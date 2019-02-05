@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -106,7 +106,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&css_class=flr&flair_type=USER_FLAIR&text=My+PRAW+text&text_editable=False"
+          "string": "api_type=json&css_class=flr&flair_type=USER_FLAIR&text=My+asyncpraw+text&text_editable=False"
         },
         "headers": {
           "Accept": [
@@ -131,7 +131,7 @@
             "edgebucket=MoSrnKOHNhWex8tYio"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -241,7 +241,7 @@
             "edgebucket=MoSrnKOHNhWex8tYio"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "GET",
@@ -250,7 +250,7 @@
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "[{\"text_editable\": false, \"type\": \"richtext\", \"text\": \"My PRAW text\", \"mod_only\": false, \"richtext\": [{\"e\": \"text\", \"t\": \"My PRAW text\"}], \"background_color\": \"\", \"id\": \"11c32eee-1482-11e9-bfc0-0efc81a5e8e8\", \"text_color\": \"dark\"}]"
+          "string": "[{\"text_editable\": false, \"type\": \"richtext\", \"text\": \"My asyncpraw text\", \"mod_only\": false, \"richtext\": [{\"e\": \"text\", \"t\": \"My asyncpraw text\"}], \"background_color\": \"\", \"id\": \"11c32eee-1482-11e9-bfc0-0efc81a5e8e8\", \"text_color\": \"dark\"}]"
         },
         "headers": {
           "Accept-Ranges": [
@@ -357,7 +357,7 @@
             "edgebucket=MoSrnKOHNhWex8tYio"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",

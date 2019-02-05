@@ -1,4 +1,4 @@
 Trophy
 ======
-.. autoclass:: praw.models.Trophy
+.. autoclass:: asyncpraw.models.Trophy
    :members: __str__

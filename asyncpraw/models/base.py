@@ -3,7 +3,7 @@ from copy import deepcopy
 
 
 class PRAWBase(object):
-    """Superclass for all models in PRAW."""
+    """Superclass for all models in asyncpraw."""
 
     @staticmethod
     def _safely_add_arguments(argument_dict, key, **new_arguments):

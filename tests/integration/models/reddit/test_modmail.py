@@ -1,4 +1,4 @@
-from praw.models import ModmailMessage
+from asyncpraw.models import ModmailMessage
 import mock
 
 from ... import IntegrationTest

@@ -1,4 +1,4 @@
-"""Test praw.models.redditors."""
+"""Test asyncpraw.models.redditors."""
 
 from .. import UnitTest
 

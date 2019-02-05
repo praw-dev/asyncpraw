@@ -1,6 +1,6 @@
 .. _configuration:
 
-Configuring PRAW
+Configuring asyncpraw
 ================
 
 .. toctree::
@@ -9,7 +9,7 @@ Configuring PRAW
    configuration/options
 
 
-Configuration options can be provided to PRAW in one of three ways:
+Configuration options can be provided to asyncpraw in one of three ways:
 
 .. toctree::
    :maxdepth: 1
@@ -19,18 +19,18 @@ Configuration options can be provided to PRAW in one of three ways:
    configuration/environment_variables
 
 Environment variables have the highest priority, followed by keyword arguments
-to :class:`.Reddit`, and finally settings in ``praw.ini`` files.
+to :class:`.Reddit`, and finally settings in ``asyncpraw.ini`` files.
 
-Using an HTTP or HTTPS proxy with PRAW
+Using an HTTP or HTTPS proxy with asyncpraw
 --------------------------------------
 
-PRAW internally relies upon the `requests <http://docs.python-requests.org/>`_
+asyncpraw internally relies upon the `requests <http://docs.python-requests.org/>`_
 package to handle HTTP requests. Requests supports use of ``HTTP_PROXY`` and
 ``HTTPS_PROXY`` environment variables in order to proxy HTTP and HTTPS requests
 respectively [`ref
 <http://docs.python-requests.org/en/master/user/advanced/#proxies>`_].
 
-Given that PRAW exclusively communicates with Reddit via HTTPS, only the
+Given that asyncpraw exclusively communicates with Reddit via HTTPS, only the
 ``HTTPS_PROXY`` option should be required.
 
 For example, if you have a script named ``prawbot.py``, the ``HTTPS_PROXY``
@@ -44,26 +44,26 @@ environment variable can be provided on the command line like so:
 Configuring a custom requests Session
 -------------------------------------
 
-PRAW uses `requests`_ to handle
+asyncpraw uses `requests`_ to handle
 networking. If your use-case requires custom configuration, it is possible
 to configure a `Session
 <http://docs.python-requests.org/en/master/user/advanced/#session-objects>`_
-and then use it with PRAW.
+and then use it with asyncpraw.
 
 For example, some networks use self-signed SSL certificates when connecting
 to HTTPS sites. By default, this would raise an exception in Requests. To
 use a self-signed SSL certificate without an exception from Requests, first
-export the certificate as a ``.pem`` file. Then configure PRAW like so:
+export the certificate as a ``.pem`` file. Then configure asyncpraw like so:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
    from requests import Session
 
 
    session = Session()
    session.verify = '/path/to/certfile.pem'
-   reddit = praw.Reddit(client_id='SI8pN3DSbt0zor',
+   reddit = asyncpraw.Reddit(client_id='SI8pN3DSbt0zor',
                         client_secret='xaxkj7HNh8kwg8e5t4m6KvSrbTI',
                         password='1guiwevlfo00esyy',
                         requestor_kwargs={'session': session},  # pass Session

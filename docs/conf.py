@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, '..')
 
-from praw import __version__
+from asyncpraw import __version__
 
 copyright = '2017, Bryce Boe'
 exclude_patterns = ['_build']
@@ -12,11 +12,11 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'collapse_navigation': True
 }
-htmlhelp_basename = 'PRAW'
+htmlhelp_basename = 'asyncpraw'
 intersphinx_mapping = {'python': ('https://docs.python.org/3.6', None)}
 master_doc = 'index'
 nitpicky = True
-project = 'PRAW'
+project = 'asyncpraw'
 pygments_style = 'sphinx'
 release = __version__
 source_suffix = '.rst'

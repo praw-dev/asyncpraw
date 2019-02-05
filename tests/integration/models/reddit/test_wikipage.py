@@ -1,4 +1,4 @@
-from praw.models import Redditor, WikiPage
+from asyncpraw.models import Redditor, WikiPage
 from prawcore import NotFound
 import mock
 import pytest
@@ -22,7 +22,7 @@ class TestWikiPage(IntegrationTest):
 
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestWikiPage.test_edit'):
-            page.edit('PRAW updated')
+            page.edit('asyncpraw updated')
 
     def test_edit__with_reason(self):
         subreddit = self.reddit.subreddit(
@@ -31,7 +31,7 @@ class TestWikiPage(IntegrationTest):
 
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestWikiPage.test_edit__with_reason'):
-            page.edit('PRAW updated with reason', reason='PRAW testing')
+            page.edit('asyncpraw updated with reason', reason='asyncpraw testing')
 
     def test_init__with_revision(self):
         subreddit = self.reddit.subreddit(

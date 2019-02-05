@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b22 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b22 prawcore/0.2.1"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer kS5eNr6p4qVgZa2Kf-CIQohzAbQ",
           "Connection": "keep-alive",
           "Cookie": "loid=jqPa8vAogSuqlQabRb; loidcreated=1479276921000",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b22 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b22 prawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/domain/youtube.com/controversial?t=all&raw_json=1&limit=100"

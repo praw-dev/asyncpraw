@@ -69,7 +69,7 @@ class CommentHelper(PRAWBase):
     def gilded(self, **generator_kwargs):
         """Deprecated.
 
-        .. warning:: (Deprecated) This method will be removed in PRAW 6 because
+        .. warning:: (Deprecated) This method will be removed in asyncpraw 6 because
                      it doesn't actually restrict the results to gilded
                      Comments. Use ``subreddit.gilded`` instead.
 

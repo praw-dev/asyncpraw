@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.4.1.dev0 prawcore/0.10.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.10.1"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=uWnb3FJZ2qlZbwQoqu.1.1492415106326.Z0FBQUFBQlk5SEtDZE9Td2VGejNNYkZXVVdia2xIeGFrMkh5Yl9McElBT1NZTmdMQzI4NXpZczhZclNsT0FFelVWWG9OQzM3MDlEbmtrRXRaUktCVlVyTFZUdjZtc041eEZ5UkhiYUl2M0FDZ2QxaHFUem9OY25SNEw1N21zTXZlUkp0OXRETDJweGg; edgebucket=YAPF2ZcugW2cC8mzuK",
-          "User-Agent": "<USER_AGENT> PRAW/4.4.1.dev0 prawcore/0.10.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.10.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/kakapo/comments/?limit=100&raw_json=1"
@@ -118,7 +118,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=uWnb3FJZ2qlZbwQoqu.1.1492415106326.Z0FBQUFBQlk5SEtDZE9Td2VGejNNYkZXVVdia2xIeGFrMkh5Yl9McElBT1NZTmdMQzI4NXpZczhZclNsT0FFelVWWG9OQzM3MDlEbmtrRXRaUktCVlVyTFZUdjZtc041eEZ5UkhiYUl2M0FDZ2QxaHFUem9OY25SNEw1N21zTXZlUkp0OXRETDJweGg; edgebucket=YAPF2ZcugW2cC8mzuK",
-          "User-Agent": "<USER_AGENT> PRAW/4.4.1.dev0 prawcore/0.10.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.10.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/kakapo/comments/?before=t1_dgauydy&limit=100&raw_json=1"
@@ -171,7 +171,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=uWnb3FJZ2qlZbwQoqu.1.1492415106326.Z0FBQUFBQlk5SEtDZE9Td2VGejNNYkZXVVdia2xIeGFrMkh5Yl9McElBT1NZTmdMQzI4NXpZczhZclNsT0FFelVWWG9OQzM3MDlEbmtrRXRaUktCVlVyTFZUdjZtc041eEZ5UkhiYUl2M0FDZ2QxaHFUem9OY25SNEw1N21zTXZlUkp0OXRETDJweGg; edgebucket=YAPF2ZcugW2cC8mzuK",
-          "User-Agent": "<USER_AGENT> PRAW/4.4.1.dev0 prawcore/0.10.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.10.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/kakapo/comments/?limit=99&raw_json=1"

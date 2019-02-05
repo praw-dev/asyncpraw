@@ -38,7 +38,7 @@ class SubredditWidgets(PRAWBase):
 
        widgets = reddit.subreddit('redditdev').widgets
 
-    Data will be lazy-loaded. By default, PRAW will not request progressively
+    Data will be lazy-loaded. By default, asyncpraw will not request progressively
     loading images from Reddit. To enable this, instantiate a SubredditWidgets
     object, then set the attribute ``progressive_images`` to ``True`` before
     performing any action that would result in a network request.
@@ -138,7 +138,7 @@ class SubredditWidgets(PRAWBase):
     async def refresh(self):
         """Refresh the subreddit's widgets.
 
-        By default, PRAW will not request progressively
+        By default, asyncpraw will not request progressively
         loading images from Reddit. To enable this,
         set the attribute ``progressive_images`` to ``True`` prior to
         calling ``refresh()``.
@@ -252,7 +252,7 @@ class ButtonWidget(Widget, BaseList):
        button_widget = None
        widgets = reddit.subreddit('redditdev').widgets
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.ButtonWidget):
+           if isinstance(widget, asyncpraw.models.ButtonWidget):
                button_widget = widget
                break
 
@@ -274,7 +274,7 @@ class Calendar(Widget):
        calendar = None
        widgets = reddit.subreddit('redditdev').widgets
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.Calendar):
+           if isinstance(widget, asyncpraw.models.Calendar):
                calendar = widget
                break
 
@@ -293,7 +293,7 @@ class CommunityList(Widget, BaseList):
        related = None
        widgets = reddit.subreddit('redditdev').widgets
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.CommunityList):
+           if isinstance(widget, asyncpraw.models.CommunityList):
                related = widget
                break
 
@@ -313,7 +313,7 @@ class CustomWidget(Widget):
        custom = None
        widgets = reddit.subreddit('redditdev').widgets
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.CustomWidget):
+           if isinstance(widget, asyncpraw.models.CustomWidget):
                custom = widget
                break
 
@@ -351,7 +351,7 @@ class ImageWidget(Widget, BaseList):
        image_widget = None
        widgets = reddit.subreddit('redditdev').widgets
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.ImageWidget):
+           if isinstance(widget, asyncpraw.models.ImageWidget):
                image_widget = widget
                break
 
@@ -373,9 +373,9 @@ class Menu(Widget, BaseList):
        topbar = reddit.subreddit('redditdev').widgets.topbar
        if len(topbar) > 0:
            probably_menu = topbar[0]
-           assert isinstance(probably_menu, praw.models.Menu)
+           assert isinstance(probably_menu, asyncpraw.models.Menu)
            for item in probably_menu:
-               if isinstance(item, praw.models.Submenu):
+               if isinstance(item, asyncpraw.models.Submenu):
                    print(item.text)
                    for child in item:
                        print(child.text, child.url)
@@ -408,7 +408,7 @@ class RulesWidget(Widget, BaseList):
        widgets = reddit.subreddit('redditdev').widgets
        rules_widget = None
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.RulesWidget):
+           if isinstance(widget, asyncpraw.models.RulesWidget):
                rules_widget = widget
                break
        from pprint import pprint; pprint(rules)
@@ -428,7 +428,7 @@ class TextArea(Widget):
        widgets = reddit.subreddit('redditdev').widgets
        text_area = None
        for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.TextArea):
+           if isinstance(widget, asyncpraw.models.TextArea):
                text_area = widget
                break
        print(text_area.text)

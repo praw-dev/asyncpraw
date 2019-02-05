@@ -1,7 +1,7 @@
 import pickle
 
-from praw.models import Subreddit, Emoji
-from praw.models.reddit.emoji import SubredditEmoji
+from asyncpraw.models import Subreddit, Emoji
+from asyncpraw.models.reddit.emoji import SubredditEmoji
 
 from ... import UnitTest
 

@@ -1,11 +1,11 @@
-"""PRAW Integration test suite."""
+"""asyncpraw Integration test suite."""
 import pytest
 from betamax import Betamax
-from praw import Reddit
+from asyncpraw import Reddit
 
 
 class IntegrationTest(object):
-    """Base class for PRAW integration tests."""
+    """Base class for asyncpraw integration tests."""
 
     def setup(self):
         """Setup runs before all test cases."""

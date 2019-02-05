@@ -9,7 +9,7 @@ This tool can be used to conveniently create refresh tokens for later use with
 your web application OAuth2 credentials.
 
 """
-import praw
+import asyncpraw
 import random
 import socket
 import sys
@@ -57,7 +57,7 @@ def main():
     else:
         scopes = commaScopes.strip().split(',')
 
-    reddit = praw.Reddit(client_id=client_id.strip(),
+    reddit = asyncpraw.Reddit(client_id=client_id.strip(),
                          client_secret=client_secret.strip(),
                          redirect_uri='http://localhost:8080',
                          user_agent='praw_refresh_token_example')

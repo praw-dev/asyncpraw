@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b21 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b21 prawcore/0.2.1"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer -9zrLUISwkJaUql49CAPSNtqygA",
           "Connection": "keep-alive",
           "Cookie": "loid=opn50YnFWER9o5hDzI; loidcreated=1479068109000",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b21 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b21 prawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/?raw_json=1"
@@ -122,7 +122,7 @@
           "Content-Length": "25",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=opn50YnFWER9o5hDzI; loidcreated=1479068109000",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b21 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b21 prawcore/0.2.1"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/leavecontributor?raw_json=1"

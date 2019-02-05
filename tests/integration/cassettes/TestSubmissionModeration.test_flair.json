@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=Ng2U8JwGXkOQOI2sve; loidcreated=1482035295000",
-          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/comments/4b536p/?raw_json=1&sort=best&limit=2048"
@@ -72,7 +72,7 @@
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "[{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"children\": [{\"kind\": \"t3\", \"data\": {\"contest_mode\": false, \"banned_by\": null, \"media_embed\": {}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"selftext_html\": null, \"selftext\": \"\", \"likes\": true, \"suggested_sort\": null, \"user_reports\": [], \"secure_media\": null, \"saved\": false, \"id\": \"4b536p\", \"gilded\": 0, \"secure_media_embed\": {}, \"clicked\": false, \"report_reasons\": [], \"author\": \"<USERNAME>\", \"media\": null, \"score\": 1, \"approved_by\": \"<USERNAME>\", \"over_18\": false, \"domain\": \"praw.readthedocs.org\", \"hidden\": false, \"num_comments\": 0, \"thumbnail\": \"default\", \"subreddit_id\": \"t5_2t5o6\", \"edited\": false, \"link_flair_css_class\": null, \"author_flair_css_class\": null, \"downs\": 0, \"archived\": true, \"removal_reason\": null, \"stickied\": false, \"is_self\": false, \"hide_score\": false, \"spoiler\": false, \"permalink\": \"/r/<TEST_SUBREDDIT>/comments/4b536p/test_title/\", \"locked\": false, \"name\": \"t3_4b536p\", \"created\": 1458455267.0, \"url\": \"https://praw.readthedocs.org/en/stable/\", \"author_flair_text\": null, \"quarantine\": false, \"title\": \"Test Title\", \"created_utc\": 1458426467.0, \"link_flair_text\": \"submission flair\", \"ups\": 1, \"upvote_ratio\": 1.0, \"mod_reports\": [], \"visited\": false, \"num_reports\": 0, \"distinguished\": null}}], \"after\": null, \"before\": null}}, {\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"children\": [], \"after\": null, \"before\": null}}]"
+          "string": "[{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"children\": [{\"kind\": \"t3\", \"data\": {\"contest_mode\": false, \"banned_by\": null, \"media_embed\": {}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"selftext_html\": null, \"selftext\": \"\", \"likes\": true, \"suggested_sort\": null, \"user_reports\": [], \"secure_media\": null, \"saved\": false, \"id\": \"4b536p\", \"gilded\": 0, \"secure_media_embed\": {}, \"clicked\": false, \"report_reasons\": [], \"author\": \"<USERNAME>\", \"media\": null, \"score\": 1, \"approved_by\": \"<USERNAME>\", \"over_18\": false, \"domain\": \"asyncpraw.readthedocs.org\", \"hidden\": false, \"num_comments\": 0, \"thumbnail\": \"default\", \"subreddit_id\": \"t5_2t5o6\", \"edited\": false, \"link_flair_css_class\": null, \"author_flair_css_class\": null, \"downs\": 0, \"archived\": true, \"removal_reason\": null, \"stickied\": false, \"is_self\": false, \"hide_score\": false, \"spoiler\": false, \"permalink\": \"/r/<TEST_SUBREDDIT>/comments/4b536p/test_title/\", \"locked\": false, \"name\": \"t3_4b536p\", \"created\": 1458455267.0, \"url\": \"https://asyncpraw.readthedocs.org/en/stable/\", \"author_flair_text\": null, \"quarantine\": false, \"title\": \"Test Title\", \"created_utc\": 1458426467.0, \"link_flair_text\": \"submission flair\", \"ups\": 1, \"upvote_ratio\": 1.0, \"mod_reports\": [], \"visited\": false, \"num_reports\": 0, \"distinguished\": null}}], \"after\": null, \"before\": null}}, {\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"children\": [], \"after\": null, \"before\": null}}]"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -122,7 +122,7 @@
           "Content-Length": "61",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=Ng2U8JwGXkOQOI2sve; loidcreated=1482035295000",
-          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/flair/?raw_json=1"

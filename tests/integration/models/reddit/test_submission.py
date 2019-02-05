@@ -1,4 +1,4 @@
-from praw.models import Comment, Submission
+from asyncpraw.models import Comment, Submission
 from prawcore import BadRequest
 import mock
 import pytest
@@ -125,7 +125,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
                 'TestSubmission.test_report'):
-            Submission(self.reddit, '4b536h').report('praw')
+            Submission(self.reddit, '4b536h').report('asyncpraw')
 
     def test_save(self):
         self.reddit.read_only = False

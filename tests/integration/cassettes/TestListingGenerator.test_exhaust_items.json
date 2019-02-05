@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -61,7 +61,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&limit=1024&sort=top"
@@ -112,7 +112,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_ct5snit&limit=1024&sort=top"
@@ -163,7 +163,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_cvqa8g8&limit=1024&sort=top"
@@ -214,7 +214,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_cszggyl&limit=1024&sort=top"
@@ -265,7 +265,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c03d987&limit=1024&sort=top"
@@ -316,7 +316,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c2qwzo&limit=1024&sort=top"
@@ -367,7 +367,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c076mlt&limit=1024&sort=top"
@@ -418,7 +418,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c1tual&limit=1024&sort=top"
@@ -469,7 +469,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c03gpm9&limit=1024&sort=top"
@@ -520,7 +520,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c09kna3&limit=1024&sort=top"
@@ -571,7 +571,7 @@
           "Authorization": "bearer -cSKrMcxZvninD9BfEflpOBav5BU",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-02T04%3A33%3A16.532Z; loid=2RpafiglZd3NTTNXw6; __cfduid=d57f1d72a9f44d0acb0aa3864ef4e3dab1456893196",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?raw_json=1&t=all&after=t1_c02bvo5&limit=1024&sort=top"

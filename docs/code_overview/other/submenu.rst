@@ -1,5 +1,5 @@
 Submenu
 =======
 
-.. autoclass:: praw.models.Submenu
+.. autoclass:: asyncpraw.models.Submenu
    :inherited-members:

@@ -1,4 +1,4 @@
-from praw.models import User
+from asyncpraw.models import User
 
 from .. import UnitTest
 

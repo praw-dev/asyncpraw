@@ -1,4 +1,4 @@
-"""PRAW exception classes.
+"""asyncpraw exception classes.
 
 Includes two main exceptions: :class:`.APIException` for when something goes
 wrong on the server side, and :class:`.ClientException` when something goes
@@ -8,7 +8,7 @@ wrong on the client side. Both of these classes extend :class:`.PRAWException`.
 
 
 class PRAWException(Exception):
-    """The base PRAW Exception that all other exception classes extend."""
+    """The base asyncpraw Exception that all other exception classes extend."""
 
 
 class APIException(PRAWException):

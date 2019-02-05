@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.5"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.5"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -61,7 +61,7 @@
           "Authorization": "bearer -S3Il7Qr3Z6xVT_YQWravNOeEiz0",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-13T01%3A22%3A24.634Z; loid=7BNAA1lY7gSYRbjxmg; __cfduid=dee9216dbe9f30e636152beedb48c01791457832144",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.5"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.5"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/randnsfw/?unique=0&raw_json=1"
@@ -105,7 +105,7 @@
           "Authorization": "bearer -S3Il7Qr3Z6xVT_YQWravNOeEiz0",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-03-13T01%3A22%3A24.634Z; loid=7BNAA1lY7gSYRbjxmg; __cfduid=dee9216dbe9f30e636152beedb48c01791457832144",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.5"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.5"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/LaBeauteFeminine/about/?raw_json=1"

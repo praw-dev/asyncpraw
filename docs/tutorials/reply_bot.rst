@@ -6,9 +6,9 @@ number of tasks including providing useful information, e.g., an Imperial to
 Metric units bot; convenience, e.g., a link corrector bot; or analytical
 information, e.g., redditor analyzer bot for writing complexity.
 
-PRAW provides a simple way to build your own bot using the python programming
+asyncpraw provides a simple way to build your own bot using the python programming
 language. As a result, it is little surprise that a majority of bots on Reddit
-are powered by PRAW.
+are powered by asyncpraw.
 
 This tutorial will show you how to build a bot that monitors a particular
 subreddit, `/r/AskReddit <https://www.reddit.com/r/AskReddit/>`_, for new
@@ -59,9 +59,9 @@ creating an instance of :class:`.Reddit`:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
 
-   reddit = praw.Reddit(user_agent='LMGTFY (by /u/USERNAME)',
+   reddit = asyncpraw.Reddit(user_agent='LMGTFY (by /u/USERNAME)',
                         client_id='CLIENT_ID', client_secret="CLIENT_SECRET",
                         username='USERNAME', password='PASSWORD')
 
@@ -76,7 +76,7 @@ account that registered the application are required.
 Step 2: Monitoring New Submissions to /r/AskReddit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PRAW provides a convenient way to obtain new submissions to a given
+asyncpraw provides a convenient way to obtain new submissions to a given
 subreddit. To indefinitely iterate over new submissions to a subreddit add:
 
 .. code-block:: python

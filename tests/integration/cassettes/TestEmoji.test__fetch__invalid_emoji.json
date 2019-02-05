@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
           ]
         },
         "method": "POST",
@@ -126,7 +126,7 @@
             "edgebucket=EhxzqiRzMifZRPlmt1; session_tracker=q2qvfpATrxiqdAiTls.0.1521913111046.Z0FBQUFBQmF0bzBYNUlzNEJWT3pSZWdYQ01VVzdUZERfZ1hWSDdSR3RFVC1MX0M3ZHJVUTlhOHVOZDc2MWYzRXNDd3U3LXMtNXJ2XzBfUEJTREpZWEVzTUZEUmRBZzE0WldFaTRmM1lPV29Ta2lDYUdLTDZjSlRsM3l3b1Z4UlJDRGtYV2J4ZElNdkE"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
           ]
         },
         "method": "GET",
@@ -239,7 +239,7 @@
             "edgebucket=EhxzqiRzMifZRPlmt1; session_tracker=q2qvfpATrxiqdAiTls.0.1521913112262.Z0FBQUFBQmF0bzBZTnRvQmh5eWp3Wl9wa182eXVzQXZpSHpvZG1sSWh3eGN6U0t1RmtBV0JUUmF3QUhuQ2dfMzhMV29veGpoX2VVc0wzRjR4OXhRVUc3SWhlMHJzbFB1QjdlSXBqdVB0QnlCQ18tZWpnLV9QdmcwMDdTZGRSVmVLblpTZjdDd0hJMTE"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
           ]
         },
         "method": "GET",
@@ -356,7 +356,7 @@
             "edgebucket=EhxzqiRzMifZRPlmt1; loid=000000000012vm3jhg.2.1521757540492.Z0FBQUFBQmF0bzBZM3FuT3d3cE5ZNzFxaUM0dnVXUDlqajBpQkZfM3U2TzhvSWQzMnpkaVc3QXktWlBBTGN0OXc1MnNQU0pGM3NSMlVpX0lEWDR0N2FSZkREQTNzY0o0RHBVS2Z3VXdWZXBkRWVCNXVxRW9IRmFsbk1IQl9GQktHdUNnREx5SVZJUmI; session_tracker=q2qvfpATrxiqdAiTls.0.1521913112420.Z0FBQUFBQmF0bzBZMzgybnY5ZnBUdzJhY0htQlM1T2t6S2VFNHMzNGh1WjR4V25jM0s5S2VtajZTZTBzajhIVVlRb1hER3RRMnZucDJocTJkbGduTmxSTzFJQkJpRHdYaF9nMDlRSE1yVnVpTEZYenNIMUVnbDJ0UjBjNGtDUVFjRS1ObTA0TlpkNHY"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
           ]
         },
         "method": "GET",

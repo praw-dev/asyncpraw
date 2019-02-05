@@ -1,4 +1,4 @@
-"""Provide the PRAW models."""
+"""Provide the asyncpraw models."""
 from .auth import Auth  # NOQA
 from .front import Front  # NOQA
 from .helpers import LiveHelper, MultiredditHelper, SubredditHelper  # NOQA

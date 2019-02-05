@@ -1,7 +1,7 @@
-"""Test praw.models.LiveThread"""
-from praw.const import API_PATH
-from praw.exceptions import APIException
-from praw.models import (LiveThread, LiveUpdate, Redditor, RedditorList,
+"""Test asyncpraw.models.LiveThread"""
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import APIException
+from asyncpraw.models import (LiveThread, LiveUpdate, Redditor, RedditorList,
                          Submission)
 import mock
 import pytest

@@ -18,6 +18,6 @@ python:
 sudo: false
 script:
   - flake8 --exclude=docs,.eggs
-  - pydocstyle praw
+  - pydocstyle asyncpraw
   - sphinx-build -W docs/ /tmp/foo
-  - coverage run --source=praw setup.py test
+  - coverage run --source=asyncpraw setup.py test

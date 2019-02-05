@@ -115,7 +115,7 @@ class Submission(RedditBase, SubmissionListingMixin, UserContentMixin):
         :param reddit: An instance of :class:`~.Reddit`.
         :param id: A reddit base36 submission ID, e.g., ``2gmzqe``.
         :param url: A URL supported by
-            :meth:`~praw.models.Submission.id_from_url`.
+            :meth:`~asyncpraw.models.Submission.id_from_url`.
 
         Either ``id`` or ``url`` can be provided, but not both.
 
@@ -364,7 +364,7 @@ class SubmissionModeration(ThingModerationMixin):
         .. code:: python
 
            submission = reddit.submission(id='5or86n')
-           submission.mod.flair(text='PRAW', css_class='bot')
+           submission.mod.flair(text='asyncpraw', css_class='bot')
 
         """
         data = {'css_class': css_class, 'link': self.thing.fullname, 'text': text}

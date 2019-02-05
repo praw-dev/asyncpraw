@@ -2,14 +2,14 @@ Quick Start
 ===========
 
 In this section, we go over everything you need to know to start building
-scripts, or bots using PRAW, the Python Reddit API Wrapper. It's fun and
+scripts, or bots using asyncpraw, the Python Reddit API Wrapper. It's fun and
 easy. Let's get started.
 
 Prerequisites
 -------------
 
-:Python Knowledge: You need to know at least a little Python to use PRAW; it's
-                   a Python wrapper after all. PRAW supports `Python 2.7`_, and
+:Python Knowledge: You need to know at least a little Python to use asyncpraw; it's
+                   a Python wrapper after all. asyncpraw supports `Python 2.7`_, and
                    `Python 3.3 to 3.6`_. If you are stuck on a problem,
                    `/r/learnpython`_ is a great place to ask for help.
 
@@ -55,14 +55,14 @@ Obtain a :class:`.Reddit` Instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning:: For the sake of brevity, the following examples pass authentication
-             information via arguments to :py:func:`praw.Reddit`. If you do
+             information via arguments to :py:func:`asyncpraw.Reddit`. If you do
              this, you need to be careful not to reveal this information to the
              outside world if you share your code. It is recommended to use a
-             :ref:`praw.ini file <praw.ini>` in order to keep your
+             :ref:`asyncpraw.ini file <asyncpraw.ini>` in order to keep your
              authentication information separate from your code.
 
 You need an instance of the :class:`.Reddit` class to do *anything* with
-PRAW. There are two distinct states a :class:`.Reddit` instance can be in:
+asyncpraw. There are two distinct states a :class:`.Reddit` instance can be in:
 :ref:`read-only <read-only>`, and :ref:`authorized <authorized>`.
 
 .. _read-only:
@@ -84,9 +84,9 @@ of providing this information). For example:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
 
-   reddit = praw.Reddit(client_id='my client id',
+   reddit = asyncpraw.Reddit(client_id='my client id',
                         client_secret='my client secret',
                         user_agent='my user agent')
 
@@ -112,7 +112,7 @@ If you want to do more than retrieve public information from Reddit, then you
 need an authorized :class:`.Reddit` instance.
 
 .. note:: In the above example we are limiting the results to 10. Without the
-          ``limit`` parameter PRAW should yield as many results as it can with
+          ``limit`` parameter asyncpraw should yield as many results as it can with
           a single request. For most endpoints this results in 100 items per
           request. If you want to retrieve as many as possible pass in
           ``limit=None``.
@@ -135,9 +135,9 @@ like the following:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
 
-   reddit = praw.Reddit(client_id='my client id',
+   reddit = asyncpraw.Reddit(client_id='my client id',
                         client_secret='my client secret',
                         user_agent='my user agent',
                         username='my username',
@@ -280,7 +280,7 @@ after ``comment_sort`` is updated. See :ref:`extracting_comments` for an example
 Determine Available Attributes of an Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have a PRAW object, e.g., :class:`.Comment`, :class:`.Message`,
+If you have a asyncpraw object, e.g., :class:`.Comment`, :class:`.Message`,
 :class:`.Redditor`, or :class:`.Submission`, and you want to see what
 attributes are available along with their values, use the built-in
 :py:func:`vars` function of python. For example:
@@ -294,7 +294,7 @@ attributes are available along with their values, use the built-in
    print(submission.title) # to make it non-lazy
    pprint.pprint(vars(submission))
 
-Note the line where we print the title. PRAW uses lazy objects so that network
+Note the line where we print the title. asyncpraw uses lazy objects so that network
 requests to Reddit's API are only issued when information is needed. Here,
 before the print line, ``submission`` points to a lazy :class:`.Submission`
 object. When we try to print its title, additional information is needed, thus

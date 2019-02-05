@@ -1,5 +1,5 @@
 reddit.live
 ===========
 
-.. autoclass:: praw.models.LiveHelper
+.. autoclass:: asyncpraw.models.LiveHelper
    :inherited-members:

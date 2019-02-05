@@ -1,6 +1,6 @@
-"""Test praw.models.auth."""
+"""Test asyncpraw.models.auth."""
 from prawcore import InvalidToken
-from praw import Reddit
+from asyncpraw import Reddit
 from six import string_types
 import pytest
 

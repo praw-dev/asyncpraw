@@ -39,7 +39,7 @@ Change Log
 
 **Changed**
 
-* :meth:`.User.me` returns ``None`` in :attr:`~praw.Reddit.read_only` mode.
+* :meth:`.User.me` returns ``None`` in :attr:`~asyncpraw.Reddit.read_only` mode.
 * :meth:`.SubredditLinkFlairTemplates.__iter__` uses the v2 flair API endpoint.
   This change will result in additional fields being returned. All fields that
   were previously returned will still be returned.
@@ -212,7 +212,7 @@ Change Log
 
 * ``cloudsearch`` is no longer the default syntax for
   :meth:`.Subreddit.search`. ``lucene`` is now the default
-  syntax so that PRAW's default is aligned with Reddit's default.
+  syntax so that asyncpraw's default is aligned with Reddit's default.
 * :meth:`.Reddit.info` will now take either a list of fullnames
   or a single URL string.
 * :meth:`.Subreddit.submit` accepts a flair template ID and text.
@@ -239,7 +239,7 @@ Change Log
   :meth:`.friend`, :meth:`.Redditor.message`, :meth:`.Subreddit.message`,
   :meth:`.select`, and :meth:`.unfriend` are removed as they do not provide
   any useful information.
-* ``praw.ini`` no longer reads in ``http_proxy`` and ``https_proxy`` settings.
+* ``asyncpraw.ini`` no longer reads in ``http_proxy`` and ``https_proxy`` settings.
 * ``is_link`` parameter of :meth:`.SubredditRedditorFlairTemplates.add` and
   :meth:`.SubredditRedditorFlairTemplates.clear`. Use
   :class:`.SubredditLinkFlairTemplates` instead.
@@ -274,34 +274,34 @@ parameter as described below:
 
 **Added**
 
-* :meth:`~praw.models.reddit.subreddit.Modmail.unread_count` to get unread
+* :meth:`~asyncpraw.models.reddit.subreddit.Modmail.unread_count` to get unread
   count by conversation state.
-* :meth:`~praw.models.reddit.subreddit.Modmail.bulk_read` to mark conversations
+* :meth:`~asyncpraw.models.reddit.subreddit.Modmail.bulk_read` to mark conversations
   as read by conversation state.
-* :meth:`~praw.models.reddit.subreddit.Modmail.subreddits` to fetch subreddits
+* :meth:`~asyncpraw.models.reddit.subreddit.Modmail.subreddits` to fetch subreddits
   using new modmail.
-* :meth:`~praw.models.reddit.subreddit.Modmail.create` to create a new modmail
+* :meth:`~asyncpraw.models.reddit.subreddit.Modmail.create` to create a new modmail
   conversation.
-* :meth:`~praw.models.ModmailConversation.read` to mark modmail conversations
+* :meth:`~asyncpraw.models.ModmailConversation.read` to mark modmail conversations
   as read.
-* :meth:`~praw.models.ModmailConversation.unread` to mark modmail conversations
+* :meth:`~asyncpraw.models.ModmailConversation.unread` to mark modmail conversations
   as unread.
-* :meth:`~praw.models.reddit.subreddit.Modmail.conversations` to get new
+* :meth:`~asyncpraw.models.reddit.subreddit.Modmail.conversations` to get new
   modmail conversations.
-* :meth:`~praw.models.ModmailConversation.highlight` to highlight modmail
+* :meth:`~asyncpraw.models.ModmailConversation.highlight` to highlight modmail
   conversations.
-* :meth:`~praw.models.ModmailConversation.unhighlight` to unhighlight modmail
+* :meth:`~asyncpraw.models.ModmailConversation.unhighlight` to unhighlight modmail
   conversations.
-* :meth:`~praw.models.ModmailConversation.mute` to mute modmail conversations.
-* :meth:`~praw.models.ModmailConversation.unmute` to unmute modmail
+* :meth:`~asyncpraw.models.ModmailConversation.mute` to mute modmail conversations.
+* :meth:`~asyncpraw.models.ModmailConversation.unmute` to unmute modmail
   conversations.
-* :meth:`~praw.models.ModmailConversation.archive` to archive modmail
+* :meth:`~asyncpraw.models.ModmailConversation.archive` to archive modmail
   conversations.
-* :meth:`~praw.models.ModmailConversation.unarchive` to unarchive modmail
+* :meth:`~asyncpraw.models.ModmailConversation.unarchive` to unarchive modmail
   conversations.
-* :meth:`~praw.models.ModmailConversation.reply` to reply to modmail
+* :meth:`~asyncpraw.models.ModmailConversation.reply` to reply to modmail
   conversations.
-* :meth:`~praw.models.reddit.subreddit.Modmail.__call__` to get a new modmail
+* :meth:`~asyncpraw.models.reddit.subreddit.Modmail.__call__` to get a new modmail
   conversation.
 * :meth:`.Inbox.stream` to stream new items in the inbox.
 * Exponential request delay to all streams when no new items are returned in a
@@ -313,17 +313,17 @@ parameter as described below:
 * :class:`.Reddit` accepts ``requestor_class=cls`` for a customized requestor
   class and ``requestor_kwargs={'param': value}`` for passing arguments to
   requestor initialization.
-* :meth:`~praw.models.reddit.subreddit.SubredditStream.comments`,
-  :meth:`~praw.models.reddit.subreddit.SubredditStream.submissions`, and
-  :meth:`~praw.models.Subreddits.stream` accept a ``pause_after`` argument to
+* :meth:`~asyncpraw.models.reddit.subreddit.SubredditStream.comments`,
+  :meth:`~asyncpraw.models.reddit.subreddit.SubredditStream.submissions`, and
+  :meth:`~asyncpraw.models.Subreddits.stream` accept a ``pause_after`` argument to
   allow pausing of the stream. The default value of ``None`` retains the
   preexisting behavior.
 
 **Deprecated**
 
 * ``cloudsearch`` will no longer be the default syntax for
-  :meth:`.Subreddit.search` in PRAW 5. Instead ``lucene`` will be the default
-  syntax so that PRAW's default is aligned with Reddit's default.
+  :meth:`.Subreddit.search` in asyncpraw 5. Instead ``lucene`` will be the default
+  syntax so that asyncpraw's default is aligned with Reddit's default.
 
 **Fixed**
 
@@ -365,7 +365,7 @@ parameter as described below:
   the relationship metadata (e.g., ``mod_permissions``).
 * :class:`.Message` instances retrieved from the inbox now have attributes
   ``author``, ``dest`` ``replies`` and ``subreddit`` properly converted to
-  their appropriate PRAW model.
+  their appropriate asyncpraw model.
 
 4.3.0 (2017/01/19)
 ------------------
@@ -423,7 +423,7 @@ parameter as described below:
 * Return values from :meth:`.Comment.block`, :meth:`.Message.block`,
   :meth:`.SubredditMessage.block`, :meth:`.SubredditFlair.delete`,
   :meth:`.friend`, :meth:`.Redditor.message`, :meth:`.Subreddit.message`,
-  :meth:`.select`, and :meth:`.unfriend` will be removed in PRAW 5 as they do
+  :meth:`.select`, and :meth:`.unfriend` will be removed in asyncpraw 5 as they do
   not provide any useful information.
 
 **Fixed**
@@ -450,16 +450,16 @@ parameter as described below:
 
 **Added**
 
-* :meth:`praw.models.Subreddits.search_by_topic` to search subreddits by topic.
+* :meth:`asyncpraw.models.Subreddits.search_by_topic` to search subreddits by topic.
   (see: https://www.reddit.com/dev/api/#GET_api_subreddits_by_topic).
-* :meth:`praw.models.LiveHelper.__call__` to provide interface to
-  ``praw.models.LiveThread.__init__``.
+* :meth:`asyncpraw.models.LiveHelper.__call__` to provide interface to
+  ``asyncpraw.models.LiveThread.__init__``.
 * :class:`.SubredditFilters` to work with filters for special subreddits, like
   ``/r/all``.
 * Added callables for :class:`.SubredditRelationship` and
   :class:`.SubredditFlair` so that ``limit`` and other parameters can be
   passed.
-* Add :meth:`~praw.models.Message.reply` to :class:`.Message` which was
+* Add :meth:`~asyncpraw.models.Message.reply` to :class:`.Message` which was
   accidentally missed previously.
 * Add ``sticky`` parameter to :meth:`.CommentModeration.distinguish` to sticky
   comments.
@@ -483,21 +483,21 @@ parameter as described below:
 
 **Deprecated**
 
-* ``validate_time_filter`` will be removed from the public interface in PRAW
+* ``validate_time_filter`` will be removed from the public interface in asyncpraw
   4.2 as it was never intended to be part of it to begin with.
 * Iterating directly over :class:`.SubredditRelationship` (e.g.,
   ``subreddit.banned``, ``subreddit.contributor``, ``subreddit.moderator``,
-  etc) and :class:`.SubredditFlair` will be removed in PRAW 5. Iterate instead
+  etc) and :class:`.SubredditFlair` will be removed in asyncpraw 5. Iterate instead
   over their callables, e.g. ``subreddit.banned()`` and ``subreddit.flair()``.
-* The following methods are deprecated to be removed in PRAW 5 and are replaced
+* The following methods are deprecated to be removed in asyncpraw 5 and are replaced
   with similar ``Comment.mod...`` and ``Submission.mod...`` alternatives:
   ``Subreddit.mod.approve``, ``Subreddit.mod.distinguish``,
   ``Subreddit.mod.ignore_reports``, ``Subreddit.mod.remove``,
   ``Subreddit.mod.undistinguish``, ``Subreddit.mod.unignore_reports``.
 * Support for passing a :class:`.Submission` to :meth:`.SubredditFlair.set`
-  will be removed in PRAW 5. Use :meth:`.flair` instead.
+  will be removed in asyncpraw 5. Use :meth:`.flair` instead.
 * The ``thing`` argument to :meth:`.SubredditFlair.set` is replaced with
-  ``redditor`` and will be removed in PRAW 5.
+  ``redditor`` and will be removed in asyncpraw 5.
 
 **Fixed**
 
@@ -533,56 +533,56 @@ parameter as described below:
   https://github.com/reddit/reddit/wiki/OAuth2#authorization-implicit-grant-flow)
 * :meth:`.scopes` to discover which scopes are available to the current
   authentication
-* Lots of documentation: http://praw.readthedocs.io/
+* Lots of documentation: http://asyncpraw.readthedocs.io/
 
 4.0.0rc2 (2016/11/20)
 ---------------------
 
 **Fixed**
 
-* :meth:`~praw.models.Auth.authorize` properly sets the session's
+* :meth:`~asyncpraw.models.Auth.authorize` properly sets the session's
   Authentication (thanks @williammck).
 
 4.0.0rc1 (2016/11/20)
 ---------------------
 
-PRAW 4 introduces significant breaking changes. The numerous changes are not
+asyncpraw 4 introduces significant breaking changes. The numerous changes are not
 listed here, only the feature removals. Please read through
 :doc:`/getting_started/quick_start` to help with updating your code to
-PRAW 4. If you require additional help please ask on `/r/redditdev
-<https://www.reddit.com/r/redditdev>`_ or in the `praw-dev/praw
-<https://gitter.im/praw-dev/praw>`_ channel on gitter.
+asyncpraw 4. If you require additional help please ask on `/r/redditdev
+<https://www.reddit.com/r/redditdev>`_ or in the `asyncpraw-dev/asyncpraw
+<https://gitter.im/asyncpraw-dev/asyncpraw>`_ channel on gitter.
 
 **Added**
 
-* :meth:`praw.models.Comment.block`, :meth:`praw.models.Message.block`, and
-  :meth:`praw.models.SubredditMessage.block` to permit blocking unwanted user
+* :meth:`asyncpraw.models.Comment.block`, :meth:`asyncpraw.models.Message.block`, and
+  :meth:`asyncpraw.models.SubredditMessage.block` to permit blocking unwanted user
   contact.
-* :meth:`praw.models.LiveHelper.create` to create new live threads.
-* :meth:`praw.models.Redditor.unblock` to undo a block.
-* :meth:`praw.models.Subreddits.gold` to iterate through gold subreddits.
-* :meth:`praw.models.Subreddits.search` to search for subreddits by name and
+* :meth:`asyncpraw.models.LiveHelper.create` to create new live threads.
+* :meth:`asyncpraw.models.Redditor.unblock` to undo a block.
+* :meth:`asyncpraw.models.Subreddits.gold` to iterate through gold subreddits.
+* :meth:`asyncpraw.models.Subreddits.search` to search for subreddits by name and
   description.
-* :meth:`praw.models.Subreddits.stream` to obtain newly created subreddits in
+* :meth:`asyncpraw.models.Subreddits.stream` to obtain newly created subreddits in
   near-realtime.
-* :meth:`praw.models.User.karma` to retrieve the current user's subreddit
+* :meth:`asyncpraw.models.User.karma` to retrieve the current user's subreddit
   karma.
-* :meth:`praw.models.reddit.submission.SubmissionModeration.lock` and
-  :meth:`praw.models.reddit.submission.SubmissionModeration.unlock` to change a
+* :meth:`asyncpraw.models.reddit.submission.SubmissionModeration.lock` and
+  :meth:`asyncpraw.models.reddit.submission.SubmissionModeration.unlock` to change a
   Submission's lock state.
-* :meth:`praw.models.reddit.subreddit.SubredditFlairTemplates.delete` to
+* :meth:`asyncpraw.models.reddit.subreddit.SubredditFlairTemplates.delete` to
   delete a single flair template.
-* :meth:`praw.models.reddit.subreddit.SubredditModeration.unread` to iterate
+* :meth:`asyncpraw.models.reddit.subreddit.SubredditModeration.unread` to iterate
   over unread moderation messages.
-* :meth:`praw.models.reddit.subreddit.ModeratorRelationship.invite` to invite a
+* :meth:`asyncpraw.models.reddit.subreddit.ModeratorRelationship.invite` to invite a
   moderator to a subreddit.
-* :meth:`praw.models.reddit.subreddit.ModeratorRelationship.update` to update a
+* :meth:`asyncpraw.models.reddit.subreddit.ModeratorRelationship.update` to update a
   moderator's permissions.
-* :meth:`praw.models.reddit.subreddit.ModeratorRelationship.update_invite` to
+* :meth:`asyncpraw.models.reddit.subreddit.ModeratorRelationship.update_invite` to
   update an invited moderator's permissions.
-* :meth:`praw.models.Front.random_rising`,
-  :meth:`praw.models.Subreddit.random_rising` and
-  :meth:`praw.models.Multireddit.random_rising`.
+* :meth:`asyncpraw.models.Front.random_rising`,
+  :meth:`asyncpraw.models.Subreddit.random_rising` and
+  :meth:`asyncpraw.models.Multireddit.random_rising`.
 * :class:`~.WikiPage` supports a revision argument.
 * :meth:`~.SubredditWiki.revisions` to obtain a list of recent revisions to a
   subreddit.
@@ -598,24 +598,24 @@ PRAW 4. If you require additional help please ask on `/r/redditdev
 .. note:: Only prominent changes are listed here.
 
 * ``helpers.comments_stream`` is now
-  :meth:`praw.models.reddit.subreddit.SubredditStream.comments`
+  :meth:`asyncpraw.models.reddit.subreddit.SubredditStream.comments`
 * ``helpers.submissions_between`` is now
   ``Subreddit.submissions``. This new method now only iterates
   through newest submissions first and as a result makes approximately 33%
   fewer requests.
 * ``helpers.submission_stream`` is now
-  :meth:`praw.models.reddit.subreddit.SubredditStream.submissions`
+  :meth:`asyncpraw.models.reddit.subreddit.SubredditStream.submissions`
 
 **Removed**
 
 * Removed :class:`.Reddit`'s ``login`` method. Authentication must be done
   through OAuth.
-* Removed ``praw-multiprocess`` as this functionality is no longer needed with
-  PRAW 4.
+* Removed ``asyncpraw-multiprocess`` as this functionality is no longer needed with
+  asyncpraw 4.
 * Removed non-oauth functions ``Message.collapse`` and ``Message.uncollapse``
   ``is_username_available``.
 * Removed captcha related functions.
 
 
 For changes prior to version 4.0 please see: `3.4.0 changelog
-<http://praw.readthedocs.io/en/v3.4.0/pages/changelog.html>`_
+<http://asyncpraw.readthedocs.io/en/v3.4.0/pages/changelog.html>`_

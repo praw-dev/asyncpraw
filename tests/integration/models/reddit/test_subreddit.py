@@ -1,10 +1,10 @@
-"""Test praw.models.subreddit."""
+"""Test asyncpraw.models.subreddit."""
 from os.path import abspath, dirname, join
 from json import dumps
 import sys
 
-from praw.exceptions import APIException, ClientException
-from praw.models import (Comment, ModAction, ModmailAction,
+from asyncpraw.exceptions import APIException, ClientException
+from asyncpraw.models import (Comment, ModAction, ModmailAction,
                          ModmailConversation, ModmailMessage, Redditor,
                          Submission, Subreddit, SubredditMessage, Stylesheet,
                          WikiPage)
@@ -97,7 +97,7 @@ class TestSubreddit(IntegrationTest):
         with self.recorder.use_cassette('TestSubreddit.test_message'):
             subreddit = self.reddit.subreddit(
                 pytest.placeholders.test_subreddit)
-            subreddit.message('Test from PRAW', message='Test content')
+            subreddit.message('Test from asyncpraw', message='Test content')
 
     def test_random(self):
         with self.recorder.use_cassette('TestSubreddit.test_random'):
@@ -128,7 +128,7 @@ class TestSubreddit(IntegrationTest):
     def test_search(self):
         with self.recorder.use_cassette('TestSubreddit.test_search'):
             subreddit = self.reddit.subreddit('all')
-            for item in subreddit.search('praw oauth search', limit=None,
+            for item in subreddit.search('asyncpraw oauth search', limit=None,
                                          syntax='cloudsearch'):
                 assert isinstance(item, Submission)
 
@@ -172,7 +172,7 @@ class TestSubreddit(IntegrationTest):
 
     @mock.patch('time.sleep', return_value=None)
     def test_submit__url(self, _):
-        url = 'https://praw.readthedocs.org/en/stable/'
+        url = 'https://asyncpraw.readthedocs.org/en/stable/'
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestSubreddit.test_submit__url'):
             subreddit = self.reddit.subreddit(
@@ -587,7 +587,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         with self.recorder.use_cassette(
                 'TestSubredditFlairTemplates.test_add'):
             for i in range(101):
-                self.subreddit.flair.templates.add('PRAW{}'.format(i),
+                self.subreddit.flair.templates.add('asyncpraw{}'.format(i),
                                                    css_class='myCSS')
 
     @mock.patch('time.sleep', return_value=None)
@@ -597,7 +597,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 'TestSubredditFlairTemplates.test_add_v2'):
             for i in range(101):
                 self.subreddit.flair.templates.add(
-                    'PRAW{}'.format(i), background_color='#ABCDEF')
+                    'asyncpraw{}'.format(i), background_color='#ABCDEF')
 
     def test_clear(self):
         self.reddit.read_only = False
@@ -621,7 +621,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 'TestSubredditFlairTemplates.test_update'):
             template = list(self.subreddit.flair.templates)[0]
             self.subreddit.flair.templates.update(
-                template['id'], 'PRAW updated', css_class='myCSS')
+                template['id'], 'asyncpraw updated', css_class='myCSS')
 
     def test_update_bad(self):
         self.reddit.read_only = False
@@ -630,7 +630,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
             template = list(self.subreddit.flair.templates)[0]
             with pytest.raises(TypeError):
                 self.subreddit.flair.templates.update(
-                    template['id'], 'PRAW updated', css_class='myclass',
+                    template['id'], 'asyncpraw updated', css_class='myclass',
                     text_color='light')
 
     @mock.patch('time.sleep', return_value=None)
@@ -638,9 +638,9 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
                 'TestSubredditFlairTemplates.test_update_across_kind'):
-            self.subreddit.flair.templates.add('My PRAW text', css_class='flr')
+            self.subreddit.flair.templates.add('My asyncpraw text', css_class='flr')
             template = [t for t in self.subreddit.flair.templates
-                        if t['text'] == 'My PRAW text'][0]
+                        if t['text'] == 'My asyncpraw text'][0]
             self.subreddit.flair.templates.update(template['id'],
                                                   'updated text :snoo:',
                                                   text_color='dark',
@@ -653,7 +653,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 'TestSubredditFlairTemplates.test_update_v2'):
             template = list(self.subreddit.flair.templates)[0]
             self.subreddit.flair.templates.update(
-                template['id'], 'updated by PRAW',
+                template['id'], 'updated by asyncpraw',
                 background_color='#000000')
 
 
@@ -680,7 +680,7 @@ class TestSubredditLinkFlairTemplates(IntegrationTest):
         with self.recorder.use_cassette(
                 'TestSubredditLinkFlairTemplates.test_add'):
             for i in range(101):
-                self.subreddit.flair.link_templates.add('PRAW{}'.format(i),
+                self.subreddit.flair.link_templates.add('asyncpraw{}'.format(i),
                                                         css_class='myCSS')
 
     @mock.patch('time.sleep', return_value=None)
@@ -690,7 +690,7 @@ class TestSubredditLinkFlairTemplates(IntegrationTest):
                 'TestSubredditLinkFlairTemplates.test_add_v2'):
             for i in range(101):
                 self.subreddit.flair.link_templates.add(
-                    'PRAW{}'.format(i), text_color='light')
+                    'asyncpraw{}'.format(i), text_color='light')
 
     def test_clear(self):
         self.reddit.read_only = False
@@ -1333,7 +1333,7 @@ class TestSubredditStylesheet(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
                 'TestSubredditStylesheet.test_delete_image'):
-            self.subreddit.stylesheet.delete_image('praw')
+            self.subreddit.stylesheet.delete_image('asyncpraw')
 
     def test_delete_mobile_header(self):
         self.reddit.read_only = False
@@ -1363,7 +1363,7 @@ class TestSubredditStylesheet(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestSubredditStylesheet.test_upload'):
             response = self.subreddit.stylesheet.upload(
-                'praw', self.image_path('white-square.png'))
+                'asyncpraw', self.image_path('white-square.png'))
         assert response['img_src'].endswith('.png')
 
     def test_upload__invalid(self):
@@ -1372,7 +1372,7 @@ class TestSubredditStylesheet(IntegrationTest):
                 'TestSubredditStylesheet.test_upload__invalid'):
             with pytest.raises(APIException) as excinfo:
                 self.subreddit.stylesheet.upload(
-                    'praw', self.image_path('invalid.jpg'))
+                    'asyncpraw', self.image_path('invalid.jpg'))
         assert excinfo.value.error_type == 'IMAGE_ERROR'
 
     def test_upload__invalid_ext(self):
@@ -1381,7 +1381,7 @@ class TestSubredditStylesheet(IntegrationTest):
                 'TestSubredditStylesheet.test_upload__invalid_ext'):
             with pytest.raises(APIException) as excinfo:
                 self.subreddit.stylesheet.upload(
-                    'praw.png', self.image_path('white-square.png'))
+                    'asyncpraw.png', self.image_path('white-square.png'))
         assert excinfo.value.error_type == 'BAD_CSS_NAME'
 
     def test_upload__too_large(self):
@@ -1390,7 +1390,7 @@ class TestSubredditStylesheet(IntegrationTest):
                 'TestSubredditStylesheet.test_upload__too_large'):
             with pytest.raises(TooLarge):
                 self.subreddit.stylesheet.upload(
-                    'praw', self.image_path('too_large.jpg'))
+                    'asyncpraw', self.image_path('too_large.jpg'))
 
     def test_upload_header__jpg(self):
         self.reddit.read_only = False
@@ -1467,7 +1467,7 @@ class TestSubredditWiki(IntegrationTest):
             pytest.placeholders.test_subreddit)
 
         with self.recorder.use_cassette('TestSubredditWiki.create'):
-            wikipage = subreddit.wiki.create('PRAW New Page',
+            wikipage = subreddit.wiki.create('asyncpraw New Page',
                                              'This is the new wiki page')
             assert wikipage.name == 'praw_new_page'
             assert wikipage.content_md == 'This is the new wiki page'

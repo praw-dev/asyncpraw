@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -131,7 +131,7 @@
             "edgebucket=DBSfIKTSxqtSjMvcmt"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -241,7 +241,7 @@
             "multipart/form-data; boundary=e52fe67647424ffa9e9ac2edf51cdb57"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -330,7 +330,7 @@
             "edgebucket=DBSfIKTSxqtSjMvcmt"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -440,7 +440,7 @@
             "multipart/form-data; boundary=e124247a8a644cb387fce6229287bf5c"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -529,7 +529,7 @@
             "edgebucket=DBSfIKTSxqtSjMvcmt"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -642,7 +642,7 @@
             "edgebucket=DBSfIKTSxqtSjMvcmt"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "PUT",
@@ -752,7 +752,7 @@
             "edgebucket=DBSfIKTSxqtSjMvcmt"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "DELETE",

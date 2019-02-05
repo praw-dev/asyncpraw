@@ -1,5 +1,5 @@
-"""Test praw.models.comment_forest."""
-from praw.models import Comment, MoreComments, Submission
+"""Test asyncpraw.models.comment_forest."""
+from asyncpraw.models import Comment, MoreComments, Submission
 
 from .. import IntegrationTest
 

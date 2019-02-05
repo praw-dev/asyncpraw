@@ -1,5 +1,5 @@
-"""Test praw.models.user."""
-from praw.models import Multireddit, Redditor, Subreddit
+"""Test asyncpraw.models.user."""
+from asyncpraw.models import Multireddit, Redditor, Subreddit
 import mock
 
 from .. import IntegrationTest

@@ -44,7 +44,7 @@ class Subreddit(RedditBase, MessageableMixin, SubredditListingMixin):
 
     Subreddits can be filtered from combined listings as follows. Note that
     these filters are ignored by certain methods, including
-    :attr:`~praw.models.Subreddit.comments`, :meth:`~praw.models.Subreddit.gilded`, and
+    :attr:`~asyncpraw.models.Subreddit.comments`, :meth:`~asyncpraw.models.Subreddit.gilded`, and
     :meth:`.SubredditStream.comments`.
 
     .. code:: python
@@ -392,11 +392,11 @@ class Subreddit(RedditBase, MessageableMixin, SubredditListingMixin):
         For more informat(ion on building a search query see:
             https://www.reddit.com/wiki/search
 
-        For example to search all subreddits for ``praw`` try:
+        For example to search all subreddits for ``asyncpraw`` try:
 
         .. code:: python
 
-           for submission in reddit.subreddit('all').search('praw'):
+           for submission in reddit.subreddit('all').search('asyncpraw'):
                print(submission.title)
 
         """
@@ -446,8 +446,8 @@ class Subreddit(RedditBase, MessageableMixin, SubredditListingMixin):
 
         .. code:: python
 
-           title = 'PRAW documentation'
-           url = 'https://praw.readthedocs.io'
+           title = 'asyncpraw documentation'
+           url = 'https://asyncpraw.readthedocs.io'
            reddit.subreddit('reddit_api_test').submit(title, url=url)
 
         """
@@ -663,7 +663,7 @@ class SubredditFlair(object):
             :class:`~.Redditor` instance.
 
         .. note:: To delete the flair of many Redditors at once, please see
-                  :meth:`~praw.models.reddit.subreddit.SubredditFlair.update`.
+                  :meth:`~asyncpraw.models.reddit.subreddit.SubredditFlair.update`.
 
         """
         url = API_PATH['deleteflair'].format(subreddit=self.subreddit)
@@ -695,7 +695,7 @@ class SubredditFlair(object):
 
         .. code:: python
 
-           reddit.subreddit('redditdev').flair.set('bboe', 'PRAW author')
+           reddit.subreddit('redditdev').flair.set('bboe', 'asyncpraw author')
 
         """
         data = {'css_class': css_class, 'name': str(redditor), 'text': text}
@@ -720,12 +720,12 @@ class SubredditFlair(object):
         :returns: List of dictionaries indicating the success or failure of
             each update.
 
-        For example to clear the flair text, and set the ``praw`` flair css
+        For example to clear the flair text, and set the ``asyncpraw`` flair css
         class on a few users try:
 
         .. code:: python
 
-           subreddit.flair.update(['bboe', 'spez', 'spladug'], css_class='praw')
+           subreddit.flair.update(['bboe', 'spez', 'spladug'], css_class='asyncpraw')
 
         """
         lines = []
@@ -843,7 +843,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-           reddit.subreddit('NAME').flair.templates.addcss_class='praw', text_editable=True)
+           reddit.subreddit('NAME').flair.templates.addcss_class='asyncpraw', text_editable=True)
 
         """
         self._add(text, css_class=css_class, text_editable=text_editable, is_link=False)
@@ -892,7 +892,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-           reddit.subreddit('NAME').flair.link_templates.addcss_class='praw', text_editable=True)
+           reddit.subreddit('NAME').flair.link_templates.addcss_class='asyncpraw', text_editable=True)
 
         """
         self._add(text, css_class=css_class, text_editable=text_editable, is_link=True)
@@ -1779,7 +1779,7 @@ class SubredditStylesheet(object):
             if response['errors']:
                 error_type = response['errors'][0]
                 error_value = response.get('errors_values', [''])[0]
-                assert error_type in ['BAD_CSS_NAME', 'IMAGE_ERROR'], 'Please file a bug with PRAW'
+                assert error_type in ['BAD_CSS_NAME', 'IMAGE_ERROR'], 'Please file a bug with asyncpraw'
                 raise APIException(error_type, error_value, None)
             return response
 
@@ -2008,7 +2008,7 @@ class SubredditWiki(object):
 
         .. code:: python
 
-           reddit.subreddit('test').wiki.create'praw_test', 'wiki body text', reason='PRAW Test Creation')
+           reddit.subreddit('test').wiki.create'praw_test', 'wiki body text', reason='asyncpraw Test Creation')
 
         """
         name = name.replace(' ', '_').lower()

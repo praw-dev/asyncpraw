@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.1.1.dev0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.1.1.dev0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -131,7 +131,7 @@
             "edgebucket=BiIM1LK6SKI5lEcdWS"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.1.1.dev0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.1.1.dev0 prawcore/1.0.0"
           ]
         },
         "method": "POST",

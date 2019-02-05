@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.2.0dev0 prawcore/0.6.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.2.0dev0 prawcore/0.6.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -66,7 +66,7 @@
           "Content-Length": "49",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loidcreated=1483592387000; loid=1Ic8kwNHFZjj7uvN52",
-          "User-Agent": "<USER_AGENT> PRAW/4.2.0dev0 prawcore/0.6.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.2.0dev0 prawcore/0.6.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/friend/?raw_json=1"
@@ -120,7 +120,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=1483592387000; loid=1Ic8kwNHFZjj7uvN52",
-          "User-Agent": "<USER_AGENT> PRAW/4.2.0dev0 prawcore/0.6.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.2.0dev0 prawcore/0.6.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/wikibanned/?limit=100&raw_json=1"
@@ -177,7 +177,7 @@
           "Content-Length": "49",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loidcreated=1483592387000; loid=1Ic8kwNHFZjj7uvN52",
-          "User-Agent": "<USER_AGENT> PRAW/4.2.0dev0 prawcore/0.6.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.2.0dev0 prawcore/0.6.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/unfriend/?raw_json=1"
@@ -231,7 +231,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=1483592387000; loid=1Ic8kwNHFZjj7uvN52",
-          "User-Agent": "<USER_AGENT> PRAW/4.2.0dev0 prawcore/0.6.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.2.0dev0 prawcore/0.6.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/wikibanned/?limit=100&raw_json=1"

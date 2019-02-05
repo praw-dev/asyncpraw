@@ -1,5 +1,5 @@
 # coding: utf-8
-from praw.exceptions import APIException, ClientException, PRAWException
+from asyncpraw.exceptions import APIException, ClientException, PRAWException
 
 
 class TestPRAWException(object):

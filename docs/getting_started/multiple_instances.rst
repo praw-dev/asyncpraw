@@ -1,11 +1,11 @@
-Running Multiple Instances of PRAW
+Running Multiple Instances of asyncpraw
 ==================================
 
-PRAW, as of version 4, performs rate limiting dynamically based on the HTTP
-response headers from Reddit. As a result you can safely run a handful of PRAW
+asyncpraw, as of version 4, performs rate limiting dynamically based on the HTTP
+response headers from Reddit. As a result you can safely run a handful of asyncpraw
 instances without any additional configuration.
 
-.. note:: Running more than a dozen or so instances of PRAW concurrently from
+.. note:: Running more than a dozen or so instances of asyncpraw concurrently from
           may occasionally result in exceeding Reddit's rate limits as each
           instance can only guess how many other instances are running.
 
@@ -15,7 +15,7 @@ own rate limit, even when running from a single IP address.
 Multiple Programs
 -----------------
 
-The recommended way to run multiple instances of PRAW is to simply write
+The recommended way to run multiple instances of asyncpraw is to simply write
 separate independent python programs. With this approach one program can
 monitor a comment stream and reply as needed, and another program can monitor a
 submission stream, for example.
@@ -26,7 +26,7 @@ as a database, or queuing system.
 Multiple Threads
 ----------------
 
-.. warning:: PRAW is not thread safe.
+.. warning:: asyncpraw is not thread safe.
 
 In a nutshell, instances of :class:`.Reddit` are not thread safe for a number
 of reasons in its own code and each instance depends on an instance of
@@ -34,8 +34,8 @@ of reasons in its own code and each instance depends on an instance of
 <https://github.com/kennethreitz/requests/issues/2766>`_].
 
 In theory having a unique :class:`.Reddit` instance for each thread should
-work. However, until someone perpetually volunteers to be PRAW's thread safety
-instructor, little to no support will go toward any PRAW issues that could be
+work. However, until someone perpetually volunteers to be asyncpraw's thread safety
+instructor, little to no support will go toward any asyncpraw issues that could be
 affected by the use of multiple threads. Consider using multiple processes
 instead.
 

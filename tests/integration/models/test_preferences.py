@@ -1,6 +1,6 @@
 import mock
 
-from praw.models import Preferences
+from asyncpraw.models import Preferences
 from .. import IntegrationTest
 
 

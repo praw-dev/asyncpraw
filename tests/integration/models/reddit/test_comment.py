@@ -1,5 +1,5 @@
-from praw.exceptions import ClientException, PRAWException
-from praw.models import Comment, Submission
+from asyncpraw.exceptions import ClientException, PRAWException
+from asyncpraw.models import Comment, Submission
 from prawcore import BadRequest
 import mock
 import pytest

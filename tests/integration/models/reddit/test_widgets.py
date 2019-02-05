@@ -3,7 +3,7 @@ import pytest
 from os.path import abspath, dirname, join
 import sys
 
-from praw.models import (Button, ButtonWidget, Calendar, CommunityList,
+from asyncpraw.models import (Button, ButtonWidget, Calendar, CommunityList,
                          CustomWidget, Menu, MenuLink, IDCard, Image,
                          ImageData, ImageWidget, ModeratorsWidget,
                          PostFlairWidget, Redditor, RulesWidget, Submenu,
@@ -58,7 +58,7 @@ class TestButtonWidget(IntegrationTest):
                 {
                     'kind': 'text',
                     'text': 'View source',
-                    'url': 'https://github.com/praw-dev/praw',
+                    'url': 'https://github.com/asyncpraw-dev/asyncpraw',
                     'color': '#FF0000',
                     'textColor': '#00FF00',
                     'fillColor': '#0000FF',
@@ -73,7 +73,7 @@ class TestButtonWidget(IntegrationTest):
                 {
                     'kind': 'image',
                     'text': 'View documentation',
-                    'linkUrl': 'https://praw.readthedocs.io',
+                    'linkUrl': 'https://asyncpraw.readthedocs.io',
                     'url': my_image,
                     'height': 200,
                     'width': 200,
@@ -105,12 +105,12 @@ class TestButtonWidget(IntegrationTest):
             assert widget.styles == styles
 
             assert widget[0].text == 'View source'
-            assert widget[0].url == 'https://github.com/praw-dev/praw'
+            assert widget[0].url == 'https://github.com/asyncpraw-dev/asyncpraw'
             assert widget[2].text == '/r/redditdev'
             assert widget[2].url == 'https://reddit.com/r/redditdev'
 
             assert widget[1].text == 'View documentation'
-            assert widget[1].linkUrl == 'https://praw.readthedocs.io'
+            assert widget[1].linkUrl == 'https://asyncpraw.readthedocs.io'
             assert widget[1].hoverState['kind'] == 'image'
             assert widget[1].hoverState['height'] == 200
 
@@ -130,12 +130,12 @@ class TestButtonWidget(IntegrationTest):
             assert widget.styles == styles
 
             assert widget[0].text == 'View source'
-            assert widget[0].url == 'https://github.com/praw-dev/praw'
+            assert widget[0].url == 'https://github.com/asyncpraw-dev/asyncpraw'
             assert widget[2].text == '/r/redditdev'
             assert widget[2].url == 'https://reddit.com/r/redditdev'
 
             assert widget[1].text == 'View documentation'
-            assert widget[1].linkUrl == 'https://praw.readthedocs.io'
+            assert widget[1].linkUrl == 'https://asyncpraw.readthedocs.io'
             assert widget[1].hoverState['kind'] == 'image'
             assert widget[1].hoverState['height'] == 200
 
@@ -152,10 +152,10 @@ class TestButtonWidget(IntegrationTest):
             assert widget[0].text == '/r/redditdev'
             assert widget[0].url == 'https://reddit.com/r/redditdev'
             assert widget[2].text == 'View source'
-            assert widget[2].url == 'https://github.com/praw-dev/praw'
+            assert widget[2].url == 'https://github.com/asyncpraw-dev/asyncpraw'
 
             assert widget[1].text == 'View documentation'
-            assert widget[1].linkUrl == 'https://praw.readthedocs.io'
+            assert widget[1].linkUrl == 'https://asyncpraw.readthedocs.io'
             assert widget[1].hoverState['kind'] == 'image'
             assert widget[1].hoverState['height'] == 200
 
@@ -476,7 +476,7 @@ class TestMenu(IntegrationTest):
             {'text': 'My homepage', 'url': 'https://example.com'},
             {'text': 'Python packages',
              'children': [
-                 {'text': 'PRAW', 'url': 'https://praw.readthedocs.io/'},
+                 {'text': 'asyncpraw', 'url': 'https://asyncpraw.readthedocs.io/'},
                  {'text': 'requests', 'url': 'http://python-requests.org'}
              ]},
             {'text': 'Reddit homepage', 'url': 'https://reddit.com'}
@@ -499,8 +499,8 @@ class TestMenu(IntegrationTest):
             assert widget[2].url == 'https://reddit.com'
 
             assert widget[1].text == 'Python packages'
-            assert widget[1][0].text == 'PRAW'
-            assert widget[1][0].url == 'https://praw.readthedocs.io/'
+            assert widget[1][0].text == 'asyncpraw'
+            assert widget[1][0].url == 'https://asyncpraw.readthedocs.io/'
             assert widget[1][1].text == 'requests'
             assert widget[1][1].url == 'http://python-requests.org'
 
@@ -520,8 +520,8 @@ class TestMenu(IntegrationTest):
             assert widget[2].url == 'https://example.com'
 
             assert widget[1].text == 'Python packages'
-            assert widget[1][0].text == 'PRAW'
-            assert widget[1][0].url == 'https://praw.readthedocs.io/'
+            assert widget[1][0].text == 'asyncpraw'
+            assert widget[1][0].url == 'https://asyncpraw.readthedocs.io/'
             assert widget[1][1].text == 'requests'
             assert widget[1][1].url == 'http://python-requests.org'
 

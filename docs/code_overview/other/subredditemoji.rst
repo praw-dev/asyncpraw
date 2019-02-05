@@ -1,5 +1,5 @@
 SubredditEmoji
 ==============
 
-.. autoclass:: praw.models.reddit.emoji.SubredditEmoji
+.. autoclass:: asyncpraw.models.reddit.emoji.SubredditEmoji
    :inherited-members:

@@ -1,5 +1,5 @@
-"""Test praw.objector."""
-from praw.exceptions import APIException
+"""Test asyncpraw.objector."""
+from asyncpraw.exceptions import APIException
 import pytest
 
 from . import IntegrationTest

@@ -31,8 +31,8 @@ def main():
     """Entry point to pre_push.py."""
     success = True
     success &= do_process('flake8', '--exclude=.eggs,docs,.tox')
-    success &= do_process('pydocstyle', 'praw')
-    success &= do_process('pylint', '--rcfile=.pylintrc', 'praw')
+    success &= do_process('pydocstyle', 'asyncpraw')
+    success &= do_process('pylint', '--rcfile=.pylintrc', 'asyncpraw')
 
     tmp_dir = mkdtemp()
     try:

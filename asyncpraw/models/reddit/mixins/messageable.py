@@ -21,7 +21,7 @@ class MessageableMixin(object):
 
         .. code:: python
 
-           reddit.redditor('spez').message('TEST', 'test message from PRAW')
+           reddit.redditor('spez').message('TEST', 'test message from asyncpraw')
 
         To send a message to ``u/spez`` from the moderators of ``r/test`` try:
 
@@ -33,7 +33,7 @@ class MessageableMixin(object):
 
         .. code:: python
 
-           reddit.subreddit('test').message('TEST', 'test PM from PRAW')
+           reddit.subreddit('test').message('TEST', 'test PM from asyncpraw')
 
         """
         data = {'subject': subject, 'text': message, 'to': '{}{}'.format(getattr(self.__class__, 'MESSAGE_PREFIX', ''), self)}

@@ -2,10 +2,10 @@ import types
 
 import mock
 import pytest
-from praw import __version__, Reddit
-from praw.config import Config
-from praw.const import configparser
-from praw.exceptions import ClientException
+from asyncpraw import __version__, Reddit
+from asyncpraw.config import Config
+from asyncpraw.const import configparser
+from asyncpraw.exceptions import ClientException
 from prawcore import Requestor
 
 from . import UnitTest
@@ -15,17 +15,17 @@ class TestReddit(UnitTest):
     REQUIRED_DUMMY_SETTINGS = {x: 'dummy' for x in
                                ['client_id', 'client_secret', 'user_agent']}
 
-    @mock.patch('praw.reddit.update_check', create=True)
-    @mock.patch('praw.reddit.UPDATE_CHECKER_MISSING', False)
-    @mock.patch('praw.reddit.Reddit.update_checked', False)
+    @mock.patch('asyncpraw.reddit.update_check', create=True)
+    @mock.patch('asyncpraw.reddit.UPDATE_CHECKER_MISSING', False)
+    @mock.patch('asyncpraw.reddit.Reddit.update_checked', False)
     def test_check_for_updates(self, mock_update_check):
         Reddit(check_for_updates='1', **self.REQUIRED_DUMMY_SETTINGS)
         assert Reddit.update_checked
-        mock_update_check.assert_called_with('praw', __version__)
+        mock_update_check.assert_called_with('asyncpraw', __version__)
 
-    @mock.patch('praw.reddit.update_check', create=True)
-    @mock.patch('praw.reddit.UPDATE_CHECKER_MISSING', True)
-    @mock.patch('praw.reddit.Reddit.update_checked', False)
+    @mock.patch('asyncpraw.reddit.update_check', create=True)
+    @mock.patch('asyncpraw.reddit.UPDATE_CHECKER_MISSING', True)
+    @mock.patch('asyncpraw.reddit.Reddit.update_checked', False)
     def test_check_for_updates_update_checker_missing(self, mock_update_check):
         Reddit(check_for_updates='1', **self.REQUIRED_DUMMY_SETTINGS)
         assert not Reddit.update_checked
@@ -146,7 +146,7 @@ class TestReddit(UnitTest):
     def test_reddit__site_name_no_section(self):
         with pytest.raises(configparser.NoSectionError) as excinfo:
             Reddit('bad_site_name')
-        assert 'praw.readthedocs.io' in excinfo.value.message
+        assert 'asyncpraw.readthedocs.io' in excinfo.value.message
 
     def test_submission(self):
         assert self.reddit.submission('2gmzqe').id == '2gmzqe'

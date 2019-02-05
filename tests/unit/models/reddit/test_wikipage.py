@@ -1,6 +1,6 @@
 import pickle
 
-from praw.models import Subreddit, WikiPage
+from asyncpraw.models import Subreddit, WikiPage
 
 from ... import UnitTest
 

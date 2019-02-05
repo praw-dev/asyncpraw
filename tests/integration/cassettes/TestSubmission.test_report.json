@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.7"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -51,7 +51,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "id=t3_4b536h&api_type=json&reason=praw"
+          "string": "id=t3_4b536h&api_type=json&reason=asyncpraw"
         },
         "headers": {
           "Accept": "*/*",
@@ -61,7 +61,7 @@
           "Content-Length": "38",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loidcreated=2016-03-20T05%3A56%3A06.978Z; loid=p5ij7sc4dVRDmp5BP2; __cfduid=d4d06eb53bc6600da1ed645f6503313eb1458453366",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.7"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/report/?raw_json=1"

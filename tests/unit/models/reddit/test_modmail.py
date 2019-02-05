@@ -1,5 +1,5 @@
 import pytest
-from praw.models import ModmailConversation
+from asyncpraw.models import ModmailConversation
 
 from ... import UnitTest
 

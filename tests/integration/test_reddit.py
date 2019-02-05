@@ -1,7 +1,7 @@
-"""Test praw.reddit."""
-from praw.models import LiveThread
-from praw.models.reddit.base import RedditBase
-from praw.models.reddit.submission import Submission
+"""Test asyncpraw.reddit."""
+from asyncpraw.models import LiveThread
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.submission import Submission
 import mock
 
 from . import IntegrationTest
@@ -40,9 +40,9 @@ class TestReddit(IntegrationTest):
     def test_live_create(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestReddit.test_live_create'):
-            live = self.reddit.live.create('PRAW Create Test')
+            live = self.reddit.live.create('asyncpraw Create Test')
             assert isinstance(live, LiveThread)
-            assert live.title == 'PRAW Create Test'
+            assert live.title == 'asyncpraw Create Test'
 
     def test_live_info__contain_invalid_id(self):
         ids = ['3rgnbke2rai6hen7ciytwcxadi',

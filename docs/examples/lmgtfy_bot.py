@@ -1,13 +1,13 @@
 from urllib.parse import quote_plus
 
-import praw
+import asyncpraw
 
 QUESTIONS = ['what is', 'who is', 'what are']
 REPLY_TEMPLATE = '[Let me google that for you](http://lmgtfy.com/?q={})'
 
 
 def main():
-    reddit = praw.Reddit(user_agent='LMGTFY (by /u/USERNAME)',
+    reddit = asyncpraw.Reddit(user_agent='LMGTFY (by /u/USERNAME)',
                          client_id='CLIENT_ID', client_secret='CLIENT_SECRET',
                          username='USERNAME', password='PASSWORD')
 

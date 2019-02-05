@@ -3,8 +3,8 @@ import sys
 
 import mock
 import pytest
-from praw.config import Config
-from praw.exceptions import ClientException
+from asyncpraw.config import Config
+from asyncpraw.exceptions import ClientException
 
 
 class TestConfig(object):
@@ -19,11 +19,11 @@ class TestConfig(object):
                 del os.environ[env_name]
         os.environ[environment] = '/MOCK'
 
-        module_dir = os.path.dirname(sys.modules['praw'].__file__)
+        module_dir = os.path.dirname(sys.modules['asyncpraw'].__file__)
         environ_path = os.path.join(
-            '/MOCK', '.config' if environment == 'HOME' else '', 'praw.ini')
-        locations = [os.path.join(module_dir, 'praw.ini'), environ_path,
-                     'praw.ini']
+            '/MOCK', '.config' if environment == 'HOME' else '', 'asyncpraw.ini')
+        locations = [os.path.join(module_dir, 'asyncpraw.ini'), environ_path,
+                     'asyncpraw.ini']
 
         try:
             Config._load_config()
@@ -77,8 +77,8 @@ class TestConfig(object):
                 prev_environment[key] = os.environ[key]
                 del os.environ[key]
 
-        module_dir = os.path.dirname(sys.modules['praw'].__file__)
-        locations = [os.path.join(module_dir, 'praw.ini'), 'praw.ini']
+        module_dir = os.path.dirname(sys.modules['asyncpraw'].__file__)
+        locations = [os.path.join(module_dir, 'asyncpraw.ini'), 'asyncpraw.ini']
 
         try:
             Config._load_config()

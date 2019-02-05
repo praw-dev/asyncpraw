@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer gzXIcUPwS1rbFBzEN_zraejSCmY",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=dc622bb493d975978acc9b022558017d41468766427; loidcreated=2016-07-17T14%3A40%3A27.308Z; loid=cWKYBltImZIM99t9Ch",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/multi/mine/?raw_json=1"
@@ -102,7 +102,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&display_name=PRAW+Renamed&from=%2Fuser%2F<USERNAME>%2Fm%2Fpraw_z2ggpt0vkr"
+          "string": "api_type=json&display_name=asyncpraw+Renamed&from=%2Fuser%2F<USERNAME>%2Fm%2Fpraw_z2ggpt0vkr"
         },
         "headers": {
           "Accept": "*/*",
@@ -112,7 +112,7 @@
           "Content-Length": "91",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "__cfduid=dc622bb493d975978acc9b022558017d41468766427; loidcreated=2016-07-17T14%3A40%3A27.308Z; loid=cWKYBltImZIM99t9Ch",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/multi/rename/?raw_json=1"
@@ -120,7 +120,7 @@
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "{\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"PRAW Renamed\", \"name\": \"praw_renamed\", \"description_html\": \"\", \"created\": 1432649032.0, \"copied_from\": \"/user/pyapitestuser2/m/praw_z2ggpt0vkr\", \"icon_url\": null, \"subreddits\": [], \"created_utc\": 1432620232.0, \"key_color\": \"#cee3f8\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_renamed\", \"description_md\": \"\"}}"
+          "string": "{\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"asyncpraw Renamed\", \"name\": \"praw_renamed\", \"description_html\": \"\", \"created\": 1432649032.0, \"copied_from\": \"/user/pyapitestuser2/m/praw_z2ggpt0vkr\", \"icon_url\": null, \"subreddits\": [], \"created_utc\": 1432620232.0, \"key_color\": \"#cee3f8\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_renamed\", \"description_md\": \"\"}}"
         },
         "headers": {
           "CF-RAY": "2c3e72fe6e4b0d5b-LAX",

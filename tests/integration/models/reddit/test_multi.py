@@ -1,4 +1,4 @@
-from praw.models import (Comment, Submission, Subreddit)
+from asyncpraw.models import (Comment, Submission, Subreddit)
 import mock
 import pytest
 
@@ -41,8 +41,8 @@ class TestMultireddit(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestMultireddit.test_create'):
             multireddit = self.reddit.multireddit.create(
-                'PRAW create test', subreddits=['redditdev'])
-        assert multireddit.display_name == 'PRAW create test'
+                'asyncpraw create test', subreddits=['redditdev'])
+        assert multireddit.display_name == 'asyncpraw create test'
         assert multireddit.name == 'praw_create_test'
 
     @mock.patch('time.sleep', return_value=None)
@@ -65,8 +65,8 @@ class TestMultireddit(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestMultireddit.test_rename'):
             multi = self.reddit.user.multireddits()[0]
-            multi.rename('PRAW Renamed')
-            assert multi.display_name == 'PRAW Renamed'
+            multi.rename('asyncpraw Renamed')
+            assert multi.display_name == 'asyncpraw Renamed'
             assert multi.name == 'praw_renamed'
 
     def test_subreddits(self):

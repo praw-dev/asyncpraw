@@ -1,4 +1,4 @@
-"""Test praw.models.front."""
+"""Test asyncpraw.models.front."""
 import pytest
 
 from .. import UnitTest

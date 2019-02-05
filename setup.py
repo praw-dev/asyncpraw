@@ -1,4 +1,4 @@
-"""praw setup.py"""
+"""asyncpraw setup.py"""
 
 import re
 from codecs import open
@@ -6,7 +6,7 @@ from os import path
 from setuptools import find_packages, setup
 
 
-PACKAGE_NAME = 'praw'
+PACKAGE_NAME = 'asyncpraw'
 HERE = path.abspath(path.dirname(__file__))
 with open(path.join(HERE, 'README.rst'), encoding='utf-8') as fp:
     README = fp.read()
@@ -33,7 +33,7 @@ setup(name=PACKAGE_NAME,
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: Implementation :: CPython',
           'Topic :: Utilities'],
-      description=('PRAW, an acronym for `Python Reddit API Wrapper`, is a '
+      description=('asyncpraw, an acronym for `Python Reddit API Wrapper`, is a '
                    'python package that allows for simple access to '
                    'reddit\'s API.'),
       install_requires=['prawcore >=1.0.0, <2.0',
@@ -52,5 +52,5 @@ setup(name=PACKAGE_NAME,
                      'pytest >=2.7.3',
                      'six >=1.10'],
       test_suite='tests',
-      url='https://praw.readthedocs.org/',
+      url='https://asyncpraw.readthedocs.org/',
       version=VERSION)

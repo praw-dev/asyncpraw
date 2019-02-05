@@ -1,5 +1,5 @@
 MenuLink
 ========
 
-.. autoclass:: praw.models.MenuLink
+.. autoclass:: asyncpraw.models.MenuLink
    :inherited-members:

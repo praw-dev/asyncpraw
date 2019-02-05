@@ -1,6 +1,6 @@
 .. _environment_variables:
 
-PRAW Environment Variables
+asyncpraw Environment Variables
 ==========================
 
 The highest priority configuration options can be passed to a program via
@@ -14,7 +14,7 @@ For example, you can invoke your script as follows:
 
 The ``username`` and ``password`` provided via environment variables will
 override any such values passed directly when initializing an instance of
-:class:`.Reddit`, as well as any such values contained in a ``praw.ini`` file.
+:class:`.Reddit`, as well as any such values contained in a ``asyncpraw.ini`` file.
 
 All :ref:`configuration_options` can be provided in this manner, except for
 custom options.

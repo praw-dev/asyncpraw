@@ -1,5 +1,5 @@
-"""Test praw.models.inbox."""
-from praw.models import Comment, Message, Redditor, Subreddit
+"""Test asyncpraw.models.inbox."""
+from asyncpraw.models import Comment, Message, Redditor, Subreddit
 from prawcore import Forbidden
 import mock
 import pytest

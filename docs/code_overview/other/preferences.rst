@@ -1,5 +1,5 @@
 Preferences
 ===========
 
-.. autoclass:: praw.models.Preferences
+.. autoclass:: asyncpraw.models.Preferences
    :inherited-members:

@@ -1,10 +1,10 @@
 .. _praw.ini:
 
-praw.ini Files
+asyncpraw.ini Files
 ==============
 
-PRAW comes with a ``praw.ini`` file in the package directory, and looks for
-user defined ``praw.ini`` files in a few other locations:
+asyncpraw comes with a ``asyncpraw.ini`` file in the package directory, and looks for
+user defined ``asyncpraw.ini`` files in a few other locations:
 
 1. In the `current working directory
    <https://docs.python.org/3.6/library/os.html#os.getcwd>`_ at the time
@@ -24,29 +24,29 @@ user defined ``praw.ini`` files in a few other locations:
       (Windows).
 
 
-Format of praw.ini
+Format of asyncpraw.ini
 ------------------
 
-``praw.ini`` uses the `INI file format
+``asyncpraw.ini`` uses the `INI file format
 <https://en.wikipedia.org/wiki/INI_file>`_, which can contain multiple groups
-of settings separated into sections. PRAW refers to each section as a
+of settings separated into sections. asyncpraw refers to each section as a
 ``site``. The default site, ``DEFAULT``, is provided in the package's
-``praw.ini`` file. This site defines the default settings for interaction with
-Reddit. The contents of the package's ``praw.ini`` file are:
+``asyncpraw.ini`` file. This site defines the default settings for interaction with
+Reddit. The contents of the package's ``asyncpraw.ini`` file are:
 
-.. literalinclude:: ../../../praw/praw.ini
+.. literalinclude:: ../../../asyncpraw/asyncpraw.ini
    :language: ini
 
-.. warning:: Avoid modifying the package's ``praw.ini`` file. Prefer instead to
-             override its values in your own ``praw.ini`` file. You can even
+.. warning:: Avoid modifying the package's ``asyncpraw.ini`` file. Prefer instead to
+             override its values in your own ``asyncpraw.ini`` file. You can even
              override settings of the ``DEFAULT`` site in user defined
-             ``praw.ini`` files.
+             ``asyncpraw.ini`` files.
 
 Defining Additional Sites
 -------------------------
 
 In addition to the ``DEFAULT`` site, additional sites can be configured in user
-defined ``praw.ini`` files. All sites inherit settings from the ``DEFAULT``
+defined ``asyncpraw.ini`` files. All sites inherit settings from the ``DEFAULT``
 site and can override whichever settings desired.
 
 Defining additional sites is a convenient way to store :ref:`OAuth credentials
@@ -83,7 +83,7 @@ example, to use the settings defined for ``bot2`` as shown above, initialize
 
 .. code-block:: python
 
-   reddit = praw.Reddit('bot2', user_agent='bot2 user agent')
+   reddit = asyncpraw.Reddit('bot2', user_agent='bot2 user agent')
 
 .. note:: In the above example you can obviate passing ``user_agent`` if you
           add the setting ``user_agent=...`` in the ``[bot2]`` site definition.

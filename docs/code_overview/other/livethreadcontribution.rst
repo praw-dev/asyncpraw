@@ -1,5 +1,5 @@
 LiveThreadContribution
 ======================
 
-.. autoclass:: praw.models.reddit.live.LiveThreadContribution
+.. autoclass:: asyncpraw.models.reddit.live.LiveThreadContribution
    :inherited-members:

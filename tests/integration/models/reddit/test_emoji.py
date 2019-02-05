@@ -1,5 +1,5 @@
-from praw.exceptions import ClientException
-from praw.models import Emoji
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models import Emoji
 import mock
 import pytest
 

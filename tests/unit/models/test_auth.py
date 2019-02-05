@@ -1,6 +1,6 @@
-"""Test praw.models.auth."""
-from praw import Reddit
-from praw.exceptions import ClientException
+"""Test asyncpraw.models.auth."""
+from asyncpraw import Reddit
+from asyncpraw.exceptions import ClientException
 import pytest
 
 from .. import UnitTest

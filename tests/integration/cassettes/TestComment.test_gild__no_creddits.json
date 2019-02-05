@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b8 prawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 prawcore/0.0.10"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -60,7 +60,7 @@
           "Connection": "keep-alive",
           "Content-Length": "0",
           "Cookie": "__cfduid=d889174f816d18337b006714d53ad5c011468686048; loid=QuybeEnivRBELAQ7EN; loidcreated=2016-07-16T16%3A20%3A48.407Z",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b8 prawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 prawcore/0.0.10"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/v1/gold/gild/t1_d1616q2/?raw_json=1"

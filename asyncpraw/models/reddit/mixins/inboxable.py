@@ -65,7 +65,7 @@ class InboxableMixin(object):
         See also :meth:`~.mark_unread`
 
         To mark the whole inbox as read with a single network request,
-        use :meth:`praw.models.Inbox.mark_read`
+        use :meth:`asyncpraw.models.Inbox.mark_read`
 
         """
         self._reddit.inbox.mark_read([self])

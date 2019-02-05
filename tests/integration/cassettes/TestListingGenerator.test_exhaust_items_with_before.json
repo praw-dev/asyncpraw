@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "session_tracker=bCYlCEdBA6Shaca39y.0.1516803805669.Z0FBQUFBQmFhSmJkemxHUHpuVWc1M0JNSEtsS0tNUUFidkphV0dzcXlRMTBCSERSWkpLWXpTX21iOWRMcy15SWlzdGZjZzNGMnJBdER1NVBXcUEzajgzSVRlMU1YTmRDbTlUQkZ4RUNOdnRIWWdNS3U5Ung2TzhmSFlER3RrQlp1WGNKb3NVZUNqaGY; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -118,7 +118,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803806060.Z0FBQUFBQmFhSmJlQmpJX1ItZ1ZlYVVldXQ2ODN3bGFxdWE2ZVRDNExncUpZeDJkUndLM21DX2RqV0NZUmtJcGNJQzZRaFJPSjdqNUY3R1UzM3RoMDYtMEhGdXJLcHBucXNMdmN6VFdWd0lkM2Y5Wm5fZVlKa1lnS2VnU1N3TE12Y2R0Q1ljSUpqZFM; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_d3uu6eg&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -172,7 +172,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803807007.Z0FBQUFBQmFhSmJmUjBfVkpkSVBXZGxKMTFhZUM5eEFfdjFnVjlDWTdtb3NwZ2huNlFGV1d2eERudHpCNmZqbFEyeVU1enBLcjcxVE1LVmdBNVFuSkVGbHFmeml0WXdFSHZtUjU4QmNBOFR2VU1POUp4RmxmSlZVTEdHdUxLOGZEc0Z3X21PM21LS0I; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_ctk9gdy&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -226,7 +226,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803808121.Z0FBQUFBQmFhSmJnTHhZcG5WZGxkQWkzM09wSjhkWFNybU80LWRvX3RuUDJxSFc3b2I4bE5YUmxsUWdBWWVHS2pCOUJ6VnM3SDZSc3JPQVZOdDBRZ3FpRVY0NTFYd0pLVDFQZEVfX3V4RVBYTURORXdfV2hVNnhGX0JDQ25DSWhHa3EtU3JtTVJZaVQ; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_cx7h7hx&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -280,7 +280,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803809141.Z0FBQUFBQmFhSmJoNXJpdUVkb2pqWnpFOU1pN0QzVElkTkl1R3pjem5oVkhWbzRVZmhBbHZpTEJqenhscGRHM2w1T2o1cU5sSDIyTVp4ZXNEeDFmN1BrM19kZXFaZEZ5NElEckgybG5ud1BPVUx1VGdtTDE1bGh1WkxpN1pYQjVic2U0d05JeWVDLVM; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_cw34c6k&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -334,7 +334,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803810211.Z0FBQUFBQmFhSmJqQXo5RkRseEFsU0FLUzYxeGludWxFQTFibjhuTThYWHdUd3ZfdFllWmluQ3JLXzZtanRoaXdGOExObW9ya2NQdnVJZlNTTWlVdl82RmV2b0tLLUtCWjAyc3FLdi0yeTkwUXZDRUxmeHU4Wjhvakd2VWgyYXp5SDdQS0tNVGpJT2Q; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t3_agw8&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -388,7 +388,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803811530.Z0FBQUFBQmFhSmJrd0xpcE1ya0dXbEtvMk9yenhTeHNNb2xqREJvd1ZTSjhkSm41WktwMXRGbEVrTVNwR1hVS0RJdVo0T3Jvd1dqWVhQMGhxLVN6aVRMQlZydW9QRDU3dnYyVk91WXotOE9ZMV9WWDcwaTdDTUpxQVpZNzhTRnRIRm5UcmpQXzRKTUM; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_dao85ns&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -442,7 +442,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803813205.Z0FBQUFBQmFhSmJsWkVUS2E3cXBnX1VxbWNQaEo3RVBfNDUxS0FhUzZRQWxXaWtiSE01dUdUYTIzZU1YWFh3MjhJcWs2UWU0bmRlRkNaeDd5d3VZNzhqc3lCZjlHbGdrdFA3VnlHYjByQlhXX3UxMDBsNUVGOVVfQ0NqcjlVYmt1RU5CT3dHeGdxSWI; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t3_4afv&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -496,7 +496,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803814350.Z0FBQUFBQmFhSmJuRFhpRFcwVXBPcHY3VTBfY216T2ZLVUhoOC1jZ2QzV2FXeWtPb19JTHJvVzB6S1dNYlhKRERxWjNLSlJnNDB2TUZTakVqR0x3dGxIQVdhcVp1ZjBaME1TOWhjaXVRYUJOMG1UbGxCTFN3Zl9nTnA2QW9rSC1MNDh4cFVxWHpKdW0; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_c03080u&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -550,7 +550,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803815553.Z0FBQUFBQmFhSmJvMkRBN3JpYTZuS1kyS1pBNFVEekJVMTFYelQ4N1ZSMDhFdVdOVnBJSnU0enNOVTZHS3NSdnhnak1lb3NPWE9NNlJWa0RobmZQejN4VXduNGJxMHR5dGhReGVDYWdMQlJFT3FOZTVaUzNaNGowNzdIZkd6RTFuNWhyUU1BdHE5RXk; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_c14wxb&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -604,7 +604,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803817291.Z0FBQUFBQmFhSmJxeFRUcTlsc3I1OFB2LUw4OXlhMlMxOERFV1BHalBBMUdJcGlOelJWTThsMlhzbkl6V3lnbUNwLXRBV0pPTGFReS15YTFTdVNjczVuWlNTMm1WS1J5el9sUW5aSHAzbFZTSGlEdENSdU5lWlFqRlRmWHRkdmdFTnMzMldWZThKYmc; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_dkz484f&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -658,7 +658,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803818906.Z0FBQUFBQmFhSmJyLTB1NzQxbnc1bFphcGwwYXMtR1Q4d1RaalFWSXNyM2pkNzdmYVh2blZQdFNQUHY3dEd6SGJDY19pdEs2N2hFQ2dzc2ZKY2dtVGxaa0Z0cGVhY3ZXdGgySlVrUlJuMVJoOXNabGFXN0FMUFp2bVVZelBleUVaNl9TaGsyZHk2VWQ; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t1_ct15f18&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -712,7 +712,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803819872.Z0FBQUFBQmFhSmJzNWY2bVhjbnFNaW92VmR2YmdELURWQ0R0MHZWbGpXcDRkVE5WakZkdlF4QjNUR0JPMVMxeF9ocmdCTFI5VElNNnBCN2pTeUg4bWZiOWhmVEs4Snh6b2RBbm44MV9EZWRILU5MN1hUZlg2SGNST0xoYWpHSmg5SnZzSVdrSU9JcFY; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t3_6585&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -766,7 +766,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803820690.Z0FBQUFBQmFhSmJzTy03ck05S3BYYVp5RVFjV2h1bU1fcFpZTjN5TzFkN004N0w3eERHT1pTSHdrWm0zNWUzNTM5WjBWUzYybEdtRGtpTG9zcjJOOUlweV9XQXB6S053VFh2azUtRllZQ0RRWHVncHBkSzFvZTVMRWxldXJpSmNyM0VqdWpNTnJQVHY; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t3_287&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -820,7 +820,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803821385.Z0FBQUFBQmFhSmJ0cGNYS0NfbTdVZ1hGT3VrQVpIZ083U2Q3SXdZNHhHbFE2TUxnNlJiSGJvY2hSUXh4bFM0SkkzOHFXU0xqOXFHNW9oSG9Pcl82bGlKZGJBSkp3d1V1WlJkdnJtQVo5WDU2STZwQ3pZTlRocFd4d3BUSk1zcnItUmlSRmx5dEUtdV8; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t3_6971&raw_json=1&limit=1024&t=all&before=3cxedn"
@@ -874,7 +874,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=00000000000tj1flae.2.1516803806084.Z0FBQUFBQmFhSmJlR3UwTkw4TjFYeS1lRUN3Y2VJblNPV3JNZEJNTEwtMDExXzN1S0ZSS3oxUmpvUDM1TkxaVG5tdFgxbTFmNTlLMXZLRGdqUmFLc3ZUeWpkX3FhOF8wamR2X1RoekZrX1lUdUcwS0pUWnlVbVdOSmdmbEhPaGRNUzNkT21HQlFLY0c; session_tracker=bCYlCEdBA6Shaca39y.0.1516803822087.Z0FBQUFBQmFhSmJ1aUJ6eEFIdEpKVVJqb0JhalMzMkZOakcwZjZ2MnctSnNXS3BzdUJtZHRYM2c1SnNoS2c5OVVKQkFhTjlONXJEZFpYRXlpZnRGUXFqRG9qSFRnbU13VFJKMTJ1WDFWcGFSbjJZRjUwMkcxUHVqVWtNOFgyenFrWi1pMmFITUItTGo; edgebucket=AFBnRR5Uy4IuiIvDj1",
-          "User-Agent": "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.13.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.13.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/spez/?sort=top&after=t3_5y9sx&raw_json=1&limit=1024&t=all&before=3cxedn"

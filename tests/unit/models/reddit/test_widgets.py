@@ -1,9 +1,9 @@
 from json import dumps
 
-from praw.models import (SubredditWidgets, SubredditWidgetsModeration,
+from asyncpraw.models import (SubredditWidgets, SubredditWidgetsModeration,
                          Widget, WidgetModeration)
-from praw.models.reddit.widgets import WidgetEncoder
-from praw.models.base import PRAWBase
+from asyncpraw.models.reddit.widgets import WidgetEncoder
+from asyncpraw.models.base import PRAWBase
 
 from ... import UnitTest
 

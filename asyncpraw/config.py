@@ -1,4 +1,4 @@
-"""Provides the code to load PRAW's configuration file `praw.ini`."""
+"""Provides the code to load asyncpraw's configuration file `asyncpraw.ini`."""
 from threading import Lock
 import os
 import sys
@@ -32,7 +32,7 @@ class Config(object):
 
     @classmethod
     def _load_config(cls):
-        """Attempt to load settings from various praw.ini files."""
+        """Attempt to load settings from various asyncpraw.ini files."""
         config = configparser.RawConfigParser()
         module_dir = os.path.dirname(sys.modules[__name__].__file__)
         if 'APPDATA' in os.environ:  # Windows
@@ -43,9 +43,9 @@ class Config(object):
             os_config_path = os.path.join(os.environ['HOME'], '.config')
         else:
             os_config_path = None
-        locations = [os.path.join(module_dir, 'praw.ini'), 'praw.ini']
+        locations = [os.path.join(module_dir, 'asyncpraw.ini'), 'asyncpraw.ini']
         if os_config_path is not None:
-            locations.insert(1, os.path.join(os_config_path, 'praw.ini'))
+            locations.insert(1, os.path.join(os_config_path, 'asyncpraw.ini'))
         config.read(locations)
         cls.CONFIG = config
 
@@ -88,7 +88,7 @@ class Config(object):
         env_value = os.getenv('praw_{}'.format(key))
         ini_value = self._fetch_default(key)  # Needed to remove from custom
 
-        # Environment variables have higher priority than praw.ini settings
+        # Environment variables have higher priority than asyncpraw.ini settings
         return env_value or ini_value or self.CONFIG_NOT_SET
 
     def _initialize_attributes(self):

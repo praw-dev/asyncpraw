@@ -1,5 +1,5 @@
 SubredditRelationship
 =====================
 
-.. autoclass:: praw.models.reddit.subreddit.SubredditRelationship
+.. autoclass:: asyncpraw.models.reddit.subreddit.SubredditRelationship
    :inherited-members:

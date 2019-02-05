@@ -3,20 +3,20 @@
 Authenticating via OAuth
 ========================
 
-PRAW supports the three types of applications that can be registered on
+asyncpraw supports the three types of applications that can be registered on
 Reddit. Those are:
 
 * `Web Applications <https://github.com/reddit-archive/reddit/wiki/OAuth2-App-Types#web-app>`_
 * `Installed Applications <https://github.com/reddit-archive/reddit/wiki/OAuth2-App-Types#installed-app>`_
 * `Script Applications <https://github.com/reddit-archive/reddit/wiki/OAuth2-App-Types#script-app>`_
 
-Before you can use any one of these with PRAW, you must first `register
+Before you can use any one of these with asyncpraw, you must first `register
 <https://www.reddit.com/prefs/apps/>`_ an application of the appropriate type
 on Reddit.
 
 If your app does not require a user context, it is :ref:`read only <read_only_application>`.
 
-PRAW supports the flows that each of these applications can use. The
+asyncpraw supports the flows that each of these applications can use. The
 following table defines which tables can use which flows:
 
 .. rst-class:: center_table_items
@@ -45,7 +45,7 @@ While **password flow** applications do not involve a redirect uri, Reddit
 still requires that you provide one when registering your script application --
 ``http://localhost:8080`` is a simple one to use.
 
-In order to use a **password flow** application with PRAW you need four pieces
+In order to use a **password flow** application with asyncpraw you need four pieces
 of information:
 
 :client_id: The client ID is the 14 character string listed just under
@@ -64,7 +64,7 @@ is as simple as:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id='SI8pN3DSbt0zor',
+   reddit = asyncpraw.Reddit(client_id='SI8pN3DSbt0zor',
                         client_secret='xaxkj7HNh8kwg8e5t4m6KvSrbTI',
                         password='1guiwevlfo00esyy',
                         user_agent='testscript by /u/fakebot3',
@@ -94,7 +94,7 @@ A 2FA token can be used by joining it to the password with a colon:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id='SI8pN3DSbt0zor',
+   reddit = asyncpraw.Reddit(client_id='SI8pN3DSbt0zor',
                         client_secret='xaxkj7HNh8kwg8e5t4m6KvSrbTI',
                         password='1guiwevlfo00esyy:955413',
                         user_agent='testscript by /u/fakebot3',
@@ -119,9 +119,9 @@ A **code flow** application is useful for two primary purposes:
 * You have an application and want to be able to access Reddit from your users'
   accounts.
 * You have a personal-use script application and you either want to
-  * limit the access one of your PRAW-based programs has to Reddit
+  * limit the access one of your asyncpraw-based programs has to Reddit
   * avoid the hassle of 2FA (described above)
-  * not pass your username and password to PRAW (and thus not keep it in memory)
+  * not pass your username and password to asyncpraw (and thus not keep it in memory)
 
 When registering your application you must provide a valid redirect uri. If you
 are running a website you will want to enter the appropriate callback URL and
@@ -144,7 +144,7 @@ URL. You can do that as follows:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id='SI8pN3DSbt0zor',
+   reddit = asyncpraw.Reddit(client_id='SI8pN3DSbt0zor',
                         client_secret='xaxkj7HNh8kwg8e5t4m6KvSrbTI',
                         redirect_uri='http://localhost:8080',
                         user_agent='testscript by /u/fakebot3')
@@ -265,7 +265,7 @@ of :class:`.Reddit` like so:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id='SI8pN3DSbt0zor',
+   reddit = asyncpraw.Reddit(client_id='SI8pN3DSbt0zor',
                         client_secret='xaxkj7HNh8kwg8e5t4m6KvSrbTI',
                         refresh_token='WeheY7PwgeCZj4S3QgUcLhKE5S2s4eAYdxM',
                         user_agent='testscript by /u/fakebot3')

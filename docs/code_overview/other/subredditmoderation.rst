@@ -1,5 +1,5 @@
 SubredditModeration
 ===================
 
-.. autoclass:: praw.models.reddit.subreddit.SubredditModeration
+.. autoclass:: asyncpraw.models.reddit.subreddit.SubredditModeration
    :inherited-members:

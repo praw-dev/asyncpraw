@@ -1,5 +1,5 @@
-"""Test praw.models.subreddits."""
-from praw.models import Subreddit
+"""Test asyncpraw.models.subreddits."""
+from asyncpraw.models import Subreddit
 import mock
 
 from .. import IntegrationTest
@@ -48,7 +48,7 @@ class TestSubreddits(IntegrationTest):
     def test_search(self):
         with self.recorder.use_cassette('TestSubreddits.test_search'):
             found = False
-            for subreddit in self.reddit.subreddits.search('praw'):
+            for subreddit in self.reddit.subreddits.search('asyncpraw'):
                 assert isinstance(subreddit, Subreddit)
                 found = True
             assert found

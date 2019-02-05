@@ -1,6 +1,6 @@
-"""Test praw.models.redditor."""
+"""Test asyncpraw.models.redditor."""
 from prawcore import BadRequest, Forbidden
-from praw.models import Comment, Submission
+from asyncpraw.models import Comment, Submission
 import mock
 import pytest
 
@@ -27,7 +27,7 @@ class TestRedditor(IntegrationTest):
         with self.recorder.use_cassette(
                 'TestRedditor.test_friend__with_note__no_gold'):
             with pytest.raises(BadRequest) as excinfo:
-                self.reddit.redditor(self.FRIEND.lower()).friend(note='praw')
+                self.reddit.redditor(self.FRIEND.lower()).friend(note='asyncpraw')
             assert 'GOLD_REQUIRED' == excinfo.value.response.json()['reason']
 
     @mock.patch('time.sleep', return_value=None)
@@ -54,7 +54,7 @@ class TestRedditor(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette('TestRedditor.test_message'):
             redditor = self.reddit.redditor('subreddit_stats')
-            redditor.message('PRAW test', 'This is a test from PRAW')
+            redditor.message('asyncpraw test', 'This is a test from asyncpraw')
 
     @mock.patch('time.sleep', return_value=None)
     def test_message_from_subreddit(self, _):
@@ -62,7 +62,7 @@ class TestRedditor(IntegrationTest):
         with self.recorder.use_cassette(
                 'TestRedditor.test_message_from_subreddit'):
             redditor = self.reddit.redditor('subreddit_stats')
-            redditor.message('PRAW test', 'This is a test from PRAW',
+            redditor.message('asyncpraw test', 'This is a test from asyncpraw',
                              from_subreddit=pytest.placeholders.test_subreddit)
 
     def test_multireddits(self):

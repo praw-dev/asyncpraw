@@ -1,4 +1,4 @@
-from praw.models import MoreComments
+from asyncpraw.models import MoreComments
 
 from ... import IntegrationTest
 

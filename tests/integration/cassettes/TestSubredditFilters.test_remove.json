@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 prawcore/0.3.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer cm5WcZKMwvmKqWc1aayVyM299Ak",
           "Connection": "keep-alive",
           "Cookie": "loid=2G9nVc7HIvBZ9wlMvH; loidcreated=1480881631000",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 prawcore/0.3.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/v1/me?raw_json=1"
@@ -120,7 +120,7 @@
           "Content-Length": "13",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=2G9nVc7HIvBZ9wlMvH; loidcreated=1480881631000",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 prawcore/0.3.0"
         },
         "method": "DELETE",
         "uri": "https://oauth.reddit.com/api/filter/user/<USERNAME>/f/mod/r/redditdev?raw_json=1"

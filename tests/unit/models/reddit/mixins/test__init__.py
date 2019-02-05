@@ -1,5 +1,5 @@
 import pytest
-from praw.models.reddit.mixins import ThingModerationMixin
+from asyncpraw.models.reddit.mixins import ThingModerationMixin
 
 from .... import UnitTest
 

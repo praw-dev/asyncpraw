@@ -21,13 +21,13 @@ class Reddit(object):
     """The Reddit class provides convenient access to reddit's API.
 
     Instances of this class are the gateway to interacting with Reddit's API
-    through PRAW. The canonical way to obtain an instance of this class is via:
+    through asyncpraw. The canonical way to obtain an instance of this class is via:
 
 
     .. code-block:: python
 
-       import praw
-       reddit = praw.Reddit(client_id='CLIENT_ID', client_secret="CLIENT_SECRET", password='PASSWORD', user_agent='USERAGENT', username='USERNAME')
+       import asyncpraw
+       reddit = asyncpraw.Reddit(client_id='CLIENT_ID', client_secret="CLIENT_SECRET", password='PASSWORD', user_agent='USERAGENT', username='USERNAME')
 
     """
 
@@ -71,9 +71,9 @@ class Reddit(object):
     def __init__(self, site_name=None, requestor_class=None, requestor_kwargs=None, **config_settings):
         """Initialize a Reddit instance.
 
-        :param site_name: The name of a section in your ``praw.ini`` file from
+        :param site_name: The name of a section in your ``asyncpraw.ini`` file from
             which to load settings from. This parameter, in tandem with an
-            appropriately configured ``praw.ini``, file is useful if you wish
+            appropriately configured ``asyncpraw.ini``, file is useful if you wish
             to easily save credentials for different applications, or
             communicate with other servers running reddit. If ``site_name`` is
             ``None``, then the site name will be looked for in the environment
@@ -121,13 +121,13 @@ class Reddit(object):
             config_section = site_name or os.getenv('praw_site') or 'DEFAULT'
             self.config = Config(config_section, **config_settings)
         except configparser.NoSectionError as exc:
-            help_message = ('You provided the name of a praw.ini configuration which does not exist.\n\nFor help with creating a Reddit instance, visit\nhttps://praw.readthedocs.io/en/latest/code_overview/reddit_instance.html\n\nFor help on configuring PRAW, visit\nhttps://praw.readthedocs.io/en/latest/getting_started/configuration.html')
+            help_message = ('You provided the name of a asyncpraw.ini configuration which does not exist.\n\nFor help with creating a Reddit instance, visit\nhttps://asyncpraw.readthedocs.io/en/latest/code_overview/reddit_instance.html\n\nFor help on configuring asyncpraw, visit\nhttps://asyncpraw.readthedocs.io/en/latest/getting_started/configuration.html')
             if site_name is not None:
                 exc.message += '\n' + help_message
             raise
 
         required_message = ('Required configuration setting {!r} missing. \n'
-                            'This setting can be provided in a praw.ini file, '
+                            'This setting can be provided in a asyncpraw.ini file, '
                             'as a keyword argument to the `Reddit` class '
                             'constructor, or as an environment variable.')
         for attribute in ('client_id', 'user_agent', 'loop'):
@@ -451,7 +451,7 @@ class Reddit(object):
 
         :param id: A reddit base36 submission ID, e.g., ``2gmzqe``.
         :param url: A URL supported by
-            :meth:`~praw.models.Submission.id_from_url`.`.
+            :meth:`~asyncpraw.models.Submission.id_from_url`.`.
 
         Either ``id`` or ``url`` can be provided, but not both.
 

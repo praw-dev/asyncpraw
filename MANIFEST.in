@@ -1,5 +1,5 @@
 include CHANGES.rst LICENSE.txt README.rst
-include praw/praw.ini
+include asyncpraw/asyncpraw.ini
 include docs/Makefile
 recursive-include docs *.png *.py *.rst
 recursive-include tests *.json *.py

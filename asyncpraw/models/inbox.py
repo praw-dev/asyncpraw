@@ -35,7 +35,7 @@ class Inbox(PRAWBase):
 
         .. code:: python
 
-            from praw.models import Message
+            from asyncpraw.models import Message
             unread_messages = []
             for item in reddit.inbox.unread(limit=None):
                 if isinstance(item, Message):
@@ -81,7 +81,7 @@ class Inbox(PRAWBase):
 
         .. code:: python
 
-            from praw.models import Message
+            from asyncpraw.models import Message
             unread_messages = []
             for item in reddit.inbox.unread(limit=None):
                 if isinstance(item, Message):
@@ -241,7 +241,7 @@ class Inbox(PRAWBase):
 
         .. code:: python
 
-            from praw.models import Message
+            from asyncpraw.models import Message
             unread_messages = []
             for item in reddit.inbox.unread(limit=None):
                 if isinstance(item, Message):
@@ -273,7 +273,7 @@ class Inbox(PRAWBase):
 
         .. code:: python
 
-           from praw.models import Comment
+           from asyncpraw.models import Comment
            for item in reddit.inbox.unread(limit=None):
                if isinstance(item, Comment):
                    print(item.author)

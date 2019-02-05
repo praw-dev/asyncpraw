@@ -1,4 +1,4 @@
-from praw.models import Message, Redditor, Subreddit, SubredditMessage
+from asyncpraw.models import Message, Redditor, Subreddit, SubredditMessage
 import mock
 import pytest
 

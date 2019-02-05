@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "edgebucket=H6gKBAFtoiTXRV29S9; session_tracker=D8sDd1y0UMCRRh9HdR.0.1509693180231.Z0FBQUFBQlpfQmI4a2VSc3cwdjFaZkxoa0VqbF8xSXRUV2V3cnpyalpxNGRsNDdPTUJESjlWNWJqYmlKMzllN3pETXJoZW1xVXh2aUVOeWlyVmlERjJ3QjBnSm1iR1hjbW1STXdNUERVelluYU52NTNYWE9HOUhYMHhIRVF6MnVYREphOFpqTlZnWDE",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/comments/?limit=100&raw_json=1"
@@ -118,7 +118,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "edgebucket=H6gKBAFtoiTXRV29S9; loid=00000000000jmmkosq.2.1509693181468.Z0FBQUFBQlpfQmItdTlRR1RnY09LRG16NngyRnJWckFTVDNwVnRiN1dxeFhMZGgxTzEwcG41MlFqbEc3WUdxcnBtdXl5b1NKbFNseVUwWWVWU00xWGUyZnk2cXpjRjMzLWtpWXRDa1VTSm5HYzNvdWtoNUtQQU9sMy1wb2QwRE11N2hCOHY0eFBZRms; session_tracker=D8sDd1y0UMCRRh9HdR.0.1509693181457.Z0FBQUFBQlpfQmItMlFUVjdkUXZSeVE2Mm9SUThBZUplOXlwUWNLc3lDVjdDRms5MUdlcjdWQVEzYWg3R0luU2dSbmJ4MHppeGZsOXpIQkwzV2d1UmF1YlJWTXZBTGM1bkdjb19ZeGVUYzcxWk9JNGxxS3FxOFBHdklRYzRmOEZYSG1QbXVTeTlFaW4",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/comments/?before=t1_dpa2864&limit=100&raw_json=1"
@@ -172,7 +172,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "edgebucket=H6gKBAFtoiTXRV29S9; loid=00000000000jmmkosq.2.1509693181468.Z0FBQUFBQlpfQmItdTlRR1RnY09LRG16NngyRnJWckFTVDNwVnRiN1dxeFhMZGgxTzEwcG41MlFqbEc3WUdxcnBtdXl5b1NKbFNseVUwWWVWU00xWGUyZnk2cXpjRjMzLWtpWXRDa1VTSm5HYzNvdWtoNUtQQU9sMy1wb2QwRE11N2hCOHY0eFBZRms; session_tracker=D8sDd1y0UMCRRh9HdR.0.1509693190892.Z0FBQUFBQlpfQmNIdC11OTdxT05xVlUwSnZrbnh3ZUVYZW1rU2hGbnl6NzRFZmdEWFZjWWctcmJ5a3NRUEtRdzdCbklWanBHUEM5ekcxZjRkZnRTLXhwcktmNTVNWGU1T1daQktja0FZa05wcmJZVmNYNFBVaDF6a3VLNnBMbnVLZHd5OE5URWp5bXY",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/comments/?before=t1_dpa28zw&limit=100&raw_json=1"
@@ -225,7 +225,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "edgebucket=H6gKBAFtoiTXRV29S9; loid=00000000000jmmkosq.2.1509693181468.Z0FBQUFBQlpfQmItdTlRR1RnY09LRG16NngyRnJWckFTVDNwVnRiN1dxeFhMZGgxTzEwcG41MlFqbEc3WUdxcnBtdXl5b1NKbFNseVUwWWVWU00xWGUyZnk2cXpjRjMzLWtpWXRDa1VTSm5HYzNvdWtoNUtQQU9sMy1wb2QwRE11N2hCOHY0eFBZRms; session_tracker=D8sDd1y0UMCRRh9HdR.0.1509693191780.Z0FBQUFBQlpfQmNJZGVIblBMTWZLTEtUSzYxemlCODZvWUU3d2JYU3V6R1k3LThRLTQ1cE1FeXhnSTB0V1UwVWhneDVXY05qU3NLTElKV0QwcGgtN0hoQmFzSXZLbEMzVklMS0hUVHQ3eTh1SWN6OVk5blJOWmZZTnlQT3E1NW9NN0VvWkNBQlk0eFc",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/comments/?limit=99&raw_json=1"
@@ -279,7 +279,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "edgebucket=H6gKBAFtoiTXRV29S9; loid=00000000000jmmkosq.2.1509693181468.Z0FBQUFBQlpfQmItdTlRR1RnY09LRG16NngyRnJWckFTVDNwVnRiN1dxeFhMZGgxTzEwcG41MlFqbEc3WUdxcnBtdXl5b1NKbFNseVUwWWVWU00xWGUyZnk2cXpjRjMzLWtpWXRDa1VTSm5HYzNvdWtoNUtQQU9sMy1wb2QwRE11N2hCOHY0eFBZRms; session_tracker=D8sDd1y0UMCRRh9HdR.0.1509693192794.Z0FBQUFBQlpfQmNLaVhjNklwRFVxdVkwSU4wQkdsTjQzZ1lUZTkwYWZQNFJidXlwcmpnNDJ4RGxyaWFpWWpkbTJSZkhzYktUY3N0V1NZMVpSLTFlX1R3QkFiTGR0cE04ZnNUbl9ZbGNvT21jZmIwQmJiS2UzOEU3QV9xM2ViRUlwZzlIQlJpM2pZdmc",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/comments/?limit=98&raw_json=1"
@@ -333,7 +333,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "edgebucket=H6gKBAFtoiTXRV29S9; loid=00000000000jmmkosq.2.1509693181468.Z0FBQUFBQlpfQmItdTlRR1RnY09LRG16NngyRnJWckFTVDNwVnRiN1dxeFhMZGgxTzEwcG41MlFqbEc3WUdxcnBtdXl5b1NKbFNseVUwWWVWU00xWGUyZnk2cXpjRjMzLWtpWXRDa1VTSm5HYzNvdWtoNUtQQU9sMy1wb2QwRE11N2hCOHY0eFBZRms; session_tracker=D8sDd1y0UMCRRh9HdR.0.1509693195707.Z0FBQUFBQlpfQmNOM1I0UEJxTzRoSFBwbUJJOXZfaGdZQTZEVURZcUNWeXp1SjEzTkZJVXZJQUJLZHNoLTVaVVQ3clc0QXZ6TU1yY3VfV0VRVU9STlM0RVBUNWp2NXFwWk9nc2NTVV9jS2VwOVBfb2VnRlZmeU5kTjZWNnpJQ1B4NE5fcHJhc2xmOEc",
-          "User-Agent": "<USER_AGENT> PRAW/5.2.1.dev0 prawcore/0.12.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.2.1.dev0 prawcore/0.12.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/comments/?limit=97&raw_json=1"

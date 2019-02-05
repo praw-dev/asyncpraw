@@ -1,4 +1,4 @@
 Button
 ======
-.. autoclass:: praw.models.Button
+.. autoclass:: asyncpraw.models.Button
    :inherited-members:

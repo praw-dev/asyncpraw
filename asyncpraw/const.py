@@ -1,4 +1,4 @@
-"""praw constants."""
+"""asyncpraw constants."""
 import sys
 
 
@@ -192,7 +192,7 @@ MIN_PNG_SIZE = 67
 MIN_JPEG_SIZE = 128
 PNG_HEADER = b'\x89\x50\x4e\x47\x0d\x0a\x1a\x0a'
 
-USER_AGENT_FORMAT = '{{}} PRAW/{}'.format(__version__)
+USER_AGENT_FORMAT = '{{}} asyncpraw/{}'.format(__version__)
 
 
 # pylint: disable=import-error,no-name-in-module,unused-import

@@ -1,8 +1,8 @@
 import pickle
 
 import pytest
-from praw.exceptions import ClientException
-from praw.models import Submission
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models import Submission
 
 from ... import UnitTest
 

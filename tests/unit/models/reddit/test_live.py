@@ -1,10 +1,10 @@
 import pickle
 
 import pytest
-from praw.models import LiveThread, LiveUpdate, Redditor
-from praw.models.reddit.live import LiveContributorRelationship
-from praw.models.reddit.live import LiveThreadContribution
-from praw.models.reddit.live import LiveUpdateContribution
+from asyncpraw.models import LiveThread, LiveUpdate, Redditor
+from asyncpraw.models.reddit.live import LiveContributorRelationship
+from asyncpraw.models.reddit.live import LiveThreadContribution
+from asyncpraw.models.reddit.live import LiveUpdateContribution
 
 from ... import UnitTest
 

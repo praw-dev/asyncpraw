@@ -1,14 +1,14 @@
-Contributing to PRAW
+Contributing to asyncpraw
 ====================
 
-PRAW gladly welcomes new contributions. As with most larger projects, we have
+asyncpraw gladly welcomes new contributions. As with most larger projects, we have
 an established consistent way of doing things. A consistent style increases
 readability, decreases bug-potential and makes it faster to understand how
 everything works together.
 
-PRAW follows :PEP:`8` and :PEP:`257`. The ``pre_push.py`` script can be used to
+asyncpraw follows :PEP:`8` and :PEP:`257`. The ``pre_push.py`` script can be used to
 test for compliance with these PEPs in addition to providing a few other
-checks. The following are PRAW-specific guidelines in addition to those PEP's.
+checks. The following are asyncpraw-specific guidelines in addition to those PEP's.
 
 Code
 ----
@@ -29,15 +29,15 @@ Code
 Testing
 -------
 
-Contributions to PRAW requires 100% test coverage as reported by `Coveralls
-<https://coveralls.io/github/praw-dev/praw>`_. If you know how to add a
+Contributions to asyncpraw requires 100% test coverage as reported by `Coveralls
+<https://coveralls.io/github/asyncpraw-dev/asyncpraw>`_. If you know how to add a
 feature, but aren't sure how to write the necessary tests, please open a PR
 anyway so we can work with you to write the necessary tests.
 
 Running the Test Suite
 ~~~~~~~~~~~~~~~~~~~~~~
 
-`Travis CI <https://travis-ci.org/praw-dev/praw>`_ automatically runs all
+`Travis CI <https://travis-ci.org/asyncpraw-dev/asyncpraw>`_ automatically runs all
 updates to known branches and pull requests. However, it's useful to be able to
 run the tests locally. The simplest way is via:
 
@@ -50,11 +50,11 @@ Without any configuration or modification, all the tests should pass.
 Adding and Updating Integration Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PRAW's integration tests utilize `Betamax
+asyncpraw's integration tests utilize `Betamax
 <http://betamax.readthedocs.io/en/latest/>`_ to record an interaction with
 Reddit. The recorded interaction is then replayed for subsequent test runs.
 
-To safely record a cassette without leaking your account credentials, PRAW
+To safely record a cassette without leaking your account credentials, asyncpraw
 utilizes a number of environment variables which are replaced with placeholders
 in the cassettes. The environment variables are (listed in bash export format):
 
@@ -104,11 +104,11 @@ For feature additions, bugfixes, or code removal please add an appropriate
 entry to ``CHANGES.rst``. If the ``Unreleased`` section does not exist at the
 top of ``CHANGES.rst`` please add it. See `commit
 280525c16ba28cdd69cdbb272a0e2764b1c7e6a0
-<https://github.com/praw-dev/praw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0>`_
+<https://github.com/asyncpraw-dev/asyncpraw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0>`_
 for an example.
 
 See Also
 --------
 
 Please also read through:
-https://github.com/praw-dev/praw/blob/master/.github/CONTRIBUTING.md
+https://github.com/asyncpraw-dev/asyncpraw/blob/master/.github/CONTRIBUTING.md
