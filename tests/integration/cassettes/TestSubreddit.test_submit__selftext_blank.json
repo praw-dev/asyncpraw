@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "60",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.8.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.8.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -66,7 +66,7 @@
           "Content-Length": "96",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=yLQL8POypQBhGTcIKo; loidcreated=1489679942000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.8.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.8.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
@@ -120,7 +120,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=yLQL8POypQBhGTcIKo; loidcreated=1489679942000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.8.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.8.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/comments/5zrez4/?limit=2048&sort=best&raw_json=1"

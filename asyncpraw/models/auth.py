@@ -1,5 +1,5 @@
 """Provide the Auth class."""
-from prawcore import (Authorizer, ImplicitAuthorizer, TrustedAuthenticator, UntrustedAuthenticator, session)
+from asyncprawcore import (Authorizer, ImplicitAuthorizer, TrustedAuthenticator, UntrustedAuthenticator, session)
 
 from .base import PRAWBase
 from ..exceptions import ClientException

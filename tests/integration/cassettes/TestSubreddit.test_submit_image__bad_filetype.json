@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -131,7 +131,7 @@
             "edgebucket=PmdUAOSai9rOLuz36X"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -241,7 +241,7 @@
             "multipart/form-data; boundary=b019136cad37427fb6f5225bdbbf3dce"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -330,7 +330,7 @@
             "edgebucket=PmdUAOSai9rOLuz36X"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",

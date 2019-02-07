@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.7"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -61,7 +61,7 @@
           "Content-Length": "32",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "__cfduid=d89d4c5add67bd85677d5846d3af17cb71458447319; loid=YYLHo2StFcUj5k26N2; loidcreated=2016-03-20T04%3A15%3A19.752Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.7"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/vote/?raw_json=1"

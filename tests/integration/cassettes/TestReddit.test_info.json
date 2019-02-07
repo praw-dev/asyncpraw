@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 asyncprawcore/0.2.1"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer FJiiaWeKd4ib_t88CouZIMcGncs",
           "Connection": "keep-alive",
           "Cookie": "loid=fVJIon75wAOLfiCqwG; loidcreated=1479365463000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 asyncprawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/info/?id=t1_d7ltv00%2Ct3_5dec00%2Ct5_2qk00%2Ct1_d7ltv01%2Ct3_5dec01%2Ct5_2qk01%2Ct1_d7ltv02%2Ct3_5dec02%2Ct5_2qk02%2Ct1_d7ltv03%2Ct3_5dec03%2Ct5_2qk03%2Ct1_d7ltv04%2Ct3_5dec04%2Ct5_2qk04%2Ct1_d7ltv05%2Ct3_5dec05%2Ct5_2qk05%2Ct1_d7ltv06%2Ct3_5dec06%2Ct5_2qk06%2Ct1_d7ltv07%2Ct3_5dec07%2Ct5_2qk07%2Ct1_d7ltv08%2Ct3_5dec08%2Ct5_2qk08%2Ct1_d7ltv09%2Ct3_5dec09%2Ct5_2qk09%2Ct1_d7ltv10%2Ct3_5dec10%2Ct5_2qk10%2Ct1_d7ltv11%2Ct3_5dec11%2Ct5_2qk11%2Ct1_d7ltv12%2Ct3_5dec12%2Ct5_2qk12%2Ct1_d7ltv13%2Ct3_5dec13%2Ct5_2qk13%2Ct1_d7ltv14%2Ct3_5dec14%2Ct5_2qk14%2Ct1_d7ltv15%2Ct3_5dec15%2Ct5_2qk15%2Ct1_d7ltv16%2Ct3_5dec16%2Ct5_2qk16%2Ct1_d7ltv17%2Ct3_5dec17%2Ct5_2qk17%2Ct1_d7ltv18%2Ct3_5dec18%2Ct5_2qk18%2Ct1_d7ltv19%2Ct3_5dec19%2Ct5_2qk19%2Ct1_d7ltv20%2Ct3_5dec20%2Ct5_2qk20%2Ct1_d7ltv21%2Ct3_5dec21%2Ct5_2qk21%2Ct1_d7ltv22%2Ct3_5dec22%2Ct5_2qk22%2Ct1_d7ltv23%2Ct3_5dec23%2Ct5_2qk23%2Ct1_d7ltv24%2Ct3_5dec24%2Ct5_2qk24%2Ct1_d7ltv25%2Ct3_5dec25%2Ct5_2qk25%2Ct1_d7ltv26%2Ct3_5dec26%2Ct5_2qk26%2Ct1_d7ltv27%2Ct3_5dec27%2Ct5_2qk27%2Ct1_d7ltv28%2Ct3_5dec28%2Ct5_2qk28%2Ct1_d7ltv29%2Ct3_5dec29%2Ct5_2qk29%2Ct1_d7ltv30%2Ct3_5dec30%2Ct5_2qk30%2Ct1_d7ltv31%2Ct3_5dec31%2Ct5_2qk31%2Ct1_d7ltv32%2Ct3_5dec32%2Ct5_2qk32%2Ct1_d7ltv33&raw_json=1"
@@ -118,7 +118,7 @@
           "Authorization": "bearer FJiiaWeKd4ib_t88CouZIMcGncs",
           "Connection": "keep-alive",
           "Cookie": "loid=fVJIon75wAOLfiCqwG; loidcreated=1479365463000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 asyncprawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/info/?id=t3_5dec33%2Ct5_2qk33%2Ct1_d7ltv34%2Ct3_5dec34%2Ct5_2qk34%2Ct1_d7ltv35%2Ct3_5dec35%2Ct5_2qk35%2Ct1_d7ltv36%2Ct3_5dec36%2Ct5_2qk36%2Ct1_d7ltv37%2Ct3_5dec37%2Ct5_2qk37%2Ct1_d7ltv38%2Ct3_5dec38%2Ct5_2qk38%2Ct1_d7ltv39%2Ct3_5dec39%2Ct5_2qk39%2Ct1_d7ltv40%2Ct3_5dec40%2Ct5_2qk40%2Ct1_d7ltv41%2Ct3_5dec41%2Ct5_2qk41%2Ct1_d7ltv42%2Ct3_5dec42%2Ct5_2qk42%2Ct1_d7ltv43%2Ct3_5dec43%2Ct5_2qk43%2Ct1_d7ltv44%2Ct3_5dec44%2Ct5_2qk44%2Ct1_d7ltv45%2Ct3_5dec45%2Ct5_2qk45%2Ct1_d7ltv46%2Ct3_5dec46%2Ct5_2qk46%2Ct1_d7ltv47%2Ct3_5dec47%2Ct5_2qk47%2Ct1_d7ltv48%2Ct3_5dec48%2Ct5_2qk48%2Ct1_d7ltv49%2Ct3_5dec49%2Ct5_2qk49%2Ct1_d7ltv50%2Ct3_5dec50%2Ct5_2qk50%2Ct1_d7ltv51%2Ct3_5dec51%2Ct5_2qk51%2Ct1_d7ltv52%2Ct3_5dec52%2Ct5_2qk52%2Ct1_d7ltv53%2Ct3_5dec53%2Ct5_2qk53%2Ct1_d7ltv54%2Ct3_5dec54%2Ct5_2qk54%2Ct1_d7ltv55%2Ct3_5dec55%2Ct5_2qk55%2Ct1_d7ltv56%2Ct3_5dec56%2Ct5_2qk56%2Ct1_d7ltv57%2Ct3_5dec57%2Ct5_2qk57%2Ct1_d7ltv58%2Ct3_5dec58%2Ct5_2qk58%2Ct1_d7ltv59%2Ct3_5dec59%2Ct5_2qk59%2Ct1_d7ltv60%2Ct3_5dec60%2Ct5_2qk60%2Ct1_d7ltv61%2Ct3_5dec61%2Ct5_2qk61%2Ct1_d7ltv62%2Ct3_5dec62%2Ct5_2qk62%2Ct1_d7ltv63%2Ct3_5dec63%2Ct5_2qk63%2Ct1_d7ltv64%2Ct3_5dec64%2Ct5_2qk64%2Ct1_d7ltv65%2Ct3_5dec65%2Ct5_2qk65%2Ct1_d7ltv66%2Ct3_5dec66&raw_json=1"
@@ -172,7 +172,7 @@
           "Authorization": "bearer FJiiaWeKd4ib_t88CouZIMcGncs",
           "Connection": "keep-alive",
           "Cookie": "loid=fVJIon75wAOLfiCqwG; loidcreated=1479365463000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b23 asyncprawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/info/?id=t5_2qk66%2Ct1_d7ltv67%2Ct3_5dec67%2Ct5_2qk67%2Ct1_d7ltv68%2Ct3_5dec68%2Ct5_2qk68%2Ct1_d7ltv69%2Ct3_5dec69%2Ct5_2qk69%2Ct1_d7ltv70%2Ct3_5dec70%2Ct5_2qk70%2Ct1_d7ltv71%2Ct3_5dec71%2Ct5_2qk71%2Ct1_d7ltv72%2Ct3_5dec72%2Ct5_2qk72%2Ct1_d7ltv73%2Ct3_5dec73%2Ct5_2qk73%2Ct1_d7ltv74%2Ct3_5dec74%2Ct5_2qk74%2Ct1_d7ltv75%2Ct3_5dec75%2Ct5_2qk75%2Ct1_d7ltv76%2Ct3_5dec76%2Ct5_2qk76%2Ct1_d7ltv77%2Ct3_5dec77%2Ct5_2qk77%2Ct1_d7ltv78%2Ct3_5dec78%2Ct5_2qk78%2Ct1_d7ltv79%2Ct3_5dec79%2Ct5_2qk79%2Ct1_d7ltv80%2Ct3_5dec80%2Ct5_2qk80%2Ct1_d7ltv81%2Ct3_5dec81%2Ct5_2qk81%2Ct1_d7ltv82%2Ct3_5dec82%2Ct5_2qk82%2Ct1_d7ltv83%2Ct3_5dec83%2Ct5_2qk83%2Ct1_d7ltv84%2Ct3_5dec84%2Ct5_2qk84%2Ct1_d7ltv85%2Ct3_5dec85%2Ct5_2qk85%2Ct1_d7ltv86%2Ct3_5dec86%2Ct5_2qk86%2Ct1_d7ltv87%2Ct3_5dec87%2Ct5_2qk87%2Ct1_d7ltv88%2Ct3_5dec88%2Ct5_2qk88%2Ct1_d7ltv89%2Ct3_5dec89%2Ct5_2qk89%2Ct1_d7ltv90%2Ct3_5dec90%2Ct5_2qk90%2Ct1_d7ltv91%2Ct3_5dec91%2Ct5_2qk91%2Ct1_d7ltv92%2Ct3_5dec92%2Ct5_2qk92%2Ct1_d7ltv93%2Ct3_5dec93%2Ct5_2qk93%2Ct1_d7ltv94%2Ct3_5dec94%2Ct5_2qk94%2Ct1_d7ltv95%2Ct3_5dec95%2Ct5_2qk95%2Ct1_d7ltv96%2Ct3_5dec96%2Ct5_2qk96%2Ct1_d7ltv97%2Ct3_5dec97%2Ct5_2qk97%2Ct1_d7ltv98%2Ct3_5dec98%2Ct5_2qk98%2Ct1_d7ltv99%2Ct3_5dec99%2Ct5_2qk99&raw_json=1"

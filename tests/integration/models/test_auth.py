@@ -1,5 +1,5 @@
 """Test asyncpraw.models.auth."""
-from prawcore import InvalidToken
+from asyncprawcore import InvalidToken
 from asyncpraw import Reddit
 from six import string_types
 import pytest

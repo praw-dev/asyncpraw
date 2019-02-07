@@ -105,7 +105,7 @@ must be refreshed after one hour; therefore, the 2FA secret would have to be
 stored along with the rest of the credentials in order to generate the token,
 which defeats the point of having an extra credential beyond the password.
 
-If you do choose to use 2FA, you must handle the ``prawcore.OAuthException``
+If you do choose to use 2FA, you must handle the ``asyncprawcore.OAuthException``
 that will be raised by API calls after one hour.
 
 

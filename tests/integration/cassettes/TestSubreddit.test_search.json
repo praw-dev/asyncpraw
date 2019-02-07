@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 prawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 asyncprawcore/0.0.10"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer rhyKqO9iSsQ6uxZQANhF1NMRE8w",
           "Connection": "keep-alive",
           "Cookie": "loid=d7kvEDwJtYdRT1phrM; __cfduid=dec0f98f2944a5a1f2cab3ee1c61eade11468343488; loidcreated=2016-07-12T17%3A11%3A28.295Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 prawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 asyncprawcore/0.0.10"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/all/search/?sort=relevance&raw_json=1&syntax=cloudsearch&t=all&restrict_sr=False&limit=1024&q=asyncpraw+oauth+search"

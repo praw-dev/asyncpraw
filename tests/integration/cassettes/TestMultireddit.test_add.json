@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer wtjtvm-zv-O7vORARdWE9P1EgZs",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=dbf2a8ff8a176f3bdec3f0bc3cdc722a81468766043; loid=cPQ8Ec0opjqR4KpirQ; loidcreated=2016-07-17T14%3A34%3A03.882Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/multi/mine/?raw_json=1"
@@ -112,7 +112,7 @@
           "Content-Length": "55",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "__cfduid=dbf2a8ff8a176f3bdec3f0bc3cdc722a81468766043; loid=cPQ8Ec0opjqR4KpirQ; loidcreated=2016-07-17T14%3A34%3A03.882Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
         },
         "method": "PUT",
         "uri": "https://oauth.reddit.com/api/multi/user/<USERNAME>/m/praw_z2ggpt0vkr/r/redditdev?raw_json=1"
@@ -161,7 +161,7 @@
           "Authorization": "bearer wtjtvm-zv-O7vORARdWE9P1EgZs",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=dbf2a8ff8a176f3bdec3f0bc3cdc722a81468766043; loid=cPQ8Ec0opjqR4KpirQ; loidcreated=2016-07-17T14%3A34%3A03.882Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 prawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/multi/user/<USERNAME>/m/praw_z2ggpt0vkr/?raw_json=1"

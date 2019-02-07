@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "60",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/5.0.2dev0 prawcore/0.11.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.0.2dev0 asyncprawcore/0.11.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -66,7 +66,7 @@
           "Content-Length": "1476",
           "Content-Type": "multipart/form-data; boundary=33f09fa7d4bf447299f67dbda6d2dde5",
           "Cookie": "edgebucket=aF6wq3OdynNsESz7Zp; session_tracker=caRdk8FBLO3heMOYjx.0.1500786772568.Z0FBQUFBQlpkREJVemVoQVVTY2p3Q2QtV0RwS20wNlJObXdvWk5HR3dETllBVlhydXRjczY0aXloTFdqQWVQX1VDd291UVJGbFktMEVjampSMmN4SzkzYzU5LXFIMC1JN3JwVXBONTI5ZF9tbjZLSVVXaHBPbVlsWWtRNnNUeTBrcS1tTDduWUpuelU",
-          "User-Agent": "<USER_AGENT> asyncpraw/5.0.2dev0 prawcore/0.11.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/5.0.2dev0 asyncprawcore/0.11.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/upload_sr_img?raw_json=1"

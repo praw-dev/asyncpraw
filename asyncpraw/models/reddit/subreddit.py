@@ -2,7 +2,7 @@
 from copy import deepcopy
 from json import dumps
 
-from prawcore import Redirect
+from asyncprawcore import Redirect
 
 from ...const import API_PATH, urljoin
 from ...exceptions import APIException
@@ -412,7 +412,7 @@ class Subreddit(RedditBase, MessageableMixin, SubredditListingMixin):
         :param number: Specify which sticky to return. 1 appears at the top
             (default: 1).
 
-        Raises ``prawcore.NotFound`` if the sticky does not exist.
+        Raises ``asyncprawcore.NotFound`` if the sticky does not exist.
 
         """
         url = API_PATH['about_sticky'].format(subreddit=self)
@@ -477,7 +477,7 @@ class Subreddit(RedditBase, MessageableMixin, SubredditListingMixin):
     async def traffic(self):
         """Return a dictionary of the subreddit's traffic statistics.
 
-        Raises ``prawcore.NotFound`` when the traffic stats aren't available to
+        Raises ``asyncprawcore.NotFound`` when the traffic stats aren't available to
         the authenticated user, that is, they are not public and the
         authenticated user is not a moderator of the subreddit.
 
@@ -550,7 +550,7 @@ class SubredditFilters(object):
 
            reddit.subreddit('all-redditdev-learnpython')
 
-        Raises ``prawcore.NotFound`` when calling on a non-special subreddit.
+        Raises ``asyncprawcore.NotFound`` when calling on a non-special subreddit.
 
         """
         url = API_PATH['subreddit_filter'].format(special=self.subreddit, user=await self.subreddit._reddit.user.me(), subreddit=subreddit)
@@ -561,7 +561,7 @@ class SubredditFilters(object):
 
         :param subreddit: The subreddit to remove from the filter list.
 
-        Raises ``prawcore.NotFound`` when calling on a non-special subreddit.
+        Raises ``asyncprawcore.NotFound`` when calling on a non-special subreddit.
 
         """
         url = API_PATH['subreddit_filter'].format(special=self.subreddit, user=await self.subreddit._reddit.user.me(), subreddit=str(subreddit))
@@ -1195,7 +1195,7 @@ class SubredditQuarantine(object):
         .. code:: python
 
            subreddit = reddit.subreddit('QUESTIONABLE')
-           next(subreddit.hot())  # Raises prawcore.Forbidden
+           next(subreddit.hot())  # Raises asyncprawcore.Forbidden
 
            subreddit.quaran.opt_in()
            next(subreddit.hot())  # Returns Submission
@@ -1218,7 +1218,7 @@ class SubredditQuarantine(object):
            next(subreddit.hot())  # Returns Submission
 
            subreddit.quaran.opt_out()
-           next(subreddit.hot())  # Raises prawcore.Forbidden
+           next(subreddit.hot())  # Raises asyncprawcore.Forbidden
 
         """
         data = {'sr_name': self.subreddit}
@@ -1868,7 +1868,7 @@ class SubredditStylesheet(object):
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.APIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -1891,7 +1891,7 @@ class SubredditStylesheet(object):
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.APIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -1914,7 +1914,7 @@ class SubredditStylesheet(object):
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.APIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -1937,7 +1937,7 @@ class SubredditStylesheet(object):
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.APIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very

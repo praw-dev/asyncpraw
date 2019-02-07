@@ -12,7 +12,7 @@
           "Accept-Encoding": "identity",
           "Authorization": "bearer invalid_token",
           "Connection": "keep-alive",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b12 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b12 asyncprawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/v1/me?raw_json=1"

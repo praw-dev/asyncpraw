@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 prawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.8"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer yJxdondPglyCziZQ2o6tk5Lh-h4",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-07-09T16%3A41%3A45.644Z; __cfduid=debe7cb164df5f9108822b4c83d667acb1468082505; loid=eX2ZOs4GNmiM8owaA8",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 prawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.8"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/message/selfreply/?limit=100&raw_json=1"
@@ -112,7 +112,7 @@
           "Content-Length": "27",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loidcreated=2016-07-09T16%3A41%3A45.644Z; __cfduid=debe7cb164df5f9108822b4c83d667acb1468082505; loid=eX2ZOs4GNmiM8owaA8",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 prawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.8"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/block?raw_json=1"

@@ -134,7 +134,7 @@ Change Log
 
 **Fixed**
 
-* Now raises ``prawcore.UnavailableForLegalReasons`` instead of an
+* Now raises ``asyncprawcore.UnavailableForLegalReasons`` instead of an
   ``AssertionError`` when encountering a HTTP 451 response.
 
 
@@ -358,7 +358,7 @@ parameter as described below:
 **Fixed**
 
 * Uploading an image resulting in too large of a request (>500 KB) now
-  raises ``prawcore.TooLarge`` instead of an ``AssertionError``.
+  raises ``asyncprawcore.TooLarge`` instead of an ``AssertionError``.
 * Uploading an invalid image raises :class:`.APIException`.
 * :class:`.Redditor` instances obtained via :attr:`.moderator` (e.g.,
   ``reddit.subreddit('subreddit').moderator()``) will contain attributes with

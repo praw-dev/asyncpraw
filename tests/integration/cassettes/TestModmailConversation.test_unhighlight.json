@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.9.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.9.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -65,7 +65,7 @@
           "Connection": "keep-alive",
           "Content-Length": "0",
           "Cookie": "loid=VMBMIGjCbqWjoiKynV.1.1490895225021.Z0FBQUFBQlkzVUY1ZElDemdUV0NHZ2Vodk9DNVJjZVEzT3Z0T1dGNFFydjRTSHlic0RpNFV6eElqMWJPRnczWS1ZZk1IV2lMR1QtRWZESXB2ZGRqbWZlZ3I4OWVGZGJhVFU2dk5iQmJUUEt0TV9VRlpISks1eDdaNWZ3TDBJUHlKa1V1UlBEU3Awb2Y; edgebucket=2ew2Jxl9ePilofEvNq",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.9.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.9.0"
         },
         "method": "DELETE",
         "uri": "https://oauth.reddit.com/api/mod/conversations/ik72/highlight?raw_json=1"
@@ -119,7 +119,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=VMBMIGjCbqWjoiKynV.1.1490895225021.Z0FBQUFBQlkzVUY1ZElDemdUV0NHZ2Vodk9DNVJjZVEzT3Z0T1dGNFFydjRTSHlic0RpNFV6eElqMWJPRnczWS1ZZk1IV2lMR1QtRWZESXB2ZGRqbWZlZ3I4OWVGZGJhVFU2dk5iQmJUUEt0TV9VRlpISks1eDdaNWZ3TDBJUHlKa1V1UlBEU3Awb2Y; edgebucket=2ew2Jxl9ePilofEvNq",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 prawcore/0.9.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.9.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/mod/conversations/ik72?raw_json=1"

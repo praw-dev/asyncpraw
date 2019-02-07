@@ -474,7 +474,7 @@ class LiveThreadContribution(object):
                 for key, value in settings.items()}
 
         url = API_PATH['live_update_thread'].format(id=self.thread.id)
-        # prawcore (0.7.0) Session.request() modifies `data` kwarg
+        # asyncprawcore (0.7.0) Session.request() modifies `data` kwarg
         self.thread._reddit.post(url, data=data.copy())
         self.thread._reset_attributes(*data.keys())
 

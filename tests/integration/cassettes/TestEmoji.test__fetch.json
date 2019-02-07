@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 asyncprawcore/0.14.0"
           ]
         },
         "method": "POST",
@@ -126,7 +126,7 @@
             "edgebucket=W63wum9D8CqWSwou09; session_tracker=2QWw8fr9r14cCItOEZ.0.1521883379939.Z0FBQUFBQmF0aGowM3ZwdEo0b0pyWUVJVWlXRlBRTjJMdUZqdzRWRmRsUzlZdExXN3ZmNThCZ0VRZjVUYUhYRmdhdllERTdSN3V5MHlLOVJ3bXdOUG1iTnNiVlZwNFdvQzRYdWV1WXZyQy14WkJiem1JZVRjTV83Z3FzdjhhSW4ydDhtc1JGT2RnU2E"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 asyncprawcore/0.14.0"
           ]
         },
         "method": "GET",
@@ -239,7 +239,7 @@
             "edgebucket=W63wum9D8CqWSwou09; session_tracker=2QWw8fr9r14cCItOEZ.0.1521883380550.Z0FBQUFBQmF0aGowS1luOGs0OWwyNDdwQ0cyck94UkQwM1FFa3dBam1xdmUyMUl0WjJvSDhqVFRLSWhzQWdXelJFSW43aGE3YkJXOVh5eFNDMEFtcUphSl9WY0xZcVhIcjRyQmFNRU1DeEVZX29udERjczVrMU9uQm9GLW5pWEdIUjFYRGNXSGR6OUU"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/5.4.0.dev0 prawcore/0.14.0"
+            "<USER_AGENT> asyncpraw/5.4.0.dev0 asyncprawcore/0.14.0"
           ]
         },
         "method": "GET",

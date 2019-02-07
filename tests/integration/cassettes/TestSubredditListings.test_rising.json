@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.4"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.4"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -61,7 +61,7 @@
           "Authorization": "bearer -Dmg1-9L9tztnDnrRYfh_0HTQ0e8",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d191fe893868c79b6d57c3c846e81dab91457815450; loid=hXZbG4VvZ5EgCbkN7Y; loidcreated=2016-03-12T20%3A44%3A10.254Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 prawcore/0.0.4"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.4"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/askreddit/rising?limit=100&raw_json=1"

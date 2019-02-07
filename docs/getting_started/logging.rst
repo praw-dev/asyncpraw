@@ -12,7 +12,7 @@ To log everything available add the following to your code:
 
    handler = logging.StreamHandler()
    handler.setLevel(logging.DEBUG)
-   logger = logging.getLogger('prawcore')
+   logger = logging.getLogger('asyncprawcore')
    logger.setLevel(logging.DEBUG)
    logger.addHandler(handler)
 

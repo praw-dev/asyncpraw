@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -131,7 +131,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -241,7 +241,7 @@
             "multipart/form-data; boundary=a742c0f73c7f4157a7a9b2bdad91bc8e"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -330,7 +330,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -440,7 +440,7 @@
             "multipart/form-data; boundary=9d83ef1cfdb74dedbb8ff371394d1b61"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -529,7 +529,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -639,7 +639,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "GET",
@@ -758,7 +758,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -868,7 +868,7 @@
             "multipart/form-data; boundary=b41762fd55ee4afca0e6acaab877ad08"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -957,7 +957,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -1067,7 +1067,7 @@
             "multipart/form-data; boundary=f0985565c39445c7954db09b94c4e66f"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -1156,7 +1156,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -1266,7 +1266,7 @@
             "edgebucket=Ocj5aJziszVUwWVqyV"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 prawcore/1.0.0"
+            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
           ]
         },
         "method": "GET",

@@ -6,7 +6,7 @@ from asyncpraw import __version__, Reddit
 from asyncpraw.config import Config
 from asyncpraw.const import configparser
 from asyncpraw.exceptions import ClientException
-from prawcore import Requestor
+from asyncprawcore import Requestor
 
 from . import UnitTest
 

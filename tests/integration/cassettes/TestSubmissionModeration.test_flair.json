@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev prawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=Ng2U8JwGXkOQOI2sve; loidcreated=1482035295000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev prawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/comments/4b536p/?raw_json=1&sort=best&limit=2048"
@@ -122,7 +122,7 @@
           "Content-Length": "61",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=Ng2U8JwGXkOQOI2sve; loidcreated=1482035295000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev prawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/flair/?raw_json=1"

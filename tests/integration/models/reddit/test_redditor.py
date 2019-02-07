@@ -1,5 +1,5 @@
 """Test asyncpraw.models.redditor."""
-from prawcore import BadRequest, Forbidden
+from asyncprawcore import BadRequest, Forbidden
 from asyncpraw.models import Comment, Submission
 import mock
 import pytest

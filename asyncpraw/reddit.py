@@ -8,7 +8,7 @@ except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
 
-from prawcore import (Authorizer, DeviceIDAuthorizer, ReadOnlyAuthorizer, Redirect, Requestor, ScriptAuthorizer, TrustedAuthenticator, UntrustedAuthenticator, session)
+from asyncprawcore import (Authorizer, DeviceIDAuthorizer, ReadOnlyAuthorizer, Redirect, Requestor, ScriptAuthorizer, TrustedAuthenticator, UntrustedAuthenticator, session)
 
 from .exceptions import ClientException
 from .config import Config
@@ -80,7 +80,7 @@ class Reddit(object):
             variable praw_site. If it is not found there, the DEFAULT site will
             be used.
         :param requestor_class: A class that will be used to create a
-            requestor. If not set, use ``prawcore.Requestor`` (default: None).
+            requestor. If not set, use ``asyncprawcore.Requestor`` (default: None).
         :param requestor_kwargs: Dictionary with additional keyword arguments
             used to initialize the requestor (default: None).
 
@@ -141,7 +141,7 @@ class Reddit(object):
         self.loop = getattr(self.config, 'loop')
         self._check_for_update()
         self._prepare_objector()
-        self._prepare_prawcore(requestor_class, requestor_kwargs)
+        self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
 
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
@@ -269,18 +269,18 @@ class Reddit(object):
         for kind, klass in mappings.items():
             self._objector.register(kind, klass)
 
-    def _prepare_prawcore(self, requestor_class=None, requestor_kwargs=None):
+    def _prepare_asyncprawcore(self, requestor_class=None, requestor_kwargs=None):
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
 
         requestor = requestor_class(USER_AGENT_FORMAT.format(self.config.user_agent), self.config.oauth_url, self.config.reddit_url, **requestor_kwargs)
 
         if self.config.client_secret:
-            self._prepare_trusted_prawcore(requestor)
+            self._prepare_trusted_asyncprawcore(requestor)
         else:
-            self._prepare_untrusted_prawcore(requestor)
+            self._prepare_untrusted_asyncprawcore(requestor)
 
-    def _prepare_trusted_prawcore(self, requestor):
+    def _prepare_trusted_asyncprawcore(self, requestor):
         authenticator = TrustedAuthenticator(requestor, self.config.client_id, self.config.client_secret, self.config.redirect_uri)
         read_only_authorizer = ReadOnlyAuthorizer(authenticator)
         self._read_only_core = session(read_only_authorizer)
@@ -295,7 +295,7 @@ class Reddit(object):
         else:
             self._core = self._read_only_core
 
-    def _prepare_untrusted_prawcore(self, requestor):
+    def _prepare_untrusted_asyncprawcore(self, requestor):
         authenticator = UntrustedAuthenticator(requestor, self.config.client_id, self.config.redirect_uri)
         read_only_authorizer = DeviceIDAuthorizer(authenticator)
         self._core = self._read_only_core = session(read_only_authorizer)

@@ -1,5 +1,5 @@
 from asyncpraw.models import Redditor, WikiPage
-from prawcore import NotFound
+from asyncprawcore import NotFound
 import mock
 import pytest
 

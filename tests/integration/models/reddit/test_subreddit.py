@@ -8,7 +8,7 @@ from asyncpraw.models import (Comment, ModAction, ModmailAction,
                          ModmailConversation, ModmailMessage, Redditor,
                          Submission, Subreddit, SubredditMessage, Stylesheet,
                          WikiPage)
-from prawcore import Forbidden, NotFound, RequestException, TooLarge
+from asyncprawcore import Forbidden, NotFound, RequestException, TooLarge
 import mock
 import pytest
 import websocket

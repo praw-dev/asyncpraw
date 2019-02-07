@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b22 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b22 asyncprawcore/0.2.1"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer g8Vi3lWMsXAF78Blj0KSZ9s6pN4",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=1479192268000; loid=2V7Lo0gVfIxYmWn1k8",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b22 prawcore/0.2.1"
+          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b22 asyncprawcore/0.2.1"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/recommend/sr/earthporn?raw_json=1&omit=cityporn"

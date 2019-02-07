@@ -1,5 +1,5 @@
 from asyncpraw.models import Comment, Submission
-from prawcore import BadRequest
+from asyncprawcore import BadRequest
 import mock
 import pytest
 
