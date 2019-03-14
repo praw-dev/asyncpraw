@@ -335,7 +335,7 @@ class Reddit(object):
         data = await self.request('GET', path, params=params)
         return self._objector.objectify(await data)
 
-    def info(self, fullnames=None, url=None):
+    async def info(self, fullnames=None, url=None):
         """Fetch information about each item in ``fullnames`` or from ``url``.
 
         :param fullnames: A list of fullnames for comments, submissions, and/or
@@ -364,11 +364,11 @@ class Reddit(object):
             if not isinstance(fullnames, list):
                 raise TypeError('fullnames must be a list')
 
-            def generator():
-                for position in range(0, len(fullnames), 100):
+            async def generator():
+                async for position in range(0, len(fullnames), 100):
                     fullname_chunk = fullnames[position:position + 100]
                     params = {'id': ','.join(fullname_chunk)}
-                    for result in self.get(API_PATH['info'], params=params):
+                    async for result in self.get(API_PATH['info'], params=params):
                         yield result
 
             return generator()
@@ -376,7 +376,7 @@ class Reddit(object):
         else:
             try:
                 params = {'url': url}
-                url_list = [result for result in self.get(API_PATH['info'], params=params)]
+                url_list = [result async for result in self.get(API_PATH['info'], params=params)]
                 return url_list
             except Exception:
                 raise TypeError('Invalid URL or no posts exist')
@@ -390,7 +390,7 @@ class Reddit(object):
 
         """
         data = await self.request('PATCH', path, data=data)
-        return self._objector.objectify(data)
+        return self._objector.objectify(await data)
 
     async def post(self, path, data=None, files=None, params=None):
         """Return parsed objects returned from a POST request to ``path``.
@@ -405,7 +405,7 @@ class Reddit(object):
 
         """
         data = await self.request('POST', path, data=data or {}, files=files, params=params)
-        return self._objector.objectify(data)
+        return self._objector.objectify(await data)
 
     def random_subreddit(self, nsfw=False):
         """Return a random lazy instance of :class:`~.Subreddit`.
