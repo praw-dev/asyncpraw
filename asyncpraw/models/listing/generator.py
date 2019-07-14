@@ -49,7 +49,7 @@ class ListingGenerator(PRAWBase):
             raise StopIteration
 
         if self._listing is None or self._list_index >= len(self._listing):
-           await self._next_batch()
+           await self._anext_batch()
 
         self._list_index += 1
         self.yielded += 1
