@@ -78,6 +78,11 @@ class TestDeprecation(UnitTest):
             await submission.gild()
             assert excinfo.value.args[0] == "`.gild` has been renamed to `.award`."
 
+    async def test_reddit_user_me_read_only(self):
+        self.reddit.read_only = True
+        with pytest.raises(DeprecationWarning):
+            await self.reddit.user.me()
+
     def test_synchronous_context_manager(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             with self.reddit:
