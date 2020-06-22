@@ -1,5 +1,5 @@
-asyncpraw: The Python Reddit API Wrapper
-===================================
+asyncpraw: The Asynchronous Python Reddit API Wrapper
+=====================================================
 
 .. image:: https://img.shields.io/pypi/v/asyncpraw.svg
    :alt: Latest asyncpraw Version
@@ -80,7 +80,7 @@ Please see asyncpraw's `documentation <http://asyncpraw.readthedocs.io/>`_ for
 more examples of what you can do with asyncpraw.
 
 asyncpraw Discussion and Support
----------------------------
+--------------------------------
 
 For those new to python, or would otherwise consider themselves a python
 beginner, please consider asking questions on the `r/learnpython
