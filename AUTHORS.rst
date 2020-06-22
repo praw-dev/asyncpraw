@@ -1,7 +1,7 @@
 Author/Maintainer
 =================
 
-- Bryce Boe <bbzbryce@gmail.com> `@bboe <https://github.com/bboe>`_
+- Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/LilSpazJoekp>`_
 
 
 Team Members

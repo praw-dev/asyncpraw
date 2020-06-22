@@ -10,9 +10,6 @@ asyncpraw: The Python Reddit API Wrapper
 .. image:: https://coveralls.io/repos/github/asyncpraw-dev/asyncpraw/badge.svg?branch=master
    :alt: Coveralls Coverage
    :target: https://coveralls.io/github/asyncpraw-dev/asyncpraw?branch=master
-.. image:: https://badges.gitter.im/asyncpraw-dev/asyncpraw.svg
-   :alt: Join the chat at https://gitter.im/asyncpraw-dev/asyncpraw
-   :target: https://gitter.im/asyncpraw-dev/asyncpraw
 
 asyncpraw, an acronym for "Python Reddit API Wrapper", is a python package that
 allows for simple access to Reddit's API. asyncpraw aims to be easy to use and
