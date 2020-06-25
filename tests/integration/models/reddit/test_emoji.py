@@ -13,17 +13,17 @@ class TestEmoji(IntegrationTest):
     def test__fetch(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        emoji = subreddit.emoji.get_emoji("test_png")
-        with self.recorder.use_cassette("TestEmoji.test__fetch"):
+        emoji = subreddit.emoji["test_png"]
+        with self.use_cassette("TestEmoji.test__fetch"):
             assert emoji.created_by.startswith("t2_")
 
     @mock.patch("asyncio.sleep", return_value=None)
     def test__fetch__invalid_emoji(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        emoji = subreddit.emoji.get_emoji("invalid")
-        emoji2 = subreddit.emoji.get_emoji("Test_png")
-        with self.recorder.use_cassette("TestEmoji.test__fetch__invalid_emoji"):
+        emoji = subreddit.emoji["invalid"]
+        emoji2 = subreddit.emoji["Test_png"]
+        with self.use_cassette("TestEmoji.test__fetch__invalid_emoji"):
             with pytest.raises(ClientException) as excinfo:
                 emoji.url
             assert str(excinfo.value) == (
@@ -38,15 +38,15 @@ class TestEmoji(IntegrationTest):
     def test_delete(self):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestEmoji.test_delete"):
-            subreddit.emoji.get_emoji("test_png").delete()
+        with self.use_cassette("TestEmoji.test_delete"):
+            subreddit.emoji["test_png"].delete()
 
     @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestEmoji.test_update"):
-            subreddit.emoji.get_emoji("test_png").update(
+        with self.use_cassette("TestEmoji.test_update"):
+            subreddit.emoji["test_png"].update(
                 mod_flair_only=False, post_flair_allowed=True, user_flair_allowed=True,
             )
 
@@ -54,10 +54,8 @@ class TestEmoji(IntegrationTest):
     def test_update__with_preexisting_values(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette(
-            "TestEmoji.test_update__with_preexisting_values"
-        ):
-            subreddit.emoji.get_emoji("test_png").update(mod_flair_only=True)
+        with self.use_cassette("TestEmoji.test_update__with_preexisting_values"):
+            subreddit.emoji["test_png"].update(mod_flair_only=True)
 
 
 class TestSubredditEmoji(IntegrationTest):
@@ -65,7 +63,7 @@ class TestSubredditEmoji(IntegrationTest):
     def test__iter(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestSubredditEmoji.test__iter"):
+        with self.use_cassette("TestSubredditEmoji.test__iter"):
             count = 0
             for emoji in subreddit.emoji:
                 assert isinstance(emoji, Emoji)
@@ -76,7 +74,7 @@ class TestSubredditEmoji(IntegrationTest):
     def test_add(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestSubredditEmoji.test_add"):
+        with self.use_cassette("TestSubredditEmoji.test_add"):
             for extension in ["jpg", "png"]:
                 emoji = subreddit.emoji.add(
                     "test_{}".format(extension),
@@ -88,7 +86,7 @@ class TestSubredditEmoji(IntegrationTest):
     def test_add_with_perms(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestSubredditEmoji.test_add_with_perms"):
+        with self.use_cassette("TestSubredditEmoji.test_add_with_perms"):
             for extension in ["jpg", "png"]:
                 emoji = subreddit.emoji.add(
                     "test_{}".format(extension),
