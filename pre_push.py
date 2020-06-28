@@ -54,8 +54,8 @@ def run_static():
     )
     success &= do_process(["black ."], shell=True)
     success &= do_process(["flake8", "--exclude=.eggs,build,docs"])
-    success &= do_process(["pydocstyle", "praw"])
-    # success &= do_process(["pylint", "--rcfile=.pylintrc", "praw"])
+    success &= do_process(["pydocstyle", "asyncraw"])
+    # success &= do_process(["pylint", "--rcfile=.pylintrc", "asyncpraw"])
 
     tmp_dir = mkdtemp()
     try:

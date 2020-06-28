@@ -1,6 +1,6 @@
 """Provide CommentForest for Submission comments."""
 from heapq import heappop, heappush
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING, AsyncIterator, Optional, Union, List
 
 from ..exceptions import DuplicateReplaceException
 from .reddit.more import MoreComments
@@ -18,7 +18,7 @@ class CommentForest:
     """
 
     @staticmethod
-    def _gather_more_comments(tree, parent_tree=None):
+    async def _gather_more_comments(tree, parent_tree=None):
         """Return a list of MoreComments objects obtained from tree."""
         more_comments = []
         queue = [(None, x) for x in tree]
@@ -27,11 +27,11 @@ class CommentForest:
             if isinstance(comment, MoreComments):
                 heappush(more_comments, comment)
                 if parent:
-                    comment._remove_from = parent.replies._comments
+                    comment._remove_from = [reply async for reply in parent.replies]
                 else:
                     comment._remove_from = parent_tree or tree
             else:
-                for item in comment.replies:
+                async for item in comment.replies:
                     queue.append((comment, item))
         return more_comments
 
@@ -42,18 +42,38 @@ class CommentForest:
 
         .. code-block:: python
 
-           first_comment = submission.comments[0]
+            comments = await submission.comments()
+            first_comment = comments[0]
 
         Alternatively, the presence of this method enables one to iterate over
         all top_level comments, like so:
 
         .. code-block:: python
 
-           for comment in submission.comments:
-               print(comment.body)
+            comments = await submission.comments()
+            for comment in comments:
+                print(comment.body)
 
         """
         return self._comments[index]
+
+    async def __aiter__(self) -> AsyncIterator[Comment]:
+        """Allow CommentForest to be used as an AsyncIterator.
+
+        # TODO: this might need changed updated
+
+        Alternatively, the presence of this method enables one to iterate over
+        all top_level comments, like so:
+
+        .. code-block:: python
+
+            comments = await submission.comments()
+            async for comment in comments:
+                print(comment.body)
+
+        """
+        for comment in self._comments:
+            yield comment
 
     def __init__(
         self, submission: "Submission", comments: Optional[List["Comment"]] = None,
@@ -71,7 +91,10 @@ class CommentForest:
 
     def __len__(self) -> int:
         """Return the number of top-level comments in the forest."""
-        return len(self._comments)
+        if self._comments:
+            return len(self._comments)
+        else:
+            return 0
 
     def _insert_comment(self, comment):
         if comment.name in self._submission._comments_by_id:
@@ -92,23 +115,23 @@ class CommentForest:
         for comment in comments:
             comment.submission = self._submission
 
-    def list(self) -> Union["Comment", "MoreComments"]:
+    async def list(self) -> AsyncIterator[Union["Comment", "MoreComments"]]:
         """Return a flattened list of all Comments.
 
         This list may contain :class:`.MoreComments` instances if
         :meth:`.replace_more` was not called first.
 
         """
-        comments = []
-        queue = list(self)
+        queue = [comment async for comment in self]
         while queue:
             comment = queue.pop(0)
-            comments.append(comment)
+            yield comment
             if not isinstance(comment, MoreComments):
-                queue.extend(comment.replies)
-        return comments
+                queue.extend([reply async for reply in comment.replies])
 
-    def replace_more(self, limit: int = 32, threshold: int = 0) -> List["MoreComments"]:
+    async def replace_more(
+        self, limit: int = 32, threshold: int = 0
+    ) -> List[MoreComments]:
         """Update the comment forest by resolving instances of MoreComments.
 
         :param limit: The maximum number of :class:`.MoreComments` instances to
@@ -129,16 +152,17 @@ class CommentForest:
 
         .. code-block:: python
 
-           submission = reddit.submission("3hahrw")
-           submission.comments.replace_more()
+            submission = await reddit.submission("3hahrw")
+            comments = await submission.comments()
+            await comments.replace_more()
 
         Alternatively, to replace :class:`.MoreComments` instances within the
         replies of a single comment try:
 
         .. code-block:: python
 
-           comment = reddit.comment("d8r4im1")
-           comment.refresh()
+           comment = await reddit.comment("d8r4im1")
+           await comment.refresh()
            comment.replies.replace_more()
 
         .. note:: This method can take a long time as each replacement will
@@ -163,7 +187,7 @@ class CommentForest:
 
         """
         remaining = limit
-        more_comments = self._gather_more_comments(self._comments)
+        more_comments = await self._gather_more_comments(self._comments)
         skipped = []
 
         # Fetch largest more_comments until reaching the limit or the threshold
@@ -174,12 +198,12 @@ class CommentForest:
                 item._remove_from.remove(item)
                 continue
 
-            new_comments = item.comments(update=False)
+            new_comments = await item.comments(update=False)
             if remaining is not None:
                 remaining -= 1
 
             # Add new MoreComment objects to the heap of more_comments
-            for more in self._gather_more_comments(new_comments, self._comments):
+            for more in await self._gather_more_comments(new_comments, self._comments):
                 more.submission = self._submission
                 heappush(more_comments, more)
             # Insert all items into the tree

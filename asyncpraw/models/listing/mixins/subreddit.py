@@ -1,5 +1,5 @@
 """Provide the SubredditListingMixin class."""
-from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, Optional, Union
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
@@ -29,7 +29,7 @@ class CommentHelper(PRAWBase):
 
     def __call__(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator["Comment"]:
+    ) -> AsyncGenerator["Comment", None]:
         """Return a :class:`.ListingGenerator` for the Subreddit's comments.
 
         Additional keyword arguments are passed in the initialization of
@@ -39,8 +39,9 @@ class CommentHelper(PRAWBase):
 
         .. code-block:: python
 
-           for comment in reddit.subreddit("redditdev").comments(limit=25):
-               print(comment.author)
+            subreddit = await reddit.subreddit('redditdev')
+            async for comment in subreddit.comments(limit=25):
+                print(comment.author)
 
         """
         return ListingGenerator(self._reddit, self._path, **generator_kwargs)
@@ -58,8 +59,9 @@ class SubredditListingMixin(BaseListingMixin, GildedListingMixin, RisingListingM
 
         .. code-block:: python
 
-           for comment in reddit.subreddit("redditdev").comments(limit=25):
-               print(comment.author)
+            subreddit = await reddit.subreddit('redditdev')
+            async for comment in subreddit.comments(limit=25):
+                print(comment.author)
 
         """
         return CommentHelper(self)

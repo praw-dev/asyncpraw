@@ -1,8 +1,7 @@
 Maintainers
 ===========
 
-- Bryce Boe <bbzbryce@gmail.com> `@bboe <https://github.com/bboe>`_
-- Joe RH <jarhill0@gmail.com> `@jarhill0 <https://github.com/jarhill0>`_
+- Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/lilspazjoekp>`_
 
 
 Documentation Contributors

@@ -3,7 +3,7 @@
 ## Code of Conduct
 
 This project is released with a
-[Contributor Code of Conduct](https://github.com/praw-dev/praw/blob/master/CODE_OF_CONDUCT.md). By
+[Contributor Code of Conduct](https://github.com/praw-dev/asyncpraw/blob/master/CODE_OF_CONDUCT.md). By
 participating in this project you agree to abide by its terms.
 
 ## Creating an Issue
@@ -13,7 +13,7 @@ participating in this project you agree to abide by its terms.
    via Slack.
 
 0. Please check the
-   [Unreleased](https://github.com/praw-dev/praw/blob/master/CHANGES.rst#unreleased)
+   [Unreleased](https://github.com/praw-dev/asyncpraw/blob/master/CHANGES.rst#unreleased)
    section of the latest changelog before filing an issue as it is possible the
    issue has already been resolved.
 
@@ -35,7 +35,7 @@ to you, it likely is not to the person asking the question.
 0. Prior to creating a pull request run the `pre_push.py` script. This script
    depends on the tools `black` `flake8`, `pylint`, `pydocstyle`, `sphinx` and `sphinx_rtd_theme`. They can
    be installed via `pip install black flake8 pydocstyle pylint sphinx sphinx_rtd_theme` or via
-   `pip install praw[lint]`.
+   `pip install asyncpraw[lint]`.
 
 0. Add yourself as a contributor to the ``AUTHORS.rst``.
 
@@ -47,7 +47,7 @@ to you, it likely is not to the person asking the question.
    not require fetching data from Reddit, e.g., method argument validation,
    should be saved as a unit test. Tests that hit Reddit's servers should be an
    integration test and all network activity should be recorded via Betamax.
-   The required packages can be installed with `pip install praw[test]`.
+   The required packages can be installed with `pip install asyncpraw[test]`.
 
 0. Feel free to check on the status of your pull request periodically by adding
    a comment.
@@ -137,4 +137,4 @@ class Example(object):
 
 ### See Also
 
-https://praw.readthedocs.io/en/latest/package_info/contributing.html
+https://asyncpraw.readthedocs.io/en/latest/package_info/contributing.html

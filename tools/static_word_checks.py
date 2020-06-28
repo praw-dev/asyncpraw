@@ -54,7 +54,9 @@ class StaticChecker:
         :param content: The content of the file
         :returns: A boolean with the status of the check
         """
-        if os.path.join("praw", "const.py") in filename:  # fails due to bytes blocks
+        if (
+            os.path.join("asyncpraw", "const.py") in filename
+        ):  # fails due to bytes blocks
             return True
         newcontent = re.sub(r"(^|\s)/(u|r)/", r"\1\2/", content)
         # will only replace if the character behind a /r/ is a
@@ -97,9 +99,9 @@ class StaticChecker:
     def run_checks(self) -> bool:
         """Scan a directory and run the checks.
 
-        The directory is assumed to be the praw directory located in the parent
+        The directory is assumed to be the asyncpraw directory located in the parent
         directory of the file, so if this file exists in
-        ``~/praw/tools/static_word_checks.py``, it will check ``~/praw/praw``.
+        ``~/asyncpraw/tools/static_word_checks.py``, it will check ``~/asyncpraw/asyncpraw``.
 
         It runs the checks located in the ``self.full_file_checks`` and
         ``self.line_checks`` lists, with full file checks being run first.
@@ -117,7 +119,7 @@ class StaticChecker:
            * :meth:`.check_for_noreturn`
         """
         status = True
-        directory = os.path.abspath(os.path.join(__file__, "..", "..", "praw"))
+        directory = os.path.abspath(os.path.join(__file__, "..", "..", "asyncpraw"))
         for current_directory, directories, filenames in os.walk(directory):
             for filename in filenames:
                 if not filename.endswith(".py"):

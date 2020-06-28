@@ -15,7 +15,7 @@ class Preferences:
     currently authenticated user.
     """
 
-    def __call__(self) -> Dict[str, Union[bool, int, str]]:
+    async def __call__(self) -> Dict[str, Union[bool, int, str]]:
         """Return the preference settings of the authenticated user as a dict.
 
         This method is intended to be accessed as ``reddit.user.preferences()``
@@ -23,13 +23,13 @@ class Preferences:
 
         .. code-block:: python
 
-           preferences = reddit.user.preferences()
-           print(preferences["show_link_flair"])
+            preferences = await reddit.user.preferences()
+            print(preferences["show_link_flair"])
 
         See https://www.reddit.com/dev/api#GET_api_v1_me_prefs for the list
         of possible values.
         """
-        return self._reddit.get(API_PATH["preferences"])
+        return await self._reddit.get(API_PATH["preferences"])
 
     def __init__(self, reddit: "Reddit"):
         """Create a Preferences instance.
@@ -38,7 +38,7 @@ class Preferences:
         """
         self._reddit = reddit
 
-    def update(self, **preferences: Union[bool, int, str]):
+    async def update(self, **preferences: Union[bool, int, str]):
         """Modify the specified settings.
 
         :param 3rd_party_data_personalized_ads: Allow Reddit to use data
@@ -164,7 +164,7 @@ class Preferences:
 
         .. code-block:: python
 
-           reddit.user.preferences.update(show_link_flair=True)
+            await reddit.user.preferences.update(show_link_flair=True)
 
         This method returns the new state of the
         preferences as a ``dict``, which can be used to check whether a
@@ -172,9 +172,9 @@ class Preferences:
 
         .. code-block:: python
 
-           original_preferences = reddit.user.preferences()
-           new_preferences = reddit.user.preferences.update(invalid_param=123)
-           print(original_preferences == new_preferences)  # True, no change
+            original_preferences = await reddit.user.preferences()
+            new_preferences = await original_preferences.update(invalid_param=123)
+            print(original_preferences == new_preferences)  # True, no change
 
         .. warning:: Passing an unknown parameter name or an illegal value
                      (such as an int when a boolean is expected) does not
@@ -190,10 +190,10 @@ class Preferences:
 
         .. code-block:: python
 
-           reddit.user.preferences.update(
-                **{"3rd_party_data_personalized_ads": False})
+            await reddit.user.preferences.update(
+                 **{"3rd_party_data_personalized_ads": False})
 
         """
-        return self._reddit.patch(
+        return await self._reddit.patch(
             API_PATH["preferences"], data={"json": dumps(preferences)}
         )

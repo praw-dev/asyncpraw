@@ -1,17 +1,17 @@
 """Provide the BaseListingMixin class."""
-from typing import Any, Dict, Iterator, Union
+from typing import Any, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
 from ...base import PRAWBase
 from ..generator import ListingGenerator
 
 
-def _prepare(praw_object, arguments_dict, target):
+def _prepare(asyncpraw_object, arguments_dict, target):
     """Fix for Redditor methods that use a query param rather than subpath."""
-    if praw_object.__dict__.get("_listing_use_sort"):
+    if asyncpraw_object.__dict__.get("_listing_use_sort"):
         PRAWBase._safely_add_arguments(arguments_dict, "params", sort=target)
-        return praw_object._path
-    return urljoin(praw_object._path, target)
+        return asyncpraw_object._path
+    return urljoin(asyncpraw_object._path, target)
 
 
 class BaseListingMixin(PRAWBase):
@@ -21,7 +21,7 @@ class BaseListingMixin(PRAWBase):
 
     @staticmethod
     def _validate_time_filter(time_filter):
-        """Raise :py:class:`.ValueError` if ``time_filter`` is not valid."""
+        """:raises: :py:class:`.ValueError` if ``time_filter`` is not valid."""
         if time_filter not in BaseListingMixin.VALID_TIME_FILTERS:
             raise ValueError(
                 "time_filter must be one of: {}".format(
@@ -33,7 +33,7 @@ class BaseListingMixin(PRAWBase):
         self,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for controversial submissions.
 
         :param time_filter: Can be one of: all, day, hour, month, week, year
@@ -61,7 +61,7 @@ class BaseListingMixin(PRAWBase):
         url = _prepare(self, generator_kwargs, "controversial")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    def hot(self, **generator_kwargs: Union[str, int, Dict[str, str]]) -> Iterator[Any]:
+    def hot(self, **generator_kwargs: Union[str, int, Dict[str, str]]) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for hot items.
 
         Additional keyword arguments are passed in the initialization of
@@ -83,7 +83,7 @@ class BaseListingMixin(PRAWBase):
         url = _prepare(self, generator_kwargs, "hot")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    def new(self, **generator_kwargs: Union[str, int, Dict[str, str]]) -> Iterator[Any]:
+    def new(self, **generator_kwargs: Union[str, int, Dict[str, str]]) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for new items.
 
         Additional keyword arguments are passed in the initialization of
@@ -109,7 +109,7 @@ class BaseListingMixin(PRAWBase):
         self,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for top submissions.
 
         :param time_filter: Can be one of: all, day, hour, month, week, year

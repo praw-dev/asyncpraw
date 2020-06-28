@@ -20,14 +20,16 @@ class Collection(RedditBase):
 
     .. code-block:: python
 
-       collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        collection = await subreddit.collections("some_uuid")
 
     or
 
     .. code-block:: python
 
-       collection = reddit.subreddit("SUBREDDIT").collections(
-           permalink='https://reddit.com/r/SUBREDDIT/collection/some_uuid')
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        collection = await subreddit.collections(
+            permalink='https://reddit.com/r/SUBREDDIT/collection/some_uuid')
 
     **Typical Attributes**
 
@@ -74,29 +76,31 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           collection.mod.update_title("My new title!")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.update_title("My new title!")
 
         """
         return CollectionModeration(self._reddit, self.collection_id)
 
-    @cachedproperty
-    def subreddit(self) -> Subreddit:
+    async def subreddit(self) -> Subreddit:
         """Get the subreddit that this collection belongs to.
 
         For example:
 
         .. code-block:: python
 
-            collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-            subreddit = collection.subreddit
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            print(await collection.subreddit())
 
         """
-        return next(self._reddit.info([self.subreddit_id]))
+        async for subreddit in self._reddit.info([self.subreddit_id]):
+            return subreddit
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: Reddit,
         _data: Dict[str, Any] = None,
         collection_id: Optional[str] = None,
         permalink: Optional[str] = None,
@@ -123,7 +127,7 @@ class Collection(RedditBase):
 
         self._info_params = {
             "collection_id": self.collection_id,
-            "include_links": True,
+            "include_links": "true", # TODO this needs looked into, probably on asyncprawcore side
         }
 
     def __iter__(self) -> Generator[Any, None, None]:
@@ -133,9 +137,10 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           for submission in collection:
-               print(submission.title, submission.permalink)
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            for submission in collection:
+                print(submission.title, submission.permalink)
 
         """
         for item in self.sorted_links:
@@ -148,8 +153,9 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           print(len(collection))
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            print(len(collection))
 
         """
         return len(self.link_ids)
@@ -157,7 +163,7 @@ class Collection(RedditBase):
     def __setattr__(self, attribute: str, value: Any):
         """Objectify author, subreddit, and sorted_links attributes."""
         if attribute == "author_name":
-            self.author = self._reddit.redditor(value)
+            self.author = value
         elif attribute == "sorted_links":
             value = self._reddit._objector.objectify(value)
         super().__setattr__(attribute, value)
@@ -165,13 +171,13 @@ class Collection(RedditBase):
     def _fetch_info(self):
         return ("collection", {}, self._info_params)
 
-    def _fetch_data(self):
+    async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         try:
             self._reddit._objector.check_error(data)
         except ClientException:
@@ -184,37 +190,42 @@ class Collection(RedditBase):
             )
 
         other = type(self)(self._reddit, _data=data)
+        other.author_name = await self._reddit.redditor(other.author_name)
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def follow(self):
+    async def follow(self):
         """Follow this Collection.
 
         Example usage:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").collections("some_uuid").follow()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.follow()
 
         .. seealso:: :meth:`~.unfollow`
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_follow"],
             data={"collection_id": self.collection_id, "follow": True},
         )
 
-    def unfollow(self):
+    async def unfollow(self):
         """Unfollow this Collection.
 
         Example usage:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").collections("some_uuid").unfollow()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.unfollow()
 
         .. seealso:: :meth:`~.follow`
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_follow"],
             data={"collection_id": self.collection_id, "follow": False},
         )
@@ -230,13 +241,15 @@ class CollectionModeration(PRAWBase):
        reddit.subreddit("SUBREDDIT").collections("some_uuid").mod
     """
 
-    def _post_fullname(self, post):
+    async def _post_fullname(self, post):
         """Get a post's fullname.
 
         :param post: A fullname, a Submission, a permalink, or an ID.
         :returns: The fullname of the post.
         """
         if isinstance(post, Submission):
+            if not post._fetched:
+                await post._fetch()
             return post.fullname
         elif not isinstance(post, str):
             raise TypeError(
@@ -245,11 +258,13 @@ class CollectionModeration(PRAWBase):
         if post.startswith("{}_".format(self._reddit.config.kinds["submission"])):
             return post
         try:
-            return self._reddit.submission(url=post).fullname
+            submission = await self._reddit.submission(url=post)
+            return submission.fullname
         except ClientException:
-            return self._reddit.submission(id=post).fullname
+            submission = await self._reddit.submission(id=post)
+            return submission.fullname
 
-    def __init__(self, reddit: "Reddit", collection_id: str):
+    def __init__(self, reddit: Reddit, collection_id: str):
         """Initialize an instance of CollectionModeration.
 
         :param collection_id: The ID of a collection.
@@ -257,7 +272,7 @@ class CollectionModeration(PRAWBase):
         super().__init__(reddit, _data=None)
         self.collection_id = collection_id
 
-    def add_post(self, submission: "Submission"):
+    async def add_post(self, submission: "Submission"):
         """Add a post to the collection.
 
         :param submission: The post to add, a :class:`.Submission`, its
@@ -268,36 +283,39 @@ class CollectionModeration(PRAWBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           collection.mod.add_post("bgibu9")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.add_post("bgibu9")
 
         .. seealso:: :meth:`.remove_post`
 
         """
-        link_fullname = self._post_fullname(submission)
+        link_fullname = await self._post_fullname(submission)
 
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_add_post"],
             data={"collection_id": self.collection_id, "link_fullname": link_fullname},
         )
 
-    def delete(self):
+    async def delete(self):
         """Delete this collection.
 
         Example usage:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").collections("some_uuid").mod.delete()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.delete()
 
         .. seealso:: :meth:`~.SubredditCollectionsModeration.create`
 
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_delete"], data={"collection_id": self.collection_id},
         )
 
-    def remove_post(self, submission: "Submission"):
+    async def remove_post(self, submission: Submission):
         """Remove a post from the collection.
 
         :param submission: The post to remove, a :class:`.Submission`, its
@@ -308,20 +326,21 @@ class CollectionModeration(PRAWBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           collection.mod.remove_post("bgibu9")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.remove_post("bgibu9")
 
         .. seealso:: :meth:`.add_post`
 
         """
-        link_fullname = self._post_fullname(submission)
+        link_fullname = await self._post_fullname(submission)
 
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_remove_post"],
             data={"collection_id": self.collection_id, "link_fullname": link_fullname},
         )
 
-    def reorder(self, links: List[Union[str, Submission]]):
+    async def reorder(self, links: List[Union[str, Submission]]):
         """Reorder posts in the collection.
 
         :param links: A ``list`` of submissions, as :class:`.Submission`,
@@ -331,19 +350,20 @@ class CollectionModeration(PRAWBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           current_order = collection.link_ids
-           new_order = reversed(current_order)
-           collection.mod.reorder(new_order)
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            current_order = collection.link_ids
+            new_order = reversed(current_order)
+            await collection.mod.reorder(new_order)
 
         """
-        link_ids = ",".join(self._post_fullname(post) for post in links)
-        self._reddit.post(
+        link_ids = ",".join([await self._post_fullname(post) for post in links])
+        await self._reddit.post(
             API_PATH["collection_reorder"],
             data={"collection_id": self.collection_id, "link_ids": link_ids},
         )
 
-    def update_description(self, description: str):
+    async def update_description(self, description: str):
         """Update the collection's description.
 
         :param description: The new description.
@@ -352,18 +372,19 @@ class CollectionModeration(PRAWBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           collection.mod.update_description("Please enjoy these links!")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.update_description("Please enjoy these links")
 
         .. seealso:: :meth:`.update_title`
 
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_desc"],
             data={"collection_id": self.collection_id, "description": description},
         )
 
-    def update_title(self, title: str):
+    async def update_title(self, title: str):
         """Update the collection's title.
 
         :param title: The new title.
@@ -372,13 +393,14 @@ class CollectionModeration(PRAWBase):
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           collection.mod.update_title("Titley McTitleface")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.update_title("Titley McTitleface")
 
         .. seealso:: :meth:`.update_description`
 
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["collection_title"],
             data={"collection_id": self.collection_id, "title": title},
         )
@@ -391,7 +413,8 @@ class SubredditCollections(PRAWBase):
 
     .. code-block:: python
 
-       reddit.subreddit("SUBREDDIT").collections
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit.collections
 
     """
 
@@ -403,13 +426,13 @@ class SubredditCollections(PRAWBase):
 
         .. code-block:: python
 
-           my_sub = reddit.subreddit("SUBREDDIT")
-           new_collection = my_sub.collections.mod.create("Title", "desc")
+            my_sub = await reddit.subreddit("SUBREDDIT")
+            new_collection = await my_sub.collections.mod.create("Title", "desc")
 
         """
         return SubredditCollectionsModeration(self._reddit, self.subreddit.fullname)
 
-    def __call__(
+    async def __call__(
         self, collection_id: Optional[str] = None, permalink: Optional[str] = None,
     ):
         """Return the :class:`.Collection` with the specified ID.
@@ -424,26 +447,28 @@ class SubredditCollections(PRAWBase):
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("SUBREDDIT")
 
-           uuid = "847e4548-a3b5-4ad7-afb4-edbfc2ed0a6b"
-           collection = subreddit.collections(uuid)
-           print(collection.title)
-           print(collection.description)
+            uuid = "847e4548-a3b5-4ad7-afb4-edbfc2ed0a6b"
+            collection = await subreddit.collections(uuid)
+            print(collection.title)
+            print(collection.description)
 
-           permalink = 'https://www.reddit.com/r/SUBREDDIT/collection/' + uuid
-           collection = subreddit.collections(permalink=permalink)
-           print(collection.title)
-           print(collection.description)
+            permalink = 'https://www.reddit.com/r/SUBREDDIT/collection/' + uuid
+            collection = await subreddit.collections(permalink=permalink)
+            print(collection.title)
+            print(collection.description)
 
         """
         if (collection_id is None) == (permalink is None):
             raise TypeError(
                 "Exactly one of collection_id or permalink must be provided."
             )
-        return Collection(
+        collection = Collection(
             self._reddit, collection_id=collection_id, permalink=permalink
         )
+        await collection._fetch()
+        return collection
 
     def __init__(
         self,
@@ -455,18 +480,19 @@ class SubredditCollections(PRAWBase):
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
-    def __iter__(self):
+    async def __aiter__(self):
         r"""Iterate over the Subreddit's :class:`.Collection`\ s.
 
         Example usage:
 
         .. code-block:: python
 
-           for collection in reddit.subreddit("SUBREDDIT").collections:
-               print(collection.permalink)
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            async for collection in subreddit.collections:
+                print(collection.permalink)
 
         """
-        request = self._reddit.get(
+        request = await self._reddit.get(
             API_PATH["collection_subreddit"],
             params={"sr_fullname": self.subreddit.fullname},
         )
@@ -481,7 +507,8 @@ class SubredditCollectionsModeration(PRAWBase):
 
     .. code-block:: python
 
-       reddit.subreddit("SUBREDDIT").collections.mod
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit.collections.mod
 
     """
 
@@ -495,7 +522,7 @@ class SubredditCollectionsModeration(PRAWBase):
         super().__init__(reddit, _data)
         self.subreddit_fullname = sub_fullname
 
-    def create(self, title: str, description: str):
+    async def create(self, title: str, description: str):
         """Create a new :class:`.Collection`.
 
         The authenticated account must have appropriate moderator
@@ -510,14 +537,14 @@ class SubredditCollectionsModeration(PRAWBase):
 
         .. code-block:: python
 
-           my_sub = reddit.subreddit("SUBREDDIT")
-           new_collection = my_sub.collections.mod.create("Title", "desc")
-           new_collection.mod.add_post("bgibu9")
+            sub = await reddit.subreddit("SUBREDDIT")
+            new_collection = await sub.collections.mod.create("Title", "desc")
+            await new_collection.mod.add_post("bgibu9")
 
         .. seealso:: :meth:`~CollectionModeration.delete`
 
         """
-        return self._reddit.post(
+        return await self._reddit.post(
             API_PATH["collection_create"],
             data={
                 "sr_fullname": self.subreddit_fullname,

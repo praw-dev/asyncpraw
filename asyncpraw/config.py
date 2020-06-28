@@ -99,7 +99,7 @@ class Config:
         if key in self._settings:  # Passed in values have the highest priority
             return self._fetch(key)
 
-        env_value = os.getenv("praw_{}".format(key))
+        env_value = os.getenv("asyncpraw_{}".format(key))
         ini_value = self._fetch_default(key)  # Needed to remove from custom
 
         # Environment variables have higher priority than praw.ini settings

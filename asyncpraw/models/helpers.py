@@ -1,6 +1,6 @@
 """Provide the helper classes."""
 from json import dumps
-from typing import Generator, List, Optional, Union
+from typing import AsyncGenerator, List, Optional, Union
 
 from ..const import API_PATH
 from .base import PRAWBase
@@ -12,7 +12,7 @@ from .reddit.redditor import Redditor
 class LiveHelper(PRAWBase):
     """Provide a set of functions to interact with LiveThreads."""
 
-    def __call__(
+    async def __call__(
         self, id: str
     ) -> LiveThread:  # pylint: disable=invalid-name,redefined-builtin
         """Return a new lazy instance of :class:`~.LiveThread`.
@@ -21,13 +21,15 @@ class LiveHelper(PRAWBase):
 
         .. code-block:: python
 
-            livethread = reddit.live("ukaeu1ik4sw5")
+            livethread = await reddit.live("ukaeu1ik4sw5")
 
         :param id: A live thread ID, e.g., ``ukaeu1ik4sw5``.
         """
-        return LiveThread(self._reddit, id=id)
+        live_thread = LiveThread(self._reddit, id=id)
+        await live_thread._fetch()
+        return live_thread
 
-    def info(self, ids: List[str]) -> Generator[LiveThread, None, None]:
+    def info(self, ids: List[str]) -> AsyncGenerator[LiveThread, None]:
         """Fetch information about each live thread in ``ids``.
 
         :param ids: A list of IDs for a live thread.
@@ -50,24 +52,24 @@ class LiveHelper(PRAWBase):
             ids = ["3rgnbke2rai6hen7ciytwcxadi",
                    "sw7bubeycai6hey4ciytwamw3a",
                    "t8jnufucss07"]
-            for thread in reddit.live.info(ids)
+            async for thread in reddit.live.info(ids)
                 print(thread.title)
 
         """
         if not isinstance(ids, list):
             raise TypeError("ids must be a list")
 
-        def generator():
+        async def generator():
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
                 params = {"limit": 100}  # 25 is used if not specified
-                for result in self._reddit.get(url, params=params):
+                for result in await self._reddit.get(url, params=params):
                     yield result
 
         return generator()
 
-    def create(
+    async def create(
         self,
         title: str,
         description: Optional[str] = None,
@@ -85,7 +87,7 @@ class LiveHelper(PRAWBase):
         :returns: The new LiveThread object.
 
         """
-        return self._reddit.post(
+        return await self._reddit.post(
             API_PATH["livecreate"],
             data={
                 "description": description,
@@ -95,7 +97,7 @@ class LiveHelper(PRAWBase):
             },
         )
 
-    def now(self) -> Optional[LiveThread]:
+    async def now(self) -> Optional[LiveThread]:
         """Get the currently featured live thread.
 
         :returns: The :class:`.LiveThread` object, or ``None`` if there is
@@ -105,17 +107,17 @@ class LiveHelper(PRAWBase):
 
         .. code-block:: python
 
-            thread = reddit.live.now()  # LiveThread object or None
+            thread = await reddit.live.now()  # LiveThread object or None
 
         """
-        return self._reddit.get(API_PATH["live_now"])
+        return await self._reddit.get(API_PATH["live_now"])
 
 
 class MultiredditHelper(PRAWBase):
     """Provide a set of functions to interact with Multireddits."""
 
-    def __call__(self, redditor: Union[str, Redditor], name: str) -> Multireddit:
-        """Return a lazy instance of :class:`~.Multireddit`.
+    async def __call__(self, redditor: Union[str, Redditor], name: str) -> Multireddit:
+        """Return an instance of :class:`~.Multireddit`.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance who owns the multireddit.
@@ -123,9 +125,11 @@ class MultiredditHelper(PRAWBase):
 
         """
         path = "/user/{}/m/{}".format(redditor, name)
-        return Multireddit(self._reddit, _data={"name": name, "path": path})
+        multireddit = Multireddit(self._reddit, _data={"name": name, "path": path})
+        await multireddit._fetch()
+        return multireddit
 
-    def create(
+    async def create(
         self,
         display_name: str,
         subreddits: Union[str, Subreddit],
@@ -167,7 +171,7 @@ class MultiredditHelper(PRAWBase):
             "visibility": visibility,
             "weighting_scheme": weighting_scheme,
         }
-        return self._reddit.post(
+        return await self._reddit.post(
             API_PATH["multireddit_base"], data={"model": dumps(model)}
         )
 
@@ -175,21 +179,22 @@ class MultiredditHelper(PRAWBase):
 class SubredditHelper(PRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    def __call__(self, display_name: str) -> Subreddit:
-        """Return a lazy instance of :class:`~.Subreddit`.
+    async def __call__(self, display_name: str) -> Subreddit:
+        """Return an instance of :class:`~.Subreddit`.
 
         :param display_name: The name of the subreddit.
         """
         lower_name = display_name.lower()
 
         if lower_name == "random":
-            return self._reddit.random_subreddit()
+            return await self._reddit.random_subreddit()
         if lower_name == "randnsfw":
-            return self._reddit.random_subreddit(nsfw=True)
+            return await self._reddit.random_subreddit(nsfw=True)
+        sub = Subreddit(self._reddit, display_name=display_name)
+        await sub._fetch()
+        return sub
 
-        return Subreddit(self._reddit, display_name=display_name)
-
-    def create(
+    async def create(
         self,
         name: str,
         title: Optional[str] = None,
@@ -219,7 +224,7 @@ class SubredditHelper(PRAWBase):
             of other available settings.
 
         """
-        Subreddit._create_or_update(
+        await Subreddit._create_or_update(
             _reddit=self._reddit,
             name=name,
             link_type=link_type,
@@ -228,4 +233,6 @@ class SubredditHelper(PRAWBase):
             wikimode=wikimode,
             **other_settings
         )
-        return self(name)
+        subreddit = self(name)
+        await subreddit._fetch()
+        return subreddit

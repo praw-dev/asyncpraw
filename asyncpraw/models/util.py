@@ -1,7 +1,7 @@
 """Provide helper classes used by other models."""
 import random
 import time
-from typing import Any, Callable, Generator, List, Optional, Set
+from typing import Any, Callable, AsyncGenerator, List, Optional, Set
 
 
 class BoundedSet:
@@ -79,14 +79,14 @@ def permissions_string(
     return ",".join(to_set)
 
 
-def stream_generator(
+async def stream_generator(
     function: Callable[[Any], Any],
     pause_after: Optional[int] = None,
     skip_existing: bool = False,
     attribute_name: str = "fullname",
     exclude_before: bool = False,
     **function_kwargs: Any
-) -> Generator[Any, None, None]:
+) -> AsyncGenerator[Any, None]:
     """Yield new items from ListingGenerators and ``None`` when paused.
 
     :param function: A callable that returns a ListingGenerator, e.g.
@@ -121,37 +121,38 @@ def stream_generator(
 
     .. code-block:: python
 
-       reply_function = reddit.inbox.comment_replies
-       for reply in praw.models.util.stream_generator(reply_function):
-           print(reply)
+        reply_function = reddit.inbox.comment_replies
+        reply_stream = asyncpraw.models.util.stream_generator(reply_function)
+        async for reply in reply_stream:
+            print(reply)
 
     To pause a comment stream after six responses with no new
     comments, try:
 
     .. code-block:: python
 
-       subreddit = reddit.subreddit("redditdev")
-       for comment in subreddit.stream.comments(pause_after=6):
-           if comment is None:
-               break
-           print(comment)
+        subreddit = await reddit.subreddit('redditdev')
+        async for comment in subreddit.stream.comments(pause_after=6):
+            if comment is None:
+                break
+            print(comment)
 
     To resume fetching comments after a pause, try:
 
     .. code-block:: python
 
-       subreddit = reddit.subreddit("help")
-       comment_stream = subreddit.stream.comments(pause_after=5)
+        subreddit = await reddit.subreddit('help')
+        comment_stream = subreddit.stream.comments(pause_after=5)
 
-       for comment in comment_stream:
-           if comment is None:
-               break
-           print(comment)
-       # Do any other processing, then try to fetch more data
-       for comment in comment_stream:
-           if comment is None:
-               break
-           print(comment)
+        async for comment in comment_stream:
+            if comment is None:
+                break
+            print(comment)
+        # Do any other processing, then try to fetch more data
+        async for comment in comment_stream:
+            if comment is None:
+                break
+            print(comment)
 
     To bypass the internal exponential backoff, try the following. This
     approach is useful if you are monitoring a subreddit with infrequent
@@ -161,11 +162,11 @@ def stream_generator(
 
     .. code-block:: python
 
-       subreddit = reddit.subreddit("help")
-       for comment in subreddit.stream.comments(pause_after=0):
-           if comment is None:
-               continue
-           print(comment)
+        subreddit = await reddit.subreddit('help')
+        async for comment in subreddit.stream.comments(pause_after=0):
+            if comment is None:
+                continue
+            print(comment)
 
     """
     before_attribute = None
@@ -181,9 +182,11 @@ def stream_generator(
         if before_attribute is None:
             limit -= without_before_counter
             without_before_counter = (without_before_counter + 1) % 30
-        if not exclude_before:
+        if not exclude_before and before_attribute:
             function_kwargs["params"] = {"before": before_attribute}
-        for item in reversed(list(function(limit=limit, **function_kwargs))):
+        for item in reversed(
+            [result async for result in function(limit=limit, **function_kwargs)]
+        ):
             attribute = getattr(item, attribute_name)
             if attribute in seen_attributes:
                 continue

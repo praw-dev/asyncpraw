@@ -19,7 +19,7 @@ class ThingModerationMixin:
 
     REMOVAL_MESSAGE_API = None
 
-    def _add_removal_reason(self, mod_note="", reason_id=None):
+    async def _add_removal_reason(self, mod_note="", reason_id=None):
         """Add a removal reason for a Comment or Submission.
 
         :param mod_note: A message for the other moderators.
@@ -39,9 +39,11 @@ class ThingModerationMixin:
             "mod_note": mod_note,
             "reason_id": reason_id,
         }
-        self.thing._reddit.post(API_PATH["removal_reasons"], data={"json": dumps(data)})
+        await self.thing._reddit.post(
+            API_PATH["removal_reasons"], data={"json": dumps(data)}
+        )
 
-    def approve(self):
+    async def approve(self):
         """Approve a :class:`~.Comment` or :class:`~.Submission`.
 
         Approving a comment or submission reverts a removal, resets the report
@@ -53,17 +55,17 @@ class ThingModerationMixin:
 
         .. code-block:: python
 
-           # approve a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.approve()
-           # approve a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.approve()
+            # approve a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.approve()
+            # approve a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.approve()
 
         """
-        self.thing._reddit.post(API_PATH["approve"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(API_PATH["approve"], data={"id": self.thing.fullname})
 
-    def distinguish(self, how="yes", sticky=False):
+    async def distinguish(self, how="yes", sticky=False):
         """Distinguish a :class:`~.Comment` or :class:`~.Submission`.
 
         :param how: One of "yes", "no", "admin", "special". "yes" adds a
@@ -77,12 +79,12 @@ class ThingModerationMixin:
 
         .. code-block:: python
 
-           # distinguish and sticky a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.distinguish(how="yes", sticky=True)
-           # undistinguish a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.distinguish(how="no")
+            # distinguish and sticky a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.distinguish(how="yes", sticky=True)
+            # undistinguish a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.distinguish(how="no")
 
         .. seealso:: :meth:`~.undistinguish`
 
@@ -90,9 +92,9 @@ class ThingModerationMixin:
         data = {"how": how, "id": self.thing.fullname}
         if sticky and getattr(self.thing, "is_root", False):
             data["sticky"] = True
-        self.thing._reddit.post(API_PATH["distinguish"], data=data)
+        await self.thing._reddit.post(API_PATH["distinguish"], data=data)
 
-    def ignore_reports(self):
+    async def ignore_reports(self):
         """Ignore future reports on a :class:`~.Comment` or :class:`~.Submission`.
 
         Calling this method will prevent future reports on this Comment or
@@ -104,40 +106,40 @@ class ThingModerationMixin:
 
         .. code-block:: python
 
-           # ignore future reports on a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.ignore_reports()
-           # ignore future reports on a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.ignore_reports()
+            # ignore future reports on a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.ignore_reports()
+            # ignore future reports on a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.ignore_reports()
 
         .. seealso:: :meth:`~.unignore_reports`
 
         """
-        self.thing._reddit.post(
+        await self.thing._reddit.post(
             API_PATH["ignore_reports"], data={"id": self.thing.fullname}
         )
 
-    def lock(self):
+    async def lock(self):
         """Lock a :class:`~.Comment` or :class:`~.Submission`.
 
         Example usage:
 
         .. code-block:: python
 
-           # lock a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.lock()
-           # lock a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.lock()
+            # lock a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.lock()
+            # lock a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.lock()
 
         .. seealso:: :meth:`~.unlock`
 
         """
-        self.thing._reddit.post(API_PATH["lock"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(API_PATH["lock"], data={"id": self.thing.fullname})
 
-    def remove(self, spam=False, mod_note="", reason_id=None):
+    async def remove(self, spam=False, mod_note="", reason_id=None):
         """Remove a :class:`~.Comment` or :class:`~.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -152,24 +154,25 @@ class ThingModerationMixin:
 
         .. code-block:: python
 
-           # remove a comment and mark as spam:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.remove(spam=True)
-           # remove a submission
-           submission = reddit.submission(id="5or86n")
-           submission.mod.remove()
-           # remove a submission with a removal reason
-           reason = reddit.subreddit.mod.removal_reasons["110ni21zo23ql"]
-           submission = reddit.submission(id="5or86n")
-           submission.mod.remove(reason_id=reason.id)
+            # remove a comment and mark as spam:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.remove(spam=True)
+            # remove a submission
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.remove()
+            # remove a submission with a removal reason
+            sub = await reddit.subreddit("subreddit")
+            reason = await sub.mod.removal_reasons.get_reason("110ni21zo23ql")
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.remove(reason_id=reason.id)
 
         """
         data = {"id": self.thing.fullname, "spam": bool(spam)}
-        self.thing._reddit.post(API_PATH["remove"], data=data)
+        await self.thing._reddit.post(API_PATH["remove"], data=data)
         if any([reason_id, mod_note]):
-            self._add_removal_reason(mod_note, reason_id)
+            await self._add_removal_reason(mod_note, reason_id)
 
-    def send_removal_message(
+    async def send_removal_message(
         self,
         message,
         title="ignored",
@@ -209,9 +212,9 @@ class ThingModerationMixin:
             "type": type,
         }
 
-        return self.thing._reddit.post(url, data={"json": dumps(data)}) or None
+        return await self.thing._reddit.post(url, data={"json": dumps(data)}) or None
 
-    def undistinguish(self):
+    async def undistinguish(self):
         """Remove mod, admin, or special distinguishing from an object.
 
         Also unstickies the object if applicable.
@@ -220,19 +223,19 @@ class ThingModerationMixin:
 
         .. code-block:: python
 
-           # undistinguish a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.undistinguish()
-           # undistinguish a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.undistinguish()
+            # undistinguish a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.undistinguish()
+            # undistinguish a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.undistinguish()
 
         .. seealso:: :meth:`~.distinguish`
 
         """
-        self.distinguish(how="no")
+        await self.distinguish(how="no")
 
-    def unignore_reports(self):
+    async def unignore_reports(self):
         """Resume receiving future reports on a Comment or Submission.
 
         Future reports on this :class:`~.Comment` or :class:`~.Submission`
@@ -243,38 +246,38 @@ class ThingModerationMixin:
 
         .. code-block:: python
 
-           # accept future reports on a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.unignore_reports()
-           # accept future reports on a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.unignore_reports()
+            # accept future reports on a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.unignore_reports()
+            # accept future reports on a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.unignore_reports()
 
         .. seealso:: :meth:`~.ignore_reports`
 
         """
-        self.thing._reddit.post(
+        await self.thing._reddit.post(
             API_PATH["unignore_reports"], data={"id": self.thing.fullname}
         )
 
-    def unlock(self):
+    async def unlock(self):
         """Unlock a :class:`~.Comment` or :class:`~.Submission`.
 
         Example usage:
 
         .. code-block:: python
 
-           # unlock a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.unlock()
-           # unlock a submission:
-           submission = reddit.submission(id="5or86n")
-           submission.mod.unlock()
+            # unlock a comment:
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.unlock()
+            # unlock a submission:
+            submission = await reddit.submission(id="5or86n")
+            await submission.mod.unlock()
 
         .. seealso:: :meth:`~.lock`
 
         """
-        self.thing._reddit.post(API_PATH["unlock"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(API_PATH["unlock"], data={"id": self.thing.fullname})
 
 
 class UserContentMixin(

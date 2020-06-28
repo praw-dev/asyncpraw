@@ -10,7 +10,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class ModAction(PRAWBase):
     """Represent a moderator action."""
 
-    @property
+    @property  # TODO: figure this out
     def mod(self) -> "Redditor":
         """Return the Redditor who the action was issued by."""
         return self._reddit.redditor(self._mod)  # pylint: disable=no-member

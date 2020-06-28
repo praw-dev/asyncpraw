@@ -82,7 +82,7 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
         super().__init__(reddit, _data=_data)
         self._fetched = True
 
-    def delete(self):
+    async def delete(self):
         """Delete the message.
 
         .. note:: Reddit does not return an indication of whether or not the
@@ -92,10 +92,12 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            next(reddit.inbox.all()).delete()
+            async for message in reddit.inbox.all():
+                await message.delete()
+                break
 
         """
-        self._reddit.post(API_PATH["delete_message"], data={"id": self.fullname})
+        await self._reddit.post(API_PATH["delete_message"], data={"id": self.fullname})
 
 
 class SubredditMessage(Message):
@@ -130,7 +132,7 @@ class SubredditMessage(Message):
 
     """
 
-    def mute(self):
+    async def mute(self):
         """Mute the sender of this SubredditMessage.
 
         For example, to mute the sender of the first SubredditMessage in the
@@ -138,14 +140,15 @@ class SubredditMessage(Message):
 
         .. code-block:: python
 
-            from praw.models import SubredditMessage
-            msg = next(message for message in reddit.inbox.all()
-                        if isinstance(message, SubredditMessage)
-            msg.mute()
+            from asyncpraw.models import SubredditMessage
+            async for message in reddit.inbox.all():
+                if isinstance(message, SubredditMessage):
+                    await msg.mute()
+                    break
         """
-        self._reddit.post(API_PATH["mute_sender"], data={"id": self.fullname})
+        await self._reddit.post(API_PATH["mute_sender"], data={"id": self.fullname})
 
-    def unmute(self):
+    async def unmute(self):
         """Unmute the sender of this SubredditMessage.
 
         For example, to unmute the sender of the first SubredditMessage in the
@@ -153,9 +156,10 @@ class SubredditMessage(Message):
 
         .. code-block:: python
 
-            from praw.models import SubredditMessage
-            msg = next(message for message in reddit.inbox.all()
-                        if isinstance(message, SubredditMessage)
-            msg.unmute()
+            from asyncpraw.models import SubredditMessage
+            async for message in reddit.inbox.all():
+                if isinstance(message, SubredditMessage):
+                    await msg.unmute()
+                    break
         """
-        self._reddit.post(API_PATH["unmute_sender"], data={"id": self.fullname})
+        await self._reddit.post(API_PATH["unmute_sender"], data={"id": self.fullname})
