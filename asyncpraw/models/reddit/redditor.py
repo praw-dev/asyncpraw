@@ -1,6 +1,6 @@
 """Provide the Redditor class."""
 from json import dumps
-from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, List, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
@@ -97,8 +97,9 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-           for comment in reddit.redditor("spez").stream.comments():
-               print(comment)
+            redditor = await reddit.redditor("spez")
+            async for comment in redditor.stream.comments():
+                print(comment)
 
         Additionally, new submissions can be retrieved via the stream. In the
         following example all submissions are fetched via the redditor
@@ -106,8 +107,9 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-           for submission in reddit.redditor("spez").stream.submissions():
-               print(submission)
+            redditor = await reddit.redditor("spez")
+            async for submission in redditor.stream.submissions():
+                print(submission)
 
         """
         return RedditorStream(self)
@@ -152,45 +154,47 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         elif fullname:
             self._fullname = fullname
 
-    def _fetch_username(self, fullname):
-        return self._reddit.get(API_PATH["user_by_fullname"], params={"ids": fullname})[
-            fullname
-        ]["name"]
+    async def _fetch_username(self, fullname):
+        response = await self._reddit.get(API_PATH["user_by_fullname"], params={"ids": fullname})
+        return response[fullname]["name"]
 
-    def _fetch_info(self):
+    async def _fetch_info(self):
         if hasattr(self, "_fullname"):
-            self.name = self._fetch_username(self._fullname)
+            self.name = await self._fetch_username(self._fullname)
         return ("user_about", {"user": self.name}, None)
 
-    def _fetch_data(self):
-        name, fields, params = self._fetch_info()
+    async def _fetch_data(self):
+        name, fields, params = await self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def _friend(self, method, data):
+    async def _friend(self, method, data):
         url = API_PATH["friend_v1"].format(user=self)
-        self._reddit.request(method, url, data=dumps(data))
+        await self._reddit.request(method, url, data=dumps(data))
 
-    def block(self):
+    async def block(self):
         """Block the Redditor.
 
         For example, to block Redditor ``spez``:
 
         .. code-block:: python
 
-            reddit.redditor("spez").block()
+            redditor = await reddit.redditor("spez")
+            await redditor.block()
 
         """
-        self._reddit.post(API_PATH["block_user"], params={"account_id": self.fullname})
+        await self._reddit.post(
+            API_PATH["block_user"], params={"account_id": self.fullname}
+        )
 
-    def friend(self, note: str = None):
+    async def friend(self, note: str = None):
         """Friend the Redditor.
 
         :param note: A note to save along with the relationship. Requires
@@ -202,18 +206,20 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-            reddit.redditor("spez").friend()
+            redditor = await reddit.redditor("spez")
+            await redditor.friend()
 
         To add a note to the friendship (requires Reddit Premium):
 
         .. code-block:: python
 
-            reddit.redditor("spez").friend(note="My favorite admin")
+            redditor = await reddit.redditor("spez")
+            await redditor.friend(note="My favorite admin")
 
         """
-        self._friend("PUT", data={"note": note} if note else {})
+        await self._friend("PUT", data={"note": note} if note else {})
 
-    def friend_info(self) -> "Redditor":
+    async def friend_info(self) -> "Redditor":
         """Return a Redditor instance with specific friend-related attributes.
 
         :returns: A :class:`.Redditor` instance with fields ``date``, ``id``,
@@ -223,13 +229,14 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-            info = reddit.redditor("spez").friend_info
+            redditor = await reddit.redditor("spez")
+            info = await redditor.friend_info
             friend_data = info.date
 
         """
-        return self._reddit.get(API_PATH["friend_v1"].format(user=self))
+        return await self._reddit.get(API_PATH["friend_v1"].format(user=self))
 
-    def gild(self, months: int = 1):
+    async def gild(self, months: int = 1):
         """Gild the Redditor.
 
         :param months: Specifies the number of months to gild up to 36
@@ -239,19 +246,20 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-            reddit.redditor("spez").gild(months=1)
+            redditor = await reddit.redditor("spez")
+            await redditor.gild(months=1)
 
         """
         if months < 1 or months > 36:
             raise TypeError("months must be between 1 and 36")
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["gild_user"].format(username=self), data={"months": months},
         )
 
-    def moderated(self) -> List["Subreddit"]:
+    async def moderated(self) -> List["Subreddit"]:
         """Return a list of the redditor's moderated subreddits.
 
-        :returns: A ``list`` of :class:`~praw.models.Subreddit` objects.
+        :returns: A ``list`` of :class:`~asyncpraw.models.Subreddit` objects.
             Return ``[]`` if the redditor has no moderated subreddits.
 
         .. note:: The redditor's own user profile subreddit will not be
@@ -262,35 +270,39 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-            for subreddit in reddit.redditor("spez").moderated():
+            redditor = await reddit.redditor("spez")
+            async for subreddit in redditor.moderated():
                 print(subreddit.display_name)
                 print(subreddit.title)
 
         """
-        modded_data = self._reddit.get(API_PATH["moderated"].format(user=self))
+        modded_data = await self._reddit.get(API_PATH["moderated"].format(user=self))
         if "data" not in modded_data:
             return []
         else:
-            subreddits = [self._reddit.subreddit(x["sr"]) for x in modded_data["data"]]
+            subreddits = [
+                await self._reddit.subreddit(x["sr"]) for x in modded_data["data"]
+            ]
             return subreddits
 
-    def multireddits(self) -> List["Multireddit"]:
+    async def multireddits(self) -> List["Multireddit"]:
         """Return a list of the redditor's public multireddits.
 
         For example, to to get Redditor ``spez``'s multireddits:
 
         .. code-block:: python
 
-            multireddits = reddit.redditor("spez").multireddits()
+            redditor = await reddit.redditor("spez")
+            multireddits = await redditor.multireddits()
 
 
         """
-        return self._reddit.get(API_PATH["multireddit_user"].format(user=self))
+        return await self._reddit.get(API_PATH["multireddit_user"].format(user=self))
 
-    def trophies(self) -> List["Trophy"]:
+    async def trophies(self) -> List["Trophy"]:
         """Return a list of the redditor's trophies.
 
-        :returns: A ``list`` of :class:`~praw.models.Trophy` objects.
+        :returns: A ``list`` of :class:`~asyncpraw.models.Trophy` objects.
             Return an empty list (``[]``) if the redditor has no trophies.
 
         :raises: :class:`.RedditAPIException` if the redditor doesn't exist.
@@ -299,42 +311,46 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. code-block:: python
 
-            for trophy in reddit.redditor("spez").trophies():
+            redditor = await reddit.redditor("spez")
+            async for trophy in redditor.trophies():
                 print(trophy.name)
                 print(trophy.description)
 
         """
-        return list(self._reddit.get(API_PATH["trophies"].format(user=self)))
+        return list(await self._reddit.get(API_PATH["trophies"].format(user=self)))
 
-    def unblock(self):
+    async def unblock(self):
         """Unblock the Redditor.
 
         For example, to unblock Redditor ``spez``:
 
         .. code-block:: python
 
-            reddit.redditor("spez").unblock()
+            redditor = await reddit.redditor("spez")
+            await redditor.unblock()
 
         """
+        container = await self._reddit.user.me()
         data = {
-            "container": self._reddit.user.me().fullname,
+            "container": container.fullname,
             "name": str(self),
             "type": "enemy",
         }
         url = API_PATH["unfriend"].format(subreddit="all")
-        self._reddit.post(url, data=data)
+        await self._reddit.post(url, data=data)
 
-    def unfriend(self):
+    async def unfriend(self):
         """Unfriend the Redditor.
 
         For example, to unfriend Redditor ``spez``:
 
         .. code-block:: python
 
-            reddit.redditor("spez").unfriend()
+            redditor = await reddit.redditor("spez")
+            await redditor.unfriend()
 
         """
-        self._friend(method="DELETE", data={"id": str(self)})
+        await self._friend(method="DELETE", data={"id": str(self)})
 
 
 class RedditorStream:
@@ -350,7 +366,7 @@ class RedditorStream:
 
     def comments(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> Generator["Comment", None, None]:
+    ) -> AsyncGenerator["Comment", None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will
@@ -363,15 +379,16 @@ class RedditorStream:
 
         .. code-block:: python
 
-           for comment in reddit.redditor("spez").stream.comments():
-               print(comment)
+            redditor = await reddit.redditor("spez")
+            async for comment in redditor.stream.comments():
+                print(comment)
 
         """
         return stream_generator(self.redditor.comments.new, **stream_options)
 
     def submissions(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> Generator["Submission", None, None]:
+    ) -> AsyncGenerator["Submission", None]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions
@@ -384,7 +401,8 @@ class RedditorStream:
 
         .. code-block:: python
 
-           for submission in reddit.redditor("spez").stream.submissions():
+            redditor = await reddit.redditor("spez")
+            async for submission in redditor.stream.submissions():
                print(submission)
 
         """

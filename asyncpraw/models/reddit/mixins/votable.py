@@ -5,12 +5,12 @@ from ....const import API_PATH
 class VotableMixin:
     """Interface for RedditBase classes that can be voted on."""
 
-    def _vote(self, direction: int):
-        self._reddit.post(
+    async def _vote(self, direction):
+        await self._reddit.post(
             API_PATH["vote"], data={"dir": str(direction), "id": self.fullname}
         )
 
-    def clear_vote(self):
+    async def clear_vote(self):
         """Clear the authenticated user's vote on the object.
 
         .. note:: Votes must be cast by humans. That is, API clients proxying a
@@ -23,16 +23,16 @@ class VotableMixin:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.clear_vote()
+            submission = await reddit.submission(id="5or86n")
+            await submission.clear_vote()
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.clear_vote()
+            comment = await reddit.comment(id="dxolpyc")
+            await comment.clear_vote()
 
         """
-        self._vote(direction=0)
+        await self._vote(direction=0)
 
-    def downvote(self):
+    async def downvote(self):
         """Downvote the object.
 
         .. note:: Votes must be cast by humans. That is, API clients proxying a
@@ -45,18 +45,18 @@ class VotableMixin:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.downvote()
+            submission = await reddit.submission(id="5or86n")
+            await submission.downvote()
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.downvote()
+            comment = await reddit.comment(id="dxolpyc")
+            await comment.downvote()
 
         .. seealso:: :meth:`~.upvote`
 
         """
-        self._vote(direction=-1)
+        await self._vote(direction=-1)
 
-    def upvote(self):
+    async def upvote(self):
         """Upvote the object.
 
         .. note:: Votes must be cast by humans. That is, API clients proxying a
@@ -69,13 +69,13 @@ class VotableMixin:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.upvote()
+            submission = await reddit.submission(id="5or86n")
+            await submission.upvote()
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.upvote()
+            comment = await reddit.comment(id="dxolpyc")
+            await comment.upvote()
 
         .. seealso:: :meth:`~.downvote`
 
         """
-        self._vote(direction=1)
+        await self._vote(direction=1)

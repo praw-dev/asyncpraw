@@ -1,4 +1,4 @@
-"""praw setup.py"""
+"""asyncpraw setup.py"""
 
 import re
 from codecs import open
@@ -6,7 +6,7 @@ from os import path
 
 from setuptools import find_packages, setup
 
-PACKAGE_NAME = "praw"
+PACKAGE_NAME = "asyncpraw"
 HERE = path.abspath(path.dirname(__file__))
 with open(path.join(HERE, "README.rst"), encoding="utf-8") as fp:
     README = fp.read()
@@ -27,9 +27,9 @@ extras["dev"] += extras["lint"] + extras["test"]
 
 setup(
     name=PACKAGE_NAME,
-    author="Bryce Boe",
-    author_email="bbzbryce@gmail.com",
-    python_requires=">3.5.3",
+    author="Joel Payne",
+    author_email="lilspazjoekp@gmail.com",
+    python_requires=">=3.6",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -39,7 +39,6 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
@@ -52,15 +51,15 @@ setup(
     ),
     extras_require=extras,
     install_requires=[
-        "prawcore >=1.3.0, <2.0",
+        "asyncprawcore >=1.0.1, <2.0",
         "update_checker >=0.17",
         "websocket-client >=0.54.0",
     ],
-    keywords="reddit api wrapper",
+    keywords="reddit api wrapper async",
     license="Simplified BSD License",
     long_description=README,
     package_data={"": ["LICENSE.txt"], PACKAGE_NAME: ["*.ini", "images/*.jpg"]},
     packages=find_packages(exclude=["tests", "tests.*", "tools", "tools.*"]),
-    url="https://praw.readthedocs.org/",
+    url="https://asyncpraw.readthedocs.org/",
     version=VERSION,
 )

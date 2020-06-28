@@ -79,17 +79,18 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-           for comment in reddit.multireddit("spez", "fun").stream.comments():
-               print(comment)
+            multireddit = await reddit.multireddit("spez", "fun")
+            async for comment in multireddit.stream.comments():
+                print(comment)
 
         Additionally, new submissions can be retrieved via the stream. In the
         following example all new submissions to the multireddit are fetched:
 
         .. code-block:: python
 
-           for submission in reddit.multireddit("bboe",
-                                                "games").stream.submissions():
-               print(submission)
+            multireddit = await reddit.multireddit("bboe", "games")
+            async for submission in multireddit.stream.submissions():
+                print(submission)
 
         """
         return SubredditStream(self)
@@ -104,26 +105,31 @@ class Multireddit(SubredditListingMixin, RedditBase):
         if "subreddits" in self.__dict__:
             self.subreddits = [Subreddit(reddit, x["name"]) for x in self.subreddits]
 
-    def _fetch_info(self):
+    async def _ensure_author_fetched(self):
+        if not self._author._fetched:
+            await self._author._fetch()
+
+    async def _fetch_info(self):
+        await self._ensure_author_fetched()
         return (
             "multireddit_api",
             {"multi": self.name, "user": self._author.name},
             None,
         )
 
-    def _fetch_data(self):
-        name, fields, params = self._fetch_info()
+    async def _fetch_data(self):
+        name, fields, params = await self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def add(self, subreddit: "Subreddit"):
+    async def add(self, subreddit: "Subreddit"):
         """Add a subreddit to this multireddit.
 
         :param subreddit: The subreddit to add to this multi.
@@ -132,17 +138,19 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            subreddit=reddit.subreddit("test")
-            reddit.multireddit("bboe", "test").add(subreddit)
+            subreddit = await reddit.subreddit("test")
+            multireddit = await reddit.multireddit("bboe", "test")
+            await multireddit.add(subreddit)
 
         """
+        await self._ensure_author_fetched()
         url = API_PATH["multireddit_update"].format(
             multi=self.name, user=self._author, subreddit=subreddit
         )
-        self._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
+        await self._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
-    def copy(self, display_name: Optional[str] = None) -> "Multireddit":
+    async def copy(self, display_name: Optional[str] = None) -> "Multireddit":
         """Copy this multireddit and return the new multireddit.
 
         :param display_name: (optional) The display name for the copied
@@ -151,10 +159,10 @@ class Multireddit(SubredditListingMixin, RedditBase):
             name and name as this multireddit.
 
         To copy the multireddit ``bboe/test`` with a name of ``testing``:
-
         .. code-block:: python
 
-            reddit.multireddit("bboe", "test").copy("testing")
+            multireddit = await reddit.multireddit("bboe", "test")
+            await multireddit.copy("testing")
 
         """
         if display_name:
@@ -166,27 +174,29 @@ class Multireddit(SubredditListingMixin, RedditBase):
             "display_name": display_name,
             "from": self.path,
             "to": API_PATH["multireddit"].format(
-                multi=name, user=self._reddit.user.me()
+                multi=name, user=await self._reddit.user.me()
             ),
         }
-        return self._reddit.post(API_PATH["multireddit_copy"], data=data)
+        return await self._reddit.post(API_PATH["multireddit_copy"], data=data)
 
-    def delete(self):
+    async def delete(self):
         """Delete this multireddit.
 
         For example, to delete multireddit``bboe/test``:
 
         .. code-block:: python
 
-            reddit.multireddit("bboe", "test").delete()
+            multireddit = await reddit.multireddit("bboe", "test")
+            await multireddit.delete()
 
         """
+        await self._ensure_author_fetched()
         path = API_PATH["multireddit_api"].format(
             multi=self.name, user=self._author.name
         )
-        self._reddit.delete(path)
+        await self._reddit.delete(path)
 
-    def remove(self, subreddit: "Subreddit"):
+    async def remove(self, subreddit: Subreddit):
         """Remove a subreddit from this multireddit.
 
         :param subreddit: The subreddit to remove from this multi.
@@ -196,18 +206,20 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            subreddit=reddit.subreddit("test")
-            reddit.multireddit("bboe", "test").remove(subreddit)
+            subreddit = await reddit.subreddit("test")
+            multireddit = await reddit.multireddit("bboe", "test")
+            await multireddit.remove(subreddit)
 
 
         """
+        await self._ensure_author_fetched()
         url = API_PATH["multireddit_update"].format(
             multi=self.name, user=self._author, subreddit=subreddit
         )
-        self._reddit.delete(url, data={"model": dumps({"name": str(subreddit)})})
+        await self._reddit.delete(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
-    def update(
+    async def update(
         self,
         **updated_settings: Union[str, List[Union[str, Subreddit, Dict[str, str]]]]
     ):
@@ -236,15 +248,17 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            reddit.multireddit("bboe", "test").update(display_name="testing")
+            multireddit = await reddit.multireddit("bboe", "test")
+            await multireddit.update(display_name="testing")
 
         """
         if "subreddits" in updated_settings:
             updated_settings["subreddits"] = [
                 {"name": str(sub)} for sub in updated_settings["subreddits"]
             ]
+        await self._ensure_author_fetched()
         path = API_PATH["multireddit_api"].format(
             multi=self.name, user=self._author.name
         )
-        new = self._reddit.put(path, data={"model": dumps(updated_settings)})
+        new = await self._reddit.put(path, data={"model": dumps(updated_settings)})
         self.__dict__.update(new.__dict__)

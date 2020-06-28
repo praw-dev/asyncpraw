@@ -137,7 +137,7 @@ class ModmailConversation(RedditBase):
         if id:
             self.id = id
 
-        self._info_params = {"markRead": True} if mark_read else None
+        self._info_params = {"markRead": "true"} if mark_read else None # TODO: fix this too
 
     def _build_conversation_list(self, other_conversations):
         """Return a comma-separated list of conversation IDs."""
@@ -145,56 +145,62 @@ class ModmailConversation(RedditBase):
         return ",".join(conversation.id for conversation in conversations)
 
     def _fetch_info(self):
-        return ("modmail_conversation", {"id": self.id}, self._info_params)
+        return "modmail_conversation", {"id": self.id}, self._info_params
 
-    def _fetch_data(self):
+    async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         other = self._reddit._objector.objectify(data)
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def archive(self):
+    async def archive(self):
         """Archive the conversation.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").archive()
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.archive()
 
         """
-        self._reddit.post(API_PATH["modmail_archive"].format(id=self.id))
+        await self._reddit.post(API_PATH["modmail_archive"].format(id=self.id))
 
-    def highlight(self):
+    async def highlight(self):
         """Highlight the conversation.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").highlight()
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.highlight()
 
         """
-        self._reddit.post(API_PATH["modmail_highlight"].format(id=self.id))
+        await self._reddit.post(API_PATH["modmail_highlight"].format(id=self.id))
 
-    def mute(self):
+    async def mute(self):
         """Mute the non-mod user associated with the conversation.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").mute()
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.mute()
 
         """
-        self._reddit.request("POST", API_PATH["modmail_mute"].format(id=self.id))
+        await self._reddit.request("POST", API_PATH["modmail_mute"].format(id=self.id))
 
-    def read(
+    async def read(
         self, other_conversations: Optional[List["ModmailConversation"]] = None
     ):  # noqa: D207, D301
         """Mark the conversation(s) as read.
@@ -207,16 +213,15 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("redditdev")
-           conversation = subreddit.modmail.conversation("2gmz")
-           conversation.read(
-                            other_conversations=conversation.user.recent_convos)
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail.conversation("2gmz")
+            await conversation.read(other_conversations=conversation.user.recent_convos)
 
         """
         data = {"conversationIds": self._build_conversation_list(other_conversations)}
-        self._reddit.post(API_PATH["modmail_read"], data=data)
+        await self._reddit.post(API_PATH["modmail_read"], data=data)
 
-    def reply(self, body: str, author_hidden: bool = False, internal: bool = False):
+    async def reply(self, body: str, author_hidden: bool = False, internal: bool = False):
         """Reply to the conversation.
 
         :param body: The Markdown formatted content for a message.
@@ -231,14 +236,15 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-           conversation = reddit.subreddit("redditdev").modmail("2gmz")
-           conversation.reply("Message body", author_hidden=True)
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.reply("Message body", author_hidden=True)
 
         To create a private moderator note on the conversation:
 
         .. code-block:: python
 
-           conversation.reply("Message body", internal=True)
+            await conversation.reply("Message body", internal=True)
 
         """
         data = {
@@ -246,50 +252,56 @@ class ModmailConversation(RedditBase):
             "isAuthorHidden": author_hidden,
             "isInternal": internal,
         }
-        response = self._reddit.post(
+        response = await self._reddit.post(
             API_PATH["modmail_conversation"].format(id=self.id), data=data
         )
         message_id = response["conversation"]["objIds"][-1]["id"]
         message_data = response["messages"][message_id]
         return self._reddit._objector.objectify(message_data)
 
-    def unarchive(self):
+    async def unarchive(self):
         """Unarchive the conversation.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").unarchive()
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.unarchive()
 
         """
-        self._reddit.post(API_PATH["modmail_unarchive"].format(id=self.id))
+        await self._reddit.post(API_PATH["modmail_unarchive"].format(id=self.id))
 
-    def unhighlight(self):
+    async def unhighlight(self):
         """Un-highlight the conversation.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").unhighlight()
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.unhighlight()
 
         """
-        self._reddit.delete(API_PATH["modmail_highlight"].format(id=self.id))
+        await self._reddit.delete(API_PATH["modmail_highlight"].format(id=self.id))
 
-    def unmute(self):
+    async def unmute(self):
         """Unmute the non-mod user associated with the conversation.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").unmute()
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.unmute()
 
         """
-        self._reddit.request("POST", API_PATH["modmail_unmute"].format(id=self.id))
+        await self._reddit.request("POST", API_PATH["modmail_unmute"].format(id=self.id))
 
-    def unread(
+    async def unread(
         self, other_conversations: Optional[List["ModmailConversation"]] = None
     ):  # noqa: D207, D301
         """Mark the conversation(s) as unread.
@@ -302,14 +314,14 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("redditdev")
-           conversation = subreddit.modmail.conversation("2gmz")
-           conversation.unread(\
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail.conversation("2gmz")
+            await conversation.unread(\
 other_conversations=conversation.user.recent_convos)
 
         """
         data = {"conversationIds": self._build_conversation_list(other_conversations)}
-        self._reddit.post(API_PATH["modmail_unread"], data=data)
+        await self._reddit.post(API_PATH["modmail_unread"], data=data)
 
 
 class ModmailObject(RedditBase):

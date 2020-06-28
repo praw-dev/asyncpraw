@@ -1,24 +1,24 @@
 PRAW: The Python Reddit API Wrapper
 ===================================
 
-.. image:: https://img.shields.io/pypi/v/praw.svg
-   :alt: Latest PRAW Version
-   :target: https://pypi.python.org/pypi/praw
-.. image:: https://img.shields.io/pypi/pyversions/praw
+.. image:: https://img.shields.io/pypi/v/asyncpraw.svg
+   :alt: Latest asyncpraw Version
+   :target: https://pypi.python.org/pypi/asyncpraw
+.. image:: https://img.shields.io/pypi/pyversions/asyncpraw
    :alt: Supported Python Versions
-   :target: https://pypi.python.org/pypi/praw
-.. image:: https://img.shields.io/pypi/dm/praw
+   :target: https://pypi.python.org/pypi/asyncpraw
+.. image:: https://img.shields.io/pypi/dm/asyncpraw
    :alt: PyPI - Downloads - Monthly
-   :target: https://pypi.python.org/pypi/praw
-.. image:: https://coveralls.io/repos/github/praw-dev/praw/badge.svg?branch=master
+   :target: https://pypi.python.org/pypi/asyncpraw
+.. image:: https://coveralls.io/repos/github/praw-dev/asyncpraw/badge.svg?branch=master
    :alt: Coveralls Coverage
-   :target: https://coveralls.io/github/praw-dev/praw?branch=master
-.. image:: https://github.com/praw-dev/praw/workflows/CI/badge.svg
+   :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=master
+.. image:: https://github.com/praw-dev/asyncpraw/workflows/CI/badge.svg
    :alt: Github Actions Coverage
-   :target: https://github.com/praw-dev/praw/actions?query=branch%3Amaster
+   :target: https://github.com/praw-dev/asyncpraw/actions?query=branch%3Amaster
 .. image:: https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg
    :alt: Contributor Covenant
-   :target: https://github.com/praw-dev/praw/blob/master/CODE_OF_CONDUCT.md
+   :target: https://github.com/praw-dev/asyncpraw/blob/master/CODE_OF_CONDUCT.md
 
 PRAW, an acronym for "Python Reddit API Wrapper", is a Python package that
 allows for simple access to Reddit's API. PRAW aims to be easy to use and
@@ -37,13 +37,13 @@ install PRAW is via `pip <https://pypi.python.org/pypi/pip>`_.
 
 .. code-block:: bash
 
-   pip install praw
+   pip install asyncpraw
 
 To install the latest development version of PRAW run the following instead:
 
 .. code-block:: bash
 
-   pip install --upgrade https://github.com/praw-dev/praw/archive/master.zip
+   pip install --upgrade https://github.com/praw-dev/asyncpraw/archive/master.zip
 
 For instructions on installing Python and pip see "The Hitchhiker's Guide to
 Python" `Installation Guides
@@ -57,8 +57,8 @@ can instantiate an instance of PRAW like so:
 
 .. code-block:: python
 
-  import praw
-  reddit = praw.Reddit(client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
+  import asyncpraw
+  reddit = asyncpraw.Reddit(client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
                        password="PASSWORD", user_agent="USERAGENT",
                        username="USERNAME")
 
@@ -85,7 +85,7 @@ With the ``reddit`` instance you can then interact with Reddit:
   for moderator in reddit.subreddit("redditdev").moderator():
       print(moderator)
 
-Please see PRAW's `documentation <https://praw.readthedocs.io/>`_ for
+Please see PRAW's `documentation <https://asyncpraw.readthedocs.io/>`_ for
 more examples of what you can do with PRAW.
 
 PRAW Discussion and Support
@@ -112,19 +112,19 @@ Slack unless they have indicated otherwise. We strongly encourage everyone to
 help others with their questions.
 
 Please file bugs and feature requests as issues on `GitHub
-<https://github.com/praw-dev/praw/issues>`_ after first searching to ensure a
+<https://github.com/praw-dev/asyncpraw/issues>`_ after first searching to ensure a
 similar issue was not already filed. If such an issue already exists please
 give it a thumbs up reaction. Comments to issues containing additional
 information are certainly welcome.
 
 .. note:: This project is released with a `Contributor Code of Conduct
-   <https://github.com/praw-dev/praw/blob/master/CODE_OF_CONDUCT.md>`_. By
+   <https://github.com/praw-dev/asyncpraw/blob/master/CODE_OF_CONDUCT.md>`_. By
    participating in this project you agree to abide by its terms.
 
 Documentation
 -------------
 
-PRAW's documentation is located at https://praw.readthedocs.io/.
+PRAW's documentation is located at https://asyncpraw.readthedocs.io/.
 
 History
 -------

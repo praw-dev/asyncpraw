@@ -1,11 +1,10 @@
 """Provide the LiveThread class."""
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, List, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
 from ..list.redditor import RedditorList
 from ..listing.generator import ListingGenerator
-from ..util import stream_generator
 from .base import RedditBase
 from .mixins import FullnameMixin
 from .redditor import Redditor
@@ -26,21 +25,28 @@ class LiveContributorRelationship:
             permissions = set(permissions)
         return ",".join("+{}".format(x) for x in permissions)
 
-    def __call__(self) -> List[Redditor]:
+    # TODO: this is implemented differently than in praw
+    def __call__(self,) -> AsyncGenerator:
         """Return a :class:`.RedditorList` for live threads' contributors.
 
         Usage:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           for contributor in thread.contributor():
-               print(contributor)
-
+            thread = await reddit.live("ukaeu1ik4sw5")
+            async for contributor in thread.contributor():
+                print(contributor)
         """
-        url = API_PATH["live_contributors"].format(id=self.thread.id)
-        temp = self.thread._reddit.get(url)
-        return temp if isinstance(temp, RedditorList) else temp[0]
+
+        async def generator():
+            url = API_PATH["live_contributors"].format(id=self.thread.id)
+            temp = await self.thread._reddit.get(url)
+            redditor_list = temp if isinstance(temp, RedditorList) else temp[0]
+            for redditor in redditor_list.children:
+                await redditor._fetch()
+                yield redditor
+
+        return generator()
 
     def __init__(self, thread: "LiveThread"):
         """Create a :class:`.LiveContributorRelationship` instance.
@@ -54,24 +60,27 @@ class LiveContributorRelationship:
         """
         self.thread = thread
 
-    def accept_invite(self):
+    async def accept_invite(self):
         """Accept an invite to contribute the live thread.
 
         Usage:
 
         .. code-block:: python
 
-            thread = reddit.live("ydwwxneu7vsa")
-            thread.contributor.accept_invite()
+            thread = await reddit.live("ydwwxneu7vsa")
+            await thread.contributor.accept_invite()
 
         """
         url = API_PATH["live_accept_invite"].format(id=self.thread.id)
-        self.thread._reddit.post(url)
+        await self.thread._reddit.post(url)
 
-    def invite(
+    async def invite(
         self, redditor: Union[str, Redditor], permissions: Optional[List[str]] = None
     ):
         """Invite a redditor to be a contributor of the live thread.
+
+        :raises: :class:`asyncpraw.exceptions.APIException` if the invitation
+        already exists.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance.
@@ -79,17 +88,16 @@ class LiveContributorRelationship:
             be a list of strings specifying which subset of permissions to
             grant. An empty list ``[]`` indicates no permissions, and when
             not provided (``None``), indicates full permissions.
-        :raises: :class:`.RedditAPIException` if the invitation already exists.
 
         Usage:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           redditor = reddit.redditor("spez")
+            thread = await reddit.live("ukaeu1ik4sw5")
+            redditor = await reddit.redditor("spez")
 
-           # "manage" and "settings" permissions
-           thread.contributor.invite(redditor, ["manage", "settings"])
+            # "manage" and "settings" permissions
+            await thread.contributor.invite(redditor, ["manage", "settings"])
 
         .. seealso:: :meth:`.LiveContributorRelationship.remove_invite` to
             remove the invite for redditor.
@@ -101,23 +109,23 @@ class LiveContributorRelationship:
             "type": "liveupdate_contributor_invite",
             "permissions": self._handle_permissions(permissions),
         }
-        self.thread._reddit.post(url, data=data)
+        await self.thread._reddit.post(url, data=data)
 
-    def leave(self):
+    async def leave(self):
         """Abdicate the live thread contributor position (use with care).
 
         Usage:
 
         .. code-block:: python
 
-            thread = reddit.live("ydwwxneu7vsa")
-            thread.contributor.leave()
+            thread = await reddit.live("ydwwxneu7vsa")
+            await thread.contributor.leave()
 
         """
         url = API_PATH["live_leave"].format(id=self.thread.id)
-        self.thread._reddit.post(url)
+        await self.thread._reddit.post(url)
 
-    def remove(self, redditor: Union[str, Redditor]):
+    async def remove(self, redditor: Union[str, Redditor]):
         """Remove the redditor from the live thread contributors.
 
         :param redditor: A redditor fullname (e.g., ``"t2_1w72"``) or
@@ -127,10 +135,10 @@ class LiveContributorRelationship:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           redditor = reddit.redditor("spez")
-           thread.contributor.remove(redditor)
-           thread.contributor.remove("t2_1w72")  # with fullname
+            thread = await reddit.live("ukaeu1ik4sw5")
+            redditor = await reddit.redditor("spez")
+            await thread.contributor.remove(redditor)
+            await thread.contributor.remove("t2_1w72")  # with fullname
 
         """
         if isinstance(redditor, Redditor):
@@ -139,9 +147,9 @@ class LiveContributorRelationship:
             fullname = redditor
         data = {"id": fullname}
         url = API_PATH["live_remove_contrib"].format(id=self.thread.id)
-        self.thread._reddit.post(url, data=data)
+        await self.thread._reddit.post(url, data=data)
 
-    def remove_invite(self, redditor: Union[str, Redditor]):
+    async def remove_invite(self, redditor: Union[str, Redditor]):
         """Remove the invite for redditor.
 
         :param redditor: A redditor fullname (e.g., ``"t2_1w72"``) or
@@ -151,12 +159,12 @@ class LiveContributorRelationship:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           redditor = reddit.redditor("spez")
-           thread.contributor.remove_invite(redditor)
-           thread.contributor.remove_invite("t2_1w72")  # with fullname
+            thread = await reddit.live("ukaeu1ik4sw5")
+            redditor = await reddit.redditor("spez")
+            await thread.contributor.remove_invite(redditor)
+            await thread.contributor.remove_invite("t2_1w72")  # with fullname
 
-        .. seealso:: :meth:`.LiveContributorRelationship.invite` to
+        :seealso: :meth:`.LiveContributorRelationship.invite` to
             invite a redditor to be a contributor of the live thread.
 
         """
@@ -166,9 +174,9 @@ class LiveContributorRelationship:
             fullname = redditor
         data = {"id": fullname}
         url = API_PATH["live_remove_invite"].format(id=self.thread.id)
-        self.thread._reddit.post(url, data=data)
+        await self.thread._reddit.post(url, data=data)
 
-    def update(
+    async def update(
         self, redditor: Union[str, Redditor], permissions: Optional[List[str]] = None
     ):
         """Update the contributor permissions for ``redditor``.
@@ -185,21 +193,21 @@ class LiveContributorRelationship:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           thread.contributor.update("spez")
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contributor.update("spez")
 
         To grant ``"access"`` and ``"edit"`` permissions (and to
         remove other permissions), try:
 
         .. code-block:: python
 
-           thread.contributor.update("spez", ["access", "edit"])
+            await thread.contributor.update("spez", ["access", "edit"])
 
         To remove all permissions from the contributor, try:
 
         .. code-block:: python
 
-           subreddit.moderator.update("spez", [])
+            await subreddit.moderator.update("spez", [])
 
         """
         url = API_PATH["live_update_perms"].format(id=self.thread.id)
@@ -208,9 +216,9 @@ class LiveContributorRelationship:
             "type": "liveupdate_contributor",
             "permissions": self._handle_permissions(permissions),
         }
-        self.thread._reddit.post(url, data=data)
+        await self.thread._reddit.post(url, data=data)
 
-    def update_invite(
+    async def update_invite(
         self, redditor: Union[str, Redditor], permissions: Optional[List[str]] = None
     ):
         """Update the contributor invite permissions for ``redditor``.
@@ -227,21 +235,21 @@ class LiveContributorRelationship:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           thread.contributor.update_invite("spez")
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contributor.update_invite("spez")
 
         To set "access" and "edit" permissions (and to remove other
         permissions) to the invitation, try:
 
         .. code-block:: python
 
-           thread.contributor.update_invite("spez", ["access", "edit"])
+            await thread.contributor.update_invite("spez", ["access", "edit"])
 
         To remove all permissions from the invitation, try:
 
         .. code-block:: python
 
-           thread.contributor.update_invite("spez", [])
+            await thread.contributor.update_invite("spez", [])
 
         """
         url = API_PATH["live_update_perms"].format(id=self.thread.id)
@@ -250,7 +258,7 @@ class LiveContributorRelationship:
             "type": "liveupdate_contributor_invite",
             "permissions": self._handle_permissions(permissions),
         }
-        self.thread._reddit.post(url, data=data)
+        await self.thread._reddit.post(url, data=data)
 
 
 class LiveThread(RedditBase):
@@ -289,8 +297,8 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           thread.contrib.add("### update")
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contrib.add("### update")
 
         """
         return LiveThreadContribution(self)
@@ -306,10 +314,10 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           for contributor in thread.contributor():
-               # prints `(Redditor(name="Acidtwist"), ["all"])`
-               print(contributor, contributor.permissions)
+            thread = await reddit.live("ukaeu1ik4sw5")
+            async for contributor in thread.contributor():
+                # prints `(Redditor(name="Acidtwist"), [u"all"])`
+                print(contributor, contributor.permissions)
 
         """
         return LiveContributorRelationship(self)
@@ -333,8 +341,8 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-            live_thread = reddit.live("ta535s1hq2je")
-            for live_update in live_thread.stream.updates(skip_existing=True):
+            live_thread = await reddit.live("ta535s1hq2je")
+            async for live_update in live_thread.stream.updates(skip_existing=True):
                 print(live_update.author)
 
         """
@@ -349,7 +357,7 @@ class LiveThread(RedditBase):
             return other == str(self)
         return isinstance(other, self.__class__) and str(self) == str(other)
 
-    def __getitem__(self, update_id: str) -> "LiveUpdate":
+    async def get_update(self, update_id: str) -> "LiveUpdate":
         """Return a lazy :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g.,
@@ -359,13 +367,15 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           update = thread["7827987a-c998-11e4-a0b9-22000b6a88d2"]
-           update.thread     # LiveThread(id="ukaeu1ik4sw5")
-           update.id         # "7827987a-c998-11e4-a0b9-22000b6a88d2"
-           update.author     # "umbrae"
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update.thread     # LiveThread(id="ukaeu1ik4sw5")
+            update.id         # "7827987a-c998-11e4-a0b9-22000b6a88d2"
+            update.author     # "umbrae"
         """
-        return LiveUpdate(self._reddit, self.id, update_id)
+        update = LiveUpdate(self._reddit, self.id, update_id)
+        await update._fetch()
+        return update
 
     def __hash__(self) -> int:
         """Return the hash of the current instance."""
@@ -391,13 +401,13 @@ class LiveThread(RedditBase):
     def _fetch_info(self):
         return ("liveabout", {"id": self.id}, None)
 
-    def _fetch_data(self):
+    async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
@@ -405,7 +415,7 @@ class LiveThread(RedditBase):
 
     def discussions(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator["Submission"]:
+    ) -> AsyncGenerator["Submission", None]:
         """Get submissions linking to the thread.
 
         :param generator_kwargs: keyword arguments passed to
@@ -420,15 +430,15 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           for submission in thread.discussions(limit=None):
-               print(submission.title)
+            thread = await reddit.live("ukaeu1ik4sw5")
+            async for submission in thread.discussions(limit=None):
+                print(submission.title)
 
         """
         url = API_PATH["live_discussions"].format(id=self.id)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    def report(self, type: str):  # pylint: disable=redefined-builtin
+    async def report(self, type: str):  # pylint: disable=redefined-builtin
         """Report the thread violating the Reddit rules.
 
         :param type: One of ``"spam"``, ``"vote-manipulation"``,
@@ -439,16 +449,16 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("xyu8kmjvfrww")
-           thread.report("spam")
+            thread = await reddit.live("xyu8kmjvfrww")
+            await thread.report("spam")
 
         """
         url = API_PATH["live_report"].format(id=self.id)
-        self._reddit.post(url, data={"type": type})
+        await self._reddit.post(url, data={"type": type})
 
-    def updates(
+    async def updates(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator["LiveUpdate"]:
+    ) -> AsyncGenerator["LiveUpdate", None]:
         """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
 
         :param generator_kwargs: keyword arguments passed to
@@ -463,14 +473,14 @@ class LiveThread(RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           after = "LiveUpdate_fefb3dae-7534-11e6-b259-0ef8c7233633"
-           for submission in thread.updates(limit=5, params={"after": after}):
-               print(submission.body)
+            thread = await reddit.live("ukaeu1ik4sw5")
+            after = "LiveUpdate_fefb3dae-7534-11e6-b259-0ef8c7233633"
+            async for submission in thread.updates(limit=5, params={"after": after}):
+                print(submission.body)
 
         """
         url = API_PATH["live_updates"].format(id=self.id)
-        for update in ListingGenerator(self._reddit, url, **generator_kwargs):
+        async for update in ListingGenerator(self._reddit, url, **generator_kwargs):
             update._thread = self
             yield update
 
@@ -488,13 +498,13 @@ class LiveThreadContribution:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           thread.contrib.add("### update")
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contrib.add("### update")
 
         """
         self.thread = thread
 
-    def add(self, body: str):
+    async def add(self, body: str):
         """Add an update to the live thread.
 
         :param body: The Markdown formatted content for the update.
@@ -503,28 +513,28 @@ class LiveThreadContribution:
 
         .. code-block:: python
 
-           thread = reddit.live("ydwwxneu7vsa")
-           thread.contrib.add("test `LiveThreadContribution.add()`")
+            thread = await reddit.live("ydwwxneu7vsa")
+            await thread.contrib.add("test `LiveThreadContribution.add()`")
 
         """
         url = API_PATH["live_add_update"].format(id=self.thread.id)
-        self.thread._reddit.post(url, data={"body": body})
+        await self.thread._reddit.post(url, data={"body": body})
 
-    def close(self):
+    async def close(self):
         """Close the live thread permanently (cannot be undone).
 
         Usage:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           thread.contrib.close()
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contrib.close()
 
         """
         url = API_PATH["live_close"].format(id=self.thread.id)
-        self.thread._reddit.post(url)
+        await self.thread._reddit.post(url)
 
-    def update(
+    async def update(
         self,
         title: Optional[str] = None,
         description: Optional[str] = None,
@@ -553,18 +563,18 @@ class LiveThreadContribution:
 
         .. code-block:: python
 
-           thread = reddit.live("xyu8kmjvfrww")
+            thread = await reddit.live("xyu8kmjvfrww")
 
-           # update `title` and `nsfw`
-           updated_thread = thread.contrib.update(title=new_title, nsfw=True)
+            # update `title` and `nsfw`
+            updated_thread = await thread.contrib.update(title=new_title, nsfw=True)
 
         If Reddit introduces new settings, you must specify ``None`` for the
         setting you want to maintain:
 
         .. code-block:: python
 
-           # update `nsfw` and maintain new setting `foo`
-           thread.contrib.update(nsfw=True, foo=None)
+            # update `nsfw` and maintain new setting `foo`
+            await thread.contrib.update(nsfw=True, foo=None)
 
         """
         settings = {
@@ -578,15 +588,16 @@ class LiveThreadContribution:
             return
         # get settings from Reddit (not cache)
         thread = LiveThread(self.thread._reddit, self.thread.id)
+        await thread._fetch()
         data = {
             key: getattr(thread, key) if value is None else value
             for key, value in settings.items()
         }
 
         url = API_PATH["live_update_thread"].format(id=self.thread.id)
-        # prawcore (0.7.0) Session.request() modifies `data` kwarg
-        self.thread._reddit.post(url, data=data.copy())
-        self.thread._reset_attributes(*data.keys())
+        # asyncprawcore (0.7.0) Session.request() modifies `data` kwarg
+        await self.thread._reddit.post(url, data=data.copy())
+        self.thread._reset_attributes(*data.keys())  # TODO: see if this is necessary
 
 
 class LiveThreadStream:
@@ -627,7 +638,8 @@ class LiveThreadStream:
 
         .. code-block:: python
 
-            for live_update in reddit.live("ta535s1hq2je").stream.updates():
+            live_thread = await reddit.live("ta535s1hq2je")
+            async for live_update in live.stream.updates():
                 print(live_update.body)
 
         To only retrieve new updates starting from when the stream is
@@ -635,8 +647,8 @@ class LiveThreadStream:
 
         .. code-block:: python
 
-            live_thread = reddit.live("ta535s1hq2je")
-            for live_update in live_thread.stream.updates(skip_existing=True):
+            live_thread = await reddit.live("ta535s1hq2je")
+            async for live_update in live_thread.stream.updates(skip_existing=True):
                 print(live_update.author)
 
         """
@@ -679,9 +691,9 @@ class LiveUpdate(FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           update = thread["7827987a-c998-11e4-a0b9-22000b6a88d2"]
-           update.contrib  # LiveUpdateContribution instance
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update.contrib  # LiveUpdateContribution instance
 
         """
         return LiveUpdateContribution(self)
@@ -690,6 +702,12 @@ class LiveUpdate(FullnameMixin, RedditBase):
     def thread(self) -> LiveThread:
         """Return :class:`.LiveThread` object the update object belongs to."""
         return self._thread
+
+    # TODO: this will need implemented differently; possibly changed to async
+    # for example:
+    # async def __ainit__(..):
+    #     ...
+    # __init__ = __ainit__
 
     def __init__(
         self,
@@ -712,11 +730,11 @@ class LiveUpdate(FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-           update = LiveUpdate(reddit, "ukaeu1ik4sw5",
+            update = LiveUpdate(reddit, "ukaeu1ik4sw5",
                                "7827987a-c998-11e4-a0b9-22000b6a88d2")
-           update.thread     # LiveThread(id="ukaeu1ik4sw5")
-           update.id         # "7827987a-c998-11e4-a0b9-22000b6a88d2"
-           update.author     # "umbrae"
+            update.thread     # LiveThread(id="ukaeu1ik4sw5")
+            update.id         # "7827987a-c998-11e4-a0b9-22000b6a88d2"
+            update.author     # "umbrae"
         """
         if _data is not None:
             # Since _data (part of JSON returned from reddit) have no
@@ -739,9 +757,9 @@ class LiveUpdate(FullnameMixin, RedditBase):
             value = Redditor(self._reddit, name=value)
         super().__setattr__(attribute, value)
 
-    def _fetch(self):
+    async def _fetch(self):
         url = API_PATH["live_focus"].format(thread_id=self.thread.id, update_id=self.id)
-        other = self._reddit.get(url)[0]
+        other = await self._reddit.get(url)[0]
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
@@ -759,38 +777,38 @@ class LiveUpdateContribution:
 
         .. code-block:: python
 
-           thread = reddit.live("ukaeu1ik4sw5")
-           update = thread["7827987a-c998-11e4-a0b9-22000b6a88d2"]
-           update.contrib  # LiveUpdateContribution instance
-           update.contrib.remove()
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update.contrib  # LiveUpdateContribution instance
+            await update.contrib.remove()
 
         """
         self.update = update
 
-    def remove(self):
+    async def remove(self):
         """Remove a live update.
 
         Usage:
 
          .. code-block:: python
 
-           thread = reddit.live("ydwwxneu7vsa")
-           update = thread["6854605a-efec-11e6-b0c7-0eafac4ff094"]
-           update.contrib.remove()
+             thread = await reddit.live("ydwwxneu7vsa")
+             update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
+             await update.contrib.remove()
 
         """
         url = API_PATH["live_remove_update"].format(id=self.update.thread.id)
         data = {"id": self.update.fullname}
-        self.update.thread._reddit.post(url, data=data)
+        await self.update.thread._reddit.post(url, data=data)
 
-    def strike(self):
+    async def strike(self):
         """Strike a content of a live update.
 
         .. code-block:: python
 
-           thread = reddit.live("xyu8kmjvfrww")
-           update = thread["cb5fe532-dbee-11e6-9a91-0e6d74fabcc4"]
-           update.contrib.strike()
+            thread = await reddit.live("xyu8kmjvfrww")
+            update = await thread.get_update("cb5fe532-dbee-11e6-9a91-0e6d74fabcc4")
+            await update.contrib.strike()
 
         To check whether the update is stricken or not, use ``update.stricken``
         attribute. But note that accessing lazy attributes on updates
@@ -800,4 +818,4 @@ class LiveUpdateContribution:
         """
         url = API_PATH["live_strike"].format(id=self.update.thread.id)
         data = {"id": self.update.fullname}
-        self.update.thread._reddit.post(url, data=data)
+        await self.update.thread._reddit.post(url, data=data)

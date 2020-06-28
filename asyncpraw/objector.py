@@ -41,7 +41,7 @@ class Objector:
 
     @classmethod
     def check_error(cls, data: Union[List[Any], Dict[str, Dict[str, str]]]):
-        """Raise an error if the argument resolves to an error object."""
+        """:raises: an error if the argument resolves to an error object."""
         error = cls.parse_error(data)
         if error:
             raise error

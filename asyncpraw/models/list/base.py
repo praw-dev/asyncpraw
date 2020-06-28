@@ -1,5 +1,5 @@
 """Provide the BaseList class."""
-from typing import TYPE_CHECKING, Any, Dict, Iterator
+from typing import TYPE_CHECKING, Any, Dict, Iterator, AsyncIterator
 
 from ..base import PRAWBase
 
@@ -34,6 +34,10 @@ class BaseList(PRAWBase):
     def __getitem__(self, index: int) -> Any:
         """Return the item at position index in the list."""
         return getattr(self, self.CHILD_ATTRIBUTE)[index]
+
+    async def __aiter__(self,) -> AsyncIterator[Any]:
+        """Return an async iterator to the list."""
+        return getattr(self, self.CHILD_ATTRIBUTE).__aiter__()
 
     def __iter__(self) -> Iterator[Any]:
         """Return an iterator to the list."""

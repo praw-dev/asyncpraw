@@ -31,13 +31,8 @@ class RedditBase(PRAWBase):
     def __getattr__(self, attribute: str) -> Any:
         """Return the value of `attribute`."""
         if not attribute.startswith("_") and not self._fetched:
-            self._fetch()
-            return getattr(self, attribute)
-        raise AttributeError(
-            "{!r} object has no attribute {!r}".format(
-                self.__class__.__name__, attribute
-            )
-        )
+            raise AttributeError("{!r} object has no attribute {!r}, did you forget to execute '.update()'?".format(self.__class__.__name__, attribute))
+        raise AttributeError("{!r} object has no attribute {!r}, did you forget to execute '.update()'?".format(self.__class__.__name__, attribute))
 
     def __hash__(self) -> int:
         """Return the hash of the current instance."""
@@ -63,6 +58,10 @@ class RedditBase(PRAWBase):
     def __ne__(self, other: Any) -> bool:
         """Return whether the other instance differs from the current."""
         return not self == other
+
+    async def update(self):
+        """Update the object."""
+        await self._fetch()
 
     def _fetch(self):  # pragma: no cover
         self._fetched = True
