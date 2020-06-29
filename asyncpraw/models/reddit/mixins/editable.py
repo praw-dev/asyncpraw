@@ -44,7 +44,8 @@ class EditableMixin:
             "thing_id": self.fullname,
             "validate_on_submit": self._reddit.validate_on_submit,
         }
-        updated = await self._reddit.post(API_PATH["edit"], data=data)[0]
+        response = await self._reddit.post(API_PATH["edit"], data=data)
+        updated = response[0]
         for attribute in [
             "_fetched",
             "_reddit",

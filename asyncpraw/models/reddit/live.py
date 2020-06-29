@@ -619,7 +619,7 @@ class LiveThreadStream:
         """
         self.live_thread = live_thread
 
-    def updates(self, **stream_options: Dict[str, Any]) -> Iterator["LiveUpdate"]:
+    def updates(self, **stream_options: Dict[str, Any]) -> AsyncGenerator["LiveUpdate", None]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created
@@ -759,7 +759,8 @@ class LiveUpdate(FullnameMixin, RedditBase):
 
     async def _fetch(self):
         url = API_PATH["live_focus"].format(thread_id=self.thread.id, update_id=self.id)
-        other = await self._reddit.get(url)[0]
+        response = await self._reddit.get(url)
+        other = response[0]
         self.__dict__.update(other.__dict__)
         self._fetched = True
 

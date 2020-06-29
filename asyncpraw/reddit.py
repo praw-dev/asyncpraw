@@ -553,7 +553,6 @@ class Reddit:
     async def _objectify_request(
         self,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
         json=None,
         method: str = "",
         params: Optional[Union[str, Dict[str, str]]] = None,
@@ -563,8 +562,6 @@ class Reddit:
 
         :param data: Dictionary, bytes, or file-like object to send in the body
             of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
         :param json: JSON-serializable object to send in the body
             of the request with a Content-Type header of application/json
             (default: None). If ``json`` is provided, ``data`` should not be.
@@ -574,10 +571,17 @@ class Reddit:
         :param path: The path to fetch.
 
         """
+        if params:
+            new_params = {}
+            for k, v in params.items():
+                if isinstance(v, bool):
+                    new_params[k] = str(v).lower()
+                else:
+                    new_params[k] = v
+            params = new_params
         return self._objector.objectify(
             await self.request(
                 data=data,
-                files=files,
                 json=json,
                 method=method,
                 params=params,
@@ -601,7 +605,7 @@ class Reddit:
                     return sleep_seconds
         return None
 
-    def delete(
+    async def delete(
         self,
         path: str,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
@@ -641,7 +645,6 @@ class Reddit:
         self,
         path: str,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
         params: Optional[Union[str, Dict[str, str]]] = None,
         json=None,
     ) -> Any:
@@ -650,8 +653,6 @@ class Reddit:
         :param path: The path to fetch.
         :param data: Dictionary, bytes, or file-like object to send in the body
             of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
         :param params: The query parameters to add to the request (default:
             None).
         :param json: JSON-serializable object to send in the body
@@ -664,7 +665,6 @@ class Reddit:
         try:
             return await self._objectify_request(
                 data=data,
-                files=files,
                 json=json,
                 method="POST",
                 params=params,
@@ -678,7 +678,7 @@ class Reddit:
                 )
                 await asyncio.sleep(seconds)
                 return await self._objectify_request(
-                    data=data, files=files, method="POST", params=params, path=path,
+                    data=data, method="POST", params=params, path=path,
                 )
             raise
 
@@ -738,7 +738,6 @@ class Reddit:
         path: str,
         params: Optional[Union[str, Dict[str, str]]] = None,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
         json=None,
     ) -> Any:
         """Return the parsed JSON data returned from a request to URL.
@@ -749,8 +748,6 @@ class Reddit:
             None).
         :param data: Dictionary, bytes, or file-like object to send in the body
             of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
         :param json: JSON-serializable object to send in the body
             of the request with a Content-Type header of application/json
             (default: None). If ``json`` is provided, ``data`` should not be.
@@ -763,14 +760,13 @@ class Reddit:
                 method,
                 path,
                 data=data,
-                files=files,
                 params=params,
                 timeout=self.config.timeout,
                 json=json,
             )
         except BadRequest as exception:
             try:
-                data = exception.response.json()
+                data = await exception.response.json()
             except ValueError:
                 # TODO: Remove this exception after 2020-12-31 if no one has
                 # filed a bug against it.

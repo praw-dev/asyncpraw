@@ -179,10 +179,13 @@ class MultiredditHelper(PRAWBase):
 class SubredditHelper(PRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    async def __call__(self, display_name: str) -> Subreddit:
+    async def __call__(self, display_name: str, fetch: bool = True) -> Subreddit:
         """Return an instance of :class:`~.Subreddit`.
 
         :param display_name: The name of the subreddit.
+        :param fetch: Determines if the subreddit will be fetched immediately.
+            This is used for specifying special subs like ``"all"``, ``"mod"``, or with
+            temporary filtering from (e.g., ``"all-redditdev-programming"``).
         """
         lower_name = display_name.lower()
 
@@ -191,7 +194,8 @@ class SubredditHelper(PRAWBase):
         if lower_name == "randnsfw":
             return await self._reddit.random_subreddit(nsfw=True)
         sub = Subreddit(self._reddit, display_name=display_name)
-        await sub._fetch()
+        if not lower_name in ['mod', 'all'] and fetch:
+            await sub._fetch()
         return sub
 
     async def create(

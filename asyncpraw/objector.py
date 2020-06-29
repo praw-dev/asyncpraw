@@ -108,10 +108,12 @@ class Objector:
             parser = self.parsers["Image"]
         elif {"isSubscribed", "name", "subscribers"}.issubset(data):
             # discards icon and subscribed information
-            return self._reddit.subreddit(data["name"])
+            data["display_name"] = data["name"]
+            del data["name"]
+            parser = self.parsers[self._reddit.config.kinds["subreddit"]]
         elif {"authorFlairType", "name"}.issubset(data):
             # discards flair information
-            return self._reddit.redditor(data["name"])
+            parser = self.parsers[self._reddit.config.kinds["redditor"]]
         elif {"parent_id"}.issubset(data):
             parser = self.parsers[self._reddit.config.kinds["comment"]]
         elif "collection_id" in data.keys():

@@ -1,5 +1,5 @@
 """Provide the Submission class."""
-from typing import Any, Dict, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 from urllib.parse import urljoin
 
 from asyncprawcore import Conflict

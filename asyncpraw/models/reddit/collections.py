@@ -100,7 +100,7 @@ class Collection(RedditBase):
 
     def __init__(
         self,
-        reddit: Reddit,
+        reddit: "Reddit",
         _data: Dict[str, Any] = None,
         collection_id: Optional[str] = None,
         permalink: Optional[str] = None,
@@ -264,7 +264,7 @@ class CollectionModeration(PRAWBase):
             submission = await self._reddit.submission(id=post)
             return submission.fullname
 
-    def __init__(self, reddit: Reddit, collection_id: str):
+    def __init__(self, reddit: "Reddit", collection_id: str):
         """Initialize an instance of CollectionModeration.
 
         :param collection_id: The ID of a collection.

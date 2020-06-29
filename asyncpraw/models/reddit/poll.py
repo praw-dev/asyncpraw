@@ -104,7 +104,7 @@ class PollData(PRAWBase):
             attribute = "_user_selection"
         super().__setattr__(attribute, value)
 
-    def option(self, option_id: str) -> PollOption:
+    async def option(self, option_id: str) -> PollOption:
         """Get the option with the specified ID.
 
         :param option_id: The ID of a poll option, as a ``str``.

@@ -60,8 +60,8 @@ class Emoji(RedditBase):
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
-    def _fetch(self):
-        for emoji in self.subreddit.emoji:
+    async def _fetch(self):
+        async for emoji in self.subreddit.emoji:
             if emoji.name == self.name:
                 self.__dict__.update(emoji.__dict__)
                 self._fetched = True
@@ -70,22 +70,24 @@ class Emoji(RedditBase):
             "/r/{} does not have the emoji {}".format(self.subreddit, self.name)
         )
 
-    def delete(self):
+    async def delete(self):
         """Delete an emoji from this subreddit by Emoji.
 
         To delete ``"test"`` as an emoji on the subreddit ``"praw_test"`` try:
 
         .. code-block:: python
 
-           reddit.subreddit("praw_test").emoji["test"].delete()
+            subreddit = await reddit.subreddit("praw_test")
+            emoji = await subreddit.emoji.get_emoji("test")
+            await emoji.delete()
 
         """
         url = API_PATH["emoji_delete"].format(
             emoji_name=self.name, subreddit=self.subreddit
         )
-        self._reddit.delete(url)
+        await self._reddit.delete(url)
 
-    def update(
+    async def update(
         self,
         mod_flair_only: Optional[bool] = None,
         post_flair_allowed: Optional[bool] = None,
@@ -112,7 +114,9 @@ class Emoji(RedditBase):
 
         .. code-block:: python
 
-           reddit.subreddit("wowemoji").emoji["test"].update(mod_flair_only=True)
+            subreddit = await reddit.subreddit("wowemoji")
+            emoji = await subreddit.emoji.get_emoji("test")
+            await emoji.update(mod_flair_only=True)
 
         """
         locals_reference = locals()
@@ -133,7 +137,7 @@ class Emoji(RedditBase):
                 value = getattr(self, attribute)
             data[attribute] = value
         url = API_PATH["emoji_update"].format(subreddit=self.subreddit)
-        self._reddit.post(url, data=data)
+        await self._reddit.post(url, data=data)
         for attribute, value in data.items():
             setattr(self, attribute, value)
 
@@ -141,8 +145,8 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a Subreddit for emoji."""
 
-    def __getitem__(self, name: str) -> Emoji:
-        """Lazily return the Emoji for the subreddit named ``name``.
+    async def get_emoji(self, name: str) -> Emoji:
+        """Return the Emoji for the subreddit named ``name``.
 
         :param name: The name of the emoji
 
@@ -150,11 +154,14 @@ class SubredditEmoji:
 
         .. code-block:: python
 
-           emoji = reddit.subreddit("praw_test").emoji["test"]
-           print(emoji)
+            subreddit = await reddit.subreddit("praw_test")
+            emoji = await subreddit.emoji.get_emoji("test")
+            print(emoji)
 
         """
-        return Emoji(self._reddit, self.subreddit, name)
+        emoji = Emoji(self._reddit, self.subreddit, name)
+        await emoji._fetch()
+        return emoji
 
     def __init__(self, subreddit: "Subreddit"):
         """Create a SubredditEmoji instance.
@@ -165,18 +172,18 @@ class SubredditEmoji:
         self.subreddit = subreddit
         self._reddit = subreddit._reddit
 
-    def __iter__(self) -> List[Emoji]:
+    async def __aiter__(self) -> List[Emoji]:
         """Return a list of Emoji for the subreddit.
 
         This method is to be used to discover all emoji for a subreddit:
 
         .. code-block:: python
 
-           for emoji in reddit.subreddit("praw_test").emoji:
-               print(emoji)
+            async for emoji in reddit.subreddit("praw_test").emoji:
+                print(emoji)
 
         """
-        response = self._reddit.get(
+        response = await self._reddit.get(
             API_PATH["emoji_list"].format(subreddit=self.subreddit)
         )
         subreddit_keys = [
@@ -188,7 +195,7 @@ class SubredditEmoji:
         for emoji_name, emoji_data in response[subreddit_keys[0]].items():
             yield Emoji(self._reddit, self.subreddit, emoji_name, _data=emoji_data)
 
-    def add(
+    async def add(
         self,
         name: str,
         image_path: str,
@@ -212,7 +219,8 @@ class SubredditEmoji:
 
         .. code-block:: python
 
-           reddit.subreddit("praw_test").emoji.add("test", "test.png")
+            subreddit = await reddit.subreddit("praw_test")
+            await subreddit.emoji.add("test", "test.png")
 
         """
         data = {
@@ -224,13 +232,15 @@ class SubredditEmoji:
         url = API_PATH["emoji_lease"].format(subreddit=self.subreddit)
 
         # until we learn otherwise, assume this request always succeeds
-        upload_lease = self._reddit.post(url, data=data)["s3UploadLease"]
+        response = await self._reddit.post(url, data=data)
+        upload_lease = response["s3UploadLease"]
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = "https:{}".format(upload_lease["action"])
 
         with open(image_path, "rb") as image:
-            response = self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data, files={"file": image}
+            upload_data["file"] = image
+            response = await self._reddit._core._requestor._http.post(
+                upload_url, data=upload_data
             )
         response.raise_for_status()
 
@@ -242,5 +252,5 @@ class SubredditEmoji:
             "user_flair_allowed": user_flair_allowed,
         }
         url = API_PATH["emoji_upload"].format(subreddit=self.subreddit)
-        self._reddit.post(url, data=data)
+        await self._reddit.post(url, data=data)
         return Emoji(self._reddit, self.subreddit, name)

@@ -135,7 +135,7 @@ class User(PRAWBase):
             self._me = Redditor(self._reddit, _data=user_data)
         return self._me
 
-    def multireddits(self) -> List["Multireddit"]:
+    async def multireddits(self) -> List["Multireddit"]:
         """Return a list of multireddits belonging to the user."""
         return await self._reddit.get(API_PATH["my_multireddits"])
 

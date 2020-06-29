@@ -57,7 +57,7 @@ class CommentForest:
         """
         return self._comments[index]
 
-    async def __aiter__(self) -> AsyncIterator[Comment]:
+    async def __aiter__(self) -> AsyncIterator["Comment"]:
         """Allow CommentForest to be used as an AsyncIterator.
 
         # TODO: this might need changed updated
