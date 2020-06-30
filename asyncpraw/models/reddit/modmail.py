@@ -137,7 +137,9 @@ class ModmailConversation(RedditBase):
         if id:
             self.id = id
 
-        self._info_params = {"markRead": "true"} if mark_read else None # TODO: fix this too
+        self._info_params = (
+            {"markRead": "true"} if mark_read else None
+        )  # TODO: fix this too
 
     def _build_conversation_list(self, other_conversations):
         """Return a comma-separated list of conversation IDs."""
@@ -221,7 +223,9 @@ class ModmailConversation(RedditBase):
         data = {"conversationIds": self._build_conversation_list(other_conversations)}
         await self._reddit.post(API_PATH["modmail_read"], data=data)
 
-    async def reply(self, body: str, author_hidden: bool = False, internal: bool = False):
+    async def reply(
+        self, body: str, author_hidden: bool = False, internal: bool = False
+    ):
         """Reply to the conversation.
 
         :param body: The Markdown formatted content for a message.
@@ -299,7 +303,9 @@ class ModmailConversation(RedditBase):
             await conversation.unmute()
 
         """
-        await self._reddit.request("POST", API_PATH["modmail_unmute"].format(id=self.id))
+        await self._reddit.request(
+            "POST", API_PATH["modmail_unmute"].format(id=self.id)
+        )
 
     async def unread(
         self, other_conversations: Optional[List["ModmailConversation"]] = None

@@ -619,7 +619,9 @@ class LiveThreadStream:
         """
         self.live_thread = live_thread
 
-    def updates(self, **stream_options: Dict[str, Any]) -> AsyncGenerator["LiveUpdate", None]:
+    def updates(
+        self, **stream_options: Dict[str, Any]
+    ) -> AsyncGenerator["LiveUpdate", None]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created

@@ -63,7 +63,9 @@ class ThingModerationMixin:
             await submission.mod.approve()
 
         """
-        await self.thing._reddit.post(API_PATH["approve"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(
+            API_PATH["approve"], data={"id": self.thing.fullname}
+        )
 
     async def distinguish(self, how="yes", sticky=False):
         """Distinguish a :class:`~.Comment` or :class:`~.Submission`.
@@ -137,7 +139,9 @@ class ThingModerationMixin:
         .. seealso:: :meth:`~.unlock`
 
         """
-        await self.thing._reddit.post(API_PATH["lock"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(
+            API_PATH["lock"], data={"id": self.thing.fullname}
+        )
 
     async def remove(self, spam=False, mod_note="", reason_id=None):
         """Remove a :class:`~.Comment` or :class:`~.Submission`.
@@ -277,7 +281,9 @@ class ThingModerationMixin:
         .. seealso:: :meth:`~.lock`
 
         """
-        await self.thing._reddit.post(API_PATH["unlock"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(
+            API_PATH["unlock"], data={"id": self.thing.fullname}
+        )
 
 
 class UserContentMixin(

@@ -146,7 +146,9 @@ class WikiPage(RedditBase):
 
     @staticmethod
     async def _revision_generator(subreddit, url, generator_kwargs):
-        async for revision in ListingGenerator(subreddit._reddit, url, **generator_kwargs):
+        async for revision in ListingGenerator(
+            subreddit._reddit, url, **generator_kwargs
+        ):
             if revision["author"] is not None:
                 revision["author"] = Redditor(
                     subreddit._reddit, _data=revision["author"]["data"]
@@ -223,7 +225,9 @@ class WikiPage(RedditBase):
         self.__dict__.update(data)
         self._fetched = True
 
-    async def edit(self, content: str, reason: Optional[str] = None, **other_settings: Any):
+    async def edit(
+        self, content: str, reason: Optional[str] = None, **other_settings: Any
+    ):
         """Edit this WikiPage's contents.
 
         :param content: The updated Markdown content of the page.

@@ -581,11 +581,7 @@ class Reddit:
             params = new_params
         return self._objector.objectify(
             await self.request(
-                data=data,
-                json=json,
-                method=method,
-                params=params,
-                path=path,
+                data=data, json=json, method=method, params=params, path=path,
             )
         )
 
@@ -621,7 +617,9 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        return await self._objectify_request(data=data, json=json, method="DELETE", path=path)
+        return await self._objectify_request(
+            data=data, json=json, method="DELETE", path=path
+        )
 
     async def patch(
         self,
@@ -639,7 +637,9 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        return await self._objectify_request(data=data, method="PATCH", path=path, json=json)
+        return await self._objectify_request(
+            data=data, method="PATCH", path=path, json=json
+        )
 
     async def post(
         self,
@@ -664,11 +664,7 @@ class Reddit:
             data = data or {}
         try:
             return await self._objectify_request(
-                data=data,
-                json=json,
-                method="POST",
-                params=params,
-                path=path,
+                data=data, json=json, method="POST", params=params, path=path,
             )
         except RedditAPIException as exception:
             seconds = self._handle_rate_limit(exception=exception)
@@ -698,7 +694,9 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        return await self._objectify_request(data=data, json=json, method="PUT", path=path)
+        return await self._objectify_request(
+            data=data, json=json, method="PUT", path=path
+        )
 
     async def random_subreddit(self, nsfw: bool = False) -> Subreddit:
         """Return a random lazy instance of :class:`~.Subreddit`.

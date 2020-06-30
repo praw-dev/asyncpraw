@@ -617,7 +617,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             return
 
         try:
-            async with websockets.connect(response["json"]["data"]["websocket_url"], close_timeout=timeout) as websocket:
+            async with websockets.connect(
+                response["json"]["data"]["websocket_url"], close_timeout=timeout
+            ) as websocket:
                 ws_update = await websocket.recv()
         except (
             websockets.WebSocketException,
@@ -681,8 +683,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         with open(media_path, "rb") as media:
             upload_data["file"] = media
             response = await self._reddit._core._requestor._http.post(
-                upload_url,
-                data=upload_data
+                upload_url, data=upload_data
             )
         if not response.status == 201:
             self._parse_xml_response(response)
@@ -1005,10 +1006,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 data[key] = value
         url = await self._upload_media(image_path, expected_mime_prefix="image")
         data.update(
-            kind="image",
-            url=url,
+            kind="image", url=url,
         )
-        return await self._submit_media(data, timeout, without_websockets=without_websockets)
+        return await self._submit_media(
+            data, timeout, without_websockets=without_websockets
+        )
 
     async def submit_poll(
         self,
@@ -1192,9 +1194,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             kind="videogif" if videogif else "video",
             url=url,
             # if thumbnail_path is None, it uploads the PRAW logo
-            video_poster_url=video_poster_url
+            video_poster_url=video_poster_url,
         )
-        return await self._submit_media(data, timeout, without_websockets=without_websockets)
+        return await self._submit_media(
+            data, timeout, without_websockets=without_websockets
+        )
 
     async def subscribe(self, other_subreddits=None):
         """Subscribe to the subreddit.
@@ -1337,7 +1341,9 @@ class SubredditFilters:
             user=self.subreddit._reddit.user.me(),
             subreddit=subreddit,
         )
-        await self.subreddit._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
+        await self.subreddit._reddit.put(
+            url, data={"model": dumps({"name": str(subreddit)})}
+        )
 
     async def remove(self, subreddit):
         """Remove ``subreddit`` from the list of filtered subreddits.
@@ -1626,7 +1632,9 @@ class SubredditFlairTemplates:
 
     async def _clear(self, is_link=None):
         url = API_PATH["flairtemplateclear"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.post(url, data={"flair_type": self.flair_type(is_link)})
+        await self.subreddit._reddit.post(
+            url, data={"flair_type": self.flair_type(is_link)}
+        )
 
     async def delete(self, template_id):
         """Remove a flair template provided by ``template_id``.
@@ -2260,7 +2268,9 @@ class SubredditModeration:
 
         """
         settings["sr"] = self.subreddit.fullname
-        return await self.subreddit._reddit.patch(API_PATH["update_settings"], json=settings)
+        return await self.subreddit._reddit.patch(
+            API_PATH["update_settings"], json=settings
+        )
 
 
 class SubredditModerationStream:

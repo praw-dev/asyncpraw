@@ -280,7 +280,9 @@ class SubmissionModeration(ThingModerationMixin):
         if not bottom:
             data["num"] = 1
         try:
-            return await self.thing._reddit.post(API_PATH["sticky_submission"], data=data)
+            return await self.thing._reddit.post(
+                API_PATH["sticky_submission"], data=data
+            )
         except Conflict:
             pass
 

@@ -187,7 +187,6 @@ class SubredditRemovalReasons:
         for reason in await self._removal_reason_list():
             yield reason
 
-
     async def _removal_reason_list(self) -> List[RemovalReason]:
         """Get a list of Removal Reason objects.
 
@@ -221,4 +220,4 @@ class SubredditRemovalReasons:
         data = {"message": message, "title": title}
         url = API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
         id = await self._reddit.post(url, data=data)
-        return RemovalReason(self._reddit, self.subreddit, id['id'])
+        return RemovalReason(self._reddit, self.subreddit, id["id"])

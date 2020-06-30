@@ -61,7 +61,9 @@ class BaseListingMixin(PRAWBase):
         url = _prepare(self, generator_kwargs, "controversial")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    def hot(self, **generator_kwargs: Union[str, int, Dict[str, str]]) -> AsyncGenerator[Any, None]:
+    def hot(
+        self, **generator_kwargs: Union[str, int, Dict[str, str]]
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for hot items.
 
         Additional keyword arguments are passed in the initialization of
@@ -83,7 +85,9 @@ class BaseListingMixin(PRAWBase):
         url = _prepare(self, generator_kwargs, "hot")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    def new(self, **generator_kwargs: Union[str, int, Dict[str, str]]) -> AsyncGenerator[Any, None]:
+    def new(
+        self, **generator_kwargs: Union[str, int, Dict[str, str]]
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for new items.
 
         Additional keyword arguments are passed in the initialization of

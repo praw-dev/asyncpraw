@@ -136,6 +136,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         """Return the Submission object this comment belongs to."""
         if not self._submission:  # Comment not from submission
             from .. import Submission
+
             self._submission = Submission(
                 self._reddit, id=self._extract_submission_id()
             )
@@ -170,7 +171,11 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         else:
             self._fetched = True
 
-    def __setattr__(self, attribute: str, value: Union[str, "Redditor", "CommentForest", "Subreddit"],):
+    def __setattr__(
+        self,
+        attribute: str,
+        value: Union[str, "Redditor", "CommentForest", "Subreddit"],
+    ):
         """Objectify author, replies, and subreddit."""
         if attribute == "author":
             value = Redditor.from_data(self._reddit, value)
@@ -183,6 +188,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         elif attribute == "subreddit":
             if isinstance(value, str):
                 from .. import Subreddit
+
                 value = Subreddit(self._reddit, display_name=value)
         super().__setattr__(attribute, value)
 

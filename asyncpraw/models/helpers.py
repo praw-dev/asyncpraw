@@ -194,7 +194,7 @@ class SubredditHelper(PRAWBase):
         if lower_name == "randnsfw":
             return await self._reddit.random_subreddit(nsfw=True)
         sub = Subreddit(self._reddit, display_name=display_name)
-        if not lower_name in ['mod', 'all'] and fetch:
+        if not lower_name in ["mod", "all"] and fetch:
             await sub._fetch()
         return sub
 

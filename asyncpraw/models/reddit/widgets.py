@@ -327,7 +327,6 @@ class SubredditWidgets(PRAWBase):
         for widget in self.layout["sidebar"]["order"]:
             yield items[widget]
 
-
     async def topbar(self):
         """Get a list of Widgets that make up the top bar."""
         items = await self.items()
@@ -356,10 +355,14 @@ class SubredditWidgets(PRAWBase):
         """Return the value of `attr`."""
         if not attr.startswith("_") and not self._fetched:
             raise AttributeError(
-                "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(self.__class__.__name__, attr)
+                "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
+                    self.__class__.__name__, attr
+                )
             )
         raise AttributeError(
-            "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(self.__class__.__name__, attr)
+            "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
+                self.__class__.__name__, attr
+            )
         )
 
     def __init__(self, subreddit):

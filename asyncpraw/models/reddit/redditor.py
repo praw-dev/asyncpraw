@@ -155,7 +155,9 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             self._fullname = fullname
 
     async def _fetch_username(self, fullname):
-        response = await self._reddit.get(API_PATH["user_by_fullname"], params={"ids": fullname})
+        response = await self._reddit.get(
+            API_PATH["user_by_fullname"], params={"ids": fullname}
+        )
         return response[fullname]["name"]
 
     async def _fetch_info(self):

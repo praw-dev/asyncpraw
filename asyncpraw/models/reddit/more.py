@@ -76,7 +76,9 @@ class MoreComments(PRAWBase):
                 "link_id": self.submission.fullname,
                 "sort": self.submission.comment_sort,
             }
-            self._comments = await self._reddit.post(API_PATH["morechildren"], data=data)
+            self._comments = await self._reddit.post(
+                API_PATH["morechildren"], data=data
+            )
             if update:
                 for comment in self._comments:
                     comment.submission = self.submission

@@ -98,7 +98,9 @@ class Redditors(PRAWBase):
 
             params = {"ids": ",".join(chunk)}
             try:
-                results = await self._reddit.get(API_PATH["user_by_fullname"], params=params)
+                results = await self._reddit.get(
+                    API_PATH["user_by_fullname"], params=params
+                )
             except asyncprawcore.exceptions.NotFound:
                 # None of the given IDs matched any Redditor.
                 continue
