@@ -1,4 +1,4 @@
-Working with asyncpraw's Models
+Working with PRAW's Models
 ==========================
 
 .. toctree::

@@ -1,5 +1,5 @@
 Image
 =====
 
-.. autoclass:: asyncpraw.models.Image
+.. autoclass:: praw.models.Image
    :inherited-members:

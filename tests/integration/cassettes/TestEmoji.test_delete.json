@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/5.4.0.dev0 asyncprawcore/0.14.0"
+            "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.14.0"
           ]
         },
         "method": "POST",
@@ -129,7 +129,7 @@
             "edgebucket=ostQVfpyvX490a0Xdf; session_tracker=RWuZ449BoZTPyYHhfr.0.1521883278942.Z0FBQUFBQmF0aGlQaXkzQk5UREZBdDc5NFFmVFl6NkVoalprTVFHTTBGd2dtVUIxNGhYR0JyM1RWZDd2SVBMNThvTWxtbTZPZ1Y0d0FJZ2I0eERYdTItXzRuZTZRS1p4Z180UFJlSHFaZXo4eWlwRVBIbWNXWkpHQi1NVUptVmxsRnBPZFhZVm8wWl8"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/5.4.0.dev0 asyncprawcore/0.14.0"
+            "<USER_AGENT> PRAW/5.4.0.dev0 prawcore/0.14.0"
           ]
         },
         "method": "DELETE",

@@ -1,10 +1,16 @@
 """Provide CommentForest for Submission comments."""
 from heapq import heappop, heappush
+from typing import TYPE_CHECKING, List, Optional, Union
 
+from ..exceptions import DuplicateReplaceException
 from .reddit.more import MoreComments
 
+if TYPE_CHECKING:  # pragma: no cover
+    from .reddit.comment import Comment  # noqa: F401
+    from .reddit.submission import Submission
 
-class CommentForest(object):
+
+class CommentForest:
     """A forest of comments starts with multiple top-level comments.
 
     Each of these comments can be a tree of replies.
@@ -29,19 +35,19 @@ class CommentForest(object):
                     queue.append((comment, item))
         return more_comments
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
         """Return the comment at position ``index`` in the list.
 
         This method is to be used like an array access, such as:
 
-        .. code:: python
+        .. code-block:: python
 
            first_comment = submission.comments[0]
 
         Alternatively, the presence of this method enables one to iterate over
         all top_level comments, like so:
 
-        .. code:: python
+        .. code-block:: python
 
            for comment in submission.comments:
                print(comment.body)
@@ -49,7 +55,9 @@ class CommentForest(object):
         """
         return self._comments[index]
 
-    def __init__(self, submission, comments=None):
+    def __init__(
+        self, submission: "Submission", comments: Optional[List["Comment"]] = None,
+    ):
         """Initialize a CommentForest instance.
 
         :param submission: An instance of :class:`~.Subreddit` that is the
@@ -61,17 +69,21 @@ class CommentForest(object):
         self._comments = comments
         self._submission = submission
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Return the number of top-level comments in the forest."""
         return len(self._comments)
 
     def _insert_comment(self, comment):
-        assert comment.name not in self._submission._comments_by_id
+        if comment.name in self._submission._comments_by_id:
+            raise DuplicateReplaceException
         comment.submission = self._submission
         if isinstance(comment, MoreComments) or comment.is_root:
             self._comments.append(comment)
         else:
-            assert comment.parent_id in self._submission._comments_by_id
+            assert comment.parent_id in self._submission._comments_by_id, (
+                "PRAW Error occured. Please file a bug report and include "
+                "the code that caused the error."
+            )
             parent = self._submission._comments_by_id[comment.parent_id]
             parent.replies._comments.append(comment)
 
@@ -80,7 +92,7 @@ class CommentForest(object):
         for comment in comments:
             comment.submission = self._submission
 
-    def list(self):
+    def list(self) -> Union["Comment", "MoreComments"]:
         """Return a flattened list of all Comments.
 
         This list may contain :class:`.MoreComments` instances if
@@ -96,7 +108,7 @@ class CommentForest(object):
                 queue.extend(comment.replies)
         return comments
 
-    def replace_more(self, limit=32, threshold=0):
+    def replace_more(self, limit: int = 32, threshold: int = 0) -> List["MoreComments"]:
         """Update the comment forest by resolving instances of MoreComments.
 
         :param limit: The maximum number of :class:`.MoreComments` instances to
@@ -115,17 +127,17 @@ class CommentForest(object):
         For example, to replace up to 32 :class:`.MoreComments` instances of a
         submission try:
 
-        .. code:: python
+        .. code-block:: python
 
-           submission = reddit.submission('3hahrw')
+           submission = reddit.submission("3hahrw")
            submission.comments.replace_more()
 
         Alternatively, to replace :class:`.MoreComments` instances within the
         replies of a single comment try:
 
-        .. code:: python
+        .. code-block:: python
 
-           comment = reddit.comment('d8r4im1')
+           comment = reddit.comment("d8r4im1")
            comment.refresh()
            comment.replies.replace_more()
 
@@ -135,15 +147,19 @@ class CommentForest(object):
                   looping and handling exceptions until the method returns
                   successfully. For example:
 
-                  .. code:: python
+                  .. code-block:: python
 
                      while True:
                          try:
                              submission.comments.replace_more()
                              break
                          except PossibleExceptions:
-                             print('Handling replace_more exception')
+                             print("Handling replace_more exception")
                              sleep(1)
+
+        .. warning:: If this method is called, and the comments are refreshed,
+            calling this method again will result in a
+            :class:`.DuplicateReplaceException`.
 
         """
         remaining = limit
@@ -153,8 +169,7 @@ class CommentForest(object):
         # Fetch largest more_comments until reaching the limit or the threshold
         while more_comments:
             item = heappop(more_comments)
-            if remaining is not None and remaining <= 0 or \
-               item.count < threshold:
+            if remaining is not None and remaining <= 0 or item.count < threshold:
                 skipped.append(item)
                 item._remove_from.remove(item)
                 continue

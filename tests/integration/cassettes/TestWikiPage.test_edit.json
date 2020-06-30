@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 asyncprawcore/0.0.11"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b8 prawcore/0.0.11"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -51,7 +51,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&content=asyncpraw+updated&page=test"
+          "string": "api_type=json&content=PRAW+updated&page=test"
         },
         "headers": {
           "Accept": "*/*",
@@ -61,7 +61,7 @@
           "Content-Length": "44",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "__cfduid=d32ca39e983f869b07169de16b276ffb91468716090; loidcreated=2016-07-17T00%3A41%3A30.100Z; loid=8w0NXBVCFtMhZCuuDO",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b8 asyncprawcore/0.0.11"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b8 prawcore/0.0.11"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/wiki/edit/?raw_json=1"

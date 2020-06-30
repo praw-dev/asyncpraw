@@ -1,5 +1,5 @@
 reddit.user
 ===========
 
-.. autoclass:: asyncpraw.models.User
+.. autoclass:: praw.models.User
    :inherited-members:

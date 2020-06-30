@@ -1,17 +1,21 @@
 """Provide the Preferences class."""
 from json import dumps
+from typing import TYPE_CHECKING, Dict, Union
 
 from ..const import API_PATH
 
+if TYPE_CHECKING:  # pragma: no cover
+    from .. import Reddit
 
-class Preferences(object):
+
+class Preferences:
     """A class for Reddit preferences.
 
     The Preferences class provides access to the Reddit preferences of the
     currently authenticated user.
     """
 
-    async def __call__(self):
+    def __call__(self) -> Dict[str, Union[bool, int, str]]:
         """Return the preference settings of the authenticated user as a dict.
 
         This method is intended to be accessed as ``reddit.user.preferences()``
@@ -20,21 +24,21 @@ class Preferences(object):
         .. code-block:: python
 
            preferences = reddit.user.preferences()
-           print(preferences['show_link_flair'])
+           print(preferences["show_link_flair"])
 
         See https://www.reddit.com/dev/api#GET_api_v1_me_prefs for the list
         of possible values.
         """
-        return await self._reddit.get(API_PATH['preferences'])
+        return self._reddit.get(API_PATH["preferences"])
 
-    def __init__(self, reddit):
+    def __init__(self, reddit: "Reddit"):
         """Create a Preferences instance.
 
         :param reddit: The Reddit instance.
         """
         self._reddit = reddit
 
-    async def update(self, **preferences):
+    def update(self, **preferences: Union[bool, int, str]):
         """Modify the specified settings.
 
         :param 3rd_party_data_personalized_ads: Allow Reddit to use data
@@ -56,8 +60,8 @@ class Preferences(object):
         :param creddit_autorenew: Use a creddit to automatically renew my
             gold if it expires (boolean).
         :param default_comment_sort: Default comment sort (one of
-            ``'confidence'``, ``'top'``, ``'new'``, ``'controversial'``,
-            ``'old'``, ``'random'``, ``'qa'``, ``'live'``).
+            ``"confidence"``, ``"top"``, ``"new"``, ``"controversial"``,
+            ``"old"``, ``"random"``, ``"qa"``, ``"live"``).
         :param domain_details: Show additional details in the domain text
             when available, such as the source subreddit or the content
             author's url/name (boolean).
@@ -65,22 +69,22 @@ class Preferences(object):
         :param email_messages: Send messages as emails (boolean).
         :param email_unsubscribe_all: Unsubscribe from all emails (boolean).
         :param enable_default_themes: Use reddit theme (boolean).
-        :param g: Location (one of ``'GLOBAL'``, ``'US'``, ``'AR'``,
-            ``'AU'``, ``'BG'``, ``'CA'``, ``'CL'``, ``'CO'``, ``'HR'``,
-            ``'CZ'``, ``'FI'``, ``'GR'``, ``'HU'``, ``'IS'``, ``'IN'``,
-            ``'IE'``, ``'JP'``, ``'MY'``, ``'MX'``, ``'NZ'``, ``'PH'``,
-            ``'PL'``, ``'PT'``, ``'PR'``, ``'RO'``, ``'RS'``, ``'SG'``,
-            ``'SE'``, ``'TW'``, ``'TH'``, ``'TR'``, ``'GB'``, ``'US_WA'``,
-            ``'US_DE'``, ``'US_DC'``, ``'US_WI'``, ``'US_WV'``, ``'US_HI'``,
-            ``'US_FL'``, ``'US_WY'``, ``'US_NH'``, ``'US_NJ'``, ``'US_NM'``,
-            ``'US_TX'``, ``'US_LA'``, ``'US_NC'``, ``'US_ND'``, ``'US_NE'``,
-            ``'US_TN'``, ``'US_NY'``, ``'US_PA'``, ``'US_CA'``, ``'US_NV'``,
-            ``'US_VA'``, ``'US_CO'``, ``'US_AK'``, ``'US_AL'``, ``'US_AR'``,
-            ``'US_VT'``, ``'US_IL'``, ``'US_GA'``, ``'US_IN'``, ``'US_IA'``,
-            ``'US_OK'``, ``'US_AZ'``, ``'US_ID'``, ``'US_CT'``, ``'US_ME'``,
-            ``'US_MD'``, ``'US_MA'``, ``'US_OH'``, ``'US_UT'``, ``'US_MO'``,
-            ``'US_MN'``, ``'US_MI'``, ``'US_RI'``, ``'US_KS'``, ``'US_MT'``,
-            ``'US_MS'``, ``'US_SC'``, ``'US_KY'``, ``'US_OR'``, ``'US_SD'``).
+        :param g: Location (one of ``"GLOBAL"``, ``"AR"``, ``"AU"``, ``"BG"``,
+            ``"CA"``, ``"CL"``, ``"CO"``, ``"CZ"``, ``"FI"``, ``"GB"``,
+            ``"GR"``, ``"HR"``, ``"HU"``, ``"IE"``, ``"IN"``, ``"IS"``,
+            ``"JP"``, ``"MX"``, ``"MY"``, ``"NZ"``, ``"PH"``, ``"PL"``,
+            ``"PR"``, ``"PT"``, ``"RO"``, ``"RS"``, ``"SE"``, ``"SG"``,
+            ``"TH"``, ``"TR"``, ``"TW"``, ``"US"``, ``"US_AK"``, ``"US_AL"``,
+            ``"US_AR"``, ``"US_AZ"``, ``"US_CA"``, ``"US_CO"``, ``"US_CT"``,
+            ``"US_DC"``, ``"US_DE"``, ``"US_FL"``, ``"US_GA"``, ``"US_HI"``,
+            ``"US_IA"``, ``"US_ID"``, ``"US_IL"``, ``"US_IN"``, ``"US_KS"``,
+            ``"US_KY"``, ``"US_LA"``, ``"US_MA"``, ``"US_MD"``, ``"US_ME"``,
+            ``"US_MI"``, ``"US_MN"``, ``"US_MO"``, ``"US_MS"``, ``"US_MT"``,
+            ``"US_NC"``, ``"US_ND"``, ``"US_NE"``, ``"US_NH"``, ``"US_NJ"``,
+            ``"US_NM"``, ``"US_NV"``, ``"US_NY"``, ``"US_OH"``, ``"US_OK"``,
+            ``"US_OR"``, ``"US_PA"``, ``"US_RI"``, ``"US_SC"``, ``"US_SD"``,
+            ``"US_TN"``, ``"US_TX"``, ``"US_UT"``, ``"US_VA"``, ``"US_VT"``,
+            ``"US_WA"``, ``"US_WI"``, ``"US_WV"``, ``"US_WY"``).
         :param hide_ads: Hide ads (boolean).
         :param hide_downs: Don't show me submissions after I've downvoted them,
             except my own (boolean).
@@ -102,10 +106,10 @@ class Preferences(object):
             (boolean).
         :param mark_messages_read: Mark messages as read when I open my inbox
             (boolean).
-        :param media: Thumbnail preference (one of ``'on'``, ``'off'``,
-            ``'subreddit'``).
-        :param media_preview: Media preview preference (one of ``'on'``,
-            ``'off'``, ``'subreddit'``).
+        :param media: Thumbnail preference (one of ``"on"``, ``"off"``,
+            ``"subreddit"``).
+        :param media_preview: Media preview preference (one of ``"on"``,
+            ``"off"``, ``"subreddit"``).
         :param min_comment_score: Don't show me comments with a score less than
             this number (int between ``-100`` and ``100``).
         :param min_link_score: Don't show me submissions with a score less than
@@ -187,7 +191,9 @@ class Preferences(object):
         .. code-block:: python
 
            reddit.user.preferences.update(
-                **{'3rd_party_data_personalized_ads': False})
+                **{"3rd_party_data_personalized_ads": False})
 
         """
-        return await self._reddit.patch(API_PATH['preferences'], data={'json': dumps(preferences)})
+        return self._reddit.patch(
+            API_PATH["preferences"], data={"json": dumps(preferences)}
+        )

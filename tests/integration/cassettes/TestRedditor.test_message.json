@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b5 asyncprawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b5 prawcore/0.0.8"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer 1buDxtKyGfk35XFULz0IykwHxnM",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-07-04T04%3A29%3A00.786Z; loid=XXkgr1Wdfnrb10UYg1; __cfduid=d0ec55f61de2767364f2194964df9be5a1467606540",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b5 asyncprawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b5 prawcore/0.0.8"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/subreddit_stats/about/?raw_json=1"
@@ -101,7 +101,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&subject=asyncpraw+test&text=This+is+a+test+from+asyncpraw&to=subreddit_stats"
+          "string": "api_type=json&subject=PRAW+test&text=This+is+a+test+from+PRAW&to=subreddit_stats"
         },
         "headers": {
           "Accept": "*/*",
@@ -111,7 +111,7 @@
           "Content-Length": "80",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loidcreated=2016-07-04T04%3A29%3A00.786Z; loid=XXkgr1Wdfnrb10UYg1; __cfduid=d0ec55f61de2767364f2194964df9be5a1467606540",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b5 asyncprawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b5 prawcore/0.0.8"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/compose/?raw_json=1"

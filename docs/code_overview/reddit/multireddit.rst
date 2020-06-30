@@ -1,5 +1,5 @@
 reddit.multireddit
 ==================
 
-.. autoclass:: asyncpraw.models.MultiredditHelper
+.. autoclass:: praw.models.MultiredditHelper
    :inherited-members:

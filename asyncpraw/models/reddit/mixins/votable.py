@@ -2,11 +2,13 @@
 from ....const import API_PATH
 
 
-class VotableMixin(object):
+class VotableMixin:
     """Interface for RedditBase classes that can be voted on."""
 
-    async def _vote(self, direction):
-        await self._reddit.post(API_PATH['vote'], data={'dir': str(direction), 'id': self.fullname})
+    def _vote(self, direction: int):
+        self._reddit.post(
+            API_PATH["vote"], data={"dir": str(direction), "id": self.fullname}
+        )
 
     def clear_vote(self):
         """Clear the authenticated user's vote on the object.
@@ -19,12 +21,12 @@ class VotableMixin(object):
 
         Example usage:
 
-        .. code:: python
+        .. code-block:: python
 
-           submission = reddit.submission(id='5or86n')
+           submission = reddit.submission(id="5or86n")
            submission.clear_vote()
 
-           comment = reddit.comment(id='dxolpyc')
+           comment = reddit.comment(id="dxolpyc")
            comment.clear_vote()
 
         """
@@ -41,15 +43,15 @@ class VotableMixin(object):
 
         Example usage:
 
-        .. code:: python
+        .. code-block:: python
 
-           submission = reddit.submission(id='5or86n')
+           submission = reddit.submission(id="5or86n")
            submission.downvote()
 
-           comment = reddit.comment(id='dxolpyc')
+           comment = reddit.comment(id="dxolpyc")
            comment.downvote()
 
-        See also :meth:`~.upvote`
+        .. seealso:: :meth:`~.upvote`
 
         """
         self._vote(direction=-1)
@@ -65,15 +67,15 @@ class VotableMixin(object):
 
         Example usage:
 
-        .. code:: python
+        .. code-block:: python
 
-           submission = reddit.submission(id='5or86n')
+           submission = reddit.submission(id="5or86n")
            submission.upvote()
 
-           comment = reddit.comment(id='dxolpyc')
+           comment = reddit.comment(id="dxolpyc")
            comment.upvote()
 
-        See also :meth:`~.downvote`
+        .. seealso:: :meth:`~.downvote`
 
         """
         self._vote(direction=1)

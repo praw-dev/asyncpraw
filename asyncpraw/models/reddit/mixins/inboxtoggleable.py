@@ -2,41 +2,45 @@
 from ....const import API_PATH
 
 
-class InboxToggleableMixin(object):
+class InboxToggleableMixin:
     """Interface for classes that can optionally receive inbox replies."""
 
-    async def disable_inbox_replies(self):
+    def disable_inbox_replies(self):
         """Disable inbox replies for the item.
 
         Example usage:
 
-        .. code:: python
+        .. code-block:: python
 
-           comment = reddit.comment('dkk4qjd')
+           comment = reddit.comment("dkk4qjd")
            comment.disable_inbox_replies()
 
-           submission = reddit.submission('8dmv8z')
+           submission = reddit.submission("8dmv8z")
            submission.disable_inbox_replies()
 
-        See also :meth:`~.enable_inbox_replies`
+        .. seealso:: :meth:`~.enable_inbox_replies`
 
         """
-        await self._reddit.post(API_PATH['sendreplies'], data={'id': self.fullname, 'state': False})
+        self._reddit.post(
+            API_PATH["sendreplies"], data={"id": self.fullname, "state": False}
+        )
 
-    async def enable_inbox_replies(self):
+    def enable_inbox_replies(self):
         """Enable inbox replies for the item.
 
         Example usage:
 
-        .. code:: python
+        .. code-block:: python
 
-           comment = reddit.comment('dkk4qjd')
+           comment = reddit.comment("dkk4qjd")
            comment.enable_inbox_replies()
 
-           submission = reddit.submission('8dmv8z')
+           submission = reddit.submission("8dmv8z")
            submission.enable_inbox_replies()
 
-        See also :meth:`~.disable_inbox_replies`
+        .. seealso:: :meth:`~.disable_inbox_replies`
 
         """
-        await self._reddit.post(API_PATH['sendreplies'], data={'id': self.fullname, 'state': True})
+        self._reddit.post(
+            API_PATH["sendreplies"], data={"id": self.fullname, "state": True}
+        )

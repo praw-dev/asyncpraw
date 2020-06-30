@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer HAYbUTX8znKAfyskS0OpIya67Q0",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=2016-07-17T22%3A04%3A08.547Z; __cfduid=dfef8689695700b24da5bf2f30a43bdab1468793048; loid=k2UwgOGXbBhj5QOxtw",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/multi/user/kjoneslol/?raw_json=1"

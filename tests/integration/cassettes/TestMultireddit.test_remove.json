@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "83",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=ynU9ZHhrU4lrr1AKRU; loidcreated=1481473902000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/multi/mine/?raw_json=1"
@@ -72,7 +72,7 @@
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "[{\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"asyncpraw multi test\", \"name\": \"praw_multi_test\", \"description_html\": \"\", \"created\": 1480913123.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884323.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test/\", \"description_md\": \"\"}}, {\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"asyncpraw multi test\", \"name\": \"praw_multi_test1\", \"description_html\": \"\", \"created\": 1480913167.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884367.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test1/\", \"description_md\": \"\"}}, {\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"asyncpraw multi test\", \"name\": \"praw_multi_test2\", \"description_html\": \"\", \"created\": 1480913200.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884400.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test2/\", \"description_md\": \"\"}}]"
+          "string": "[{\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"praw multi test\", \"name\": \"praw_multi_test\", \"description_html\": \"\", \"created\": 1480913123.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884323.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test/\", \"description_md\": \"\"}}, {\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"praw multi test\", \"name\": \"praw_multi_test1\", \"description_html\": \"\", \"created\": 1480913167.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884367.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test1/\", \"description_md\": \"\"}}, {\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"praw multi test\", \"name\": \"praw_multi_test2\", \"description_html\": \"\", \"created\": 1480913200.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884400.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test2/\", \"description_md\": \"\"}}]"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -122,7 +122,7 @@
           "Content-Length": "55",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=ynU9ZHhrU4lrr1AKRU; loidcreated=1481473902000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
         },
         "method": "DELETE",
         "uri": "https://oauth.reddit.com/api/multi/user/<USERNAME>/m/praw_multi_test/r/redditdev?raw_json=1"
@@ -176,7 +176,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=ynU9ZHhrU4lrr1AKRU; loidcreated=1481473902000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0 prawcore/0.3.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/multi/user/<USERNAME>/m/praw_multi_test/?raw_json=1"
@@ -184,7 +184,7 @@
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "{\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"asyncpraw multi test\", \"name\": \"praw_multi_test\", \"description_html\": \"\", \"created\": 1480913123.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884323.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test/\", \"description_md\": \"\"}}"
+          "string": "{\"kind\": \"LabeledMulti\", \"data\": {\"can_edit\": true, \"display_name\": \"praw multi test\", \"name\": \"praw_multi_test\", \"description_html\": \"\", \"created\": 1480913123.0, \"copied_from\": null, \"icon_url\": null, \"subreddits\": [{\"name\": \"aww\"}], \"created_utc\": 1480884323.0, \"key_color\": \"\", \"visibility\": \"private\", \"icon_name\": \"\", \"weighting_scheme\": \"classic\", \"path\": \"/user/<USERNAME>/m/praw_multi_test/\", \"description_md\": \"\"}}"
         },
         "headers": {
           "Accept-Ranges": "bytes",

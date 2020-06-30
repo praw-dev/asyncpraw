@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.7"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -61,7 +61,7 @@
           "Content-Length": "106",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "__cfduid=d09ae8ae16087fb45bcd2a7451ca382a61458545896; loidcreated=2016-03-21T07%3A38%3A16.675Z; loid=xdxqHrtRIkBReVhBby",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.7"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
@@ -110,10 +110,10 @@
           "Authorization": "bearer 7302867-hBIKYkrMXJg_DhuZb4I4h2zs8YE",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d09ae8ae16087fb45bcd2a7451ca382a61458545896; loidcreated=2016-03-21T07%3A38%3A16.675Z; loid=xdxqHrtRIkBReVhBby",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.7"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.7"
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/comments/4bbe4b/?sort=best&raw_json=1&limit=2048"
+        "uri": "https://oauth.reddit.com/comments/4bbe4b/?sort=confidence&raw_json=1&limit=2048"
       },
       "response": {
         "body": {
@@ -145,7 +145,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/comments/4bbe4b/?sort=best&raw_json=1&limit=2048"
+        "url": "https://oauth.reddit.com/comments/4bbe4b/?sort=confidence&raw_json=1&limit=2048"
       }
     }
   ],

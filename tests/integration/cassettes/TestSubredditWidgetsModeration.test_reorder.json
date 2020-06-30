@@ -27,7 +27,7 @@
             "application/x-www-form-urlencoded"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "POST",
@@ -125,7 +125,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "GET",
@@ -241,7 +241,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "PATCH",
@@ -348,7 +348,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "GET",
@@ -464,7 +464,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "PATCH",
@@ -571,7 +571,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "GET",
@@ -687,7 +687,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "PATCH",
@@ -794,7 +794,7 @@
             "edgebucket=W4uy60UOpFzKtZaB0y"
           ],
           "User-Agent": [
-            "<USER_AGENT> asyncpraw/6.0.0 asyncprawcore/1.0.0"
+            "<USER_AGENT> PRAW/6.0.0 prawcore/1.0.0"
           ]
         },
         "method": "GET",

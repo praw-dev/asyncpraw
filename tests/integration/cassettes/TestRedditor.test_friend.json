@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.8"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -60,7 +60,7 @@
           "Connection": "keep-alive",
           "Content-Length": "2",
           "Cookie": "__cfduid=d1012b2ab29539f47a7de913b2c910de01468101605; loid=cU4EcL3eyE6nXb80oW; loidcreated=2016-07-09T22%3A00%3A05.421Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.8"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.8"
         },
         "method": "PUT",
         "uri": "https://oauth.reddit.com/api/v1/me/friends/pyapitestuser3?raw_json=1"

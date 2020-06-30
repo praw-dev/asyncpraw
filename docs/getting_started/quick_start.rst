@@ -2,20 +2,20 @@ Quick Start
 ===========
 
 In this section, we go over everything you need to know to start building
-scripts, or bots using asyncpraw, the Python Reddit API Wrapper. It's fun and
+scripts or bots using PRAW, the Python Reddit API Wrapper. It's fun and
 easy. Let's get started.
 
 Prerequisites
 -------------
 
-:Python Knowledge: You need to know at least a little Python to use asyncpraw; it's
-                   a Python wrapper after all. asyncpraw supports `Python 2.7`_, and
-                   `Python 3.3 to 3.6`_. If you are stuck on a problem,
-                   `/r/learnpython`_ is a great place to ask for help.
+:Python Knowledge: You need to know at least a little Python to use PRAW; it's
+                   a Python wrapper after all. PRAW supports `Python 3.5+`_. If
+                   you are stuck on a problem, `r/learnpython`_ is a great
+                   place to ask for help.
 
-:Reddit Knowledge: A basic understanding of how `reddit.com`_ works is a
+:Reddit Knowledge: A basic understanding of how Reddit works is a
                    must. In the event you are not already familiar with Reddit
-                   start with their FAQ_.
+                   start at `Reddit Help`_.
 
 :Reddit Account: A Reddit account is required to access Reddit's API. Create
                  one at `reddit.com`_.
@@ -29,17 +29,16 @@ Prerequisites
 :User Agent: A user agent is a unique identifier that helps Reddit determine
              the source of network requests. To use Reddit's API, you need a
              unique and descriptive user agent. The recommended format is
-             ``<platform>:<app ID>:<version string> (by /u/<Reddit
+             ``<platform>:<app ID>:<version string> (by u/<Reddit
              username>)``. For example,
-             ``android:com.example.myredditapp:v1.2.3 (by /u/kemitche)``. Read
-             more about user-agents at `Reddit's API wiki page`_.
+             ``android:com.example.myredditapp:v1.2.3 (by u/kemitche)``. Read
+             more about user agents at `Reddit's API wiki page`_.
 
 
-.. _`Python 2.7`: https://docs.python.org/2/tutorial/index.html
-.. _`Python 3.3 to 3.6`: https://docs.python.org/3/tutorial/index.html
-.. _`/r/learnpython`: https://www.reddit.com/r/learnpython/
+.. _`Python 3.5+`: https://docs.python.org/3/tutorial/index.html
+.. _`r/learnpython`: https://www.reddit.com/r/learnpython/
 .. _reddit.com: https://www.reddit.com
-.. _FAQ: https://www.reddit.com/wiki/faq
+.. _`Reddit Help`: https://www.reddithelp.com/en
 .. _`Reddit's API wiki page`: https://github.com/reddit/reddit/wiki/API
 
 .. _`First Steps Guide`:
@@ -55,14 +54,14 @@ Obtain a :class:`.Reddit` Instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning:: For the sake of brevity, the following examples pass authentication
-             information via arguments to :py:func:`asyncpraw.Reddit`. If you do
+             information via arguments to :py:func:`praw.Reddit`. If you do
              this, you need to be careful not to reveal this information to the
              outside world if you share your code. It is recommended to use a
-             :ref:`asyncpraw.ini file <asyncpraw.ini>` in order to keep your
+             :ref:`praw.ini file <praw.ini>` in order to keep your
              authentication information separate from your code.
 
 You need an instance of the :class:`.Reddit` class to do *anything* with
-asyncpraw. There are two distinct states a :class:`.Reddit` instance can be in:
+PRAW. There are two distinct states a :class:`.Reddit` instance can be in:
 :ref:`read-only <read-only>`, and :ref:`authorized <authorized>`.
 
 .. _read-only:
@@ -73,9 +72,9 @@ Read-only :class:`.Reddit` Instances
 To create a read-only :class:`.Reddit` instance, you need three pieces of
 information:
 
-1) client ID
-2) client secret
-3) user agent
+1) Client ID
+2) Client secret
+3) User agent
 
 You may choose to provide these by passing in three keyword arguments when
 calling the initializer of the :class:`.Reddit` class: ``client_id``,
@@ -84,11 +83,11 @@ of providing this information). For example:
 
 .. code-block:: python
 
-   import asyncpraw
+   import praw
 
-   reddit = asyncpraw.Reddit(client_id='my client id',
-                        client_secret='my client secret',
-                        user_agent='my user agent')
+   reddit = praw.Reddit(client_id="my client id",
+                        client_secret="my client secret",
+                        user_agent="my user agent")
 
 Just like that, you now have a read-only  :class:`.Reddit` instance.
 
@@ -96,23 +95,23 @@ Just like that, you now have a read-only  :class:`.Reddit` instance.
 
    print(reddit.read_only)  # Output: True
 
-With a read-only instance, you can do something like obtaining 10 'hot'
-submissions from ``/r/learnpython``:
+With a read-only instance, you can do something like obtaining 10 "hot"
+submissions from ``r/learnpython``:
 
 .. code-block:: python
 
    # continued from code above
 
-   for submission in reddit.subreddit('learnpython').hot(limit=10):
+   for submission in reddit.subreddit("learnpython").hot(limit=10):
        print(submission.title)
 
-   # Output: 10 submission
+   # Output: 10 submissions
 
 If you want to do more than retrieve public information from Reddit, then you
 need an authorized :class:`.Reddit` instance.
 
 .. note:: In the above example we are limiting the results to 10. Without the
-          ``limit`` parameter asyncpraw should yield as many results as it can with
+          ``limit`` parameter PRAW should yield as many results as it can with
           a single request. For most endpoints this results in 100 items per
           request. If you want to retrieve as many as possible pass in
           ``limit=None``.
@@ -126,8 +125,8 @@ In order to create an authorized :class:`.Reddit` instance, two additional
 pieces of information are required for **script** applications (see
 :ref:`oauth` for other application types):
 
-4) your Reddit user name, and
-5) your Reddit password
+4) Your Reddit username, and
+5) Your Reddit password
 
 Again, you may choose to provide these by passing in keyword arguments
 ``username`` and ``password`` when you call the :class:`.Reddit` initializer,
@@ -135,13 +134,13 @@ like the following:
 
 .. code-block:: python
 
-   import asyncpraw
+   import praw
 
-   reddit = asyncpraw.Reddit(client_id='my client id',
-                        client_secret='my client secret',
-                        user_agent='my user agent',
-                        username='my username',
-                        password='my password')
+   reddit = praw.Reddit(client_id="my client id",
+                        client_secret="my client secret",
+                        user_agent="my user agent",
+                        username="my username",
+                        password="my password")
 
    print(reddit.read_only)  # Output: False
 
@@ -153,7 +152,7 @@ switch back to read-only mode whenever you want:
    # continued from code above
    reddit.read_only = True
 
-.. note:: If you are uncomfortable hard coding your credentials into your
+.. note:: If you are uncomfortable hard-coding your credentials into your
           program, there are some options available to you. Please see:
           :ref:`configuration`.
 
@@ -166,7 +165,7 @@ calling ``subreddit`` on your :class:`.Reddit` instance. For example:
 .. code-block:: python
 
    # assume you have a Reddit instance bound to variable `reddit`
-   subreddit = reddit.subreddit('redditdev')
+   subreddit = reddit.subreddit("redditdev")
 
    print(subreddit.display_name)  # Output: redditdev
    print(subreddit.title)         # Output: reddit Development
@@ -211,7 +210,7 @@ You can create :class:`.Submission` instances in other ways too:
 .. code-block:: python
 
    # assume you have a Reddit instance bound to variable `reddit`
-   submission = reddit.submission(id='39zje0')
+   submission = reddit.submission(id="39zje0")
    print(submission.title)  # Output: reddit will soon only be available ...
 
    # or
@@ -237,17 +236,17 @@ For example:
    print(redditor1.name)  # Output: name of the redditor
 
   # assume you have a Reddit instance bound to variable `reddit`
-   redditor2 = reddit.redditor('bboe')
-   print(redditor2.link_karma)  # Output: bboe's karma
+   redditor2 = reddit.redditor("bboe")
+   print(redditor2.link_karma)  # Output: u/bboe's karma
 
 Obtain :class:`.Comment` Instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Submissions have a ``comments`` attribute that is a :class:`.CommentForest`
 instance. That instance is iterable and represents the top-level comments of
-the submission by the default comment sort (``best``). If you instead want to
-iterate over *all* comments as a flattened list you can call the :meth:`.list`
-method on a :class:`.CommentForest` instance. For example:
+the submission by the default comment sort (``confidence``). If you instead
+want to iterate over *all* comments as a flattened list you can call the
+:meth:`.list` method on a :class:`.CommentForest` instance. For example:
 
 .. code-block:: python
 
@@ -265,8 +264,8 @@ method on a :class:`.CommentForest` instance. For example:
           .. code-block:: python
 
              # assume you have a Reddit instance bound to variable `reddit`
-             submission = reddit.submission(id='39zje0')
-             submission.comment_sort = 'new'
+             submission = reddit.submission(id="39zje0")
+             submission.comment_sort = "new"
              top_level_comments = list(submission.comments)
 
 As you may be aware there will periodically be :class:`.MoreComments` instances
@@ -280,7 +279,7 @@ after ``comment_sort`` is updated. See :ref:`extracting_comments` for an example
 Determine Available Attributes of an Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have a asyncpraw object, e.g., :class:`.Comment`, :class:`.Message`,
+If you have a PRAW object, e.g., :class:`.Comment`, :class:`.Message`,
 :class:`.Redditor`, or :class:`.Submission`, and you want to see what
 attributes are available along with their values, use the built-in
 :py:func:`vars` function of python. For example:
@@ -290,11 +289,11 @@ attributes are available along with their values, use the built-in
    import pprint
 
    # assume you have a Reddit instance bound to variable `reddit`
-   submission = reddit.submission(id='39zje0')
+   submission = reddit.submission(id="39zje0")
    print(submission.title) # to make it non-lazy
    pprint.pprint(vars(submission))
 
-Note the line where we print the title. asyncpraw uses lazy objects so that network
+Note the line where we print the title. PRAW uses lazy objects so that network
 requests to Reddit's API are only issued when information is needed. Here,
 before the print line, ``submission`` points to a lazy :class:`.Submission`
 object. When we try to print its title, additional information is needed, thus

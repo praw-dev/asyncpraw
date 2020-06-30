@@ -1,5 +1,5 @@
 SubredditWidgetsModeration
 ==========================
 
-.. autoclass:: asyncpraw.models.SubredditWidgetsModeration
+.. autoclass:: praw.models.SubredditWidgetsModeration
    :inherited-members:

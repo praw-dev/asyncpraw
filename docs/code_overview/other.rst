@@ -3,7 +3,16 @@ Other Classes
 
 The following list of classes are provided here for complete documentation. You
 should not likely need to work with these classes directly, but rather through
-instances of them bound to an attribute of one of the asyncpraw models.
+instances of them bound to an attribute of one of the PRAW models.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Collections
+
+   other/collection
+   other/collectionmoderation
+   other/subredditcollections
+   other/subredditcollectionsmoderation
 
 .. toctree::
    :maxdepth: 2
@@ -21,6 +30,7 @@ instances of them bound to an attribute of one of the asyncpraw models.
 
    other/livecontributorrelationship
    other/livethreadcontribution
+   other/livethreadstream
    other/liveupdatecontribution
 
 .. toctree::
@@ -29,8 +39,11 @@ instances of them bound to an attribute of one of the asyncpraw models.
 
    other/commentmoderation
    other/submissionmoderation
+   other/rulemoderation
    other/subredditmoderation
+   other/subredditrulesmoderation
    other/subredditwidgetsmoderation
+   other/thingmoderationmixin
    other/widgetmoderation
    other/wikipagemoderation
 
@@ -49,6 +62,7 @@ instances of them bound to an attribute of one of the asyncpraw models.
    other/subredditfilters
    other/subredditquarantine
    other/subredditstream
+   other/subredditmoderationstream
    other/subredditstylesheet
    other/subredditwidgets
    other/subredditwiki
@@ -75,10 +89,13 @@ instances of them bound to an attribute of one of the asyncpraw models.
 
    other/auth
    other/button
+   other/calendarconfiguration
    other/commentforest
    other/commenthelper
+   other/config
    other/domainlisting
    other/emoji
+   other/hover
    other/listinggenerator
    other/image
    other/imagedata
@@ -86,12 +103,18 @@ instances of them bound to an attribute of one of the asyncpraw models.
    other/modmail
    other/modmailmessage
    other/preferences
+   other/poll
    other/redditbase
    other/redditorlist
+   other/removalreason
+   other/rule
+   other/styles
    other/sublisting
    other/submenu
    other/subredditemoji
    other/subredditmessage
+   other/subredditremovalreasons
+   other/subredditrules
    other/redditorstream
    other/trophy
    other/util

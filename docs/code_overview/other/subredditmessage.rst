@@ -1,5 +1,5 @@
 SubredditMessage
 ================
 
-.. autoclass:: asyncpraw.models.SubredditMessage
+.. autoclass:: praw.models.SubredditMessage
    :inherited-members:

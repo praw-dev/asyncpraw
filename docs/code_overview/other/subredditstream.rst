@@ -1,5 +1,5 @@
 SubredditStream
 ===============
 
-.. autoclass:: asyncpraw.models.reddit.subreddit.SubredditStream
+.. autoclass:: praw.models.reddit.subreddit.SubredditStream
    :inherited-members:

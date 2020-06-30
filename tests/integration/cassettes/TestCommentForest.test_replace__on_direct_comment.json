@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=4shXkw0BBIUsu8mop8; loidcreated=1482132436000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/info/?raw_json=1&id=t1_d8r4im1"
@@ -120,7 +120,7 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=4shXkw0BBIUsu8mop8; loidcreated=1482132436000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/comments/57dw9a/_/d8r4im1?context=100&raw_json=1"
@@ -176,10 +176,10 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=4shXkw0BBIUsu8mop8; loidcreated=1482132436000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/comments/57dw9a/_/d8rzxi2?limit=2048&sort=best&raw_json=1"
+        "uri": "https://oauth.reddit.com/comments/57dw9a/_/d8rzxi2?limit=2048&sort=confidence&raw_json=1"
       },
       "response": {
         "body": {
@@ -216,7 +216,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/comments/57dw9a/_/d8rzxi2?limit=2048&sort=best&raw_json=1"
+        "url": "https://oauth.reddit.com/comments/57dw9a/_/d8rzxi2?limit=2048&sort=confidence&raw_json=1"
       }
     }
   ],

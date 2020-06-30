@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> <USER_AGENT>/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> <USER_AGENT>/4.0.0 prawcore/0.3.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,7 +64,7 @@
           "Authorization": "bearer lyMvBeVdGbG0QoH-QvghJJWVXNV4",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=1480436362000; loid=TuKkRMEPoWf8ouw52F",
-          "User-Agent": "<USER_AGENT> <USER_AGENT>/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> <USER_AGENT>/4.0.0 prawcore/0.3.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/subreddits_by_topic?raw_json=1&query=python"
@@ -117,7 +117,7 @@
           "Authorization": "bearer lyMvBeVdGbG0QoH-QvghJJWVXNV4",
           "Connection": "keep-alive",
           "Cookie": "loidcreated=1480436362000; loid=TuKkRMEPoEf9ouw52F",
-          "User-Agent": "<USER_AGENT> <USER_AGENT>/4.0.0 asyncprawcore/0.3.0"
+          "User-Agent": "<USER_AGENT> <USER_AGENT>/4.0.0 prawcore/0.3.0"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/api/subreddits_by_topic?raw_json=1&query=xvfx2741r"

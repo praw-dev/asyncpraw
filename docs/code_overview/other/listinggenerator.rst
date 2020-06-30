@@ -1,5 +1,5 @@
 ListingGenerator
 ================
 
-.. autoclass:: asyncpraw.models.ListingGenerator
+.. autoclass:: praw.models.ListingGenerator
    :inherited-members:

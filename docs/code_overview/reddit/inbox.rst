@@ -1,5 +1,5 @@
 reddit.inbox
 ============
 
-.. autoclass:: asyncpraw.models.Inbox
+.. autoclass:: praw.models.Inbox
    :inherited-members:

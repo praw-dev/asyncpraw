@@ -1,5 +1,5 @@
 WidgetModeration
 ================
 
-.. autoclass:: asyncpraw.models.WidgetModeration
+.. autoclass:: praw.models.WidgetModeration
    :inherited-members:

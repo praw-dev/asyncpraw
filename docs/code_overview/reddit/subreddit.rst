@@ -1,5 +1,5 @@
 reddit.subreddit
 ================
 
-.. autoclass:: asyncpraw.models.SubredditHelper
+.. autoclass:: praw.models.SubredditHelper
    :inherited-members:

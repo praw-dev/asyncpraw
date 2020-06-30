@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -64,10 +64,10 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/comments/3hahrw/?limit=2048&sort=best&raw_json=1"
+        "uri": "https://oauth.reddit.com/comments/3hahrw/?limit=2048&sort=confidence&raw_json=1"
       },
       "response": {
         "body": {
@@ -104,7 +104,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/comments/3hahrw/?limit=2048&sort=best&raw_json=1"
+        "url": "https://oauth.reddit.com/comments/3hahrw/?limit=2048&sort=confidence&raw_json=1"
       }
     },
     {
@@ -112,7 +112,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&children=cu5w3gc&link_id=t3_3hahrw&sort=best"
+          "string": "api_type=json&children=cu5w3gc&link_id=t3_3hahrw&sort=confidence"
         },
         "headers": {
           "Accept": "*/*",
@@ -122,7 +122,7 @@
           "Content-Length": "58",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/morechildren/?raw_json=1"
@@ -167,7 +167,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&children=cu5uvq3%2Ccu637g6&link_id=t3_3hahrw&sort=best"
+          "string": "api_type=json&children=cu5uvq3%2Ccu637g6&link_id=t3_3hahrw&sort=confidence"
         },
         "headers": {
           "Accept": "*/*",
@@ -177,7 +177,7 @@
           "Content-Length": "68",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/morechildren/?raw_json=1"
@@ -222,7 +222,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&children=cu694c2&link_id=t3_3hahrw&sort=best"
+          "string": "api_type=json&children=cu694c2&link_id=t3_3hahrw&sort=confidence"
         },
         "headers": {
           "Accept": "*/*",
@@ -232,7 +232,7 @@
           "Content-Length": "58",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/morechildren/?raw_json=1"
@@ -277,7 +277,7 @@
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "api_type=json&children=cu5uxqk&link_id=t3_3hahrw&sort=best"
+          "string": "api_type=json&children=cu5uxqk&link_id=t3_3hahrw&sort=confidence"
         },
         "headers": {
           "Accept": "*/*",
@@ -287,7 +287,7 @@
           "Content-Length": "58",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/morechildren/?raw_json=1"
@@ -340,10 +340,10 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/comments/3hahrw/_/cu5v5h7?limit=2048&sort=best&raw_json=1"
+        "uri": "https://oauth.reddit.com/comments/3hahrw/_/cu5v5h7?limit=2048&sort=confidence&raw_json=1"
       },
       "response": {
         "body": {
@@ -380,7 +380,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/comments/3hahrw/_/cu5v5h7?limit=2048&sort=best&raw_json=1"
+        "url": "https://oauth.reddit.com/comments/3hahrw/_/cu5v5h7?limit=2048&sort=confidence&raw_json=1"
       }
     },
     {
@@ -396,10 +396,10 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/comments/3hahrw/_/cu5uyz1?limit=2048&sort=best&raw_json=1"
+        "uri": "https://oauth.reddit.com/comments/3hahrw/_/cu5uyz1?limit=2048&sort=confidence&raw_json=1"
       },
       "response": {
         "body": {
@@ -436,7 +436,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/comments/3hahrw/_/cu5uyz1?limit=2048&sort=best&raw_json=1"
+        "url": "https://oauth.reddit.com/comments/3hahrw/_/cu5uyz1?limit=2048&sort=confidence&raw_json=1"
       }
     },
     {
@@ -452,10 +452,10 @@
           "Authorization": "bearer <ACCESS_TOKEN>",
           "Connection": "keep-alive",
           "Cookie": "loid=W9bo0pMs7dD3JuzfLP; loidcreated=1482132432000",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.1.0dev asyncprawcore/0.5.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.1.0dev prawcore/0.5.0"
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/comments/3hahrw/_/cu61zil?limit=2048&sort=best&raw_json=1"
+        "uri": "https://oauth.reddit.com/comments/3hahrw/_/cu61zil?limit=2048&sort=confidence&raw_json=1"
       },
       "response": {
         "body": {
@@ -492,7 +492,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/comments/3hahrw/_/cu61zil?limit=2048&sort=best&raw_json=1"
+        "url": "https://oauth.reddit.com/comments/3hahrw/_/cu61zil?limit=2048&sort=confidence&raw_json=1"
       }
     }
   ],

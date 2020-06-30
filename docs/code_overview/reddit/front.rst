@@ -1,5 +1,5 @@
 reddit.front
 ============
 
-.. autoclass:: asyncpraw.models.Front
+.. autoclass:: praw.models.Front
    :inherited-members:

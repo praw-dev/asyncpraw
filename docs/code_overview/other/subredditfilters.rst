@@ -1,5 +1,5 @@
 SubredditFilters
 ================
 
-.. autoclass:: asyncpraw.models.reddit.subreddit.SubredditFilters
+.. autoclass:: praw.models.reddit.subreddit.SubredditFilters
    :inherited-members:

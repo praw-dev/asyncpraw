@@ -1,14 +1,14 @@
-Exceptions in asyncpraw
+Exceptions in PRAW
 ==================
 
-In addition to exceptions under the ``asyncpraw.exceptions`` namespace shown below,
+In addition to exceptions under the ``praw.exceptions`` namespace shown below,
 exceptions might be raised that inherit from
-``asyncprawcore.asyncprawcoreException``. Please see the following resource for
+``prawcore.PrawcoreException``. Please see the following resource for
 information on those exceptions:
-https://github.com/asyncpraw-dev/asyncprawcore/blob/master/asyncprawcore/exceptions.py
+https://github.com/praw-dev/prawcore/blob/master/prawcore/exceptions.py
 
-asyncpraw.exceptions
+praw.exceptions
 ---------------
 
-.. automodule:: asyncpraw.exceptions
+.. automodule:: praw.exceptions
    :inherited-members:

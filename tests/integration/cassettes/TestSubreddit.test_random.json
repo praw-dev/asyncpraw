@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer IK6Z3bmRxGEbgmFg7ID6ZyMkBA8",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d2b5a24482c717572f345417ad50be8be1468327114; loid=TfIbOU8zFtkP6c45x4; loidcreated=2016-07-12T12%3A38%3A35.032Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/random/?unique=0&raw_json=1"
@@ -108,7 +108,7 @@
           "Authorization": "bearer IK6Z3bmRxGEbgmFg7ID6ZyMkBA8",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d2b5a24482c717572f345417ad50be8be1468327114; loid=TfIbOU8zFtkP6c45x4; loidcreated=2016-07-12T12%3A38%3A35.032Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/random/?unique=1&raw_json=1"
@@ -157,7 +157,7 @@
           "Authorization": "bearer IK6Z3bmRxGEbgmFg7ID6ZyMkBA8",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d2b5a24482c717572f345417ad50be8be1468327114; loid=TfIbOU8zFtkP6c45x4; loidcreated=2016-07-12T12%3A38%3A35.032Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/random/?unique=2&raw_json=1"
@@ -206,7 +206,7 @@
           "Authorization": "bearer IK6Z3bmRxGEbgmFg7ID6ZyMkBA8",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d2b5a24482c717572f345417ad50be8be1468327114; loid=TfIbOU8zFtkP6c45x4; loidcreated=2016-07-12T12%3A38%3A35.032Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b7 asyncprawcore/0.0.10"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/random/?unique=3&raw_json=1"

@@ -1,1 +1,1 @@
-"""asyncpraw Test Suite."""
+"""PRAW Test Suite."""

@@ -1,5 +1,5 @@
 Auth
 ====
 
-.. autoclass:: asyncpraw.models.Auth
+.. autoclass:: praw.models.Auth
    :inherited-members:

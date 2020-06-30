@@ -1,5 +1,5 @@
 RedditBase
 ==========
 
-.. autoclass:: asyncpraw.models.reddit.base.RedditBase
+.. autoclass:: praw.models.reddit.base.RedditBase
    :inherited-members:

@@ -1,21 +1,21 @@
-"""Test asyncpraw.models.list.base."""
+"""Test praw.models.list.base."""
 import pytest
 
-from asyncpraw.models.list.base import BaseList
+from praw.models.list.base import BaseList
 
 
-class DummyObjector(object):
+class DummyObjector:
     @staticmethod
     def objectify(value):
         return value
 
 
-class Dummy(object):
+class Dummy:
     def __init__(self):
         self._objector = DummyObjector
 
 
-class TestBaseList(object):
+class TestBaseList:
     def setup(self):
         self._prev_child_attribute = BaseList.CHILD_ATTRIBUTE
 
@@ -27,28 +27,28 @@ class TestBaseList(object):
             BaseList(None, None)
 
     def test__contains__(self):
-        BaseList.CHILD_ATTRIBUTE = 'asyncpraw'
-        items = ['foo', 1, {'a': 'b'}]
-        base_list = BaseList(Dummy(), {'asyncpraw': items})
+        BaseList.CHILD_ATTRIBUTE = "praw"
+        items = ["foo", 1, {"a": "b"}]
+        base_list = BaseList(Dummy(), {"praw": items})
         for item in items:
             assert item in base_list
 
     def test__getitem__(self):
-        BaseList.CHILD_ATTRIBUTE = 'asyncpraw'
-        items = ['foo', 1, {'a': 'b'}]
-        base_list = BaseList(Dummy(), {'asyncpraw': items})
+        BaseList.CHILD_ATTRIBUTE = "praw"
+        items = ["foo", 1, {"a": "b"}]
+        base_list = BaseList(Dummy(), {"praw": items})
         for i, item in enumerate(items):
             assert item == base_list[i]
 
     def test__iter__(self):
-        BaseList.CHILD_ATTRIBUTE = 'asyncpraw'
-        items = ['foo', 1, {'a': 'b'}]
-        base_list = BaseList(Dummy(), {'asyncpraw': items})
+        BaseList.CHILD_ATTRIBUTE = "praw"
+        items = ["foo", 1, {"a": "b"}]
+        base_list = BaseList(Dummy(), {"praw": items})
         for i, item in enumerate(base_list):
             assert items[i] == item
 
     def test__str__(self):
-        BaseList.CHILD_ATTRIBUTE = 'asyncpraw'
-        items = ['foo', 1, {'a': 'b'}]
-        base_list = BaseList(Dummy(), {'asyncpraw': items})
+        BaseList.CHILD_ATTRIBUTE = "praw"
+        items = ["foo", 1, {"a": "b"}]
+        base_list = BaseList(Dummy(), {"praw": items})
         assert str(items) == str(base_list)

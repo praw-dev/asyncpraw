@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -61,7 +61,7 @@
           "Authorization": "bearer -a6tpCYvP49EPWjGZILrgKX2yE1k",
           "Connection": "keep-alive",
           "Cookie": "loid=dWG6JzCqD2OJsxSZ3j; loidcreated=2016-03-01T08%3A38%3A38.436Z; __cfduid=d3c4eeb177c8a7cdbee7ad428a9a39efb1456821518",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0a1 asyncprawcore/0.0.3"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0a1 prawcore/0.0.3"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/r/askreddit/gilded?raw_json=1&limit=100"

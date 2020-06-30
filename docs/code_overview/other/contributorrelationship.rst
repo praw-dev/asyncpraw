@@ -1,5 +1,5 @@
 ContributorRelationship
 =======================
 
-.. autoclass:: asyncpraw.models.reddit.subreddit.ContributorRelationship
+.. autoclass:: praw.models.reddit.subreddit.ContributorRelationship
    :inherited-members:

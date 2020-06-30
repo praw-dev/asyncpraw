@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "29",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -59,7 +59,7 @@
           "Authorization": "bearer ClNdtX7CuLpxppVTeJ-S_ZM8kxw",
           "Connection": "keep-alive",
           "Cookie": "__cfduid=d05dfa3115e13f81661a766959e7a24d31468767717; loidcreated=2016-07-17T15%3A01%3A57.115Z; loid=qhax7KLnj0tOA6396Z",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.0.0b9 asyncprawcore/0.0.12"
+          "User-Agent": "<USER_AGENT> PRAW/4.0.0b9 prawcore/0.0.12"
         },
         "method": "GET",
         "uri": "https://oauth.reddit.com/user/kjoneslol/m/sfwpornnetwork/new?raw_json=1&limit=100"

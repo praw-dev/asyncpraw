@@ -1,5 +1,5 @@
 CommentForest
 =============
 
-.. autoclass:: asyncpraw.models.comment_forest.CommentForest
+.. autoclass:: praw.models.comment_forest.CommentForest
    :inherited-members:

@@ -1,5 +1,5 @@
 SubmissionModeration
 ====================
 
-.. autoclass:: asyncpraw.models.reddit.submission.SubmissionModeration
+.. autoclass:: praw.models.reddit.submission.SubmissionModeration
    :inherited-members:

@@ -2,24 +2,24 @@
 from ....const import API_PATH
 
 
-class GildableMixin(object):
+class GildableMixin:
     """Interface for classes that can be gilded."""
 
-    async def gild(self):
+    def gild(self):
         """Gild the author of the item.
 
-        .. note:: Requires the authenticated user to own reddit gold creddits.
-                  Calling this method will consume one reddit gold creddit.
+        .. note:: Requires the authenticated user to own Reddit Coins.
+                  Calling this method will consume Reddit Coins.
 
         Example usage:
 
-        .. code:: python
+        .. code-block:: python
 
-           comment = reddit.comment('dkk4qjd')
+           comment = reddit.comment("dkk4qjd")
            comment.gild()
 
-           submission = reddit.submission('8dmv8z')
+           submission = reddit.submission("8dmv8z")
            submission.gild()
 
         """
-        await self._reddit.post(API_PATH['gild_thing'].format(fullname=self.fullname))
+        self._reddit.post(API_PATH["gild_thing"].format(fullname=self.fullname))

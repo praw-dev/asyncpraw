@@ -1,13 +1,7 @@
-Author/Maintainer
-=================
+Maintainers
+===========
 
-- Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/LilSpazJoekp>`_
-
-
-Team Members
-============
-
-- Ethan Dalool <edalool@yahoo.com> `@voussoir <https://github.com/voussoir>`_
+- Bryce Boe <bbzbryce@gmail.com> `@bboe <https://github.com/bboe>`_
 - Joe RH <jarhill0@gmail.com> `@jarhill0 <https://github.com/jarhill0>`_
 
 
@@ -17,17 +11,24 @@ Documentation Contributors
 - Dale Cudmore <dalecudmore@gmail.com> `@DCuddies <https://github.com/DCuddies>`_
 - Zhifu Ge <zhifu@me.com> `@zhifuge <https://github.com/zhifuge>`_
 - diceroll123 `@diceroll123 <https://github.com/diceroll123>`_
-- Mike Wohlrab `@D0cR3d <https://github.com/D0cR3d>`_
 - Watchful1 `@Watchful1 <https://github.com/Watchful1>`_
 - theonefoster `@theonefoster <https://github.com/theonefoster>`_
 - Eric Woolard `@ericwoolard <https://github.com/ericwoolard>`_
 - Marc `@PerhapsSomeone <https://github.com/PerhapsSomeone>`_
-- Add "Name <email (optional)> and github profile link" above this line.
+- Richard Hoekstra `@RichardHoekstra <https://github.com/RichardHoekstra>`_
+<!-- - Add "Name <email (optional)> and github profile link" above this line. -->
+
+
+Logo Creator
+============
+
+- kungming2 `@kungming2 <https://github.com/kungming2>`_
 
 
 Source Contributors
 ===================
 
+- Ethan Dalool <edalool@yahoo.com> `@voussoir <https://github.com/voussoir>`_
 - William McKinnerney <me@williammck.net> `@williammck <https://github.com/williammck>`_
 - Katharine Jarmul <katharine@kjamistan.com> `@kjam <https://github.com/kjam>`_
 - nmtake `@nmtake <https://github.com/nmtake>`_
@@ -45,4 +46,19 @@ Source Contributors
 - Amanda O'Neal <amanda.oneal.dev@gmail.com> `@amandaoneal <https://github.com/amandaoneal>`_
 - Gourari Oussama <gourari.ouss@gmail.com> `@O-Gourari <https://github.com/O-Gourari>`_
 - Declan Hoare <declanhoare@exemail.com.au> `@NetwideRogue <https://github.com/NetwideRogue>`_
-- Add "Name <email (optional)> and github profile link" above this line.
+- Elaina Martineau `@CrackedP0t <https://github.com/CrackedP0t>`_
+- Rob Curtis <BourbonInExile@gmail.com> `@waab76 <https://github.com/waab76>`_
+- Pyprohly <pyprohly@outlook.com> `@Pyprohly <https://github.com/Pyprohly>`_
+- LilSpazJoekp `@LilSpazJoekp <https://github.com/LilSpazJoekp>`_
+- Timendum `@timendum <https://github.com/timendum>`_
+- vaclav-2012 `@vaclav-2012 <https://github.com/vaclav-2012>`_
+- Jon Meager `@H4CKY54CK <https://github.com/H4CKY54CK>`_
+- kungming2 `@kungming2 <https://github.com/kungming2>`_
+- Jack Steel `@jackodsteel <https://github.com/jackodsteel>`_
+- David Mirch `@fwump38 <https://github.com/fwump38>`_
+- PythonCoderAS `@PythonCoderAS <https://github.com/PythonCoderAS>`_
+- Michael Cetrulo <contact@michael-cetrulo.com> `@git2samus <https://github.com/git2samus>`_
+- George Schizas `@gschizas <https://github.com/gschizas>`_
+- Todd Roberts `@toddrob99 <https://github.com/toddrob99>`_
+- MaybeNetwork `@MaybeNetwork <https://github.com/MaybeNetwork>`_
+<!-- - Add "Name <email (optional)> and github profile link" above this line. -->

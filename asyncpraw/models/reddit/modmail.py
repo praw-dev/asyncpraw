@@ -1,45 +1,96 @@
 """Provide models for new modmail."""
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
+
 from ...const import API_PATH
+from ...util import snake_case_keys
 from .base import RedditBase
+
+if TYPE_CHECKING:  # pragma: no cover
+    from ... import Reddit
 
 
 class ModmailConversation(RedditBase):
-    """A class for modmail conversations."""
+    """A class for modmail conversations.
 
-    STR_FIELD = 'id'
+    **Typical Attributes**
+
+    This table describes attributes that typically belong to objects of this
+    class. Since attributes are dynamically provided (see
+    :ref:`determine-available-attributes-of-an-object`), there is not a
+    guarantee that these attributes will always be present, nor is this list
+    necessarily complete.
+
+    ======================= ===================================================
+    Attribute               Description
+    ======================= ===================================================
+    ``authors``             Provides an ordered list of :class:`.Redditor`
+                            instances. The authors of each message in the
+                            modmail conversation.
+    ``id``                  The ID of the ModmailConversation.
+    ``is_highlighted``      Whether or not the ModmailConversation is
+                            highlighted.
+    ``is_internal``         Whether or not the ModmailConversation is a private
+                            mod conversation.
+    ``last_mod_update``     Time of the last mod message reply, represented in
+                            the `ISO 8601`_ standard with timezone.
+    ``last_updated``        Time of the last message reply, represented in
+                            the `ISO 8601`_ standard with timezone.
+    ``last_user_update``    Time of the last user message reply, represented in
+                            the `ISO 8601`_ standard with timezone.
+    ``num_messages``        The number of messages in the ModmailConversation.
+    ``obj_ids``             Provides a list of dictionaries representing
+                            mod actions on the ModmailConversation. Each dict
+                            contains attributes of "key" and "id". The key can
+                            be either "messages" or "ModAction". ModAction
+                            represents archiving/highlighting etc.
+    ``owner``               Provides an instance of :class:`.Subreddit`. The
+                            subreddit that the ModmailConversation belongs to.
+    ``participant``         Provides an instance of :class:`.Redditor`. The
+                            participating user in the ModmailConversation.
+    ``subject``             The subject of the ModmailConversation.
+    ======================= ===================================================
+
+
+    .. _ISO 8601: https://en.wikipedia.org/wiki/ISO_8601
+
+    """
+
+    STR_FIELD = "id"
 
     @staticmethod
     def _convert_conversation_objects(data, reddit):
-        """Convert messages and mod actions to asyncpraw objects."""
-        result = {'messages': [], 'modActions': []}
-        for thing in data['conversation']['objIds']:
-            key = thing['key']
-            thing_data = data[key][thing['id']]
+        """Convert messages and mod actions to PRAW objects."""
+        result = {"messages": [], "modActions": []}
+        for thing in data["conversation"]["objIds"]:
+            key = thing["key"]
+            thing_data = data[key][thing["id"]]
             result[key].append(reddit._objector.objectify(thing_data))
         return result
 
     @staticmethod
     def _convert_user_summary(data, reddit):
-        """Convert dictionaries of recent user history to asyncpraw objects."""
-        parsers = {'recentComments':
-                   reddit._objector.parsers[reddit.config.kinds['comment']], 'recentConvos': ModmailConversation, 'recentPosts':
-                   reddit._objector.parsers[reddit.config.kinds['submission']]}
+        """Convert dictionaries of recent user history to PRAW objects."""
+        parsers = {
+            "recentComments": reddit._objector.parsers[reddit.config.kinds["comment"]],
+            "recentConvos": ModmailConversation,
+            "recentPosts": reddit._objector.parsers[reddit.config.kinds["submission"]],
+        }
         for kind, parser in parsers.items():
             objects = []
             for thing_id, summary in data[kind].items():
-                thing = parser(reddit, id=thing_id.rsplit('_', 1)[-1])
+                thing = parser(reddit, id=thing_id.rsplit("_", 1)[-1])
                 if parser is not ModmailConversation:
-                    del summary['permalink']
+                    del summary["permalink"]
                 for key, value in summary.items():
                     setattr(thing, key, value)
                 objects.append(thing)
             # Sort by id, oldest to newest
-            data[kind] = sorted(
-                objects, key=lambda x: int(x.id, base=36), reverse=True)
+            data[kind] = sorted(objects, key=lambda x: int(x.id, base=36), reverse=True)
 
     @classmethod
-    def parse(cls, data, reddit,  # pylint: disable=arguments-differ
-              convert_objects=True):
+    def parse(  # pylint: disable=arguments-differ
+        cls, data: Dict[str, Any], reddit: "Reddit", convert_objects: bool = True,
+    ):
         """Return an instance of ModmailConversation from ``data``.
 
         :param data: The structured data.
@@ -48,86 +99,104 @@ class ModmailConversation(RedditBase):
             into objects (default: True).
 
         """
-        conversation = data['conversation']
+        conversation = data["conversation"]
 
-        conversation['authors'] = [reddit._objector.objectify(author)
-                                   for author in conversation['authors']]
-        for entity in 'owner', 'participant':
-            conversation[entity] = reddit._objector.objectify(
-                conversation[entity])
+        conversation["authors"] = [
+            reddit._objector.objectify(author) for author in conversation["authors"]
+        ]
+        for entity in "owner", "participant":
+            conversation[entity] = reddit._objector.objectify(conversation[entity])
 
-        if data.get('user'):
-            cls._convert_user_summary(data['user'], reddit)
-            conversation['user'] = reddit._objector.objectify(data['user'])
+        if data.get("user"):
+            cls._convert_user_summary(data["user"], reddit)
+            conversation["user"] = reddit._objector.objectify(data["user"])
         if convert_objects:
             conversation.update(cls._convert_conversation_objects(data, reddit))
 
-        conversation = reddit._objector._snake_case_keys(conversation)
+        conversation = snake_case_keys(conversation)
 
         return cls(reddit, _data=conversation)
 
-    def __init__(self, reddit, id=None,  # pylint: disable=redefined-builtin
-                 mark_read=False, _data=None):
+    def __init__(
+        self,
+        reddit: "Reddit",
+        id: Optional[str] = None,  # pylint: disable=redefined-builtin
+        mark_read: bool = False,
+        _data: Optional[Dict[str, Any]] = None,
+    ):
         """Construct an instance of the ModmailConversation object.
 
         :param mark_read: If True, conversation is marked as read
             (default: False).
 
         """
-        super(ModmailConversation, self).__init__(reddit, _data)
+        super().__init__(reddit, _data=_data)
         if bool(id) == bool(_data):
-            raise TypeError('Either `id` or `_data` must be provided.')
+            raise TypeError("Either `id` or `_data` must be provided.")
 
         if id:
-            self.id = id  # pylint: disable=invalid-name
-        if mark_read:
-            self._info_params = {'markRead': True}
+            self.id = id
+
+        self._info_params = {"markRead": True} if mark_read else None
 
     def _build_conversation_list(self, other_conversations):
         """Return a comma-separated list of conversation IDs."""
         conversations = [self] + (other_conversations or [])
-        return ','.join(conversation.id for conversation in conversations)
+        return ",".join(conversation.id for conversation in conversations)
 
-    def _info_path(self):
-        return API_PATH['modmail_conversation'].format(id=self.id)
+    def _fetch_info(self):
+        return ("modmail_conversation", {"id": self.id}, self._info_params)
 
-    async def archive(self):
+    def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return self._reddit.request("GET", path, params)
+
+    def _fetch(self):
+        data = self._fetch_data()
+        other = self._reddit._objector.objectify(data)
+        self.__dict__.update(other.__dict__)
+        self._fetched = True
+
+    def archive(self):
         """Archive the conversation.
 
-        Example:
+        For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           reddit.subreddit('redditdev').modmail('2gmz').archive()
+           reddit.subreddit("redditdev").modmail("2gmz").archive()
 
         """
-        await self._reddit.post(API_PATH['modmail_archive'].format(id=self.id))
+        self._reddit.post(API_PATH["modmail_archive"].format(id=self.id))
 
-    async def highlight(self):
+    def highlight(self):
         """Highlight the conversation.
 
-        Example:
+        For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           reddit.subreddit('redditdev').modmail('2gmz').highlight()
+           reddit.subreddit("redditdev").modmail("2gmz").highlight()
 
         """
-        await self._reddit.post(API_PATH['modmail_highlight'].format(id=self.id))
+        self._reddit.post(API_PATH["modmail_highlight"].format(id=self.id))
 
-    async def mute(self):
+    def mute(self):
         """Mute the non-mod user associated with the conversation.
 
-        Example:
+        For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           reddit.subreddit('redditdev').modmail('2gmz').mute()
+           reddit.subreddit("redditdev").modmail("2gmz").mute()
 
         """
-        await self._reddit.request('POST', API_PATH['modmail_mute'].format(id=self.id))
+        self._reddit.request("POST", API_PATH["modmail_mute"].format(id=self.id))
 
-    async def read(self, other_conversations=None):  # noqa: D207, D301
+    def read(
+        self, other_conversations: Optional[List["ModmailConversation"]] = None
+    ):  # noqa: D207, D301
         """Mark the conversation(s) as read.
 
         :param other_conversations: A list of other conversations to mark
@@ -136,85 +205,93 @@ class ModmailConversation(RedditBase):
         For example, to mark the conversation as read along with other recent
         conversations from the same user:
 
-        .. code:: python
+        .. code-block:: python
 
-           subreddit = reddit.subreddit('redditdev')
-           conversation = subreddit.modmail.conversation('2gmz')
-           conversation.read(other_conversations=conversation.user.recent_convos)
+           subreddit = reddit.subreddit("redditdev")
+           conversation = subreddit.modmail.conversation("2gmz")
+           conversation.read(
+                            other_conversations=conversation.user.recent_convos)
 
         """
-        data = {'conversationIds': self._build_conversation_list(
-            other_conversations)}
-        await self._reddit.post(API_PATH['modmail_read'], data=data)
+        data = {"conversationIds": self._build_conversation_list(other_conversations)}
+        self._reddit.post(API_PATH["modmail_read"], data=data)
 
-    async def reply(self, body, author_hidden=False, internal=False):
+    def reply(self, body: str, author_hidden: bool = False, internal: bool = False):
         """Reply to the conversation.
 
-        :param body: The markdown formatted content for a message.
+        :param body: The Markdown formatted content for a message.
         :param author_hidden: When True, author is hidden from non-moderators
             (default: False).
-        :param internal: When True, message is a private moderator note, hidden from non-moderators (default: False).
+        :param internal: When True, message is a private moderator note,
+            hidden from non-moderators (default: False).
         :returns: A :class:`~.ModmailMessage` object for the newly created
             message.
 
         For example, to reply to the non-mod user while hiding your username:
 
-        .. code:: python
+        .. code-block:: python
 
-           conversation = reddit.subreddit('redditdev').modmail('2gmz')
-           conversation.reply('Message body', author_hidden=True)
+           conversation = reddit.subreddit("redditdev").modmail("2gmz")
+           conversation.reply("Message body", author_hidden=True)
 
         To create a private moderator note on the conversation:
 
-        .. code:: python
+        .. code-block:: python
 
-           conversation.reply('Message body', internal=True)
+           conversation.reply("Message body", internal=True)
 
         """
-        data = {'body': body, 'isAuthorHidden': author_hidden, 'isInternal': internal}
-        response = await self._reddit.post(API_PATH['modmail_conversation']
-                                     .format(id=self.id), data=data)
-        message_id = response['conversation']['objIds'][-1]['id']
-        message_data = response['messages'][message_id]
+        data = {
+            "body": body,
+            "isAuthorHidden": author_hidden,
+            "isInternal": internal,
+        }
+        response = self._reddit.post(
+            API_PATH["modmail_conversation"].format(id=self.id), data=data
+        )
+        message_id = response["conversation"]["objIds"][-1]["id"]
+        message_data = response["messages"][message_id]
         return self._reddit._objector.objectify(message_data)
 
-    async def unarchive(self):
+    def unarchive(self):
         """Unarchive the conversation.
 
-        Example:
+        For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           reddit.subreddit('redditdev').modmail('2gmz').unarchive()
+           reddit.subreddit("redditdev").modmail("2gmz").unarchive()
 
         """
-        await self._reddit.post(API_PATH['modmail_unarchive'].format(id=self.id))
+        self._reddit.post(API_PATH["modmail_unarchive"].format(id=self.id))
 
-    async def unhighlight(self):
+    def unhighlight(self):
         """Un-highlight the conversation.
 
-        Example:
+        For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           reddit.subreddit('redditdev').modmail('2gmz').unhighlight()
+           reddit.subreddit("redditdev").modmail("2gmz").unhighlight()
 
         """
-        await self._reddit.request('DELETE', API_PATH['modmail_highlight'].format(id=self.id))
+        self._reddit.delete(API_PATH["modmail_highlight"].format(id=self.id))
 
-    async def unmute(self):
+    def unmute(self):
         """Unmute the non-mod user associated with the conversation.
 
-        Example:
+        For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           reddit.subreddit('redditdev').modmail('2gmz').unmute()
+           reddit.subreddit("redditdev").modmail("2gmz").unmute()
 
         """
-        await self._reddit.request('POST', API_PATH['modmail_unmute'].format(id=self.id))
+        self._reddit.request("POST", API_PATH["modmail_unmute"].format(id=self.id))
 
-    async def unread(self, other_conversations=None):  # noqa: D207, D301
+    def unread(
+        self, other_conversations: Optional[List["ModmailConversation"]] = None
+    ):  # noqa: D207, D301
         """Mark the conversation(s) as unread.
 
         :param other_conversations: A list of other conversations to mark
@@ -223,30 +300,29 @@ class ModmailConversation(RedditBase):
         For example, to mark the conversation as unread along with other recent
         conversations from the same user:
 
-        .. code:: python
+        .. code-block:: python
 
-           subreddit = reddit.subreddit('redditdev')
-           conversation = subreddit.modmail.conversation('2gmz')
+           subreddit = reddit.subreddit("redditdev")
+           conversation = subreddit.modmail.conversation("2gmz")
            conversation.unread(\
 other_conversations=conversation.user.recent_convos)
 
         """
-        data = {'conversationIds': self._build_conversation_list(
-            other_conversations)}
-        await self._reddit.post(API_PATH['modmail_unread'], data=data)
+        data = {"conversationIds": self._build_conversation_list(other_conversations)}
+        self._reddit.post(API_PATH["modmail_unread"], data=data)
 
 
 class ModmailObject(RedditBase):
     """A base class for objects within a modmail conversation."""
 
-    AUTHOR_ATTRIBUTE = 'author'
-    STR_FIELD = 'id'
+    AUTHOR_ATTRIBUTE = "author"
+    STR_FIELD = "id"
 
-    def __setattr__(self, attribute, value):
+    def __setattr__(self, attribute: str, value: Any):
         """Objectify the AUTHOR_ATTRIBUTE attribute."""
         if attribute == self.AUTHOR_ATTRIBUTE:
             value = self._reddit._objector.objectify(value)
-        super(ModmailObject, self).__setattr__(attribute, value)
+        super().__setattr__(attribute, value)
 
 
 class ModmailAction(ModmailObject):

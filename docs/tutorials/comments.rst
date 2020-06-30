@@ -8,11 +8,11 @@ As always, you need to begin by creating an instance of :class:`.Reddit`:
 
 .. code-block:: python
 
-   import asyncpraw
+   import praw
 
-   reddit = asyncpraw.Reddit(user_agent='Comment Extraction (by /u/USERNAME)',
-                        client_id='CLIENT_ID', client_secret="CLIENT_SECRET",
-                        username='USERNAME', password='PASSWORD')
+   reddit = praw.Reddit(user_agent="Comment Extraction (by /u/USERNAME)",
+                        client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
+                        username="USERNAME", password="PASSWORD")
 
 .. note:: If you are only analyzing public comments, entering a username and
    password is optional.
@@ -20,11 +20,11 @@ As always, you need to begin by creating an instance of :class:`.Reddit`:
 In this document we will detail the process of finding all the comments for a
 given submission. If you instead want process all comments on Reddit, or
 comments belonging to one or more specific subreddits, please see
-:meth:`asyncpraw.models.reddit.subreddit.SubredditStream.comments`.
+:meth:`praw.models.reddit.subreddit.SubredditStream.comments`.
 
 .. _extracting_comments:
 
-Extracting comments with asyncpraw
+Extracting comments with PRAW
 -----------------------------
 
 Assume we want to process the comments for this submission:
@@ -35,16 +35,17 @@ entire URL:
 
 .. code-block:: python
 
-   submission = reddit.submission(url='https://www.reddit.com/r/funny/comments/3g1jfi/buttons/')
+   url = "https://www.reddit.com/r/funny/comments/3g1jfi/buttons/"
+   submission = reddit.submission(url=url)
 
 or with the submission's ID which comes after ``comments/`` in the URL:
 
 .. code-block:: python
 
-   submission = reddit.submission(id='3g1jfi')
+   submission = reddit.submission(id="3g1jfi")
 
 With a submission object we can then interact with its :class:`.CommentForest`
-through the submission's :attr:`~asyncpraw.models.Submission.comments` attribute. A
+through the submission's :attr:`~praw.models.Submission.comments` attribute. A
 :class:`.CommentForest` is a list of top-level comments each of which contains
 a :class:`.CommentForest` of replies.
 
@@ -65,7 +66,7 @@ thread" links encountered on the website. While we could ignore
 
 .. code-block:: python
 
-   from asyncpraw.models import MoreComments
+   from praw.models import MoreComments
    for top_level_comment in submission.comments:
        if isinstance(top_level_comment, MoreComments):
            continue
@@ -152,5 +153,5 @@ belonging to a single submission. Combine this with :ref:`submission iteration
 <submission-iteration>` and you can build some really cool stuff.
 
 Finally, note that the value of ``submission.num_comments`` may not match up
-100% with the number of comments extracted via asyncpraw. This discrepancy is
+100% with the number of comments extracted via PRAW. This discrepancy is
 normal as that count includes deleted, removed, and spam comments.

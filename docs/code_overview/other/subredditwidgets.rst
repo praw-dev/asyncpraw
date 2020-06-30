@@ -1,5 +1,5 @@
 SubredditWidgets
 ================
 
-.. autoclass:: asyncpraw.models.SubredditWidgets
+.. autoclass:: praw.models.SubredditWidgets
    :inherited-members:

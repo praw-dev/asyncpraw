@@ -1,5 +1,5 @@
 DomainListing
 =============
 
-.. autoclass:: asyncpraw.models.DomainListing
+.. autoclass:: praw.models.DomainListing
    :inherited-members:

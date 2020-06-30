@@ -14,7 +14,7 @@
           "Connection": "keep-alive",
           "Content-Length": "57",
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.9.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.4.1.dev0 prawcore/0.9.0"
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
@@ -66,7 +66,7 @@
           "Content-Length": "41",
           "Content-Type": "application/x-www-form-urlencoded",
           "Cookie": "loid=4IGtjDYCbJFxe5iCWI.1.1491488807238.Z0FBQUFBQlk1bEFueEpCaFJKem9lUy1aS0ptZXV3MGp3bDhqRTVXWU1QWGx0N1hxbE5DU05NZzBuZVdHbVRBVDBOQlJCM1QzZUQyeHBYbENYclFoRjJkNVFUU3Y1bFlHVUN3dHVFOUFESmxJX2pwTTFfYlNscDh6VHlnSlQxcUpyR1U0clR2SFVfT08; edgebucket=7oX7rrKtwq2SDnihCb",
-          "User-Agent": "<USER_AGENT> asyncpraw/4.4.1.dev0 asyncprawcore/0.9.0"
+          "User-Agent": "<USER_AGENT> PRAW/4.4.1.dev0 prawcore/0.9.0"
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/mod/conversations/read?raw_json=1"
