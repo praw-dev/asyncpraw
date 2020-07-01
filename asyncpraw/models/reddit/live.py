@@ -38,6 +38,7 @@ class LiveContributorRelationship:
             async for contributor in thread.contributor():
                 print(contributor)
         """
+
         async def generator():
             url = API_PATH["live_contributors"].format(id=self.thread.id)
             temp = await self.thread._reddit.get(url)
