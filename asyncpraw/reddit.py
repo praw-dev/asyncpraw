@@ -174,9 +174,9 @@ class Reddit:
             import json, betamax, requests
 
             class JSONDebugRequestor(Requestor):
-                def request(self, *args, **kwargs):
-                    response = super().request(*args, **kwargs)
-                    print(json.dumps(response.json(), indent=4))
+                async def request(self, *args, **kwargs):
+                    response = await super().request(*args, **kwargs)
+                    print(json.dumps(await response.json(), indent=4))
                     return response
 
             my_session = betamax.Betamax(requests.Session())
