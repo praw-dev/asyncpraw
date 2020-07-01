@@ -27,7 +27,7 @@ class LiveContributorRelationship:
         return ",".join("+{}".format(x) for x in permissions)
 
     # TODO: this is implemented differently than in praw
-    def __call__(self,) -> AsyncGenerator:
+    def __call__(self,) -> AsyncGenerator:  # noqa: D202
         """Return a :class:`.RedditorList` for live threads' contributors.
 
         Usage:
@@ -38,6 +38,7 @@ class LiveContributorRelationship:
             async for contributor in thread.contributor():
                 print(contributor)
         """
+
         async def generator():
             url = API_PATH["live_contributors"].format(id=self.thread.id)
             temp = await self.thread._reddit.get(url)
