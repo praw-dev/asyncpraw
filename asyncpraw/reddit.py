@@ -167,8 +167,7 @@ class Reddit:
         |Session|_ in a caching layer. Example usage:
 
         .. |Session| replace:: ``Session``
-        .. _Session: https://2.python-requests.org/en/master/api/\
-#requests.Session
+        .. _Session: https://2.python-requests.org/en/master/api/#requests.Session
 
         .. code-block:: python
 
