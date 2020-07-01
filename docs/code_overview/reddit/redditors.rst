@@ -1,5 +1,5 @@
 reddit.redditors
 ================
 
-.. autoclass:: praw.models.Redditors
+.. autoclass:: asyncpraw.models.Redditors
    :inherited-members:

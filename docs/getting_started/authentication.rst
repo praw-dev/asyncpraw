@@ -64,7 +64,7 @@ is as simple as:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id="SI8pN3DSbt0zor",
+   reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         password="1guiwevlfo00esyy",
                         user_agent="testscript by /u/fakebot3",
@@ -95,7 +95,7 @@ A 2FA token can be used by joining it to the password with a colon:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id="SI8pN3DSbt0zor",
+   reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         password='1guiwevlfo00esyy:955413',
                         user_agent="testscript by /u/fakebot3",
@@ -106,7 +106,7 @@ must be refreshed after one hour; therefore, the 2FA secret would have to be
 stored along with the rest of the credentials in order to generate the token,
 which defeats the point of having an extra credential beyond the password.
 
-If you do choose to use 2FA, you must handle the ``prawcore.OAuthException``
+If you do choose to use 2FA, you must handle the ``asyncprawcore.OAuthException``
 that will be raised by API calls after one hour.
 
 
@@ -120,7 +120,7 @@ A **code flow** application is useful for two primary purposes:
 * You have an application and want to be able to access Reddit from your users'
   accounts.
 * You have a personal-use script application and you either want to
-   
+
    * limit the access one of your PRAW-based programs has to Reddit
    * avoid the hassle of 2FA (described above)
    * not pass your username and password to PRAW (and thus not keep it in memory)
@@ -146,7 +146,7 @@ URL. You can do that as follows:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id="SI8pN3DSbt0zor",
+   reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         redirect_uri="http://localhost:8080",
                         user_agent="testscript by /u/fakebot3")
@@ -267,7 +267,7 @@ of :class:`.Reddit` like so:
 
 .. code-block:: python
 
-   reddit = praw.Reddit(client_id="SI8pN3DSbt0zor",
+   reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         refresh_token="WeheY7PwgeCZj4S3QgUcLhKE5S2s4eAYdxM",
                         user_agent="testscript by u/fakebot3")

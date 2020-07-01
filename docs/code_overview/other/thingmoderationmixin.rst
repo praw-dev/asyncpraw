@@ -1,5 +1,5 @@
 ThingModerationMixin
 ====================
 
-.. autoclass:: praw.models.reddit.mixins.ThingModerationMixin
+.. autoclass:: asyncpraw.models.reddit.mixins.ThingModerationMixin
    :inherited-members:

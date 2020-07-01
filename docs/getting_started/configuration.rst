@@ -57,13 +57,13 @@ export the certificate as a ``.pem`` file. Then configure PRAW like so:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
    from requests import Session
 
 
    session = Session()
    session.verify = "/path/to/certfile.pem"
-   reddit = praw.Reddit(client_id="SI8pN3DSbt0zor",
+   reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         password="1guiwevlfo00esyy",
                         requestor_kwargs={"session": session},  # pass Session

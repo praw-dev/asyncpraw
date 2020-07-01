@@ -5,7 +5,7 @@ PRAW supports Python 3.5+. The recommended way to install PRAW is via ``pip``.
 
 .. code-block:: bash
 
-   pip install praw
+   pip install asyncpraw
 
 .. note:: Depending on your system, you may need to use ``pip3`` to install
           packages for Python 3.
@@ -24,7 +24,7 @@ PRAW can be updated by running:
 
 .. code-block:: bash
 
-   pip install --upgrade praw
+   pip install --upgrade asyncpraw
 
 Installing Older Versions
 -------------------------
@@ -34,7 +34,7 @@ part of the installation command:
 
 .. code-block:: bash
 
-   pip install praw==3.6.0
+   pip install asyncpraw==3.6.0
 
 Installing the Latest Development Version
 -----------------------------------------
@@ -44,10 +44,10 @@ take advantage of? If so, you can install PRAW directly from GitHub like so:
 
 .. code-block:: bash
 
-   pip install --upgrade https://github.com/praw-dev/praw/archive/master.zip
+   pip install --upgrade https://github.com/praw-dev/asyncpraw/archive/master.zip
 
 You can also directly clone a copy of the repository using git, like so:
 
 .. code-block:: bash
 
-   pip install --upgrade git+https://github.com/praw-dev/praw.git
+   pip install --upgrade git+https://github.com/praw-dev/asyncpraw.git

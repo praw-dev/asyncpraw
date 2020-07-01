@@ -1,5 +1,5 @@
 SubredditStylesheet
 ===================
 
-.. autoclass:: praw.models.reddit.subreddit.SubredditStylesheet
+.. autoclass:: asyncpraw.models.reddit.subreddit.SubredditStylesheet
    :inherited-members:

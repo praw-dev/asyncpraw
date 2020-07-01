@@ -43,5 +43,5 @@ pool.
 
 Please see `this discussion
 <https://www.reddit.com/r/redditdev/comments/5uwxke/praw4_is_praw4_thread_safe/>`_
-and `this GitHub issue <https://github.com/praw-dev/praw/issues/1336>`_ for
+and `this GitHub issue <https://github.com/praw-dev/asyncpraw/issues/1336>`_ for
 more information.

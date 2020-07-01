@@ -34,7 +34,7 @@ applications and **web** applications.
    :caption: Code Overview
 
    code_overview/reddit_instance
-   code_overview/praw_models
+   code_overview/asyncpraw_models
    code_overview/exceptions
    code_overview/other
 

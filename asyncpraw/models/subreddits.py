@@ -121,7 +121,7 @@ class Subreddits(PRAWBase):
         """
         result = await self._reddit.post(
             API_PATH["subreddits_name_search"],
-            data={"include_over_18": include_nsfw, "exact": exact, "query": query,},
+            data={"include_over_18": include_nsfw, "exact": exact, "query": query},
         )
         return [await self._reddit.subreddit(x) for x in result["names"]]
 

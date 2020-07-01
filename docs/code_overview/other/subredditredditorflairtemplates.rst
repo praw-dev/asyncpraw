@@ -1,5 +1,5 @@
 SubredditRedditorFlairTemplates
 ===============================
 
-.. autoclass:: praw.models.reddit.subreddit.SubredditRedditorFlairTemplates
+.. autoclass:: asyncpraw.models.reddit.subreddit.SubredditRedditorFlairTemplates
    :inherited-members:

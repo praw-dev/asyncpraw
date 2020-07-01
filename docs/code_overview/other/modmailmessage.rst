@@ -1,5 +1,5 @@
 ModmailMessage
 ==============
 
-.. autoclass:: praw.models.ModmailMessage
+.. autoclass:: asyncpraw.models.ModmailMessage
    :inherited-members:

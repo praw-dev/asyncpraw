@@ -13,13 +13,13 @@ class PollOption(PRAWBase):
 
     .. code-block:: python
 
-       poll_data = submission.poll_data
+        poll_data = submission.poll_data
 
        # By index -- print the first option
-       print(poll_data.options[0])
+        print(poll_data.options[0])
 
        # By ID -- print the option with ID "576797"
-       print(poll_data.option("576797"))
+        print(poll_data.option("576797"))
 
     **Typical Attributes**
 
@@ -104,7 +104,7 @@ class PollData(PRAWBase):
             attribute = "_user_selection"
         super().__setattr__(attribute, value)
 
-    async def option(self, option_id: str) -> PollOption:
+    def option(self, option_id: str) -> PollOption:
         """Get the option with the specified ID.
 
         :param option_id: The ID of a poll option, as a ``str``.

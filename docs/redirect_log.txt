@@ -3,7 +3,7 @@
 
 /code_overview/exceptions.html -> /pages/exceptions.html
 /code_overview/other.html -> /pages/code_overview.html
-/code_overview/praw_models.html -> /pages/code_overview.html
+/code_overview/asyncpraw_models.html -> /pages/code_overview.html
 /code_overview/reddit_instance.html -> /pages/code_overview.html
 /getting_started/authentication.html -> /pages/oauth.html
 /getting_started/configuration.html -> /pages/configuration_files.html

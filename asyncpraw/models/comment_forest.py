@@ -60,10 +60,7 @@ class CommentForest:
     async def __aiter__(self) -> AsyncIterator["Comment"]:
         """Allow CommentForest to be used as an AsyncIterator.
 
-        # TODO: this might need changed updated
-
-        Alternatively, the presence of this method enables one to iterate over
-        all top_level comments, like so:
+        This method enables one to iterate over all top_level comments, like so:
 
         .. code-block:: python
 
@@ -161,9 +158,9 @@ class CommentForest:
 
         .. code-block:: python
 
-           comment = await reddit.comment("d8r4im1")
-           await comment.refresh()
-           comment.replies.replace_more()
+            comment = await reddit.comment("d8r4im1")
+            await comment.refresh()
+            await comment.replies.replace_more()
 
         .. note:: This method can take a long time as each replacement will
                   discover at most 20 new :class:`.Comment` or
@@ -173,13 +170,13 @@ class CommentForest:
 
                   .. code-block:: python
 
-                     while True:
-                         try:
-                             submission.comments.replace_more()
-                             break
-                         except PossibleExceptions:
-                             print("Handling replace_more exception")
-                             sleep(1)
+                      while True:
+                          try:
+                              await submission.comments.replace_more()
+                              break
+                          except PossibleExceptions:
+                              print("Handling replace_more exception")
+                              await asyncio.sleep(1)
 
         .. warning:: If this method is called, and the comments are refreshed,
             calling this method again will result in a

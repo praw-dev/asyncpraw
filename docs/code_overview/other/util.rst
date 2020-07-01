@@ -1,12 +1,12 @@
 Util
 ====
 
-.. autoclass:: praw.models.util.BoundedSet
+.. autoclass:: asyncpraw.models.util.BoundedSet
    :inherited-members:
 
-.. autoclass:: praw.models.util.ExponentialCounter
+.. autoclass:: asyncpraw.models.util.ExponentialCounter
    :inherited-members:
 
-.. autofunction:: praw.models.util.permissions_string
+.. autofunction:: asyncpraw.models.util.permissions_string
 
-.. autofunction:: praw.models.util.stream_generator
+.. autofunction:: asyncpraw.models.util.stream_generator

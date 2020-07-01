@@ -5,6 +5,7 @@ from ...const import API_PATH
 from ...util.cache import cachedproperty
 from ..list.redditor import RedditorList
 from ..listing.generator import ListingGenerator
+from ..util import stream_generator
 from .base import RedditBase
 from .mixins import FullnameMixin
 from .redditor import Redditor
@@ -80,7 +81,7 @@ class LiveContributorRelationship:
         """Invite a redditor to be a contributor of the live thread.
 
         :raises: :class:`asyncpraw.exceptions.APIException` if the invitation
-        already exists.
+            already exists.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance.

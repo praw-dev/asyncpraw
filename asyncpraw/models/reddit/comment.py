@@ -99,8 +99,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            comment = reddit.comment("dkk4qjd")
-            comment.mod.approve()
+            comment = await reddit.comment("dkk4qjd")
+            await comment.mod.approve()
 
         """
         return CommentModeration(self)
@@ -119,7 +119,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         .. code-block:: python
 
            comment.reply_sort = "new"
-           comment.refresh()
+           await comment.refresh()
            replies = comment.replies
 
         .. note:: The appropriate values for ``reply_sort`` include
@@ -228,7 +228,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         If this comment was obtained through a :class:`.Submission`, then its
         entire ancestry should be immediately available, requiring no extra
         network requests. However, if this comment was obtained through other
-        means, e.g., ``reddit.comment("COMMENT_ID")``, or
+        means, e.g., ``await reddit.comment("COMMENT_ID")``, or
         ``reddit.inbox.comment_replies``, then the returned parent may be a
         lazy instance of either :class:`.Comment`, or :class:`.Submission`.
 

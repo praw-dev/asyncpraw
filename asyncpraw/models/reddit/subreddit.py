@@ -369,7 +369,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT")
-            async for moderator in subreddit.moderator():
+            async for moderator in subreddit.moderator:
                 print('{}: {}'.format(moderator, moderator.mod_permissions))
 
         """
@@ -488,9 +488,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT")
-            stylesheet = subreddit.stylesheet()
+            stylesheet = await subreddit.stylesheet()
             stylesheet += ".test{color:blue}"
-            subreddit.stylesheet.update(stylesheet)
+            await subreddit.stylesheet.update(stylesheet)
 
         """
         return SubredditStylesheet(self)
@@ -514,7 +514,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         .. code-block:: python
 
             subreddit = await reddit.subreddit("redditdev")
-            print(await subreddit.widgets.id_card())
+            widget = await subreddit.widgets.id_card()
+            print(widget)
 
         """
         return SubredditWidgets(self)
@@ -620,7 +621,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             async with websockets.connect(
                 response["json"]["data"]["websocket_url"], close_timeout=timeout
             ) as websocket:
-                ws_update = await websocket.recv()
+                ws_update = loads(await websocket.recv())
         except (
             websockets.WebSocketException,
             socket.error,
@@ -636,7 +637,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if ws_update.get("type") == "failed":
             raise MediaPostFailed
         url = ws_update["payload"]["redirect"]
-        return self._reddit.submission(url=url)
+        return await self._reddit.submission(url=url)
 
     async def _upload_media(self, media_path, expected_mime_prefix=None):
         """Upload media and return its URL. Uses undocumented endpoint.
@@ -721,7 +722,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            print(reddit.subreddit("test").post_requirements)
+            subreddit = await reddit.subreddit("test")
+            post_requirements = await subreddit.post_requirements
+            print(post_requirements)
 
         """
         return await self._reddit.get(
@@ -822,7 +825,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             await self._reddit.get(url, params={"num": number})
         except Redirect as redirect:
             path = redirect.path
-        submission = await self._submission_class(
+        submission = self._submission_class(
             self._reddit, url=urljoin(self._reddit.config.reddit_url, path)
         )
         await submission._fetch()
@@ -1330,7 +1333,7 @@ class SubredditFilters:
 
         .. code-block:: python
 
-            await reddit.subreddit("all-redditdev-learnpython", fetch=False)
+            await reddit.subreddit("all-redditdev-learnpython")
 
         Raises ``asyncprawcore.NotFound`` when calling on a non-special
             subreddit.
@@ -1472,7 +1475,7 @@ class SubredditFlair:
 
         .. seealso::
 
-            :meth:`~praw.models.reddit.subreddit.SubredditFlair.update` to
+            :meth:`~asyncpraw.models.reddit.subreddit.SubredditFlair.update` to
             delete the flair of many Redditors at once.
 
         """
@@ -1594,6 +1597,7 @@ class SubredditFlairTemplates:
 
         .. note:: This class should not be initialized directly. Instead obtain
             an instance via:
+
            ``reddit.subreddit("subreddit_name").flair.templates`` or
            ``reddit.subreddit("subreddit_name").flair.link_templates``.
 
@@ -1699,7 +1703,8 @@ class SubredditFlairTemplates:
                 await subreddit.flair.templates.update(
                     template_info["id"],
                     template_info["flair_text"],
-                    text_editable=True)
+                    text_editable=True
+                )
                 break
 
         """
@@ -1744,11 +1749,11 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
             async for template in subreddit.flair.templates:
                 print(template)
 
-
         """
         url = API_PATH["user_flair"].format(subreddit=self.subreddit)
         params = {"unique": self.subreddit._reddit._next_unique}
-        for template in await self.subreddit._reddit.get(url, params=params):
+        results = await self.subreddit._reddit.get(url, params=params)
+        for template in results:
             yield template
 
     async def add(
@@ -1831,7 +1836,8 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         """
         url = API_PATH["link_flair"].format(subreddit=self.subreddit)
-        for template in await self.subreddit._reddit.get(url):
+        results = await self.subreddit._reddit.get(url)
+        for template in results:
             yield template
 
     async def add(
@@ -1869,8 +1875,8 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("NAME")
-            await subreddit.flair.link_templates.add(
-                css_class="praw", text_editable=True)
+            await subreddit.flair.link_templates.add(css_class="praw",
+            text_editable=True)
 
         """
         await self._add(
@@ -2062,7 +2068,7 @@ class SubredditModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("NAME")
-            for removal_reason in subreddit.mod.removal_reasons:
+            async for removal_reason in subreddit.mod.removal_reasons:
                 print(removal_reason)
 
         A single removal reason can be retrieved via:
@@ -2623,7 +2629,7 @@ class ModeratorRelationship(SubredditRelationship):
     .. code-block:: python
 
         subreddit = await reddit.subreddit("redditdev")
-        async for moderator in subreddit.moderator():
+        async for moderator in subreddit.moderator:
             print(moderator)
 
     """
@@ -2637,6 +2643,25 @@ class ModeratorRelationship(SubredditRelationship):
             permissions, ModeratorRelationship.PERMISSIONS
         )
         return other_settings
+
+    async def __aiter__(self):
+        """Asynchronously iterate through Redditors who are moderators.
+
+        For example, to list the moderators along with their permissions try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            async for moderator in subreddit.moderator:
+                print('{}: {}'.format(moderator, moderator.mod_permissions))
+
+        """
+        url = API_PATH["list_{}".format(self.relationship)].format(
+            subreddit=self.subreddit
+        )
+        results = await self.subreddit._reddit.get(url)
+        for result in results:
+            yield result
 
     async def __call__(self, redditor=None):  # pylint: disable=arguments-differ
         """Return a list of Redditors who are moderators.
@@ -2656,15 +2681,6 @@ class ModeratorRelationship(SubredditRelationship):
 
             subreddit = await reddit.subreddit("nameofsub")
             moderators = await subreddit.moderator()
-
-        For example, to list the moderators along with their permissions try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("SUBREDDIT")
-            async for moderator in subreddit.moderator():
-                print('{}: {}'.format(moderator, moderator.mod_permissions))
-
 
         """
         params = {} if redditor is None else {"user": redditor}
@@ -3117,8 +3133,8 @@ class SubredditStylesheet:
 
         subreddit = await reddit.subreddit("SUBREDDIT")
         stylesheet = await subreddit.stylesheet()
-        stylesheet += ".test{color:blue}"
-        await subreddit.stylesheet.update(stylesheet)
+        stylesheet.stylesheet += ".test{color:blue}"
+        await subreddit.stylesheet.update(stylesheet.stylesheet)
 
     """
 
@@ -3187,7 +3203,7 @@ class SubredditStylesheet:
 
         with open(image_path, "rb") as image:
             upload_data["file"] = image
-            response = self.subreddit._reddit._core._requestor._http.post(
+            response = await self.subreddit._reddit._core._requestor._http.post(
                 upload_url, data=upload_data
             )
         response.raise_for_status()
@@ -3517,7 +3533,7 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload_mobile_icon("icon.png")
 
         """
-        return self._upload_image(image_path, {"upload_type": "icon"})
+        return await self._upload_image(image_path, {"upload_type": "icon"})
 
 
 class SubredditWiki:
@@ -3582,8 +3598,8 @@ class SubredditWiki:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.wiki.create("praw_test", "wiki body text",
-                                         reason="PRAW Test Creation")
+            await subreddit.wiki.create("praw_test", "wiki body text", reason="PRAW
+            Test Creation")
 
         """
         name = name.replace(" ", "_").lower()

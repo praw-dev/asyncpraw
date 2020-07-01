@@ -9,7 +9,7 @@ Prerequisites
 -------------
 
 :Python Knowledge: You need to know at least a little Python to use PRAW; it's
-                   a Python wrapper after all. PRAW supports `Python 3.5+`_. If
+                   a Python wrapper after all. PRAW supports `Python 3.6+`_. If
                    you are stuck on a problem, `r/learnpython`_ is a great
                    place to ask for help.
 
@@ -35,7 +35,7 @@ Prerequisites
              more about user agents at `Reddit's API wiki page`_.
 
 
-.. _`Python 3.5+`: https://docs.python.org/3/tutorial/index.html
+.. _`Python 3.6+`: https://docs.python.org/3/tutorial/index.html
 .. _`r/learnpython`: https://www.reddit.com/r/learnpython/
 .. _reddit.com: https://www.reddit.com
 .. _`Reddit Help`: https://www.reddithelp.com/en
@@ -54,7 +54,7 @@ Obtain a :class:`.Reddit` Instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning:: For the sake of brevity, the following examples pass authentication
-             information via arguments to :py:func:`praw.Reddit`. If you do
+             information via arguments to :py:func:`asyncpraw.Reddit`. If you do
              this, you need to be careful not to reveal this information to the
              outside world if you share your code. It is recommended to use a
              :ref:`praw.ini file <praw.ini>` in order to keep your
@@ -83,9 +83,9 @@ of providing this information). For example:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
 
-   reddit = praw.Reddit(client_id="my client id",
+   reddit = asyncpraw.Reddit(client_id="my client id",
                         client_secret="my client secret",
                         user_agent="my user agent")
 
@@ -134,9 +134,9 @@ like the following:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
 
-   reddit = praw.Reddit(client_id="my client id",
+   reddit = asyncpraw.Reddit(client_id="my client id",
                         client_secret="my client secret",
                         user_agent="my user agent",
                         username="my username",

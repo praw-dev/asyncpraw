@@ -9,8 +9,7 @@ class InboxableMixin:
     async def block(self):
         """Block the user who sent the item.
 
-        .. note:: This method pertains only to objects which were retrieved via
-            the inbox.
+        .. note:: This method pertains only to objects which were retrieved via the inbox.
 
         Example usage:
 

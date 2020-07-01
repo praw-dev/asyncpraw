@@ -1,7 +1,7 @@
 The Reddit Instance
 ===================
 
-.. autoclass:: praw.Reddit
+.. autoclass:: asyncpraw.Reddit
    :inherited-members:
 
 .. toctree::

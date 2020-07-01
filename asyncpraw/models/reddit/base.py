@@ -71,7 +71,7 @@ class RedditBase(PRAWBase):
         """Update the object."""
         await self._fetch()
 
-    def _fetch(self):  # pragma: no cover
+    async def _fetch(self):  # pragma: no cover
         self._fetched = True
 
     def _reset_attributes(self, *attributes):

@@ -13,11 +13,11 @@ checks. The following are PRAW-specific guidelines in addition to those PEP's.
 .. note:: Python 3.6+ is needed to run the script.
 
 .. note:: In order to install the dependencies needed to run the script, you can
-   install the ``[dev]`` package of praw, like so:
-   
+   install the ``[dev]`` package of asyncpraw, like so:
+
    .. code-block:: bash
-   
-      pip install praw[dev]
+
+      pip install asyncpraw[dev]
 
 Code
 ----
@@ -39,14 +39,14 @@ Testing
 -------
 
 Contributions to PRAW requires 100% test coverage as reported by `Coveralls
-<https://coveralls.io/github/praw-dev/praw>`_. If you know how to add a
+<https://coveralls.io/github/praw-dev/asyncpraw>`_. If you know how to add a
 feature, but aren't sure how to write the necessary tests, please open a PR
 anyway so we can work with you to write the necessary tests.
 
 Running the Test Suite
 ~~~~~~~~~~~~~~~~~~~~~~
 
-`Github Actions <https://github.com/praw-dev/praw/actions>`_ automatically runs
+`Github Actions <https://github.com/praw-dev/asyncpraw/actions>`_ automatically runs
 all updates to known branches and pull requests. However, it's useful to be
 able to run the tests locally. The simplest way is via:
 
@@ -126,11 +126,11 @@ For feature additions, bugfixes, or code removal please add an appropriate
 entry to ``CHANGES.rst``. If the ``Unreleased`` section does not exist at the
 top of ``CHANGES.rst`` please add it. See `commit
 280525c16ba28cdd69cdbb272a0e2764b1c7e6a0
-<https://github.com/praw-dev/praw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0>`_
+<https://github.com/praw-dev/asyncpraw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0>`_
 for an example.
 
 See Also
 --------
 
 Please also read through:
-https://github.com/praw-dev/praw/blob/master/.github/CONTRIBUTING.md
+https://github.com/praw-dev/asyncpraw/blob/master/.github/CONTRIBUTING.md

@@ -1,5 +1,5 @@
 LiveThreadStream
 ================
 
-.. autoclass:: praw.models.reddit.live.LiveThreadStream
+.. autoclass:: asyncpraw.models.reddit.live.LiveThreadStream
    :inherited-members:

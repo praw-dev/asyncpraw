@@ -59,9 +59,9 @@ creating an instance of :class:`.Reddit`:
 
 .. code-block:: python
 
-   import praw
+   import asyncpraw
 
-   reddit = praw.Reddit(user_agent="LMGTFY (by /u/USERNAME)",
+   reddit = asyncpraw.Reddit(user_agent="LMGTFY (by /u/USERNAME)",
                         client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
                         username="USERNAME", password="PASSWORD")
 

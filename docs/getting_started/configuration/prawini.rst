@@ -22,34 +22,34 @@ user defined ``praw.ini`` files in a few other locations:
 
    3. In the directory specified by the ``APPDATA`` environment variable
       (Windows).
-      
+
    .. note:: To check the values of the environment variables, you can
       open up a terminal (Terminal/Terminal.app/Command Prompt/Powershell)
-      and echo the variables (replacing <variable> with the name of the 
+      and echo the variables (replacing <variable> with the name of the
       variable):
-      
-      **MacOS/Linux**: 
-      
+
+      **MacOS/Linux**:
+
       .. code-block:: bash
-      
+
          echo "$<variable>"
-         
+
       **Windows Command Prompt**
-      
+
       .. code-block:: bat
-      
+
          echo "%<variable>%"
-         
+
       **Powershell**
-      
+
       .. code-block:: powershell
-      
+
          Write-Output "$env:<variable>"
-         
+
       You can also view environment variables in Python:
-      
+
       .. code-block:: python
-      
+
          import os
          print(os.environ.get("<variable>", ""))
 
@@ -63,7 +63,7 @@ of settings separated into sections. PRAW refers to each section as a
 ``praw.ini`` file. This site defines the default settings for interaction with
 Reddit. The contents of the package's ``praw.ini`` file are:
 
-.. literalinclude:: ../../../praw/praw.ini
+.. literalinclude:: ../../../asyncpraw/praw.ini
    :language: ini
 
 .. warning:: Avoid modifying the package's ``praw.ini`` file. Prefer instead to
@@ -112,7 +112,7 @@ example, to use the settings defined for ``bot2`` as shown above, initialize
 
 .. code-block:: python
 
-   reddit = praw.Reddit("bot2", user_agent="bot2 user agent")
+   reddit = asyncpraw.Reddit("bot2", user_agent="bot2 user agent")
 
 .. note:: In the above example you can obviate passing ``user_agent`` if you
           add the setting ``user_agent=...`` in the ``[bot2]`` site definition.
@@ -144,7 +144,7 @@ follows:
 
 .. code-block:: python
 
-   reddit = praw.Reddit("bot1", config_interpolation="basic")
+   reddit = asyncpraw.Reddit("bot1", config_interpolation="basic")
 
 Then the value of ``reddit.config.user_agent`` will be
 ``script:MyBot:v1.2.3 (by /u/MyUser)``.

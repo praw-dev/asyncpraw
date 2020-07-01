@@ -4,13 +4,13 @@ PRAW Environment Variables
 ==========================
 
 The second-highest priority configuration options can be passed to a program
-via environment variables prefixed with ``praw_``.
+via environment variables prefixed with ``asyncpraw_``.
 
 For example, you can invoke your script as follows:
 
 .. code-block:: shell
 
-   praw_username=bboe praw_password=not_my_password python my_script.py
+   asyncpraw_username=bboe asyncpraw_password=not_my_password python my_script.py
 
 The ``username`` and ``password`` provided via environment variables will
 override any values contained in a ``praw.ini`` file., but not any variables

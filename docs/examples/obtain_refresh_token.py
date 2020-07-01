@@ -13,7 +13,7 @@ import random
 import socket
 import sys
 
-import praw
+import asyncpraw
 
 
 def receive_connection():
@@ -62,7 +62,7 @@ def main():
     else:
         scopes = commaScopes.strip().split(",")
 
-    reddit = praw.Reddit(
+    reddit = asyncpraw.Reddit(
         client_id=client_id.strip(),
         client_secret=client_secret.strip(),
         redirect_uri="http://localhost:8080",

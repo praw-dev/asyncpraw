@@ -1,4 +1,4 @@
 Styles
 ======
-.. autoclass:: praw.models.Styles
+.. autoclass:: asyncpraw.models.Styles
    :inherited-members:

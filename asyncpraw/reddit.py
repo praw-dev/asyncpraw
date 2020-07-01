@@ -170,7 +170,7 @@ class Reddit:
         .. _Session: https://2.python-requests.org/en/master/api/\
 #requests.Session
 
-        .. code-block:: python # TODO: change this to aiohttp
+        .. code-block:: python
 
             import json, betamax, requests
 
@@ -398,6 +398,7 @@ class Reddit:
             "moderators": models.ModeratorsWidget,
             "more": models.MoreComments,
             "post-flair": models.PostFlairWidget,
+            "rule": models.Rule,
             "stylesheet": models.Stylesheet,
             "subreddit-rules": models.RulesWidget,
             "textarea": models.TextArea,
@@ -576,7 +577,7 @@ class Reddit:
             for k, v in params.items():
                 if isinstance(v, bool):
                     new_params[k] = str(v).lower()
-                else:
+                elif v:
                     new_params[k] = v
             params = new_params
         return self._objector.objectify(

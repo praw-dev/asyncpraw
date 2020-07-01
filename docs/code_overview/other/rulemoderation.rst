@@ -1,5 +1,5 @@
 RuleModeration
 ==============
 
-.. autoclass:: praw.models.reddit.rules.RuleModeration
+.. autoclass:: asyncpraw.models.reddit.rules.RuleModeration
    :inherited-members:

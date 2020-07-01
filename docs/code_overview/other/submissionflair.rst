@@ -1,5 +1,5 @@
 SubmissionFlair
 ===============
 
-.. autoclass:: praw.models.reddit.submission.SubmissionFlair
+.. autoclass:: asyncpraw.models.reddit.submission.SubmissionFlair
    :inherited-members:

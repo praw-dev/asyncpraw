@@ -127,7 +127,7 @@ class Collection(RedditBase):
 
         self._info_params = {
             "collection_id": self.collection_id,
-            "include_links": "true",  # TODO this needs looked into, probably on asyncprawcore side
+            "include_links": True,
         }
 
     def __iter__(self) -> Generator[Any, None, None]:

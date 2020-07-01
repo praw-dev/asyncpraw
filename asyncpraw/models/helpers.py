@@ -2,6 +2,8 @@
 from json import dumps
 from typing import AsyncGenerator, List, Optional, Union
 
+from asyncprawcore import NotFound
+
 from ..const import API_PATH
 from .base import PRAWBase
 from .reddit.live import LiveThread
@@ -186,6 +188,8 @@ class SubredditHelper(PRAWBase):
         :param fetch: Determines if the subreddit will be fetched immediately.
             This is used for specifying special subs like ``"all"``, ``"mod"``, or with
             temporary filtering from (e.g., ``"all-redditdev-programming"``).
+
+        # TODO: Add code example for using fetch
         """
         lower_name = display_name.lower()
 
@@ -194,8 +198,14 @@ class SubredditHelper(PRAWBase):
         if lower_name == "randnsfw":
             return await self._reddit.random_subreddit(nsfw=True)
         sub = Subreddit(self._reddit, display_name=display_name)
-        if not lower_name in ["mod", "all"] and fetch:
-            await sub._fetch()
+        if "+" not in lower_name and lower_name not in ["mod", "all"] and fetch:
+            # if the sub doesn't exist then check to see if it is a special subreddit
+            # construct and re-raise the exception if it is not
+            try:
+                await sub._fetch()
+            except NotFound:
+                if not lower_name.startswith(("mod", "all")) and "-" not in lower_name:
+                    raise NotFound
         return sub
 
     async def create(

@@ -16,7 +16,14 @@ with open(path.join(HERE, PACKAGE_NAME, "const.py"), encoding="utf-8") as fp:
 extras = {
     "ci": ["coveralls"],
     "dev": ["pre-commit"],
-    "lint": ["black", "flake8", "pydocstyle", "sphinx<3.0", "sphinx_rtd_theme"],
+    "lint": [
+        "black",
+        "flake8",
+        "pydocstyle",
+        "sphinx<3.0",
+        "sphinx_rtd_theme",
+        "sphinxcontrib-trio",
+    ],
     "test": [
         "betamax >=0.8, <0.9",
         "betamax-matchers >=0.3.0, <0.5",
@@ -53,7 +60,7 @@ setup(
     install_requires=[
         "asyncprawcore >=1.0.1, <2.0",
         "update_checker >=0.17",
-        "websocket-client >=0.54.0",
+        "websockets >=8.1",
     ],
     keywords="reddit api wrapper async",
     license="Simplified BSD License",
