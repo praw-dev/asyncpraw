@@ -67,10 +67,6 @@ class RedditBase(PRAWBase):
         """Return whether the other instance differs from the current."""
         return not self == other
 
-    async def update(self):
-        """Update the object."""
-        await self._fetch()
-
     async def _fetch(self):  # pragma: no cover
         self._fetched = True
 
