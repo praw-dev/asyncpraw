@@ -2,13 +2,13 @@ from unittest import mock
 
 import pytest
 
-from praw.models import Message, Redditor, Subreddit, SubredditMessage
+from asyncpraw.models import Message, Redditor, Subreddit, SubredditMessage
 
 from ... import IntegrationTest
 
 
 class TestMessage(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_attributes(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_attributes"):
@@ -34,7 +34,7 @@ class TestMessage(IntegrationTest):
                     raise
         assert count < 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_block(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_block"):
@@ -47,14 +47,14 @@ class TestMessage(IntegrationTest):
                 assert False, "no message found"
             message.block()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_delete"):
             message = next(self.reddit.inbox.messages())
             message.delete()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mark_read(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_mark_read"):
@@ -67,28 +67,28 @@ class TestMessage(IntegrationTest):
                 assert False, "no message found in unread"
             message.mark_read()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mark_unread(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_mark_unread"):
             message = next(self.reddit.inbox.messages())
             message.mark_unread()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message_collapse(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_message_collapse"):
             message = next(self.reddit.inbox.messages())
             message.collapse()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message_uncollapse(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_message_uncollapse"):
             message = next(self.reddit.inbox.messages())
             message.uncollapse()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reply(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMessage.test_reply"):

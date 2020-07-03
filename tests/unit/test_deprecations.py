@@ -2,7 +2,8 @@
 
 import pytest
 
-from praw.exceptions import APIException, WebSocketException
+from asyncpraw.exceptions import APIException, WebSocketException
+from asyncpraw.models import Subreddit
 
 from . import UnitTest
 
@@ -27,16 +28,17 @@ class TestDeprecation(UnitTest):
         with pytest.raises(DeprecationWarning):
             exc.field
 
-    def test_subreddit_rules_call(self):
+    async def test_subreddit_rules_call(self):
         with pytest.raises(DeprecationWarning) as excinfo:
-            self.reddit.subreddit("test").rules()
+            subreddit = Subreddit(self.reddit, display_name="test")
+            await subreddit.rules()
         assert (
             excinfo.value.args[0]
             == "Calling SubredditRules to get a list of rules is deprecated. "
             "Remove the parentheses to use the iterator. View the "
             "PRAW documentation on how to change the code in order to use the"
-            "iterator (https://praw.readthedocs.io/en/latest/code_overview"
-            "/other/subredditrules.html#praw.models.reddit.rules."
+            "iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview"
+            "/other/subredditrules.html#asyncpraw.models.reddit.rules."
             "SubredditRules.__call__)."
         )
 

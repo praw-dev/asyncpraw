@@ -1,8 +1,8 @@
-"""Test praw.models.auth."""
+"""Test asyncpraw.models.auth."""
 import pytest
 
-from praw import Reddit
-from praw.exceptions import ClientException
+from asyncpraw import Reddit
+from asyncpraw.exceptions import ClientException
 
 from .. import UnitTest
 
@@ -65,20 +65,20 @@ class TestAuth(UnitTest):
         ]:
             assert expected == app.auth.limits
 
-    def test_url__installed_app(self):
+    async def test_url__installed_app(self):
         url = installed_app().auth.url(["dummy scope"], "dummy state")
         assert "client_id=dummy+client" in url
         assert "duration=permanent" in url
-        assert "redirect_uri=https%3A%2F%2Fdummy.tld%2F" in url
+        assert "redirect_uri=https://dummy.tld/" in url
         assert "response_type=code" in url
         assert "scope=dummy+scope" in url
         assert "state=dummy+state" in url
 
-    def test_url__installed_app__implicit(self):
+    async def test_url__installed_app__implicit(self):
         url = installed_app().auth.url(["dummy scope"], "dummy state", implicit=True)
         assert "client_id=dummy+client" in url
         assert "duration=temporary" in url
-        assert "redirect_uri=https%3A%2F%2Fdummy.tld%2F" in url
+        assert "redirect_uri=https://dummy.tld/" in url
         assert "response_type=token" in url
         assert "scope=dummy+scope" in url
         assert "state=dummy+state" in url
@@ -87,7 +87,7 @@ class TestAuth(UnitTest):
         url = web_app().auth.url(["dummy scope"], "dummy state")
         assert "client_id=dummy+client" in url
         assert "secret" not in url
-        assert "redirect_uri=https%3A%2F%2Fdummy.tld%2F" in url
+        assert "redirect_uri=https://dummy.tld/" in url
         assert "response_type=code" in url
         assert "scope=dummy+scope" in url
         assert "state=dummy+state" in url

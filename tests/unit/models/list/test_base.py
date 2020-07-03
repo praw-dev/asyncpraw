@@ -1,7 +1,7 @@
-"""Test praw.models.list.base."""
+"""Test asyncpraw.models.list.base."""
 import pytest
 
-from praw.models.list.base import BaseList
+from asyncpraw.models.list.base import BaseList
 
 
 class DummyObjector:
@@ -27,28 +27,28 @@ class TestBaseList:
             BaseList(None, None)
 
     def test__contains__(self):
-        BaseList.CHILD_ATTRIBUTE = "praw"
+        BaseList.CHILD_ATTRIBUTE = "asyncpraw"
         items = ["foo", 1, {"a": "b"}]
-        base_list = BaseList(Dummy(), {"praw": items})
+        base_list = BaseList(Dummy(), {"asyncpraw": items})
         for item in items:
             assert item in base_list
 
     def test__getitem__(self):
-        BaseList.CHILD_ATTRIBUTE = "praw"
+        BaseList.CHILD_ATTRIBUTE = "asyncpraw"
         items = ["foo", 1, {"a": "b"}]
-        base_list = BaseList(Dummy(), {"praw": items})
+        base_list = BaseList(Dummy(), {"asyncpraw": items})
         for i, item in enumerate(items):
             assert item == base_list[i]
 
     def test__iter__(self):
-        BaseList.CHILD_ATTRIBUTE = "praw"
+        BaseList.CHILD_ATTRIBUTE = "asyncpraw"
         items = ["foo", 1, {"a": "b"}]
-        base_list = BaseList(Dummy(), {"praw": items})
+        base_list = BaseList(Dummy(), {"asyncpraw": items})
         for i, item in enumerate(base_list):
             assert items[i] == item
 
     def test__str__(self):
-        BaseList.CHILD_ATTRIBUTE = "praw"
+        BaseList.CHILD_ATTRIBUTE = "asyncpraw"
         items = ["foo", 1, {"a": "b"}]
-        base_list = BaseList(Dummy(), {"praw": items})
+        base_list = BaseList(Dummy(), {"asyncpraw": items})
         assert str(items) == str(base_list)

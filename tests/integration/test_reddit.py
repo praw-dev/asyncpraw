@@ -1,12 +1,12 @@
-"""Test praw.reddit."""
+"""Test asyncpraw.reddit."""
 from unittest import mock
 
 import pytest
-from prawcore.exceptions import BadRequest
+from asyncprawcore.exceptions import BadRequest
 
-from praw.models import LiveThread
-from praw.models.reddit.base import RedditBase
-from praw.models.reddit.submission import Submission
+from asyncpraw.models import LiveThread
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.submission import Submission
 
 from . import IntegrationTest
 
@@ -47,14 +47,14 @@ class TestReddit(IntegrationTest):
         for item in results:
             assert isinstance(item, Submission)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_live_call(self, _):
         thread_id = "ukaeu1ik4sw5"
         thread = self.reddit.live(thread_id)
         with self.recorder.use_cassette("TestReddit.test_live_call"):
             assert thread.title == "reddit updates"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_live_create(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestReddit.test_live_create"):
@@ -75,7 +75,7 @@ class TestReddit(IntegrationTest):
             threads = list(gen)
         assert len(threads) == 2
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_live_info(self, _):
         ids = """
         ta40aifzobnv ta40l9u2ermf ta40ucdiq366 ta416hjgvbhy ta41ln5vsyaz
@@ -114,9 +114,9 @@ class TestReddit(IntegrationTest):
         assert thread_ids != ids
         assert sorted(thread_ids) == ids
 
-    def test_live_now__featured(self):
+    async def test_live_now__featured(self):
         with self.recorder.use_cassette("TestReddit.test_live_now__featured"):
-            thread = self.reddit.live.now()
+            thread = await self.reddit.live.now()
         assert isinstance(thread, LiveThread)
         assert thread.id == "z2f981agq7ky"
 

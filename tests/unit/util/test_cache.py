@@ -1,6 +1,6 @@
-"""Test praw.util.cache."""
+"""Test asyncpraw.util.cache."""
 
-from praw.util.cache import cachedproperty
+from asyncpraw.util.cache import cachedproperty
 
 from .. import UnitTest
 

@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 
-from praw.models import (
+from asyncpraw.models import (
     Button,
     ButtonWidget,
     Calendar,
@@ -60,7 +60,7 @@ class TestButtonWidget(IntegrationTest):
 
             assert subreddit == button_widget.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -76,7 +76,7 @@ class TestButtonWidget(IntegrationTest):
                 {
                     "kind": "text",
                     "text": "View source",
-                    "url": "https://github.com/praw-dev/praw",
+                    "url": "https://github.com/praw-dev/asyncpraw",
                     "color": "#FF0000",
                     "textColor": "#00FF00",
                     "fillColor": "#0000FF",
@@ -91,7 +91,7 @@ class TestButtonWidget(IntegrationTest):
                 {
                     "kind": "image",
                     "text": "View documentation",
-                    "linkUrl": "https://praw.readthedocs.io",
+                    "linkUrl": "https://asyncpraw.readthedocs.io",
                     "url": my_image,
                     "height": 200,
                     "width": 200,
@@ -123,12 +123,12 @@ class TestButtonWidget(IntegrationTest):
             assert widget.styles == styles
 
             assert widget[0].text == "View source"
-            assert widget[0].url == "https://github.com/praw-dev/praw"
+            assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
             assert widget[2].text == "/r/redditdev"
             assert widget[2].url == "https://reddit.com/r/redditdev"
 
             assert widget[1].text == "View documentation"
-            assert widget[1].linkUrl == "https://praw.readthedocs.io"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
             assert widget[1].hoverState["kind"] == "image"
             assert widget[1].hoverState["height"] == 200
 
@@ -148,12 +148,12 @@ class TestButtonWidget(IntegrationTest):
             assert widget.styles == styles
 
             assert widget[0].text == "View source"
-            assert widget[0].url == "https://github.com/praw-dev/praw"
+            assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
             assert widget[2].text == "/r/redditdev"
             assert widget[2].url == "https://reddit.com/r/redditdev"
 
             assert widget[1].text == "View documentation"
-            assert widget[1].linkUrl == "https://praw.readthedocs.io"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
             assert widget[1].hoverState["kind"] == "image"
             assert widget[1].hoverState["height"] == 200
 
@@ -170,10 +170,10 @@ class TestButtonWidget(IntegrationTest):
             assert widget[0].text == "/r/redditdev"
             assert widget[0].url == "https://reddit.com/r/redditdev"
             assert widget[2].text == "View source"
-            assert widget[2].url == "https://github.com/praw-dev/praw"
+            assert widget[2].url == "https://github.com/praw-dev/asyncpraw"
 
             assert widget[1].text == "View documentation"
-            assert widget[1].linkUrl == "https://praw.readthedocs.io"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
             assert widget[1].hoverState["kind"] == "image"
             assert widget[1].hoverState["height"] == 200
 
@@ -200,7 +200,7 @@ class TestCalendar(IntegrationTest):
 
             assert subreddit == calendar.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -269,7 +269,7 @@ class TestCommunityList(IntegrationTest):
 
             assert subreddit == comm_list.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -313,7 +313,7 @@ class TestCustomWidget(IntegrationTest):
         test_dir = abspath(dirname(sys.modules[__name__].__file__))
         return join(test_dir, "..", "..", "files", name)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -407,7 +407,7 @@ class TestIDCard(IntegrationTest):
 
             assert subreddit == card.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
 
@@ -436,7 +436,7 @@ class TestImageWidget(IntegrationTest):
         test_dir = abspath(dirname(sys.modules[__name__].__file__))
         return join(test_dir, "..", "..", "files", name)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -501,7 +501,7 @@ class TestImageWidget(IntegrationTest):
 
 
 class TestMenu(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -513,7 +513,7 @@ class TestMenu(IntegrationTest):
             {
                 "text": "Python packages",
                 "children": [
-                    {"text": "PRAW", "url": "https://praw.readthedocs.io/"},
+                    {"text": "PRAW", "url": "https://asyncpraw.readthedocs.io/"},
                     {"text": "requests", "url": "http://python-requests.org"},
                 ],
             },
@@ -539,7 +539,7 @@ class TestMenu(IntegrationTest):
 
             assert widget[1].text == "Python packages"
             assert widget[1][0].text == "PRAW"
-            assert widget[1][0].url == "https://praw.readthedocs.io/"
+            assert widget[1][0].url == "https://asyncpraw.readthedocs.io/"
             assert widget[1][1].text == "requests"
             assert widget[1][1].url == "http://python-requests.org"
 
@@ -562,7 +562,7 @@ class TestMenu(IntegrationTest):
 
             assert widget[1].text == "Python packages"
             assert widget[1][0].text == "PRAW"
-            assert widget[1][0].url == "https://praw.readthedocs.io/"
+            assert widget[1][0].url == "https://asyncpraw.readthedocs.io/"
             assert widget[1][1].text == "requests"
             assert widget[1][1].url == "http://python-requests.org"
 
@@ -615,7 +615,7 @@ class TestModeratorsWidget(IntegrationTest):
 
             assert subreddit == mods.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
 
@@ -632,7 +632,7 @@ class TestModeratorsWidget(IntegrationTest):
 
 
 class TestPostFlairWidget(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
@@ -721,7 +721,7 @@ class TestRulesWidget(IntegrationTest):
             assert len(rules) > 0
             assert subreddit == rules.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
 
@@ -844,7 +844,7 @@ class TestSubredditWidgetsModeration(IntegrationTest):
         test_dir = abspath(dirname(sys.modules[__name__].__file__))
         return join(test_dir, "..", "..", "files", name)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -873,7 +873,7 @@ class TestSubredditWidgetsModeration(IntegrationTest):
             widgets.refresh()
             assert list(widgets.sidebar) == new_order
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_image(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -888,7 +888,7 @@ class TestSubredditWidgetsModeration(IntegrationTest):
 
 
 class TestTextArea(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 

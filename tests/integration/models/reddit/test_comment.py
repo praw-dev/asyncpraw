@@ -2,8 +2,8 @@ from unittest import mock
 
 import pytest
 
-from praw.exceptions import ClientException, PRAWException, RedditAPIException
-from praw.models import Comment, Submission
+from asyncpraw.exceptions import ClientException, PRAWException, RedditAPIException
+from asyncpraw.models import Comment, Submission
 
 from ... import IntegrationTest
 
@@ -17,7 +17,7 @@ class TestComment(IntegrationTest):
             assert not comment.is_root
             assert comment.submission == "2gmzqe"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_block(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestComment.test_block"):
@@ -35,7 +35,7 @@ class TestComment(IntegrationTest):
         with self.recorder.use_cassette("TestComment.test_clear_vote"):
             Comment(self.reddit, "d1680wu").clear_vote()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestComment.test_delete"):
@@ -55,7 +55,7 @@ class TestComment(IntegrationTest):
         with self.recorder.use_cassette("TestComment.test_downvote"):
             Comment(self.reddit, "d1680wu").downvote()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_edit(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestComment.test_edit"):
@@ -83,7 +83,7 @@ class TestComment(IntegrationTest):
                 Comment(self.reddit, "0").body
             assert excinfo.value.args[0].startswith("No data returned for comment")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mark_read(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestComment.test_mark_read"):
@@ -91,7 +91,7 @@ class TestComment(IntegrationTest):
             assert isinstance(comment, Comment)
             comment.mark_read()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mark_unread(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestComment.test_mark_unread"):
@@ -128,7 +128,7 @@ class TestComment(IntegrationTest):
         assert isinstance(parent, Comment)
         assert parent.fullname == comment.parent_id
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_parent__from_replies(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestComment.parent__from_replies"):
@@ -246,7 +246,7 @@ class TestCommentModeration(IntegrationTest):
         with self.recorder.use_cassette("TestCommentModeration.test_distinguish"):
             Comment(self.reddit, "da2g5y6").mod.distinguish()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_distinguish__sticky(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -269,7 +269,7 @@ class TestCommentModeration(IntegrationTest):
         with self.recorder.use_cassette("TestCommentModeration.test_remove"):
             self.reddit.comment("da2g5y6").mod.remove(spam=True)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove_with_reason_id(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -287,7 +287,7 @@ class TestCommentModeration(IntegrationTest):
         with self.recorder.use_cassette("TestCommentModeration.test_unlock"):
             Comment(self.reddit, "da2g6ne").mod.unlock()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add_removal_reason(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -297,7 +297,7 @@ class TestCommentModeration(IntegrationTest):
             comment.mod.remove()
             comment.mod._add_removal_reason(mod_note="Blah", reason_id="110nhral8vygf")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add_removal_reason_without_id(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -307,7 +307,7 @@ class TestCommentModeration(IntegrationTest):
             comment.mod.remove()
             comment.mod._add_removal_reason(mod_note="Test")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add_removal_reason_without_id_or_note(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -319,7 +319,7 @@ class TestCommentModeration(IntegrationTest):
                 comment.mod._add_removal_reason()
             assert excinfo.value.args[0].startswith("mod_note cannot be blank")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_send_removal_message(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -339,7 +339,7 @@ class TestCommentModeration(IntegrationTest):
             assert res[1] is None
             assert res[2] is None
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_send_removal_message__error(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(

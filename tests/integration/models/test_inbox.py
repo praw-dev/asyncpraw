@@ -1,10 +1,10 @@
-"""Test praw.models.inbox."""
+"""Test asyncpraw.models.inbox."""
 from unittest import mock
 
 import pytest
-from prawcore import Forbidden
+from asyncprawcore import Forbidden
 
-from praw.models import Comment, Message, Redditor, Subreddit
+from asyncpraw.models import Comment, Message, Redditor, Subreddit
 
 from .. import IntegrationTest
 
@@ -19,7 +19,7 @@ class TestInbox(IntegrationTest):
                 count += 1
             assert count == 100
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_all__with_limit(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestInbox.test_all__with_limit"):
@@ -35,7 +35,7 @@ class TestInbox(IntegrationTest):
                 count += 1
             assert count == 64
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comment_reply__refresh(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestInbox.test_comment_reply__refresh"):
@@ -45,7 +45,7 @@ class TestInbox(IntegrationTest):
             comment.refresh()
             assert saved_id == comment.id
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mark_read(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -53,7 +53,7 @@ class TestInbox(IntegrationTest):
         ):
             self.reddit.inbox.mark_read(list(self.reddit.inbox.unread()))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mark_unread(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -61,7 +61,7 @@ class TestInbox(IntegrationTest):
         ):
             self.reddit.inbox.mark_unread(list(self.reddit.inbox.all()))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_mention__refresh(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestInbox.test_mention__refresh"):
@@ -95,7 +95,7 @@ class TestInbox(IntegrationTest):
             with pytest.raises(Forbidden):
                 self.reddit.inbox.message("6i8om7")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message_collapse(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -104,7 +104,7 @@ class TestInbox(IntegrationTest):
         ):
             self.reddit.inbox.collapse(list(self.reddit.inbox.messages()))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message_uncollapse(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -132,7 +132,7 @@ class TestInbox(IntegrationTest):
                 count += 1
             assert count == 64
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_stream(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestInbox__test_stream"):
@@ -149,7 +149,7 @@ class TestInbox(IntegrationTest):
                 count += 1
             assert count == 64
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_unread(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestInbox.test_unread"):

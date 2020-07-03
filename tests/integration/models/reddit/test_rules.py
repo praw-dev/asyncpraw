@@ -2,8 +2,8 @@ from unittest import mock
 
 import pytest
 
-from praw.exceptions import ClientException, RedditAPIException
-from praw.models import Rule
+from asyncpraw.exceptions import ClientException, RedditAPIException
+from asyncpraw.models import Rule
 
 from ... import IntegrationTest
 
@@ -38,7 +38,7 @@ class TestRule(IntegrationTest):
             assert rule.description == ""
             assert rule.violation_reason == "PRAW Test 2"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete_rule(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_delete_rule"):
@@ -55,18 +55,21 @@ class TestRule(IntegrationTest):
     @pytest.mark.filterwarnings("ignore", category=DeprecationWarning)
     def test_iter_call(self):
         with self.recorder.use_cassette("TestRule.test_call"):
-            assert self.subreddit.rules()["rules"][0]["short_name"] == "Test post 12"
+            assert (
+                self.subreddit.rules().get_rule("rules")[0]["short_name"]
+                == "Test post 12"
+            )
 
     def test_iter_rule_string(self):
         with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            rule = self.subreddit.rules["PRAW Test"]
+            rule = self.subreddit.rules.get_rule("PRAW Test")
             assert isinstance(rule, Rule)
             rule._fetch()
             assert rule.kind
 
     def test_iter_rule_invalid(self):
         with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            rule = self.subreddit.rules["fake rule"]
+            rule = self.subreddit.rules.get_rule("fake rule")
             with pytest.raises(ClientException) as excinfo:
                 rule.kind
             assert excinfo.value.args[
@@ -90,7 +93,7 @@ class TestRule(IntegrationTest):
             for rule in rules:
                 assert isinstance(rule, Rule)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder_rules(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_reorder_rules"):
@@ -103,7 +106,7 @@ class TestRule(IntegrationTest):
             for rule in new_rules:
                 assert rule_info[rule.short_name] == rule
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder_rules_double(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_reorder_rules_double"):
@@ -111,21 +114,21 @@ class TestRule(IntegrationTest):
             with pytest.raises(RedditAPIException):
                 self.subreddit.rules.mod.reorder(rule_list + rule_list[0:1])
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder_rules_empty(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_reorder_rules_empty"):
             with pytest.raises(RedditAPIException):
                 self.subreddit.rules.mod.reorder([])
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder_rules_no_reorder(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_reorder_rules_no_reorder"):
             rule_list = list(self.subreddit.rules)
             assert self.subreddit.rules.mod.reorder(rule_list) == rule_list
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder_rules_omit(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_reorder_rules_omit"):
@@ -133,7 +136,7 @@ class TestRule(IntegrationTest):
             with pytest.raises(RedditAPIException):
                 self.subreddit.rules.mod.reorder(rule_list[:-1])
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_rule(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_update_rule"):
@@ -148,7 +151,7 @@ class TestRule(IntegrationTest):
             assert rule.violation_reason != rule2.violation_reason
             assert rule2.violation_reason == "PUpdate"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_rule_short_name(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_update_rule_short_name"):
@@ -170,7 +173,7 @@ class TestRule(IntegrationTest):
             for new_rule in self.subreddit.rules:
                 assert new_rule.short_name != rule.short_name
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_rule_no_params(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRule.test_update_rule_no_params"):

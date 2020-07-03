@@ -1,11 +1,11 @@
-"""Test praw.models.Trophy"""
+"""Test asyncpraw.models.Trophy"""
 from unittest import mock
 
 from .. import IntegrationTest
 
 
 class TestTrophy(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_equality(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestTrophy.test_equality"):

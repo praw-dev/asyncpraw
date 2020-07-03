@@ -1,8 +1,8 @@
 """Test classes from collections.py."""
 import pytest
 
-from praw.models import Collection
-from praw.models.reddit.collections import SubredditCollections
+from asyncpraw.models import Collection
+from asyncpraw.models.reddit.collections import SubredditCollections
 
 from ... import UnitTest
 
@@ -57,9 +57,9 @@ class TestCollection(UnitTest):
 
 
 class TestSubredditCollections(UnitTest):
-    def test_call(self):
+    async def test_call(self):
         collections = SubredditCollections(None, None)
         with pytest.raises(TypeError):
-            collections()
+            await collections()
         with pytest.raises(TypeError):
-            collections("a uuid", "a permalink")
+            await collections("a uuid", "a permalink")

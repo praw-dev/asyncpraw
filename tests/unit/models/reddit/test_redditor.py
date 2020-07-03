@@ -1,8 +1,6 @@
-import pickle
-
 import pytest
 
-from praw.models import Redditor
+from asyncpraw.models import Redditor
 
 from ... import UnitTest
 
@@ -51,14 +49,14 @@ class TestRedditor(UnitTest):
         redditor = Redditor(self.reddit, _data={"name": "name", "id": "dummy"})
         assert redditor.fullname == "t2_dummy"
 
-    def test_guild__min(self):
+    async def test_guild__min(self):
         with pytest.raises(TypeError) as excinfo:
-            Redditor(self.reddit, name="RedditorName").gild(0)
+            await Redditor(self.reddit, name="RedditorName").gild(0)
         assert str(excinfo.value) == "months must be between 1 and 36"
 
-    def test_guild__max(self):
+    async def test_guild__max(self):
         with pytest.raises(TypeError) as excinfo:
-            Redditor(self.reddit, name="RedditorName").gild(37)
+            await Redditor(self.reddit, name="RedditorName").gild(37)
         assert str(excinfo.value) == "months must be between 1 and 36"
 
     def test_hash(self):
@@ -71,12 +69,6 @@ class TestRedditor(UnitTest):
         assert hash(redditor1) == hash(redditor2)
         assert hash(redditor2) != hash(redditor3)
         assert hash(redditor1) != hash(redditor3)
-
-    def test_pickle(self):
-        redditor = Redditor(self.reddit, _data={"name": "name", "id": "dummy"})
-        for level in range(pickle.HIGHEST_PROTOCOL + 1):
-            other = pickle.loads(pickle.dumps(redditor, protocol=level))
-            assert redditor == other
 
     def test_repr(self):
         redditor = Redditor(self.reddit, name="RedditorName")

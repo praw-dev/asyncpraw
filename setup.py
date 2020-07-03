@@ -25,9 +25,11 @@ extras = {
         "sphinxcontrib-trio",
     ],
     "test": [
-        "betamax >=0.8, <0.9",
-        "betamax-matchers >=0.3.0, <0.5",
         "pytest >=2.7.3",
+        "asynctest >=0.13.0",
+        "pytest-vcr",
+        "mock >=0.8",
+        "testfixtures >4.13.2, <7",
     ],
 }
 extras["dev"] += extras["lint"] + extras["test"]

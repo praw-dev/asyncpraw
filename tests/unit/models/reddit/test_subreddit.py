@@ -1,11 +1,10 @@
 import json
-import pickle
 import pytest
-from unittest import mock
+from asynctest import mock, CoroutineMock, MagicMock
 
-from praw.exceptions import MediaPostFailed
-from praw.models import Subreddit, WikiPage
-from praw.models.reddit.subreddit import SubredditFlairTemplates
+from asyncpraw.exceptions import MediaPostFailed
+from asyncpraw.models import Subreddit
+from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
 from ... import UnitTest
 
@@ -52,30 +51,30 @@ class TestSubreddit(UnitTest):
         assert hash(subreddit1) != hash(subreddit3)
 
     @mock.patch(
-        "praw.Reddit.post", return_value={"json": {"data": {"websocket_url": ""}}},
+        "asyncpraw.Reddit.post", return_value={"json": {"data": {"websocket_url": ""}}},
     )
-    @mock.patch("praw.models.Subreddit._upload_media", return_value="")
-    @mock.patch("websocket.create_connection")
-    def test_invalid_media(self, connection_mock, _mock_upload_media, _mock_post):
-        connection_mock().recv.return_value = json.dumps(
-            {"payload": {}, "type": "failed"}
+    @mock.patch("asyncpraw.models.Subreddit._upload_media", return_value="")
+    @mock.patch("websockets.connect")
+    async def test_invalid_media(self, connection_mock, _mock_upload_media, _mock_post):
+        recv_mock = MagicMock()
+        recv_mock.recv = CoroutineMock(
+            return_value=json.dumps({"payload": {}, "type": "failed"})
         )
-        with pytest.raises(MediaPostFailed):
-            self.reddit.subreddit("test").submit_image("Test", "dummy path")
+        context_manager = MagicMock()
+        context_manager.__aenter__.return_value = recv_mock
+        connection_mock.return_value = context_manager
 
-    def test_pickle(self):
-        subreddit = Subreddit(
-            self.reddit, _data={"display_name": "name", "id": "dummy"}
-        )
-        for level in range(pickle.HIGHEST_PROTOCOL + 1):
-            other = pickle.loads(pickle.dumps(subreddit, protocol=level))
-            assert subreddit == other
+        # websockets_mock().__aenter__.recv =
+        with pytest.raises(MediaPostFailed):
+            await Subreddit(self.reddit, display_name="test").submit_image(
+                "Test", "dummy path"
+            )
 
     def test_repr(self):
         subreddit = Subreddit(self.reddit, display_name="name")
         assert repr(subreddit) == "Subreddit(display_name='name')"
 
-    def test_search__params_not_modified(self):
+    async def test_search__params_not_modified(self):
         params = {"dummy": "value"}
         subreddit = Subreddit(self.reddit, display_name="name")
         generator = subreddit.search(None, params=params)
@@ -88,62 +87,63 @@ class TestSubreddit(UnitTest):
         )
         assert str(subreddit) == "name"
 
-    def test_submit_failure(self):
+    async def test_submit_failure(self):
         message = "Either `selftext` or `url` must be provided."
         subreddit = Subreddit(self.reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
-            subreddit.submit("Cool title")
+            await subreddit.submit("Cool title")
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            subreddit.submit("Cool title", selftext="a", url="b")
+            await subreddit.submit("Cool title", selftext="a", url="b")
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            subreddit.submit("Cool title", selftext="", url="b")
+            await subreddit.submit("Cool title", selftext="", url="b")
         assert str(excinfo.value) == message
 
-    def test_upload_banner_additional_image(self):
+    async def test_upload_banner_additional_image(self):
         subreddit = Subreddit(self.reddit, display_name="name")
         with pytest.raises(ValueError):
-            subreddit.stylesheet.upload_banner_additional_image(
+            await subreddit.stylesheet.upload_banner_additional_image(
                 "dummy_path", align="asdf"
             )
 
 
 class TestSubredditFlair(UnitTest):
-    def test_set(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_set(self):
+        subreddit = Subreddit(self.reddit, pytest.placeholders.test_subreddit)
         with pytest.raises(TypeError):
-            subreddit.flair.set(
+            await subreddit.flair.set(
                 "a_redditor", css_class="myCSS", flair_template_id="gibberish"
             )
 
 
 class TestSubredditFlairTemplates(UnitTest):
-    def test_not_implemented(self):
+    async def test_not_implemented(self):
         with pytest.raises(NotImplementedError):
-            SubredditFlairTemplates(
+            await SubredditFlairTemplates(
                 Subreddit(self.reddit, pytest.placeholders.test_subreddit)
-            ).__iter__()
+            ).__aiter__()
 
 
-class TestSubredditWiki(UnitTest):
-    def test__getitem(self):
-        subreddit = Subreddit(self.reddit, display_name="name")
-        wikipage = subreddit.wiki["Foo"]
-        assert isinstance(wikipage, WikiPage)
-        assert "foo" == wikipage.name
+# FIXME: unit tests can't make requests
+# class TestSubredditWiki(UnitTest):
+#     def test__getitem(self):
+#         subreddit = Subreddit(self.reddit, display_name="name")
+#         wikipage = subreddit.wiki.get_wiki("Foo")
+#         assert isinstance(wikipage, WikiPage)
+#         assert "foo" == wikipage.name
 
 
 class TestSubredditModmailConversationsStream(UnitTest):
-    def test_conversation_stream_init(self):
-        submodstream = self.reddit.subreddit("mod").mod.stream
+    async def test_conversation_stream_init(self):
+        submodstream = Subreddit(self.reddit, display_name="mod").mod.stream
         submodstream.modmail_conversations()
         assert submodstream.subreddit == "all"
 
-    def test_conversation_stream_capilization(self):
-        submodstream = self.reddit.subreddit("Mod").mod.stream
+    async def test_conversation_stream_capilization(self):
+        submodstream = Subreddit(self.reddit, display_name="Mod").mod.stream
         submodstream.modmail_conversations()
         assert submodstream.subreddit == "all"

@@ -1,7 +1,7 @@
 # coding: utf-8
 import pytest
 
-from praw.exceptions import (
+from asyncpraw.exceptions import (
     APIException,
     ClientException,
     DuplicateReplaceException,

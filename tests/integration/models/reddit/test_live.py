@@ -1,11 +1,11 @@
-"""Test praw.models.LiveThread"""
+"""Test asyncpraw.models.LiveThread"""
 from unittest import mock
 
 import pytest
 
-from praw.const import API_PATH
-from praw.exceptions import RedditAPIException
-from praw.models import (
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import RedditAPIException
+from asyncpraw.models import (
     LiveThread,
     LiveUpdate,
     Redditor,
@@ -39,7 +39,7 @@ class TestLiveThread(IntegrationTest):
             assert "permissions" in contributor.__dict__
             assert isinstance(contributor, Redditor)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_contributor__with_manage_permission(self, _):
         # see issue #710 for more info
         self.reddit.read_only = False
@@ -72,7 +72,7 @@ class TestLiveThread(IntegrationTest):
         with self.recorder.use_cassette("TestLiveThread_test_report"):
             thread.report("spam")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_updates(self, _):
         thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
         with self.recorder.use_cassette("TestLiveThread_test_updates"):
@@ -86,7 +86,7 @@ class TestLiveThreadStream(IntegrationTest):
     def live_thread(self):
         return self.reddit.live("ta535s1hq2je")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_updates(self, _):
         with self.recorder.use_cassette("TestLiveThreadStream.test_updates"):
             generator = self.live_thread.stream.updates()
@@ -103,7 +103,7 @@ class TestLiveContributorRelationship(IntegrationTest):
         ):
             thread.contributor.accept_invite()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_invite__already_invited(self, _):
         self.reddit.read_only = False
         thread = LiveThread(self.reddit, "xyu8kmjvfrww")
@@ -250,7 +250,7 @@ class TestLiveThreadContribution(IntegrationTest):
         with self.recorder.use_cassette("TestLiveThreadContribution_close"):
             thread.contrib.close()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update__partial_settings(self, _):
         old_settings = {
             "title": "old title",
@@ -270,7 +270,7 @@ class TestLiveThreadContribution(IntegrationTest):
             assert thread.nsfw == new_settings["nsfw"]
             assert thread.resources == old_settings["resources"]
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update__full_settings(self, _):
         new_settings = {
             "title": "new title 2",
@@ -289,7 +289,7 @@ class TestLiveThreadContribution(IntegrationTest):
             assert thread.nsfw == new_settings["nsfw"]
             assert thread.resources == new_settings["resources"]
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update__other_settings(self, _):
         new_settings = {
             "title": "new title",
@@ -305,7 +305,7 @@ class TestLiveThreadContribution(IntegrationTest):
 
 
 class TestLiveUpdateContribution(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove(self, _):
         self.reddit.read_only = False
         update = LiveUpdate(

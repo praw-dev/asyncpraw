@@ -1,9 +1,7 @@
-import pickle
-
 import pytest
 
-from praw.exceptions import ClientException
-from praw.models import Comment
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models import Comment
 
 from ... import UnitTest
 
@@ -90,12 +88,6 @@ class TestComment(UnitTest):
         for url in urls:
             with pytest.raises(ClientException):
                 Comment.id_from_url(url)
-
-    def test_pickle(self):
-        comment = Comment(self.reddit, _data={"id": "dummy"})
-        for level in range(pickle.HIGHEST_PROTOCOL + 1):
-            other = pickle.loads(pickle.dumps(comment, protocol=level))
-            assert comment == other
 
     def test_repr(self):
         comment = Comment(self.reddit, id="dummy")

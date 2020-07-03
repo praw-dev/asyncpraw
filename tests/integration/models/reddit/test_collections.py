@@ -4,8 +4,8 @@ from unittest import mock
 
 import pytest
 
-from praw.exceptions import ClientException
-from praw.models import Submission
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models import Submission
 
 from ... import IntegrationTest
 
@@ -69,7 +69,7 @@ class TestCollectionModeration(IntegrationTest):
     def subreddit(self):
         return self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add_post(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
@@ -99,14 +99,14 @@ class TestCollectionModeration(IntegrationTest):
             for post in posts:
                 assert post in collection_set
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestCollectionModeration.test_delete"):
             collection = self.subreddit.collections.mod.create("Title", "")
             collection.mod.delete()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove_post(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
@@ -115,7 +115,7 @@ class TestCollectionModeration(IntegrationTest):
             collection = self.subreddit.collections(uuid)
             collection.mod.remove_post(post)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reorder(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestCollectionModeration.test_reorder"):
@@ -131,7 +131,7 @@ class TestCollectionModeration(IntegrationTest):
             collection._fetch()
             assert collection.link_ids == new_order
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_description(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
@@ -143,7 +143,7 @@ class TestCollectionModeration(IntegrationTest):
             collection.mod.update_description(new_description)
             assert new_description == collection.description
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_title(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
@@ -159,7 +159,7 @@ class TestSubredditCollections(IntegrationTest):
     def subreddit(self):
         return self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_call(self, _):
         with self.recorder.use_cassette("TestSubredditCollections.test_call"):
             collection = next(iter(self.subreddit.collections))
@@ -168,7 +168,7 @@ class TestSubredditCollections(IntegrationTest):
                 permalink=collection.permalink
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_iter(self, _):
         with self.recorder.use_cassette("TestSubredditCollections.test_iter"):
             found_any = False
@@ -185,7 +185,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
     def subreddit(self):
         return self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create(self, _):
         title = "The title!"
         description = "The description."

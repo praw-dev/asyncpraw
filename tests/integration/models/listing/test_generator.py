@@ -1,4 +1,4 @@
-"""Test praw.models.listing.generator."""
+"""Test asyncpraw.models.listing.generator."""
 from ... import IntegrationTest
 
 

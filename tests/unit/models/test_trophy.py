@@ -1,7 +1,7 @@
-"""Test praw.models.Trophy."""
+"""Test asyncpraw.models.Trophy."""
 import pytest
 
-from praw.models.trophy import Trophy
+from asyncpraw.models.trophy import Trophy
 
 from .. import UnitTest
 

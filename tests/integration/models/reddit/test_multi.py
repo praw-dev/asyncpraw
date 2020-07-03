@@ -2,13 +2,13 @@ from unittest import mock
 
 import pytest
 
-from praw.models import Comment, Submission, Subreddit
+from asyncpraw.models import Comment, Submission, Subreddit
 
 from ... import IntegrationTest
 
 
 class TestMultireddit(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMultireddit.test_add"):
@@ -16,7 +16,7 @@ class TestMultireddit(IntegrationTest):
             multi.add("redditdev")
             assert "redditdev" in multi.subreddits
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_copy(self, _):
         self.reddit.read_only = False
         multi = self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
@@ -26,7 +26,7 @@ class TestMultireddit(IntegrationTest):
         assert new.display_name == multi.display_name
         assert pytest.placeholders.username in new.path
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_copy__with_display_name(self, _):
         self.reddit.read_only = False
         multi = self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
@@ -37,7 +37,7 @@ class TestMultireddit(IntegrationTest):
         assert new.display_name == name
         assert pytest.placeholders.username in new.path
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMultireddit.test_create"):
@@ -47,14 +47,14 @@ class TestMultireddit(IntegrationTest):
         assert multireddit.display_name == "PRAW create test"
         assert multireddit.name == "praw_create_test"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMultireddit.test_delete"):
             multi = self.reddit.user.multireddits()[0]
             multi.delete()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMultireddit.test_remove"):
@@ -68,7 +68,7 @@ class TestMultireddit(IntegrationTest):
             assert multi.subreddits
         assert all(isinstance(x, Subreddit) for x in multi.subreddits)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
         subreddits = ["pokemongo", "pokemongodev"]
@@ -112,7 +112,7 @@ class TestMultiredditListings(IntegrationTest):
             submissions = list(multi.new())
         assert len(submissions) == 100
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_new__self_multi(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestMultiredditListings.test_new__self_multi"):
@@ -140,7 +140,7 @@ class TestMultiredditListings(IntegrationTest):
 
 
 class TestMultiredditStreams(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comments(self, _):
         multi = self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
         with self.recorder.use_cassette("TestMultiredditStreams.comments"):
@@ -148,7 +148,7 @@ class TestMultiredditStreams(IntegrationTest):
             for i in range(110):
                 assert isinstance(next(generator), Comment)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comments__with_pause(self, _):
         multi = self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
         with self.recorder.use_cassette("TestMultiredditStreams.comments__with_pause"):
@@ -165,7 +165,7 @@ class TestMultiredditStreams(IntegrationTest):
             assert comment_count == 102
             assert pause_count == 4
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submissions(self, _):
         multi = self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
         with self.recorder.use_cassette("TestMultiredditStreams.submissions"):
@@ -173,7 +173,7 @@ class TestMultiredditStreams(IntegrationTest):
             for i in range(102):
                 assert isinstance(next(generator), Submission)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submissions__with_pause(self, _):
         multi = self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
         with self.recorder.use_cassette("TestMultiredditStreams.submissions"):

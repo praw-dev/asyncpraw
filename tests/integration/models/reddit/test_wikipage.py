@@ -1,9 +1,9 @@
 from unittest import mock
 
 import pytest
-from prawcore import NotFound
+from asyncprawcore import NotFound
 
-from praw.models import Redditor, WikiPage
+from asyncpraw.models import Redditor, WikiPage
 
 from ... import IntegrationTest
 
@@ -74,29 +74,29 @@ class TestWikiPage(IntegrationTest):
     def test_revision(self):
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
         revision_id = "f31e1988-07d0-11e6-b927-0ea0743a0543"
-        page = subreddit.wiki["index"].revision(revision_id)
+        page = subreddit.wiki.get_emoji("index").revision(revision_id)
 
         with self.recorder.use_cassette("TestWikiPage.test_revision"):
             assert len(page.content_md) > 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_revisions(self, _):
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         with self.recorder.use_cassette("TestWikiPage.test_revisions"):
             count = 0
-            for revision in subreddit.wiki["index"].revisions(limit=None):
+            for revision in subreddit.wiki.get_emoji("index").revisions(limit=None):
                 count += 1
                 assert isinstance(revision["author"], Redditor)
                 assert isinstance(revision["page"], WikiPage)
             assert count > 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_revisions__author_deleted(self, _):
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         with self.recorder.use_cassette("TestWikiPage.test_revisions__author_deleted"):
-            revisions = subreddit.wiki["index"].revisions(limit=10)
+            revisions = subreddit.wiki.get_("index").revisions(limit=10)
             assert any(revision["author"] is None for revision in revisions)
 
 

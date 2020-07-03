@@ -1,4 +1,4 @@
-"""Test praw.models.front."""
+"""Test asyncpraw.models.front."""
 from .. import IntegrationTest
 
 

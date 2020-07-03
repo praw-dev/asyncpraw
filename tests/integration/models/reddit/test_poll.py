@@ -1,9 +1,9 @@
-"""Test praw.models.poll."""
+"""Test asyncpraw.models.poll."""
 
 
 import pytest
 
-from praw.models import PollData, PollOption
+from asyncpraw.models import PollData, PollOption
 
 from ... import IntegrationTest
 

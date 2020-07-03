@@ -1,7 +1,7 @@
-"""Test praw.models.subreddits."""
+"""Test asyncpraw.models.subreddits."""
 from unittest import mock
 
-from praw.models import Subreddit
+from asyncpraw.models import Subreddit
 
 from .. import IntegrationTest
 
@@ -50,7 +50,7 @@ class TestSubreddits(IntegrationTest):
     def test_search(self):
         with self.recorder.use_cassette("TestSubreddits.test_search"):
             found = False
-            for subreddit in self.reddit.subreddits.search("praw"):
+            for subreddit in self.reddit.subreddits.search("asyncpraw"):
                 assert isinstance(subreddit, Subreddit)
                 found = True
             assert found
@@ -73,7 +73,7 @@ class TestSubreddits(IntegrationTest):
             assert isinstance(subreddits, list)
             assert len(subreddits) == 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_stream(self, _):
         with self.recorder.use_cassette("TestSubreddits__test_streams"):
             generator = self.reddit.subreddits.stream()

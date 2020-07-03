@@ -1,10 +1,10 @@
-"""Test praw.models.comment_forest."""
+"""Test asyncpraw.models.comment_forest."""
 from unittest import mock
 
 import pytest
 
-from praw.exceptions import DuplicateReplaceException
-from praw.models import Comment, MoreComments, Submission
+from asyncpraw.exceptions import DuplicateReplaceException
+from asyncpraw.models import Comment, MoreComments, Submission
 
 from .. import IntegrationTest
 
@@ -122,7 +122,7 @@ class TestCommentForest(IntegrationTest):
             comment.replies.replace_more()
             assert all(isinstance(x, Comment) for x in comment.replies.list())
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comment_forest_refresh_error(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(

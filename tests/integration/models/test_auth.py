@@ -1,8 +1,8 @@
-"""Test praw.models.auth."""
+"""Test asyncpraw.models.auth."""
 import pytest
-from prawcore import InvalidToken
+from asyncprawcore import InvalidToken
 
-from praw import Reddit
+from asyncpraw import Reddit
 
 from .. import IntegrationTest
 

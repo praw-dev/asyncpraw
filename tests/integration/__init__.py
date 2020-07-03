@@ -1,10 +1,10 @@
 """PRAW Integration test suite."""
-
+import aiohttp
 import pytest
-import requests
-from betamax import Betamax
 
-from praw import Reddit
+from asyncpraw import Reddit
+
+from tests.conftest import VCR
 
 
 class IntegrationTest:
@@ -14,15 +14,15 @@ class IntegrationTest:
         """Setup runs before all test cases."""
         self._overrode_reddit_setup = True
         self.setup_reddit()
-        self.setup_betamax()
+        self.setup_vcr()
 
-    def setup_betamax(self):
-        """Configure betamax instance based off of the reddit instance."""
+    def setup_vcr(self):
+        """Configure vcr instance based off of the reddit instance."""
         http = self.reddit._core._requestor._http
-        self.recorder = Betamax(http)
+        self.recorder = VCR
 
         # Disable response compression in order to see the response bodies in
-        # the betamax cassettes.
+        # the vcr cassettes.
         http.headers["Accept-Encoding"] = "identity"
 
         # Require tests to explicitly disable read_only mode.
@@ -33,7 +33,7 @@ class IntegrationTest:
     def setup_reddit(self):
         self._overrode_reddit_setup = False
 
-        self._session = requests.Session()
+        self._session = aiohttp.ClientSession()
 
         self.reddit = Reddit(
             requestor_kwargs={"session": self._session},

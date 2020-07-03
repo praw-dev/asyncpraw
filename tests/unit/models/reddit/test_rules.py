@@ -1,6 +1,6 @@
 import pytest
 
-from praw.models import Rule
+from asyncpraw.models import Rule
 
 from ... import UnitTest
 

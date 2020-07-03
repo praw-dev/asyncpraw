@@ -1,4 +1,4 @@
-from praw.models import PollOption
+from asyncpraw.models import PollOption
 
 from ... import UnitTest
 

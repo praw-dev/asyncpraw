@@ -1,11 +1,11 @@
-"""Test praw.models.redditor."""
+"""Test asyncpraw.models.redditor."""
 from unittest import mock
 
 import pytest
-from prawcore import Forbidden
+from asyncprawcore import Forbidden
 
-from praw.exceptions import RedditAPIException
-from praw.models import Comment, Submission
+from asyncpraw.exceptions import RedditAPIException
+from asyncpraw.models import Comment, Submission
 
 from ... import IntegrationTest
 
@@ -14,7 +14,7 @@ class TestRedditor(IntegrationTest):
     FRIEND = "PyAPITestUser3"
     FRIEND_FULLNAME = "t2_6c1xj"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_block(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_block"):
@@ -30,10 +30,10 @@ class TestRedditor(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_friend__with_note__no_gold"):
             with pytest.raises(RedditAPIException) as excinfo:
-                self.reddit.redditor(self.FRIEND.lower()).friend(note="praw")
+                self.reddit.redditor(self.FRIEND.lower()).friend(note="asyncpraw")
             assert "GOLD_REQUIRED" == excinfo.value.error_type
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_friend_info(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_friend_info"):
@@ -43,7 +43,7 @@ class TestRedditor(IntegrationTest):
             assert "created_utc" not in redditor.__dict__
             assert hasattr(redditor, "created_utc")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_fullname_init(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_fullname_init"):
@@ -57,14 +57,14 @@ class TestRedditor(IntegrationTest):
                 self.reddit.redditor("subreddit_stats").gild()
             assert "INSUFFICIENT_CREDDITS" == excinfo.value.error_type
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_message"):
             redditor = self.reddit.redditor("subreddit_stats")
             redditor.message("PRAW test", "This is a test from PRAW")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message_from_subreddit(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_message_from_subreddit"):
@@ -75,7 +75,7 @@ class TestRedditor(IntegrationTest):
                 from_subreddit=pytest.placeholders.test_subreddit,
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_moderated(self, _):
         redditor = self.reddit.redditor("spez")
         redditor_no_mod = self.reddit.redditor("ArtemisHelper")
@@ -95,14 +95,14 @@ class TestRedditor(IntegrationTest):
             else:
                 assert False, "sfwpornnetwork not found in multireddits"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_stream__comments(self, _):
         generator = self.reddit.redditor("AutoModerator").stream.comments()
         with self.recorder.use_cassette("TestRedditor.test_stream__comments"):
             for i in range(101):
                 assert isinstance(next(generator), Comment)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_stream__submissions(self, _):
         generator = self.reddit.redditor("AutoModerator").stream.submissions()
         with self.recorder.use_cassette("TestRedditor.test_stream__submissions"):
@@ -123,14 +123,14 @@ class TestRedditor(IntegrationTest):
                 redditor.trophies()
             assert "USER_DOESNT_EXIST" == excinfo.value.error_type
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_unblock(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_unblock"):
             redditor = self.reddit.user.blocked()[0]
             redditor.unblock()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_unfriend(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestRedditor.test_unfriend"):

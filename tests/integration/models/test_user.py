@@ -1,10 +1,10 @@
-"""Test praw.models.user."""
+"""Test asyncpraw.models.user."""
 from unittest import mock
 
 import pytest
 
-from praw.exceptions import RedditAPIException
-from praw.models import Multireddit, Redditor, Subreddit
+from asyncpraw.exceptions import RedditAPIException
+from asyncpraw.models import Multireddit, Redditor, Subreddit
 
 from .. import IntegrationTest
 
@@ -33,14 +33,14 @@ class TestUser(IntegrationTest):
         assert len(friends) > 0
         assert all(isinstance(friend, Redditor) for friend in friends)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_friend_exist(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestUser.test_friend_exist"):
             friend = self.reddit.user.friends(user=self.reddit.user.me())
             assert isinstance(friend, Redditor)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_friend_not_exist(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestUser.test_friend_not_exist"):
@@ -65,7 +65,7 @@ class TestUser(IntegrationTest):
         me.praw_is_cached = True
         assert self.reddit.user.me().praw_is_cached
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_me__bypass_cache(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestUser.test_me__bypass_cache"):

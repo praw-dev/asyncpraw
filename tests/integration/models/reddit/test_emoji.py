@@ -2,27 +2,27 @@ from unittest import mock
 
 import pytest
 
-from praw.exceptions import ClientException
-from praw.models import Emoji
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models import Emoji
 
 from ... import IntegrationTest
 
 
 class TestEmoji(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test__fetch(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        emoji = subreddit.emoji["test_png"]
+        emoji = subreddit.emoji.get_emoji("test_png")
         with self.recorder.use_cassette("TestEmoji.test__fetch"):
             assert emoji.created_by.startswith("t2_")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test__fetch__invalid_emoji(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        emoji = subreddit.emoji["invalid"]
-        emoji2 = subreddit.emoji["Test_png"]
+        emoji = subreddit.emoji.get_emoji("invalid")
+        emoji2 = subreddit.emoji.get_emoji("Test_png")
         with self.recorder.use_cassette("TestEmoji.test__fetch__invalid_emoji"):
             with pytest.raises(ClientException) as excinfo:
                 emoji.url
@@ -39,29 +39,29 @@ class TestEmoji(IntegrationTest):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.recorder.use_cassette("TestEmoji.test_delete"):
-            subreddit.emoji["test_png"].delete()
+            subreddit.emoji.get_emoji("test_png").delete()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.recorder.use_cassette("TestEmoji.test_update"):
-            subreddit.emoji["test_png"].update(
+            subreddit.emoji.get_emoji("test_png").update(
                 mod_flair_only=False, post_flair_allowed=True, user_flair_allowed=True,
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update__with_preexisting_values(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.recorder.use_cassette(
             "TestEmoji.test_update__with_preexisting_values"
         ):
-            subreddit.emoji["test_png"].update(mod_flair_only=True)
+            subreddit.emoji.get_emoji("test_png").update(mod_flair_only=True)
 
 
 class TestSubredditEmoji(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test__iter(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -72,7 +72,7 @@ class TestSubredditEmoji(IntegrationTest):
                 count += 1
             assert count > 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -84,7 +84,7 @@ class TestSubredditEmoji(IntegrationTest):
                 )
                 assert isinstance(emoji, Emoji)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add_with_perms(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)

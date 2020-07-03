@@ -1,9 +1,7 @@
-import pickle
-
 import pytest
 
-from praw.models import LiveThread, LiveUpdate, Redditor
-from praw.models.reddit.live import (
+from asyncpraw.models import LiveThread, LiveUpdate, Redditor
+from asyncpraw.models.reddit.live import (
     LiveContributorRelationship,
     LiveThreadContribution,
     LiveUpdateContribution,
@@ -59,13 +57,14 @@ class TestLiveThread(UnitTest):
         assert thread2 != "dummy1"
         assert thread2 == "Dummy1"
 
-    def test_getitem(self):
-        thread_id = "dummy_thread_id"
-        update_id = "dummy_update_id"
-        thread = LiveThread(self.reddit, id=thread_id)
-        update = thread[update_id]
-        assert isinstance(update, LiveUpdate)
-        assert update.id == update_id
+    # FIXME: unit tests can't make requests
+    # async def test_getitem(self):
+    #     thread_id = "dummy_thread_id"
+    #     update_id = "dummy_update_id"
+    #     thread = LiveThread(self.reddit, id=thread_id)
+    #     update = await thread.get_update(update_id)
+    #     assert isinstance(update, LiveUpdate)
+    #     assert update.id == update_id
 
     def test_hash(self):
         thread1 = LiveThread(self.reddit, id="dummy1")
@@ -78,12 +77,6 @@ class TestLiveThread(UnitTest):
         assert hash(thread2) != hash(thread3)
         assert hash(thread1) != hash(thread3)
 
-    def test_pickle(self):
-        thread = LiveThread(self.reddit, id="dummy")
-        for level in range(pickle.HIGHEST_PROTOCOL + 1):
-            other = pickle.loads(pickle.dumps(thread, protocol=level))
-            assert thread == other
-
     def test_repr(self):
         thread = LiveThread(self.reddit, id="dummy")
         assert repr(thread) == "LiveThread(id='dummy')"
@@ -94,9 +87,9 @@ class TestLiveThread(UnitTest):
 
 
 class TestLiveThreadContribution(UnitTest):
-    def test_update__no_args(self):
+    async def test_update__no_args(self):
         thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        assert thread.contrib.update() is None
+        assert await thread.contrib.update() is None
 
 
 class TestLiveUpdate(UnitTest):

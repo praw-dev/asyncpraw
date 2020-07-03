@@ -1,5 +1,5 @@
-"""Test praw.models.util."""
-from praw.models.util import ExponentialCounter, permissions_string
+"""Test asyncpraw.models.util."""
+from asyncpraw.models.util import ExponentialCounter, permissions_string
 
 from .. import UnitTest
 

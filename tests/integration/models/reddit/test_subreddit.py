@@ -1,4 +1,4 @@
-"""Test praw.models.subreddit."""
+"""Test asyncpraw.models.subreddit."""
 import socket
 import sys
 from json import dumps
@@ -7,8 +7,8 @@ from unittest import mock
 
 import pytest
 import requests
-import websocket
-from prawcore import (
+import websockets
+from asyncprawcore import (
     BadRequest,
     Forbidden,
     NotFound,
@@ -16,15 +16,15 @@ from prawcore import (
     TooLarge,
 )
 
-from praw.const import PNG_HEADER
-from praw.exceptions import (
+from asyncpraw.const import PNG_HEADER
+from asyncpraw.exceptions import (
     ClientException,
     InvalidFlairTemplateID,
     RedditAPIException,
     TooLargeMediaException,
     WebSocketException,
 )
-from praw.models import (
+from asyncpraw.models import (
     Comment,
     ModAction,
     ModmailAction,
@@ -57,7 +57,7 @@ class WebsocketMock:
 
     def recv(self):
         if not self.post_ids:
-            raise websocket.WebSocketTimeoutException()
+            raise websockets.W
         assert 0 <= self.i + 1 < len(self.post_ids)
         self.i += 1
         return dumps(self.make_dict(self.post_ids[self.i]))
@@ -100,7 +100,7 @@ class TestSubreddit(IntegrationTest):
         test_dir = abspath(dirname(sys.modules[__name__].__file__))
         return join(test_dir, "..", "..", "files", name)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create(self, _):
         self.reddit.read_only = False
         new_name = "PRAW_rrldkyrfln"
@@ -156,14 +156,14 @@ class TestSubreddit(IntegrationTest):
                 )
             assert excinfo.value.items[0].error_type == "NO_TEXT"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_message(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_message"):
             subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
             subreddit.message("Test from PRAW", message="Test content")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_post_requirements(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_post_requirements"):
@@ -223,11 +223,11 @@ class TestSubreddit(IntegrationTest):
         with self.recorder.use_cassette("TestSubreddit.test_search"):
             subreddit = self.reddit.subreddit("all")
             for item in subreddit.search(
-                "praw oauth search", limit=None, syntax="cloudsearch"
+                "asyncpraw oauth search", limit=None, syntax="cloudsearch"
             ):
                 assert isinstance(item, Submission)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__flair(self, _):
         flair_id = "17bf09c4-520c-11e7-8073-0ef8adb5ef68"
         flair_text = "Test flair text"
@@ -244,7 +244,7 @@ class TestSubreddit(IntegrationTest):
             assert submission.link_flair_css_class == flair_class
             assert submission.link_flair_text == flair_text
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__selftext(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit__selftext"):
@@ -254,7 +254,7 @@ class TestSubreddit(IntegrationTest):
             assert submission.selftext == "Test text."
             assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__selftext_blank(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit__selftext_blank"):
@@ -264,7 +264,7 @@ class TestSubreddit(IntegrationTest):
             assert submission.selftext == ""
             assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_live_chat(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit_live_chat"):
@@ -274,9 +274,9 @@ class TestSubreddit(IntegrationTest):
             )
             assert submission.discussion_type == "CHAT"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__url(self, _):
-        url = "https://praw.readthedocs.org/en/stable/"
+        url = "https://asyncpraw.readthedocs.org/en/stable/"
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit__url"):
             subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -285,7 +285,7 @@ class TestSubreddit(IntegrationTest):
             assert submission.url == url
             assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__nsfw(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit__nsfw"):
@@ -297,7 +297,7 @@ class TestSubreddit(IntegrationTest):
             )
             assert submission.over_18 is True
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__spoiler(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit__spoiler"):
@@ -309,7 +309,7 @@ class TestSubreddit(IntegrationTest):
             )
             assert submission.spoiler is True
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit__verify_invalid(self, _):
         self.reddit.read_only = False
         self.reddit.validate_on_submit = True
@@ -320,7 +320,7 @@ class TestSubreddit(IntegrationTest):
             ):  # waiting for prawcore fix
                 subreddit.submit("dfgfdgfdgdf", url="https://www.google.com")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_poll(self, _):
         options = ["Yes", "No", "3", "4", "5", "6"]
         self.reddit.read_only = False
@@ -335,7 +335,7 @@ class TestSubreddit(IntegrationTest):
             assert [str(option) for option in submission.poll_data.options] == options
             assert submission.poll_data.voting_end_timestamp > submission.created_utc
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_poll__flair(self, _):
         flair_id = "9ac711a4-1ddf-11e9-aaaa-0e22784c70ce"
         flair_text = "Test flair text"
@@ -355,7 +355,7 @@ class TestSubreddit(IntegrationTest):
             assert submission.link_flair_text == flair_text
             assert submission.link_flair_css_class == flair_class
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_poll__live_chat(self, _):
         options = ["Yes", "No"]
         self.reddit.read_only = False
@@ -370,9 +370,9 @@ class TestSubreddit(IntegrationTest):
             )
             assert submission.discussion_type == "CHAT"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMock(
             "ahf0uh",  # update with cassette
             "ahf0uq",  # update with cassette
@@ -391,7 +391,7 @@ class TestSubreddit(IntegrationTest):
                 assert submission.is_reddit_media_domain
                 assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_image__large(self, _, tmp_path):
         reddit = self.reddit
         reddit.read_only = False
@@ -427,8 +427,8 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(TooLargeMediaException):
                 reddit.subreddit("test").submit_image("test", tempfile.name)
 
-    @mock.patch("time.sleep", return_value=None)
-    @mock.patch("websocket.create_connection", return_value=WebsocketMock())
+    @mock.patch("asyncio.sleep", return_value=None)
+    @mock.patch("websockets.connect", return_value=WebsocketMock())
     def test_submit_image__bad_websocket(self, _, __):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit_image"):
@@ -439,7 +439,7 @@ class TestSubreddit(IntegrationTest):
                 with pytest.raises(ClientException):
                     subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_image__bad_filetype(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -451,9 +451,9 @@ class TestSubreddit(IntegrationTest):
                 with pytest.raises(ClientException):
                     subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection", return_value=WebsocketMock("ah3gqo")
+        "websockets.connect", return_value=WebsocketMock("ah3gqo")
     )  # update with cassette
     def test_submit_image__flair(self, _, __):
         flair_id = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
@@ -469,9 +469,9 @@ class TestSubreddit(IntegrationTest):
             assert submission.link_flair_css_class == flair_class
             assert submission.link_flair_text == flair_text
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection", return_value=WebsocketMock("flo1ea")
+        "websockets.connect", return_value=WebsocketMock("flo1ea")
     )  # update with cassette
     def test_submit_image_chat(self, _=None, __=None):
         self.reddit.read_only = False
@@ -483,7 +483,7 @@ class TestSubreddit(IntegrationTest):
             )
             assert submission.discussion_type == "CHAT"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_image_verify_invalid(self, _):
         self.reddit.read_only = False
         self.reddit.validate_on_submit = True
@@ -497,9 +497,9 @@ class TestSubreddit(IntegrationTest):
             ):  # waiting for prawcore fix
                 subreddit.submit_image("gdfgfdgdgdgfgfdgdfgfdgfdg", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection", side_effect=BlockingIOError
+        "websockets.connect", side_effect=BlockingIOError
     )  # happens with timeout=0
     def test_submit_image__timeout_1(self, _, __):
 
@@ -510,9 +510,9 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         side_effect=socket.timeout
         # happens with timeout=0.00001
     )
@@ -525,11 +525,11 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMockException(
-            recv_exc=websocket.WebSocketTimeoutException()
+            recv_exc=websockets.WebSocketException()
         ),  # happens with timeout=0.1
     )
     def test_submit_image__timeout_3(self, _, __):
@@ -541,11 +541,11 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMockException(
-            close_exc=websocket.WebSocketTimeoutException()
+            close_exc=websockets.WebSocketException()
         ),  # could happen, and PRAW should handle it
     )
     def test_submit_image__timeout_4(self, _, __):
@@ -557,11 +557,11 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMockException(
-            recv_exc=websocket.WebSocketConnectionClosedException()
+            recv_exc=websockets.ConnectionClosedError
         ),  # from issue #1124
     )
     def test_submit_image__timeout_5(self, _, __):
@@ -572,7 +572,7 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_image("Test Title", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_image__without_websockets(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -587,9 +587,9 @@ class TestSubreddit(IntegrationTest):
                 )
                 assert submission is None
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMock("aheljy", "ahelks"),  # update with cassette
     )  # update with cassette
     def test_submit_video(self, _, __):
@@ -604,7 +604,7 @@ class TestSubreddit(IntegrationTest):
                 assert submission.is_video
                 assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_video__bad_filetype(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -616,8 +616,8 @@ class TestSubreddit(IntegrationTest):
                 with pytest.raises(ClientException):
                     subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
-    @mock.patch("websocket.create_connection", return_value=WebsocketMock())
+    @mock.patch("asyncio.sleep", return_value=None)
+    @mock.patch("websockets.connect", return_value=WebsocketMock())
     def test_submit_video__bad_websocket(self, _, __):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubreddit.test_submit_video"):
@@ -628,9 +628,9 @@ class TestSubreddit(IntegrationTest):
                 with pytest.raises(ClientException):
                     subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection", return_value=WebsocketMock("ahells")
+        "websockets.connect", return_value=WebsocketMock("ahells")
     )  # update with cassette
     def test_submit_video__flair(self, _, __):
         flair_id = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
@@ -646,9 +646,9 @@ class TestSubreddit(IntegrationTest):
             assert submission.link_flair_css_class == flair_class
             assert submission.link_flair_text == flair_text
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection", return_value=WebsocketMock("flnyhf")
+        "websockets.connect", return_value=WebsocketMock("flnyhf")
     )  # update with cassette
     def test_submit_video_chat(self, _=None, __=None):
         self.reddit.read_only = False
@@ -660,7 +660,7 @@ class TestSubreddit(IntegrationTest):
             )
             assert submission.discussion_type == "CHAT"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_video_verify_invalid(self, _):
         self.reddit.read_only = False
         self.reddit.validate_on_submit = True
@@ -674,9 +674,9 @@ class TestSubreddit(IntegrationTest):
             ):  # waiting for prawcore fix
                 subreddit.submit_video("gdfgfdgdgdgfgfdgdfgfdgfdg", image)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMock("aheln2", "ahelnz"),  # update with cassette
     )  # update with cassette
     def test_submit_video__thumbnail(self, _, __):
@@ -697,9 +697,9 @@ class TestSubreddit(IntegrationTest):
                 assert submission.is_video
                 assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection", side_effect=BlockingIOError
+        "websockets.connect", side_effect=BlockingIOError
     )  # happens with timeout=0
     def test_submit_video__timeout_1(self, _, __):
 
@@ -710,9 +710,9 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         side_effect=socket.timeout
         # happens with timeout=0.00001
     )
@@ -725,11 +725,11 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMockException(
-            recv_exc=websocket.WebSocketTimeoutException()
+            recv_exc=websockets.WebSocketException()
         ),  # happens with timeout=0.1
     )
     def test_submit_video__timeout_3(self, _, __):
@@ -741,11 +741,11 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMockException(
-            close_exc=websocket.WebSocketTimeoutException()
+            close_exc=websockets.WebSocketException()
         ),  # could happen, and PRAW should handle it
     )
     def test_submit_video__timeout_4(self, _, __):
@@ -757,11 +757,11 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMockException(
-            close_exc=websocket.WebSocketConnectionClosedException()
+            close_exc=websockets.WebSocketException()
         ),  # from issue #1124
     )
     def test_submit_video__timeout_5(self, _, __):
@@ -772,9 +772,9 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(WebSocketException):
                 subreddit.submit_video("Test Title", video)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
-        "websocket.create_connection",
+        "websockets.connect",
         return_value=WebsocketMock("ahelor", "ahelpf"),  # update with cassette
     )  # update with cassette
     def test_submit_video__videogif(self, _, __):
@@ -789,7 +789,7 @@ class TestSubreddit(IntegrationTest):
                 assert submission.is_video
                 assert submission.title == "Test Title"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submit_video__without_websockets(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -842,7 +842,7 @@ class TestSubreddit(IntegrationTest):
 
 
 class TestSubredditFilters(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test__iter__all(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test__iter__all"):
@@ -850,7 +850,7 @@ class TestSubredditFilters(IntegrationTest):
         assert len(filters) > 0
         assert all(isinstance(x, Subreddit) for x in filters)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test__iter__mod(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test__iter__mod"):
@@ -858,32 +858,32 @@ class TestSubredditFilters(IntegrationTest):
         assert len(filters) > 0
         assert all(isinstance(x, Subreddit) for x in filters)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test_add"):
             self.reddit.subreddit("all").filters.add("redditdev")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add__subreddit_model(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test_add"):
             self.reddit.subreddit("all").filters.add(self.reddit.subreddit("redditdev"))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_add__non_special(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test_add__non_special"):
             with pytest.raises(NotFound):
                 self.reddit.subreddit("redditdev").filters.add("redditdev")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test_remove"):
             self.reddit.subreddit("mod").filters.remove("redditdev")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove__subreddit_model(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFilters.test_remove"):
@@ -891,7 +891,7 @@ class TestSubredditFilters(IntegrationTest):
                 self.reddit.subreddit("redditdev")
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_remove__non_special(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -941,7 +941,7 @@ class TestSubredditFlair(IntegrationTest):
         with self.recorder.use_cassette("TestSubredditFlair.test_delete"):
             self.subreddit.flair.delete(self.reddit.config.username)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete_all(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFlair.test_delete_all"):
@@ -1020,7 +1020,7 @@ class TestSubredditFlair(IntegrationTest):
             response = self.subreddit.flair.update(flair_list, css_class="default")
             assert all(x["ok"] for x in response)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_quotes(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFlair.test_update_quotes"):
@@ -1059,14 +1059,14 @@ class TestSubredditFlairTemplates(IntegrationTest):
         with self.recorder.use_cassette("TestSubredditFlairTemplates.test_clear"):
             self.subreddit.flair.templates.clear()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_delete(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFlairTemplates.test_delete"):
             template = list(self.subreddit.flair.templates)[0]
             self.subreddit.flair.templates.delete(template["id"])
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditFlairTemplates.test_update"):
@@ -1079,7 +1079,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 background_color="#00FFFF",
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_invalid(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1095,7 +1095,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                     fetch=True,
                 )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_fetch(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1111,7 +1111,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 fetch=True,
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_fetch_no_css_class(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1126,7 +1126,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 fetch=True,
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_fetch_no_text(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1141,7 +1141,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 fetch=True,
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_fetch_no_text_or_css_class(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1155,7 +1155,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 fetch=True,
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_fetch_only(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1171,7 +1171,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
             )[0]
             assert newtemplate == template
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update_false(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1460,7 +1460,7 @@ class TestSubredditModeration(IntegrationTest):
                 count += 1
             assert count > 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModeration.test_update"):
@@ -1495,7 +1495,7 @@ class TestSubredditModmail(IntegrationTest):
             for conversation in self.subreddit.modmail.bulk_read(state="new"):
                 assert isinstance(conversation, ModmailConversation)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_call(self, _):
         self.reddit.read_only = False
         conversation_id = "ik72"
@@ -1507,7 +1507,7 @@ class TestSubredditModmail(IntegrationTest):
             for action in conversation.mod_actions:
                 assert isinstance(action, ModmailAction)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_call__internal(self, _):
         self.reddit.read_only = False
         conversation_id = "nbhy"
@@ -1518,14 +1518,14 @@ class TestSubredditModmail(IntegrationTest):
             for action in conversation.mod_actions:
                 assert isinstance(action, ModmailAction)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_call__mark_read(self, _):
         self.reddit.read_only = False
         conversation = self.reddit.subreddit("all").modmail("o7wz", mark_read=True)
         with self.recorder.use_cassette("TestSubredditModmail.test_call__mark_read"):
             assert conversation.last_unread is None
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_conversations(self, _):
         self.reddit.read_only = False
         conversations = self.reddit.subreddit("all").modmail.conversations()
@@ -1534,7 +1534,7 @@ class TestSubredditModmail(IntegrationTest):
                 assert isinstance(conversation, ModmailConversation)
                 assert isinstance(conversation.authors[0], Redditor)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_conversations__params(self, _):
         self.reddit.read_only = False
         conversations = self.reddit.subreddit("all").modmail.conversations(state="mod")
@@ -1544,7 +1544,7 @@ class TestSubredditModmail(IntegrationTest):
             for conversation in conversations:
                 assert conversation.is_internal
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_conversations__other_subreddits(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit("modmailtestA")
@@ -1556,7 +1556,7 @@ class TestSubredditModmail(IntegrationTest):
         ):
             assert len(set(conversation.owner for conversation in conversations)) > 1
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModmail.test_create"):
@@ -1578,7 +1578,7 @@ class TestSubredditModmail(IntegrationTest):
 
 
 class TestSubredditQuarantine(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_opt_in(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit("ferguson")
@@ -1588,7 +1588,7 @@ class TestSubredditQuarantine(IntegrationTest):
             subreddit.quaran.opt_in()
             assert isinstance(next(subreddit.hot()), Submission)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_opt_out(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit("ferguson")
@@ -1601,7 +1601,7 @@ class TestSubredditQuarantine(IntegrationTest):
 class TestSubredditRelationships(IntegrationTest):
     REDDITOR = "pyapitestuser3"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def add_remove(self, base, user, relationship, _):
         relationship = getattr(base, relationship)
         relationship.add(user)
@@ -1635,7 +1635,7 @@ class TestSubredditRelationships(IntegrationTest):
         with self.recorder.use_cassette("TestSubredditRelationships.contributor"):
             self.add_remove(self.subreddit, self.REDDITOR, "contributor")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_contributor_leave(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1651,7 +1651,7 @@ class TestSubredditRelationships(IntegrationTest):
         ):
             assert len(list(contributor)) == 1
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_moderator(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditRelationships.moderator"):
@@ -1661,7 +1661,7 @@ class TestSubredditRelationships(IntegrationTest):
             self.subreddit.moderator.add(self.REDDITOR)
             assert self.REDDITOR not in self.subreddit.moderator()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_moderator__limited_permissions(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1682,7 +1682,7 @@ class TestSubredditRelationships(IntegrationTest):
                 self.subreddit.moderator.invite(self.REDDITOR, permissions=["a"])
             assert excinfo.value.items[0].error_type == "INVALID_PERMISSIONS"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_moderator_invite__no_perms(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1694,7 +1694,7 @@ class TestSubredditRelationships(IntegrationTest):
             self.subreddit.moderator.invite(self.REDDITOR, permissions=[])
             assert self.REDDITOR not in self.subreddit.moderator()
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_modeator_leave(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditRelationships.moderator_leave"):
@@ -1745,14 +1745,14 @@ class TestSubredditRelationships(IntegrationTest):
 
 
 class TestSubredditStreams(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comments(self, _):
         with self.recorder.use_cassette("TestSubredditStreams.comments"):
             generator = self.reddit.subreddit("all").stream.comments()
             for i in range(400):
                 assert isinstance(next(generator), Comment)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comments__with_pause(self, _):
         with self.recorder.use_cassette("TestSubredditStreams.comments__with_pause"):
             comment_stream = self.reddit.subreddit("kakapo").stream.comments(
@@ -1770,7 +1770,7 @@ class TestSubredditStreams(IntegrationTest):
             assert comment_count == 17
             assert pause_count == 2
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_comments__with_skip_existing(self, _):
         with self.recorder.use_cassette("TestSubredditStreams.comments"):
             generator = self.reddit.subreddit("all").stream.comments(skip_existing=True)
@@ -1790,7 +1790,7 @@ class TestSubredditStreams(IntegrationTest):
             for i in range(101):
                 assert isinstance(next(generator), Submission)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submissions__with_pause(self, _):
         with self.recorder.use_cassette("TestSubredditStreams.submissions"):
             generator = self.reddit.subreddit("all").stream.submissions(pause_after=-1)
@@ -1801,7 +1801,7 @@ class TestSubredditStreams(IntegrationTest):
                 submission = next(generator)
             assert submission_count == 100
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_submissions__with_pause_and_skip_after(self, _):
         with self.recorder.use_cassette("TestSubredditStreams.submissions"):
             generator = self.reddit.subreddit("all").stream.submissions(
@@ -1822,7 +1822,7 @@ class TestSubredditModerationStreams(IntegrationTest):
     def subreddit(self):
         return self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_edited(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModerationStreams.test_edited"):
@@ -1830,7 +1830,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(10):
                 assert isinstance(next(generator), (Comment, Submission))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_log(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModerationStreams.test_log"):
@@ -1838,7 +1838,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(101):
                 assert isinstance(next(generator), ModAction)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_modmail_conversations(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1848,7 +1848,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(10):
                 assert isinstance(next(generator), ModmailConversation)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_modqueue(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModerationStreams.test_modqueue"):
@@ -1856,7 +1856,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(10):
                 assert isinstance(next(generator), (Comment, Submission))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_spam(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModerationStreams.test_spam"):
@@ -1864,7 +1864,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(10):
                 assert isinstance(next(generator), (Comment, Submission))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_reports(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModerationStreams.test_reports"):
@@ -1872,7 +1872,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(10):
                 assert isinstance(next(generator), (Comment, Submission))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_unmoderated(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -1882,7 +1882,7 @@ class TestSubredditModerationStreams(IntegrationTest):
             for i in range(10):
                 assert isinstance(next(generator), (Comment, Submission))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_unread(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditModerationStreams.test_unread"):
@@ -1935,7 +1935,7 @@ class TestSubredditStylesheet(IntegrationTest):
     def test_delete_image(self):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditStylesheet.test_delete_image"):
-            self.subreddit.stylesheet.delete_image("praw")
+            self.subreddit.stylesheet.delete_image("asyncpraw")
 
     def test_delete_mobile_header(self):
         self.reddit.read_only = False
@@ -1967,7 +1967,7 @@ class TestSubredditStylesheet(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditStylesheet.test_upload"):
             response = self.subreddit.stylesheet.upload(
-                "praw", self.image_path("white-square.png")
+                "asyncpraw", self.image_path("white-square.png")
             )
         assert response["img_src"].endswith(".png")
 
@@ -1975,7 +1975,9 @@ class TestSubredditStylesheet(IntegrationTest):
         self.reddit.read_only = False
         with self.recorder.use_cassette("TestSubredditStylesheet.test_upload__invalid"):
             with pytest.raises(RedditAPIException) as excinfo:
-                self.subreddit.stylesheet.upload("praw", self.image_path("invalid.jpg"))
+                self.subreddit.stylesheet.upload(
+                    "asyncpraw", self.image_path("invalid.jpg")
+                )
         assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
 
     def test_upload__invalid_ext(self):
@@ -1985,7 +1987,7 @@ class TestSubredditStylesheet(IntegrationTest):
         ):
             with pytest.raises(RedditAPIException) as excinfo:
                 self.subreddit.stylesheet.upload(
-                    "praw.png", self.image_path("white-square.png")
+                    "asyncpraw", self.image_path("white-square.png")
                 )
         assert excinfo.value.items[0].error_type == "BAD_CSS_NAME"
 
@@ -1996,10 +1998,10 @@ class TestSubredditStylesheet(IntegrationTest):
         ):
             with pytest.raises(TooLarge):
                 self.subreddit.stylesheet.upload(
-                    "praw", self.image_path("too_large.jpg")
+                    "asyncpraw", self.image_path("too_large.jpg")
                 )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner__jpg(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2007,7 +2009,7 @@ class TestSubredditStylesheet(IntegrationTest):
         ):
             self.subreddit.stylesheet.upload_banner(self.image_path("white-square.jpg"))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner__png(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2015,7 +2017,7 @@ class TestSubredditStylesheet(IntegrationTest):
         ):
             self.subreddit.stylesheet.upload_banner(self.image_path("white-square.png"))
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner_additional_image__jpg(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2025,7 +2027,7 @@ class TestSubredditStylesheet(IntegrationTest):
                 self.image_path("white-square.jpg")
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner_additional_image__png(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2035,7 +2037,7 @@ class TestSubredditStylesheet(IntegrationTest):
                 self.image_path("white-square.png")
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner_additional_image__align(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2046,7 +2048,7 @@ class TestSubredditStylesheet(IntegrationTest):
                     self.image_path("white-square.png"), align=alignment
                 )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner_hover_image__jpg(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2059,7 +2061,7 @@ class TestSubredditStylesheet(IntegrationTest):
                 self.image_path("white-square.jpg")
             )
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload_banner_hover_image__png(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2112,7 +2114,7 @@ class TestSubredditStylesheet(IntegrationTest):
             )
         assert response["img_src"].endswith(".jpg")
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_upload__others_invalid(self, _):
         self.reddit.read_only = False
         with self.recorder.use_cassette(
@@ -2146,7 +2148,7 @@ class TestSubredditStylesheet(IntegrationTest):
 
 
 class TestSubredditWiki(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test__iter(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -2157,7 +2159,7 @@ class TestSubredditWiki(IntegrationTest):
                 count += 1
             assert count > 0
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_create(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -2169,7 +2171,7 @@ class TestSubredditWiki(IntegrationTest):
             assert wikipage.name == "praw_new_page"
             assert wikipage.content_md == "This is the new wiki page"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_revisions(self, _):
         self.reddit.read_only = False
         subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)

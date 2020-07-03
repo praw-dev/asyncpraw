@@ -1,6 +1,6 @@
 from unittest import mock
 
-from praw.models import Preferences
+from asyncpraw.models import Preferences
 
 from .. import IntegrationTest
 
@@ -28,7 +28,7 @@ class TestPreferences(IntegrationTest):
         assert isinstance(prefs_dict, dict)
         assert some_known_keys.issubset(prefs_dict)
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     def test_update(self, _):
         # boolean params, as many as are reproducible on multiple accounts.
         bool_params = (
