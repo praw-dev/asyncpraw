@@ -187,6 +187,7 @@ class Reddit:
         self._core = self._authorized_core = self._read_only_core = None
         self._objector = None
         self._unique_counter = 0
+        self._validate_on_submit = False
 
         try:
             config_section = site_name or os.getenv("praw_site") or "DEFAULT"
@@ -699,7 +700,7 @@ class Reddit:
         )
 
     async def random_subreddit(self, nsfw: bool = False) -> Subreddit:
-        """Return a random lazy instance of :class:`~.Subreddit`.
+        """Return a random instance of :class:`~.Subreddit`.
 
         :param nsfw: Return a random NSFW (not safe for work) subreddit
             (default: False).
