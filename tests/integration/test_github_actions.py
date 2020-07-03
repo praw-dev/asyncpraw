@@ -15,7 +15,7 @@ from asyncpraw.models import Submission
     not os.getenv("NETWORK_TEST_CLIENT_ID"),
     reason="Not running from the NETWORK_TEST ci task on praw-dev/asyncpraw",
 )
-def test_github_actions():
+async def test_github_actions():
     reddit = Reddit(
         client_id=os.getenv("NETWORK_TEST_CLIENT_ID"),
         client_secret=os.getenv("NETWORK_TEST_CLIENT_SECRET"),
