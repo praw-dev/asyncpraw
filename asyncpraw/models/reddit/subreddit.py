@@ -156,7 +156,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         wiki_edit_age=None,
         wiki_edit_karma=None,
         wikimode=None,
-        **other_settings
+        **other_settings,
     ):
         # pylint: disable=invalid-name,too-many-locals,too-many-arguments
         model = {
@@ -766,7 +766,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         sort="relevance",
         syntax="lucene",
         time_filter="all",
-        **generator_kwargs
+        **generator_kwargs,
     ):
         """Return a :class:`.ListingGenerator` for items that match ``query``.
 
@@ -1439,7 +1439,7 @@ class SubredditFlair:
         self_assign=False,
         link_position="left",
         link_self_assign=False,
-        **settings
+        **settings,
     ):
         """Update the subreddit's flair configuration.
 
@@ -1960,7 +1960,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_edited"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def inbox(self, **generator_kwargs):
@@ -1985,7 +1985,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["moderator_messages"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def log(self, action=None, mod=None, **generator_kwargs):
@@ -2013,7 +2013,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_log"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def modqueue(self, only=None, **generator_kwargs):
@@ -2038,7 +2038,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_modqueue"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     @cachedproperty
@@ -2107,7 +2107,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_reports"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     async def settings(self):
@@ -2137,7 +2137,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_spam"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def unmoderated(self, **generator_kwargs):
@@ -2158,7 +2158,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_unmoderated"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def unread(self, **generator_kwargs):
@@ -2181,7 +2181,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["moderator_unread"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     async def update(self, **settings):
@@ -2333,7 +2333,7 @@ class SubredditModerationStream:
             action=action,
             mod=mod,
             attribute_name="id",
-            **stream_options
+            **stream_options,
         )
 
     def modmail_conversations(
@@ -2361,7 +2361,7 @@ class SubredditModerationStream:
 
         """  # noqa: E501
         if self.subreddit == "mod":
-            self.subreddit = self.subreddit._reddit.subreddit("all")
+            self.subreddit = Subreddit(self.subreddit._reddit, "all")
         return stream_generator(
             self.subreddit.modmail.conversations,
             other_subreddits=other_subreddits,
@@ -2369,7 +2369,7 @@ class SubredditModerationStream:
             state=state,
             attribute_name="id",
             exclude_before=True,
-            **stream_options
+            **stream_options,
         )
 
     def modqueue(self, only=None, **stream_options):
