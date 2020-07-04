@@ -11,6 +11,11 @@ import pytest
 from vcr import VCR
 from vcr.cassette import Cassette
 
+import logging
+
+logging.basicConfig() # you need to initialize logging, otherwise you will not see anything from vcrpy
+vcr_log = logging.getLogger("vcr")
+vcr_log.setLevel(logging.INFO)
 
 # Prevent calls to sleep
 async def _sleep(*args):
@@ -32,15 +37,17 @@ def env_default(key):
 
 def filter_access_token(response):
     """Add VCR callback to filter access token."""
-    request_uri = response.data["request"]["uri"]
-    response = response.data["response"]
+    request_uri = response['url']
     if "api/v1/access_token" not in request_uri or response["status"]["code"] != 200:
-        return
-    body = response["body"]["string"]
+        return response
+    body = response["body"]["string"].decode()
     try:
-        json.loads(body)["access_token"]
+        token = json.loads(body)["access_token"]
+        response["body"]["string"] = response["body"]["string"].replace(token.encode("utf-8"), b"<ACCESS_TOKEN>")
+        placeholders['access_token'] = token
     except (KeyError, TypeError, ValueError):
-        return
+        pass
+    return response
 
 
 os.environ["praw_check_for_updates"] = "False"
@@ -58,13 +65,24 @@ placeholders["basic_auth"] = b64_string(
     "{}:{}".format(placeholders["client_id"], placeholders["client_secret"])
 )
 
-
 class PrettyJSONSerializer(object):
-    def serialize(self, cassette_dict):
+    @staticmethod
+    def serialize(cassette_dict):
         return json.dumps(cassette_dict, sort_keys=True, indent=2) + "\n"
 
-    def deserialize(self, cassette_string):
+    @staticmethod
+    def deserialize(cassette_string):
         return json.loads(cassette_string)
+
+def filter_value(request):
+    headers = json.dumps(dict(request.headers))
+    body = json.dumps(request.body)
+    for replacement, value in [(f"<{k.upper()}>", v) for k, v in placeholders.items()]:
+        headers = headers.replace(value, replacement)
+        body = body.replace(value, replacement)
+    request.headers.update(json.loads(headers))
+    request.body = json.loads(body)
+    return request
 
 
 class CustomVCR(VCR):
@@ -75,28 +93,12 @@ class CustomVCR(VCR):
         path += ".json"
         return super().use_cassette(path, **kwargs)
 
-
-class AsyncMock:
-    """Class to assist making asynchronous mocks simpler to write."""
-
-    def __init__(self, status, response_dict, headers):
-        """Initialize the class with return status, response-dict and headers."""
-        self.status = status
-        self.response_dict = response_dict
-        self.headers = headers
-
-    async def json(self):
-        """Mock the json of ClientSession.request."""
-        return self.response_dict
-
-
+vcr_placeholders = [(v, f"<{k.upper()}>") for k, v in placeholders.items()]
 VCR = CustomVCR(
-    serializer="prettyjson",
-    cassette_library_dir="tests/cassettes",
-    match_on=["uri", "method"],
-    filter_headers=list(placeholders),
-    filter_post_data_parameters=list(placeholders),
-    filter_query_parameters=list(placeholders),
+    serializer="json",
+    cassette_library_dir="tests/integration/cassettes",
+    match_on=["uri", "method", "headers", "query", "body"],
+    before_record_request=filter_value,
     before_record_response=filter_access_token,
 )
 VCR.register_serializer("prettyjson", PrettyJSONSerializer)
@@ -121,7 +123,7 @@ Cassette.__init__ = add_init_hook(Cassette.__init__)
 
 
 def init_hook(cassette):
-    if not cassette.requsets:
+    if not cassette.requests:
         pytest.set_up_record()  # dynamically defined in __init__.py
 
 

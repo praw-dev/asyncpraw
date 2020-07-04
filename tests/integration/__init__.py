@@ -3,22 +3,20 @@ import inspect
 import logging
 
 import aiohttp
+import asynctest
 import pytest
-
-import requests
-from betamax import Betamax
 
 from asyncpraw import Reddit
 
 from tests.conftest import VCR
 
 
-class IntegrationTest:
+class IntegrationTest(asynctest.TestCase):
     """Base class for PRAW integration tests."""
 
     logger = logging.getLogger(__name__)
 
-    def setup(self):
+    def setUp(self):
         """Setup runs before all test cases."""
         self._overrode_reddit_setup = True
         self.setup_reddit()
@@ -31,7 +29,7 @@ class IntegrationTest:
 
         # Disable response compression in order to see the response bodies in
         # the vcr cassettes.
-        http.headers["Accept-Encoding"] = "identity"
+        http._default_headers["Accept-Encoding"] = "identity"
 
         # Require tests to explicitly disable read_only mode.
         self.reddit.read_only = True
@@ -62,6 +60,15 @@ class IntegrationTest:
                     user_agent=pytest.placeholders.user_agent,
                     refresh_token=pytest.placeholders.refresh_token,
                 )
+
+    @staticmethod
+    async def async_list(async_generator):
+        return [item async for item in async_generator]
+
+    @staticmethod
+    async def async_next(async_generator):
+        async for item in async_generator:
+            return item
 
     def use_cassette(self, cassette_name=None, **kwargs):
         """Use a cassette. The cassette name is dynamically generated.

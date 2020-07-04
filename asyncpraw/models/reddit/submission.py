@@ -474,7 +474,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         """
         # This assumes _comments is set so that _fetch is called when it's not.
-        if not self._comments:
+        if "_comments" not in self.__dict__:
             await self._fetch()
         return self._comments
 
