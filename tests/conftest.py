@@ -13,7 +13,7 @@ from vcr.cassette import Cassette
 
 import logging
 
-logging.basicConfig() # you need to initialize logging, otherwise you will not see anything from vcrpy
+logging.basicConfig()  # you need to initialize logging, otherwise you will not see anything from vcrpy
 vcr_log = logging.getLogger("vcr")
 vcr_log.setLevel(logging.INFO)
 
@@ -37,14 +37,16 @@ def env_default(key):
 
 def filter_access_token(response):
     """Add VCR callback to filter access token."""
-    request_uri = response['url']
+    request_uri = response["url"]
     if "api/v1/access_token" not in request_uri or response["status"]["code"] != 200:
         return response
     body = response["body"]["string"].decode()
     try:
         token = json.loads(body)["access_token"]
-        response["body"]["string"] = response["body"]["string"].replace(token.encode("utf-8"), b"<ACCESS_TOKEN>")
-        placeholders['access_token'] = token
+        response["body"]["string"] = response["body"]["string"].replace(
+            token.encode("utf-8"), b"<ACCESS_TOKEN>"
+        )
+        placeholders["access_token"] = token
     except (KeyError, TypeError, ValueError):
         pass
     return response
@@ -65,6 +67,7 @@ placeholders["basic_auth"] = b64_string(
     "{}:{}".format(placeholders["client_id"], placeholders["client_secret"])
 )
 
+
 class PrettyJSONSerializer(object):
     @staticmethod
     def serialize(cassette_dict):
@@ -73,6 +76,7 @@ class PrettyJSONSerializer(object):
     @staticmethod
     def deserialize(cassette_string):
         return json.loads(cassette_string)
+
 
 def filter_value(request):
     headers = json.dumps(dict(request.headers))
@@ -92,6 +96,7 @@ class CustomVCR(VCR):
         """Use a cassette."""
         path += ".json"
         return super().use_cassette(path, **kwargs)
+
 
 vcr_placeholders = [(v, f"<{k.upper()}>") for k, v in placeholders.items()]
 VCR = CustomVCR(

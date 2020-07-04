@@ -12,8 +12,8 @@ from .. import IntegrationTest
 class TestCommentForest(IntegrationTest):
     # async def setUp(self):
     #     super().setUp()
-        # Responses do not decode well on travis so manually re-enable gzip.
-        # self.reddit._core._requestor._http.headers["Accept-Encoding"] = "gzip"
+    # Responses do not decode well on travis so manually re-enable gzip.
+    # self.reddit._core._requestor._http.headers["Accept-Encoding"] = "gzip"
 
     async def test_replace__all(self):
         with self.use_cassette(match_requests_on=["uri", "method", "body"]):
@@ -34,7 +34,9 @@ class TestCommentForest(IntegrationTest):
             assert len(skipped) == 0
             assert all([isinstance(x, Comment) async for x in comments.list()])
             assert len(await self.async_list(comments.list())) > 1000
-            assert len(await self.async_list(comments.list())) == len(submission._comments_by_id)
+            assert len(await self.async_list(comments.list())) == len(
+                submission._comments_by_id
+            )
 
     async def test_replace__all_with_comment_limit(self):
         with self.use_cassette(match_requests_on=["uri", "method", "body"]):
@@ -101,7 +103,9 @@ class TestCommentForest(IntegrationTest):
         with self.use_cassette(match_requests_on=["uri", "method", "body"]):
             comment = await self.reddit.comment("d8r4im1")
             await comment.refresh()
-            assert any([isinstance(x, MoreComments) async for x in comment.replies.list()])
+            assert any(
+                [isinstance(x, MoreComments) async for x in comment.replies.list()]
+            )
             await comment.replies.replace_more()
             assert all([isinstance(x, Comment) async for x in comment.replies.list()])
 

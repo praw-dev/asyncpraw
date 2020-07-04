@@ -70,7 +70,7 @@ class TestReddit(IntegrationTest):
         ]  # NBA
         gen = self.reddit.live.info(ids)
         with self.use_cassette():
-            threads =  await self.async_list(gen)
+            threads = await self.async_list(gen)
         assert len(threads) == 2
 
     # @mock.patch("asyncio.sleep", return_value=None)
@@ -146,7 +146,9 @@ class TestReddit(IntegrationTest):
 class TestDomainListing(IntegrationTest):
     async def test_controversial(self):
         with self.use_cassette():
-            submissions = await self.async_list(self.reddit.domain("youtube.com").controversial())
+            submissions = await self.async_list(
+                self.reddit.domain("youtube.com").controversial()
+            )
         assert len(submissions) == 100
 
     async def test_hot(self):
@@ -161,7 +163,9 @@ class TestDomainListing(IntegrationTest):
 
     async def test_random_rising(self):
         with self.use_cassette():
-            submissions = await self.async_list(self.reddit.domain("youtube.com").random_rising())
+            submissions = await self.async_list(
+                self.reddit.domain("youtube.com").random_rising()
+            )
         assert len(submissions) == 100
 
     async def test_rising(self):

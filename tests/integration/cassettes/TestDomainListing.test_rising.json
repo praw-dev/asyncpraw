@@ -1,0 +1,63 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "post",
+                "uri": "https://www.reddit.com/api/v1/access_token",
+                "body": [
+                    [
+                        "grant_type",
+                        "client_credentials"
+                    ]
+                ],
+                "headers": {
+                    "User-Agent": [
+                        "<USER_AGENT> PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+                    ],
+                    "Accept-Encoding": [
+                        "identity"
+                    ],
+                    "Connection": [
+                        "close"
+                    ],
+                    "AUTHORIZATION": [
+                        "Basic <BASIC_AUTH>"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 401,
+                    "message": "Unauthorized"
+                },
+                "headers": {
+                    "Connection": "close",
+                    "Content-Length": "41",
+                    "Content-Type": "application/json; charset=UTF-8",
+                    "WWW-Authenticate": "Basic realm=\"reddit\"",
+                    "x-ua-compatible": "IE=edge",
+                    "x-frame-options": "SAMEORIGIN",
+                    "x-content-type-options": "nosniff",
+                    "x-xss-protection": "1; mode=block",
+                    "Set-Cookie": "edgebucket=3gVjC6oeTVJkIcvYAS; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+                    "Cache-Control": "max-age=0, must-revalidate",
+                    "X-Moose": "majestic",
+                    "Accept-Ranges": "bytes",
+                    "Date": "Sat, 04 Jul 2020 00:42:57 GMT",
+                    "Via": "1.1 varnish",
+                    "X-Served-By": "cache-mci5949-MCI",
+                    "X-Cache": "MISS",
+                    "X-Cache-Hits": "0",
+                    "X-Timer": "S1593823377.275377,VS0,VE102",
+                    "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+                    "Server": "snooserv"
+                },
+                "body": {
+                    "string": "{\"message\": \"Unauthorized\", \"error\": 401}"
+                },
+                "url": "https://www.reddit.com/api/v1/access_token"
+            }
+        }
+    ]
+}
