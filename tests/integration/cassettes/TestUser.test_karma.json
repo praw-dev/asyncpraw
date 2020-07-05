@@ -1,0 +1,119 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "post",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:21:35 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=xUScSw21AywWM8vJdo; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5935-MCI",
+          "X-Timer": "S1593912095.916603,VS0,VE88",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/v1/me/karma?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"KarmaList\", \"data\": [{\"sr\": \"WTF\", \"comment_karma\": 1146, \"link_karma\": 6248}, {\"sr\": \"pics\", \"comment_karma\": 24, \"link_karma\": 7172}, {\"sr\": \"Whatcouldgowrong\", \"comment_karma\": 347, \"link_karma\": 6673}, {\"sr\": \"woahdude\", \"comment_karma\": 122, \"link_karma\": 6355}, {\"sr\": \"MadeMeSmile\", \"comment_karma\": 2, \"link_karma\": 6343}, {\"sr\": \"WatchPeopleDieInside\", \"comment_karma\": 51, \"link_karma\": 6233}, {\"sr\": \"justneckbeardthings\", \"comment_karma\": 0, \"link_karma\": 6277}, {\"sr\": \"thisismylifenow\", \"comment_karma\": 2, \"link_karma\": 6193}, {\"sr\": \"fakehistoryporn\", \"comment_karma\": 3002, \"link_karma\": 3096}, {\"sr\": \"memes\", \"comment_karma\": 2, \"link_karma\": 5845}, {\"sr\": \"wholesomebpt\", \"comment_karma\": 8, \"link_karma\": 4567}, {\"sr\": \"funny\", \"comment_karma\": 246, \"link_karma\": 3322}, {\"sr\": \"PoliticalHumor\", \"comment_karma\": 0, \"link_karma\": 3474}, {\"sr\": \"BlackPeopleTwitter\", \"comment_karma\": 0, \"link_karma\": 3410}, {\"sr\": \"AskReddit\", \"comment_karma\": 738, \"link_karma\": 2298}, {\"sr\": \"politics\", \"comment_karma\": 0, \"link_karma\": 2455}, {\"sr\": \"BestOfReports\", \"comment_karma\": 22, \"link_karma\": 2399}, {\"sr\": \"wholesomememes\", \"comment_karma\": 5, \"link_karma\": 2332}, {\"sr\": \"Wellthatsucks\", \"comment_karma\": 0, \"link_karma\": 2332}, {\"sr\": \"ANormalDayInRussia\", \"comment_karma\": 0, \"link_karma\": 2084}, {\"sr\": \"dankmemes\", \"comment_karma\": 329, \"link_karma\": 1557}, {\"sr\": \"KenM\", \"comment_karma\": 0, \"link_karma\": 1826}, {\"sr\": \"rarepuppers\", \"comment_karma\": 0, \"link_karma\": 1190}, {\"sr\": \"BikiniBottomTwitter\", \"comment_karma\": 0, \"link_karma\": 961}, {\"sr\": \"iOSBeta\", \"comment_karma\": 313, \"link_karma\": 635}, {\"sr\": \"apolloapp\", \"comment_karma\": 362, \"link_karma\": 582}, {\"sr\": \"nonononoyes\", \"comment_karma\": 898, \"link_karma\": 1}, {\"sr\": \"IdiotsInCars\", \"comment_karma\": 721, \"link_karma\": 1}, {\"sr\": \"AnimalTextGifs\", \"comment_karma\": 12, \"link_karma\": 695}, {\"sr\": \"MurderedByWords\", \"comment_karma\": 2, \"link_karma\": 629}, {\"sr\": \"happycowgifs\", \"comment_karma\": 0, \"link_karma\": 618}, {\"sr\": \"trashy\", \"comment_karma\": 2, \"link_karma\": 598}, {\"sr\": \"CrackheadCraigslist\", \"comment_karma\": 0, \"link_karma\": 577}, {\"sr\": \"HumansBeingBros\", \"comment_karma\": 519, \"link_karma\": 1}, {\"sr\": \"Trumpgret\", \"comment_karma\": 0, \"link_karma\": 515}, {\"sr\": \"videos\", \"comment_karma\": 510, \"link_karma\": 2}, {\"sr\": \"Unexpected\", \"comment_karma\": 296, \"link_karma\": 197}, {\"sr\": \"assholedesign\", \"comment_karma\": 180, \"link_karma\": 296}, {\"sr\": \"wholesomevandalism\", \"comment_karma\": 0, \"link_karma\": 461}, {\"sr\": \"MemeEconomy\", \"comment_karma\": 0, \"link_karma\": 424}, {\"sr\": \"drugscirclejerk\", \"comment_karma\": 0, \"link_karma\": 415}, {\"sr\": \"aww\", \"comment_karma\": 242, \"link_karma\": 140}, {\"sr\": \"apple\", \"comment_karma\": 245, \"link_karma\": 132}, {\"sr\": \"HelloInternet\", \"comment_karma\": 78, \"link_karma\": 297}, {\"sr\": \"instant_regret\", \"comment_karma\": 53, \"link_karma\": 300}, {\"sr\": \"ChoosingBeggars\", \"comment_karma\": 330, \"link_karma\": 1}, {\"sr\": \"Cringetopia\", \"comment_karma\": 0, \"link_karma\": 268}, {\"sr\": \"ProgrammerHumor\", \"comment_karma\": 223, \"link_karma\": 36}, {\"sr\": \"mildlyinfuriating\", \"comment_karma\": 208, \"link_karma\": 47}, {\"sr\": \"CrappyDesign\", \"comment_karma\": 230, \"link_karma\": 1}, {\"sr\": \"Damnthatsinteresting\", \"comment_karma\": 185, \"link_karma\": 1}, {\"sr\": \"nononono\", \"comment_karma\": 163, \"link_karma\": 1}, {\"sr\": \"HolUp\", \"comment_karma\": 0, \"link_karma\": 155}, {\"sr\": \"gaming\", \"comment_karma\": 144, \"link_karma\": 1}, {\"sr\": \"BetterEveryLoop\", \"comment_karma\": 76, \"link_karma\": 45}, {\"sr\": \"StuffOnCats\", \"comment_karma\": 0, \"link_karma\": 112}, {\"sr\": \"oddlysatisfying\", \"comment_karma\": 62, \"link_karma\": 47}, {\"sr\": \"mildlyinteresting\", \"comment_karma\": 98, \"link_karma\": 1}, {\"sr\": \"The_Mueller\", \"comment_karma\": 0, \"link_karma\": 84}, {\"sr\": \"MaliciousCompliance\", \"comment_karma\": 83, \"link_karma\": 1}, {\"sr\": \"OSHA\", \"comment_karma\": 75, \"link_karma\": 1}, {\"sr\": \"gifs\", \"comment_karma\": 75, \"link_karma\": 1}, {\"sr\": \"Incorgnito\", \"comment_karma\": 0, \"link_karma\": 72}, {\"sr\": \"KarmaCourt\", \"comment_karma\": 71, \"link_karma\": 1}, {\"sr\": \"dankchristianmemes\", \"comment_karma\": 0, \"link_karma\": 65}, {\"sr\": \"inthesoulstone\", \"comment_karma\": 63, \"link_karma\": 1}, {\"sr\": \"puns\", \"comment_karma\": 0, \"link_karma\": 61}, {\"sr\": \"ThingsCutInHalfPorn\", \"comment_karma\": 60, \"link_karma\": 1}, {\"sr\": \"interestingasfuck\", \"comment_karma\": 60, \"link_karma\": 1}, {\"sr\": \"tifu\", \"comment_karma\": 59, \"link_karma\": 1}, {\"sr\": \"LifeProTips\", \"comment_karma\": 58, \"link_karma\": 1}, {\"sr\": \"AbsoluteUnits\", \"comment_karma\": 0, \"link_karma\": 57}, {\"sr\": \"pettyrevenge\", \"comment_karma\": 56, \"link_karma\": 1}, {\"sr\": \"MURICA\", \"comment_karma\": 54, \"link_karma\": 1}, {\"sr\": \"starterpacks\", \"comment_karma\": 53, \"link_karma\": 1}, {\"sr\": \"killthecameraman\", \"comment_karma\": 7, \"link_karma\": 45}, {\"sr\": \"hmmm\", \"comment_karma\": 0, \"link_karma\": 50}, {\"sr\": \"weirdflex\", \"comment_karma\": 2, \"link_karma\": 48}, {\"sr\": \"MacOS\", \"comment_karma\": 49, \"link_karma\": 1}, {\"sr\": \"Justrolledintotheshop\", \"comment_karma\": 49, \"link_karma\": 1}, {\"sr\": \"talesfromtechsupport\", \"comment_karma\": 49, \"link_karma\": 1}, {\"sr\": \"hearthstone\", \"comment_karma\": 48, \"link_karma\": 1}, {\"sr\": \"electricvehicles\", \"comment_karma\": 23, \"link_karma\": 24}, {\"sr\": \"carbage\", \"comment_karma\": 0, \"link_karma\": 46}, {\"sr\": \"JusticeServed\", \"comment_karma\": 46, \"link_karma\": 1}, {\"sr\": \"Link_Dies\", \"comment_karma\": 45, \"link_karma\": 1}, {\"sr\": \"Tinder\", \"comment_karma\": 41, \"link_karma\": 1}, {\"sr\": \"chemicalreactiongifs\", \"comment_karma\": 39, \"link_karma\": 1}, {\"sr\": \"DunderMifflin\", \"comment_karma\": 39, \"link_karma\": 1}, {\"sr\": \"StartledCats\", \"comment_karma\": 0, \"link_karma\": 38}, {\"sr\": \"ParentsAreFuckingDumb\", \"comment_karma\": 38, \"link_karma\": 1}, {\"sr\": \"Eyebleach\", \"comment_karma\": 36, \"link_karma\": 1}, {\"sr\": \"RestOfTheDamnRoutine\", \"comment_karma\": 2, \"link_karma\": 32}, {\"sr\": \"UnethicalLifeProTips\", \"comment_karma\": 33, \"link_karma\": 1}, {\"sr\": \"Badfaketexts\", \"comment_karma\": 14, \"link_karma\": 19}, {\"sr\": \"youseeingthisshit\", \"comment_karma\": 30, \"link_karma\": 1}, {\"sr\": \"KidsAreFuckingStupid\", \"comment_karma\": 29, \"link_karma\": 1}, {\"sr\": \"ios\", \"comment_karma\": 28, \"link_karma\": 1}, {\"sr\": \"factorio\", \"comment_karma\": 28, \"link_karma\": 1}, {\"sr\": \"Showerthoughts\", \"comment_karma\": 28, \"link_karma\": 1}, {\"sr\": \"AppleWatch\", \"comment_karma\": 28, \"link_karma\": 1}, {\"sr\": \"redditdev\", \"comment_karma\": 23, \"link_karma\": 3}, {\"sr\": \"CenturyClub\", \"comment_karma\": 1, \"link_karma\": 25}, {\"sr\": \"badUIbattles\", \"comment_karma\": 25, \"link_karma\": 1}, {\"sr\": \"HouseMD\", \"comment_karma\": 25, \"link_karma\": 1}, {\"sr\": \"blackmagicfuckery\", \"comment_karma\": 22, \"link_karma\": 1}, {\"sr\": \"Justfuckmyshitup\", \"comment_karma\": 0, \"link_karma\": 22}, {\"sr\": \"picsmods\", \"comment_karma\": 18, \"link_karma\": 4}, {\"sr\": \"ipad\", \"comment_karma\": 5, \"link_karma\": 17}, {\"sr\": \"KeepOurNetFree\", \"comment_karma\": 15, \"link_karma\": 7}, {\"sr\": \"Breath_of_the_Wild\", \"comment_karma\": 21, \"link_karma\": 1}, {\"sr\": \"INEEEEDIT\", \"comment_karma\": 21, \"link_karma\": 1}, {\"sr\": \"crappyoffbrands\", \"comment_karma\": 21, \"link_karma\": 1}, {\"sr\": \"cableporn\", \"comment_karma\": 20, \"link_karma\": 1}, {\"sr\": \"thatHappened\", \"comment_karma\": 18, \"link_karma\": 1}, {\"sr\": \"OSXBeta\", \"comment_karma\": 18, \"link_karma\": 1}, {\"sr\": \"DataHoarder\", \"comment_karma\": 18, \"link_karma\": 1}, {\"sr\": \"antiassholedesign\", \"comment_karma\": 17, \"link_karma\": 1}, {\"sr\": \"AnimalsBeingJerks\", \"comment_karma\": 0, \"link_karma\": 17}, {\"sr\": \"specializedtools\", \"comment_karma\": 17, \"link_karma\": 1}, {\"sr\": \"firstworldproblems\", \"comment_karma\": 17, \"link_karma\": 1}, {\"sr\": \"EngineeringPorn\", \"comment_karma\": 16, \"link_karma\": 1}, {\"sr\": \"CGPGrey\", \"comment_karma\": 16, \"link_karma\": 1}, {\"sr\": \"insanepeoplefacebook\", \"comment_karma\": 2, \"link_karma\": 13}, {\"sr\": \"HouseOfCards\", \"comment_karma\": 15, \"link_karma\": 1}, {\"sr\": \"WhitePeopleTwitter\", \"comment_karma\": 15, \"link_karma\": 1}, {\"sr\": \"me_irl\", \"comment_karma\": 0, \"link_karma\": 15}, {\"sr\": \"Jokes\", \"comment_karma\": 14, \"link_karma\": 1}, {\"sr\": \"HappyBirthdaySpaz\", \"comment_karma\": 14, \"link_karma\": 1}, {\"sr\": \"ImmaPeeInUrAss\", \"comment_karma\": 0, \"link_karma\": 14}, {\"sr\": \"MarchAgainstTrump\", \"comment_karma\": 0, \"link_karma\": 13}, {\"sr\": \"conduitporn\", \"comment_karma\": 12, \"link_karma\": 1}, {\"sr\": \"OldSchoolCool\", \"comment_karma\": 0, \"link_karma\": 12}, {\"sr\": \"technology\", \"comment_karma\": 12, \"link_karma\": 1}, {\"sr\": \"brushybrushy\", \"comment_karma\": 0, \"link_karma\": 12}, {\"sr\": \"TrumpRoasts\", \"comment_karma\": 0, \"link_karma\": 11}, {\"sr\": \"IDontWorkHereLady\", \"comment_karma\": 11, \"link_karma\": 1}, {\"sr\": \"petthedamnpolarbear\", \"comment_karma\": 2, \"link_karma\": 9}, {\"sr\": \"whitepeoplegifs\", \"comment_karma\": 0, \"link_karma\": 10}, {\"sr\": \"theydidthemath\", \"comment_karma\": 3, \"link_karma\": 7}, {\"sr\": \"therewasanattempt\", \"comment_karma\": 5, \"link_karma\": 5}, {\"sr\": \"Simulated\", \"comment_karma\": 10, \"link_karma\": 1}, {\"sr\": \"programminghorror\", \"comment_karma\": 10, \"link_karma\": 1}, {\"sr\": \"CyanideandHappiness\", \"comment_karma\": 10, \"link_karma\": 1}, {\"sr\": \"counting\", \"comment_karma\": 10, \"link_karma\": 1}, {\"sr\": \"redesign\", \"comment_karma\": 9, \"link_karma\": 1}, {\"sr\": \"quityourbullshit\", \"comment_karma\": 0, \"link_karma\": 9}, {\"sr\": \"UNBGBBIIVCHIDCTIICBG\", \"comment_karma\": 9, \"link_karma\": 1}, {\"sr\": \"MyPeopleNeedMe\", \"comment_karma\": 0, \"link_karma\": 9}, {\"sr\": \"totallynotrobots\", \"comment_karma\": 9, \"link_karma\": 1}, {\"sr\": \"Skookum\", \"comment_karma\": 9, \"link_karma\": 1}, {\"sr\": \"WholesomeMemesMods\", \"comment_karma\": 9, \"link_karma\": 1}, {\"sr\": \"WeWantPlates\", \"comment_karma\": 8, \"link_karma\": 1}, {\"sr\": \"OutOfTheLoop\", \"comment_karma\": 8, \"link_karma\": 1}, {\"sr\": \"oldpeoplefacebook\", \"comment_karma\": 8, \"link_karma\": 1}, {\"sr\": \"dogs\", \"comment_karma\": 5, \"link_karma\": 3}, {\"sr\": \"holdmybeer\", \"comment_karma\": 8, \"link_karma\": 1}, {\"sr\": \"ModSupport\", \"comment_karma\": 8, \"link_karma\": 1}, {\"sr\": \"movies\", \"comment_karma\": 0, \"link_karma\": 7}, {\"sr\": \"needamod\", \"comment_karma\": 0, \"link_karma\": 7}, {\"sr\": \"facepalm\", \"comment_karma\": 0, \"link_karma\": 7}, {\"sr\": \"cablegore\", \"comment_karma\": 7, \"link_karma\": 1}, {\"sr\": \"ancient_videos\", \"comment_karma\": 0, \"link_karma\": 7}, {\"sr\": \"coolguides\", \"comment_karma\": 7, \"link_karma\": 1}, {\"sr\": \"AmItheAsshole\", \"comment_karma\": 7, \"link_karma\": 1}, {\"sr\": \"holdmybinky\", \"comment_karma\": 0, \"link_karma\": 7}, {\"sr\": \"Slimemolds\", \"comment_karma\": 2, \"link_karma\": 5}, {\"sr\": \"calvinandhobbes\", \"comment_karma\": 6, \"link_karma\": 1}, {\"sr\": \"AutoModerator\", \"comment_karma\": 4, \"link_karma\": 2}, {\"sr\": \"DiWHY\", \"comment_karma\": 6, \"link_karma\": 1}, {\"sr\": \"iphone\", \"comment_karma\": 6, \"link_karma\": 1}, {\"sr\": \"MassEffectAndromeda\", \"comment_karma\": 6, \"link_karma\": 1}, {\"sr\": \"Cardiology\", \"comment_karma\": 3, \"link_karma\": 3}, {\"sr\": \"ImGoingToHellForThis\", \"comment_karma\": 6, \"link_karma\": 1}, {\"sr\": \"SweatyPalms\", \"comment_karma\": 0, \"link_karma\": 5}, {\"sr\": \"ATBGE\", \"comment_karma\": 0, \"link_karma\": 5}, {\"sr\": \"AccidentalComedy\", \"comment_karma\": 0, \"link_karma\": 5}, {\"sr\": \"DataVizRequests\", \"comment_karma\": 0, \"link_karma\": 5}, {\"sr\": \"swift\", \"comment_karma\": 5, \"link_karma\": 1}, {\"sr\": \"DankMods\", \"comment_karma\": 5, \"link_karma\": 1}, {\"sr\": \"comics\", \"comment_karma\": 5, \"link_karma\": 1}, {\"sr\": \"vsaucewithcorn\", \"comment_karma\": 5, \"link_karma\": 1}, {\"sr\": \"holdmycosmo\", \"comment_karma\": 0, \"link_karma\": 4}, {\"sr\": \"sequence\", \"comment_karma\": 1, \"link_karma\": 3}, {\"sr\": \"FHPMods\", \"comment_karma\": 4, \"link_karma\": 1}, {\"sr\": \"needagay\", \"comment_karma\": 2, \"link_karma\": 2}, {\"sr\": \"MiniMetro\", \"comment_karma\": 4, \"link_karma\": 1}, {\"sr\": \"Nest\", \"comment_karma\": 0, \"link_karma\": 4}, {\"sr\": \"MovieDetails\", \"comment_karma\": 4, \"link_karma\": 1}, {\"sr\": \"chinchilla\", \"comment_karma\": 4, \"link_karma\": 1}, {\"sr\": \"nextfuckinglevel\", \"comment_karma\": 4, \"link_karma\": 1}, {\"sr\": \"Xcode\", \"comment_karma\": 4, \"link_karma\": 1}, {\"sr\": \"gifsthatkeepongiving\", \"comment_karma\": 0, \"link_karma\": 4}, {\"sr\": \"dataisbeautiful\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"redditrequest\", \"comment_karma\": 0, \"link_karma\": 3}, {\"sr\": \"DicemazeGoneWild\", \"comment_karma\": 0, \"link_karma\": 3}, {\"sr\": \"Lil_SpazJoekp\", \"comment_karma\": 0, \"link_karma\": 3}, {\"sr\": \"UnlawfulMemes21\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"creepy\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"IdiotsFightingThings\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"watchsubsdie\", \"comment_karma\": 0, \"link_karma\": 3}, {\"sr\": \"marvelstudios\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"casualChildAbuse\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"AnimalsBeingBros\", \"comment_karma\": 3, \"link_karma\": 1}, {\"sr\": \"SelectorLegend\", \"comment_karma\": 0, \"link_karma\": 3}, {\"sr\": \"TheSpazDot\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"madladsmods\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"BikiniBottomTest\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"watchOSBeta\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"calicosummer\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"NegativeWithGold\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"memesmods\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"mechanical_gifs\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"nameaserver\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"whatsthisbug\", \"comment_karma\": 0, \"link_karma\": 2}, {\"sr\": \"MacOSBeta\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"MiniMotorways\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"appletv\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"IDmydog\", \"comment_karma\": 0, \"link_karma\": 2}, {\"sr\": \"BSG\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"softwaregore\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"OOTLMods\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"AnimalsBeingDerps\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"ecobee\", \"comment_karma\": 0, \"link_karma\": 2}, {\"sr\": \"test\", \"comment_karma\": 0, \"link_karma\": 2}, {\"sr\": \"evilbuildings\", \"comment_karma\": 2, \"link_karma\": 1}, {\"sr\": \"rarkgrimes\", \"comment_karma\": 0, \"link_karma\": 1}, {\"sr\": \"mycology\", \"comment_karma\": 0, \"link_karma\": 1}, {\"sr\": \"SpazJoekp\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"modnews\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"headlinememes\", \"comment_karma\": 0, \"link_karma\": 1}, {\"sr\": \"jailbreak\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"OverEngineeringPorn\", \"comment_karma\": 0, \"link_karma\": 1}, {\"sr\": \"CatTaps\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"NotHowDrugsWork\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"madlads\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"thanosdidnothingwrong\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"insaneparents\", \"comment_karma\": 1, \"link_karma\": 1}, {\"sr\": \"redditisajob\", \"comment_karma\": 0, \"link_karma\": 1}, {\"sr\": \"Bitcoin\", \"comment_karma\": 0, \"link_karma\": 1}, {\"sr\": \"cars\", \"comment_karma\": -1, \"link_karma\": 1}, {\"sr\": \"fuckHOA\", \"comment_karma\": -9, \"link_karma\": 1}]}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "15022",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:21:35 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5922-MCI",
+          "X-Timer": "S1593912095.075259,VS0,VE196",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "505.0",
+          "x-ratelimit-reset": "505",
+          "x-ratelimit-used": "95",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/v1/me/karma?raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-04T20:21:35",
+  "version": 1
+}

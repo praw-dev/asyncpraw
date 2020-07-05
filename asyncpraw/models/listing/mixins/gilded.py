@@ -9,7 +9,7 @@ from ..generator import ListingGenerator
 class GildedListingMixin(PRAWBase):
     """Mixes in the gilded method."""
 
-    async def gilded(
+    def gilded(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
     ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for gilded items.

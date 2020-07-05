@@ -1,4 +1,4 @@
-from unittest import mock
+from asynctest import mock
 
 from asyncpraw.models import Preferences
 
@@ -10,7 +10,7 @@ class TestPreferences(IntegrationTest):
         prefs_obj = self.reddit.user.preferences
         assert isinstance(prefs_obj, Preferences)
 
-    def test_view(self):
+    async def test_view(self):
         some_known_keys = {
             "allow_clicktracking",
             "default_comment_sort",
@@ -24,12 +24,12 @@ class TestPreferences(IntegrationTest):
 
         self.reddit.read_only = False
         with self.use_cassette():
-            prefs_dict = self.reddit.user.preferences()
+            prefs_dict = await self.reddit.user.preferences()
         assert isinstance(prefs_dict, dict)
         assert some_known_keys.issubset(prefs_dict)
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_update(self, _):
+    async def test_update(self, _):
         # boolean params, as many as are reproducible on multiple accounts.
         bool_params = (
             "allow_clicktracking",
@@ -37,7 +37,6 @@ class TestPreferences(IntegrationTest):
             "clickgadget",
             "collapse_read_messages",
             "compress",
-            "creddit_autorenew",
             "domain_details",
             "email_digests",
             "email_messages",
@@ -45,7 +44,6 @@ class TestPreferences(IntegrationTest):
             "enable_default_themes",
             "hide_downs",
             "hide_from_robots",
-            "hide_locationbar",
             "hide_ups",
             "highlight_controversial",
             "highlight_new_comments",
@@ -55,8 +53,6 @@ class TestPreferences(IntegrationTest):
             "mark_messages_read",
             "monitor_mentions",
             "newwindow",
-            "no_video_autoplay",
-            "organic",
             "over_18",
             "private_feeds",
             "profile_opt_out",
@@ -98,20 +94,20 @@ class TestPreferences(IntegrationTest):
         with self.use_cassette():
 
             # test an empty update
-            preferences.update()
+            await preferences.update()
 
             for param in int_params:
-                response = preferences.update(**{param: 1})
+                response = await preferences.update(**{param: 1})
                 assert response[param] == 1
-                response = preferences.update(**{param: 3})
+                response = await preferences.update(**{param: 3})
                 assert response[param] == 3
             for param in bool_params:
-                response = preferences.update(**{param: True})
+                response = await preferences.update(**{param: True})
                 assert response[param] is True
-                response = preferences.update(**{param: False})
+                response = await preferences.update(**{param: False})
                 assert response[param] is False
             for param, values in str_params:
-                response = preferences.update(**{param: values[0]})
+                response = await preferences.update(**{param: values[0]})
                 assert response[param] == values[0]
-                response = preferences.update(**{param: values[1]})
+                response = await preferences.update(**{param: values[1]})
                 assert response[param] == values[1]

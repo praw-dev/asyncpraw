@@ -1,21 +1,17 @@
 """Prepare py.test."""
 import json
 import os
-import socket
 import asyncio
 from base64 import b64encode
+from datetime import datetime
 from functools import wraps
-from sys import platform
 
 import pytest
 from vcr import VCR
 from vcr.cassette import Cassette
+from vcr.persisters.filesystem import FilesystemPersister
+from vcr.serialize import deserialize, serialize
 
-import logging
-
-logging.basicConfig()  # you need to initialize logging, otherwise you will not see anything from vcrpy
-vcr_log = logging.getLogger("vcr")
-vcr_log.setLevel(logging.INFO)
 
 # Prevent calls to sleep
 async def _sleep(*args):
@@ -68,27 +64,6 @@ placeholders["basic_auth"] = b64_string(
 )
 
 
-class PrettyJSONSerializer(object):
-    @staticmethod
-    def serialize(cassette_dict):
-        return json.dumps(cassette_dict, sort_keys=True, indent=2) + "\n"
-
-    @staticmethod
-    def deserialize(cassette_string):
-        return json.loads(cassette_string)
-
-
-def filter_value(request):
-    headers = json.dumps(dict(request.headers))
-    body = json.dumps(request.body)
-    for replacement, value in [(f"<{k.upper()}>", v) for k, v in placeholders.items()]:
-        headers = headers.replace(value, replacement)
-        body = body.replace(value, replacement)
-    request.headers.update(json.loads(headers))
-    request.body = json.loads(body)
-    return request
-
-
 class CustomVCR(VCR):
     """Derived from VCR to make setting paths easier."""
 
@@ -98,15 +73,55 @@ class CustomVCR(VCR):
         return super().use_cassette(path, **kwargs)
 
 
+class CustomSerializer(object):
+    @staticmethod
+    def serialize(cassette_dict):
+        cassette_dict["recorded_at"] = datetime.now().isoformat()[:-7]
+        return json.dumps(cassette_dict, sort_keys=True, indent=2) + "\n"
+
+    @staticmethod
+    def deserialize(cassette_string):
+        return json.loads(cassette_string)
+
+
+class CustomPersister(FilesystemPersister):
+    @classmethod
+    def load_cassette(cls, cassette_path, serializer):
+        try:
+            with open(cassette_path) as f:
+                cassette_content = f.read()
+        except OSError:
+            raise ValueError("Cassette not found.")
+        for replacement, value in [
+            (v, f"<{k.upper()}>") for k, v in placeholders.items()
+        ]:
+            cassette_content = cassette_content.replace(value, replacement)
+        cassette = deserialize(cassette_content, serializer)
+        return cassette
+
+    @staticmethod
+    def save_cassette(cassette_path, cassette_dict, serializer):
+        data = serialize(cassette_dict, serializer)
+        for replacement, value in [
+            (f"<{k.upper()}>", v) for k, v in placeholders.items()
+        ]:
+            data = data.replace(value, replacement)
+        dirname, filename = os.path.split(cassette_path)
+        if dirname and not os.path.exists(dirname):
+            os.makedirs(dirname)
+        with open(cassette_path, "w") as f:
+            f.write(data)
+
+
 vcr_placeholders = [(v, f"<{k.upper()}>") for k, v in placeholders.items()]
 VCR = CustomVCR(
-    serializer="json",
+    serializer="custom_serializer",
     cassette_library_dir="tests/integration/cassettes",
-    match_on=["uri", "method", "headers", "query", "body"],
-    before_record_request=filter_value,
+    match_on=["uri", "method"],
     before_record_response=filter_access_token,
 )
-VCR.register_serializer("prettyjson", PrettyJSONSerializer)
+VCR.register_serializer("custom_serializer", CustomSerializer)
+VCR.register_persister(CustomPersister)
 
 
 def after_init(func, *args):
@@ -139,7 +154,3 @@ class Placeholders:
 
 def pytest_configure():
     pytest.placeholders = Placeholders(placeholders)
-
-
-if platform == "darwin":
-    socket.gethostbyname = lambda x: "127.0.0.1"

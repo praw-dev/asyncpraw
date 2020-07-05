@@ -8,10 +8,10 @@ from .. import IntegrationTest
 
 
 class TestAuthScript(IntegrationTest):
-    def test_scopes(self):
+    async def test_scopes(self):
         with self.use_cassette():
             assert self.reddit.read_only is True
-            assert self.reddit.auth.scopes() == {"*"}
+            assert await self.reddit.auth.scopes() == {"*"}
 
 
 class TestAuthWeb(IntegrationTest):
@@ -24,17 +24,17 @@ class TestAuthWeb(IntegrationTest):
             username=None,
         )
 
-    def test_authorize(self):
+    async def test_authorize(self):
         with self.use_cassette():
-            token = self.reddit.auth.authorize(pytest.placeholders.auth_code)
+            token = await self.reddit.auth.authorize(pytest.placeholders.auth_code)
             assert isinstance(token, str)
             assert self.reddit.read_only is False
-            assert self.reddit.auth.scopes() == {"submit"}
+            assert await self.reddit.auth.scopes() == {"submit"}
 
-    def test_scopes__read_only(self):
+    async def test_scopes__read_only(self):
         with self.use_cassette():
             assert self.reddit.read_only is True
-            assert self.reddit.auth.scopes() == {"*"}
+            assert await self.reddit.auth.scopes() == {"*"}
 
 
 class TestAuthImplicit(IntegrationTest):
@@ -45,13 +45,13 @@ class TestAuthImplicit(IntegrationTest):
             user_agent=pytest.placeholders.user_agent,
         )
 
-    def test_implicit__with_invalid_token(self):
+    async def test_implicit__with_invalid_token(self):
         self.reddit.auth.implicit("invalid_token", 10, "read")
         with self.use_cassette():
             with pytest.raises(InvalidToken):
-                self.reddit.user.me()
+                await self.reddit.user.me()
 
-    def test_scopes__read_only(self):
+    async def test_scopes__read_only(self):
         with self.use_cassette():
             assert self.reddit.read_only is True
-            assert self.reddit.auth.scopes() == {"*"}
+            assert await self.reddit.auth.scopes() == {"*"}

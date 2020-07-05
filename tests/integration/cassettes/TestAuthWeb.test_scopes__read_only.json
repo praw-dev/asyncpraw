@@ -1,0 +1,63 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "method": "post",
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": [
+          [
+            "grant_type",
+            "client_credentials"
+          ]
+        ],
+        "headers": {
+          "User-Agent": [
+            "<USER_AGENT> PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ]
+        }
+      },
+      "response": {
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "headers": {
+          "Connection": "close",
+          "Content-Length": "106",
+          "Content-Type": "application/json; charset=UTF-8",
+          "x-reddit-loid": "000000000075teloll.2.1593894687549.Z0FBQUFBQmZBT2NmeHoyZjRHajBMVnd0aEMtRHVkb01JRDlwZmIxaGZ0OFRlZ0c1TkV5Mk5Gb2RuS3hNUEhNNGs3emhHa255bjUxYmNQdnBsMWd3eGJvTURlY01WTk10ZU40UVplZFBGSDZmb3VpS2V4Z0tkemlSRzBEQXFXUDBsZ2I0cFlwcXhfSGU",
+          "x-frame-options": "SAMEORIGIN",
+          "x-content-type-options": "nosniff",
+          "x-xss-protection": "1; mode=block",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "X-Moose": "majestic",
+          "Accept-Ranges": "bytes",
+          "Date": "Sat, 04 Jul 2020 20:31:27 GMT",
+          "Via": "1.1 varnish",
+          "X-Served-By": "cache-mci5939-MCI",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Timer": "S1593894688.507173,VS0,VE76",
+          "Set-Cookie": "edgebucket=bGuFd1dcPeid45DHVk; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Server": "snooserv"
+        },
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-04T18:07:23",
+  "version": 1
+}

@@ -461,7 +461,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         .. code-block:: python
 
             submission.comment_sort = "new"
-            comments = await submission.comments
+            comments = await submission.comments()
             async for comment in comments.list():
                 # do stuff with comment
 

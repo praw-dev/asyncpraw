@@ -1,0 +1,67 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "method": "post",
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": [
+          [
+            "device_id",
+            "DO_NOT_TRACK_THIS_DEVICE"
+          ],
+          [
+            "grant_type",
+            "https://oauth.reddit.com/grants/installed_client"
+          ]
+        ],
+        "headers": {
+          "User-Agent": [
+            "<USER_AGENT> PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "AUTHORIZATION": [
+            "Basic ZWFsZ0Q2aDRnUUFSa0E6"
+          ]
+        }
+      },
+      "response": {
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "headers": {
+          "Connection": "close",
+          "Content-Length": "147",
+          "Content-Type": "application/json; charset=UTF-8",
+          "x-reddit-loid": "000000000075tqgcvt.2.1593896424760.Z0FBQUFBQmZBTzNvZUtTZWxJa3BkTmYxMDQyZmRIdkp6THZ4cXRDeDR2X0RNTnEydnc3cEtRNmpmNktDTTBrUXFXa0liQmdvOVdXdVF5X3F0azk1TmV3bllrRXZmYW5nR2NBZmF6OEJwOGNQaGhZQ2FJajBxTTBmdkVYQmU3SVNrYWxtV1JIZzNEaXk",
+          "x-frame-options": "SAMEORIGIN",
+          "x-content-type-options": "nosniff",
+          "x-xss-protection": "1; mode=block",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "X-Moose": "majestic",
+          "Accept-Ranges": "bytes",
+          "Date": "Sat, 04 Jul 2020 21:00:24 GMT",
+          "Via": "1.1 varnish",
+          "X-Served-By": "cache-mci5921-MCI",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Timer": "S1593896425.715871,VS0,VE83",
+          "Set-Cookie": "edgebucket=kK7dsknL0z6PjxPOzr; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Server": "snooserv"
+        },
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"device_id\": \"DO_NOT_TRACK_THIS_DEVICE\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-04T18:07:24",
+  "version": 1
+}
