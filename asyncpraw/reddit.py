@@ -744,7 +744,9 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        if params: # this a fix for aiohttp not liking bool values in its params this needs to be fix asyncprawcore
+        # this a fix for aiohttp not liking bool values in its params this needs to
+        # be fixed asyncprawcore
+        if params:
             new_params = {}
             for k, v in params.items():
                 if isinstance(v, bool):
