@@ -17,7 +17,7 @@ class LiveHelper(AsyncPRAWBase):
     async def __call__(
         self, id: str
     ) -> LiveThread:  # pylint: disable=invalid-name,redefined-builtin
-        """Return a new lazy instance of :class:`~.LiveThread`.
+        """Return a new instance of :class:`~.LiveThread`.
 
         This method is intended to be used as:
 
@@ -63,7 +63,7 @@ class LiveHelper(AsyncPRAWBase):
 
         async def generator():
             for position in range(0, len(ids), 100):
-                ids_chunk = ids[position : position + 100]
+                ids_chunk = ids[position: position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
                 params = {"limit": 100}  # 25 is used if not specified
                 for result in await self._reddit.get(url, params=params):

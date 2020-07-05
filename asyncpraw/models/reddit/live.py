@@ -359,7 +359,7 @@ class LiveThread(RedditBase):
         return isinstance(other, self.__class__) and str(self) == str(other)
 
     async def get_update(self, update_id: str) -> "LiveUpdate":
-        """Return a lazy :class:`.LiveUpdate` instance.
+        """Return a :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g.,
             ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.

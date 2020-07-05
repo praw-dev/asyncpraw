@@ -229,8 +229,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         entire ancestry should be immediately available, requiring no extra
         network requests. However, if this comment was obtained through other
         means, e.g., ``await reddit.comment("COMMENT_ID")``, or
-        ``reddit.inbox.comment_replies``, then the returned parent may be a
-        lazy instance of either :class:`.Comment`, or :class:`.Submission`.
+        ``reddit.inbox.comment_replies``, then the returned parent may be an
+        instance of either :class:`.Comment`, or :class:`.Submission`.
 
         Lazy comment example:
 
