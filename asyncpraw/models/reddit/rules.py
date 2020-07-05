@@ -182,7 +182,7 @@ class SubredditRules:
         warn(
             "Calling SubredditRules to get a list of rules is deprecated. "
             "Remove the parentheses to use the iterator. View the "
-            "PRAW documentation on how to change the code in order to use the"
+            "Async PRAW documentation on how to change the code in order to use the"
             "iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview"
             "/other/subredditrules.html#asyncpraw.models.reddit.rules."
             "SubredditRules.__call__).",
