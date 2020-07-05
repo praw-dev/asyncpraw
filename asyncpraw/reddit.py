@@ -572,14 +572,6 @@ class Reddit:
         :param path: The path to fetch.
 
         """
-        if params:
-            new_params = {}
-            for k, v in params.items():
-                if isinstance(v, bool):
-                    new_params[k] = str(v).lower()
-                elif v:
-                    new_params[k] = v
-            params = new_params
         return self._objector.objectify(
             await self.request(
                 data=data, json=json, method=method, params=params, path=path,
@@ -752,6 +744,14 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
+        if params: # this a fix for aiohttp not liking bool values in its params this needs to be fix asyncprawcore
+            new_params = {}
+            for k, v in params.items():
+                if isinstance(v, bool):
+                    new_params[k] = str(v).lower()
+                elif v:
+                    new_params[k] = v
+            params = new_params
         if data and json:
             raise ClientException("At most one of `data` and `json` is supported.")
         try:

@@ -238,18 +238,18 @@ class CollectionModeration(AsyncPRAWBase):
 
     .. code-block:: python
 
-       reddit.subreddit("SUBREDDIT").collections("some_uuid").mod
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        collection = await subreddit.collections("some_uuid")
+        collection.mod
     """
 
-    async def _post_fullname(self, post):
+    def _post_fullname(self, post):
         """Get a post's fullname.
 
         :param post: A fullname, a Submission, a permalink, or an ID.
         :returns: The fullname of the post.
         """
         if isinstance(post, Submission):
-            if not post._fetched:
-                await post._fetch()
             return post.fullname
         elif not isinstance(post, str):
             raise TypeError(
@@ -258,11 +258,9 @@ class CollectionModeration(AsyncPRAWBase):
         if post.startswith("{}_".format(self._reddit.config.kinds["submission"])):
             return post
         try:
-            submission = await self._reddit.submission(url=post)
-            return submission.fullname
+            return Submission(self._reddit, url=post).fullname
         except ClientException:
-            submission = await self._reddit.submission(id=post)
-            return submission.fullname
+            return Submission(self._reddit, id=post).fullname
 
     def __init__(self, reddit: "Reddit", collection_id: str):
         """Initialize an instance of CollectionModeration.
@@ -290,7 +288,7 @@ class CollectionModeration(AsyncPRAWBase):
         .. seealso:: :meth:`.remove_post`
 
         """
-        link_fullname = await self._post_fullname(submission)
+        link_fullname = self._post_fullname(submission)
 
         await self._reddit.post(
             API_PATH["collection_add_post"],
@@ -333,7 +331,7 @@ class CollectionModeration(AsyncPRAWBase):
         .. seealso:: :meth:`.add_post`
 
         """
-        link_fullname = await self._post_fullname(submission)
+        link_fullname = self._post_fullname(submission)
 
         await self._reddit.post(
             API_PATH["collection_remove_post"],
@@ -357,7 +355,7 @@ class CollectionModeration(AsyncPRAWBase):
             await collection.mod.reorder(new_order)
 
         """
-        link_ids = ",".join([await self._post_fullname(post) for post in links])
+        link_ids = ",".join([self._post_fullname(post) for post in links])
         await self._reddit.post(
             API_PATH["collection_reorder"],
             data={"collection_id": self.collection_id, "link_ids": link_ids},
