@@ -63,7 +63,7 @@ class LiveHelper(AsyncPRAWBase):
 
         async def generator():
             for position in range(0, len(ids), 100):
-                ids_chunk = ids[position: position + 100]
+                ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
                 params = {"limit": 100}  # 25 is used if not specified
                 for result in await self._reddit.get(url, params=params):
