@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, Optional, Union
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 from .base import BaseListingMixin
 from .gilded import GildedListingMixin
@@ -15,7 +15,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from ...reddit.subreddit import Subreddit
 
 
-class CommentHelper(PRAWBase):
+class CommentHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with a subreddit's comments."""
 
     @property

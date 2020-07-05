@@ -9,10 +9,10 @@ from asyncprawcore import (
 )
 
 from ..exceptions import InvalidImplicitAuth, MissingRequiredAttributeException
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 
 
-class Auth(PRAWBase):
+class Auth(AsyncPRAWBase):
     """Auth provides an interface to Reddit's authorization."""
 
     @property

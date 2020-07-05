@@ -3,7 +3,7 @@ Other Classes
 
 The following list of classes are provided here for complete documentation. You
 should not likely need to work with these classes directly, but rather through
-instances of them bound to an attribute of one of the PRAW models.
+instances of them bound to an attribute of one of the Async PRAW models.
 
 .. toctree::
    :maxdepth: 2

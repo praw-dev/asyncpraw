@@ -1,14 +1,14 @@
 """Provide the BaseList class."""
 from typing import TYPE_CHECKING, Any, Dict, Iterator, AsyncIterator
 
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     from ... import Reddit
 
 
-class BaseList(PRAWBase):
-    """An abstract class to coerce a list into a PRAWBase."""
+class BaseList(AsyncPRAWBase):
+    """An abstract class to coerce a list into a AsyncPRAWBase."""
 
     CHILD_ATTRIBUTE = None
 

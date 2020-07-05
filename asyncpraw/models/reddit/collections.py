@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Union
 from ...const import API_PATH
 from ...exceptions import ClientException
 from ...util.cache import cachedproperty
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 from .base import RedditBase
 from .submission import Submission
 from .subreddit import Subreddit
@@ -231,7 +231,7 @@ class Collection(RedditBase):
         )
 
 
-class CollectionModeration(PRAWBase):
+class CollectionModeration(AsyncPRAWBase):
     """Class to support moderation actions on a :class:`.Collection`.
 
     Obtain an instance via:
@@ -406,7 +406,7 @@ class CollectionModeration(PRAWBase):
         )
 
 
-class SubredditCollections(PRAWBase):
+class SubredditCollections(AsyncPRAWBase):
     r"""Class to represent a Subreddit's :class:`.Collection`\ s.
 
     Obtain an instance via:
@@ -500,7 +500,7 @@ class SubredditCollections(PRAWBase):
             yield collection
 
 
-class SubredditCollectionsModeration(PRAWBase):
+class SubredditCollectionsModeration(AsyncPRAWBase):
     """Class to represent moderator actions on a Subreddit's Collections.
 
     Obtain an instance via:

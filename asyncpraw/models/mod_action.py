@@ -1,13 +1,13 @@
 """Provide the ModAction class."""
 from typing import TYPE_CHECKING
 
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     from .reddit.redditor import Redditor
 
 
-class ModAction(PRAWBase):
+class ModAction(AsyncPRAWBase):
     """Represent a moderator action."""
 
     @property

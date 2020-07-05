@@ -93,7 +93,7 @@ class Rule(RedditBase):
         value = super().__getattribute__(attribute)
         if attribute == "subreddit" and value is None:
             raise ValueError(
-                "The Rule is missing a subreddit. File a bug report at PRAW."
+                "The Rule is missing a subreddit. File a bug report at Async PRAW."
             )
         return value
 

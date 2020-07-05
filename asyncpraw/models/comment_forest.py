@@ -18,7 +18,7 @@ class CommentForest:
     """
 
     @staticmethod
-    async def _gather_more_comments(tree, parent_tree=None):
+    def _gather_more_comments(tree, parent_tree=None):
         """Return a list of MoreComments objects obtained from tree."""
         more_comments = []
         queue = [(None, x) for x in tree]
@@ -27,11 +27,11 @@ class CommentForest:
             if isinstance(comment, MoreComments):
                 heappush(more_comments, comment)
                 if parent:
-                    comment._remove_from = [reply async for reply in parent.replies]
+                    comment._remove_from = parent.replies._comments
                 else:
                     comment._remove_from = parent_tree or tree
             else:
-                async for item in comment.replies:
+                for item in comment.replies:
                     queue.append((comment, item))
         return more_comments
 
@@ -112,19 +112,21 @@ class CommentForest:
         for comment in comments:
             comment.submission = self._submission
 
-    async def list(self) -> AsyncIterator[Union["Comment", "MoreComments"]]:
+    async def list(self) -> Union["Comment", "MoreComments"]:
         """Return a flattened list of all Comments.
 
         This list may contain :class:`.MoreComments` instances if
         :meth:`.replace_more` was not called first.
 
         """
-        queue = [comment async for comment in self]
+        comments = []
+        queue = list(self)
         while queue:
             comment = queue.pop(0)
-            yield comment
+            comments.append(comment)
             if not isinstance(comment, MoreComments):
                 queue.extend([reply async for reply in comment.replies])
+        return comments
 
     async def replace_more(
         self, limit: int = 32, threshold: int = 0
@@ -172,7 +174,8 @@ class CommentForest:
 
                       while True:
                           try:
-                              await submission.comments.replace_more()
+                              comments = await submission.comments()
+                              await comments.replace_more()
                               break
                           except PossibleExceptions:
                               print("Handling replace_more exception")
@@ -184,7 +187,7 @@ class CommentForest:
 
         """
         remaining = limit
-        more_comments = await self._gather_more_comments(self._comments)
+        more_comments = self._gather_more_comments(self._comments)
         skipped = []
 
         # Fetch largest more_comments until reaching the limit or the threshold
@@ -200,7 +203,7 @@ class CommentForest:
                 remaining -= 1
 
             # Add new MoreComment objects to the heap of more_comments
-            for more in await self._gather_more_comments(new_comments, self._comments):
+            for more in self._gather_more_comments(new_comments, self._comments):
                 more.submission = self._submission
                 heappush(more_comments, more)
             # Insert all items into the tree

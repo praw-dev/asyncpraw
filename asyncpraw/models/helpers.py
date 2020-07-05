@@ -5,13 +5,13 @@ from typing import AsyncGenerator, List, Optional, Union
 from asyncprawcore import NotFound
 
 from ..const import API_PATH
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .reddit.live import LiveThread
 from .reddit.multi import Multireddit, Subreddit
 from .reddit.redditor import Redditor
 
 
-class LiveHelper(PRAWBase):
+class LiveHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with LiveThreads."""
 
     async def __call__(
@@ -115,7 +115,7 @@ class LiveHelper(PRAWBase):
         return await self._reddit.get(API_PATH["live_now"])
 
 
-class MultiredditHelper(PRAWBase):
+class MultiredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Multireddits."""
 
     async def __call__(self, redditor: Union[str, Redditor], name: str) -> Multireddit:
@@ -178,7 +178,7 @@ class MultiredditHelper(PRAWBase):
         )
 
 
-class SubredditHelper(PRAWBase):
+class SubredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
     async def __call__(self, display_name: str, fetch: bool = True) -> Subreddit:

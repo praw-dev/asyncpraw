@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 from urllib.parse import urlparse
 
 from ...exceptions import InvalidURL
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     from ... import Reddit
 
 
-class RedditBase(PRAWBase):
+class RedditBase(AsyncPRAWBase):
     """Base class that represents actual Reddit objects."""
 
     @staticmethod
@@ -32,12 +32,13 @@ class RedditBase(PRAWBase):
         """Return the value of `attribute`."""
         if not attribute.startswith("_") and not self._fetched:
             raise AttributeError(
-                "{!r} object has no attribute {!r}, did you forget to execute '.update()'?".format(
+                "{0!r} object has no attribute {1!r}. {0!r} object has not been fetched, "
+                "did you forget to execute '.update()'?".format(
                     self.__class__.__name__, attribute
                 )
             )
         raise AttributeError(
-            "{!r} object has no attribute {!r}, did you forget to execute '.update()'?".format(
+            "{!r} object has no attribute {!r}".format(
                 self.__class__.__name__, attribute
             )
         )
@@ -75,3 +76,15 @@ class RedditBase(PRAWBase):
             if attribute in self.__dict__:
                 del self.__dict__[attribute]
         self._fetched = False
+
+    async def update(self):
+        """Re-fetches the object.
+
+        This is used to explicitly fetch the object from reddit. This method can be used
+        on any :class:`.RedditBase` object.
+
+        .. code-block:: python
+
+            await reddit_base_object.update()
+        """
+        await self._fetch()

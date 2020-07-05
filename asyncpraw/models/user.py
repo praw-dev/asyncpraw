@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Dict, AsyncGenerator, List, Optional, Union
 from ..const import API_PATH
 from ..models import Preferences
 from ..util.cache import cachedproperty
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .reddit.redditor import Redditor
 from .reddit.subreddit import Subreddit
@@ -14,7 +14,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from .reddit.multi import Multireddit  # noqa: F401
 
 
-class User(PRAWBase):
+class User(AsyncPRAWBase):
     """The user class provides methods for the currently authenticated user."""
 
     @cachedproperty

@@ -51,7 +51,7 @@ class Reddit:
     """The Reddit class provides convenient access to Reddit's API.
 
     Instances of this class are the gateway to interacting with Reddit's API
-    through PRAW. The canonical way to obtain an instance of this class is via:
+    through Async PRAW. The canonical way to obtain an instance of this class is via:
 
 
     .. code-block:: python
@@ -164,14 +164,14 @@ class Reddit:
         The ``requestor_class`` and ``requestor_kwargs`` allow for
         customization of the requestor :class:`.Reddit` will use. This allows,
         e.g., easily adding behavior to the requestor or wrapping its
-        |Session|_ in a caching layer. Example usage:
+        |ClientSession|_ in a caching layer. Example usage:
 
-        .. |Session| replace:: ``Session``
-        .. _Session: https://2.python-requests.org/en/master/api/#requests.Session
+        .. |ClientSession| replace:: ``ClientSession``
+        .. _ClientSession: https://docs.aiohttp.org/en/stable/client_advanced.html
 
         .. code-block:: python
 
-            import json, betamax, requests
+            import json, aiohttp
 
             class JSONDebugRequestor(Requestor):
                 async def request(self, *args, **kwargs):
@@ -179,7 +179,7 @@ class Reddit:
                     print(json.dumps(await response.json(), indent=4))
                     return response
 
-            my_session = betamax.Betamax(requests.Session())
+            my_session = aiohttp.ClientSession(trust_env=True)
             reddit = Reddit(..., requestor_class=JSONDebugRequestor,
                             requestor_kwargs={"session": my_session})
 
@@ -201,7 +201,7 @@ class Reddit:
                 "with creating a Reddit instance, visit\n"
                 "https://asyncpraw.readthedocs.io/en/latest/code_overvi"
                 "ew/reddit_instance.html\n\n"
-                "For help on configuring PRAW, visit\n"
+                "For help on configuring Async PRAW, visit\n"
                 "https://asyncpraw.readthedocs.io/en/latest/getting_sta"
                 "rted/configuration.html"
             )

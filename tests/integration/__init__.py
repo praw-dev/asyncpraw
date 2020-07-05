@@ -8,7 +8,7 @@ from praw import Reddit
 
 
 class IntegrationTest:
-    """Base class for PRAW integration tests."""
+    """Base class for Async PRAW integration tests."""
 
     def setup(self):
         """Setup runs before all test cases."""

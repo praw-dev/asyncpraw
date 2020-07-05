@@ -2,11 +2,11 @@
 from typing import Any, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 
-class GildedListingMixin(PRAWBase):
+class GildedListingMixin(AsyncPRAWBase):
     """Mixes in the gilded method."""
 
     async def gilded(

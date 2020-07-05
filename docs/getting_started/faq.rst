@@ -9,9 +9,9 @@ A: Directly calling the constructors will refresh the value:
 
 .. code-block:: python
 
-   reddit.comment(id=comment.id)
-   reddit.subreddit(display_name=subreddit.display_name)
-   reddit.submission(id=submission.id)
+   await reddit.comment(id=comment.id)
+   await reddit.subreddit(display_name=subreddit.display_name)
+   await reddit.submission(id=submission.id)
 
 .. _faq2:
 
@@ -43,7 +43,7 @@ Q2: I keep on getting this exception:
 
     asyncprawcore.exceptions.Redirect: Redirect to /r/subreddit/login/ (You may be trying to perform a non-read-only action via a read-only instance.)
 
-A: PRAW is most likely in read-only mode. This normally occurs when PRAW is
+A: Async PRAW is most likely in read-only mode. This normally occurs when Async PRAW is
 authenticated without a username and password or a refresh token. In order to perform
 this action, the Reddit instance needs to be authenticated. See :ref:`oauth_options` to
 see the available authentication methods.
@@ -61,10 +61,14 @@ For example, the code block:
 
 .. code-block:: python
 
-    reddit.subreddit('all').search('https://google.com')
+    subreddit = await reddit.subreddit('all')
+    async for result in subreddit.search('https://google.com'):
+        # do things with results
 
 Will become this code block:
 
 .. code-block:: python
 
-    reddit.subreddit('all').search('url:"https://google.com"')
+    subreddit = await reddit.subreddit('all')
+    async for result in subreddit.search('url:"https://google.com"'):
+        # do things with results

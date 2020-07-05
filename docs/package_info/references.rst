@@ -17,4 +17,4 @@ References
 * `r/changelog <https://www.reddit.com/r/changelog/>`_. Significant changes to
   Reddit's codebase will be announced here in non-developer speak.
 * `r/redditdev <https://www.reddit.com/r/redditdev>`_. Ask questions about
-  Reddit's codebase, PRAW, and other API clients here.
+  Reddit's codebase, Async PRAW, and other API clients here.

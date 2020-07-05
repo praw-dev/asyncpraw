@@ -1,9 +1,9 @@
 """Provide the Stylesheet class."""
 
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 
 
-class Stylesheet(PRAWBase):
+class Stylesheet(AsyncPRAWBase):
     """Represent a stylesheet.
 
     **Typical Attributes**

@@ -2,14 +2,14 @@
 from typing import TYPE_CHECKING, Dict, AsyncGenerator, Union
 
 from ....const import API_PATH
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ...reddit.submission import Submission  # noqa: F401
 
 
-class SubmissionListingMixin(PRAWBase):
+class SubmissionListingMixin(AsyncPRAWBase):
     """Adds additional methods pertaining to Submission instances."""
 
     def duplicates(

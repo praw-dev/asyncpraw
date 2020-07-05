@@ -1,5 +1,5 @@
-Working with PRAW's Models
-==========================
+Working with Async PRAW's Models
+================================
 
 .. toctree::
    :maxdepth: 2

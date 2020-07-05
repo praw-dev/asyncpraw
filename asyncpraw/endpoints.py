@@ -1,4 +1,4 @@
-"""List of API endpoints PRAW knows about."""
+"""List of API endpoints Async PRAW knows about."""
 
 # flake8: noqa
 # fmt: off

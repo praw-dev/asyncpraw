@@ -599,7 +599,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         # the user's /submitted page, and a websocket URL. We can use the
         # websocket URL to get a link to the new post once it is created.
         #
-        # An important note to PRAW contributors or anyone who would
+        # An important note to Async PRAW contributors or anyone who would
         # wish to step through this section with a debugger: This block
         # of code is NOT debugger-friendly. If there is *any*
         # significant time between the POST request just above this
@@ -957,7 +957,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`.Submission` object for the newly created
             submission, unless ``without_websockets`` is ``True``.
 
-        If ``image_path`` refers to a file that is not an image, PRAW will
+        If ``image_path`` refers to a file that is not an image, Async PRAW will
         raise a :class:`.ClientException`.
 
         .. note::
@@ -1061,7 +1061,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            title = "Do you like PRAW?"
+            title = "Do you like Async PRAW?"
             options = ["Yes", "No"]
             subreddit = await reddit.subreddit("reddit_api_test")
             await subreddit.submit_poll(title, selftext="", options=options, duration=3)
@@ -1141,7 +1141,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`.Submission` object for the newly created
             submission, unless ``without_websockets`` is ``True``.
 
-        If ``video_path`` refers to a file that is not a video, PRAW will
+        If ``video_path`` refers to a file that is not a video, Async PRAW will
         raise a :class:`.ClientException`.
 
         .. note::
@@ -1688,7 +1688,7 @@ class SubredditFlairTemplates:
             valid emoji string, for example ``":snoo:"``.
         :param max_emojis: (int) Maximum emojis in the flair
             (Reddit defaults this value to 10).
-        :param fetch: Whether or not PRAW will fetch existing information on
+        :param fetch: Whether or not Async PRAW will fetch existing information on
             the existing flair before updating (Default: True).
 
         .. warning:: If parameter ``fetch`` is set to ``False``, all parameters
@@ -3075,7 +3075,7 @@ class SubredditStream:
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. note:: While PRAW tries to catch all new comments, some high-volume
+        .. note:: While Async PRAW tries to catch all new comments, some high-volume
             streams, especially the r/all stream, may drop some comments.
 
         For example, to retrieve all new comments made to the ``iama``
@@ -3107,7 +3107,7 @@ class SubredditStream:
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. note:: While PRAW tries to catch all new submissions, some
+        .. note:: While Async PRAW tries to catch all new submissions, some
             high-volume streams, especially the r/all stream, may drop some
             submissions.
 
@@ -3185,7 +3185,7 @@ class SubredditStylesheet:
                 assert error_type in [
                     "BAD_CSS_NAME",
                     "IMAGE_ERROR",
-                ], "Please file a bug with PRAW"
+                ], "Please file a bug with Async PRAW"
                 raise RedditAPIException([[error_type, error_value, None]])
             return response
 

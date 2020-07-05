@@ -2,19 +2,19 @@
 from typing import Any, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 
 def _prepare(asyncpraw_object, arguments_dict, target):
     """Fix for Redditor methods that use a query param rather than subpath."""
     if asyncpraw_object.__dict__.get("_listing_use_sort"):
-        PRAWBase._safely_add_arguments(arguments_dict, "params", sort=target)
+        AsyncPRAWBase._safely_add_arguments(arguments_dict, "params", sort=target)
         return asyncpraw_object._path
     return urljoin(asyncpraw_object._path, target)
 
 
-class BaseListingMixin(PRAWBase):
+class BaseListingMixin(AsyncPRAWBase):
     """Adds minimum set of methods that apply to all listing objects."""
 
     VALID_TIME_FILTERS = {"all", "day", "hour", "month", "week", "year"}

@@ -3,7 +3,7 @@
 Configuration Options
 =====================
 
-PRAW's configuration options are broken down into the following categories:
+Async PRAW's configuration options are broken down into the following categories:
 
 * :ref:`basic_options`
 * :ref:`oauth_options`
@@ -19,8 +19,8 @@ All of these options can be provided in any of the ways mentioned in
 Basic Configuration Options
 ---------------------------
 
-:check_for_updates: When ``true``, check for new versions of PRAW. When a
-                    newer version of PRAW is available a message is reported
+:check_for_updates: When ``true``, check for new versions of Async PRAW. When a
+                    newer version of Async PRAW is available a message is reported
                     via standard error (default: ``true``).
 
 :user_agent: (Required) A unique description of your application. The following
@@ -58,12 +58,12 @@ OAuth Configuration Options
 
 :password: The password of the Reddit account associated with your registered
            Reddit **script** application. This field is required for **script**
-           applications, and PRAW assumes it is working with a **script**
+           applications, and Async PRAW assumes it is working with a **script**
            application by its presence.
 
 :username: The username of the Reddit account associated with your registered
            Reddit **script** application. This field is required for **script**
-           applications, and PRAW assumes it is working with a **script**
+           applications, and Async PRAW assumes it is working with a **script**
            application by its presence.
 
 .. _site_options:
@@ -71,7 +71,7 @@ OAuth Configuration Options
 Reddit Site Configuration Options
 ---------------------------------
 
-PRAW can be configured to work with instances of Reddit which are not hosted at
+Async PRAW can be configured to work with instances of Reddit which are not hosted at
 `reddit.com <https://www.reddit.com>`_. The following options may need to be
 updated in order to successfully access a third-party Reddit site:
 
@@ -84,7 +84,7 @@ updated in order to successfully access a third-party Reddit site:
 :oauth_url: The URL used to access the Reddit instance's API (default:
             https://oauth.reddit.com).
 
-:reddit_url: The URL used to access the Reddit instance. PRAW assumes the
+:reddit_url: The URL used to access the Reddit instance. Async PRAW assumes the
              endpoints for establishing OAuth authorization are accessible
              under this URL (default: https://www.reddit.com).
 
@@ -106,19 +106,19 @@ Miscellaneous Configuration Options
 -----------------------------------
 
 These are options that do not belong in another category, but still play a part
-in PRAW.
+in Async PRAW.
 
-:ratelimit_seconds: Controls the maximum amount of seconds PRAW will capture
+:ratelimit_seconds: Controls the maximum amount of seconds Async PRAW will capture
                     ratelimits returned in JSON data. Because this can be as
                     high as 10 minutes, only ratelimits of up to 5 seconds
                     are captured and waited on by default. Should be a number
                     representing the amount of seconds to sleep.
 
-                    .. note:: PRAW sleeps for the ratelimit plus either 1/10th
+                    .. note:: Async PRAW sleeps for the ratelimit plus either 1/10th
                         of the ratelimit or 1 second, whichever is smallest.
 
-:timeout: Controls the amount of time PRAW will wait for a request from Reddit
-          to complete before throwing an exception. By default, PRAW waits
+:timeout: Controls the amount of time Async PRAW will wait for a request from Reddit
+          to complete before throwing an exception. By default, Async PRAW waits
           16 seconds before throwing an exception.
 
 .. _custom_options:
@@ -127,7 +127,8 @@ Custom Configuration Options
 ----------------------------
 
 Your application can utilize PRAW's configuration system in order to provide
-its own custom settings.
+its own custom settings. Async PRAW utilizes the the same configuration system
+as PRAW.
 
 For instance you might want to add an ``app_debugging: true`` option to your
 application's ``praw.ini`` file. To retrieve the value of this custom option
@@ -137,6 +138,6 @@ from an instance of :class:`.Reddit` you can execute:
 
    reddit.config.custom["app_debugging"]
 
-.. note:: Custom PRAW configuration environment variables are not
+.. note:: Custom Async PRAW configuration environment variables are not
           supported. You can directly access environment variables via
           ``os.getenv``.

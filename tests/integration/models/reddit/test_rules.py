@@ -19,12 +19,12 @@ class TestRule(IntegrationTest):
             rule = self.subreddit.rules.mod.add(
                 "PRAW Test",
                 "all",
-                description="Test by PRAW",
+                description="Test by Async PRAW",
                 violation_reason="PTest",
             )
         assert rule.short_name == "PRAW Test"
         assert rule.kind == "all"
-        assert rule.description == "Test by PRAW"
+        assert rule.description == "Test by Async PRAW"
         assert rule.violation_reason == "PTest"
 
     def test_add_rule_without_violation_reason(self):

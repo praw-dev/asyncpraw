@@ -5,11 +5,11 @@ from json import JSONEncoder, dumps
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 from ..list.base import BaseList
 
 
-class Button(PRAWBase):
+class Button(AsyncPRAWBase):
     """Class to represent a single button inside a :class:`.ButtonWidget`.
 
     **Typical Attributes**
@@ -42,7 +42,7 @@ class Button(PRAWBase):
     """
 
 
-class CalendarConfiguration(PRAWBase):
+class CalendarConfiguration(AsyncPRAWBase):
     """Class to represent the configuration of a :class:`.Calendar`.
 
     **Typical Attributes**
@@ -66,7 +66,7 @@ class CalendarConfiguration(PRAWBase):
     """
 
 
-class Hover(PRAWBase):
+class Hover(AsyncPRAWBase):
     """Class to represent the hover data for a :class:`.ButtonWidget`.
 
     These values will take effect when the button is hovered over (the user
@@ -98,7 +98,7 @@ class Hover(PRAWBase):
     """
 
 
-class Image(PRAWBase):
+class Image(AsyncPRAWBase):
     """Class to represent an image that's part of a :class:`.ImageWidget`.
 
     **Typical Attributes**
@@ -120,7 +120,7 @@ class Image(PRAWBase):
     """
 
 
-class ImageData(PRAWBase):
+class ImageData(AsyncPRAWBase):
     """Class for image data that's part of a :class:`.CustomWidget`.
 
     **Typical Attributes**
@@ -142,7 +142,7 @@ class ImageData(PRAWBase):
     """
 
 
-class MenuLink(PRAWBase):
+class MenuLink(AsyncPRAWBase):
     """Class to represent a single link inside a menu or submenu.
 
     **Typical Attributes**
@@ -162,7 +162,7 @@ class MenuLink(PRAWBase):
     """
 
 
-class Styles(PRAWBase):
+class Styles(AsyncPRAWBase):
     """Class to represent the style information of a widget.
 
     **Typical Attributes**
@@ -209,7 +209,7 @@ class Submenu(BaseList):
     CHILD_ATTRIBUTE = "children"
 
 
-class SubredditWidgets(PRAWBase):
+class SubredditWidgets(AsyncPRAWBase):
     """Class to represent a subreddit's widgets.
 
     Create an instance like so:
@@ -219,7 +219,7 @@ class SubredditWidgets(PRAWBase):
         subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
 
-    Data will be lazy-loaded. By default, PRAW will not request progressively
+    Data will be lazy-loaded. By default, Async PRAW will not request progressively
     loading images from Reddit. To enable this, instantiate a SubredditWidgets
     object, then set the attribute ``progressive_images`` to ``True`` before
     performing any action that would result in a network request.
@@ -336,7 +336,7 @@ class SubredditWidgets(PRAWBase):
     async def refresh(self):
         """Refresh the subreddit's widgets.
 
-        By default, PRAW will not request progressively
+        By default, Async PRAW will not request progressively
         loading images from Reddit. To enable this,
         set the attribute ``progressive_images`` to ``True`` prior to
         calling ``refresh()``.
@@ -1000,7 +1000,7 @@ class SubredditWidgetsModeration:
         return upload_url + "/" + upload_data["key"]
 
 
-class Widget(PRAWBase):
+class Widget(AsyncPRAWBase):
     """Base class to represent a Widget."""
 
     @cachedproperty
@@ -1816,10 +1816,10 @@ class WidgetEncoder(JSONEncoder):
     """Class to encode widget-related objects."""
 
     def default(self, o):  # pylint: disable=E0202
-        """Serialize ``PRAWBase`` objects."""
+        """Serialize ``AsyncPRAWBase`` objects."""
         if isinstance(o, self._subreddit_class):
             return str(o)
-        elif isinstance(o, PRAWBase):
+        elif isinstance(o, AsyncPRAWBase):
             return {key: val for key, val in vars(o).items() if not key.startswith("_")}
         return JSONEncoder.default(self, o)
 

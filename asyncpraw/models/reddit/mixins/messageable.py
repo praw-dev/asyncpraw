@@ -32,7 +32,7 @@ class MessageableMixin:
         .. code-block:: python
 
             redditor = await reddit.redditor("spez")
-            await redditor.message("TEST", "test message from PRAW")
+            await redditor.message("TEST", "test message from Async PRAW")
 
         To send a message to ``u/spez`` from the moderators of ``r/test`` try:
 
@@ -46,7 +46,7 @@ class MessageableMixin:
         .. code-block:: python
 
            redditor = await reddit.subreddit("test")
-           await redditor.message("TEST", "test PM from PRAW")
+           await redditor.message("TEST", "test PM from Async PRAW")
 
         """
         data = {

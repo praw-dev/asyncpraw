@@ -146,7 +146,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         if _data:
             assert (
                 isinstance(_data, dict) and "name" in _data
-            ), "Please file a bug with PRAW"
+            ), "Please file a bug with Async PRAW"
         super().__init__(reddit, _data=_data)
         self._listing_use_sort = True
         if name:

@@ -8,7 +8,10 @@ information, e.g., redditor analyzer bot for writing complexity.
 
 PRAW provides a simple way to build your own bot using the python programming
 language. As a result, it is little surprise that a majority of bots on Reddit
-are powered by PRAW.
+are powered by Async PRAW.
+
+With Async PRAW, there is now support for interacting with Reddit inside an
+asynchronous environment, most commonly, Discord bots.
 
 This tutorial will show you how to build a bot that monitors a particular
 subreddit, `/r/AskReddit <https://www.reddit.com/r/AskReddit/>`_, for new
@@ -59,9 +62,9 @@ creating an instance of :class:`.Reddit`:
 
 .. code-block:: python
 
-   import asyncpraw
+    import asyncpraw
 
-   reddit = asyncpraw.Reddit(user_agent="LMGTFY (by /u/USERNAME)",
+    reddit = asyncpraw.Reddit(user_agent="LMGTFY (by /u/USERNAME)",
                         client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
                         username="USERNAME", password="PASSWORD")
 
@@ -81,9 +84,9 @@ subreddit. To indefinitely iterate over new submissions to a subreddit add:
 
 .. code-block:: python
 
-   subreddit = reddit.subreddit("AskReddit")
-   for submission in subreddit.stream.submissions():
-       # do something with submission
+    subreddit = await reddit.subreddit("AskReddit")
+    async for submission in subreddit.stream.submissions():
+        # do something with submission
 
 Replace ``AskReddit`` with the name of another subreddit if you want to iterate
 through its new submissions. Additionally multiple subreddits can be specified
@@ -109,20 +112,20 @@ First we filter out titles that contain more than ten words:
 
 .. code-block:: python
 
-   if len(submission.title.split()) > 10:
-           return
+    if len(submission.title.split()) > 10:
+        return
 
 We then check to see if the submission's title contains any of the desired
 phrases:
 
 .. code-block:: python
 
-   questions = ["what is", "who is", "what are"]
-   normalized_title = submission.title.lower()
-   for question_phrase in questions:
-       if question_phrase in normalized_title:
-           # do something with a matched submission
-           break
+    questions = ["what is", "who is", "what are"]
+    normalized_title = submission.title.lower()
+    for question_phrase in questions:
+        if question_phrase in normalized_title:
+            # do something with a matched submission
+            break
 
 String comparison in python is case sensitive. As a result, we only compare a
 normalized version of the title to our lower-case question phrases. In this
@@ -158,12 +161,12 @@ comment is located:
 
 .. code-block:: python
 
-   from urllib.parse import quote_plus
+    from urllib.parse import quote_plus
 
-   reply_template = '[Let me google that for you](https://lmgtfy.com/?q={})'
+    reply_template = '[Let me google that for you](https://lmgtfy.com/?q={})'
 
-   url_title = quote_plus(submission.title)
-   reply_text = reply_template.format(url_title)
+    url_title = quote_plus(submission.title)
+    reply_text = reply_template.format(url_title)
 
 .. note:: This example assumes the use of Python 3. For Python 2 replace ``from
     urllib.parse import quote_plus`` with ``from urllib import quote_plus``.
@@ -172,7 +175,7 @@ Now that we have the reply text, replying to the submission is easy:
 
 .. code-block:: python
 
-   submission.reply(reply_text)
+    await submission.reply(reply_text)
 
 If all went well, your comment should have been made. If your bot account is
 brand new, you will likely run into rate limit issues. These rate limits will
