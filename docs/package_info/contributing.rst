@@ -1,14 +1,14 @@
-Contributing to PRAW
-====================
+Contributing to Async PRAW
+==========================
 
-PRAW gladly welcomes new contributions. As with most larger projects, we have
+Async PRAW gladly welcomes new contributions. As with most larger projects, we have
 an established consistent way of doing things. A consistent style increases
 readability, decreases bug-potential and makes it faster to understand how
 everything works together.
 
-PRAW follows :PEP:`8` and :PEP:`257`. The ``pre_push.py`` script can be used to
+Async PRAW follows :PEP:`8` and :PEP:`257`. The ``pre_push.py`` script can be used to
 test for compliance with these PEPs in addition to providing a few other
-checks. The following are PRAW-specific guidelines in addition to those PEP's.
+checks. The following are Async PRAW-specific guidelines in addition to those PEP's.
 
 .. note:: Python 3.6+ is needed to run the script.
 
@@ -38,7 +38,7 @@ Code
 Testing
 -------
 
-Contributions to PRAW requires 100% test coverage as reported by `Coveralls
+Contributions to Async PRAW requires 100% test coverage as reported by `Coveralls
 <https://coveralls.io/github/praw-dev/asyncpraw>`_. If you know how to add a
 feature, but aren't sure how to write the necessary tests, please open a PR
 anyway so we can work with you to write the necessary tests.
@@ -59,11 +59,11 @@ Without any configuration or modification, all the tests should pass.
 Adding and Updating Integration Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PRAW's integration tests utilize `Betamax
-<https://betamax.readthedocs.io/en/latest/>`_ to record an interaction with
+Async PRAW's integration tests utilize `vcrpy
+<https://vcrpy.readthedocs.io/en/latest/>`_ to record an interaction with
 Reddit. The recorded interaction is then replayed for subsequent test runs.
 
-To safely record a cassette without leaking your account credentials, PRAW
+To safely record a cassette without leaking your account credentials, Async PRAW
 utilizes a number of environment variables which are replaced with placeholders
 in the cassettes. The environment variables are (listed in bash export format):
 
@@ -103,7 +103,7 @@ Documentation
 Static Checker
 ~~~~~~~~~~~~~~
 
-PRAW's test suite comes with a checker tool that can warn you of using
+Async PRAW's test suite comes with a checker tool that can warn you of using
 incorrect documentation styles (using ``.. code::`` instead of
 ``.. code-block::``, using ``/r/`` instead of ``r/``, etc.).
 

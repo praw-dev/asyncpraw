@@ -5,19 +5,19 @@ from typing import AsyncGenerator, List, Optional, Union
 from asyncprawcore import NotFound
 
 from ..const import API_PATH
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .reddit.live import LiveThread
 from .reddit.multi import Multireddit, Subreddit
 from .reddit.redditor import Redditor
 
 
-class LiveHelper(PRAWBase):
+class LiveHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with LiveThreads."""
 
     async def __call__(
-        self, id: str
+        self, id: str, fetch: bool = False
     ) -> LiveThread:  # pylint: disable=invalid-name,redefined-builtin
-        """Return a new lazy instance of :class:`~.LiveThread`.
+        """Return a new instance of :class:`~.LiveThread`.
 
         This method is intended to be used as:
 
@@ -25,10 +25,19 @@ class LiveHelper(PRAWBase):
 
             livethread = await reddit.live("ukaeu1ik4sw5")
 
+        If you need the object fetched right away (e.g., to access attributes) you can do:
+
+        .. code-block:: python
+
+            livethread = await reddit.live("ukaeu1ik4sw5", fetch=True)
+            await livethread.close()
+
         :param id: A live thread ID, e.g., ``ukaeu1ik4sw5``.
+        :param fetch: Determines if the object is loaded on call (default: False).
         """
         live_thread = LiveThread(self._reddit, id=id)
-        await live_thread._fetch()
+        if fetch:
+            await live_thread._fetch()
         return live_thread
 
     def info(self, ids: List[str]) -> AsyncGenerator[LiveThread, None]:
@@ -115,20 +124,31 @@ class LiveHelper(PRAWBase):
         return await self._reddit.get(API_PATH["live_now"])
 
 
-class MultiredditHelper(PRAWBase):
+class MultiredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Multireddits."""
 
-    async def __call__(self, redditor: Union[str, Redditor], name: str) -> Multireddit:
+    async def __call__(
+        self, redditor: Union[str, Redditor], name: str, fetch: bool = False
+    ) -> Multireddit:
         """Return an instance of :class:`~.Multireddit`.
+
+        If you need the object fetched right away (e.g., to access an attribute) you can do:
+
+        .. code-block:: python
+
+            multireddit = await reddit.multireddit("redditor", "multi", fetch=True)
+            async for comment in multireddit.comments(limit=25):
+                print(comment.author)
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance who owns the multireddit.
         :param name: The name of the multireddit.
-
+        :param fetch: Determines if the object is loaded on call (default: False).
         """
         path = "/user/{}/m/{}".format(redditor, name)
         multireddit = Multireddit(self._reddit, _data={"name": name, "path": path})
-        await multireddit._fetch()
+        if fetch:
+            await multireddit._fetch()
         return multireddit
 
     async def create(
@@ -178,18 +198,22 @@ class MultiredditHelper(PRAWBase):
         )
 
 
-class SubredditHelper(PRAWBase):
+class SubredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    async def __call__(self, display_name: str, fetch: bool = True) -> Subreddit:
+    async def __call__(self, display_name: str, fetch: bool = False) -> Subreddit:
         """Return an instance of :class:`~.Subreddit`.
 
-        :param display_name: The name of the subreddit.
-        :param fetch: Determines if the subreddit will be fetched immediately.
-            This is used for specifying special subs like ``"all"``, ``"mod"``, or with
-            temporary filtering from (e.g., ``"all-redditdev-programming"``).
+        If you need the object fetched right away (e.g., to access an attribute) you can do:
 
-        # TODO: Add code example for using fetch
+        .. code-block:: python
+
+            multireddit = await reddit.subreddit("redditor", fetch=True)
+            async for comment in multireddit.comments(limit=25):
+                print(comment.author)
+
+        :param display_name: The name of the subreddit.
+        :param fetch: Determines if the object is loaded on call (default: False).
         """
         lower_name = display_name.lower()
 
@@ -198,15 +222,20 @@ class SubredditHelper(PRAWBase):
         if lower_name == "randnsfw":
             return await self._reddit.random_subreddit(nsfw=True)
         sub = Subreddit(self._reddit, display_name=display_name)
-        if "+" not in lower_name and lower_name not in ["mod", "all"] and fetch:
-            # if the sub doesn't exist then check to see if it is a special subreddit
-            # construct and re-raise the exception if it is not
+        if fetch:
+            sub = await self._determine_fetch(lower_name, sub)
+        return sub
+
+    async def _determine_fetch(self, lower_name, sub):
+        # if the sub doesn't exist then check to see if it is a special subreddit
+        # construct and re-raise the exception if it is not
+        if "+" not in lower_name and lower_name not in ["mod", "all"]:
             try:
                 await sub._fetch()
+                return sub
             except NotFound:
                 if not lower_name.startswith(("mod", "all")) and "-" not in lower_name:
                     raise NotFound
-        return sub
 
     async def create(
         self,

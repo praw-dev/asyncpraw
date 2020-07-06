@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, Optional, Union
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 from .base import BaseListingMixin
 from .gilded import GildedListingMixin
@@ -15,7 +15,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from ...reddit.subreddit import Subreddit
 
 
-class CommentHelper(PRAWBase):
+class CommentHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with a subreddit's comments."""
 
     @property
@@ -39,7 +39,7 @@ class CommentHelper(PRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('redditdev')
+            subreddit = await reddit.subreddit('redditdev', lazy=True)
             async for comment in subreddit.comments(limit=25):
                 print(comment.author)
 
@@ -59,7 +59,7 @@ class SubredditListingMixin(BaseListingMixin, GildedListingMixin, RisingListingM
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('redditdev')
+            subreddit = await reddit.subreddit('redditdev', lazy=True)
             async for comment in subreddit.comments(limit=25):
                 print(comment.author)
 

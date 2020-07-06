@@ -51,7 +51,7 @@ class Reddit:
     """The Reddit class provides convenient access to Reddit's API.
 
     Instances of this class are the gateway to interacting with Reddit's API
-    through PRAW. The canonical way to obtain an instance of this class is via:
+    through Async PRAW. The canonical way to obtain an instance of this class is via:
 
 
     .. code-block:: python
@@ -164,14 +164,14 @@ class Reddit:
         The ``requestor_class`` and ``requestor_kwargs`` allow for
         customization of the requestor :class:`.Reddit` will use. This allows,
         e.g., easily adding behavior to the requestor or wrapping its
-        |Session|_ in a caching layer. Example usage:
+        |ClientSession|_ in a caching layer. Example usage:
 
-        .. |Session| replace:: ``Session``
-        .. _Session: https://2.python-requests.org/en/master/api/#requests.Session
+        .. |ClientSession| replace:: ``ClientSession``
+        .. _ClientSession: https://docs.aiohttp.org/en/stable/client_advanced.html
 
         .. code-block:: python
 
-            import json, betamax, requests
+            import json, aiohttp
 
             class JSONDebugRequestor(Requestor):
                 async def request(self, *args, **kwargs):
@@ -179,7 +179,7 @@ class Reddit:
                     print(json.dumps(await response.json(), indent=4))
                     return response
 
-            my_session = betamax.Betamax(requests.Session())
+            my_session = aiohttp.ClientSession(trust_env=True)
             reddit = Reddit(..., requestor_class=JSONDebugRequestor,
                             requestor_kwargs={"session": my_session})
 
@@ -201,7 +201,7 @@ class Reddit:
                 "with creating a Reddit instance, visit\n"
                 "https://asyncpraw.readthedocs.io/en/latest/code_overvi"
                 "ew/reddit_instance.html\n\n"
-                "For help on configuring PRAW, visit\n"
+                "For help on configuring Async PRAW, visit\n"
                 "https://asyncpraw.readthedocs.io/en/latest/getting_sta"
                 "rted/configuration.html"
             )
@@ -291,6 +291,12 @@ class Reddit:
 
             multireddit = await reddit.multireddit("samuraisam", "programming")
 
+        If you want to obtain a :class:`.Multireddit` instance you can do:
+
+        .. code-block:: python
+
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+
         """
 
         self.redditors = models.Redditors(self, None)
@@ -316,11 +322,17 @@ class Reddit:
 
             await reddit.subreddit.create("coolnewsubname")
 
-        To obtain a :class:`.Subreddit` instance run:
+        To obtain a lazy :class:`.Subreddit` instance run:
 
         .. code-block:: python
 
             await reddit.subreddit("redditdev")
+
+        To obtain a fetched :class:`.Subreddit` instance run:
+
+        .. code-block:: python
+
+            await reddit.subreddit("redditdev", fetch=True)
 
         Note that multiple subreddits can be combined and filtered views of
         r/all can also be used just like a subreddit:
@@ -459,20 +471,31 @@ class Reddit:
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         url: Optional[str] = None,
+        lazy: bool = False,
     ):
         """Return an instance of :class:`~.Comment` for ``id``.
 
         :param id: The ID of the comment.
-
         :param url: A permalink pointing to the comment.
+        :param lazy: Determines if object is loaded lazily (default: False)
 
-        .. note:: If you want to obtain the comment's replies, you will need to
-                  call :meth:`~.Comment.refresh` on the returned
-                  :class:`.Comment`.
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) then you can do:
+
+        .. code-block:: python
+
+            comment = await reddit.comment("comment_id", lazy=True)
+            await comment.reply("reply")
+
+        .. note:: If call this with ``lazy=True`` and you need to obtain the
+                   comment's replies, you will need to call this without ``lazy=True``
+                   or call :meth:`~.Comment.refresh` on the returned
+                   :class:`.Comment`.
 
         """
         comment = models.Comment(self, id=id, url=url)
-        await comment._fetch()
+        if not lazy:
+            await comment._fetch()
         return comment
 
     def domain(self, domain: str):
@@ -572,14 +595,6 @@ class Reddit:
         :param path: The path to fetch.
 
         """
-        if params:
-            new_params = {}
-            for k, v in params.items():
-                if isinstance(v, bool):
-                    new_params[k] = str(v).lower()
-                elif v:
-                    new_params[k] = v
-            params = new_params
         return self._objector.objectify(
             await self.request(
                 data=data, json=json, method=method, params=params, path=path,
@@ -752,6 +767,16 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
+        # this a fix for aiohttp not liking bool values in its params this needs to
+        # be fixed asyncprawcore
+        if params:
+            new_params = {}
+            for k, v in params.items():
+                if isinstance(v, bool):
+                    new_params[k] = str(v).lower()
+                elif v:
+                    new_params[k] = v
+            params = new_params
         if data and json:
             raise ClientException("At most one of `data` and `json` is supported.")
         try:
@@ -785,13 +810,21 @@ class Reddit:
             ) from exception
 
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
-        self, id: Optional[str] = None, url: Optional[str] = None
+        self, id: Optional[str] = None, url: Optional[str] = None, lazy=False
     ) -> Submission:
         """Return an instance of :class:`~.Submission`.
 
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) then you can do:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("submission_id", lazy=True)
+            await submission.mod.remove()
+
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by
-            :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param lazy: Determines if object is loaded lazily (default: False).
 
         Either ``id`` or ``url`` can be provided, but not both.
 

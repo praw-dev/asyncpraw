@@ -59,7 +59,7 @@ class ModmailConversation(RedditBase):
 
     @staticmethod
     def _convert_conversation_objects(data, reddit):
-        """Convert messages and mod actions to PRAW objects."""
+        """Convert messages and mod actions to Async PRAW objects."""
         result = {"messages": [], "modActions": []}
         for thing in data["conversation"]["objIds"]:
             key = thing["key"]
@@ -69,7 +69,7 @@ class ModmailConversation(RedditBase):
 
     @staticmethod
     def _convert_user_summary(data, reddit):
-        """Convert dictionaries of recent user history to PRAW objects."""
+        """Convert dictionaries of recent user history to Async PRAW objects."""
         parsers = {
             "recentComments": reddit._objector.parsers[reddit.config.kinds["comment"]],
             "recentConvos": ModmailConversation,

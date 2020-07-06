@@ -4,12 +4,12 @@ from warnings import warn
 
 from ..const import API_PATH
 from . import Subreddit
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 
-class Subreddits(PRAWBase):
+class Subreddits(AsyncPRAWBase):
     """Subreddits is a Listing class that provides various subreddit lists."""
 
     @staticmethod

@@ -71,7 +71,7 @@ class WebsocketMockException:
         :param close_exc: An exception to be raised during close().
 
         The purpose of this class is to mock a WebSockets connection that is
-        faulty or times out, to see how PRAW handles it.
+        faulty or times out, to see how Async PRAW handles it.
         """
         self._recv_exc = recv_exc
         self._close_exc = close_exc
@@ -161,7 +161,7 @@ class TestSubreddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            subreddit.message("Test from PRAW", message="Test content")
+            subreddit.message("Test from Async PRAW", message="Test content")
 
     @mock.patch("asyncio.sleep", return_value=None)
     def test_post_requirements(self, _):
@@ -540,8 +540,8 @@ class TestSubreddit(IntegrationTest):
     @mock.patch(
         "websockets.connect",
         return_value=WebsocketMockException(
-            close_exc=websockets.WebSocketException()
-        ),  # could happen, and PRAW should handle it
+            close_exc=websocket.WebSocketTimeoutException()
+        ),  # could happen, and Async PRAW should handle it
     )
     def test_submit_image__timeout_4(self, _, __):
 
@@ -734,8 +734,8 @@ class TestSubreddit(IntegrationTest):
     @mock.patch(
         "websockets.connect",
         return_value=WebsocketMockException(
-            close_exc=websockets.WebSocketException()
-        ),  # could happen, and PRAW should handle it
+            close_exc=websocket.WebSocketTimeoutException()
+        ),  # could happen, and Async PRAW should handle it
     )
     def test_submit_video__timeout_4(self, _, __):
 

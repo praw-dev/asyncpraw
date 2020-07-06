@@ -2,14 +2,14 @@
 from typing import TYPE_CHECKING, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ...reddit.submission import Submission  # noqa: F401
 
 
-class RisingListingMixin(PRAWBase):
+class RisingListingMixin(AsyncPRAWBase):
     """Mixes in the rising methods."""
 
     def random_rising(
@@ -24,7 +24,7 @@ class RisingListingMixin(PRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('test')
+            subreddit = await reddit.subreddit("test")
             async for submission in subreddit.random_rising():
                 print(submission.title)
 

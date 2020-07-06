@@ -1,5 +1,5 @@
-PRAW: The Python Reddit API Wrapper
-===================================
+Async PRAW: The Asynchronous Python Reddit API Wrapper
+======================================================
 
 .. image:: https://img.shields.io/pypi/v/asyncpraw.svg
    :alt: Latest asyncpraw Version
@@ -20,10 +20,10 @@ PRAW: The Python Reddit API Wrapper
    :alt: Contributor Covenant
    :target: https://github.com/praw-dev/asyncpraw/blob/master/CODE_OF_CONDUCT.md
 
-PRAW, an acronym for "Python Reddit API Wrapper", is a Python package that
-allows for simple access to Reddit's API. PRAW aims to be easy to use and
+Async PRAW, an acronym for "Asynchronous Python Reddit API Wrapper", is a Python package that
+allows for simple access to Reddit's API. Async PRAW aims to be easy to use and
 internally follows all of `Reddit's API rules
-<https://github.com/reddit/reddit/wiki/API>`_. With PRAW there's no need to
+<https://github.com/reddit/reddit/wiki/API>`_. With Async PRAW there's no need to
 introduce ``sleep`` calls in your code. Give your client an appropriate user
 agent and you're set.
 
@@ -32,18 +32,18 @@ agent and you're set.
 Installation
 ------------
 
-PRAW is supported on Python 3.5+. The recommended way to
-install PRAW is via `pip <https://pypi.python.org/pypi/pip>`_.
+Async PRAW is supported on Python 3.6+. The recommended way to
+install Async PRAW is via `pip <https://pypi.python.org/pypi/pip>`_.
 
 .. code-block:: bash
 
-   pip install asyncpraw
+    pip install asyncpraw
 
-To install the latest development version of PRAW run the following instead:
+To install the latest development version of Async PRAW run the following instead:
 
 .. code-block:: bash
 
-   pip install --upgrade https://github.com/praw-dev/asyncpraw/archive/master.zip
+    pip install --upgrade https://github.com/praw-dev/asyncpraw/archive/master.zip
 
 For instructions on installing Python and pip see "The Hitchhiker's Guide to
 Python" `Installation Guides
@@ -53,43 +53,47 @@ Quickstart
 ----------
 
 Assuming you already have a credentials for a script-type OAuth application you
-can instantiate an instance of PRAW like so:
+can instantiate an instance of Async PRAW like so:
 
 .. code-block:: python
 
-  import asyncpraw
-  reddit = asyncpraw.Reddit(client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
-                       password="PASSWORD", user_agent="USERAGENT",
-                       username="USERNAME")
+    import asyncpraw
+    reddit = asyncpraw.Reddit(client_id="CLIENT_ID", client_secret="CLIENT_SECRET",
+                         password="PASSWORD", user_agent="USERAGENT",
+                         username="USERNAME")
 
 With the ``reddit`` instance you can then interact with Reddit:
 
 .. code-block:: python
 
-  # Create a submission to r/test
-  reddit.subreddit("test").submit("Test Submission", url="https://reddit.com")
+    # Create a submission to r/test
+    subreddit = await reddit.subreddit("test")
+    await subreddit.submit("Test Submission", url="https://reddit.com")
 
-  # Comment on a known submission
-  submission = reddit.submission(url="https://www.reddit.com/comments/5e1az9")
-  submission.reply("Super rad!")
+    # Comment on a known submission
+    submission = await reddit.submission(url="https://www.reddit.com/comments/5e1az9")
+    await submission.reply("Super rad!")
 
-  # Reply to the first comment of a weekly top thread of a moderated community
-  submission = next(reddit.subreddit("mod").top("week"))
-  submission.comments[0].reply("An automated reply")
+    # Reply to the first comment of a weekly top thread of a moderated community
+    subreddit = await reddit.subreddit("mod")
+    async for submission in subreddit.top("week"):
+        comments = await submission.comments()
+        await comments[0].reply("An automated reply")
 
-  # Output score for the first 256 items on the frontpage
-  for submission in reddit.front.hot(limit=256):
-      print(submission.score)
+    # Output score for the first 256 items on the frontpage
+    async for submission in reddit.front.hot(limit=256):
+        print(submission.score)
 
-  # Obtain the moderator listing for r/redditdev
-  for moderator in reddit.subreddit("redditdev").moderator():
-      print(moderator)
+    # Obtain the moderator listing for r/redditdev
+    subreddit = await reddit.subreddit("redditdev")
+    async for moderator in subreddit.moderator:
+        print(moderator)
 
-Please see PRAW's `documentation <https://asyncpraw.readthedocs.io/>`_ for
-more examples of what you can do with PRAW.
+Please see Async PRAW's `documentation <https://asyncpraw.readthedocs.io/>`_ for
+more examples of what you can do with Async PRAW.
 
-PRAW Discussion and Support
----------------------------
+Async PRAW Discussion and Support
+---------------------------------
 
 For those new to Python, or would otherwise consider themselves a Python
 beginner, please consider asking questions on the `r/learnpython
@@ -124,7 +128,7 @@ information are certainly welcome.
 Documentation
 -------------
 
-PRAW's documentation is located at https://asyncpraw.readthedocs.io/.
+Async PRAW's documentation is located at https://asyncpraw.readthedocs.io/.
 
 History
 -------
@@ -154,7 +158,7 @@ Bryce began work on PRAW4, a complete rewrite of PRAW.
 License
 -------
 
-PRAW's source (v4.0.0+) is provided under the `Simplified BSD License
+Async PRAW uses the same license as PRAW uses. PRAW's source (v4.0.0+) is provided under the `Simplified BSD License
 <https://github.com/praw-dev/praw/blob/0860c11a9309c80621c267af7caeb6a993933744/LICENSE.txt>`_.
 
 * Copyright (c), 2016, Bryce Boe

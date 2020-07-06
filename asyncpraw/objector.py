@@ -108,9 +108,7 @@ class Objector:
             parser = self.parsers["Image"]
         elif {"isSubscribed", "name", "subscribers"}.issubset(data):
             # discards icon and subscribed information
-            data["display_name"] = data["name"]
-            del data["name"]
-            parser = self.parsers[self._reddit.config.kinds["subreddit"]]
+            return self._reddit.subreddit(data["name"])
         elif {"authorFlairType", "name"}.issubset(data):
             # discards flair information
             parser = self.parsers[self._reddit.config.kinds["redditor"]]

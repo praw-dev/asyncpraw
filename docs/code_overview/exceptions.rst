@@ -1,5 +1,5 @@
-Exceptions in PRAW
-==================
+Exceptions in Async PRAW
+========================
 
 In addition to exceptions under the ``asyncpraw.exceptions`` namespace shown below,
 exceptions might be raised that inherit from

@@ -44,7 +44,6 @@ class LiveContributorRelationship:
             temp = await self.thread._reddit.get(url)
             redditor_list = temp if isinstance(temp, RedditorList) else temp[0]
             for redditor in redditor_list.children:
-                await redditor._fetch()
                 yield redditor
 
         return generator()
@@ -95,7 +94,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez")
+            redditor = await reddit.redditor("spez", lazy=True)
 
             # "manage" and "settings" permissions
             await thread.contributor.invite(redditor, ["manage", "settings"])
@@ -137,7 +136,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez")
+            redditor = await reddit.redditor("spez", lazy=True)
             await thread.contributor.remove(redditor)
             await thread.contributor.remove("t2_1w72")  # with fullname
 
@@ -161,7 +160,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez")
+            redditor = await reddit.redditor("spez", lazy=True)
             await thread.contributor.remove_invite(redditor)
             await thread.contributor.remove_invite("t2_1w72")  # with fullname
 
@@ -359,7 +358,7 @@ class LiveThread(RedditBase):
         return isinstance(other, self.__class__) and str(self) == str(other)
 
     async def get_update(self, update_id: str) -> "LiveUpdate":
-        """Return a lazy :class:`.LiveUpdate` instance.
+        """Return a :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g.,
             ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.

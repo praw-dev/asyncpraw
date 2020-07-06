@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Do not touch these. They use the local PRAW over the global PRAW.
+# Do not touch these. They use the local Async PRAW over the global Async PRAW.
 sys.path.insert(0, ".")
 sys.path.insert(1, "..")
 

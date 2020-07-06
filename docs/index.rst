@@ -1,7 +1,7 @@
-PRAW: The Python Reddit API Wrapper
-===================================
+Async PRAW: The Asynchronous Python Reddit API Wrapper
+======================================================
 
-PRAW's documentation is organized into the following sections:
+Async PRAW's documentation is organized into the following sections:
 
 * :ref:`getting_started`
 * :ref:`code_overview`

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, AsyncGenerator, Iterable, Dict, Union
 import asyncprawcore
 
 from ..const import API_PATH
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator
 
@@ -18,7 +18,7 @@ class PartialRedditor(SimpleNamespace):
     """A namespace object that provides a subset of Redditor attributes."""
 
 
-class Redditors(PRAWBase):
+class Redditors(AsyncPRAWBase):
     """Redditors is a Listing class that provides various Redditor lists."""
 
     def new(

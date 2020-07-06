@@ -1,4 +1,4 @@
-"""Provide the PRAWBase superclass."""
+"""Provide the AsyncPRAWBase superclass."""
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
@@ -6,8 +6,8 @@ if TYPE_CHECKING:  # pragma: no cover
     from .. import Reddit
 
 
-class PRAWBase:
-    """Superclass for all models in PRAW."""
+class AsyncPRAWBase:
+    """Superclass for all models in Async PRAW."""
 
     @staticmethod
     def _safely_add_arguments(argument_dict, key, **new_arguments):

@@ -93,7 +93,7 @@ class Rule(RedditBase):
         value = super().__getattribute__(attribute)
         if attribute == "subreddit" and value is None:
             raise ValueError(
-                "The Rule is missing a subreddit. File a bug report at PRAW."
+                "The Rule is missing a subreddit. File a bug report at Async PRAW."
             )
         return value
 
@@ -182,7 +182,7 @@ class SubredditRules:
         warn(
             "Calling SubredditRules to get a list of rules is deprecated. "
             "Remove the parentheses to use the iterator. View the "
-            "PRAW documentation on how to change the code in order to use the"
+            "Async PRAW documentation on how to change the code in order to use the"
             "iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview"
             "/other/subredditrules.html#asyncpraw.models.reddit.rules."
             "SubredditRules.__call__).",
@@ -319,7 +319,7 @@ class RuleModeration:
 
         .. code-block:: python
 
-            subreddit = reddit.subreddit("NAME")
+            subreddit = reddit.subreddit("NAME", lazy=True)
             rule = await subreddit.rules.get_rule("No Spam")
             await rule.mod.update(description="Don't do this!", violation_reason="Spam post")
 

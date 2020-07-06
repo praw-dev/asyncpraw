@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING, Dict, AsyncGenerator, List, Union
 
 from ..const import API_PATH
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator
 
@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from .reddit.message import Message
 
 
-class Inbox(PRAWBase):
+class Inbox(AsyncPRAWBase):
     """Inbox is a Listing class that represents the Inbox."""
 
     def all(

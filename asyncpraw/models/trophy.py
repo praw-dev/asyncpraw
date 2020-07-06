@@ -1,13 +1,13 @@
 """Represent the Trophy class."""
 from typing import TYPE_CHECKING, Any, Dict, Union
 
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     from .. import Reddit
 
 
-class Trophy(PRAWBase):
+class Trophy(AsyncPRAWBase):
     """Represent a trophy.
 
     End users should not instantiate this class directly.

@@ -1,7 +1,7 @@
-Installing PRAW
-===============
+Installing Async PRAW
+=====================
 
-PRAW supports Python 3.5+. The recommended way to install PRAW is via ``pip``.
+Async PRAW supports Python 3.6+. The recommended way to install Async PRAW is via ``pip``.
 
 .. code-block:: bash
 
@@ -17,10 +17,10 @@ For instructions on installing Python and pip see "The Hitchhiker's Guide to
 Python" `Installation Guides
 <https://docs.python-guide.org/en/latest/starting/installation/>`_.
 
-Updating PRAW
--------------
+Updating Async PRAW
+-------------------
 
-PRAW can be updated by running:
+Async PRAW can be updated by running:
 
 .. code-block:: bash
 
@@ -29,18 +29,18 @@ PRAW can be updated by running:
 Installing Older Versions
 -------------------------
 
-Older versions of PRAW can be installed by specifying the version number as
+Older versions of Async PRAW can be installed by specifying the version number as
 part of the installation command:
 
 .. code-block:: bash
 
-   pip install asyncpraw==3.6.0
+   pip install asyncpraw==7.0.0
 
 Installing the Latest Development Version
 -----------------------------------------
 
-Is there a feature that was recently merged into PRAW that you cannot wait to
-take advantage of? If so, you can install PRAW directly from GitHub like so:
+Is there a feature that was recently merged into Async PRAW that you cannot wait to
+take advantage of? If so, you can install Async PRAW directly from GitHub like so:
 
 .. code-block:: bash
 

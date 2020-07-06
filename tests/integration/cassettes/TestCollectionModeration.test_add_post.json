@@ -408,7 +408,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/submit/?raw_json=1"
+        "url": "https://oauth.reddit.com/api/v1/collections/collection?collection_id=3aa31024-711b-46b2-9514-3fd50619f6e8&include_links=True&raw_json=1"
       }
     },
     {
@@ -466,8 +466,8 @@
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
-        "method": "POST",
-        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/user/<TEST_SUBREDDIT>/about/?raw_json=1"
       },
       "response": {
         "body": {
@@ -768,8 +768,9 @@
           "Accept-Encoding": [
             "identity"
           ],
-          "Authorization": [
-            "bearer <ACCESS_TOKEN>"
+          [
+            "nsfw",
+            false
           ],
           "User-Agent": [
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
@@ -838,12 +839,32 @@
           "Authorization": [
             "bearer <ACCESS_TOKEN>"
           ],
+          [
+            "text",
+            ""
+          ],
+          [
+            "title",
+            "Post #1"
+          ],
+          [
+            "validate_on_submit",
+            false
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
           "User-Agent": [
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/v1/collections/add_post_to_collection?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
       },
       "response": {
         "body": {
@@ -909,7 +930,7 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/v1/collections/add_post_to_collection?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
       },
       "response": {
         "body": {
@@ -944,7 +965,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/v1/collections/add_post_to_collection?raw_json=1"
+        "url": "https://oauth.reddit.com/api/submit/?raw_json=1"
       }
     },
     {
@@ -954,8 +975,9 @@
           "Accept-Encoding": [
             "identity"
           ],
-          "Authorization": [
-            "bearer <ACCESS_TOKEN>"
+          [
+            "nsfw",
+            false
           ],
           "User-Agent": [
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
@@ -1029,7 +1051,7 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/v1/collections/add_post_to_collection?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
       },
       "response": {
         "body": {
@@ -1064,7 +1086,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/v1/collections/add_post_to_collection?raw_json=1"
+        "url": "https://oauth.reddit.com/api/submit/?raw_json=1"
       }
     },
     {
@@ -1148,8 +1170,8 @@
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
-        "method": "POST",
-        "uri": "https://oauth.reddit.com/api/v1/collections/add_post_to_collection?raw_json=1"
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/comments/hlet1l/?limit=2048&sort=confidence&raw_json=1"
       },
       "response": {
         "body": {

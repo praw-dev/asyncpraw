@@ -2,14 +2,14 @@
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Optional, Union
 
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 from .listing import FlairListing
 
 if TYPE_CHECKING:  # pragma: no cover
     from ... import Reddit
 
 
-class ListingGenerator(PRAWBase, AsyncIterator):
+class ListingGenerator(AsyncPRAWBase, AsyncIterator):
     """Instances of this class generate :class:`.RedditBase` instances.
 
     .. warning:: This class should not be directly utilized. Instead you will

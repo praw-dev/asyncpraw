@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Union
 from ...const import API_PATH
 from ...exceptions import ClientException
 from ...util.cache import cachedproperty
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 from .base import RedditBase
 from .submission import Submission
 from .subreddit import Subreddit
@@ -231,25 +231,25 @@ class Collection(RedditBase):
         )
 
 
-class CollectionModeration(PRAWBase):
+class CollectionModeration(AsyncPRAWBase):
     """Class to support moderation actions on a :class:`.Collection`.
 
     Obtain an instance via:
 
     .. code-block:: python
 
-       reddit.subreddit("SUBREDDIT").collections("some_uuid").mod
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        collection = await subreddit.collections("some_uuid")
+        collection.mod
     """
 
-    async def _post_fullname(self, post):
+    def _post_fullname(self, post):
         """Get a post's fullname.
 
         :param post: A fullname, a Submission, a permalink, or an ID.
         :returns: The fullname of the post.
         """
         if isinstance(post, Submission):
-            if not post._fetched:
-                await post._fetch()
             return post.fullname
         elif not isinstance(post, str):
             raise TypeError(
@@ -258,11 +258,9 @@ class CollectionModeration(PRAWBase):
         if post.startswith("{}_".format(self._reddit.config.kinds["submission"])):
             return post
         try:
-            submission = await self._reddit.submission(url=post)
-            return submission.fullname
+            return Submission(self._reddit, url=post).fullname
         except ClientException:
-            submission = await self._reddit.submission(id=post)
-            return submission.fullname
+            return Submission(self._reddit, id=post).fullname
 
     def __init__(self, reddit: "Reddit", collection_id: str):
         """Initialize an instance of CollectionModeration.
@@ -290,7 +288,7 @@ class CollectionModeration(PRAWBase):
         .. seealso:: :meth:`.remove_post`
 
         """
-        link_fullname = await self._post_fullname(submission)
+        link_fullname = self._post_fullname(submission)
 
         await self._reddit.post(
             API_PATH["collection_add_post"],
@@ -333,7 +331,7 @@ class CollectionModeration(PRAWBase):
         .. seealso:: :meth:`.add_post`
 
         """
-        link_fullname = await self._post_fullname(submission)
+        link_fullname = self._post_fullname(submission)
 
         await self._reddit.post(
             API_PATH["collection_remove_post"],
@@ -357,7 +355,7 @@ class CollectionModeration(PRAWBase):
             await collection.mod.reorder(new_order)
 
         """
-        link_ids = ",".join([await self._post_fullname(post) for post in links])
+        link_ids = ",".join([self._post_fullname(post) for post in links])
         await self._reddit.post(
             API_PATH["collection_reorder"],
             data={"collection_id": self.collection_id, "link_ids": link_ids},
@@ -406,7 +404,7 @@ class CollectionModeration(PRAWBase):
         )
 
 
-class SubredditCollections(PRAWBase):
+class SubredditCollections(AsyncPRAWBase):
     r"""Class to represent a Subreddit's :class:`.Collection`\ s.
 
     Obtain an instance via:
@@ -433,12 +431,16 @@ class SubredditCollections(PRAWBase):
         return SubredditCollectionsModeration(self._reddit, self.subreddit.fullname)
 
     async def __call__(
-        self, collection_id: Optional[str] = None, permalink: Optional[str] = None,
+        self,
+        collection_id: Optional[str] = None,
+        permalink: Optional[str] = None,
+        lazy: bool = False,
     ):
         """Return the :class:`.Collection` with the specified ID.
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
+        :param lazy: Determines if object is loaded lazily (default: False)
         :returns: The specified Collection.
 
         Exactly one of ``collection_id`` and ``permalink`` is required.
@@ -454,10 +456,19 @@ class SubredditCollections(PRAWBase):
             print(collection.title)
             print(collection.description)
 
-            permalink = 'https://www.reddit.com/r/SUBREDDIT/collection/' + uuid
+            permalink = "https://www.reddit.com/r/SUBREDDIT/collection/" + uuid
             collection = await subreddit.collections(permalink=permalink)
             print(collection.title)
             print(collection.description)
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections(uuid, lazy=True)
+            await collection.mod.add("submission_id")
 
         """
         if (collection_id is None) == (permalink is None):
@@ -467,7 +478,8 @@ class SubredditCollections(PRAWBase):
         collection = Collection(
             self._reddit, collection_id=collection_id, permalink=permalink
         )
-        await collection._fetch()
+        if not lazy:
+            await collection._fetch()
         return collection
 
     def __init__(
@@ -500,7 +512,7 @@ class SubredditCollections(PRAWBase):
             yield collection
 
 
-class SubredditCollectionsModeration(PRAWBase):
+class SubredditCollectionsModeration(AsyncPRAWBase):
     """Class to represent moderator actions on a Subreddit's Collections.
 
     Obtain an instance via:

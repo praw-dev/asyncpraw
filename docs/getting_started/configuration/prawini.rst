@@ -3,7 +3,7 @@
 praw.ini Files
 ==============
 
-PRAW comes with a ``praw.ini`` file in the package directory, and looks for
+Async PRAW comes with a ``praw.ini`` file in the package directory, and looks for
 user defined ``praw.ini`` files in a few other locations:
 
 1. In the `current working directory
@@ -58,8 +58,8 @@ Format of praw.ini
 
 ``praw.ini`` uses the `INI file format
 <https://en.wikipedia.org/wiki/INI_file>`_, which can contain multiple groups
-of settings separated into sections. PRAW refers to each section as a
-``site``. The default site, ``DEFAULT``, is provided in the package's
+of settings separated into sections. PRAW and Async PRAW refers to each section
+as a ``site``. The default site, ``DEFAULT``, is provided in the package's
 ``praw.ini`` file. This site defines the default settings for interaction with
 Reddit. The contents of the package's ``praw.ini`` file are:
 
@@ -123,7 +123,7 @@ approach has precedence over the ``site_name`` parameter described above.
 Using Interpolation
 -------------------
 
-By default PRAW doesn't apply any interpolation on the config file but this can
+By default Async PRAW doesn't apply any interpolation on the config file but this can
 be changed with the ``config_interpolation`` parameter which can be set to
 "basic" or "extended".
 

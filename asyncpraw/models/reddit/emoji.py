@@ -179,7 +179,8 @@ class SubredditEmoji:
 
         .. code-block:: python
 
-            async for emoji in reddit.subreddit("praw_test").emoji:
+            subreddit = await reddit.subreddit("praw_test")
+            async for emoji in subreddit.emoji:
                 print(emoji)
 
         """

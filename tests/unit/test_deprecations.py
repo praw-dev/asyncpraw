@@ -50,7 +50,7 @@ class TestDeprecation(UnitTest):
             excinfo.value.args[0]
             == "Accessing the attribute original_exception is deprecated."
             " Please rewrite your code in such a way that this attribute does "
-            "not need to be used. It will be removed in PRAW 8.0."
+            "not need to be used. It will be removed in Async PRAW 8.0."
         )
 
     def test_gold_method(self):

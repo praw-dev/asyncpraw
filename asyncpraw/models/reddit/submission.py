@@ -85,7 +85,7 @@ class SubmissionModeration(ThingModerationMixin):
 
     .. code-block:: python
 
-        submission = await reddit.submission(id="8dmv8z")
+        submission = await reddit.submission(id="8dmv8z", lazy=True)
         await submission.mod.approve()
 
     """
@@ -118,7 +118,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.contest_mode(state=True)
 
         """
@@ -148,7 +148,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.flair(text="PRAW", css_class="bot")
 
         """
@@ -222,7 +222,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.sfw()
 
         .. seealso:: :meth:`~.nsfw`
@@ -242,7 +242,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.spoiler()
 
         .. seealso:: :meth:`~.unspoiler`
@@ -272,7 +272,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.sticky()
 
         """
@@ -461,8 +461,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         .. code-block:: python
 
             submission.comment_sort = "new"
-            comments = await submission.comments()
-            async for comment in comments.list():
+            comments = await submission.comments
+            comment_list = await comments.list()
+            for comment in list:
                 # do stuff with comment
 
         .. note:: The appropriate values for ``comment_sort`` include
@@ -492,8 +493,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         .. code-block:: python
 
             choices = await submission.flair.choices()
-            template_id = next(x for x in choices
-                              if x["flair_text_editable"])["flair_template_id"]
+            template_id = next(x for x in choices if x["flair_text_editable"])["flair_template_id"]
             await submission.flair.select(template_id, "my custom value")
 
         """
@@ -507,7 +507,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="8dmv8z")
+            submission = await reddit.submission(id="8dmv8z", lazy=True)
             await submission.mod.approve()
 
         """
@@ -610,7 +610,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mark_visited()
 
         """
@@ -628,7 +628,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.hide()
 
         .. seealso:: :meth:`~.unhide`

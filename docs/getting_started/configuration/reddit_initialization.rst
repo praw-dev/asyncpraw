@@ -3,7 +3,7 @@
 Keyword Arguments to :class:`.Reddit`
 =====================================
 
-Most of PRAW's documentation will demonstrate configuring PRAW through the use
+Most of Async PRAW's documentation will demonstrate configuring Async PRAW through the use
 of keyword arguments when initializing instances of :class:`.Reddit`. All of
 the :ref:`configuration_options` can be specified using a keyword argument of
 the same name.

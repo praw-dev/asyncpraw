@@ -87,7 +87,11 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
     @property
     def is_root(self) -> bool:
-        """Return True when the comment is a top level comment."""
+        """Return True when the comment is a top level comment.
+
+        .. note:: This property requires the comment to be fetched. Otherwise, an
+                   ``AttributeError`` will be raised.
+        """
         parent_type = self.parent_id.split("_", 1)[0]
         return parent_type == self._reddit.config.kinds["submission"]
 
@@ -99,7 +103,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd")
+            comment = await reddit.comment("dkk4qjd", lazy=True)
             await comment.mod.approve()
 
         """
@@ -233,19 +237,19 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         entire ancestry should be immediately available, requiring no extra
         network requests. However, if this comment was obtained through other
         means, e.g., ``await reddit.comment("COMMENT_ID")``, or
-        ``reddit.inbox.comment_replies``, then the returned parent may be a
-        lazy instance of either :class:`.Comment`, or :class:`.Submission`.
+        ``reddit.inbox.comment_replies``, then the returned parent may be an
+        instance of either :class:`.Comment`, or :class:`.Submission`.
 
         Lazy comment example:
 
         .. code-block:: python
 
-           comment = await reddit.comment("cklhv0f")
-           parent = await comment.parent()
-           # `replies` is empty until the comment is refreshed
-           print(parent.replies)  # Output: []
-           await parent.refresh()
-           print(parent.replies)  # Output is at least: [Comment(id='cklhv0f')]
+            comment = await reddit.comment("cklhv0f", lazy=True)
+            parent = await comment.parent()
+            # `replies` is empty until the comment is refreshed
+            print(parent.replies)  # Output: []
+            await parent.refresh()
+            print(parent.replies)  # Output is at least: [Comment(id='cklhv0f')]
 
         .. warning:: Successive calls to :meth:`.parent()` may result in a
            network request per call when the comment is not obtained through a
@@ -259,15 +263,14 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-           comment = await reddit.comment("dkk4qjd")
-           ancestor = comment
-           refresh_counter = 0
-           while not ancestor.is_root:
-               ancestor = await ancestor.parent()
-               if refresh_counter % 9 == 0:
-                   await ancestor.refresh()
-               refresh_counter += 1
-           print('Top-most Ancestor: {}'.format(ancestor))
+            ancestor =  await reddit.comment("dkk4qjd")
+            refresh_counter = 0
+            while not ancestor.is_root:
+                ancestor = await ancestor.parent()
+                if refresh_counter % 9 == 0:
+                    await ancestor.refresh()
+                refresh_counter += 1
+            print('Top-most Ancestor: {}'.format(ancestor))
 
         The above code should result in 5 network requests to Reddit. Without
         the calls to :meth:`.refresh()` it would make at least 31 network
@@ -301,7 +304,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-           comment = await reddit.comment("dkk4qjd")
+           comment = await reddit.comment("dkk4qjd", lazy=True)
            await comment.refresh()
 
         """
@@ -351,7 +354,7 @@ class CommentModeration(ThingModerationMixin):
 
     .. code-block:: python
 
-       comment = await reddit.comment("dkk4qjd")
+       comment = await reddit.comment("dkk4qjd", lazy=True)
        await comment.mod.approve()
 
     """
@@ -374,7 +377,7 @@ class CommentModeration(ThingModerationMixin):
         .. code-block:: python
 
            # lock a comment:
-           comment = await reddit.comment("dkk4qjd")
+           comment = await reddit.comment("dkk4qjd", lazy=True)
            await comment.mod.show()
         """
         url = API_PATH["show_comment"]

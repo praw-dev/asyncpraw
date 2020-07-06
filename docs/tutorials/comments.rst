@@ -24,8 +24,8 @@ comments belonging to one or more specific subreddits, please see
 
 .. _extracting_comments:
 
-Extracting comments with PRAW
------------------------------
+Extracting comments with Async PRAW
+-----------------------------------
 
 Assume we want to process the comments for this submission:
 https://www.reddit.com/r/funny/comments/3g1jfi/buttons/
@@ -35,14 +35,14 @@ entire URL:
 
 .. code-block:: python
 
-   url = "https://www.reddit.com/r/funny/comments/3g1jfi/buttons/"
-   submission = reddit.submission(url=url)
+    url = "https://www.reddit.com/r/funny/comments/3g1jfi/buttons/"
+    submission = await reddit.submission(url=url)
 
 or with the submission's ID which comes after ``comments/`` in the URL:
 
 .. code-block:: python
 
-   submission = reddit.submission(id="3g1jfi")
+    submission = await reddit.submission(id="3g1jfi")
 
 With a submission object we can then interact with its :class:`.CommentForest`
 through the submission's :attr:`~asyncpraw.models.Submission.comments` attribute. A
@@ -54,8 +54,9 @@ thread we could do:
 
 .. code-block:: python
 
-   for top_level_comment in submission.comments:
-       print(top_level_comment.body)
+    comments = await submission.comments()
+    for top_level_comment in comments:
+        print(top_level_comment.body)
 
 While running this you will most likely encounter the exception
 ``AttributeError: 'MoreComments' object has no attribute 'body'``. This
@@ -66,11 +67,13 @@ thread" links encountered on the website. While we could ignore
 
 .. code-block:: python
 
-   from asyncpraw.models import MoreComments
-   for top_level_comment in submission.comments:
-       if isinstance(top_level_comment, MoreComments):
-           continue
-       print(top_level_comment.body)
+    from asyncpraw.models import MoreComments
+
+    comments - await submission.comments()
+    for top_level_comment in comments:
+        if isinstance(top_level_comment, MoreComments):
+            continue
+        print(top_level_comment.body)
 
 The ``replace_more`` method
 ---------------------------
@@ -96,9 +99,10 @@ The previous snippet can thus be simplified:
 
 .. code-block:: python
 
-   submission.comments.replace_more(limit=0)
-   for top_level_comment in submission.comments:
-       print(top_level_comment.body)
+    comments = await submission.comments()
+    await comments.replace_more(limit=0)
+    for top_level_comment in comments:
+        print(top_level_comment.body)
 
 .. note:: Calling :meth:`.replace_more` is destructive. Calling it again on the
    same submission instance has no effect.
@@ -109,19 +113,20 @@ the ``threshold``.
 
 .. code-block:: python
 
-   submission.comments.replace_more(limit=None)
-   for top_level_comment in submission.comments:
-       print(top_level_comment.body)
+    comments = await submission.comments()
+    await comments.replace_more(limit=None)
+    for top_level_comment in comments:
+        print(top_level_comment.body)
 
 Now we are able to successfully iterate over all the top-level comments. What
 about their replies? We could output all second-level comments like so:
 
 .. code-block:: python
 
-   submission.comments.replace_more(limit=None)
-   for top_level_comment in submission.comments:
-       for second_level_comment in top_level_comment.replies:
-           print(second_level_comment.body)
+    submission.comments.replace_more(limit=None)
+    for top_level_comment in submission.comments:
+        for second_level_comment in top_level_comment.replies:
+            print(second_level_comment.body)
 
 However, the comment forest can be arbitrarily deep, so we'll want a more
 robust solution. One way to iterate over a tree, or forest, is via a
@@ -129,12 +134,13 @@ breadth-first traversal using a queue:
 
 .. code-block:: python
 
-   submission.comments.replace_more(limit=None)
-   comment_queue = submission.comments[:]  # Seed with top-level
-   while comment_queue:
-       comment = comment_queue.pop(0)
-       print(comment.body)
-       comment_queue.extend(comment.replies)
+    comments = await submission.comments()
+    await comments.replace_more(limit=None)
+    comment_queue = comments[:]  # Seed with top-level
+    while comment_queue:
+        comment = comment_queue.pop(0)
+        print(comment.body)
+        comment_queue.extend(comment.replies)
 
 The above code will output all the top-level comments, followed by
 second-level, third-level, etc. While it is awesome to be able to do your own
@@ -144,14 +150,16 @@ order as the code above. Thus the above can be rewritten as:
 
 .. code-block:: python
 
-   submission.comments.replace_more(limit=None)
-   for comment in submission.comments.list():
-       print(comment.body)
+    comments = await submission.comments()
+    comments.replace_more(limit=None)
+    all_comments = await comments.list()
+    for comment in all_comments:
+        print(comment.body)
 
 You can now properly extract and parse all (or most) of the comments
 belonging to a single submission. Combine this with :ref:`submission iteration
 <submission-iteration>` and you can build some really cool stuff.
 
 Finally, note that the value of ``submission.num_comments`` may not match up
-100% with the number of comments extracted via PRAW. This discrepancy is
+100% with the number of comments extracted via Async PRAW. This discrepancy is
 normal as that count includes deleted, removed, and spam comments.

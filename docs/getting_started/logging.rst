@@ -1,7 +1,7 @@
-Logging in PRAW
-===============
+Logging in Async PRAW
+=====================
 
-It is occasionally useful to observe the HTTP requests that PRAW is issuing. To
+It is occasionally useful to observe the HTTP requests that Async PRAW is issuing. To
 do so you have to configure and enable logging.
 
 Add the following to your code to log everything available:

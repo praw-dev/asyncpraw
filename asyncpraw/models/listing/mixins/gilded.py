@@ -2,11 +2,11 @@
 from typing import Any, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 
-class GildedListingMixin(PRAWBase):
+class GildedListingMixin(AsyncPRAWBase):
     """Mixes in the gilded method."""
 
     def gilded(
@@ -21,7 +21,7 @@ class GildedListingMixin(PRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('test')
+            subreddit = await reddit.subreddit("test")
             async for item in subreddit.gilded():
                 print(item.id)
 

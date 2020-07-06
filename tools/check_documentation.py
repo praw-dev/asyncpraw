@@ -4,7 +4,7 @@ import os
 import re
 import sys
 
-# This line imports from the local PRAW rather than the global installed PRAW.
+# This line imports from the local Async PRAW rather than the global installed Async PRAW.
 sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..")))
 
 from asyncpraw.models.reddit.base import RedditBase  # noqa: E402

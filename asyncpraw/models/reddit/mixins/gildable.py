@@ -15,10 +15,10 @@ class GildableMixin:
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd")
+            comment = await reddit.comment("dkk4qjd"), lazy=True
             await comment.gild()
 
-            submission = await reddit.submission("8dmv8z")
+            submission = await reddit.submission("8dmv8z", lazy=True)
             await submission.gild()
 
         """
