@@ -1,11 +1,11 @@
 """Test asyncpraw.models.redditor."""
-from unittest import mock
+from asynctest import mock
 
 import pytest
 from asyncprawcore import Forbidden
 
 from asyncpraw.exceptions import RedditAPIException
-from asyncpraw.models import Comment, Submission
+from asyncpraw.models import Comment, Submission, Redditor
 
 from ... import IntegrationTest
 
@@ -15,304 +15,313 @@ class TestRedditor(IntegrationTest):
     FRIEND_FULLNAME = "t2_6c1xj"
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_block(self, _):
+    async def test_block(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.FRIEND)
-            redditor.block()
+            redditor = await self.reddit.redditor(self.FRIEND)
+            await redditor.block()
 
-    def test_friend(self):
+    async def test_friend(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            self.reddit.redditor(self.FRIEND.lower()).friend()
+            redditor = await self.reddit.redditor(self.FRIEND.lower())
+            await redditor.friend()
 
-    def test_friend__with_note__no_gold(self):
+    async def test_friend__with_note__no_gold(self):
         self.reddit.read_only = False
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
-                self.reddit.redditor(self.FRIEND.lower()).friend(note="asyncpraw")
+                redditor = await self.reddit.redditor(self.FRIEND.lower())
+                await redditor.friend(note="asyncpraw")
             assert "GOLD_REQUIRED" == excinfo.value.error_type
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_friend_info(self, _):
+    async def test_friend_info(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.FRIEND).friend_info()
+            friend = await self.reddit.redditor(self.FRIEND)
+            redditor = await friend.friend_info()
             assert self.FRIEND == redditor
             assert "date" in redditor.__dict__
             assert "created_utc" not in redditor.__dict__
-            assert hasattr(redditor, "created_utc")
+            # assert  hasattr(redditor, "created_utc") # FIXME: what is this for?
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_fullname_init(self, _):
+    async def test_fullname_init(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(fullname=self.FRIEND_FULLNAME)
+            redditor = await self.reddit.redditor(fullname=self.FRIEND_FULLNAME)
             assert redditor.name == self.FRIEND
 
-    def test_gild__no_creddits(self):
+    async def test_gild__no_creddits(self):
         self.reddit.read_only = False
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
-                self.reddit.redditor("subreddit_stats").gild()
-            assert "INSUFFICIENT_CREDDITS" == excinfo.value.error_type
+                redditor = await self.reddit.redditor("subreddit_stats")
+                await redditor.gild()
+            assert "INSUFFICIENT_COINS" == excinfo.value.error_type
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_message(self, _):
+    async def test_message(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("subreddit_stats")
-            redditor.message("PRAW test", "This is a test from PRAW")
+            redditor = await self.reddit.redditor("subreddit_stats")
+            redditor.message("Async PRAW test", "This is a test fromAsync PRAW")
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_message_from_subreddit(self, _):
+    async def test_message_from_subreddit(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("subreddit_stats")
+            redditor = await self.reddit.redditor("subreddit_stats")
             redditor.message(
-                "PRAW test",
-                "This is a test from PRAW",
+                "Async PRAW test",
+                "This is a test from Async PRAW",
                 from_subreddit=pytest.placeholders.test_subreddit,
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_moderated(self, _):
-        redditor = self.reddit.redditor("spez")
-        redditor_no_mod = self.reddit.redditor("ArtemisHelper")
+    async def test_moderated(self, _):
         with self.use_cassette():
-            moderated = redditor.moderated()
+            redditor = await self.reddit.redditor("spez")
+            redditor_no_mod = await self.reddit.redditor("Turambar420")
+            moderated = await redditor.moderated()
             assert len(moderated) > 0
             assert len(moderated[0].name) > 0
-            not_moderated = redditor_no_mod.moderated()
+            not_moderated = await redditor_no_mod.moderated()
             assert len(not_moderated) == 0
 
-    def test_multireddits(self):
-        redditor = self.reddit.redditor("kjoneslol")
+    async def test_multireddits(self):
         with self.use_cassette():
-            for multireddit in redditor.multireddits():
+            redditor = await self.reddit.redditor("kjoneslol")
+            multireddits = await redditor.multireddits()
+            for multireddit in multireddits:
                 if "sfwpornnetwork" == multireddit.name:
                     break
             else:
                 assert False, "sfwpornnetwork not found in multireddits"
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_stream__comments(self, _):
-        generator = self.reddit.redditor("AutoModerator").stream.comments()
+    async def test_stream__comments(self, _):
         with self.use_cassette():
+            redditor = await self.reddit.redditor("AutoModerator")
+            generator = redditor.stream.comments()
             for i in range(101):
-                assert isinstance(next(generator), Comment)
+                assert isinstance(await self.async_next(generator), Comment)
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_stream__submissions(self, _):
-        generator = self.reddit.redditor("AutoModerator").stream.submissions()
+    async def test_stream__submissions(self, _):
         with self.use_cassette():
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            generator = redditor.stream.submissions()
             for i in range(101):
-                assert isinstance(next(generator), Submission)
+                assert isinstance(await self.async_next(generator), Submission)
 
-    def test_trophies(self):
-        redditor = self.reddit.redditor("spez")
+    async def test_trophies(self):
         with self.use_cassette():
-            trophies = redditor.trophies()
+            redditor = await self.reddit.redditor("spez")
+            trophies = await redditor.trophies()
             assert len(trophies) > 0
             assert len(trophies[0].name) > 0
 
-    def test_trophies__user_not_exist(self):
-        redditor = self.reddit.redditor("thisusershouldnotexist")
+    async def test_trophies__user_not_exist(self):
         with self.use_cassette():
+            redditor = Redditor(self.reddit, "thisusershouldnotexist")
             with pytest.raises(RedditAPIException) as excinfo:
-                redditor.trophies()
+                await redditor.trophies()
             assert "USER_DOESNT_EXIST" == excinfo.value.error_type
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_unblock(self, _):
+    async def test_unblock(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.user.blocked()[0]
-            redditor.unblock()
+            blocked = await self.reddit.user.blocked()
+            for redditor in blocked:
+                await redditor.unblock()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_unfriend(self, _):
+    async def test_unfriend(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.user.friends()[0]
-            assert redditor.unfriend() is None
+            friends = await self.reddit.user.friends()
+            redditor = friends[0]
+            assert await redditor.unfriend() is None
 
 
 class TestRedditorListings(IntegrationTest):
-    def test_comments__controversial(self):
+    async def test_comments__controversial(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            comments = list(redditor.comments.controversial())
+            redditor = await self.reddit.redditor("spez")
+            comments = await self.async_list(redditor.comments.controversial())
         assert len(comments) == 100
 
-    def test_comments__hot(self):
+    async def test_comments__hot(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            comments = list(redditor.comments.hot())
+            redditor = await self.reddit.redditor("spez")
+            comments = await self.async_list(redditor.comments.hot())
         assert len(comments) == 100
 
-    def test_comments__new(self):
+    async def test_comments__new(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            comments = list(redditor.comments.new())
+            redditor = await self.reddit.redditor("spez")
+            comments = await self.async_list(redditor.comments.new())
         assert len(comments) == 100
 
-    def test_comments__top(self):
+    async def test_comments__top(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            comments = list(redditor.comments.top())
+            redditor = await self.reddit.redditor("spez")
+            comments = await self.async_list(redditor.comments.top())
         assert len(comments) == 100
 
-    def test_controversial(self):
+    async def test_controversial(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            items = list(redditor.controversial())
+            redditor = await self.reddit.redditor("spez")
+            items = await self.async_list(redditor.controversial())
         assert len(items) == 100
 
-    def test_downvoted(self):
+    async def test_downvoted(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
-            submissions = list(redditor.downvoted())
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            submissions = await self.async_list(redditor.downvoted())
         assert len(submissions) > 0
 
-    def test_downvoted__in_read_only_mode(self):
+    async def test_downvoted__in_read_only_mode(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
             with pytest.raises(Forbidden):
-                list(redditor.downvoted())
+                await self.async_list(redditor.downvoted())
 
-    def test_downvoted__other_user(self):
+    async def test_downvoted__other_user(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
+            redditor = await self.reddit.redditor("spez")
             with pytest.raises(Forbidden):
-                list(redditor.downvoted())
+                await self.async_list(redditor.downvoted())
 
-    def test_gilded(self):
+    async def test_gilded(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            items = list(redditor.gilded(limit=50))
+            redditor = await self.reddit.redditor("spez")
+            items = await self.async_list(redditor.gilded(limit=50))
         assert len(items) == 50
 
-    def test_gildings(self):
+    async def test_gildings(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
-            items = list(redditor.gildings())
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            items = await self.async_list(redditor.gildings())
         assert isinstance(items, list)
 
-    def test_gildings__in_read_only_mode(self):
+    async def test_gildings__in_read_only_mode(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
             with pytest.raises(Forbidden):
-                list(redditor.gildings())
+                await self.async_list(redditor.gildings())
 
-    def test_gildings__other_user(self):
+    async def test_gildings__other_user(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
+            redditor = await self.reddit.redditor("spez")
             with pytest.raises(Forbidden):
-                list(redditor.gildings())
+                await self.async_list(redditor.gildings())
 
-    def test_hidden(self):
+    async def test_hidden(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
-            submissions = list(redditor.hidden())
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            submissions = await self.async_list(redditor.hidden())
         assert len(submissions) > 0
 
-    def test_hidden__in_read_only_mode(self):
+    async def test_hidden__in_read_only_mode(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
             with pytest.raises(Forbidden):
-                list(redditor.hidden())
+                await self.async_list(redditor.hidden())
 
-    def test_hidden__other_user(self):
+    async def test_hidden__other_user(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
+            redditor = await self.reddit.redditor("spez")
             with pytest.raises(Forbidden):
-                list(redditor.hidden())
+                await self.async_list(redditor.hidden())
 
-    def test_hot(self):
+    async def test_hot(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            items = list(redditor.hot())
+            redditor = await self.reddit.redditor("spez")
+            items = await self.async_list(redditor.hot())
         assert len(items) == 100
 
-    def test_new(self):
+    async def test_new(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            items = list(redditor.new())
+            redditor = await self.reddit.redditor("spez")
+            items = await self.async_list(redditor.new())
         assert len(items) == 100
 
-    def test_saved(self):
+    async def test_saved(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
-            items = list(redditor.saved())
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            items = await self.async_list(redditor.saved())
         assert len(items) > 0
 
-    def test_saved__in_read_only_mode(self):
+    async def test_saved__in_read_only_mode(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
             with pytest.raises(Forbidden):
-                list(redditor.saved())
+                await self.async_list(redditor.saved())
 
-    def test_saved__other_user(self):
+    async def test_saved__other_user(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
+            redditor = await self.reddit.redditor("spez")
             with pytest.raises(Forbidden):
-                list(redditor.saved())
+                await self.async_list(redditor.saved())
 
-    def test_submissions__controversial(self):
+    async def test_submissions__controversial(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spladug")
-            submissions = list(redditor.submissions.controversial())
+            redditor = await self.reddit.redditor("spladug")
+            submissions = await self.async_list(redditor.submissions.controversial())
         assert len(submissions) == 100
 
-    def test_submissions__hot(self):
+    async def test_submissions__hot(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            submissions = list(redditor.submissions.hot())
+            redditor = await self.reddit.redditor("spez")
+            submissions = await self.async_list(redditor.submissions.hot())
         assert len(submissions) == 100
 
-    def test_submissions__new(self):
+    async def test_submissions__new(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            submissions = list(redditor.submissions.new())
+            redditor = await self.reddit.redditor("spez")
+            submissions = await self.async_list(redditor.submissions.new())
         assert len(submissions) == 100
 
-    def test_submissions__top(self):
+    async def test_submissions__top(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spladug")
-            submissions = list(redditor.submissions.top())
+            redditor = await self.reddit.redditor("spladug")
+            submissions = await self.async_list(redditor.submissions.top())
         assert len(submissions) == 100
 
-    def test_top(self):
+    async def test_top(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
-            items = list(redditor.top())
+            redditor = await self.reddit.redditor("spez")
+            items = await self.async_list(redditor.top())
         assert len(items) == 100
 
-    def test_upvoted(self):
+    async def test_upvoted(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
-            submissions = list(redditor.upvoted())
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            submissions = await self.async_list(redditor.upvoted())
         assert len(submissions) > 0
 
-    def test_upvoted__in_read_only_mode(self):
+    async def test_upvoted__in_read_only_mode(self):
         with self.use_cassette():
-            redditor = self.reddit.redditor(self.reddit.config.username)
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
             with pytest.raises(Forbidden):
-                list(redditor.upvoted())
+                await self.async_list(redditor.upvoted())
 
-    def test_upvoted__other_user(self):
+    async def test_upvoted__other_user(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = self.reddit.redditor("spez")
+            redditor = await self.reddit.redditor("spez")
             with pytest.raises(Forbidden):
-                list(redditor.upvoted())
+                await self.async_list(redditor.upvoted())

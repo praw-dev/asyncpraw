@@ -73,11 +73,40 @@ class CustomVCR(VCR):
         return super().use_cassette(path, **kwargs)
 
 
+def serialize_list(data: list):
+    new_list = []
+    for item in data:
+        if isinstance(item, dict):
+            new_list.append(serialize_dict(item))
+        elif isinstance(item, list):
+            new_list.append(serialize_list(item))
+        else:
+            new_list.append(item)
+    return new_list
+
+
+def serialize_dict(data: dict):
+    """this is to filter out buffered readers"""
+    new_dict = {}
+    for key, value in data.items():
+        if key == "file":
+            continue  # skip files
+        elif isinstance(value, dict):
+            new_dict[key] = serialize_dict(value)
+        elif isinstance(value, list):
+            new_dict[key] = serialize_list(value)
+        else:
+            new_dict[key] = value
+    return new_dict
+
+
 class CustomSerializer(object):
     @staticmethod
     def serialize(cassette_dict):
         cassette_dict["recorded_at"] = datetime.now().isoformat()[:-7]
-        return json.dumps(cassette_dict, sort_keys=True, indent=2) + "\n"
+        return (
+            json.dumps(serialize_dict(cassette_dict), sort_keys=True, indent=2) + "\n"
+        )
 
     @staticmethod
     def deserialize(cassette_string):

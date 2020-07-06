@@ -1,5 +1,5 @@
 """Test asyncpraw.models.comment_forest."""
-from unittest import mock
+from asynctest import mock
 
 import pytest
 

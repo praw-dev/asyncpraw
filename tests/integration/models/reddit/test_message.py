@@ -1,4 +1,4 @@
-from unittest import mock
+from asynctest import mock
 
 import pytest
 
@@ -9,10 +9,10 @@ from ... import IntegrationTest
 
 class TestMessage(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_attributes(self, _):
+    async def test_attributes(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            messages = list(self.reddit.inbox.messages())
+            messages = await self.async_list(self.reddit.inbox.messages())
             count = len(messages)
             while messages:
                 message = messages.pop(0)
@@ -35,79 +35,79 @@ class TestMessage(IntegrationTest):
         assert count < 0
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_block(self, _):
+    async def test_block(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             message = None
-            for item in self.reddit.inbox.messages():
+            async for item in self.reddit.inbox.messages():
                 if item.author and item.author != pytest.placeholders.username:
                     message = item
                     break
             else:
                 assert False, "no message found"
-            message.block()
+            await message.block()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_delete(self, _):
+    async def test_delete(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = next(self.reddit.inbox.messages())
-            message.delete()
+            message = await self.async_next(self.reddit.inbox.messages())
+            await message.delete()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_mark_read(self, _):
+    async def test_mark_read(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             message = None
-            for item in self.reddit.inbox.unread():
+            async for item in self.reddit.inbox.unread():
                 if isinstance(item, Message):
                     message = item
                     break
             else:
                 assert False, "no message found in unread"
-            message.mark_read()
+            await message.mark_read()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_mark_unread(self, _):
+    async def test_mark_unread(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = next(self.reddit.inbox.messages())
-            message.mark_unread()
+            message = await self.async_next(self.reddit.inbox.messages())
+            await message.mark_unread()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_message_collapse(self, _):
+    async def test_message_collapse(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = next(self.reddit.inbox.messages())
-            message.collapse()
+            message = await self.async_next(self.reddit.inbox.messages())
+            await message.collapse()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_message_uncollapse(self, _):
+    async def test_message_uncollapse(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = next(self.reddit.inbox.messages())
-            message.uncollapse()
+            message = await self.async_next(self.reddit.inbox.messages())
+            await message.uncollapse()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_reply(self, _):
+    async def test_reply(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = next(self.reddit.inbox.messages())
-            reply = message.reply("Message reply")
-            assert reply.author == self.reddit.config.username
+            message = await self.async_next(self.reddit.inbox.messages())
+            reply = await message.reply("Message reply")
+            assert reply.author == pytest.placeholders.username
             assert reply.body == "Message reply"
             assert reply.first_message_name == message.fullname
 
 
 class TestSubredditMessage(IntegrationTest):
-    def test_mute(self):
+    async def test_mute(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = SubredditMessage(self.reddit, _data={"id": "5yr8id"})
-            message.mute()
+            message = SubredditMessage(self.reddit, _data={"id": "faj6z"})
+            await message.mute()
 
-    def test_unmute(self):
+    async def test_unmute(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            message = SubredditMessage(self.reddit, _data={"id": "5yr8id"})
-            message.unmute()
+            message = SubredditMessage(self.reddit, _data={"id": "faj6z"})
+            await message.unmute()

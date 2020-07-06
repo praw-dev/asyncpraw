@@ -1,6 +1,6 @@
 """Test classes from collections.py."""
 
-from unittest import mock
+from asynctest import mock
 
 import pytest
 

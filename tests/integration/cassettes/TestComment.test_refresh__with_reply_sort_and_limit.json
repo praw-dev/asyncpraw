@@ -1,0 +1,174 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "post",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "371",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 22:27:49 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=AMBm1REj86gNks1pQU; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5936-MCI",
+          "X-Timer": "S1593988070.590693,VS0,VE96",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/info/?id=t1_e4j4830&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": 1, \"children\": [{\"kind\": \"t1\", \"data\": {\"total_awards_received\": 0, \"approved_at_utc\": null, \"edited\": false, \"mod_reason_by\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"removal_reason\": null, \"link_id\": \"t3_98vj9e\", \"author_flair_template_id\": null, \"likes\": null, \"replies\": \"\", \"user_reports\": [], \"saved\": false, \"id\": \"e4j4830\", \"banned_at_utc\": null, \"mod_reason_title\": null, \"gilded\": 0, \"archived\": true, \"no_follow\": false, \"author\": \"Sporkicide\", \"can_mod_post\": false, \"created_utc\": 1534789466.0, \"send_replies\": true, \"parent_id\": \"t3_98vj9e\", \"score\": 86, \"author_fullname\": \"t2_51pf6\", \"approved_by\": null, \"mod_note\": null, \"all_awardings\": [], \"subreddit_id\": \"t5_2qizd\", \"body\": \"Please don't make me send your bot to a farm upstate.\\n\\nYou know I'll do it.\", \"awarders\": [], \"author_flair_css_class\": null, \"name\": \"t1_e4j4830\", \"author_patreon_flair\": false, \"downs\": 0, \"author_flair_richtext\": [], \"is_submitter\": false, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EPlease don\\u0026#39;t make me send your bot to a farm upstate.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EYou know I\\u0026#39;ll do it.\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"gildings\": {}, \"collapsed_reason\": null, \"distinguished\": \"admin\", \"associated_award\": null, \"stickied\": false, \"author_premium\": true, \"can_gild\": true, \"top_awarded_type\": null, \"author_flair_text_color\": null, \"score_hidden\": false, \"permalink\": \"/r/redditdev/comments/98vj9e/please_be_a_good_bot_citizen_of_reddit/e4j4830/\", \"num_reports\": null, \"locked\": false, \"report_reasons\": null, \"created\": 1534818266.0, \"subreddit\": \"redditdev\", \"author_flair_text\": null, \"treatment_tags\": [], \"collapsed\": false, \"subreddit_name_prefixed\": \"r/redditdev\", \"controversiality\": 0, \"author_flair_background_color\": null, \"collapsed_because_crowd_control\": null, \"mod_reports\": [], \"subreddit_type\": \"public\", \"ups\": 86}}], \"after\": null, \"before\": null}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "1971",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 22:27:49 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5949-MCI",
+          "X-Timer": "S1593988070.796539,VS0,VE162",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "590.0",
+          "x-ratelimit-reset": "131",
+          "x-ratelimit-used": "10",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/info/?id=t1_e4j4830&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/comments/98vj9e/_/e4j4830?context=100&limit=4&sort=new&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "[{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": 1, \"children\": [{\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"redditdev\", \"selftext\": \"Hello everyone! I'd like to post a gentle reminder to those writing bots and exploring the API to behave in an appropriate manner.\\n\\nIn /r/redditdev, I love seeing people of all experience levels learning about various programming languages (though mostly python) by way of reddit's API. However, it's important for bot-writers to remember that they are interacting with reddit at large when they make comments or posts, and to add value to the subreddits they participate in.\\n\\nSo please follow a few basic good-bot guidelines.\\n\\n# Please don't write simple reply bots\\n\\nA \\\"simple reply bot\\\" is one that looks at every comment across all of reddit for a word or phrase, and makes a static reply. For example, a bot that replied to every comment that has the phrase \\\"Hello there\\\" with \\\"General Kenobi\\\" would not be a good bot.\\n\\nReply bots are best when they are specifically requested and invoked, and add contextual information. /u/hearthscan-bot is an example of a well-loved reply bot.\\n\\n# Get approval from moderators of specific subreddits when deploying your bot\\n\\nIn general, you should be checking with moderators before deploying your bot to reddit. Send the mods of the subreddit(s) you want your bot to work in a modmail message, and get their approval first.\\n\\n# Use a dedicated subreddit for testing\\n\\nMake your [own subreddit](https://www.reddit.com/subreddits/create) and use it to test your bot. Alternatively, use /r/test.\\n\\nPlease _don't_ use /r/redditdev to test your bot, thanks!\\n\\n# Review the community moderated 'bottiquette' list\\n\\nIt's here, it's quick to read, it's great: https://www.reddit.com/wiki/bottiquette\", \"user_reports\": [], \"saved\": false, \"mod_reason_title\": null, \"gilded\": 2, \"clicked\": false, \"title\": \"Please be a good 'bot' citizen of reddit\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/redditdev\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"parent_whitelist_status\": \"all_ads\", \"hide_score\": false, \"name\": \"t3_98vj9e\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.99, \"author_flair_background_color\": null, \"subreddit_type\": \"public\", \"ups\": 107, \"total_awards_received\": 2, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"author_fullname\": \"t2_3jo4g\", \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 107, \"approved_by\": null, \"author_premium\": true, \"thumbnail\": \"\", \"edited\": 1534790362.0, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {\"gid_2\": 2}, \"content_categories\": null, \"is_self\": true, \"mod_note\": null, \"created\": 1534814490.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"self.redditdev\", \"allow_live_comments\": false, \"selftext_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EHello everyone! I\\u0026#39;d like to post a gentle reminder to those writing bots and exploring the API to behave in an appropriate manner.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EIn \\u003Ca href=\\\"/r/redditdev\\\"\\u003E/r/redditdev\\u003C/a\\u003E, I love seeing people of all experience levels learning about various programming languages (though mostly python) by way of reddit\\u0026#39;s API. However, it\\u0026#39;s important for bot-writers to remember that they are interacting with reddit at large when they make comments or posts, and to add value to the subreddits they participate in.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ESo please follow a few basic good-bot guidelines.\\u003C/p\\u003E\\n\\n\\u003Ch1\\u003EPlease don\\u0026#39;t write simple reply bots\\u003C/h1\\u003E\\n\\n\\u003Cp\\u003EA \\u0026quot;simple reply bot\\u0026quot; is one that looks at every comment across all of reddit for a word or phrase, and makes a static reply. For example, a bot that replied to every comment that has the phrase \\u0026quot;Hello there\\u0026quot; with \\u0026quot;General Kenobi\\u0026quot; would not be a good bot.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EReply bots are best when they are specifically requested and invoked, and add contextual information. \\u003Ca href=\\\"/u/hearthscan-bot\\\"\\u003E/u/hearthscan-bot\\u003C/a\\u003E is an example of a well-loved reply bot.\\u003C/p\\u003E\\n\\n\\u003Ch1\\u003EGet approval from moderators of specific subreddits when deploying your bot\\u003C/h1\\u003E\\n\\n\\u003Cp\\u003EIn general, you should be checking with moderators before deploying your bot to reddit. Send the mods of the subreddit(s) you want your bot to work in a modmail message, and get their approval first.\\u003C/p\\u003E\\n\\n\\u003Ch1\\u003EUse a dedicated subreddit for testing\\u003C/h1\\u003E\\n\\n\\u003Cp\\u003EMake your \\u003Ca href=\\\"https://www.reddit.com/subreddits/create\\\"\\u003Eown subreddit\\u003C/a\\u003E and use it to test your bot. Alternatively, use \\u003Ca href=\\\"/r/test\\\"\\u003E/r/test\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EPlease \\u003Cem\\u003Edon\\u0026#39;t\\u003C/em\\u003E use \\u003Ca href=\\\"/r/redditdev\\\"\\u003E/r/redditdev\\u003C/a\\u003E to test your bot, thanks!\\u003C/p\\u003E\\n\\n\\u003Ch1\\u003EReview the community moderated \\u0026#39;bottiquette\\u0026#39; list\\u003C/h1\\u003E\\n\\n\\u003Cp\\u003EIt\\u0026#39;s here, it\\u0026#39;s quick to read, it\\u0026#39;s great: \\u003Ca href=\\\"https://www.reddit.com/wiki/bottiquette\\\"\\u003Ehttps://www.reddit.com/wiki/bottiquette\\u003C/a\\u003E\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"likes\": null, \"suggested_sort\": null, \"banned_at_utc\": null, \"view_count\": null, \"archived\": true, \"no_follow\": false, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [{\"giver_coin_reward\": null, \"subreddit_id\": null, \"is_new\": false, \"days_of_drip_extension\": 0, \"coin_price\": 500, \"id\": \"gid_2\", \"penny_donate\": null, \"coin_reward\": 100, \"icon_url\": \"https://www.redditstatic.com/gold/awards/icon/gold_512.png\", \"days_of_premium\": 7, \"icon_height\": 512, \"resized_icons\": [{\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_16.png\", \"width\": 16, \"height\": 16}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_32.png\", \"width\": 32, \"height\": 32}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_48.png\", \"width\": 48, \"height\": 48}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_64.png\", \"width\": 64, \"height\": 64}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_128.png\", \"width\": 128, \"height\": 128}], \"icon_width\": 512, \"static_icon_width\": 512, \"start_date\": null, \"is_enabled\": true, \"description\": \"Gives the author a week of Reddit Premium, %{coin_symbol}100 Coins to do with as they please, and shows a Gold Award.\", \"end_date\": null, \"subreddit_coin_reward\": 0, \"count\": 2, \"static_icon_height\": 512, \"name\": \"Gold\", \"resized_static_icons\": [{\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_16.png\", \"width\": 16, \"height\": 16}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_32.png\", \"width\": 32, \"height\": 32}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_48.png\", \"width\": 48, \"height\": 48}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_64.png\", \"width\": 64, \"height\": 64}, {\"url\": \"https://www.redditstatic.com/gold/awards/icon/gold_128.png\", \"width\": 128, \"height\": 128}], \"icon_format\": null, \"award_sub_type\": \"GLOBAL\", \"penny_price\": null, \"award_type\": \"global\", \"static_icon_url\": \"https://www.redditstatic.com/gold/awards/icon/gold_512.png\"}], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": \"moderator\", \"subreddit_id\": \"t5_2qizd\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"98vj9e\", \"is_robot_indexable\": true, \"num_duplicates\": 2, \"report_reasons\": null, \"author\": \"kemitche\", \"discussion_type\": null, \"num_comments\": 42, \"send_replies\": true, \"media\": null, \"contest_mode\": false, \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/redditdev/comments/98vj9e/please_be_a_good_bot_citizen_of_reddit/\", \"whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"https://www.reddit.com/r/redditdev/comments/98vj9e/please_be_a_good_bot_citizen_of_reddit/\", \"subreddit_subscribers\": 38992, \"created_utc\": 1534785690.0, \"num_crossposts\": 4, \"mod_reports\": [], \"is_video\": false}}], \"after\": null, \"before\": null}}, {\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": null, \"children\": [{\"kind\": \"t1\", \"data\": {\"total_awards_received\": 0, \"approved_at_utc\": null, \"ups\": 88, \"awarders\": [], \"mod_reason_by\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"removal_reason\": null, \"link_id\": \"t3_98vj9e\", \"author_flair_template_id\": null, \"likes\": null, \"replies\": {\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": null, \"children\": [{\"kind\": \"t1\", \"data\": {\"total_awards_received\": 0, \"approved_at_utc\": null, \"ups\": 1, \"awarders\": [], \"mod_reason_by\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"removal_reason\": null, \"link_id\": \"t3_98vj9e\", \"author_flair_template_id\": null, \"likes\": null, \"replies\": \"\", \"user_reports\": [], \"saved\": false, \"id\": \"edisd6j\", \"banned_at_utc\": null, \"mod_reason_title\": null, \"gilded\": 0, \"archived\": true, \"no_follow\": true, \"author\": \"LGBTreecko\", \"can_mod_post\": false, \"send_replies\": true, \"parent_id\": \"t1_e4j4830\", \"score\": 1, \"author_fullname\": \"t2_p3edy\", \"report_reasons\": null, \"approved_by\": null, \"all_awardings\": [], \"subreddit_id\": \"t5_2qizd\", \"collapsed\": true, \"body\": \"Please do something about the spambots coming from /r/QUZANG.\", \"edited\": false, \"author_flair_css_class\": null, \"is_submitter\": false, \"downs\": 0, \"author_flair_richtext\": [], \"author_patreon_flair\": false, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EPlease do something about the spambots coming from \\u003Ca href=\\\"/r/QUZANG\\\"\\u003E/r/QUZANG\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"gildings\": {}, \"collapsed_reason\": \"comment score below threshold\", \"associated_award\": null, \"stickied\": false, \"author_premium\": false, \"subreddit_type\": \"public\", \"can_gild\": true, \"top_awarded_type\": null, \"author_flair_text_color\": null, \"score_hidden\": false, \"permalink\": \"/r/redditdev/comments/98vj9e/please_be_a_good_bot_citizen_of_reddit/edisd6j/\", \"num_reports\": null, \"locked\": false, \"name\": \"t1_edisd6j\", \"created\": 1546934907.0, \"subreddit\": \"redditdev\", \"author_flair_text\": null, \"treatment_tags\": [], \"created_utc\": 1546906107.0, \"subreddit_name_prefixed\": \"r/redditdev\", \"controversiality\": 0, \"depth\": 1, \"author_flair_background_color\": null, \"collapsed_because_crowd_control\": null, \"mod_reports\": [], \"mod_note\": null, \"distinguished\": null}}, {\"kind\": \"t1\", \"data\": {\"total_awards_received\": 0, \"approved_at_utc\": null, \"ups\": 1, \"awarders\": [], \"mod_reason_by\": null, \"banned_by\": null, \"removal_reason\": null, \"link_id\": \"t3_98vj9e\", \"author_flair_template_id\": null, \"likes\": null, \"no_follow\": true, \"replies\": \"\", \"user_reports\": [], \"saved\": false, \"id\": \"e7q58bn\", \"banned_at_utc\": null, \"mod_reason_title\": null, \"gilded\": 0, \"archived\": true, \"report_reasons\": null, \"author\": \"[deleted]\", \"can_mod_post\": false, \"send_replies\": true, \"parent_id\": \"t1_e4j4830\", \"score\": 1, \"approved_by\": null, \"all_awardings\": [], \"subreddit_id\": \"t5_2qizd\", \"body\": \"As long as we're using PRAW is it possible to run afoul as far as requesting too much too fast?\\n\\n\", \"edited\": false, \"author_flair_css_class\": null, \"collapsed\": true, \"downs\": 0, \"is_submitter\": false, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EAs long as we\\u0026#39;re using PRAW is it possible to run afoul as far as requesting too much too fast?\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"gildings\": {}, \"collapsed_reason\": \"comment score below threshold\", \"associated_award\": null, \"stickied\": false, \"subreddit_type\": \"public\", \"can_gild\": false, \"top_awarded_type\": null, \"author_flair_text_color\": \"dark\", \"score_hidden\": false, \"permalink\": \"/r/redditdev/comments/98vj9e/please_be_a_good_bot_citizen_of_reddit/e7q58bn/\", \"num_reports\": null, \"locked\": false, \"name\": \"t1_e7q58bn\", \"created\": 1539511135.0, \"subreddit\": \"redditdev\", \"author_flair_text\": null, \"treatment_tags\": [], \"created_utc\": 1539482335.0, \"subreddit_name_prefixed\": \"r/redditdev\", \"controversiality\": 0, \"depth\": 1, \"author_flair_background_color\": \"\", \"collapsed_because_crowd_control\": null, \"mod_reports\": [], \"mod_note\": null, \"distinguished\": null}}, {\"kind\": \"more\", \"data\": {\"count\": 31, \"name\": \"t1_e4jjt2i\", \"id\": \"e4jjt2i\", \"parent_id\": \"t1_e4j4830\", \"depth\": 1, \"children\": [\"e4jjt2i\", \"e4j4fhz\", \"e4uaa59\", \"e4j98vr\", \"e4jbdej\", \"e4lpsbh\"]}}], \"after\": null, \"before\": null}}, \"user_reports\": [], \"saved\": false, \"id\": \"e4j4830\", \"banned_at_utc\": null, \"mod_reason_title\": null, \"gilded\": 0, \"archived\": true, \"no_follow\": false, \"author\": \"Sporkicide\", \"can_mod_post\": false, \"send_replies\": true, \"parent_id\": \"t3_98vj9e\", \"score\": 88, \"author_fullname\": \"t2_51pf6\", \"report_reasons\": null, \"approved_by\": null, \"all_awardings\": [], \"subreddit_id\": \"t5_2qizd\", \"body\": \"Please don't make me send your bot to a farm upstate.\\n\\nYou know I'll do it.\", \"edited\": false, \"downs\": 0, \"author_flair_css_class\": null, \"is_submitter\": false, \"collapsed\": false, \"author_flair_richtext\": [], \"author_patreon_flair\": false, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EPlease don\\u0026#39;t make me send your bot to a farm upstate.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EYou know I\\u0026#39;ll do it.\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"gildings\": {}, \"collapsed_reason\": null, \"associated_award\": null, \"stickied\": false, \"author_premium\": true, \"subreddit_type\": \"public\", \"can_gild\": true, \"top_awarded_type\": null, \"author_flair_text_color\": null, \"score_hidden\": false, \"permalink\": \"/r/redditdev/comments/98vj9e/please_be_a_good_bot_citizen_of_reddit/e4j4830/\", \"num_reports\": null, \"locked\": false, \"name\": \"t1_e4j4830\", \"created\": 1534818266.0, \"subreddit\": \"redditdev\", \"author_flair_text\": null, \"treatment_tags\": [], \"created_utc\": 1534789466.0, \"subreddit_name_prefixed\": \"r/redditdev\", \"controversiality\": 0, \"depth\": 0, \"author_flair_background_color\": null, \"collapsed_because_crowd_control\": null, \"mod_reports\": [], \"mod_note\": null, \"distinguished\": \"admin\"}}], \"after\": null, \"before\": null}}]"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "14659",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 22:27:50 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=oaqbedninqnpbdmaqi.0.1593988070034.Z0FBQUFBQmZBbFBtUVdXQkZDck9mOFpQc3ZtcEtzaGNZa21VVkNVelE1cUlXXzU5OUxrR0pfbEFlTTlLeWphN1FpbHlnNERlbUxoa0dpb2tmNjAwVUFzTWxUTENubzNIcFpNbUY2UmhMLUxOMGItbkFqVkJtdC1KTC10aktTaXgtRnJ2SWo3a0sxSW4; Domain=reddit.com; Max-Age=7199; Path=/; expires=Mon, 06-Jul-2020 00:27:50 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5949-MCI",
+          "X-Timer": "S1593988070.978905,VS0,VE275",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "589.0",
+          "x-ratelimit-reset": "130",
+          "x-ratelimit-used": "11",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/comments/98vj9e/_/e4j4830?context=100&limit=4&sort=new&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-05T17:27:50",
+  "version": 1
+}

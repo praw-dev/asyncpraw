@@ -134,13 +134,17 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     @property
     def submission(self) -> "Submission":
         """Return the Submission object this comment belongs to."""
-        if not self._submission:  # Comment not from submission
+        if not self._submission and self._fetched:  # Comment not from submission
             from .. import Submission
 
             self._submission = Submission(
                 self._reddit, id=self._extract_submission_id()
             )
-        return self._submission
+            return self._submission
+        elif self._submission:
+            return self._submission
+        else:
+            return None
 
     @submission.setter
     def submission(self, submission: "Submission"):
@@ -271,8 +275,13 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         """
         # pylint: disable=no-member
-        if not self.submission._fetched:
-            await self._submission._fetch()
+
+        if "submission" in self.__dict__:
+            if not self.submission._fetched:
+                await self.submission._fetch()
+        else:
+            await self._fetch()
+            await self.submission._fetch()
         if self.parent_id == self.submission.fullname:
             return self.submission
 
@@ -288,9 +297,6 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     async def refresh(self):
         """Refresh the comment's attributes.
 
-        If using :meth:`.Reddit.comment` this method must be called in order to
-        obtain the comment's replies.
-
         Example usage:
 
         .. code-block:: python
@@ -302,6 +308,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         if "context" in self.__dict__:  # Using hasattr triggers a fetch
             comment_path = self.context.split("?", 1)[0]
         else:
+            if not self.submission:
+                await self._fetch()
             path = API_PATH["submission"].format(id=self.submission.id)
             comment_path = "{}_/{}".format(path, self.id)
 

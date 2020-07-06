@@ -1,6 +1,6 @@
 import os
 import sys
-from unittest import mock
+from asynctest import mock
 
 import pytest
 

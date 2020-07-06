@@ -1,5 +1,5 @@
 """Test asyncpraw.models.subreddits."""
-from unittest import mock
+from asynctest import mock
 
 from asyncpraw.models import Subreddit
 

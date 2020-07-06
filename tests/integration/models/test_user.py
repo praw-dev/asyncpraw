@@ -1,5 +1,5 @@
 """Test asyncpraw.models.user."""
-from unittest import mock
+from asynctest import mock
 
 import pytest
 

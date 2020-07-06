@@ -1,92 +1,102 @@
-from unittest import mock
+from asynctest import mock
 
-from asyncpraw.models import ModmailMessage
+from asyncpraw.models import ModmailMessage, Subreddit
 
 from ... import IntegrationTest
 
 
 class TestModmailConversation(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_archive(self, _):
+    async def test_archive(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.archive()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.archive()
+            conversation = await subreddit.modmail("faj6z")
             assert conversation.state == 2
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_highlight(self, _):
+    async def test_highlight(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.highlight()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.highlight()
+            conversation = await subreddit.modmail("faj6z")
             assert conversation.is_highlighted
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_mute(self, _):
+    async def test_mute(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.mute()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.mute()
+            conversation = await subreddit.modmail("faj6z")
             assert conversation.user.mute_status["isMuted"]
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_read(self, _):
+    async def test_read(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.read()
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.read()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_read__other_conversations(self, _):
+    async def test_read__other_conversations(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("p8rp")
-        other_conversation = self.reddit.subreddit("all").modmail("p8rr")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.read(other_conversations=[other_conversation])
+            conversation = await subreddit.modmail("faj6z")
+            other_conversation = await subreddit.modmail("fajcu")
+            await conversation.read(other_conversations=[other_conversation])
 
-    def test_reply(self):
+    async def test_reply(self):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            reply = conversation.reply("A message")
+            conversation = await subreddit.modmail("faj6z")
+            reply = await conversation.reply("A message")
         assert isinstance(reply, ModmailMessage)
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_unarchive(self, _):
+    async def test_unarchive(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.unarchive()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.unarchive()
+            conversation = await subreddit.modmail("faj6z")
             assert conversation.state == 1
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_unhighlight(self, _):
+    async def test_unhighlight(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.unhighlight()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.unhighlight()
+            conversation = await subreddit.modmail("faj6z")
             assert not conversation.is_highlighted
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_unmute(self, _):
+    async def test_unmute(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.unmute()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.unmute()
+            conversation = await subreddit.modmail("faj6z")
             assert not conversation.user.mute_status["isMuted"]
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_unread(self, _):
+    async def test_unread(self, _):
         self.reddit.read_only = False
-        conversation = self.reddit.subreddit("all").modmail("ik72")
+        subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
-            conversation.unread()
-            conversation = self.reddit.subreddit("all").modmail("ik72")
+            conversation = await subreddit.modmail("faj6z")
+            await conversation.unread()
+            conversation = await subreddit.modmail("faj6z")
             assert conversation.last_unread is not None

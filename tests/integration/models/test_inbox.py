@@ -1,5 +1,5 @@
 """Test asyncpraw.models.inbox."""
-from unittest import mock
+from asynctest import mock
 
 import pytest
 from asyncprawcore import Forbidden

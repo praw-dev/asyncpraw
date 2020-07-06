@@ -1,6 +1,6 @@
 import sys
 from os.path import abspath, dirname, join
-from unittest import mock
+from asynctest import mock
 
 import pytest
 

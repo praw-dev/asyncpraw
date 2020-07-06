@@ -1,5 +1,5 @@
 """Test asyncpraw.models.Trophy"""
-from unittest import mock
+from asynctest import mock
 
 from .. import IntegrationTest
 
