@@ -131,7 +131,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit('redditdev')
+        subreddit = await reddit.subreddit('redditdev', lazy=True)
         async for comment in subreddit.stream.comments(pause_after=6):
             if comment is None:
                 break
@@ -141,7 +141,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit('help')
+        subreddit = await reddit.subreddit("help")
         comment_stream = subreddit.stream.comments(pause_after=5)
 
         async for comment in comment_stream:
@@ -162,7 +162,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit('help')
+        subreddit = await reddit.subreddit("help")
         async for comment in subreddit.stream.comments(pause_after=0):
             if comment is None:
                 continue

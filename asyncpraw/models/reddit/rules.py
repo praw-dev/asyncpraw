@@ -319,7 +319,7 @@ class RuleModeration:
 
         .. code-block:: python
 
-            subreddit = reddit.subreddit("NAME")
+            subreddit = reddit.subreddit("NAME", lazy=True)
             rule = await subreddit.rules.get_rule("No Spam")
             await rule.mod.update(description="Don't do this!", violation_reason="Spam post")
 

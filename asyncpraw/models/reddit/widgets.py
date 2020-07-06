@@ -236,10 +236,10 @@ class SubredditWidgets(AsyncPRAWBase):
 
     .. code-block:: python
 
-        print(widgets.id_card)
-        print(widgets.moderators_widget)
-        print(widgets.sidebar)
-        print(widgets.topbar)
+        print(await widgets.id_card()
+        print(await widgets.moderators_widget()
+        print([widget async for widget in widgets.sidebar()])
+        print([widget async for widget in widgets.topbar()])
 
     The attribute :attr:`.id_card` contains the subreddit's ID card,
     which displays information like the number of subscribers.
@@ -664,7 +664,8 @@ class SubredditWidgetsModeration:
             subreddit = await reddit.subreddit("mysub")
             widget_moderation = subreddit.widgets.mod
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-            subreddits = ["learnpython", reddit.subreddit("redditdev")]
+            new_subreddit = await reddit.subreddit("redditdev")
+            subreddits = ["learnpython", new_subreddit]
             new_widget = await widget_moderation.add_community_list("My fav subs",
                                                              subreddits,
                                                              styles,
@@ -877,9 +878,9 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-            subreddit = reddit.subreddit("mysub")
+            subreddit = await subreddit("mysub", lazy=True)
             widget_moderation = subreddit.widgets.mod
-            flairs = [f["id"] for f in subreddit.flair.link_templates]
+            flairs = [f["id"] async for f in subreddit.flair.link_templates]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             new_widget = await widget_moderation.add_post_flair_widget("Some flairs",
                                                                 "list",
@@ -968,13 +969,11 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-            my_sub = reddit.subreddit("my_sub")
-            image_url = my_sub.widgets.mod.upload_image("/path/to/image.jpg")
-            images = [{"width": 300, "height": 300,
-                      "url": image_url, "linkUrl": ''}]
+            my_sub = await reddit.subreddit("my_sub")
+            image_url = await my_sub.widgets.mod.upload_image("/path/to/image.jpg")
+            images = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ''}]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-            my_sub.widgets.mod.add_image_widget("My cool pictures", images,
-                                                styles)
+            await my_sub.widgets.mod.add_image_widget("My cool pictures", images, styles)
         """
         img_data = {
             "filepath": os.path.basename(file_path),
@@ -1010,8 +1009,7 @@ class Widget(AsyncPRAWBase):
         .. note::
            Using any of the methods of :class:`.WidgetModeration` will likely
            make outdated the data in the :class:`.SubredditWidgets` that this
-           widget belongs to. To remedy this, call
-           :meth:`~.SubredditWidgets.refresh`.
+           widget belongs to. To remedy this, call :meth:`~.SubredditWidgets.refresh`.
         """
         return WidgetModeration(self, self.subreddit, self._reddit)
 
@@ -1091,14 +1089,14 @@ class ButtonWidget(Widget, BaseList):
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        button_widget = button_widget.mod.update(shortName="My fav buttons",
+        button_widget = await button_widget.mod.update(shortName="My fav buttons",
                                                 styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-        button_widget.mod.delete()
+        await button_widget.mod.delete()
 
     **Typical Attributes**
 
@@ -1171,14 +1169,13 @@ class Calendar(Widget):
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        calendar = calendar.mod.update(shortName="My fav events",
-                                      styles=new_styles)
+        calendar = await calendar.mod.update(shortName="My fav events", styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-        calendar.mod.delete()
+        await calendar.mod.delete()
 
     **Typical Attributes**
 
@@ -1229,7 +1226,8 @@ class CommunityList(Widget, BaseList):
         subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-        subreddits = ["learnpython", reddit.subreddit("announcements")]
+        new_subreddit = await reddit.subreddit("announcements")
+        subreddits = ["learnpython", new_subreddit]
         community_list = await widgets.mod.add_community_list("Related subreddits",
                                                         subreddits, styles,
                                                        "description")
@@ -1241,14 +1239,14 @@ class CommunityList(Widget, BaseList):
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        community_list = community_list.mod.update(shortName="My fav subs",
+        community_list = await community_list.mod.update(shortName="My fav subs",
                                                   styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-        community_list.mod.delete()
+        await community_list.mod.delete()
 
     **Typical Attributes**
 
@@ -1313,14 +1311,13 @@ class CustomWidget(Widget):
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        custom = custom.mod.update(shortName="My fav customization",
-                                  styles=new_styles)
+        custom = await custom.mod.update(shortName="My fav customization", styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-        custom.mod.delete()
+        await custom.mod.delete()
 
     **Typical Attributes**
 
@@ -1365,14 +1362,15 @@ class IDCard(Widget):
 
         subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
-        id_card = widgets.id_card
+        id_card = await widgets.id_card()
         print(id_card.subscribersText)
 
     Update one (requires proper moderator permissions):
 
     .. code-block:: python
 
-        widgets.id_card.mod.update(currentlyViewingText="Bots")
+        id_card = await widgets.id_card()
+        await id_card.mod.update(currentlyViewingText="Bots")
 
     **Typical Attributes**
 
@@ -1429,7 +1427,7 @@ class ImageWidget(Widget, BaseList):
         widgets = subreddit.widgets
         image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
         image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
-                       "url": widgets.mod.upload_image(img_path)}
+                       "url": await widgets.mod.upload_image(img_path)}
                       for img_path in image_paths]
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         image_widget = await widgets.mod.add_image_widget("My cool pictures",
@@ -1486,7 +1484,8 @@ class Menu(Widget, BaseList):
 
     .. code-block:: python
 
-        topbar = reddit.subreddit("redditdev").widgets.topbar
+        subreddit = await reddit.subreddit("redditdev")
+        topbar = [widget async for widget in subreddit.widgets.topbar()]
         if len(topbar) > 0:
             probably_menu = topbar[0]
             assert isinstance(probably_menu, praw.models.Menu)
@@ -1523,7 +1522,7 @@ class Menu(Widget, BaseList):
 
         menu_items = list(menu)
         menu_items.reverse()
-        menu = menu.mod.update(data=menu_items)
+        menu = await menu.mod.update(data=menu_items)
 
     Delete one (requires proper moderator permissions):
 
@@ -1564,14 +1563,15 @@ class ModeratorsWidget(Widget, BaseList):
 
         subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
-        print(widgets.moderators_widget)
+        print(await widgets.moderators_widget())
 
     Update one (requires proper moderator permissions):
 
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        widgets.moderators_widget.mod.update(styles=new_styles)
+        moderator_widget = await widgets.moderators_widget()
+        await moderator_widget.mod.update(styles=new_styles)
 
     **Typical Attributes**
 
@@ -1631,9 +1631,9 @@ class PostFlairWidget(Widget, BaseList):
 
     .. code-block:: python
 
-        subreddit = reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
-        flairs = [f["id"] for f in subreddit.flair.link_templates]
+        flairs = [f["id"] async for f in subreddit.flair.link_templates]
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         post_flair = await widgets.mod.add_post_flair_widget("Some flairs", "list",
                                                       flairs, styles)
@@ -1645,14 +1645,13 @@ class PostFlairWidget(Widget, BaseList):
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        post_flair = post_flair.mod.update(shortName="My fav flairs",
-                                          styles=new_styles)
+        post_flair = await post_flair.mod.update(shortName="My fav flairs", styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-        post_flair.mod.delete()
+        await post_flair.mod.delete()
 
     **Typical Attributes**
 
@@ -1705,7 +1704,7 @@ class RulesWidget(Widget, BaseList):
     .. code-block:: python
 
         new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        rules_widget.mod.update(display="compact", shortName="The LAWS",
+        await rules_widget.mod.update(display="compact", shortName="The LAWS",
                                 styles=new_styles)
 
     **Typical Attributes**
@@ -1831,7 +1830,9 @@ class WidgetModeration:
 
     .. code-block:: python
 
-        widget = reddit.subreddit("my_sub").widgets.sidebar[0]
+        subreddit = await reddit.subreddit("my_sub")
+        sidebar = [widget async for widget in subreddit.widgets.sidebar()]
+        widget = sidebar[0]
         await widget.mod.update(shortName="My new title")
         await widget.mod.delete()
     """

@@ -17,10 +17,10 @@ class ReportableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.report("report reason")
 
-            comment = await reddit.comment(id="dxolpyc")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.report("report reason")
 
         """

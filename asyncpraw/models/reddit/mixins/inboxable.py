@@ -19,7 +19,7 @@ class InboxableMixin:
             await comment.block()
 
             # or, identically:
-
+            comment = await reddit.comment("dkk4qjd")
             await comment.author.block()
 
         """

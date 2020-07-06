@@ -431,12 +431,16 @@ class SubredditCollections(AsyncPRAWBase):
         return SubredditCollectionsModeration(self._reddit, self.subreddit.fullname)
 
     async def __call__(
-        self, collection_id: Optional[str] = None, permalink: Optional[str] = None,
+        self,
+        collection_id: Optional[str] = None,
+        permalink: Optional[str] = None,
+        lazy: bool = False,
     ):
         """Return the :class:`.Collection` with the specified ID.
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
+        :param lazy: Determines if object is loaded lazily (default: False)
         :returns: The specified Collection.
 
         Exactly one of ``collection_id`` and ``permalink`` is required.
@@ -452,10 +456,19 @@ class SubredditCollections(AsyncPRAWBase):
             print(collection.title)
             print(collection.description)
 
-            permalink = 'https://www.reddit.com/r/SUBREDDIT/collection/' + uuid
+            permalink = "https://www.reddit.com/r/SUBREDDIT/collection/" + uuid
             collection = await subreddit.collections(permalink=permalink)
             print(collection.title)
             print(collection.description)
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            collection = await subreddit.collections(uuid, lazy=True)
+            await collection.mod.add("submission_id")
 
         """
         if (collection_id is None) == (permalink is None):
@@ -465,7 +478,8 @@ class SubredditCollections(AsyncPRAWBase):
         collection = Collection(
             self._reddit, collection_id=collection_id, permalink=permalink
         )
-        await collection._fetch()
+        if not lazy:
+            await collection._fetch()
         return collection
 
     def __init__(

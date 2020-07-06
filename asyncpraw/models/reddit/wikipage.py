@@ -44,7 +44,7 @@ class WikiPageModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test")
+            page = await subreddit.wiki.get_page("praw_test", lazy=True)
             await page.mod.add("spez")
 
         """
@@ -65,7 +65,7 @@ class WikiPageModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test")
+            page = await subreddit.wiki.get_page("praw_test", lazy=True)
             await page.mod.remove("spez")
 
         """
@@ -102,7 +102,7 @@ class WikiPageModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test")
+            page = await subreddit.wiki.get_page("praw_test", lazy=True)
             await page.mod.update(listed=False, permlevel=2)
 
         """
@@ -168,7 +168,7 @@ class WikiPage(RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test")
+            page = await subreddit.wiki.get_page("praw_test", lazy=True)
             await page.mod.add("spez")
 
         """
@@ -240,7 +240,7 @@ class WikiPage(RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("test")
+            page = await subreddit.wiki.get_page("test", lazy=True)
             await page.edit(content="test wiki page")
 
         """
@@ -257,7 +257,7 @@ class WikiPage(RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test")
+            page = await subreddit.wiki.get_page("praw_test", lazy=True)
             revision = await page.revision("[ID]")
 
         """
@@ -278,7 +278,7 @@ class WikiPage(RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("test_page")
+            page = await subreddit.wiki.get_page("test_page", lazy=True)
             async for item in page.revisions():
                 print(item)
 
@@ -287,7 +287,7 @@ class WikiPage(RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("test_page")
+            page = await subreddit.wiki.get_page("test_page", lazy=True)
             async for item in page.revisions():
                 print(item["page"])
 

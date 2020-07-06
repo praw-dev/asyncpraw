@@ -9,7 +9,7 @@ from ..generator import ListingGenerator
 class GildedListingMixin(AsyncPRAWBase):
     """Mixes in the gilded method."""
 
-    async def gilded(
+    def gilded(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
     ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for gilded items.
@@ -21,7 +21,7 @@ class GildedListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('test')
+            subreddit = await reddit.subreddit("test")
             async for item in subreddit.gilded():
                 print(item.id)
 

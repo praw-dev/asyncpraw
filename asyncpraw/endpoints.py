@@ -1,4 +1,4 @@
-"""List of API endpoints Async PRAW knows about."""
+"""List of API endpoints PRAW knows about."""
 
 # flake8: noqa
 # fmt: off
@@ -173,7 +173,7 @@ API_PATH = {
     "subreddit_stylesheet":    "r/{subreddit}/api/subreddit_stylesheet/",
     "subreddits_by_topic":     "api/subreddits_by_topic",
     "subreddits_default":      "subreddits/default/",
-    "subreddits_gold":         "subreddits/gold/",
+    "subreddits_gold":         "subreddits/premium/",
     "subreddits_name_search":  "api/search_reddit_names/",
     "subreddits_new":          "subreddits/new/",
     "subreddits_popular":      "subreddits/popular/",

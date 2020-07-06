@@ -46,6 +46,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         subreddit = await reddit.subreddit("redditdev")
 
+    To obtain a lazy instance of this class for subreddit ``r/redditdev`` execute:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("redditdev")
+
     While ``r/all`` is not a real subreddit, it can still be treated like
     one. The following outputs the titles of the 25 hottest submissions in
     ``r/all``:
@@ -550,7 +556,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param display_name: The name of the subreddit.
 
         .. note:: This class should not be initialized directly. Instead obtain
-           an instance via: ``await reddit.subreddit("subreddit_name")``
+           an instance via: ``await reddit.subreddit("subreddit_name")`` or lazily
+           ``await reddit.subreddit("subreddit_name")``
 
         """
         if bool(display_name) == bool(_data):
@@ -1598,8 +1605,18 @@ class SubredditFlairTemplates:
         .. note:: This class should not be initialized directly. Instead obtain
             an instance via:
 
-           ``reddit.subreddit("subreddit_name").flair.templates`` or
-           ``reddit.subreddit("subreddit_name").flair.link_templates``.
+            .. code-block:: python
+
+               subreddit = await reddit.subreddit("subreddit_name")
+               subreddit.flair.templates
+
+            or via
+
+            .. code-block:: python
+
+               subreddit = await reddit.subreddit("subreddit_name")
+               subreddit.flair.link_templates
+
 
         """
         self.subreddit = subreddit

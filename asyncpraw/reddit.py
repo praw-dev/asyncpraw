@@ -291,6 +291,12 @@ class Reddit:
 
             multireddit = await reddit.multireddit("samuraisam", "programming")
 
+        If you want to obtain a :class:`.Multireddit` instance you can do:
+
+        .. code-block:: python
+
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+
         """
 
         self.redditors = models.Redditors(self, None)
@@ -316,11 +322,17 @@ class Reddit:
 
             await reddit.subreddit.create("coolnewsubname")
 
-        To obtain a :class:`.Subreddit` instance run:
+        To obtain a lazy :class:`.Subreddit` instance run:
 
         .. code-block:: python
 
             await reddit.subreddit("redditdev")
+
+        To obtain a fetched :class:`.Subreddit` instance run:
+
+        .. code-block:: python
+
+            await reddit.subreddit("redditdev", fetch=True)
 
         Note that multiple subreddits can be combined and filtered views of
         r/all can also be used just like a subreddit:
@@ -459,20 +471,31 @@ class Reddit:
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         url: Optional[str] = None,
+        lazy: bool = False,
     ):
         """Return an instance of :class:`~.Comment` for ``id``.
 
         :param id: The ID of the comment.
-
         :param url: A permalink pointing to the comment.
+        :param lazy: Determines if object is loaded lazily (default: False)
 
-        .. note:: If you want to obtain the comment's replies, you will need to
-                  call :meth:`~.Comment.refresh` on the returned
-                  :class:`.Comment`.
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) then you can do:
+
+        .. code-block:: python
+
+            comment = await reddit.comment("comment_id", lazy=True)
+            await comment.reply("reply")
+
+        .. note:: If call this with ``lazy=True`` and you need to obtain the
+                   comment's replies, you will need to call this without ``lazy=True``
+                   or call :meth:`~.Comment.refresh` on the returned
+                   :class:`.Comment`.
 
         """
         comment = models.Comment(self, id=id, url=url)
-        await comment._fetch()
+        if not lazy:
+            await comment._fetch()
         return comment
 
     def domain(self, domain: str):
@@ -787,13 +810,21 @@ class Reddit:
             ) from exception
 
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
-        self, id: Optional[str] = None, url: Optional[str] = None
+        self, id: Optional[str] = None, url: Optional[str] = None, lazy=False
     ) -> Submission:
         """Return an instance of :class:`~.Submission`.
 
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) then you can do:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("submission_id", lazy=True)
+            await submission.mod.remove()
+
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by
-            :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param lazy: Determines if object is loaded lazily (default: False).
 
         Either ``id`` or ``url`` can be provided, but not both.
 

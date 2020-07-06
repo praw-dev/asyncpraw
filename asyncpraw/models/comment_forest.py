@@ -151,7 +151,7 @@ class CommentForest:
 
         .. code-block:: python
 
-            submission = await reddit.submission("3hahrw")
+            submission = await reddit.submission("3hahrw", lazy=True)
             comments = await submission.comments()
             await comments.replace_more()
 
@@ -161,7 +161,6 @@ class CommentForest:
         .. code-block:: python
 
             comment = await reddit.comment("d8r4im1")
-            await comment.refresh()
             await comment.replies.replace_more()
 
         .. note:: This method can take a long time as each replacement will

@@ -23,10 +23,10 @@ class VotableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.clear_vote()
 
-            comment = await reddit.comment(id="dxolpyc")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.clear_vote()
 
         """
@@ -45,10 +45,10 @@ class VotableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.downvote()
 
-            comment = await reddit.comment(id="dxolpyc")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.downvote()
 
         .. seealso:: :meth:`~.upvote`
@@ -69,10 +69,10 @@ class VotableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.upvote()
 
-            comment = await reddit.comment(id="dxolpyc")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.upvote()
 
         .. seealso:: :meth:`~.downvote`

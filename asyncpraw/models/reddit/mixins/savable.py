@@ -18,10 +18,10 @@ class SavableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.save(category="view later")
 
-            comment = await reddit.comment(id="dxolpyc")
+            comment = await reddit.comment(id="dxolpyc", lazy=True, lazy=True)
             await comment.save()
 
         .. seealso:: :meth:`~.unsave`
@@ -38,10 +38,10 @@ class SavableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.unsave()
 
-            comment = await reddit.comment(id="dxolpyc")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.unsave()
 
         .. seealso:: :meth:`~.save`

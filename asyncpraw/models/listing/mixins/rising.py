@@ -24,7 +24,7 @@ class RisingListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('test')
+            subreddit = await reddit.subreddit("test")
             async for submission in subreddit.random_rising():
                 print(submission.title)
 

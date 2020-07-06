@@ -33,7 +33,7 @@ class RedditBase(AsyncPRAWBase):
         if not attribute.startswith("_") and not self._fetched:
             raise AttributeError(
                 "{0!r} object has no attribute {1!r}. {0!r} object has not been fetched, "
-                "did you forget to execute '.update()'?".format(
+                "did you forget to execute '.load()'?".format(
                     self.__class__.__name__, attribute
                 )
             )
@@ -77,7 +77,7 @@ class RedditBase(AsyncPRAWBase):
                 del self.__dict__[attribute]
         self._fetched = False
 
-    async def update(self):
+    async def load(self):
         """Re-fetches the object.
 
         This is used to explicitly fetch the object from reddit. This method can be used
@@ -85,6 +85,6 @@ class RedditBase(AsyncPRAWBase):
 
         .. code-block:: python
 
-            await reddit_base_object.update()
+            await reddit_base_object.load()
         """
         await self._fetch()

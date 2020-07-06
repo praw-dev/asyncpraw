@@ -1,5 +1,6 @@
 """Provide the Subreddits class."""
 from typing import AsyncGenerator, Dict, List, Optional, Union
+from warnings import warn
 
 from ..const import API_PATH
 from . import Subreddit
@@ -27,10 +28,19 @@ class Subreddits(AsyncPRAWBase):
             self._reddit, API_PATH["subreddits_default"], **generator_kwargs
         )
 
-    def gold(
+    def gold(self, **generator_kwargs) -> AsyncGenerator[Subreddit, None]:
+        """Alias for :meth:`.premium` to maintain backwards compatibility."""
+        warn(
+            "`subreddits.gold` has be renamed to `subreddits.premium`.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.premium(**generator_kwargs)
+
+    def premium(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
     ) -> AsyncGenerator[Subreddit, None]:
-        """Return a :class:`.ListingGenerator` for gold subreddits.
+        """Return a :class:`.ListingGenerator` for premium subreddits.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
