@@ -2,13 +2,13 @@
 import configparser
 import os
 import re
-import time
+import asyncio
 from itertools import islice
 from logging import getLogger
-from typing import IO, Any, Dict, Generator, Iterable, Optional, Type, Union
+from typing import IO, Any, Dict, AsyncGenerator, Iterable, Optional, Type, Union
 from warnings import warn
 
-from prawcore import (
+from asyncprawcore import (
     Authorizer,
     DeviceIDAuthorizer,
     ReadOnlyAuthorizer,
@@ -19,7 +19,7 @@ from prawcore import (
     UntrustedAuthenticator,
     session,
 )
-from prawcore.exceptions import BadRequest
+from asyncprawcore.exceptions import BadRequest
 
 from . import models
 from .config import Config
@@ -51,13 +51,13 @@ class Reddit:
     """The Reddit class provides convenient access to Reddit's API.
 
     Instances of this class are the gateway to interacting with Reddit's API
-    through PRAW. The canonical way to obtain an instance of this class is via:
+    through Async PRAW. The canonical way to obtain an instance of this class is via:
 
 
     .. code-block:: python
 
-       import praw
-       reddit = praw.Reddit(client_id="CLIENT_ID",
+       import asyncpraw
+       reddit = asyncpraw.Reddit(client_id="CLIENT_ID",
                             client_secret="CLIENT_SECRET", password="PASSWORD",
                             user_agent="USERAGENT", username="USERNAME")
 
@@ -164,25 +164,24 @@ class Reddit:
         The ``requestor_class`` and ``requestor_kwargs`` allow for
         customization of the requestor :class:`.Reddit` will use. This allows,
         e.g., easily adding behavior to the requestor or wrapping its
-        |Session|_ in a caching layer. Example usage:
+        |ClientSession|_ in a caching layer. Example usage:
 
-        .. |Session| replace:: ``Session``
-        .. _Session: https://2.python-requests.org/en/master/api/\
-#requests.Session
+        .. |ClientSession| replace:: ``ClientSession``
+        .. _ClientSession: https://docs.aiohttp.org/en/stable/client_advanced.html
 
         .. code-block:: python
 
-           import json, betamax, requests
+            import json, aiohttp
 
-           class JSONDebugRequestor(Requestor):
-               def request(self, *args, **kwargs):
-                   response = super().request(*args, **kwargs)
-                   print(json.dumps(response.json(), indent=4))
-                   return response
+            class JSONDebugRequestor(Requestor):
+                async def request(self, *args, **kwargs):
+                    response = await super().request(*args, **kwargs)
+                    print(json.dumps(await response.json(), indent=4))
+                    return response
 
-           my_session = betamax.Betamax(requests.Session())
-           reddit = Reddit(..., requestor_class=JSONDebugRequestor,
-                           requestor_kwargs={"session": my_session})
+            my_session = aiohttp.ClientSession(trust_env=True)
+            reddit = Reddit(..., requestor_class=JSONDebugRequestor,
+                            requestor_kwargs={"session": my_session})
 
         """
         self._core = self._authorized_core = self._read_only_core = None
@@ -200,10 +199,10 @@ class Reddit:
                 "You provided the name of a praw.ini "
                 "configuration which does not exist.\n\nFor help "
                 "with creating a Reddit instance, visit\n"
-                "https://praw.readthedocs.io/en/latest/code_overvi"
+                "https://asyncpraw.readthedocs.io/en/latest/code_overvi"
                 "ew/reddit_instance.html\n\n"
-                "For help on configuring PRAW, visit\n"
-                "https://praw.readthedocs.io/en/latest/getting_sta"
+                "For help on configuring Async PRAW, visit\n"
+                "https://asyncpraw.readthedocs.io/en/latest/getting_sta"
                 "rted/configuration.html"
             )
             if site_name is not None:
@@ -249,8 +248,8 @@ class Reddit:
 
         .. code-block:: python
 
-           for submission in reddit.front.hot():
-               print(submission)
+            async for submission in reddit.front.hot():
+                print(submission)
 
         """
 
@@ -264,8 +263,8 @@ class Reddit:
 
         .. code-block:: python
 
-           for comment in reddit.inbox.mentions():
-               print(comment)
+            async for comment in reddit.inbox.mentions():
+                print(comment)
 
         """
 
@@ -277,7 +276,7 @@ class Reddit:
 
         .. code-block:: python
 
-           reddit.live.create("title", "description")
+            await reddit.live.create("title", "description")
 
         """
 
@@ -290,7 +289,13 @@ class Reddit:
 
         .. code-block:: python
 
-           reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+
+        If you want to obtain a :class:`.Multireddit` instance you can do:
+
+        .. code-block:: python
+
+            multireddit = await reddit.multireddit("samuraisam", "programming")
 
         """
 
@@ -302,8 +307,8 @@ class Reddit:
 
         .. code-block:: python
 
-           for redditor in reddit.redditors.new(limit=None):
-               print(redditor)
+            async for redditor in reddit.redditors.new(limit=None):
+                print(redditor)
 
         """
 
@@ -315,21 +320,27 @@ class Reddit:
 
         .. code-block:: python
 
-           reddit.subreddit.create("coolnewsubname")
+            await reddit.subreddit.create("coolnewsubname")
 
-        To obtain a lazy a :class:`.Subreddit` instance run:
+        To obtain a lazy :class:`.Subreddit` instance run:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev")
+            await reddit.subreddit("redditdev")
+
+        To obtain a fetched :class:`.Subreddit` instance run:
+
+        .. code-block:: python
+
+            await reddit.subreddit("redditdev", fetch=True)
 
         Note that multiple subreddits can be combined and filtered views of
         r/all can also be used just like a subreddit:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev+learnpython+botwatch")
-           reddit.subreddit("all-redditdev-learnpython")
+            await reddit.subreddit("redditdev+learnpython+botwatch")
+            await reddit.subreddit("all-redditdev-learnpython")
 
         """
 
@@ -341,8 +352,8 @@ class Reddit:
 
         .. code-block:: python
 
-           for subreddit in reddit.subreddits.default(limit=None):
-               print(subreddit)
+            async for subreddit in reddit.subreddits.default(limit=None):
+                print(subreddit)
 
         """
 
@@ -355,7 +366,7 @@ class Reddit:
 
         .. code-block:: python
 
-           print(reddit.user.me())
+            print(await reddit.user.me())
 
         """
 
@@ -456,23 +467,36 @@ class Reddit:
         else:
             self._core = self._read_only_core
 
-    def comment(
+    async def comment(
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         url: Optional[str] = None,
+        lazy: bool = False,
     ):
-        """Return a lazy instance of :class:`~.Comment` for ``id``.
+        """Return an instance of :class:`~.Comment` for ``id``.
 
         :param id: The ID of the comment.
-
         :param url: A permalink pointing to the comment.
+        :param lazy: Determines if object is loaded lazily (default: False)
 
-        .. note:: If you want to obtain the comment's replies, you will need to
-                  call :meth:`~.Comment.refresh` on the returned
-                  :class:`.Comment`.
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) then you can do:
+
+        .. code-block:: python
+
+            comment = await reddit.comment("comment_id", lazy=True)
+            await comment.reply("reply")
+
+        .. note:: If call this with ``lazy=True`` and you need to obtain the
+                   comment's replies, you will need to call this without ``lazy=True``
+                   or call :meth:`~.Comment.refresh` on the returned
+                   :class:`.Comment`.
 
         """
-        return models.Comment(self, id=id, url=url)
+        comment = models.Comment(self, id=id, url=url)
+        if not lazy:
+            await comment._fetch()
+        return comment
 
     def domain(self, domain: str):
         """Return an instance of :class:`.DomainListing`.
@@ -482,7 +506,7 @@ class Reddit:
         """
         return models.DomainListing(self, domain)
 
-    def get(
+    async def get(
         self,
         path: str,
         params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
@@ -494,11 +518,11 @@ class Reddit:
             None).
 
         """
-        return self._objectify_request(method="GET", params=params, path=path)
+        return await self._objectify_request(method="GET", params=params, path=path)
 
     def info(
         self, fullnames: Optional[Iterable[str]] = None, url: Optional[str] = None,
-    ) -> Generator[Union[Subreddit, Comment, Submission], None, None]:
+    ) -> AsyncGenerator[Union[Subreddit, Comment, Submission], None]:
         """Fetch information about each item in ``fullnames`` or from ``url``.
 
         :param fullnames: A list of fullnames for comments, submissions, and/or
@@ -530,7 +554,7 @@ class Reddit:
             if isinstance(fullnames, str):
                 raise TypeError("`fullnames` must be a non-str iterable.")
 
-            def generator(fullnames):
+            async def generator(fullnames):
                 iterable = iter(fullnames)
                 while True:
                     chunk = list(islice(iterable, 100))
@@ -538,22 +562,21 @@ class Reddit:
                         break
 
                     params = {"id": ",".join(chunk)}
-                    for result in self.get(API_PATH["info"], params=params):
+                    for result in await self.get(API_PATH["info"], params=params):
                         yield result
 
             return generator(fullnames)
 
-        def generator(url):
+        async def generator(url):
             params = {"url": url}
-            for result in self.get(API_PATH["info"], params=params):
+            for result in await self.get(API_PATH["info"], params=params):
                 yield result
 
         return generator(url)
 
-    def _objectify_request(
+    async def _objectify_request(
         self,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
         json=None,
         method: str = "",
         params: Optional[Union[str, Dict[str, str]]] = None,
@@ -563,8 +586,6 @@ class Reddit:
 
         :param data: Dictionary, bytes, or file-like object to send in the body
             of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
         :param json: JSON-serializable object to send in the body
             of the request with a Content-Type header of application/json
             (default: None). If ``json`` is provided, ``data`` should not be.
@@ -575,13 +596,8 @@ class Reddit:
 
         """
         return self._objector.objectify(
-            self.request(
-                data=data,
-                files=files,
-                json=json,
-                method=method,
-                params=params,
-                path=path,
+            await self.request(
+                data=data, json=json, method=method, params=params, path=path,
             )
         )
 
@@ -601,7 +617,7 @@ class Reddit:
                     return sleep_seconds
         return None
 
-    def delete(
+    async def delete(
         self,
         path: str,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
@@ -617,9 +633,11 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        return self._objectify_request(data=data, json=json, method="DELETE", path=path)
+        return await self._objectify_request(
+            data=data, json=json, method="DELETE", path=path
+        )
 
-    def patch(
+    async def patch(
         self,
         path: str,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
@@ -635,13 +653,14 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        return self._objectify_request(data=data, method="PATCH", path=path, json=json)
+        return await self._objectify_request(
+            data=data, method="PATCH", path=path, json=json
+        )
 
-    def post(
+    async def post(
         self,
         path: str,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
         params: Optional[Union[str, Dict[str, str]]] = None,
         json=None,
     ) -> Any:
@@ -650,8 +669,6 @@ class Reddit:
         :param path: The path to fetch.
         :param data: Dictionary, bytes, or file-like object to send in the body
             of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
         :param params: The query parameters to add to the request (default:
             None).
         :param json: JSON-serializable object to send in the body
@@ -662,13 +679,8 @@ class Reddit:
         if json is None:
             data = data or {}
         try:
-            return self._objectify_request(
-                data=data,
-                files=files,
-                json=json,
-                method="POST",
-                params=params,
-                path=path,
+            return await self._objectify_request(
+                data=data, json=json, method="POST", params=params, path=path,
             )
         except RedditAPIException as exception:
             seconds = self._handle_rate_limit(exception=exception)
@@ -676,13 +688,13 @@ class Reddit:
                 logger.debug(
                     "Rate limit hit, sleeping for {:.2f} seconds".format(seconds)
                 )
-                time.sleep(seconds)
-                return self._objectify_request(
-                    data=data, files=files, method="POST", params=params, path=path,
+                await asyncio.sleep(seconds)
+                return await self._objectify_request(
+                    data=data, method="POST", params=params, path=path,
                 )
             raise
 
-    def put(
+    async def put(
         self,
         path: str,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
@@ -698,10 +710,12 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        return self._objectify_request(data=data, json=json, method="PUT", path=path)
+        return await self._objectify_request(
+            data=data, json=json, method="PUT", path=path
+        )
 
-    def random_subreddit(self, nsfw: bool = False) -> Subreddit:
-        """Return a random lazy instance of :class:`~.Subreddit`.
+    async def random_subreddit(self, nsfw: bool = False) -> Subreddit:
+        """Return a random instance of :class:`~.Subreddit`.
 
         :param nsfw: Return a random NSFW (not safe for work) subreddit
             (default: False).
@@ -710,15 +724,17 @@ class Reddit:
         url = API_PATH["subreddit"].format(subreddit="randnsfw" if nsfw else "random")
         path = None
         try:
-            self.get(url, params={"unique": self._next_unique})
+            await self.get(url, params={"unique": self._next_unique})
         except Redirect as redirect:
             path = redirect.path
-        return models.Subreddit(self, path.split("/")[2])
+        subreddit = models.Subreddit(self, path.split("/")[2])
+        await subreddit._fetch()
+        return subreddit
 
-    def redditor(
+    async def redditor(
         self, name: Optional[str] = None, fullname: Optional[str] = None
     ) -> Redditor:
-        """Return a lazy instance of :class:`~.Redditor`.
+        """Return an instance of :class:`~.Redditor`.
 
         :param name: The name of the redditor.
         :param fullname: The fullname of the redditor, starting with ``t2_``.
@@ -726,15 +742,16 @@ class Reddit:
         Either ``name`` or ``fullname`` can be provided, but not both.
 
         """
-        return models.Redditor(self, name=name, fullname=fullname)
+        redditor = models.Redditor(self, name=name, fullname=fullname)
+        await redditor._fetch()
+        return redditor
 
-    def request(
+    async def request(
         self,
         method: str,
         path: str,
         params: Optional[Union[str, Dict[str, str]]] = None,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
         json=None,
     ) -> Any:
         """Return the parsed JSON data returned from a request to URL.
@@ -745,28 +762,35 @@ class Reddit:
             None).
         :param data: Dictionary, bytes, or file-like object to send in the body
             of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
         :param json: JSON-serializable object to send in the body
             of the request with a Content-Type header of application/json
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
+        # this a fix for aiohttp not liking bool values in its params this needs to
+        # be fixed asyncprawcore
+        if params:
+            new_params = {}
+            for k, v in params.items():
+                if isinstance(v, bool):
+                    new_params[k] = str(v).lower()
+                elif v:
+                    new_params[k] = v
+            params = new_params
         if data and json:
             raise ClientException("At most one of `data` and `json` is supported.")
         try:
-            return self._core.request(
+            return await self._core.request(
                 method,
                 path,
                 data=data,
-                files=files,
                 params=params,
                 timeout=self.config.timeout,
                 json=json,
             )
         except BadRequest as exception:
             try:
-                data = exception.response.json()
+                data = await exception.response.json()
             except ValueError:
                 # TODO: Remove this exception after 2020-12-31 if no one has
                 # filed a bug against it.
@@ -785,16 +809,26 @@ class Reddit:
                 [data["reason"], data["explanation"], field]
             ) from exception
 
-    def submission(  # pylint: disable=invalid-name,redefined-builtin
-        self, id: Optional[str] = None, url: Optional[str] = None
+    async def submission(  # pylint: disable=invalid-name,redefined-builtin
+        self, id: Optional[str] = None, url: Optional[str] = None, lazy=False
     ) -> Submission:
-        """Return a lazy instance of :class:`~.Submission`.
+        """Return an instance of :class:`~.Submission`.
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) then you can do:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("submission_id", lazy=True)
+            await submission.mod.remove()
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by
-            :meth:`~praw.models.Submission.id_from_url`.`.
+        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param lazy: Determines if object is loaded lazily (default: False).
 
         Either ``id`` or ``url`` can be provided, but not both.
 
         """
-        return models.Submission(self, id=id, url=url)
+        submission = models.Submission(self, id=id, url=url)
+        await submission._fetch()
+        return submission

@@ -36,7 +36,7 @@ jobs:
     - name: Check documentation
       run: python ./tools/check_documentation.py
     - name: Run pydocstyle
-      run: pydocstyle praw
+      run: pydocstyle asyncpraw
     - name: Run sphinx
       run: sphinx-build -W --keep-going docs/ /tmp/foo
     strategy:
@@ -71,7 +71,7 @@ jobs:
     - name: Check documentation
       run: python ./tools/check_documentation.py
     - name: Run pydocstyle
-      run: pydocstyle praw
+      run: pydocstyle asyncpraw
     - name: Run sphinx
       run: sphinx-build -W --keep-going docs/ /tmp/foo
     strategy:
@@ -124,7 +124,7 @@ jobs:
         pip install .[test]
         pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
     - name: Test with pytest
-      run: coverage run --source praw --module pytest
+      run: coverage run --source asyncpraw --module pytest
     - env:
         COVERALLS_PARALLEL: true
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -134,7 +134,7 @@ jobs:
       run: coverage report -m --fail-under=100
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8]
 
   test-network:
     name: Test Network Request

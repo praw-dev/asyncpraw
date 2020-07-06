@@ -1,4 +1,4 @@
 SubredditCollectionsModeration
 ==============================
-.. autoclass:: praw.models.reddit.collections.SubredditCollectionsModeration
+.. autoclass:: asyncpraw.models.reddit.collections.SubredditCollectionsModeration
    :inherited-members:

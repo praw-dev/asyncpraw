@@ -5,7 +5,7 @@ from ....const import API_PATH
 class GildableMixin:
     """Interface for classes that can be gilded."""
 
-    def gild(self):
+    async def gild(self):
         """Gild the author of the item.
 
         .. note:: Requires the authenticated user to own Reddit Coins.
@@ -15,11 +15,11 @@ class GildableMixin:
 
         .. code-block:: python
 
-           comment = reddit.comment("dkk4qjd")
-           comment.gild()
+            comment = await reddit.comment("dkk4qjd"), lazy=True
+            await comment.gild()
 
-           submission = reddit.submission("8dmv8z")
-           submission.gild()
+            submission = await reddit.submission("8dmv8z", lazy=True)
+            await submission.gild()
 
         """
-        self._reddit.post(API_PATH["gild_thing"].format(fullname=self.fullname))
+        await self._reddit.post(API_PATH["gild_thing"].format(fullname=self.fullname))

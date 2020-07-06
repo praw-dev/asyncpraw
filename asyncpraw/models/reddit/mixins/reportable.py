@@ -5,7 +5,7 @@ from ....const import API_PATH
 class ReportableMixin:
     """Interface for RedditBase classes that can be reported."""
 
-    def report(self, reason: str):
+    async def report(self, reason: str):
         """Report this object to the moderators of its subreddit.
 
         :param reason: The reason for reporting.
@@ -17,13 +17,13 @@ class ReportableMixin:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.report("report reason")
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.report("report reason")
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.report("report reason")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
+            await comment.report("report reason")
 
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["report"], data={"id": self.fullname, "reason": reason}
         )

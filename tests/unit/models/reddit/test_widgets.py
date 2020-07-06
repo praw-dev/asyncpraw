@@ -8,7 +8,7 @@ from praw.models import (
     Widget,
     WidgetModeration,
 )
-from praw.models.base import PRAWBase
+from praw.models.base import AsyncPRAWBase
 from praw.models.reddit.widgets import WidgetEncoder
 
 from ... import UnitTest
@@ -28,7 +28,7 @@ class TestWidgetEncoder(UnitTest):
         data = [
             1,
             "two",
-            PRAWBase(self.reddit, _data={"_secret": "no", "3": 3}),
+            AsyncPRAWBase(self.reddit, _data={"_secret": "no", "3": 3}),
             self.reddit.subreddit("four"),
         ]
         assert '[1, "two", {"3": 3}, "four"]' == dumps(data, cls=WidgetEncoder)

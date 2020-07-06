@@ -1,4 +1,4 @@
-"""Provide the PRAW models."""
+"""Provide the Async PRAW models."""
 from .auth import Auth
 from .front import Front
 from .helpers import LiveHelper, MultiredditHelper, SubredditHelper

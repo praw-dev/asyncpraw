@@ -5,11 +5,11 @@ from json import JSONEncoder, dumps
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 from ..list.base import BaseList
 
 
-class Button(PRAWBase):
+class Button(AsyncPRAWBase):
     """Class to represent a single button inside a :class:`.ButtonWidget`.
 
     **Typical Attributes**
@@ -42,7 +42,7 @@ class Button(PRAWBase):
     """
 
 
-class CalendarConfiguration(PRAWBase):
+class CalendarConfiguration(AsyncPRAWBase):
     """Class to represent the configuration of a :class:`.Calendar`.
 
     **Typical Attributes**
@@ -66,7 +66,7 @@ class CalendarConfiguration(PRAWBase):
     """
 
 
-class Hover(PRAWBase):
+class Hover(AsyncPRAWBase):
     """Class to represent the hover data for a :class:`.ButtonWidget`.
 
     These values will take effect when the button is hovered over (the user
@@ -98,7 +98,7 @@ class Hover(PRAWBase):
     """
 
 
-class Image(PRAWBase):
+class Image(AsyncPRAWBase):
     """Class to represent an image that's part of a :class:`.ImageWidget`.
 
     **Typical Attributes**
@@ -120,7 +120,7 @@ class Image(PRAWBase):
     """
 
 
-class ImageData(PRAWBase):
+class ImageData(AsyncPRAWBase):
     """Class for image data that's part of a :class:`.CustomWidget`.
 
     **Typical Attributes**
@@ -142,7 +142,7 @@ class ImageData(PRAWBase):
     """
 
 
-class MenuLink(PRAWBase):
+class MenuLink(AsyncPRAWBase):
     """Class to represent a single link inside a menu or submenu.
 
     **Typical Attributes**
@@ -162,7 +162,7 @@ class MenuLink(PRAWBase):
     """
 
 
-class Styles(PRAWBase):
+class Styles(AsyncPRAWBase):
     """Class to represent the style information of a widget.
 
     **Typical Attributes**
@@ -209,35 +209,37 @@ class Submenu(BaseList):
     CHILD_ATTRIBUTE = "children"
 
 
-class SubredditWidgets(PRAWBase):
+class SubredditWidgets(AsyncPRAWBase):
     """Class to represent a subreddit's widgets.
 
     Create an instance like so:
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
 
-    Data will be lazy-loaded. By default, PRAW will not request progressively
+    Data will be lazy-loaded. By default, Async PRAW will not request progressively
     loading images from Reddit. To enable this, instantiate a SubredditWidgets
     object, then set the attribute ``progressive_images`` to ``True`` before
     performing any action that would result in a network request.
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       widgets.progressive_images = True
-       for widget in widgets.sidebar:
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        widgets.progressive_images = True
+        async for widget in widgets.sidebar():
            # do something
 
     Access a subreddit's widgets with the following attributes:
 
     .. code-block:: python
 
-       print(widgets.id_card)
-       print(widgets.moderators_widget)
-       print(widgets.sidebar)
-       print(widgets.topbar)
+        print(await widgets.id_card()
+        print(await widgets.moderators_widget()
+        print([widget async for widget in widgets.sidebar()])
+        print([widget async for widget in widgets.topbar()])
 
     The attribute :attr:`.id_card` contains the subreddit's ID card,
     which displays information like the number of subscribers.
@@ -256,7 +258,7 @@ class SubredditWidgets(PRAWBase):
 
     .. code-block:: python
 
-       widgets.mod.add_text_area("My title", "**bold text**",
+        await widgets.mod.add_text_area("My title", "**bold text**",
                                  {"backgroundColor": "#FFFF66",
                                   "headerColor": "#3333EE"})
 
@@ -266,8 +268,8 @@ class SubredditWidgets(PRAWBase):
 
     .. code-block:: python
 
-       for widget in widgets.sidebar:
-           widget.mod.update(shortName="Exciting new name")
+        async for widget in widgets.sidebar():
+            await widget.mod.update(shortName="Exciting new name")
 
     For more information, see :class:`.WidgetModeration`.
 
@@ -287,15 +289,16 @@ class SubredditWidgets(PRAWBase):
 
     """
 
-    @cachedproperty
-    def id_card(self):
+    async def id_card(self):
         """Get this subreddit's :class:`.IDCard` widget."""
-        return self.items[self.layout["idCardWidget"]]
+        items = await self.items()
+        return items[self.layout["idCardWidget"]]
 
-    @cachedproperty
-    def items(self):
+    async def items(self):
         """Get this subreddit's widgets as a dict from ID to widget."""
         items = {}
+        if not self._raw_items:
+            await self._fetch()
         for item_name, data in self._raw_items.items():
             data["subreddit"] = self.subreddit
             items[item_name] = self._reddit._objector.objectify(data)
@@ -313,49 +316,53 @@ class SubredditWidgets(PRAWBase):
         """
         return SubredditWidgetsModeration(self.subreddit, self._reddit)
 
-    @cachedproperty
-    def moderators_widget(self):
+    async def moderators_widget(self):
         """Get this subreddit's :class:`.ModeratorsWidget`."""
-        return self.items[self.layout["moderatorWidget"]]
+        items = await self.items()
+        return items[self.layout["moderatorWidget"]]
 
-    @cachedproperty
-    def sidebar(self):
+    async def sidebar(self):
         """Get a list of Widgets that make up the sidebar."""
-        return [
-            self.items[widget_name] for widget_name in self.layout["sidebar"]["order"]
-        ]
+        items = await self.items()
+        for widget in self.layout["sidebar"]["order"]:
+            yield items[widget]
 
-    @cachedproperty
-    def topbar(self):
+    async def topbar(self):
         """Get a list of Widgets that make up the top bar."""
-        return [
-            self.items[widget_name] for widget_name in self.layout["topbar"]["order"]
-        ]
+        items = await self.items()
+        for widget in self.layout["topbar"]["order"]:
+            yield items[widget]
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the subreddit's widgets.
 
-        By default, PRAW will not request progressively
+        By default, Async PRAW will not request progressively
         loading images from Reddit. To enable this,
         set the attribute ``progressive_images`` to ``True`` prior to
         calling ``refresh()``.
 
         .. code-block:: python
 
-           widgets = reddit.subreddit("redditdev").widgets
-           widgets.progressive_images = True
-           widgets.refresh()
+            subreddit = await reddit.subreddit("redditdev")
+            widgets = subreddit.widgets
+            widgets.progressive_images = True
+            await widgets.refresh()
 
         """
-        self._fetch()
+        await self._fetch()
 
     def __getattr__(self, attr):
         """Return the value of `attr`."""
         if not attr.startswith("_") and not self._fetched:
-            self._fetch()
-            return getattr(self, attr)
+            raise AttributeError(
+                "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
+                    self.__class__.__name__, attr
+                )
+            )
         raise AttributeError(
-            "{!r} object has no attribute {!r}".format(self.__class__.__name__, attr)
+            "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
+                self.__class__.__name__, attr
+            )
         )
 
     def __init__(self, subreddit):
@@ -377,8 +384,8 @@ class SubredditWidgets(PRAWBase):
             subreddit=self.subreddit
         )
 
-    def _fetch(self):
-        data = self._reddit.get(
+    async def _fetch(self):
+        data = await self._reddit.get(
             API_PATH["widgets"].format(subreddit=self.subreddit),
             params={"progressive_images": self.progressive_images},
         )
@@ -409,9 +416,9 @@ class SubredditWidgetsModeration:
 
     .. code-block:: python
 
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       reddit.subreddit("learnpython").widgets.mod.add_text_area(
-           "My title", "**bold text**", styles)
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        subreddit = await reddit.subreddit("learnpython")
+        await subreddit.widgets.mod.add_text_area("My title", "**bold text**", styles)
 
     .. note::
 
@@ -424,15 +431,15 @@ class SubredditWidgetsModeration:
         self._subreddit = subreddit
         self._reddit = reddit
 
-    def _create_widget(self, payload):
+    async def _create_widget(self, payload):
         path = API_PATH["widget_create"].format(subreddit=self._subreddit)
-        widget = self._reddit.post(
+        widget = await self._reddit.post(
             path, data={"json": dumps(payload, cls=WidgetEncoder)}
         )
         widget.subreddit = self._subreddit
         return widget
 
-    def add_button_widget(
+    async def add_button_widget(
         self, short_name, description, buttons, styles, **other_settings
     ):
         r"""Add and return a :class:`.ButtonWidget`.
@@ -519,9 +526,10 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           my_image = widget_moderation.upload_image("/path/to/pic.jpg")
-           buttons = [
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            my_image = await widget_moderation.upload_image("/path/to/pic.jpg")
+            buttons = [
                {
                    "kind": "text",
                    "text": "View source",
@@ -552,10 +560,10 @@ class SubredditWidgetsModeration:
                    }
                }
            ]
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           new_widget = widget_moderation.add_button_widget(
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            new_widget = await widget_moderation.add_button_widget(
                "Things to click", "Click some of these *cool* links!",
-               buttons, styles)
+                buttons, styles)
 
         """
         button_widget = {
@@ -566,9 +574,9 @@ class SubredditWidgetsModeration:
             "styles": styles,
         }
         button_widget.update(other_settings)
-        return self._create_widget(button_widget)
+        return await self._create_widget(button_widget)
 
-    def add_calendar(
+    async def add_calendar(
         self,
         short_name,
         google_calendar_id,
@@ -607,18 +615,19 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           config = {"numEvents": 10,
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            config = {"numEvents": 10,
                      "showDate": True,
                      "showDescription": False,
                      "showLocation": False,
                      "showTime": True,
                      "showTitle": True}
-           cal_id = "y6nm89jy427drk8l71w75w9wjn@group.calendar.google.com"
-           new_widget = widget_moderation.add_calendar("Upcoming Events",
-                                                       cal_id, True,
-                                                       config, styles)
+            cal_id = "y6nm89jy427drk8l71w75w9wjn@group.calendar.google.com"
+            new_widget = await widget_moderation.add_calendar("Upcoming Events",
+                                                        cal_id, True,
+                                                        config, styles)
         """
         calendar = {
             "shortName": short_name,
@@ -629,9 +638,9 @@ class SubredditWidgetsModeration:
             "kind": "calendar",
         }
         calendar.update(other_settings)
-        return self._create_widget(calendar)
+        return await self._create_widget(calendar)
 
-    def add_community_list(
+    async def add_community_list(
         self, short_name, data, styles, description="", **other_settings
     ):
         """Add and return a :class:`.CommunityList` widget.
@@ -652,10 +661,12 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           subreddits = ["learnpython", reddit.subreddit("redditdev")]
-           new_widget = widget_moderation.add_community_list("My fav subs",
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            new_subreddit = await reddit.subreddit("redditdev")
+            subreddits = ["learnpython", new_subreddit]
+            new_widget = await widget_moderation.add_community_list("My fav subs",
                                                              subreddits,
                                                              styles,
                                                              "description")
@@ -669,9 +680,9 @@ class SubredditWidgetsModeration:
             "description": description,
         }
         community_list.update(other_settings)
-        return self._create_widget(community_list)
+        return await self._create_widget(community_list)
 
-    def add_custom_widget(
+    async def add_custom_widget(
         self, short_name, text, css, height, image_data, styles, **other_settings
     ):
         r"""Add and return a :class:`.CustomWidget`.
@@ -713,19 +724,20 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-           image_urls = [widget_moderation.upload_image(img_path)
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
+            image_urls = [widget_moderation.upload_image(img_path)
                          for img_path in image_paths]
-           image_dicts = [{"width": 600, "height": 450, "name": "logo",
+            image_dicts = [{"width": 600, "height": 450, "name": "logo",
                            "url": image_urls[0]},
                           {"width": 450, "height": 600, "name": "icon",
                            "url": image_urls[1]}]
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           new_widget = widget_moderation.add_custom_widget("My widget",
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            new_widget = await widget_moderation.add_custom_widget("My widget",
                                                            "# Hello world!",
                                                            "/**/", 200,
-                                                           image_dicts, styles)
+                                                            image_dicts, styles)
 
         """
         custom_widget = {
@@ -738,9 +750,9 @@ class SubredditWidgetsModeration:
             "text": text,
         }
         custom_widget.update(other_settings)
-        return self._create_widget(custom_widget)
+        return await self._create_widget(custom_widget)
 
-    def add_image_widget(self, short_name, data, styles, **other_settings):
+    async def add_image_widget(self, short_name, data, styles, **other_settings):
         r"""Add and return an :class:`.ImageWidget`.
 
         :param short_name: A name for the widget, no longer than 30 characters.
@@ -770,14 +782,15 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-           image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
+            image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
                            "url": widget_moderation.upload_image(img_path)}
                           for img_path in image_paths]
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           new_widget = widget_moderation.add_image_widget("My cool pictures",
-                                                           image_dicts, styles)
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            new_widget = await widget_moderation.add_image_widget("My cool pictures",
+                                                            image_dicts, styles)
 
         """
         image_widget = {
@@ -787,9 +800,9 @@ class SubredditWidgetsModeration:
             "styles": styles,
         }
         image_widget.update(other_settings)
-        return self._create_widget(image_widget)
+        return await self._create_widget(image_widget)
 
-    def add_menu(self, data, **other_settings):
+    async def add_menu(self, data, **other_settings):
         r"""Add and return a :class:`.Menu` widget.
 
         :param data: A ``list`` of ``dict``\ s describing menu contents, as
@@ -824,8 +837,9 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           menu_contents = [
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            menu_contents = [
                {"text": "My homepage", "url": 'https://example.com'},
                {"text": "Python packages",
                 "children": [
@@ -834,14 +848,14 @@ class SubredditWidgetsModeration:
                 ]},
                {"text": "Reddit homepage", "url": 'https://reddit.com'}
            ]
-           new_widget = widget_moderation.add_menu(menu_contents)
+            new_widget = await widget_moderation.add_menu(menu_contents)
 
         """
         menu = {"data": data, "kind": "menu"}
         menu.update(other_settings)
-        return self._create_widget(menu)
+        return await self._create_widget(menu)
 
-    def add_post_flair_widget(
+    async def add_post_flair_widget(
         self, short_name, display, order, styles, **other_settings
     ):
         """Add and return a :class:`.PostFlairWidget`.
@@ -853,7 +867,7 @@ class SubredditWidgetsModeration:
 
             .. code-block:: python
 
-               flairs = [f["id"] for f in subreddit.flair.link_templates]
+                flairs = [f["id"] for f in subreddit.flair.link_templates]
 
         :param styles: A ``dict`` with keys ``backgroundColor`` and
                        ``headerColor``, and values of hex colors. For example,
@@ -864,11 +878,11 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("mysub")
-           widget_moderation = subreddit.widgets.mod
-           flairs = [f["id"] for f in subreddit.flair.link_templates]
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           new_widget = widget_moderation.add_post_flair_widget("Some flairs",
+            subreddit = await subreddit("mysub", lazy=True)
+            widget_moderation = subreddit.widgets.mod
+            flairs = [f["id"] async for f in subreddit.flair.link_templates]
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            new_widget = await widget_moderation.add_post_flair_widget("Some flairs",
                                                                 "list",
                                                                 flairs, styles)
 
@@ -881,9 +895,9 @@ class SubredditWidgetsModeration:
             "styles": styles,
         }
         post_flair.update(other_settings)
-        return self._create_widget(post_flair)
+        return await self._create_widget(post_flair)
 
-    def add_text_area(self, short_name, text, styles, **other_settings):
+    async def add_text_area(self, short_name, text, styles, **other_settings):
         """Add and return a :class:`.TextArea` widget.
 
         :param short_name: A name for the widget, no longer than 30 characters.
@@ -897,9 +911,10 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widget_moderation = reddit.subreddit("mysub").widgets.mod
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           new_widget = widget_moderation.add_text_area("My cool title",
+            subreddit = await reddit.subreddit("mysub")
+            widget_moderation = subreddit.widgets.mod
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            new_widget = await widget_moderation.add_text_area("My cool title",
                                                         "*Hello* **world**!",
                                                         styles)
 
@@ -911,9 +926,9 @@ class SubredditWidgetsModeration:
             "kind": "textarea",
         }
         text_area.update(other_settings)
-        return self._create_widget(text_area)
+        return await self._create_widget(text_area)
 
-    def reorder(self, new_order, section="sidebar"):
+    async def reorder(self, new_order, section="sidebar"):
         """Reorder the widgets.
 
         :param new_order: A list of widgets. Represented as a ``list`` that
@@ -925,10 +940,11 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           widgets = reddit.subreddit("mysub").widgets
-           order = list(widgets.sidebar)
-           order.reverse()
-           widgets.mod.reorder(order)
+            subreddit = await reddit.subreddit("mysub")
+            widgets = [async for widget in subreddit.widgets]
+            order = list(widgets.sidebar)
+            order.reverse()
+            await widgets.mod.reorder(order)
 
         """
         order = [
@@ -937,9 +953,9 @@ class SubredditWidgetsModeration:
         path = API_PATH["widget_order"].format(
             subreddit=self._subreddit, section=section
         )
-        self._reddit.patch(path, data={"json": dumps(order), "section": section})
+        await self._reddit.patch(path, data={"json": dumps(order), "section": section})
 
-    def upload_image(self, file_path):
+    async def upload_image(self, file_path):
         """Upload an image to Reddit and get the URL.
 
         :param file_path: The path to the local file.
@@ -953,13 +969,11 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-           my_sub = reddit.subreddit("my_sub")
-           image_url = my_sub.widgets.mod.upload_image("/path/to/image.jpg")
-           images = [{"width": 300, "height": 300,
-                      "url": image_url, "linkUrl": ''}]
-           styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-           my_sub.widgets.mod.add_image_widget("My cool pictures", images,
-                                               styles)
+            my_sub = await reddit.subreddit("my_sub")
+            image_url = await my_sub.widgets.mod.upload_image("/path/to/image.jpg")
+            images = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ''}]
+            styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+            await my_sub.widgets.mod.add_image_widget("My cool pictures", images, styles)
         """
         img_data = {
             "filepath": os.path.basename(file_path),
@@ -970,20 +984,22 @@ class SubredditWidgetsModeration:
 
         url = API_PATH["widget_lease"].format(subreddit=self._subreddit)
         # until we learn otherwise, assume this request always succeeds
-        upload_lease = self._reddit.post(url, data=img_data)["s3UploadLease"]
+        response = await self._reddit.post(url, data=img_data)
+        upload_lease = response["s3UploadLease"]
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = "https:{}".format(upload_lease["action"])
 
         with open(file_path, "rb") as image:
-            response = self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data, files={"file": image}
+            upload_data["file"] = image
+            response = await self._reddit._core._requestor._http.post(
+                upload_url, data=upload_data
             )
         response.raise_for_status()
 
         return upload_url + "/" + upload_data["key"]
 
 
-class Widget(PRAWBase):
+class Widget(AsyncPRAWBase):
     """Base class to represent a Widget."""
 
     @cachedproperty
@@ -993,8 +1009,7 @@ class Widget(PRAWBase):
         .. note::
            Using any of the methods of :class:`.WidgetModeration` will likely
            make outdated the data in the :class:`.SubredditWidgets` that this
-           widget belongs to. To remedy this, call
-           :meth:`~.SubredditWidgets.refresh`.
+           widget belongs to. To remedy this, call :meth:`~.SubredditWidgets.refresh`.
         """
         return WidgetModeration(self, self.subreddit, self._reddit)
 
@@ -1020,22 +1035,24 @@ class ButtonWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       button_widget = None
-       widgets = reddit.subreddit("redditdev").widgets
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.ButtonWidget):
-               button_widget = widget
-               break
+        button_widget = None
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.ButtonWidget):
+                button_widget = widget
+                break
 
-       for button in button_widget:
-           print(button.text, button.url)
+        for button in button_widget:
+            print(button.text, button.url)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       buttons = [
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        buttons = [
            {
                "kind": "text",
                "text": "View source",
@@ -1060,10 +1077,10 @@ class ButtonWidget(Widget, BaseList):
                "fillColor": "#0000FF"
            },
        ]
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       button_widget = widgets.mod.add_button_widget(
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        button_widget = await widgets.mod.add_button_widget(
            "Things to click", "Click some of these *cool* links!",
-           buttons, styles)
+            buttons, styles)
 
     For more information on creation, see :meth:`.add_button_widget`.
 
@@ -1071,15 +1088,15 @@ class ButtonWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       button_widget = button_widget.mod.update(shortName="My fav buttons",
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        button_widget = await button_widget.mod.update(shortName="My fav buttons",
                                                 styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       button_widget.mod.delete()
+        await button_widget.mod.delete()
 
     **Typical Attributes**
 
@@ -1118,29 +1135,31 @@ class Calendar(Widget):
 
     .. code-block:: python
 
-       calendar = None
-       widgets = reddit.subreddit("redditdev").widgets
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.Calendar):
-               calendar = widget
-               break
+        calendar = None
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.Calendar):
+                calendar = widget
+                break
 
-       print(calendar.googleCalendarId)
+        print(calendar.googleCalendarId)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       config = {"numEvents": 10,
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        config = {"numEvents": 10,
                  "showDate": True,
                  "showDescription": False,
                  "showLocation": False,
                  "showTime": True,
                  "showTitle": True}
-       cal_id = "y6nm89jy427drk8l71w75w9wjn@group.calendar.google.com"
-       calendar = widgets.mod.add_calendar(
+        cal_id = "y6nm89jy427drk8l71w75w9wjn@group.calendar.google.com"
+        calendar = await widgets.mod.add_calendar(
            "Upcoming Events", cal_id, True, config, styles)
 
     For more information on creation, see :meth:`.add_calendar`.
@@ -1149,15 +1168,14 @@ class Calendar(Widget):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       calendar = calendar.mod.update(shortName="My fav events",
-                                      styles=new_styles)
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        calendar = await calendar.mod.update(shortName="My fav events", styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       calendar.mod.delete()
+        await calendar.mod.delete()
 
     **Typical Attributes**
 
@@ -1191,24 +1209,27 @@ class CommunityList(Widget, BaseList):
 
     .. code-block:: python
 
-       community_list = None
-       widgets = reddit.subreddit("redditdev").widgets
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.CommunityList):
-               community_list = widget
-               break
+        community_list = None
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.CommunityList):
+                community_list = widget
+                break
 
-       print(community_list)
+        print(community_list)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       subreddits = ["learnpython", reddit.subreddit("announcements")]
-       community_list = widgets.mod.add_community_list("Related subreddits",
-                                                       subreddits, styles,
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        new_subreddit = await reddit.subreddit("announcements")
+        subreddits = ["learnpython", new_subreddit]
+        community_list = await widgets.mod.add_community_list("Related subreddits",
+                                                        subreddits, styles,
                                                        "description")
 
     For more information on creation, see :meth:`.add_community_list`.
@@ -1217,15 +1238,15 @@ class CommunityList(Widget, BaseList):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       community_list = community_list.mod.update(shortName="My fav subs",
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        community_list = await community_list.mod.update(shortName="My fav subs",
                                                   styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       community_list.mod.delete()
+        await community_list.mod.delete()
 
     **Typical Attributes**
 
@@ -1262,23 +1283,25 @@ class CustomWidget(Widget):
 
     .. code-block:: python
 
-       custom = None
-       widgets = reddit.subreddit("redditdev").widgets
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.CustomWidget):
-               custom = widget
-               break
+        custom = None
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.CustomWidget):
+                custom = widget
+                break
 
-       print(custom.text)
-       print(custom.css)
+        print(custom.text)
+        print(custom.css)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       custom = widgets.mod.add_custom_widget(
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        custom = await widgets.mod.add_custom_widget(
            "My custom widget", "# Hello world!", "/**/", 200, [], styles)
 
     For more information on creation, see :meth:`.add_custom_widget`.
@@ -1287,15 +1310,14 @@ class CustomWidget(Widget):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       custom = custom.mod.update(shortName="My fav customization",
-                                  styles=new_styles)
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        custom = await custom.mod.update(shortName="My fav customization", styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       custom.mod.delete()
+        await custom.mod.delete()
 
     **Typical Attributes**
 
@@ -1338,15 +1360,17 @@ class IDCard(Widget):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       id_card = widgets.id_card
-       print(id_card.subscribersText)
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        id_card = await widgets.id_card()
+        print(id_card.subscribersText)
 
     Update one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets.id_card.mod.update(currentlyViewingText="Bots")
+        id_card = await widgets.id_card()
+        await id_card.mod.update(currentlyViewingText="Bots")
 
     **Typical Attributes**
 
@@ -1384,28 +1408,30 @@ class ImageWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       image_widget = None
-       widgets = reddit.subreddit("redditdev").widgets
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.ImageWidget):
-               image_widget = widget
-               break
+        image_widget = None
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.ImageWidget):
+                image_widget = widget
+                break
 
-       for image in image_widget:
-           print(image.url)
+        for image in image_widget:
+            print(image.url)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-       image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
-                       "url": widgets.mod.upload_image(img_path)}
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
+        image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
+                       "url": await widgets.mod.upload_image(img_path)}
                       for img_path in image_paths]
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       image_widget = widgets.mod.add_image_widget("My cool pictures",
-                                                   image_dicts, styles)
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        image_widget = await widgets.mod.add_image_widget("My cool pictures",
+                                                    image_dicts, styles)
 
     For more information on creation, see :meth:`.add_image_widget`.
 
@@ -1413,15 +1439,15 @@ class ImageWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       image_widget = image_widget.mod.update(shortName="My fav images",
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        image_widget = await image_widget.mod.update(shortName="My fav images",
                                               styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       image_widget.mod.delete()
+        await image_widget.mod.delete()
 
     **Typical Attributes**
 
@@ -1458,24 +1484,26 @@ class Menu(Widget, BaseList):
 
     .. code-block:: python
 
-       topbar = reddit.subreddit("redditdev").widgets.topbar
-       if len(topbar) > 0:
-           probably_menu = topbar[0]
-           assert isinstance(probably_menu, praw.models.Menu)
-           for item in probably_menu:
-               if isinstance(item, praw.models.Submenu):
-                   print(item.text)
-                   for child in item:
-                       print("\t", child.text, child.url)
-               else:  # MenuLink
-                   print(item.text, item.url)
+        subreddit = await reddit.subreddit("redditdev")
+        topbar = [widget async for widget in subreddit.widgets.topbar()]
+        if len(topbar) > 0:
+            probably_menu = topbar[0]
+            assert isinstance(probably_menu, praw.models.Menu)
+            for item in probably_menu:
+                if isinstance(item, praw.models.Submenu):
+                    print(item.text)
+                    for child in item:
+                        print("\t", child.text, child.url)
+                else:  # MenuLink
+                    print(item.text, item.url)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       menu_contents = [
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        menu_contents = [
            {"text": "My homepage", "url": 'https://example.com'},
            {"text": "Python packages",
             "children": [
@@ -1484,7 +1512,7 @@ class Menu(Widget, BaseList):
             ]},
            {"text": "Reddit homepage", "url": 'https://reddit.com'}
        ]
-       menu = widgets.mod.add_menu(menu_contents)
+        menu = await widgets.mod.add_menu(menu_contents)
 
     For more information on creation, see :meth:`.add_menu`.
 
@@ -1492,15 +1520,15 @@ class Menu(Widget, BaseList):
 
     .. code-block:: python
 
-       menu_items = list(menu)
-       menu_items.reverse()
-       menu = menu.mod.update(data=menu_items)
+        menu_items = list(menu)
+        menu_items.reverse()
+        menu = await menu.mod.update(data=menu_items)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       menu.mod.delete()
+        await menu.mod.delete()
 
     **Typical Attributes**
 
@@ -1533,15 +1561,17 @@ class ModeratorsWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       print(widgets.moderators_widget)
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        print(await widgets.moderators_widget())
 
     Update one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       widgets.moderators_widget.mod.update(styles=new_styles)
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        moderator_widget = await widgets.moderators_widget()
+        await moderator_widget.mod.update(styles=new_styles)
 
     **Typical Attributes**
 
@@ -1585,26 +1615,27 @@ class PostFlairWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       post_flair_widget = None
-       widgets = reddit.subreddit("redditdev").widgets
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.PostFlairWidget):
-               post_flair_widget = widget
-               break
+        post_flair_widget = None
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.PostFlairWidget):
+                post_flair_widget = widget
+                break
 
-       for flair in post_flair_widget:
-           print(flair)
-           print(post_flair_widget.templates[flair])
+        async for flair in post_flair_widget:
+            print(flair)
+            print(post_flair_widget.templates[flair])
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       subreddit = reddit.subreddit("redditdev")
-       widgets = subreddit.widgets
-       flairs = [f["id"] for f in subreddit.flair.link_templates]
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       post_flair = widgets.mod.add_post_flair_widget("Some flairs", "list",
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        flairs = [f["id"] async for f in subreddit.flair.link_templates]
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        post_flair = await widgets.mod.add_post_flair_widget("Some flairs", "list",
                                                       flairs, styles)
 
     For more information on creation, see :meth:`.add_post_flair_widget`.
@@ -1613,15 +1644,14 @@ class PostFlairWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       post_flair = post_flair.mod.update(shortName="My fav flairs",
-                                          styles=new_styles)
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        post_flair = await post_flair.mod.update(shortName="My fav flairs", styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       post_flair.mod.delete()
+        await post_flair.mod.delete()
 
     **Typical Attributes**
 
@@ -1660,21 +1690,22 @@ class RulesWidget(Widget, BaseList):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       rules_widget = None
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.RulesWidget):
-               rules_widget = widget
-               break
-       from pprint import pprint; pprint(rules_widget.data)
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        rules_widget = None
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.RulesWidget):
+                rules_widget = widget
+                break
+        from pprint import pprint; pprint(rules_widget.data)
 
     Update one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       rules_widget.mod.update(display="compact", shortName="The LAWS",
-                               styles=new_styles)
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        await rules_widget.mod.update(display="compact", shortName="The LAWS",
+                                styles=new_styles)
 
     **Typical Attributes**
 
@@ -1720,21 +1751,23 @@ class TextArea(Widget):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       text_area = None
-       for widget in widgets.sidebar:
-           if isinstance(widget, praw.models.TextArea):
-               text_area = widget
-               break
-       print(text_area.text)
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        text_area = None
+        async for widget in widgets.sidebar():
+            if isinstance(widget, praw.models.TextArea):
+                text_area = widget
+                break
+        print(text_area.text)
 
     Create one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       widgets = reddit.subreddit("redditdev").widgets
-       styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-       text_area = widgets.mod.add_text_area("My cool title",
+        subreddit = await reddit.subreddit("redditdev")
+        widgets = subreddit.widgets
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        text_area = await widgets.mod.add_text_area("My cool title",
                                              "*Hello* **world**!",
                                              styles)
 
@@ -1744,15 +1777,15 @@ class TextArea(Widget):
 
     .. code-block:: python
 
-       new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-       text_area = text_area.mod.update(shortName="My fav text",
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        text_area = await text_area.mod.update(shortName="My fav text",
                                         styles=new_styles)
 
     Delete one (requires proper moderator permissions):
 
     .. code-block:: python
 
-       text_area.mod.delete()
+        await text_area.mod.delete()
 
     **Typical Attributes**
 
@@ -1782,10 +1815,10 @@ class WidgetEncoder(JSONEncoder):
     """Class to encode widget-related objects."""
 
     def default(self, o):  # pylint: disable=E0202
-        """Serialize ``PRAWBase`` objects."""
+        """Serialize ``AsyncPRAWBase`` objects."""
         if isinstance(o, self._subreddit_class):
             return str(o)
-        elif isinstance(o, PRAWBase):
+        elif isinstance(o, AsyncPRAWBase):
             return {key: val for key, val in vars(o).items() if not key.startswith("_")}
         return JSONEncoder.default(self, o)
 
@@ -1797,9 +1830,11 @@ class WidgetModeration:
 
     .. code-block:: python
 
-       widget = reddit.subreddit("my_sub").widgets.sidebar[0]
-       widget.mod.update(shortName="My new title")
-       widget.mod.delete()
+        subreddit = await reddit.subreddit("my_sub")
+        sidebar = [widget async for widget in subreddit.widgets.sidebar()]
+        widget = sidebar[0]
+        await widget.mod.update(shortName="My new title")
+        await widget.mod.delete()
     """
 
     def __init__(self, widget, subreddit, reddit):
@@ -1808,21 +1843,21 @@ class WidgetModeration:
         self._reddit = reddit
         self._subreddit = subreddit
 
-    def delete(self):
+    async def delete(self):
         """Delete the widget.
 
         Example usage:
 
         .. code-block:: python
 
-           widget.mod.delete()
+            await widget.mod.delete()
         """
         path = API_PATH["widget_modify"].format(
             widget_id=self.widget.id, subreddit=self._subreddit
         )
-        self._reddit.delete(path)
+        await self._reddit.delete(path)
 
-    def update(self, **kwargs):
+    async def update(self, **kwargs):
         """Update the widget. Returns the updated widget.
 
         Parameters differ based on the type of widget. See
@@ -1833,12 +1868,12 @@ class WidgetModeration:
 
         .. code-block:: python
 
-           text_widget.mod.update(shortName="New text area", text="Hello!")
+            await text_widget.mod.update(shortName="New text area", text="Hello!")
 
         .. note::
 
-           Most parameters follow the ``lowerCamelCase`` convention. When in
-           doubt, check the Reddit documentation linked above.
+            Most parameters follow the ``lowerCamelCase`` convention. When in
+            doubt, check the Reddit documentation linked above.
         """
         path = API_PATH["widget_modify"].format(
             widget_id=self.widget.id, subreddit=self._subreddit
@@ -1852,7 +1887,7 @@ class WidgetModeration:
         if "mod" in payload:
             del payload["mod"]
         payload.update(kwargs)
-        widget = self._reddit.put(
+        widget = await self._reddit.put(
             path, data={"json": dumps(payload, cls=WidgetEncoder)}
         )
         widget.subreddit = self._subreddit

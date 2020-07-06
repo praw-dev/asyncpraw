@@ -1,5 +1,5 @@
 """Provide the RedditorListingMixin class."""
-from typing import TYPE_CHECKING, Any, Dict, Iterator, Union
+from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
@@ -40,8 +40,9 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-           for comment in reddit.redditor("spez").comments.new(limit=None):
-               print(comment.body.split("\n", 1)[0][:79])
+            redditor = await reddit.redditor("spez")
+            async for comment in redditor.comments.new(limit=None):
+                print(comment.body.split("\n", 1)[0][:79])
 
         """
         return SubListing(self._reddit, self._path, "comments")
@@ -55,21 +56,22 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-           for submission in reddit.redditor("spez").submissions.top("all"):
-               print(submission.title)
+            redditor = await reddit.redditor("spez")
+            async for submission in redditor.submissions.top("all"):
+                print(submission.title)
 
         """
         return SubListing(self._reddit, self._path, "submitted")
 
     def downvoted(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for items the user has downvoted.
 
-        May raise ``prawcore.Forbidden`` after issuing the request if the user
-        is not authorized to access the list. Note that because this function
-        returns a :class:`.ListingGenerator` the exception may not occur until
-        sometime after this function has returned.
+        May raise ``asyncprawcore.Forbidden`` after issuing the request if the
+        user is not authorized to access the list. Note that because this
+        function returns a :class:`.ListingGenerator` the exception may not
+        occur until sometime after this function has returned.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -78,7 +80,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-            for item in reddit.user.me().downvoted():
+            current_user = await reddit.user.me()
+            async for item in current_user.downvoted():
                 print(item.id)
 
         """
@@ -88,13 +91,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def gildings(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for items the user has gilded.
 
-        May raise ``prawcore.Forbidden`` after issuing the request if the user
-        is not authorized to access the list. Note that because this function
-        returns a :class:`.ListingGenerator` the exception may not occur until
-        sometime after this function has returned.
+        May raise ``asyncprawcore.Forbidden`` after issuing the request if the
+        user is not authorized to access the list. Note that because this
+        function returns a :class:`.ListingGenerator` the exception may not
+        occur until sometime after this function has returned.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -103,7 +106,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-            for item in reddit.user.me().gildings():
+            current_user = await reddit.user.me()
+            async for item in current_user.gildings():
                 print(item.id)
 
         """
@@ -113,13 +117,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def hidden(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for items the user has hidden.
 
-        May raise ``prawcore.Forbidden`` after issuing the request if the user
-        is not authorized to access the list. Note that because this function
-        returns a :class:`.ListingGenerator` the exception may not occur until
-        sometime after this function has returned.
+        May raise ``asyncprawcore.Forbidden`` after issuing the request if the
+        user is not authorized to access the list. Note that because this
+        function returns a :class:`.ListingGenerator` the exception may not
+        occur until sometime after this function has returned.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -128,7 +132,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-            for item in reddit.user.me().hidden():
+            current_user = await reddit.user.me()
+            async for item in current_user.hidden():
                 print(item.id)
 
         """
@@ -138,13 +143,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def saved(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for items the user has saved.
 
-        May raise ``prawcore.Forbidden`` after issuing the request if the user
-        is not authorized to access the list. Note that because this function
-        returns a :class:`.ListingGenerator` the exception may not occur until
-        sometime after this function has returned.
+        May raise ``asyncprawcore.Forbidden`` after issuing the request if the
+        user is not authorized to access the list. Note that because this
+        function returns a :class:`.ListingGenerator` the exception may not
+        occur until sometime after this function has returned.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -153,7 +158,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-            for item in reddit.user.me().saved():
+            current_user = await reddit.user.me()
+            async for item in current_user.saved():
                 print(item.id)
 
         """
@@ -163,13 +169,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def upvoted(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for items the user has upvoted.
 
-        May raise ``prawcore.Forbidden`` after issuing the request if the user
-        is not authorized to access the list. Note that because this function
-        returns a :class:`.ListingGenerator` the exception may not occur until
-        sometime after this function has returned.
+        May raise ``asyncprawcore.Forbidden`` after issuing the request if the
+        user is not authorized to access the list. Note that because this
+        function returns a :class:`.ListingGenerator` the exception may not
+        occur until sometime after this function has returned.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -178,7 +184,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         .. code-block:: python
 
-            for item in reddit.user.me().upvoted():
+            current_user = await reddit.user.me()
+            async for item in current_user.upvoted():
                 print(item.id)
 
         """

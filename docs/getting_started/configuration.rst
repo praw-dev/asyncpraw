@@ -1,7 +1,7 @@
 .. _configuration:
 
-Configuring PRAW
-================
+Configuring Async PRAW
+======================
 
 .. toctree::
    :maxdepth: 2
@@ -9,7 +9,7 @@ Configuring PRAW
    configuration/options
 
 
-Configuration options can be provided to PRAW in one of three ways:
+Configuration options can be provided to Async PRAW in one of three ways:
 
 .. toctree::
    :maxdepth: 1
@@ -21,16 +21,18 @@ Configuration options can be provided to PRAW in one of three ways:
 Environment variables have the highest priority, followed by keyword arguments
 to :class:`.Reddit`, and finally settings in ``praw.ini`` files.
 
-Using an HTTP or HTTPS proxy with PRAW
---------------------------------------
+.. _proxy-support:
 
-PRAW internally relies upon the `requests <https://requests.readthedocs.io/>`_
-package to handle HTTP requests. Requests supports use of ``HTTP_PROXY`` and
+Using an HTTP or HTTPS proxy with Async PRAW
+--------------------------------------------
+
+Async PRAW internally relies upon the `aiohttp <https://docs.aiohttp.org/>`_
+package to handle HTTP requests. Aiohttp supports use of ``HTTP_PROXY`` and
 ``HTTPS_PROXY`` environment variables in order to proxy HTTP and HTTPS requests
 respectively [`ref
-<https://requests.readthedocs.io/en/master/user/advanced/#proxies>`_].
+<https://docs.aiohttp.org/en/stable/client_advanced.html?highlight=proxy#proxy-support>`_].
 
-Given that PRAW exclusively communicates with Reddit via HTTPS, only the
+Given that Async PRAW exclusively communicates with Reddit via HTTPS, only the
 ``HTTPS_PROXY`` option should be required.
 
 For example, if you have a script named ``prawbot.py``, the ``HTTPS_PROXY``
@@ -40,40 +42,61 @@ environment variable can be provided on the command line like so:
 
    HTTPS_PROXY=http://localhost:3128 ./prawbot.py
 
-
-Configuring a custom requests Session
--------------------------------------
-
-PRAW uses `requests`_ to handle
-networking. If your use-case requires custom configuration, it is possible
-to configure a `Session
-<https://requests.readthedocs.io/en/master/user/advanced/#session-objects>`_
-and then use it with PRAW.
-
-For example, some networks use self-signed SSL certificates when connecting
-to HTTPS sites. By default, this would raise an exception in Requests. To
-use a self-signed SSL certificate without an exception from Requests, first
-export the certificate as a ``.pem`` file. Then configure PRAW like so:
+Contrary to the Requests library, aiohttp won’t read environment
+variables by default. But you can do so by passing ``trust_env=True`` into
+aiohttp and configuring Async PRAW like so:
 
 .. code-block:: python
 
-   import praw
-   from requests import Session
+    import asyncpraw
+    from aiohttp import ClientSession
 
 
-   session = Session()
-   session.verify = "/path/to/certfile.pem"
-   reddit = praw.Reddit(client_id="SI8pN3DSbt0zor",
-                        client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
-                        password="1guiwevlfo00esyy",
-                        requestor_kwargs={"session": session},  # pass Session
-                        user_agent="testscript by /u/fakebot3",
-                        username="fakebot3")
+    session = ClientSession(trust_env=True)
+    reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
+                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
+                         password="1guiwevlfo00esyy",
+                         requestor_kwargs={"session": session},  # pass Session
+                         user_agent="testscript by /u/fakebot3",
+                         username="fakebot3")
 
 
-The code above creates a Session and `configures it to use a custom certificate
-<https://requests.readthedocs
-.io/en/master/user/advanced/#ssl-cert-verification>`_, then passes it as a
-parameter when creating the :class:`.Reddit` instance. Note that the example
-above uses a :ref:`password_flow` authentication type, but this method
-will work for any authentication type.
+Configuring a custom aiohttp ClientSession
+------------------------------------------
+
+Async PRAW uses `aiohttp`_ to handle
+networking. If your use-case requires custom configuration, it is possible to
+configure a `ClientSession
+<https://docs.aiohttp.org/en/stable/client_advanced.html>`_ and then use it with
+Async PRAW.
+
+For example, some networks use self-signed SSL certificates when connecting
+to HTTPS sites. By default, this would raise an exception in Aiohttp. To
+use a self-signed SSL certificate without an exception from Aiohttp, first
+export the certificate as a ``.pem`` file. Then configure Async PRAW like so:
+
+.. code-block:: python
+
+    import ssl
+
+    import aiohttp
+    import asyncpraw
+
+
+    ssl_ctx = ssl.create_default_context(cafile="/path/to/certfile.pem")
+
+    conn = aiohttp.TCPConnector(ssl_context=ssl_ctx)
+    session = aiohttp.ClientSession(connector=conn)
+    reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
+                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
+                         password="1guiwevlfo00esyy",
+                         requestor_kwargs={"session": session},  # pass Session
+                         user_agent="testscript by /u/fakebot3",
+                         username="fakebot3")
+
+
+The code above creates a ``ClientSession`` and `configures it to use a custom certificate
+<https://docs.aiohttp.org/en/stable/client_advanced.html#ssl-control-for-tcp-sockets>`_,
+then passes it as a parameter when creating the :class:`.Reddit` instance.
+Note that the example above uses a :ref:`password_flow` authentication type,
+but this method will work for any authentication type.

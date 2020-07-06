@@ -1,14 +1,15 @@
 """Provide the Subreddits class."""
-from typing import Dict, Iterator, List, Optional, Union
+from typing import AsyncGenerator, Dict, List, Optional, Union
+from warnings import warn
 
 from ..const import API_PATH
 from . import Subreddit
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 
-class Subreddits(PRAWBase):
+class Subreddits(AsyncPRAWBase):
     """Subreddits is a Listing class that provides various subreddit lists."""
 
     @staticmethod
@@ -17,7 +18,7 @@ class Subreddits(PRAWBase):
 
     def default(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Subreddit]:
+    ) -> AsyncGenerator[Subreddit, None]:
         """Return a :class:`.ListingGenerator` for default subreddits.
 
         Additional keyword arguments are passed in the initialization of
@@ -27,10 +28,19 @@ class Subreddits(PRAWBase):
             self._reddit, API_PATH["subreddits_default"], **generator_kwargs
         )
 
-    def gold(
+    def gold(self, **generator_kwargs) -> AsyncGenerator[Subreddit, None]:
+        """Alias for :meth:`.premium` to maintain backwards compatibility."""
+        warn(
+            "`subreddits.gold` has be renamed to `subreddits.premium`.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.premium(**generator_kwargs)
+
+    def premium(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Subreddit]:
-        """Return a :class:`.ListingGenerator` for gold subreddits.
+    ) -> AsyncGenerator[Subreddit, None]:
+        """Return a :class:`.ListingGenerator` for premium subreddits.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -41,7 +51,7 @@ class Subreddits(PRAWBase):
 
     def new(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Subreddit]:
+    ) -> AsyncGenerator[Subreddit, None]:
         """Return a :class:`.ListingGenerator` for new subreddits.
 
         Additional keyword arguments are passed in the initialization of
@@ -53,7 +63,7 @@ class Subreddits(PRAWBase):
 
     def popular(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Subreddit]:
+    ) -> AsyncGenerator[Subreddit, None]:
         """Return a :class:`.ListingGenerator` for popular subreddits.
 
         Additional keyword arguments are passed in the initialization of
@@ -63,7 +73,7 @@ class Subreddits(PRAWBase):
             self._reddit, API_PATH["subreddits_popular"], **generator_kwargs
         )
 
-    def recommended(
+    async def recommended(
         self,
         subreddits: List[Union[str, Subreddit]],
         omit_subreddits: Optional[List[Union[str, Subreddit]]] = None,
@@ -85,13 +95,13 @@ class Subreddits(PRAWBase):
         params = {"omit": self._to_list(omit_subreddits or [])}
         url = API_PATH["sub_recommended"].format(subreddits=self._to_list(subreddits))
         return [
-            Subreddit(self._reddit, sub["sr_name"])
-            for sub in self._reddit.get(url, params=params)
+            await Subreddit(self._reddit, sub["sr_name"])
+            for sub in await self._reddit.get(url, params=params)
         ]
 
     def search(
         self, query: str, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Subreddit]:
+    ) -> AsyncGenerator[Subreddit, None]:
         """Return a :class:`.ListingGenerator` of subreddits matching ``query``.
 
         Subreddits are searched by both their title and description.
@@ -109,7 +119,7 @@ class Subreddits(PRAWBase):
             self._reddit, API_PATH["subreddits_search"], **generator_kwargs
         )
 
-    def search_by_name(
+    async def search_by_name(
         self, query: str, include_nsfw: bool = True, exact: bool = False
     ) -> List[Subreddit]:
         """Return list of Subreddits whose names begin with ``query``.
@@ -119,26 +129,28 @@ class Subreddits(PRAWBase):
         :param exact: Return only exact matches to ``query`` (default: False).
 
         """
-        result = self._reddit.post(
+        result = await self._reddit.post(
             API_PATH["subreddits_name_search"],
             data={"include_over_18": include_nsfw, "exact": exact, "query": query},
         )
-        return [self._reddit.subreddit(x) for x in result["names"]]
+        return [await self._reddit.subreddit(x) for x in result["names"]]
 
-    def search_by_topic(self, query: str) -> List[Subreddit]:
+    async def search_by_topic(self, query: str) -> List[Subreddit]:
         """Return list of Subreddits whose topics match ``query``.
 
         :param query: Search for subreddits relevant to the search topic.
 
         """
-        result = self._reddit.get(
+        result = await self._reddit.get(
             API_PATH["subreddits_by_topic"], params={"query": query}
         )
-        return [self._reddit.subreddit(x["name"]) for x in result if x.get("name")]
+        return [
+            await self._reddit.subreddit(x["name"]) for x in result if x.get("name")
+        ]
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Subreddit]:
+    ) -> AsyncGenerator[Subreddit, None]:
         """Yield new subreddits as they are created.
 
         Subreddits are yielded oldest first. Up to 100 historical subreddits

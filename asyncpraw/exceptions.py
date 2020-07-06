@@ -13,7 +13,7 @@ from warnings import warn
 
 
 class PRAWException(Exception):
-    """The base PRAW Exception that all other exception classes extend."""
+    """The base Async PRAW Exception that all other exception classes extend."""
 
 
 class RedditErrorItem:
@@ -64,7 +64,7 @@ class APIException(PRAWException):
 
     .. deprecated:: 7.0
         Class :class:`.APIException` has been deprecated in favor of
-        :class:`.RedditAPIException`. This class will be removed in PRAW 8.0.
+        :class:`.RedditAPIException`. This class will be removed in Async PRAW 8.0.
     """
 
     @staticmethod
@@ -87,7 +87,7 @@ class APIException(PRAWException):
 
             Accessing attributes through instances of
             :class:`.RedditAPIException` is deprecated. This behavior will be
-            removed in PRAW 8.0. Check out the
+            removed in Async PRAW 8.0. Check out the
             :ref:`PRAW 7 Migration tutorial <Exception_Handling>` on how to
             migrate code from this behavior.
 
@@ -102,7 +102,7 @@ class APIException(PRAWException):
 
             Accessing attributes through instances of
             :class:`.RedditAPIException` is deprecated. This behavior will be
-            removed in PRAW 8.0. Check out the
+            removed in Async PRAW 8.0. Check out the
             :ref:`PRAW 7 Migration tutorial <Exception_Handling>` on how to
             migrate code from this behavior.
 
@@ -117,7 +117,7 @@ class APIException(PRAWException):
 
             Accessing attributes through instances of
             :class:`.RedditAPIException` is deprecated. This behavior will be
-            removed in PRAW 8.0. Check out the
+            removed in Async PRAW 8.0. Check out the
             :ref:`PRAW 7 Migration tutorial <Exception_Handling>` on how to
             migrate code from this behavior.
 
@@ -127,7 +127,7 @@ class APIException(PRAWException):
     def _get_old_attr(self, attrname):
         warn(
             "Accessing attribute ``{}`` through APIException is deprecated. "
-            "This behavior will be removed in PRAW 8.0. Check out "
+            "This behavior will be removed in Async PRAW 8.0. Check out "
             "https://praw.readthedocs.io/en/latest/package_info/"
             "praw7_migration.html to learn how to migrate your code.".format(attrname),
             category=DeprecationWarning,
@@ -240,7 +240,7 @@ class WebSocketException(ClientException):
         warn(
             "Accessing the attribute original_exception is deprecated. Please"
             " rewrite your code in such a way that this attribute does not"
-            " need to be used. It will be removed in PRAW 8.0.",
+            " need to be used. It will be removed in Async PRAW 8.0.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -260,7 +260,7 @@ class WebSocketException(ClientException):
         :param message: The exception message.
         :param exception: The exception thrown by the websocket library.
 
-            .. note:: This parameter is deprecated. It will be removed in PRAW
+            .. note:: This parameter is deprecated. It will be removed in Async PRAW
                 8.0.
         """
         super().__init__(message)

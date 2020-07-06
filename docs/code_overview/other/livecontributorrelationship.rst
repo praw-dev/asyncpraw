@@ -1,5 +1,5 @@
 LiveContributorRelationship
 ===========================
 
-.. autoclass:: praw.models.reddit.live.LiveContributorRelationship
+.. autoclass:: asyncpraw.models.reddit.live.LiveContributorRelationship
    :inherited-members:

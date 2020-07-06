@@ -10,7 +10,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class MessageableMixin:
     """Interface for classes that can be messaged."""
 
-    def message(
+    async def message(
         self,
         subject: str,
         message: str,
@@ -31,20 +31,22 @@ class MessageableMixin:
 
         .. code-block:: python
 
-           reddit.redditor("spez").message("TEST", "test message from PRAW")
+            redditor = await reddit.redditor("spez", lazy=True)
+            await redditor.message("TEST", "test message from Async PRAW")
 
         To send a message to ``u/spez`` from the moderators of ``r/test`` try:
 
         .. code-block:: python
 
-           reddit.redditor("spez").message("TEST", "test message from r/test",
-                                           from_subreddit="test")
+            redditor = await reddit.redditor("spez", lazy=True)
+            await redditor.message("TEST", "test message from r/test", from_subreddit="test")
 
         To send a message to the moderators of ``r/test``, try:
 
         .. code-block:: python
 
-           reddit.subreddit("test").message("TEST", "test PM from PRAW")
+           subreddit = await reddit.subreddit("test")
+           await subreddit.message("TEST", "test PM from Async PRAW")
 
         """
         data = {
@@ -54,4 +56,4 @@ class MessageableMixin:
         }
         if from_subreddit:
             data["from_sr"] = str(from_subreddit)
-        self._reddit.post(API_PATH["compose"], data=data)
+        await self._reddit.post(API_PATH["compose"], data=data)

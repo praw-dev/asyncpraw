@@ -2,10 +2,10 @@
 from typing import Any, Optional
 
 from ...util import cachedproperty
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 
 
-class PollOption(PRAWBase):
+class PollOption(AsyncPRAWBase):
     """Class to represent one option of a poll.
 
     If ``submission`` is a poll :class:`.Submission`, access the poll's
@@ -13,13 +13,13 @@ class PollOption(PRAWBase):
 
     .. code-block:: python
 
-       poll_data = submission.poll_data
+        poll_data = submission.poll_data
 
        # By index -- print the first option
-       print(poll_data.options[0])
+        print(poll_data.options[0])
 
        # By ID -- print the option with ID "576797"
-       print(poll_data.option("576797"))
+        print(poll_data.option("576797"))
 
     **Typical Attributes**
 
@@ -47,7 +47,7 @@ class PollOption(PRAWBase):
         return self.text
 
 
-class PollData(PRAWBase):
+class PollData(AsyncPRAWBase):
     """Class to represent poll data on a poll submission.
 
     If ``submission`` is a poll :class:`.Submission`, access the poll data

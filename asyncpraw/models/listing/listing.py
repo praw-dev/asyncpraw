@@ -1,10 +1,10 @@
 """Provide the Listing class."""
 from typing import Any, Optional
 
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 
 
-class Listing(PRAWBase):
+class Listing(AsyncPRAWBase):
     """A listing is a collection of RedditBase instances."""
 
     CHILD_ATTRIBUTE = "children"

@@ -5,23 +5,23 @@ from ....const import API_PATH
 class EditableMixin:
     """Interface for classes that can be edited and deleted."""
 
-    def delete(self):
+    async def delete(self):
         """Delete the object.
 
         Example usage:
 
         .. code-block:: python
 
-           comment = reddit.comment("dkk4qjd")
-           comment.delete()
+            comment = await reddit.comment("dkk4qjd", lazy=True)
+            await comment.delete()
 
-           submission = reddit.submission("8dmv8z")
-           submission.delete()
+            submission = await reddit.submission("8dmv8z", lazy=True)
+            await submission.delete()
 
         """
-        self._reddit.post(API_PATH["del"], {"id": self.fullname})
+        await self._reddit.post(API_PATH["del"], {"id": self.fullname})
 
-    def edit(self, body: str):
+    async def edit(self, body):
         """Replace the body of the object with ``body``.
 
         :param body: The Markdown formatted content for the updated object.
@@ -31,12 +31,12 @@ class EditableMixin:
 
         .. code-block:: python
 
-           comment = reddit.comment("dkk4qjd")
+            comment = await reddit.comment("dkk4qjd")
 
-           # construct the text of an edited comment
-           # by appending to the old body:
-           edited_body = comment.body + "Edit: thanks for the gold!"
-           comment.edit(edited_body)
+            # construct the text of an edited comment
+            # by appending to the old body:
+            edited_body = comment.body + "Edit: thanks for the gold!"
+            await comment.edit(edited_body)
 
         """
         data = {
@@ -44,7 +44,8 @@ class EditableMixin:
             "thing_id": self.fullname,
             "validate_on_submit": self._reddit.validate_on_submit,
         }
-        updated = self._reddit.post(API_PATH["edit"], data=data)[0]
+        response = await self._reddit.post(API_PATH["edit"], data=data)
+        updated = response[0]
         for attribute in [
             "_fetched",
             "_reddit",

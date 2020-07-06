@@ -1,5 +1,5 @@
 SubredditRemovalReasons
 =======================
 
-.. autoclass:: praw.models.reddit.removal_reasons.SubredditRemovalReasons
+.. autoclass:: asyncpraw.models.reddit.removal_reasons.SubredditRemovalReasons
    :inherited-members:

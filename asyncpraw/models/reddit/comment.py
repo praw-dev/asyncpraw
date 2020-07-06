@@ -87,7 +87,11 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
     @property
     def is_root(self) -> bool:
-        """Return True when the comment is a top level comment."""
+        """Return True when the comment is a top level comment.
+
+        .. note:: This property requires the comment to be fetched. Otherwise, an
+                   ``AttributeError`` will be raised.
+        """
         parent_type = self.parent_id.split("_", 1)[0]
         return parent_type == self._reddit.config.kinds["submission"]
 
@@ -99,8 +103,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            comment = reddit.comment("dkk4qjd")
-            comment.mod.approve()
+            comment = await reddit.comment("dkk4qjd", lazy=True)
+            await comment.mod.approve()
 
         """
         return CommentModeration(self)
@@ -119,7 +123,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         .. code-block:: python
 
            comment.reply_sort = "new"
-           comment.refresh()
+           await comment.refresh()
            replies = comment.replies
 
         .. note:: The appropriate values for ``reply_sort`` include
@@ -134,17 +138,25 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     @property
     def submission(self) -> "Submission":
         """Return the Submission object this comment belongs to."""
-        if not self._submission:  # Comment not from submission
-            self._submission = self._reddit.submission(self._extract_submission_id())
-        return self._submission
+        if not self._submission and self._fetched:  # Comment not from submission
+            from .. import Submission
+
+            self._submission = Submission(
+                self._reddit, id=self._extract_submission_id()
+            )
+            return self._submission
+        elif self._submission:
+            return self._submission
+        else:
+            return None
 
     @submission.setter
     def submission(self, submission: "Submission"):
         """Update the Submission associated with the Comment."""
-        submission._comments_by_id[self.fullname] = self
+        submission._comments_by_id[self.name] = self
         self._submission = submission
         # pylint: disable=not-an-iterable
-        for reply in getattr(self, "replies", []):
+        for reply in self.replies:
             reply.submission = submission
 
     def __init__(
@@ -182,19 +194,22 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
                 value = self._reddit._objector.objectify(value).children
             attribute = "_replies"
         elif attribute == "subreddit":
-            value = self._reddit.subreddit(value)
+            if isinstance(value, str):
+                from .. import Subreddit
+
+                value = Subreddit(self._reddit, display_name=value)
         super().__setattr__(attribute, value)
 
     def _fetch_info(self):
         return ("info", {}, {"id": self.fullname})
 
-    def _fetch_data(self):
+    async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         data = data["data"]
 
         if not data["children"]:
@@ -212,7 +227,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             return self.context.rsplit("/", 4)[1]
         return self.link_id.split("_", 1)[1]
 
-    def parent(self) -> Union["Comment", "Submission"]:
+    async def parent(self) -> Union["Comment", "Submission"]:
         """Return the parent of the comment.
 
         The returned parent will be an instance of either
@@ -221,20 +236,20 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         If this comment was obtained through a :class:`.Submission`, then its
         entire ancestry should be immediately available, requiring no extra
         network requests. However, if this comment was obtained through other
-        means, e.g., ``reddit.comment("COMMENT_ID")``, or
-        ``reddit.inbox.comment_replies``, then the returned parent may be a
-        lazy instance of either :class:`.Comment`, or :class:`.Submission`.
+        means, e.g., ``await reddit.comment("COMMENT_ID")``, or
+        ``reddit.inbox.comment_replies``, then the returned parent may be an
+        instance of either :class:`.Comment`, or :class:`.Submission`.
 
         Lazy comment example:
 
         .. code-block:: python
 
-           comment = reddit.comment("cklhv0f")
-           parent = comment.parent()
-           # `replies` is empty until the comment is refreshed
-           print(parent.replies)  # Output: []
-           parent.refresh()
-           print(parent.replies)  # Output is at least: [Comment(id='cklhv0f')]
+            comment = await reddit.comment("cklhv0f", lazy=True)
+            parent = await comment.parent()
+            # `replies` is empty until the comment is refreshed
+            print(parent.replies)  # Output: []
+            await parent.refresh()
+            print(parent.replies)  # Output is at least: [Comment(id='cklhv0f')]
 
         .. warning:: Successive calls to :meth:`.parent()` may result in a
            network request per call when the comment is not obtained through a
@@ -248,15 +263,14 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-           comment = reddit.comment("dkk4qjd")
-           ancestor = comment
-           refresh_counter = 0
-           while not ancestor.is_root:
-               ancestor = ancestor.parent()
-               if refresh_counter % 9 == 0:
-                   ancestor.refresh()
-               refresh_counter += 1
-           print('Top-most Ancestor: {}'.format(ancestor))
+            ancestor =  await reddit.comment("dkk4qjd")
+            refresh_counter = 0
+            while not ancestor.is_root:
+                ancestor = await ancestor.parent()
+                if refresh_counter % 9 == 0:
+                    await ancestor.refresh()
+                refresh_counter += 1
+            print('Top-most Ancestor: {}'.format(ancestor))
 
         The above code should result in 5 network requests to Reddit. Without
         the calls to :meth:`.refresh()` it would make at least 31 network
@@ -264,6 +278,13 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         """
         # pylint: disable=no-member
+
+        if "submission" in self.__dict__:
+            if not self.submission._fetched:
+                await self.submission._fetch()
+        else:
+            await self._fetch()
+            await self.submission._fetch()
         if self.parent_id == self.submission.fullname:
             return self.submission
 
@@ -276,23 +297,22 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         parent._submission = self.submission
         return parent
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the comment's attributes.
-
-        If using :meth:`.Reddit.comment` this method must be called in order to
-        obtain the comment's replies.
 
         Example usage:
 
         .. code-block:: python
 
-           comment = reddit.comment("dkk4qjd")
-           comment.refresh()
+           comment = await reddit.comment("dkk4qjd", lazy=True)
+           await comment.refresh()
 
         """
         if "context" in self.__dict__:  # Using hasattr triggers a fetch
             comment_path = self.context.split("?", 1)[0]
         else:
+            if not self.submission:
+                await self._fetch()
             path = API_PATH["submission"].format(id=self.submission.id)
             comment_path = "{}_/{}".format(path, self.id)
 
@@ -302,7 +322,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             params["limit"] = self.reply_limit
         if "reply_sort" in self.__dict__:
             params["sort"] = self.reply_sort
-        comment_list = self._reddit.get(comment_path, params=params)[1].children
+        response = await self._reddit.get(comment_path, params=params)
+        comment_list = response[1].children
         if not comment_list:
             raise ClientException(self.MISSING_COMMENT_MESSAGE)
 
@@ -333,8 +354,8 @@ class CommentModeration(ThingModerationMixin):
 
     .. code-block:: python
 
-       comment = reddit.comment("dkk4qjd")
-       comment.mod.approve()
+       comment = await reddit.comment("dkk4qjd", lazy=True)
+       await comment.mod.approve()
 
     """
 
@@ -348,7 +369,7 @@ class CommentModeration(ThingModerationMixin):
         """
         self.thing = comment
 
-    def show(self):
+    async def show(self):
         """Uncollapse a :class:`~.Comment` that has been collapsed by Crowd Control.
 
         Example usage:
@@ -356,9 +377,9 @@ class CommentModeration(ThingModerationMixin):
         .. code-block:: python
 
            # lock a comment:
-           comment = reddit.comment("dkk4qjd")
-           comment.mod.show()
+           comment = await reddit.comment("dkk4qjd", lazy=True)
+           await comment.mod.show()
         """
         url = API_PATH["show_comment"]
 
-        self.thing._reddit.post(url, data={"id": self.thing.fullname})
+        await self.thing._reddit.post(url, data={"id": self.thing.fullname})

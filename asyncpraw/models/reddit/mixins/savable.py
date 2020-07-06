@@ -7,7 +7,7 @@ from ....const import API_PATH
 class SavableMixin:
     """Interface for RedditBase classes that can be saved."""
 
-    def save(self, category: Optional[str] = None):
+    async def save(self, category: Optional[str] = None):
         """Save the object.
 
         :param category: (Premium) The category to save to. If your user does
@@ -18,33 +18,33 @@ class SavableMixin:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.save(category="view later")
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.save(category="view later")
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.save()
+            comment = await reddit.comment(id="dxolpyc", lazy=True, lazy=True)
+            await comment.save()
 
         .. seealso:: :meth:`~.unsave`
 
         """
-        self._reddit.post(
+        await self._reddit.post(
             API_PATH["save"], data={"category": category, "id": self.fullname}
         )
 
-    def unsave(self):
+    async def unsave(self):
         """Unsave the object.
 
         Example usage:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.unsave()
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.unsave()
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.unsave()
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
+            await comment.unsave()
 
         .. seealso:: :meth:`~.save`
 
         """
-        self._reddit.post(API_PATH["unsave"], data={"id": self.fullname})
+        await self._reddit.post(API_PATH["unsave"], data={"id": self.fullname})

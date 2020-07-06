@@ -2,16 +2,17 @@ Quick Start
 ===========
 
 In this section, we go over everything you need to know to start building
-scripts or bots using PRAW, the Python Reddit API Wrapper. It's fun and
+scripts or bots using Async PRAW, the Python Reddit API Wrapper. It's fun and
 easy. Let's get started.
 
 Prerequisites
 -------------
 
-:Python Knowledge: You need to know at least a little Python to use PRAW; it's
-                   a Python wrapper after all. PRAW supports `Python 3.5+`_. If
-                   you are stuck on a problem, `r/learnpython`_ is a great
-                   place to ask for help.
+:Python Knowledge: You need to know at least a little Python and some understanding
+                   asynchronous usage in python to use Async PRAW; it's an
+                   asynchronous a Python wrapper after all. Async PRAW supports
+                   `Python 3.6+`_. If you are stuck on a problem, `r/learnpython`_
+                   is a great place to ask for help.
 
 :Reddit Knowledge: A basic understanding of how Reddit works is a
                    must. In the event you are not already familiar with Reddit
@@ -35,7 +36,7 @@ Prerequisites
              more about user agents at `Reddit's API wiki page`_.
 
 
-.. _`Python 3.5+`: https://docs.python.org/3/tutorial/index.html
+.. _`Python 3.6+`: https://docs.python.org/3/tutorial/index.html
 .. _`r/learnpython`: https://www.reddit.com/r/learnpython/
 .. _reddit.com: https://www.reddit.com
 .. _`Reddit Help`: https://www.reddithelp.com/en
@@ -54,14 +55,14 @@ Obtain a :class:`.Reddit` Instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning:: For the sake of brevity, the following examples pass authentication
-             information via arguments to :py:func:`praw.Reddit`. If you do
+             information via arguments to :py:func:`asyncpraw.Reddit`. If you do
              this, you need to be careful not to reveal this information to the
              outside world if you share your code. It is recommended to use a
              :ref:`praw.ini file <praw.ini>` in order to keep your
              authentication information separate from your code.
 
 You need an instance of the :class:`.Reddit` class to do *anything* with
-PRAW. There are two distinct states a :class:`.Reddit` instance can be in:
+Async PRAW. There are two distinct states a :class:`.Reddit` instance can be in:
 :ref:`read-only <read-only>`, and :ref:`authorized <authorized>`.
 
 .. _read-only:
@@ -83,35 +84,36 @@ of providing this information). For example:
 
 .. code-block:: python
 
-   import praw
+    import asyncpraw
 
-   reddit = praw.Reddit(client_id="my client id",
-                        client_secret="my client secret",
-                        user_agent="my user agent")
+    reddit = asyncpraw.Reddit(client_id="my client id",
+                         client_secret="my client secret",
+                         user_agent="my user agent")
 
 Just like that, you now have a read-only  :class:`.Reddit` instance.
 
 .. code-block:: python
 
-   print(reddit.read_only)  # Output: True
+    print(reddit.read_only)  # Output: True
 
 With a read-only instance, you can do something like obtaining 10 "hot"
 submissions from ``r/learnpython``:
 
 .. code-block:: python
 
-   # continued from code above
+    # continued from code above
 
-   for submission in reddit.subreddit("learnpython").hot(limit=10):
-       print(submission.title)
+    subreddit = await  reddit.subreddit("learnpython")
+    async for submission in subreddit.hot(limit=10):
+        print(submission.title)
 
-   # Output: 10 submissions
+    # Output: 10 submissions
 
 If you want to do more than retrieve public information from Reddit, then you
 need an authorized :class:`.Reddit` instance.
 
 .. note:: In the above example we are limiting the results to 10. Without the
-          ``limit`` parameter PRAW should yield as many results as it can with
+          ``limit`` parameter Async PRAW should yield as many results as it can with
           a single request. For most endpoints this results in 100 items per
           request. If you want to retrieve as many as possible pass in
           ``limit=None``.
@@ -134,23 +136,23 @@ like the following:
 
 .. code-block:: python
 
-   import praw
+    import asyncpraw
 
-   reddit = praw.Reddit(client_id="my client id",
-                        client_secret="my client secret",
-                        user_agent="my user agent",
-                        username="my username",
-                        password="my password")
+    reddit = asyncpraw.Reddit(client_id="my client id",
+                         client_secret="my client secret",
+                         user_agent="my user agent",
+                         username="my username",
+                         password="my password")
 
-   print(reddit.read_only)  # Output: False
+    print(reddit.read_only)  # Output: False
 
 Now you can do whatever your Reddit account is authorized to do. And you can
 switch back to read-only mode whenever you want:
 
 .. code-block:: python
 
-   # continued from code above
-   reddit.read_only = True
+    # continued from code above
+    reddit.read_only = True
 
 .. note:: If you are uncomfortable hard-coding your credentials into your
           program, there are some options available to you. Please see:
@@ -164,12 +166,12 @@ calling ``subreddit`` on your :class:`.Reddit` instance. For example:
 
 .. code-block:: python
 
-   # assume you have a Reddit instance bound to variable `reddit`
-   subreddit = reddit.subreddit("redditdev")
+    # assume you have a Reddit instance bound to variable `reddit`
+    subreddit = await reddit.subreddit("redditdev")
 
-   print(subreddit.display_name)  # Output: redditdev
-   print(subreddit.title)         # Output: reddit Development
-   print(subreddit.description)   # Output: A subreddit for discussion of ...
+    print(subreddit.display_name)  # Output: redditdev
+    print(subreddit.title)         # Output: reddit Development
+    print(subreddit.description)   # Output: A subreddit for discussion of ...
 
 Obtain :class:`.Submission` Instances from a :class:`.Subreddit`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,13 +195,13 @@ submissions based on the ``hot`` sort for a given subreddit try:
 
 .. code-block:: python
 
-   # assume you have a Subreddit instance bound to variable `subreddit`
-   for submission in subreddit.hot(limit=10):
-       print(submission.title)  # Output: the submission's title
-       print(submission.score)  # Output: the submission's score
-       print(submission.id)     # Output: the submission's ID
-       print(submission.url)    # Output: the URL the submission points to
-                                # or the submission's URL if it's a self post
+    # assume you have a Subreddit instance bound to variable `subreddit`
+    async for submission in subreddit.hot(limit=10):
+        print(submission.title)  # Output: the submission's title
+        print(submission.score)  # Output: the submission's score
+        print(submission.id)     # Output: the submission's ID
+        print(submission.url)    # Output: the URL the submission points to
+                                 # or the submission's URL if it's a self post
 
 .. note:: The act of calling a method that returns a :class:`.ListingGenerator`
           does not result in any network requests until you begin to iterate
@@ -209,12 +211,12 @@ You can create :class:`.Submission` instances in other ways too:
 
 .. code-block:: python
 
-   # assume you have a Reddit instance bound to variable `reddit`
-   submission = reddit.submission(id="39zje0")
-   print(submission.title)  # Output: reddit will soon only be available ...
+    # assume you have a Reddit instance bound to variable `reddit`
+    submission = await reddit.submission(id="39zje0")
+    print(submission.title)  # Output: reddit will soon only be available ...
 
-   # or
-   submission = reddit.submission(url='https://www.reddit.com/...')
+    # or
+    submission =await  reddit.submission(url='https://www.reddit.com/...')
 
 
 Obtain :class:`.Redditor` Instances
@@ -232,12 +234,12 @@ For example:
 .. code-block:: python
 
     # assume you have a Submission instance bound to variable `submission`
-   redditor1 = submission.author
-   print(redditor1.name)  # Output: name of the redditor
+    redditor1 = submission.author
+    print(redditor1.name)  # Output: name of the redditor
 
-  # assume you have a Reddit instance bound to variable `reddit`
-   redditor2 = reddit.redditor("bboe")
-   print(redditor2.link_karma)  # Output: u/bboe's karma
+    # assume you have a Reddit instance bound to variable `reddit`
+    redditor2 = await reddit.redditor("bboe")
+    print(redditor2.link_karma)  # Output: u/bboe's karma
 
 Obtain :class:`.Comment` Instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -250,9 +252,9 @@ want to iterate over *all* comments as a flattened list you can call the
 
 .. code-block:: python
 
-   # assume you have a Reddit instance bound to variable `reddit`
-   top_level_comments = list(submission.comments)
-   all_comments = submission.comments.list()
+    # assume you have a Reddit instance bound to variable `reddit`
+    top_level_comments = await submission.comments()
+    all_comments = await submission.comments.list()
 
 .. note:: The comment sort order can be changed by updating the value of
           ``comment_sort`` on the :class:`.Submission` instance prior to
@@ -263,10 +265,10 @@ want to iterate over *all* comments as a flattened list you can call the
 
           .. code-block:: python
 
-             # assume you have a Reddit instance bound to variable `reddit`
-             submission = reddit.submission(id="39zje0")
-             submission.comment_sort = "new"
-             top_level_comments = list(submission.comments)
+            # assume you have a Reddit instance bound to variable `reddit`
+            submission = await reddit.submission(id="39zje0")
+            submission.comment_sort = "new"
+            top_level_comments = await submission.comments()
 
 As you may be aware there will periodically be :class:`.MoreComments` instances
 scattered throughout the forest. Replace those :class:`.MoreComments` instances
@@ -279,23 +281,15 @@ after ``comment_sort`` is updated. See :ref:`extracting_comments` for an example
 Determine Available Attributes of an Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have a PRAW object, e.g., :class:`.Comment`, :class:`.Message`,
+If you have a Async PRAW object, e.g., :class:`.Comment`, :class:`.Message`,
 :class:`.Redditor`, or :class:`.Submission`, and you want to see what
 attributes are available along with their values, use the built-in
 :py:func:`vars` function of python. For example:
 
 .. code-block:: python
 
-   import pprint
+    import pprint
 
-   # assume you have a Reddit instance bound to variable `reddit`
-   submission = reddit.submission(id="39zje0")
-   print(submission.title) # to make it non-lazy
-   pprint.pprint(vars(submission))
-
-Note the line where we print the title. PRAW uses lazy objects so that network
-requests to Reddit's API are only issued when information is needed. Here,
-before the print line, ``submission`` points to a lazy :class:`.Submission`
-object. When we try to print its title, additional information is needed, thus
-a network request is made, and the instances ceases to be lazy. Outputting all
-the attributes of a lazy object will result in fewer attributes than expected.
+    # assume you have a Reddit instance bound to variable `reddit`
+    submission = await reddit.submission(id="39zje0")
+    pprint.pprint(vars(submission))

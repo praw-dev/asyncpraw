@@ -1,3 +1,4 @@
+Copyright (c) 2020, Joel Payne
 Copyright (c) 2016, Bryce Boe
 All rights reserved.
 

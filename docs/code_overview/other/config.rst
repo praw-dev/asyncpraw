@@ -1,5 +1,5 @@
 Config
 ======
 
-.. autoclass:: praw.config.Config
+.. autoclass:: asyncpraw.config.Config
    :inherited-members:

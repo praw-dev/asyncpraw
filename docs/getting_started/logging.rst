@@ -1,7 +1,7 @@
-Logging in PRAW
-===============
+Logging in Async PRAW
+=====================
 
-It is occasionally useful to observe the HTTP requests that PRAW is issuing. To
+It is occasionally useful to observe the HTTP requests that Async PRAW is issuing. To
 do so you have to configure and enable logging.
 
 Add the following to your code to log everything available:
@@ -12,7 +12,7 @@ Add the following to your code to log everything available:
 
    handler = logging.StreamHandler()
    handler.setLevel(logging.DEBUG)
-   for logger_name in ("praw", "prawcore"):
+   for logger_name in ("asyncpraw", "asyncprawcore"):
        logger = logging.getLogger(logger_name)
        logger.setLevel(logging.DEBUG)
        logger.addHandler(handler)
@@ -27,7 +27,7 @@ similar to the following:
    Data: None
    Params: {'raw_json': 1}
    Response: 200 (876 bytes)
-   
+
 Furthermore, any API ratelimits from POST actions that are handled will produce
 a log entry with a message similar to the following message:
 

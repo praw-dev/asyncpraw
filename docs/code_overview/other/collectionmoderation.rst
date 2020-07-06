@@ -1,4 +1,4 @@
 CollectionModeration
 ====================
-.. autoclass:: praw.models.reddit.collections.CollectionModeration
+.. autoclass:: asyncpraw.models.reddit.collections.CollectionModeration
    :inherited-members:

@@ -1,12 +1,12 @@
 """Provide the Redditors class."""
 from itertools import islice
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Dict, Iterable, Iterator, Union
+from typing import TYPE_CHECKING, AsyncGenerator, Iterable, Dict, Union
 
-import prawcore
+import asyncprawcore
 
 from ..const import API_PATH
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator
 
@@ -18,12 +18,12 @@ class PartialRedditor(SimpleNamespace):
     """A namespace object that provides a subset of Redditor attributes."""
 
 
-class Redditors(PRAWBase):
+class Redditors(AsyncPRAWBase):
     """Redditors is a Listing class that provides various Redditor lists."""
 
     def new(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator["Subreddit"]:
+    ) -> AsyncGenerator["Subreddit", None]:
         """Return a :class:`.ListingGenerator` for new Redditors.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
@@ -35,7 +35,7 @@ class Redditors(PRAWBase):
 
     def popular(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator["Subreddit"]:
+    ) -> AsyncGenerator["Subreddit", None]:
         """Return a :class:`.ListingGenerator` for popular Redditors.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
@@ -49,7 +49,7 @@ class Redditors(PRAWBase):
 
     def search(
         self, query: str, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator["Subreddit"]:
+    ) -> AsyncGenerator["Subreddit", None]:
         r"""Return a :class:`.ListingGenerator` of Redditors for ``query``.
 
         :param query: The query string to filter Redditors by.
@@ -66,7 +66,7 @@ class Redditors(PRAWBase):
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> Iterator["Subreddit"]:
+    ) -> AsyncGenerator["Subreddit", None]:
         """Yield new Redditors as they are created.
 
         Redditors are yielded oldest first. Up to 100 historical Redditors
@@ -78,7 +78,9 @@ class Redditors(PRAWBase):
         """
         return stream_generator(self.new, **stream_options)
 
-    def partial_redditors(self, ids: Iterable[str]) -> Iterator[PartialRedditor]:
+    async def partial_redditors(
+        self, ids: Iterable[str]
+    ) -> AsyncGenerator[PartialRedditor, None]:
         """Get user summary data by redditor IDs.
 
         :param ids: An iterable of redditor fullname IDs.
@@ -96,8 +98,10 @@ class Redditors(PRAWBase):
 
             params = {"ids": ",".join(chunk)}
             try:
-                results = self._reddit.get(API_PATH["user_by_fullname"], params=params)
-            except prawcore.exceptions.NotFound:
+                results = await self._reddit.get(
+                    API_PATH["user_by_fullname"], params=params
+                )
+            except asyncprawcore.exceptions.NotFound:
                 # None of the given IDs matched any Redditor.
                 continue
 

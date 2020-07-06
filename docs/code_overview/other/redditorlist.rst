@@ -1,5 +1,5 @@
 RedditorList
 ============
 
-.. autoclass:: praw.models.RedditorList
+.. autoclass:: asyncpraw.models.RedditorList
    :inherited-members:

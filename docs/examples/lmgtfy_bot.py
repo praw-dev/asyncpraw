@@ -1,13 +1,14 @@
+import asyncio
 from urllib.parse import quote_plus
 
-import praw
+import asyncpraw
 
 QUESTIONS = ["what is", "who is", "what are"]
 REPLY_TEMPLATE = "[Let me google that for you](http://lmgtfy.com/?q={})"
 
 
-def main():
-    reddit = praw.Reddit(
+async def main():
+    reddit = asyncpraw.Reddit(
         user_agent="LMGTFY (by /u/USERNAME)",
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
@@ -15,12 +16,12 @@ def main():
         password="PASSWORD",
     )
 
-    subreddit = reddit.subreddit("AskReddit")
-    for submission in subreddit.stream.submissions():
-        process_submission(submission)
+    subreddit = await reddit.subreddit("AskReddit")
+    async for submission in subreddit.stream.submissions():
+        await process_submission(submission)
 
 
-def process_submission(submission):
+async def process_submission(submission):
     # Ignore titles with more than 10 words as they probably are not simple
     # questions.
     if len(submission.title.split()) > 10:
@@ -32,10 +33,11 @@ def process_submission(submission):
             url_title = quote_plus(submission.title)
             reply_text = REPLY_TEMPLATE.format(url_title)
             print("Replying to: {}".format(submission.title))
-            submission.reply(reply_text)
+            await submission.reply(reply_text)
             # A reply has been made so do not attempt to match other phrases.
             break
 
 
 if __name__ == "__main__":
-    main()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())

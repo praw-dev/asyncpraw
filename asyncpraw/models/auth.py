@@ -1,7 +1,7 @@
 """Provide the Auth class."""
 from typing import Dict, List, Optional, Set, Union
 
-from prawcore import (
+from asyncprawcore import (
     Authorizer,
     ImplicitAuthorizer,
     UntrustedAuthenticator,
@@ -9,10 +9,10 @@ from prawcore import (
 )
 
 from ..exceptions import InvalidImplicitAuth, MissingRequiredAttributeException
-from .base import PRAWBase
+from .base import AsyncPRAWBase
 
 
-class Auth(PRAWBase):
+class Auth(AsyncPRAWBase):
     """Auth provides an interface to Reddit's authorization."""
 
     @property
@@ -44,7 +44,7 @@ class Auth(PRAWBase):
             "used": data.used,
         }
 
-    def authorize(self, code: str) -> Optional[str]:
+    async def authorize(self, code: str) -> Optional[str]:
         """Complete the web authorization flow and return the refresh token.
 
         :param code: The code obtained through the request to the redirect uri.
@@ -55,7 +55,7 @@ class Auth(PRAWBase):
         """
         authenticator = self._reddit._read_only_core._authorizer._authenticator
         authorizer = Authorizer(authenticator)
-        authorizer.authorize(code)
+        await authorizer.authorize(code)
         authorized_session = session(authorizer)
         self._reddit._core = self._reddit._authorized_core = authorized_session
         return authorizer.refresh_token
@@ -84,7 +84,7 @@ class Auth(PRAWBase):
         )
         self._reddit._core = self._reddit._authorized_core = implicit_session
 
-    def scopes(self) -> Set[str]:
+    async def scopes(self) -> Set[str]:
         """Return a set of scopes included in the current authorization.
 
         For read-only authorizations this should return ``{"*"}``.
@@ -92,7 +92,7 @@ class Auth(PRAWBase):
         """
         authorizer = self._reddit._core._authorizer
         if not authorizer.is_valid():
-            authorizer.refresh()
+            await authorizer.refresh()
         return authorizer.scopes
 
     def url(

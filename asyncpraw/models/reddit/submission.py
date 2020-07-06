@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 from urllib.parse import urljoin
 
-from prawcore import Conflict
+from asyncprawcore import Conflict
 
 from ...const import API_PATH
 from ...exceptions import InvalidURL
@@ -31,7 +31,7 @@ class SubmissionFlair:
         """
         self.submission = submission
 
-    def choices(self) -> List[Dict[str, Union[bool, list, str]]]:
+    async def choices(self) -> List[Dict[str, Union[bool, list, str]]]:
         """Return list of available flair choices.
 
         Choices are required in order to use :meth:`.select`.
@@ -40,15 +40,16 @@ class SubmissionFlair:
 
         .. code-block:: python
 
-           choices = submission.flair.choices()
+            choices = await submission.flair.choices()
 
         """
         url = API_PATH["flairselector"].format(subreddit=self.submission.subreddit)
-        return self.submission._reddit.post(
+        data = await self.submission._reddit.post(
             url, data={"link": self.submission.fullname}
-        )["choices"]
+        )
+        return data["choices"]
 
-    def select(self, flair_template_id: str, text: Optional[str] = None):
+    async def select(self, flair_template_id: str, text: Optional[str] = None):
         """Select flair for submission.
 
         :param flair_template_id: The flair template to select. The possible
@@ -62,10 +63,10 @@ class SubmissionFlair:
 
         .. code-block:: python
 
-           choices = submission.flair.choices()
-           template_id = next(x for x in choices
+            choices = await submission.flair.choices()
+            template_id = next(x for x in choices
                               if x["flair_text_editable"])["flair_template_id"]
-           submission.flair.select(template_id, "my custom value")
+            await submission.flair.select(template_id, "my custom value")
 
         """
         data = {
@@ -74,7 +75,7 @@ class SubmissionFlair:
             "text": text,
         }
         url = API_PATH["select_flair"].format(subreddit=self.submission.subreddit)
-        self.submission._reddit.post(url, data=data)
+        await self.submission._reddit.post(url, data=data)
 
 
 class SubmissionModeration(ThingModerationMixin):
@@ -84,8 +85,8 @@ class SubmissionModeration(ThingModerationMixin):
 
     .. code-block:: python
 
-       submission = reddit.submission(id="8dmv8z")
-       submission.mod.approve()
+        submission = await reddit.submission(id="8dmv8z", lazy=True)
+        await submission.mod.approve()
 
     """
 
@@ -99,7 +100,7 @@ class SubmissionModeration(ThingModerationMixin):
         """
         self.thing = submission
 
-    def contest_mode(self, state: bool = True):
+    async def contest_mode(self, state: bool = True):
         """Set contest mode for the comments of this submission.
 
         :param state: (boolean) True enables contest mode, False, disables
@@ -117,15 +118,15 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.mod.contest_mode(state=True)
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.mod.contest_mode(state=True)
 
         """
-        self.thing._reddit.post(
+        await self.thing._reddit.post(
             API_PATH["contest_mode"], data={"id": self.thing.fullname, "state": state},
         )
 
-    def flair(
+    async def flair(
         self,
         text: str = "",
         css_class: str = "",
@@ -147,8 +148,8 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.mod.flair(text="PRAW", css_class="bot")
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.mod.flair(text="PRAW", css_class="bot")
 
         """
         data = {
@@ -160,9 +161,9 @@ class SubmissionModeration(ThingModerationMixin):
         if flair_template_id is not None:
             data["flair_template_id"] = flair_template_id
             url = API_PATH["select_flair"].format(subreddit=self.thing.subreddit)
-        self.thing._reddit.post(url, data=data)
+        await self.thing._reddit.post(url, data=data)
 
-    def nsfw(self):
+    async def nsfw(self):
         """Mark as not safe for work.
 
         This method can be used both by the submission author and moderators of
@@ -172,16 +173,18 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.subreddit("test").submit("nsfw test",
-                                                        selftext="nsfw")
-           submission.mod.nsfw()
+            subreddit = await reddit.subreddit("test")
+            submission = await subreddit.submit("nsfw test", selftext="nsfw")
+            await submission.mod.nsfw()
 
         .. seealso:: :meth:`~.sfw`
 
         """
-        self.thing._reddit.post(API_PATH["marknsfw"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(
+            API_PATH["marknsfw"], data={"id": self.thing.fullname}
+        )
 
-    def set_original_content(self):
+    async def set_original_content(self):
         """Mark as original content.
 
         This method can be used by moderators of the subreddit that the
@@ -193,9 +196,9 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.subreddit("test").submit("oc test",
-                                                        selftext="original")
-           submission.mod.set_original_content()
+            subreddit = await reddit.subreddit("test")
+            submission = await subreddit.submit("oc test", selftext="original")
+            await submission.mod.set_original_content()
 
         .. seealso:: :meth:`.unset_original_content`
 
@@ -207,9 +210,9 @@ class SubmissionModeration(ThingModerationMixin):
             "executed": False,
             "r": self.thing.subreddit,
         }
-        self.thing._reddit.post(API_PATH["set_original_content"], data=data)
+        await self.thing._reddit.post(API_PATH["set_original_content"], data=data)
 
-    def sfw(self):
+    async def sfw(self):
         """Mark as safe for work.
 
         This method can be used both by the submission author and moderators of
@@ -219,17 +222,17 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.mod.sfw()
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.mod.sfw()
 
         .. seealso:: :meth:`~.nsfw`
 
         """
-        self.thing._reddit.post(
+        await self.thing._reddit.post(
             API_PATH["unmarknsfw"], data={"id": self.thing.fullname}
         )
 
-    def spoiler(self):
+    async def spoiler(self):
         """Indicate that the submission contains spoilers.
 
         This method can be used both by the submission author and moderators of
@@ -239,15 +242,17 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.mod.spoiler()
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.mod.spoiler()
 
         .. seealso:: :meth:`~.unspoiler`
 
         """
-        self.thing._reddit.post(API_PATH["spoiler"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(
+            API_PATH["spoiler"], data={"id": self.thing.fullname}
+        )
 
-    def sticky(self, state: bool = True, bottom: bool = True):
+    async def sticky(self, state: bool = True, bottom: bool = True):
         """Set the submission's sticky state in its subreddit.
 
         :param state: (boolean) True sets the sticky for the submission, false
@@ -267,30 +272,32 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.mod.sticky()
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.mod.sticky()
 
         """
         data = {"id": self.thing.fullname, "state": state}
         if not bottom:
             data["num"] = 1
         try:
-            return self.thing._reddit.post(API_PATH["sticky_submission"], data=data)
+            return await self.thing._reddit.post(
+                API_PATH["sticky_submission"], data=data
+            )
         except Conflict:
             pass
 
-    def suggested_sort(self, sort: str = "blank"):
+    async def suggested_sort(self, sort: str = "blank"):
         """Set the suggested sort for the comments of the submission.
 
         :param sort: Can be one of: confidence, top, new, controversial, old,
             random, qa, blank (default: blank).
 
         """
-        self.thing._reddit.post(
+        await self.thing._reddit.post(
             API_PATH["suggested_sort"], data={"id": self.thing.fullname, "sort": sort},
         )
 
-    def unset_original_content(self):
+    async def unset_original_content(self):
         """Indicate that the submission is not original content.
 
         This method can be used by moderators of the subreddit that the
@@ -302,9 +309,9 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.subreddit("test").submit("oc test",
-                                                        selftext="original")
-           submission.mod.unset_original_content()
+            subreddit = await reddit.subreddit("test")
+            submission = await subreddit.submit("oc test", selftext="original")
+            await submission.mod.unset_original_content()
 
         .. seealso:: :meth:`.set_original_content`
 
@@ -316,9 +323,9 @@ class SubmissionModeration(ThingModerationMixin):
             "executed": False,
             "r": self.thing.subreddit,
         }
-        self.thing._reddit.post(API_PATH["set_original_content"], data=data)
+        await self.thing._reddit.post(API_PATH["set_original_content"], data=data)
 
-    def unspoiler(self):
+    async def unspoiler(self):
         """Indicate that the submission does not contain spoilers.
 
         This method can be used both by the submission author and moderators of
@@ -328,14 +335,16 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           submission = reddit.subreddit("test").submit("not spoiler",
-                                                        selftext="spoiler")
-           submission.mod.unspoiler()
+            sub await reddit.subreddit("test")
+            submission = await sub.submit("not spoiler", selftext="spoiler")
+            await submission.mod.unspoiler()
 
         .. seealso:: :meth:`~.spoiler`
 
         """
-        self.thing._reddit.post(API_PATH["unspoiler"], data={"id": self.thing.fullname})
+        await self.thing._reddit.post(
+            API_PATH["unspoiler"], data={"id": self.thing.fullname}
+        )
 
 
 class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, RedditBase):
@@ -432,8 +441,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         """Return the class's kind."""
         return self._reddit.config.kinds["submission"]
 
-    @property
-    def comments(self) -> CommentForest:
+    async def comments(self) -> CommentForest:  # TODO: this might need changed
         """Provide an instance of :class:`.CommentForest`.
 
         This attribute can use used, for example, to obtain a flat list of
@@ -441,8 +449,10 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission.comments.replace_more(limit=0)
-           comments = submission.comments.list()
+            comments = await submission.comments
+            await comments.replace_more(limit=0)
+            async for comment in comments.list():
+                # do stuff with comment
 
         Sort order and comment limit can be set with the ``comment_sort`` and
         ``comment_limit`` attributes before comments are fetched, including
@@ -450,8 +460,11 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission.comment_sort = "new"
-           comments = submission.comments.list()
+            submission.comment_sort = "new"
+            comments = await submission.comments
+            comment_list = await comments.list()
+            for comment in list:
+                # do stuff with comment
 
         .. note:: The appropriate values for ``comment_sort`` include
            ``confidence``, ``controversial``, ``new``, ``old``, ``q&a``,
@@ -462,6 +475,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         """
         # This assumes _comments is set so that _fetch is called when it's not.
+        if "_comments" not in self.__dict__:
+            await self._fetch()
         return self._comments
 
     @cachedproperty
@@ -477,10 +492,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           choices = submission.flair.choices()
-           template_id = next(x for x in choices
-                              if x["flair_text_editable"])["flair_template_id"]
-           submission.flair.select(template_id, "my custom value")
+            choices = await submission.flair.choices()
+            template_id = next(x for x in choices if x["flair_text_editable"])["flair_template_id"]
+            await submission.flair.select(template_id, "my custom value")
 
         """
         return SubmissionFlair(self)
@@ -493,8 +507,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission = reddit.submission(id="8dmv8z")
-           submission.mod.approve()
+            submission = await reddit.submission(id="8dmv8z", lazy=True)
+            await submission.mod.approve()
 
         """
         return SubmissionModeration(self)
@@ -521,7 +535,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         :param reddit: An instance of :class:`~.Reddit`.
         :param id: A reddit base36 submission ID, e.g., ``2gmzqe``.
         :param url: A URL supported by
-            :meth:`~praw.models.Submission.id_from_url`.
+            :meth:`~asyncpraw.models.Submission.id_from_url`.
 
         Either ``id`` or ``url`` can be provided, but not both.
 
@@ -566,13 +580,13 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             {"limit": self.comment_limit, "sort": self.comment_sort},
         )
 
-    def _fetch_data(self):
+    async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         submission_listing, comment_listing = data
         comment_listing = Listing(self._reddit, _data=comment_listing["data"])
 
@@ -583,11 +597,11 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         submission._comments = CommentForest(self)
 
         self.__dict__.update(submission.__dict__)
-        self.comments._update(comment_listing.children)
+        self._comments._update(comment_listing.children)
 
         self._fetched = True
 
-    def mark_visited(self):
+    async def mark_visited(self):
         """Mark submission as visited.
 
         This method requires a subscription to reddit premium.
@@ -596,14 +610,14 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.mark_visited()
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.mark_visited()
 
         """
         data = {"links": self.fullname}
-        self._reddit.post(API_PATH["store_visits"], data=data)
+        await self._reddit.post(API_PATH["store_visits"], data=data)
 
-    def hide(self, other_submissions: Optional[List["Submission"]] = None):
+    async def hide(self, other_submissions: Optional[List["Submission"]] = None):
         """Hide Submission.
 
         :param other_submissions: When provided, additionally
@@ -614,16 +628,16 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.hide()
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.hide()
 
         .. seealso:: :meth:`~.unhide`
 
         """
         for submissions in self._chunk(other_submissions, 50):
-            self._reddit.post(API_PATH["hide"], data={"id": submissions})
+            await self._reddit.post(API_PATH["hide"], data={"id": submissions})
 
-    def unhide(self, other_submissions: Optional[List["Submission"]] = None):
+    async def unhide(self, other_submissions: Optional[List["Submission"]] = None):
         """Unhide Submission.
 
         :param other_submissions: When provided, additionally
@@ -634,16 +648,16 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.unhide()
+            submission = await reddit.submission(id="5or86n")
+            await submission.unhide()
 
         .. seealso:: :meth:`~.hide`
 
         """
         for submissions in self._chunk(other_submissions, 50):
-            self._reddit.post(API_PATH["unhide"], data={"id": submissions})
+            await self._reddit.post(API_PATH["unhide"], data={"id": submissions})
 
-    def crosspost(
+    async def crosspost(
         self,
         subreddit: "Subreddit",
         title: Optional[str] = None,
@@ -679,9 +693,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           cross_post = submission.crosspost(subreddit="learnprogramming",
-                                             send_replies=False)
+            submission = await reddit.submission(id="5or86n")
+            cross_post = await submission.crosspost(subreddit="learnprogramming",
+                                              send_replies=False)
 
         .. seealso:: :meth:`~.hide`
 
@@ -702,7 +716,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             if value is not None:
                 data[key] = value
 
-        return self._reddit.post(API_PATH["submit"], data=data)
+        return await self._reddit.post(API_PATH["submit"], data=data)
 
 
 Subreddit._submission_class = Submission

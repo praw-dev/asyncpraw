@@ -26,5 +26,5 @@ class TestRules(UnitTest):
             getattr(rule, "subreddit")
         assert (
             excinfo.value.args[0]
-            == "The Rule is missing a subreddit. File a bug report at PRAW."
+            == "The Rule is missing a subreddit. File a bug report at Async PRAW."
         )

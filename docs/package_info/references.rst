@@ -1,7 +1,7 @@
 References
 ==========
 
-* `PRAW Source Code <https://github.com/praw-dev/praw>`_.
+* `PRAW Source Code <https://github.com/praw-dev/asyncpraw>`_.
 * `Reddit Source Code <https://github.com/reddit/reddit>`_.
   This repository has been archived and is no longer updated.
 * `Reddit API Wiki Page <https://github.com/reddit/reddit/wiki/API>`_.
@@ -17,4 +17,4 @@ References
 * `r/changelog <https://www.reddit.com/r/changelog/>`_. Significant changes to
   Reddit's codebase will be announced here in non-developer speak.
 * `r/redditdev <https://www.reddit.com/r/redditdev>`_. Ask questions about
-  Reddit's codebase, PRAW, and other API clients here.
+  Reddit's codebase, Async PRAW, and other API clients here.

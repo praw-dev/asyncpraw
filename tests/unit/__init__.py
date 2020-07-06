@@ -3,7 +3,7 @@ from praw import Reddit
 
 
 class UnitTest:
-    """Base class for PRAW unit tests."""
+    """Base class for Async PRAW unit tests."""
 
     def setup(self):
         """Setup runs before all test cases."""

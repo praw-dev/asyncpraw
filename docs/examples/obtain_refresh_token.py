@@ -9,11 +9,12 @@ This tool can be used to conveniently create refresh tokens for later use with
 your web application OAuth2 credentials.
 
 """
+import asyncio
 import random
 import socket
 import sys
 
-import praw
+import asyncpraw
 
 
 def receive_connection():
@@ -38,7 +39,7 @@ def send_message(client, message):
     client.close()
 
 
-def main():
+async def main():
     """Provide the program's entry point when directly executed."""
     print(
         "Go here while logged into the account you want to create a token for: "
@@ -62,7 +63,7 @@ def main():
     else:
         scopes = commaScopes.strip().split(",")
 
-    reddit = praw.Reddit(
+    reddit = asyncpraw.Reddit(
         client_id=client_id.strip(),
         client_secret=client_secret.strip(),
         redirect_uri="http://localhost:8080",
@@ -90,10 +91,12 @@ def main():
         send_message(client, params["error"])
         return 1
 
-    refresh_token = reddit.auth.authorize(params["code"])
+    refresh_token = await reddit.auth.authorize(params["code"])
     send_message(client, "Refresh token: {}".format(refresh_token))
+    await reddit._http.close()
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    loop = asyncio.get_event_loop()
+    sys.exit(loop.run_until_complete(main()))

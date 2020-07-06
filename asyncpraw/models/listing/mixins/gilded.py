@@ -1,17 +1,17 @@
 """Provide the GildedListingMixin class."""
-from typing import Any, Dict, Iterator, Union
+from typing import Any, Dict, AsyncGenerator, Union
 from urllib.parse import urljoin
 
-from ...base import PRAWBase
+from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 
-class GildedListingMixin(PRAWBase):
+class GildedListingMixin(AsyncPRAWBase):
     """Mixes in the gilded method."""
 
     def gilded(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> Iterator[Any]:
+    ) -> AsyncGenerator[Any, None]:
         """Return a :class:`.ListingGenerator` for gilded items.
 
         Additional keyword arguments are passed in the initialization of
@@ -21,7 +21,8 @@ class GildedListingMixin(PRAWBase):
 
         .. code-block:: python
 
-            for item in reddit.subreddit("test").gilded():
+            subreddit = await reddit.subreddit("test")
+            async for item in subreddit.gilded():
                 print(item.id)
 
         """

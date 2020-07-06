@@ -2,14 +2,14 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Union
 
 from ...const import API_PATH
-from ..base import PRAWBase
+from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     from ... import Reddit
     from .comment import Comment  # noqa: F401
 
 
-class MoreComments(PRAWBase):
+class MoreComments(AsyncPRAWBase):
     """A class indicating there are more comments."""
 
     def __init__(self, reddit: "Reddit", _data: Dict[str, Any]):
@@ -42,41 +42,43 @@ class MoreComments(PRAWBase):
             self.__class__.__name__, self.count, children
         )
 
-    def _continue_comments(self, update):
-        assert not self.children, "Please file a bug report with PRAW."
-        parent = self._load_comment(self.parent_id.split("_", 1)[1])
+    async def _continue_comments(self, update):
+        assert not self.children, "Please file a bug report with Async PRAW."
+        parent = await self._load_comment(self.parent_id.split("_", 1)[1])
         self._comments = parent.replies
         if update:
-            for comment in self._comments:
+            async for comment in self._comments:
                 comment.submission = self.submission
         return self._comments
 
-    def _load_comment(self, comment_id):
+    async def _load_comment(self, comment_id):
         path = "{}_/{}".format(
             API_PATH["submission"].format(id=self.submission.id), comment_id
         )
-        _, comments = self._reddit.get(
+        _, comments = await self._reddit.get(
             path,
             params={
                 "limit": self.submission.comment_limit,
                 "sort": self.submission.comment_sort,
             },
         )
-        assert len(comments.children) == 1, "Please file a bug report with PRAW."
+        assert len(comments.children) == 1, "Please file a bug report with Async PRAW."
         return comments.children[0]
 
-    def comments(self, update: bool = True) -> List["Comment"]:
+    async def comments(self, update: bool = True) -> List["Comment"]:
         """Fetch and return the comments for a single MoreComments object."""
         if self._comments is None:
             if self.count == 0:  # Handle "continue this thread"
-                return self._continue_comments(update)
-            assert self.children, "Please file a bug report with PRAW."
+                return await self._continue_comments(update)
+            assert self.children, "Please file a bug report with Async PRAW."
             data = {
                 "children": ",".join(self.children),
                 "link_id": self.submission.fullname,
                 "sort": self.submission.comment_sort,
             }
-            self._comments = self._reddit.post(API_PATH["morechildren"], data=data)
+            self._comments = await self._reddit.post(
+                API_PATH["morechildren"], data=data
+            )
             if update:
                 for comment in self._comments:
                     comment.submission = self.submission

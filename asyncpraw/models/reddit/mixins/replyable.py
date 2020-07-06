@@ -5,7 +5,7 @@ from ....const import API_PATH
 class ReplyableMixin:
     """Interface for RedditBase classes that can be replied to."""
 
-    def reply(self, body: str):
+    async def reply(self, body: str):
         """Reply to the object.
 
         :param body: The Markdown formatted content for a comment.
@@ -19,22 +19,23 @@ class ReplyableMixin:
         by drawing the comment from the user's comment history.
 
         .. note:: Some items, such as locked submissions/comments or
-            non-replyable messages will throw ``prawcore.exceptions.Forbidden``
-            when attempting to reply to them.
+            non-replyable messages will throw
+            ``asyncprawcore.exceptions.Forbidden`` when attempting to reply
+            to them.
 
         Example usage:
 
         .. code-block:: python
 
-           submission = reddit.submission(id="5or86n")
-           submission.reply("reply")
+            submission = await reddit.submission(id="5or86n", lazy=True)
+            await submission.reply("reply")
 
-           comment = reddit.comment(id="dxolpyc")
-           comment.reply("reply")
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
+            await comment.reply("reply")
 
         """
         data = {"text": body, "thing_id": self.fullname}
-        comments = self._reddit.post(API_PATH["comment"], data=data)
+        comments = await self._reddit.post(API_PATH["comment"], data=data)
         try:
             return comments[0]
         except IndexError:

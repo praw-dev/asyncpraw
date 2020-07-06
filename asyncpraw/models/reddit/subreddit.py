@@ -11,8 +11,8 @@ from typing import List
 from urllib.parse import urljoin
 from xml.etree.ElementTree import XML
 
-import websocket
-from prawcore import Redirect
+import websockets
+from asyncprawcore import Redirect
 
 from ...const import API_PATH, JPEG_HEADER
 from ...exceptions import (
@@ -44,7 +44,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     .. code-block:: python
 
-       subreddit = reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("redditdev")
+
+    To obtain a lazy instance of this class for subreddit ``r/redditdev`` execute:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("redditdev")
 
     While ``r/all`` is not a real subreddit, it can still be treated like
     one. The following outputs the titles of the 25 hottest submissions in
@@ -52,26 +58,29 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     .. code-block:: python
 
-       for submission in reddit.subreddit("all").hot(limit=25):
-           print(submission.title)
+        subreddit = await reddit.subreddit("all")
+        async for submission in subreddit.hot(limit=25):
+            print(submission.title)
 
     Multiple subreddits can be combined with a ``+`` like so:
 
     .. code-block:: python
 
-       for submission in reddit.subreddit("redditdev+learnpython").top("all"):
-           print(submission)
+        subreddit = await reddit.subreddit("redditdev+learnpython")
+        async for submission in subreddit.top("all"):
+            print(submission)
 
     Subreddits can be filtered from combined listings as follows. Note that
     these filters are ignored by certain methods, including
-    :attr:`~praw.models.Subreddit.comments`,
-    :meth:`~praw.models.Subreddit.gilded`, and
+    :attr:`~asyncpraw.models.Subreddit.comments`,
+    :meth:`~asyncpraw.models.Subreddit.gilded`, and
     :meth:`.SubredditStream.comments`.
 
     .. code-block:: python
 
-       for submission in reddit.subreddit("all-redditdev").new():
-           print(submission)
+        subreddit = await reddit.subreddit("all-redditdev")
+        async for submission in subreddit.new():
+            print(submission)
 
     **Typical Attributes**
 
@@ -118,7 +127,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     MESSAGE_PREFIX = "#"
 
     @staticmethod
-    def _create_or_update(
+    async def _create_or_update(
         _reddit,
         allow_images=None,
         allow_post_crossposts=None,
@@ -153,7 +162,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         wiki_edit_age=None,
         wiki_edit_karma=None,
         wikimode=None,
-        **other_settings
+        **other_settings,
     ):
         # pylint: disable=invalid-name,too-many-locals,too-many-arguments
         model = {
@@ -194,7 +203,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         model.update(other_settings)
 
-        _reddit.post(API_PATH["site_admin"], data=model)
+        await _reddit.post(API_PATH["site_admin"], data=model)
 
     @staticmethod
     def _subreddit_list(subreddit, other_subreddits):
@@ -215,14 +224,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").banned.add("NAME", ban_reason="...")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.banned.add("NAME", ban_reason="...")
 
         To list the banned users along with any notes, try:
 
         .. code-block:: python
 
-           for ban in reddit.subreddit("SUBREDDIT").banned():
-               print('{}: {}'.format(ban, ban.note))
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            async for ban in subreddit.banned():
+                print('{}: {}'.format(ban, ban.note))
 
         """
         return SubredditRelationship(self, "banned")
@@ -236,17 +247,20 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for collection in reddit.subreddit("SUBREDDIT").collections:
-               print(collection.permalink)
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            async for collection in subreddit.collections:
+                print(collection.permalink)
 
         To get a specific :class:`.Collection` by its UUID or permalink,
         use one of the following:
 
         .. code-block:: python
 
-           collection = reddit.subreddit("SUBREDDIT").collections("some_uuid")
-           collection = reddit.subreddit("SUBREDDIT").collections(
-               permalink='https://reddit.com/r/SUBREDDIT/collection/some_uuid')
+            subreddit = await reddit.subreddit("SUBREDDIT")
+
+            collection = subreddit.collections("some_uuid")
+            collection = subreddit.collections(
+                permalink='https://reddit.com/r/SUBREDDIT/collection/some_uuid')
 
         """
         return self._subreddit_collections_class(self._reddit, self)
@@ -261,7 +275,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").contributor.add("NAME")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.contributor.add("NAME")
 
         """
         return ContributorRelationship(self, "contributor")
@@ -274,14 +289,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for emoji in reddit.subreddit("iama").emoji:
-               print(emoji)
+            subreddit = await reddit.subreddit("iama")
+            async for emoji in subreddit.emoji:
+                print(emoji)
 
         A single emoji can be lazily retrieved via:
 
         .. code-block:: python
 
-           reddit.subreddit("blah").emoji["emoji_name"]
+            subreddit = await reddit.subreddit("blah")
+            emoji = await subreddit.emoji.get_emoji("emoji_name")
 
         .. note:: Attempting to access attributes of an nonexistent emoji will
            result in a :class:`.ClientException`.
@@ -297,7 +314,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("all").filters.add("subreddit_name")
+            subreddit = await reddit.subreddit("all")
+            await subreddit.filters.add("subreddit_name")
 
         """
         return SubredditFilters(self)
@@ -312,15 +330,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for flair in reddit.subreddit("NAME").flair():
-               print(flair)
+            subreddit = await reddit.subreddit("NAME")
+            async for flair in subreddit.flair():
+                print(flair)
 
         Flair templates can be interacted with through this attribute via:
 
         .. code-block:: python
 
-           for template in reddit.subreddit("NAME").flair.templates:
-               print(template)
+            subreddit = await reddit.subreddit("NAME")
+            async for template in subreddit.flair.templates:
+                print(template)
 
         """
         return SubredditFlair(self)
@@ -333,7 +353,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("test").mod.accept_invite()
+            subreddit = await reddit.subreddit("test")
+            await subreddit.mod.accept_invite()
+
         """
         return SubredditModeration(self)
 
@@ -345,14 +367,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").moderator.add("NAME")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.moderator.add("NAME")
 
         To list the moderators along with their permissions try:
 
         .. code-block:: python
 
-           for moderator in reddit.subreddit("SUBREDDIT").moderator():
-               print('{}: {}'.format(moderator, moderator.mod_permissions))
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            async for moderator in subreddit.moderator:
+                print('{}: {}'.format(moderator, moderator.mod_permissions))
 
         """
         return ModeratorRelationship(self, "moderator")
@@ -367,7 +391,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("test").modmail.create("test", "hello", "spez")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.modmail.create("test", "hello", "spez")
 
         """
         return Modmail(self)
@@ -380,7 +405,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            for mute in reddit.subreddit("redditdev").muted():
+            subreddit = await reddit.subreddit("redditdev")
+            async for mute in subreddit.muted():
                 print('{}: {}'.format(mute, mute.note))
 
         """
@@ -398,7 +424,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("test").quaran.opt_in()
+            subreddit = await reddit.subreddit("test")
+            await subreddit.quaran.opt_in()
 
         """
         return SubredditQuarantine(self)
@@ -413,7 +440,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            for rule in reddit.subreddit("AskReddit").rules:
+            subreddit = await reddit.subreddit("AskReddit")
+            async for rule in subreddit.rules:
                 print(rule)
 
         Moderators can also add rules to the subreddit. For example, to make
@@ -421,7 +449,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("NAME").rules.mod.add(
+            subreddit = await reddit.subreddit("NAME")
+            await subreddit.rules.mod.add(
                 short_name="No spam",
                 kind="all",
                 description="Do not spam. Spam bad")
@@ -438,8 +467,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for comment in reddit.subreddit("iama").stream.comments():
-               print(comment)
+            subreddit = await reddit.subreddit("iama")
+            async for comment in subreddit.stream.comments():
+                print(comment)
 
         Additionally, new submissions can be retrieved via the stream. In the
         following example all submissions are fetched via the special subreddit
@@ -447,8 +477,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for submission in reddit.subreddit("all").stream.submissions():
-               print(submission)
+            subreddit = await reddit.subreddit("all")
+            async for submission in subreddit.stream.submissions():
+                print(submission)
 
         """
         return SubredditStream(self)
@@ -462,10 +493,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = reddit.subreddit("SUBREDDIT")
-            stylesheet = subreddit.stylesheet()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            stylesheet = await subreddit.stylesheet()
             stylesheet += ".test{color:blue}"
-            subreddit.stylesheet.update(stylesheet)
+            await subreddit.stylesheet.update(stylesheet)
 
         """
         return SubredditStylesheet(self)
@@ -480,14 +511,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for widget in reddit.subreddit("redditdev").widgets.sidebar:
-               print(widget)
+            subreddit = await reddit.subreddit("redditdev")
+            async for widget in subreddit.widgets.sidebar:
+                print(widget)
 
         Get ID card widget:
 
         .. code-block:: python
 
-           print(reddit.subreddit("redditdev").widgets.id_card)
+            subreddit = await reddit.subreddit("redditdev")
+            widget = await subreddit.widgets.id_card()
+            print(widget)
 
         """
         return SubredditWidgets(self)
@@ -500,15 +534,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for wikipage in reddit.subreddit("iama").wiki:
-               print(wikipage)
+            subreddit = await reddit.subreddit("iama")
+            async for wikipage in subreddit.wiki:
+                print(wikipage)
 
         To fetch the content for a given wikipage try:
 
         .. code-block:: python
 
-           wikipage = reddit.subreddit("iama").wiki["proof"]
-           print(wikipage.content_md)
+            subreddit = await reddit.subreddit("iama")
+            wikipage = await subreddit.wiki.get_page("proof")
+            print(wikipage.content_md)
 
         """
         return SubredditWiki(self)
@@ -520,7 +556,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param display_name: The name of the subreddit.
 
         .. note:: This class should not be initialized directly. Instead obtain
-           an instance via: ``reddit.subreddit("subreddit_name")``
+           an instance via: ``await reddit.subreddit("subreddit_name")`` or lazily
+           ``await reddit.subreddit("subreddit_name")``
 
         """
         if bool(display_name) == bool(_data):
@@ -533,13 +570,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def _fetch_info(self):
         return ("subreddit_about", {"subreddit": self}, None)
 
-    def _fetch_data(self):
+    async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return self._reddit.request("GET", path, params)
+        return await self._reddit.request("GET", path, params)
 
-    def _fetch(self):
-        data = self._fetch_data()
+    async def _fetch(self):
+        data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
@@ -555,13 +592,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             code, message, actual, maximum_size = [element.text for element in root[:4]]
             raise TooLargeMediaException(int(maximum_size), int(actual))
 
-    def _submit_media(self, data, timeout, without_websockets):
+    async def _submit_media(self, data, timeout, without_websockets):
         """Submit and return an `image`, `video`, or `videogif`.
 
         This is a helper method for submitting posts that are not link posts or
         self posts.
         """
-        response = self._reddit.post(API_PATH["submit"], data=data)
+        response = await self._reddit.post(API_PATH["submit"], data=data)
 
         # About the websockets:
         #
@@ -569,7 +606,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         # the user's /submitted page, and a websocket URL. We can use the
         # websocket URL to get a link to the new post once it is created.
         #
-        # An important note to PRAW contributors or anyone who would
+        # An important note to Async PRAW contributors or anyone who would
         # wish to step through this section with a debugger: This block
         # of code is NOT debugger-friendly. If there is *any*
         # significant time between the POST request just above this
@@ -588,13 +625,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             return
 
         try:
-            connection = websocket.create_connection(
-                response["json"]["data"]["websocket_url"], timeout=timeout
-            )
-            ws_update = loads(connection.recv())
-            connection.close()
+            async with websockets.connect(
+                response["json"]["data"]["websocket_url"], close_timeout=timeout
+            ) as websocket:
+                ws_update = loads(await websocket.recv())
         except (
-            websocket.WebSocketException,
+            websockets.WebSocketException,
             socket.error,
             BlockingIOError,
         ) as ws_exception:
@@ -608,9 +644,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if ws_update.get("type") == "failed":
             raise MediaPostFailed
         url = ws_update["payload"]["redirect"]
-        return self._reddit.submission(url=url)
+        return await self._reddit.submission(url=url)
 
-    def _upload_media(self, media_path, expected_mime_prefix=None):
+    async def _upload_media(self, media_path, expected_mime_prefix=None):
         """Upload media and return its URL. Uses undocumented endpoint.
 
         :param expected_mime_prefix: If provided, enforce that the media has a
@@ -647,21 +683,23 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         url = API_PATH["media_asset"]
         # until we learn otherwise, assume this request always succeeds
-        upload_lease = self._reddit.post(url, data=img_data)["args"]
+        response = await self._reddit.post(url, data=img_data)
+        upload_lease = response["args"]
         upload_url = "https:{}".format(upload_lease["action"])
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
 
         with open(media_path, "rb") as media:
-            response = self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data, files={"file": media}
+            upload_data["file"] = media
+            response = await self._reddit._core._requestor._http.post(
+                upload_url, data=upload_data
             )
-        if not response.ok:
+        if not response.status == 201:
             self._parse_xml_response(response)
         response.raise_for_status()
 
         return upload_url + "/" + upload_data["key"]
 
-    def post_requirements(self):
+    async def post_requirements(self):
         """Get the post requirements for a subreddit.
 
         :returns: A dict with the various requirements.
@@ -691,14 +729,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            print(reddit.subreddit("test").post_requirements)
+            subreddit = await reddit.subreddit("test")
+            post_requirements = await subreddit.post_requirements
+            print(post_requirements)
 
         """
-        return self._reddit.get(
+        return await self._reddit.get(
             API_PATH["post_requirements"].format(subreddit=str(self))
         )
 
-    def random(self):
+    async def random(self):
         """Return a random Submission.
 
         Returns ``None`` on subreddits that do not support the random feature.
@@ -708,18 +748,22 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            submission = reddit.subreddit("AskReddit").random()
+            subreddit = await reddit.subreddit("AskReddit")
+            submission = await subreddit.random()
             print(submission.title)
+
         """
         url = API_PATH["subreddit_random"].format(subreddit=self)
         try:
-            self._reddit.get(url, params={"unique": self._reddit._next_unique})
+            await self._reddit.get(url, params={"unique": self._reddit._next_unique})
         except Redirect as redirect:
             path = redirect.path
         try:
-            return self._submission_class(
+            submission = self._submission_class(
                 self._reddit, url=urljoin(self._reddit.config.reddit_url, path)
             )
+            await submission._fetch()
+            return submission
         except ClientException:
             return None
 
@@ -729,7 +773,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         sort="relevance",
         syntax="lucene",
         time_filter="all",
-        **generator_kwargs
+        **generator_kwargs,
     ):
         """Return a :class:`.ListingGenerator` for items that match ``query``.
 
@@ -748,8 +792,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           for submission in reddit.subreddit("all").search("praw"):
-               print(submission.title)
+            subreddit = await reddit.subreddit("all")
+            async for submission in subreddit.search("praw"):
+                print(submission.title)
 
         """
         self._validate_time_filter(time_filter)
@@ -766,31 +811,34 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         url = API_PATH["search"].format(subreddit=self)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    def sticky(self, number=1):
+    async def sticky(self, number=1):
         """Return a Submission object for a sticky of the subreddit.
 
         :param number: Specify which sticky to return. 1 appears at the top
             (default: 1).
 
-        Raises ``prawcore.NotFound`` if the sticky does not exist.
+        Raises ``asyncprawcore.NotFound`` if the sticky does not exist.
 
         For example, to get the stickied post on the subreddit ``r/test``:
 
         .. code-block:: python
 
-            reddit.subreddit("test").sticky()
+            subreddit = await reddit.subreddit("test")
+            await subreddit.sticky()
 
         """
         url = API_PATH["about_sticky"].format(subreddit=self)
         try:
-            self._reddit.get(url, params={"num": number})
+            await self._reddit.get(url, params={"num": number})
         except Redirect as redirect:
             path = redirect.path
-        return self._submission_class(
+        submission = self._submission_class(
             self._reddit, url=urljoin(self._reddit.config.reddit_url, path)
         )
+        await submission._fetch()
+        return submission
 
-    def submit(
+    async def submit(
         self,
         title,
         selftext=None,
@@ -835,9 +883,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           title = "PRAW documentation"
-           url = 'https://praw.readthedocs.io'
-           reddit.subreddit("reddit_api_test").submit(title, url=url)
+            title = "PRAW documentation"
+            url = 'https://asyncpraw.readthedocs.io'
+            subreddit = await reddit.subreddit("reddit_api_test")
+            await subreddit.submit(title, url=url)
 
         .. seealso ::
 
@@ -871,9 +920,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         else:
             data.update(kind="link", url=url)
 
-        return self._reddit.post(API_PATH["submit"], data=data)
+        return await self._reddit.post(API_PATH["submit"], data=data)
 
-    def submit_image(
+    async def submit_image(
         self,
         title,
         image_path,
@@ -915,7 +964,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`.Submission` object for the newly created
             submission, unless ``without_websockets`` is ``True``.
 
-        If ``image_path`` refers to a file that is not an image, PRAW will
+        If ``image_path`` refers to a file that is not an image, Async PRAW will
         raise a :class:`.ClientException`.
 
         .. note::
@@ -937,9 +986,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           title = "My favorite picture"
-           image = "/path/to/image.png"
-           reddit.subreddit("reddit_api_test").submit_image(title, image)
+            title = "My favorite picture"
+            image = "/path/to/image.png"
+            subreddit = await reddit.subreddit("reddit_api_test")
+            await subreddit.submit_image(title, image)
 
         .. seealso ::
 
@@ -964,13 +1014,15 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         ):
             if value is not None:
                 data[key] = value
+        url = await self._upload_media(image_path, expected_mime_prefix="image")
         data.update(
-            kind="image",
-            url=self._upload_media(image_path, expected_mime_prefix="image"),
+            kind="image", url=url,
         )
-        return self._submit_media(data, timeout, without_websockets=without_websockets)
+        return await self._submit_media(
+            data, timeout, without_websockets=without_websockets
+        )
 
-    def submit_poll(
+    async def submit_poll(
         self,
         title: str,
         selftext: str,
@@ -1016,13 +1068,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           title = "Do you like PRAW?"
-           reddit.subreddit("reddit_api_test").submit(
-               title,
-               selftext="",
-               options=["Yes", "No"],
-               duration=3
-           )
+            title = "Do you like Async PRAW?"
+            options = ["Yes", "No"]
+            subreddit = await reddit.subreddit("reddit_api_test")
+            await subreddit.submit_poll(title, selftext="", options=options, duration=3)
+
         """
         data = {
             "sr": str(self),
@@ -1045,9 +1095,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             if value is not None:
                 data[key] = value
 
-        return self._reddit.post(API_PATH["submit_poll_post"], json=data)
+        return await self._reddit.post(API_PATH["submit_poll_post"], json=data)
 
-    def submit_video(
+    async def submit_video(
         self,
         title,
         video_path,
@@ -1098,7 +1148,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`.Submission` object for the newly created
             submission, unless ``without_websockets`` is ``True``.
 
-        If ``video_path`` refers to a file that is not a video, PRAW will
+        If ``video_path`` refers to a file that is not a video, Async PRAW will
         raise a :class:`.ClientException`.
 
         .. note::
@@ -1120,9 +1170,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-           title = "My favorite movie"
-           video = "/path/to/video.mp4"
-           reddit.subreddit("reddit_api_test").submit_video(title, video)
+            title = "My favorite movie"
+            video = "/path/to/video.mp4"
+            subreddit = await reddit.subreddit("reddit_api_test")
+            await subreddit.submit_video(title, video)
 
         .. seealso ::
 
@@ -1147,15 +1198,19 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         ):
             if value is not None:
                 data[key] = value
+        url = await self._upload_media(video_path, expected_mime_prefix="video")
+        video_poster_url = await self._upload_media(thumbnail_path)
         data.update(
             kind="videogif" if videogif else "video",
-            url=self._upload_media(video_path, expected_mime_prefix="video"),
+            url=url,
             # if thumbnail_path is None, it uploads the PRAW logo
-            video_poster_url=self._upload_media(thumbnail_path),
+            video_poster_url=video_poster_url,
         )
-        return self._submit_media(data, timeout, without_websockets=without_websockets)
+        return await self._submit_media(
+            data, timeout, without_websockets=without_websockets
+        )
 
-    def subscribe(self, other_subreddits=None):
+    async def subscribe(self, other_subreddits=None):
         """Subscribe to the subreddit.
 
         :param other_subreddits: When provided, also subscribe to the provided
@@ -1165,7 +1220,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("test").subscribe()
+            subreddit = await reddit.subreddit("test")
+            await subreddit.subscribe()
 
         """
         data = {
@@ -1173,14 +1229,14 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "skip_inital_defaults": True,
             "sr_name": self._subreddit_list(self, other_subreddits),
         }
-        self._reddit.post(API_PATH["subscribe"], data=data)
+        await self._reddit.post(API_PATH["subscribe"], data=data)
 
-    def traffic(self):
+    async def traffic(self):
         """Return a dictionary of the subreddit's traffic statistics.
 
-        Raises ``prawcore.NotFound`` when the traffic stats aren't available to
-        the authenticated user, that is, they are not public and the
-        authenticated user is not a moderator of the subreddit.
+        Raises ``asyncprawcore.NotFound`` when the traffic stats aren't
+        available to the authenticated user, that is, they are not public and
+        the authenticated user is not a moderator of the subreddit.
 
         The traffic method returns a dict with three keys. The keys are
         ``day``, ``hour`` and ``month``. Each key contains a list of lists with
@@ -1197,12 +1253,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            stats=reddit.subreddit("test").traffic()
+            subreddit = await reddit.subreddit("test")
+            stats = await subreddit.traffic()
 
         """
-        return self._reddit.get(API_PATH["about_traffic"].format(subreddit=self))
+        return await self._reddit.get(API_PATH["about_traffic"].format(subreddit=self))
 
-    def unsubscribe(self, other_subreddits=None):
+    async def unsubscribe(self, other_subreddits=None):
         """Unsubscribe from the subreddit.
 
         :param other_subreddits: When provided, also unsubscribe from
@@ -1212,14 +1269,15 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            reddit.subreddit("test").unsubscribe()
+            subreddit = await reddit.subreddit("test")
+            await subreddit.unsubscribe()
 
         """
         data = {
             "action": "unsub",
             "sr_name": self._subreddit_list(self, other_subreddits),
         }
-        self._reddit.post(API_PATH["subscribe"], data=data)
+        await self._reddit.post(API_PATH["subscribe"], data=data)
 
 
 WidgetEncoder._subreddit_class = Subreddit
@@ -1233,7 +1291,8 @@ class SubredditFilters:
 
     .. code-block:: python
 
-        reddit.subreddit("all").filters.add("subreddit_name")
+        subreddit = await reddit.subreddit("all")
+        await subreddit.filters.add("subreddit_name")
 
     """
 
@@ -1248,14 +1307,15 @@ class SubredditFilters:
         """
         self.subreddit = subreddit
 
-    def __iter__(self):
+    async def __aiter__(self):
         """Iterate through the special subreddit's filters.
 
         This method should be invoked as:
 
         .. code-block:: python
 
-           for subreddit in reddit.subreddit("NAME").filters:
+            subreddit = await reddit.subreddit("NAME")
+            async for subreddit in subreddit.filters:
                ...
 
         """
@@ -1263,11 +1323,11 @@ class SubredditFilters:
             special=self.subreddit, user=self.subreddit._reddit.user.me()
         )
         params = {"unique": self.subreddit._reddit._next_unique}
-        response_data = self.subreddit._reddit.get(url, params=params)
+        response_data = await self.subreddit._reddit.get(url, params=params)
         for subreddit in response_data.subreddits:
             yield subreddit
 
-    def add(self, subreddit):
+    async def add(self, subreddit):
         """Add ``subreddit`` to the list of filtered subreddits.
 
         :param subreddit: The subreddit to add to the filter list.
@@ -1280,9 +1340,10 @@ class SubredditFilters:
 
         .. code-block:: python
 
-           reddit.subreddit("all-redditdev-learnpython")
+            await reddit.subreddit("all-redditdev-learnpython")
 
-        Raises ``prawcore.NotFound`` when calling on a non-special subreddit.
+        Raises ``asyncprawcore.NotFound`` when calling on a non-special
+            subreddit.
 
         """
         url = API_PATH["subreddit_filter"].format(
@@ -1290,14 +1351,17 @@ class SubredditFilters:
             user=self.subreddit._reddit.user.me(),
             subreddit=subreddit,
         )
-        self.subreddit._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
+        await self.subreddit._reddit.put(
+            url, data={"model": dumps({"name": str(subreddit)})}
+        )
 
-    def remove(self, subreddit):
+    async def remove(self, subreddit):
         """Remove ``subreddit`` from the list of filtered subreddits.
 
         :param subreddit: The subreddit to remove from the filter list.
 
-        Raises ``prawcore.NotFound`` when calling on a non-special subreddit.
+        Raises ``asyncprawcore.NotFound`` when calling on a non-special
+            subreddit.
 
         """
         url = API_PATH["subreddit_filter"].format(
@@ -1305,7 +1369,7 @@ class SubredditFilters:
             user=self.subreddit._reddit.user.me(),
             subreddit=str(subreddit),
         )
-        self.subreddit._reddit.delete(url)
+        await self.subreddit._reddit.delete(url)
 
 
 class SubredditFlair:
@@ -1321,8 +1385,9 @@ class SubredditFlair:
 
         .. code-block:: python
 
-           for template in reddit.subreddit("NAME").flair.link_templates:
-               print(template)
+            subreddit = await reddit.subreddit("NAME")
+            async for template in subreddit.flair.link_templates:
+                print(template)
 
         """
         return SubredditLinkFlairTemplates(self.subreddit)
@@ -1337,13 +1402,14 @@ class SubredditFlair:
 
         .. code-block:: python
 
-           for template in reddit.subreddit("NAME").flair.templates:
-               print(template)
+            subreddit = await reddit.subreddit("NAME")
+            async for template in subreddit.flair.templates:
+                print(template)
 
         """
         return SubredditRedditorFlairTemplates(self.subreddit)
 
-    def __call__(self, redditor=None, **generator_kwargs):
+    async def __call__(self, redditor=None, **generator_kwargs):
         """Return a :class:`.ListingGenerator` for Redditors and their flairs.
 
         :param redditor: When provided, yield at most a single
@@ -1356,8 +1422,9 @@ class SubredditFlair:
 
         .. code-block:: python
 
-           for flair in reddit.subreddit("NAME").flair(limit=None):
-               print(flair)
+            subreddit = await reddit.subreddit("NAME")
+            async for flair in subreddit.flair(limit=None):
+                print(flair)
 
         """
         Subreddit._safely_add_arguments(generator_kwargs, "params", name=redditor)
@@ -1373,13 +1440,13 @@ class SubredditFlair:
         """
         self.subreddit = subreddit
 
-    def configure(
+    async def configure(
         self,
         position="right",
         self_assign=False,
         link_position="left",
         link_self_assign=False,
-        **settings
+        **settings,
     ):
         """Update the subreddit's flair configuration.
 
@@ -1389,8 +1456,8 @@ class SubredditFlair:
             (default: False).
         :param link_position: One of left, right, or False to disable
             (default: left).
-        :param link_self_assign: (boolean) Permit self assignment
-               of link flair (default: False).
+        :param link_self_assign: (boolean) Permit self assignment of link flair
+            (default: False).
 
         Additional keyword arguments can be provided to handle new settings as
         Reddit introduces them.
@@ -1405,9 +1472,9 @@ class SubredditFlair:
         }
         data.update(settings)
         url = API_PATH["flairconfig"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def delete(self, redditor):
+    async def delete(self, redditor):
         """Delete flair for a Redditor.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -1415,14 +1482,14 @@ class SubredditFlair:
 
         .. seealso::
 
-            :meth:`~praw.models.reddit.subreddit.SubredditFlair.update` to
+            :meth:`~asyncpraw.models.reddit.subreddit.SubredditFlair.update` to
             delete the flair of many Redditors at once.
 
         """
         url = API_PATH["deleteflair"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data={"name": str(redditor)})
+        await self.subreddit._reddit.post(url, data={"name": str(redditor)})
 
-    def delete_all(self):
+    async def delete_all(self):
         """Delete all Redditor flair in the Subreddit.
 
         :returns: List of dictionaries indicating the success or failure of
@@ -1431,7 +1498,7 @@ class SubredditFlair:
         """
         return self.update(x["user"] for x in self())
 
-    def set(self, redditor, text="", css_class="", flair_template_id=None):
+    async def set(self, redditor, text="", css_class="", flair_template_id=None):
         """Set flair for a Redditor.
 
         :param redditor: (Required) A redditor name (e.g., ``"spez"``) or
@@ -1450,11 +1517,11 @@ class SubredditFlair:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").flair.set("bboe", "PRAW author",
-                                                   css_class="mods")
-           template = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
-           reddit.subreddit("redditdev").flair.set("spez", "Reddit CEO",
-                                                   flair_template_id=template)
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.flair.set("bboe", "PRAW author", css_class="mods")
+            template = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.flair.set("spez", "Reddit CEO", flair_template_id=template)
 
         """
         if css_class and flair_template_id is not None:
@@ -1469,9 +1536,9 @@ class SubredditFlair:
         else:
             data["css_class"] = css_class
             url = API_PATH["flair"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def update(self, flair_list, text="", css_class=""):
+    async def update(self, flair_list, text="", css_class=""):
         """Set or clear the flair for many Redditors at once.
 
         :param flair_list: Each item in this list should be either: the name of
@@ -1495,8 +1562,7 @@ class SubredditFlair:
 
         .. code-block:: python
 
-           subreddit.flair.update(["bboe", "spez", "spladug"],
-                                  css_class="praw")
+            await subreddit.flair.update(["bboe", "spez", "spladug"], css_class="praw")
 
         """
         templines = StringIO()
@@ -1518,7 +1584,7 @@ class SubredditFlair:
         url = API_PATH["flaircsv"].format(subreddit=self.subreddit)
         while lines:
             data = {"flair_csv": "\n".join(lines[:100])}
-            response.extend(self.subreddit._reddit.post(url, data=data))
+            response.extend(await self.subreddit._reddit.post(url, data=data))
             lines = lines[100:]
         return response
 
@@ -1537,18 +1603,29 @@ class SubredditFlairTemplates:
         :param subreddit: The subreddit whose flair templates to work with.
 
         .. note:: This class should not be initialized directly. Instead obtain
-           an instance via:
-           ``reddit.subreddit("subreddit_name").flair.templates`` or
-           ``reddit.subreddit("subreddit_name").flair.link_templates``.
+            an instance via:
+
+            .. code-block:: python
+
+               subreddit = await reddit.subreddit("subreddit_name")
+               subreddit.flair.templates
+
+            or via
+
+            .. code-block:: python
+
+               subreddit = await reddit.subreddit("subreddit_name")
+               subreddit.flair.link_templates
+
 
         """
         self.subreddit = subreddit
 
-    def __iter__(self):
+    async def __aiter__(self):
         """Abstract method to return flair templates."""
         raise NotImplementedError()
 
-    def _add(
+    async def _add(
         self,
         text,
         css_class="",
@@ -1572,27 +1649,30 @@ class SubredditFlairTemplates:
             "text_color": text_color,
             "text_editable": bool(text_editable),
         }
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def _clear(self, is_link=None):
+    async def _clear(self, is_link=None):
         url = API_PATH["flairtemplateclear"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data={"flair_type": self.flair_type(is_link)})
+        await self.subreddit._reddit.post(
+            url, data={"flair_type": self.flair_type(is_link)}
+        )
 
-    def delete(self, template_id):
+    async def delete(self, template_id):
         """Remove a flair template provided by ``template_id``.
 
         For example, to delete the first Redditor flair template listed, try:
 
         .. code-block:: python
 
-           template_info = list(subreddit.flair.templates)[0]
-           subreddit.flair.templates.delete(template_info["id"])
+            async for template_info in subreddit.flair.templates:
+                await subreddit.flair.templates.delete(template_info["id"])
+                break
 
         """
         url = API_PATH["flairtemplatedelete"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data={"flair_template_id": template_id})
+        await self.subreddit._reddit.post(url, data={"flair_template_id": template_id})
 
-    def update(
+    async def update(
         self,
         template_id,
         text=None,
@@ -1625,7 +1705,7 @@ class SubredditFlairTemplates:
             valid emoji string, for example ``":snoo:"``.
         :param max_emojis: (int) Maximum emojis in the flair
             (Reddit defaults this value to 10).
-        :param fetch: Whether or not PRAW will fetch existing information on
+        :param fetch: Whether or not Async PRAW will fetch existing information on
             the existing flair before updating (Default: True).
 
         .. warning:: If parameter ``fetch`` is set to ``False``, all parameters
@@ -1636,11 +1716,13 @@ class SubredditFlairTemplates:
 
         .. code-block:: python
 
-           template_info = list(subreddit.flair.templates)[0]
-           subreddit.flair.templates.update(
-               template_info["id"],
-               template_info["flair_text"],
-               text_editable=True)
+            async for template_info in subreddit.flair.templates:
+                await subreddit.flair.templates.update(
+                    template_info["id"],
+                    template_info["flair_text"],
+                    text_editable=True
+                )
+                break
 
         """
         url = API_PATH["flairtemplate_v2"].format(subreddit=self.subreddit)
@@ -1656,8 +1738,9 @@ class SubredditFlairTemplates:
             "text_editable": text_editable,
         }
         if fetch:
+
             _existing_data = [
-                template for template in iter(self) if template["id"] == template_id
+                template async for template in self if template["id"] == template_id
             ]
             if len(_existing_data) != 1:
                 raise InvalidFlairTemplateID(template_id)
@@ -1666,30 +1749,31 @@ class SubredditFlairTemplates:
                 for key, value in existing_data.items():
                     if data.get(key) is None:
                         data[key] = value
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
 
 class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
     """Provide functions to interact with Redditor flair templates."""
 
-    def __iter__(self):
+    async def __aiter__(self):
         """Iterate through the user flair templates.
 
         For example:
 
         .. code-block:: python
 
-           for template in reddit.subreddit("NAME").flair.templates:
-               print(template)
-
+            subreddit = await reddit.subreddit("NAME")
+            async for template in subreddit.flair.templates:
+                print(template)
 
         """
         url = API_PATH["user_flair"].format(subreddit=self.subreddit)
         params = {"unique": self.subreddit._reddit._next_unique}
-        for template in self.subreddit._reddit.get(url, params=params):
+        results = await self.subreddit._reddit.get(url, params=params)
+        for template in results:
             yield template
 
-    def add(
+    async def add(
         self,
         text,
         css_class="",
@@ -1723,11 +1807,11 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-           reddit.subreddit("NAME").flair.templates.add(
-               css_class="praw", text_editable=True)
+            subreddit = await reddit.subreddit("NAME")
+            await subreddit.flair.templates.add(css_class="praw", text_editable=True)
 
         """
-        self._add(
+        await self._add(
             text,
             css_class=css_class,
             text_editable=text_editable,
@@ -1739,38 +1823,41 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
             max_emojis=max_emojis,
         )
 
-    def clear(self):
+    async def clear(self):
         """Remove all Redditor flair templates from the subreddit.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("NAME").flair.templates.clear()
+            subreddit = await reddit.subreddit("NAME")
+            await subreddit.flair.templates.clear()
 
         """
-        self._clear(is_link=False)
+        await self._clear(is_link=False)
 
 
 class SubredditLinkFlairTemplates(SubredditFlairTemplates):
     """Provide functions to interact with link flair templates."""
 
-    def __iter__(self):
+    async def __aiter__(self):
         """Iterate through the link flair templates.
 
         For example:
 
         .. code-block:: python
 
-           for template in reddit.subreddit("NAME").flair.link_templates:
-               print(template)
+            subreddit = await reddit.subreddit("NAME")
+            async for template in subreddit.flair.link_templates:
+                print(template)
 
         """
         url = API_PATH["link_flair"].format(subreddit=self.subreddit)
-        for template in self.subreddit._reddit.get(url):
+        results = await self.subreddit._reddit.get(url)
+        for template in results:
             yield template
 
-    def add(
+    async def add(
         self,
         text,
         css_class="",
@@ -1804,11 +1891,12 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-           reddit.subreddit("NAME").flair.link_templates.add(
-               css_class="praw", text_editable=True)
+            subreddit = await reddit.subreddit("NAME")
+            await subreddit.flair.link_templates.add(css_class="praw",
+            text_editable=True)
 
         """
-        self._add(
+        await self._add(
             text,
             css_class=css_class,
             text_editable=text_editable,
@@ -1820,17 +1908,18 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
             max_emojis=max_emojis,
         )
 
-    def clear(self):
+    async def clear(self):
         """Remove all link flair templates from the subreddit.
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("NAME").flair.link_templates.clear()
+            subreddit = await reddit.subreddit("NAME")
+            await subreddit.flair.link_templates.clear()
 
         """
-        self._clear(is_link=True)
+        await self._clear(is_link=True)
 
 
 class SubredditModeration:
@@ -1840,7 +1929,8 @@ class SubredditModeration:
 
     .. code-block:: python
 
-        reddit.subreddit("test").mod.accept_invite()
+         subreddit = await reddit.subreddit("test")
+         await subreddit.mod.accept_invite()
 
     """
 
@@ -1860,10 +1950,10 @@ class SubredditModeration:
         self.subreddit = subreddit
         self._stream = None
 
-    def accept_invite(self):
+    async def accept_invite(self):
         """Accept an invitation as a moderator of the community."""
         url = API_PATH["accept_mod_invite"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url)
+        await self.subreddit._reddit.post(url)
 
     def edited(self, only=None, **generator_kwargs):
         """Return a :class:`.ListingGenerator` for edited comments and submissions.
@@ -1878,15 +1968,16 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.edited(limit=None):
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.edited(limit=None):
+                print(item)
 
         """
         self._handle_only(only, generator_kwargs)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_edited"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def inbox(self, **generator_kwargs):
@@ -1901,16 +1992,17 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for message in reddit.subreddit("mod").mod.inbox(limit=5):
-               print("From: {}, Body: {}".format(message.author, message.body))
-               for reply in message.replies:
-                   print("From: {}, Body: {}".format(reply.author, reply.body))
+            subreddit = await reddit.subreddit("mod")
+            async for message in subreddit.mod.inbox(limit=5):
+                print("From: {}, Body: {}".format(message.author, message.body))
+                for reply in message.replies:
+                    print("From: {}, Body: {}".format(reply.author, reply.body))
 
         """
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["moderator_messages"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def log(self, action=None, mod=None, **generator_kwargs):
@@ -1928,8 +2020,9 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for log in reddit.subreddit("mod").mod.log(limit=5):
-               print("Mod: {}, Subreddit: {}".format(log.mod, log.subreddit))
+            subreddit = await reddit.subreddit("mod")
+            async for log in subreddit.mod.log(limit=5):
+                print("Mod: {}, Subreddit: {}".format(log.mod, log.subreddit))
 
         """
         params = {"mod": str(mod) if mod else mod, "type": action}
@@ -1937,7 +2030,7 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_log"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def modqueue(self, only=None, **generator_kwargs):
@@ -1953,15 +2046,16 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.modqueue(limit=None):
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.modqueue(limit=None):
+                print(item)
 
         """
         self._handle_only(only, generator_kwargs)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_modqueue"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     @cachedproperty
@@ -1973,8 +2067,9 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for log in reddit.subreddit("mod").mod.stream.log():
-               print("Mod: {}, Subreddit: {}".format(log.mod, log.subreddit))
+            subreddit = await reddit.subreddit("mod")
+            async for log in subreddit.mod.stream.log():
+                print("Mod: {}, Subreddit: {}".format(log.mod, log.subreddit))
 
         """
         return SubredditModerationStream(self.subreddit)
@@ -1989,14 +2084,16 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for removal_reason in reddit.subreddit("NAME").mod.removal_reasons:
-               print(removal_reason)
+            subreddit = await reddit.subreddit("NAME")
+            async for removal_reason in subreddit.mod.removal_reasons:
+                print(removal_reason)
 
-        A single removal reason can be lazily retrieved via:
+        A single removal reason can be retrieved via:
 
         .. code-block:: python
 
-           reddit.subreddit("NAME").mod.removal_reasons["reason_id"]
+            subreddit = await reddit.subreddit("NAME")
+            await subreddit.mod.removal_reasons.get_reason("reason_id")
 
         .. note:: Attempting to access attributes of an nonexistent removal
            reason will result in a :class:`.ClientException`.
@@ -2017,22 +2114,23 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for reported_item in reddit.subreddit("mod").mod.reports():
-               print("User Reports: {}".format(reported_item.user_reports))
-               print("Mod Reports: {}".format(reported_item.mod_reports))
+            subreddit = await reddit.subreddit("mod")
+            async for reported_item in subreddit.mod.reports():
+                print("User Reports: {}".format(reported_item.user_reports))
+                print("Mod Reports: {}".format(reported_item.mod_reports))
 
         """
         self._handle_only(only, generator_kwargs)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_reports"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
-    def settings(self):
+    async def settings(self):
         """Return a dictionary of the subreddit's current settings."""
         url = API_PATH["subreddit_settings"].format(subreddit=self.subreddit)
-        return self.subreddit._reddit.get(url)["data"]
+        return await self.subreddit._reddit.get(url)["data"]
 
     def spam(self, only=None, **generator_kwargs):
         """Return a :class:`.ListingGenerator` for spam comments and submissions.
@@ -2047,15 +2145,16 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.spam():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.spam():
+                print(item)
 
         """
         self._handle_only(only, generator_kwargs)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_spam"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def unmoderated(self, **generator_kwargs):
@@ -2068,14 +2167,15 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.unmoderated():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.unmoderated():
+                print(item)
 
         """
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_unmoderated"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
     def unread(self, **generator_kwargs):
@@ -2090,17 +2190,18 @@ class SubredditModeration:
 
         .. code-block:: python
 
-           for message in reddit.subreddit("mod").mod.unread():
-               print("From: {}, To: {}".format(message.author, message.dest))
+            subreddit = await reddit.subreddit("mod")
+            async for message in subreddit.mod.unread():
+                print("From: {}, To: {}".format(message.author, message.dest))
 
         """
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["moderator_unread"].format(subreddit=self.subreddit),
-            **generator_kwargs
+            **generator_kwargs,
         )
 
-    def update(self, **settings):
+    async def update(self, **settings):
         """Update the subreddit's settings.
 
         :param all_original_content: Mandate all submissions to be original
@@ -2190,7 +2291,9 @@ class SubredditModeration:
 
         """
         settings["sr"] = self.subreddit.fullname
-        return self.subreddit._reddit.patch(API_PATH["update_settings"], json=settings)
+        return await self.subreddit._reddit.patch(
+            API_PATH["update_settings"], json=settings
+        )
 
 
 class SubredditModerationStream:
@@ -2217,8 +2320,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.stream.edited():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.stream.edited():
+                print(item)
 
         """
         return stream_generator(self.subreddit.mod.edited, only=only, **stream_options)
@@ -2236,8 +2340,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for log in reddit.subreddit("mod").mod.stream.log():
-               print("Mod: {}, Subreddit: {}".format(log.mod, log.subreddit))
+            subreddit = await reddit.subreddit("mod")
+            async for log in subreddit.mod.stream.log():
+                print("Mod: {}, Subreddit: {}".format(log.mod, log.subreddit))
 
         """
         return stream_generator(
@@ -2245,7 +2350,7 @@ class SubredditModerationStream:
             action=action,
             mod=mod,
             attribute_name="id",
-            **stream_options
+            **stream_options,
         )
 
     def modmail_conversations(
@@ -2267,13 +2372,13 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("all")
-           for message in subreddit.mod.stream.modmail_conversations():
-               print("From: {}, To: {}".format(message.owner, message.participant))
+            subreddit = await reddit.subreddit("all")
+            async for message in subreddit.mod.stream.modmail_conversations():
+                print("From: {}, To: {}".format(message.owner, message.participant))
 
         """  # noqa: E501
         if self.subreddit == "mod":
-            self.subreddit = self.subreddit._reddit.subreddit("all")
+            self.subreddit = Subreddit(self.subreddit._reddit, "all")
         return stream_generator(
             self.subreddit.modmail.conversations,
             other_subreddits=other_subreddits,
@@ -2281,7 +2386,7 @@ class SubredditModerationStream:
             state=state,
             attribute_name="id",
             exclude_before=True,
-            **stream_options
+            **stream_options,
         )
 
     def modqueue(self, only=None, **stream_options):
@@ -2296,8 +2401,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.stream.modqueue():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.stream.modqueue():
+                print(item)
 
         """
         return stream_generator(
@@ -2316,8 +2422,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.stream.reports():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.stream.reports():
+                print(item)
 
         """
         return stream_generator(self.subreddit.mod.reports, only=only, **stream_options)
@@ -2334,8 +2441,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.stream.spam():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.stream.spam():
+                print(item)
 
         """
         return stream_generator(self.subreddit.mod.spam, only=only, **stream_options)
@@ -2349,8 +2457,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("mod").mod.stream.unmoderated():
-               print(item)
+            subreddit = await reddit.subreddit("mod")
+            async for item in subreddit.mod.stream.unmoderated():
+                print(item)
 
         """
         return stream_generator(self.subreddit.mod.unmoderated, **stream_options)
@@ -2366,8 +2475,9 @@ class SubredditModerationStream:
 
         .. code-block:: python
 
-           for message in reddit.subreddit("mod").mod.stream.unread():
-               print("From: {}, To: {}".format(message.author, message.dest))
+            subreddit = await reddit.subreddit("mod")
+            async for message in subreddit.mod.stream.unread():
+                print("From: {}, To: {}".format(message.author, message.dest))
 
         """
         return stream_generator(self.subreddit.mod.unread, **stream_options)
@@ -2380,7 +2490,8 @@ class SubredditQuarantine:
 
     .. code-block:: python
 
-        reddit.subreddit("test").quaran.opt_in()
+        subreddit = await reddit.subreddit("test")
+        await subreddit.quaran.opt_in()
 
     """
 
@@ -2392,43 +2503,47 @@ class SubredditQuarantine:
         """
         self.subreddit = subreddit
 
-    def opt_in(self):
+    async def opt_in(self):
         """Permit your user access to the quarantined subreddit.
 
         Usage:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("QUESTIONABLE")
-           next(subreddit.hot())  # Raises prawcore.Forbidden
+            subreddit = await reddit.subreddit("QUESTIONABLE")
+            async for submission in subreddit.hot():  # Raises asyncprawcore.Forbidden
+                print(submission)
 
-           subreddit.quaran.opt_in()
-           next(subreddit.hot())  # Returns Submission
+            await subreddit.quaran.opt_in()
+            async for submission in subreddit.hot():
+                print(submission)  # Returns Submission
 
         """
         data = {"sr_name": self.subreddit}
         try:
-            self.subreddit._reddit.post(API_PATH["quarantine_opt_in"], data=data)
+            await self.subreddit._reddit.post(API_PATH["quarantine_opt_in"], data=data)
         except Redirect:
             pass
 
-    def opt_out(self):
+    async def opt_out(self):
         """Remove access to the quarantined subreddit.
 
         Usage:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("QUESTIONABLE")
-           next(subreddit.hot())  # Returns Submission
+            subreddit = await reddit.subreddit("QUESTIONABLE")
+            async for submission in subreddit.hot():
+                print(submission)  # Returns Submission
 
-           subreddit.quaran.opt_out()
-           next(subreddit.hot())  # Raises prawcore.Forbidden
+            await subreddit.quaran.opt_out()
+            async for submission in subreddit.hot():  # Raises asyncprawcore.Forbidden
+                print(submission)
 
         """
         data = {"sr_name": self.subreddit}
         try:
-            self.subreddit._reddit.post(API_PATH["quarantine_opt_out"], data=data)
+            await self.subreddit._reddit.post(API_PATH["quarantine_opt_out"], data=data)
         except Redirect:
             pass
 
@@ -2443,8 +2558,9 @@ class SubredditRelationship:
 
     .. code-block:: python
 
-       for ban in reddit.subreddit("redditdev").banned():
-           print('{}: {}'.format(ban, ban.note))
+        subreddit = await reddit.subreddit("redditdev")
+        async for ban in subreddit.banned():
+            print('{}: {}'.format(ban, ban.note))
 
     """
 
@@ -2476,7 +2592,7 @@ class SubredditRelationship:
         self.relationship = relationship
         self.subreddit = subreddit
 
-    def add(self, redditor, **other_settings):
+    async def add(self, redditor, **other_settings):
         """Add ``redditor`` to this relationship.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2486,9 +2602,9 @@ class SubredditRelationship:
         data = {"name": str(redditor), "type": self.relationship}
         data.update(other_settings)
         url = API_PATH["friend"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def remove(self, redditor):
+    async def remove(self, redditor):
         """Remove ``redditor`` from this relationship.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2497,7 +2613,7 @@ class SubredditRelationship:
         """
         data = {"name": str(redditor), "type": self.relationship}
         url = API_PATH["unfriend"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
 
 class ContributorRelationship(SubredditRelationship):
@@ -2509,14 +2625,15 @@ class ContributorRelationship(SubredditRelationship):
 
     .. code-block:: python
 
-       for contributor in reddit.subreddit("redditdev").contributor():
-           print(contributor)
+        subreddit = await reddit.subreddit("redditdev")
+        async for contributor in subreddit.contributor():
+            print(contributor)
 
     """
 
-    def leave(self):
+    async def leave(self):
         """Abdicate the contributor position."""
-        self.subreddit._reddit.post(
+        await self.subreddit._reddit.post(
             API_PATH["leavecontributor"], data={"id": self.subreddit.fullname}
         )
 
@@ -2528,8 +2645,9 @@ class ModeratorRelationship(SubredditRelationship):
 
     .. code-block:: python
 
-       for moderator in reddit.subreddit("redditdev").moderator():
-           print(moderator)
+        subreddit = await reddit.subreddit("redditdev")
+        async for moderator in subreddit.moderator:
+            print(moderator)
 
     """
 
@@ -2543,7 +2661,26 @@ class ModeratorRelationship(SubredditRelationship):
         )
         return other_settings
 
-    def __call__(self, redditor=None):  # pylint: disable=arguments-differ
+    async def __aiter__(self):
+        """Asynchronously iterate through Redditors who are moderators.
+
+        For example, to list the moderators along with their permissions try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            async for moderator in subreddit.moderator:
+                print('{}: {}'.format(moderator, moderator.mod_permissions))
+
+        """
+        url = API_PATH["list_{}".format(self.relationship)].format(
+            subreddit=self.subreddit
+        )
+        results = await self.subreddit._reddit.get(url)
+        for result in results:
+            yield result
+
+    async def __call__(self, redditor=None):  # pylint: disable=arguments-differ
         """Return a list of Redditors who are moderators.
 
         :param redditor: When provided, return a list containing at most one
@@ -2559,25 +2696,18 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-           moderators = reddit.subreddit("nameofsub").moderator()
-
-        For example, to list the moderators along with their permissions try:
-
-        .. code-block:: python
-
-           for moderator in reddit.subreddit("SUBREDDIT").moderator():
-               print('{}: {}'.format(moderator, moderator.mod_permissions))
-
+            subreddit = await reddit.subreddit("nameofsub")
+            moderators = await subreddit.moderator()
 
         """
         params = {} if redditor is None else {"user": redditor}
         url = API_PATH["list_{}".format(self.relationship)].format(
             subreddit=self.subreddit
         )
-        return self.subreddit._reddit.get(url, params=params)
+        return await self.subreddit._reddit.get(url, params=params)
 
     # pylint: disable=arguments-differ
-    def add(self, redditor, permissions=None, **other_settings):
+    async def add(self, redditor, permissions=None, **other_settings):
         """Add or invite ``redditor`` to be a moderator of the subreddit.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2595,15 +2725,16 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-           reddit.subreddit("test").moderator.add("spez", ["posts", "mail"])
+            subreddit = await reddit.subreddit("test")
+            await subreddit.moderator.add("spez", ["posts", "mail"])
 
         """
         other_settings = self._handle_permissions(permissions, other_settings)
-        super().add(redditor, **other_settings)
+        await super().add(redditor, **other_settings)
 
     # pylint: enable=arguments-differ
 
-    def invite(self, redditor, permissions=None, **other_settings):
+    async def invite(self, redditor, permissions=None, **other_settings):
         """Invite ``redditor`` to be a moderator of the subreddit.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2618,27 +2749,29 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-           reddit.subreddit("test").moderator.invite("spez", ["posts", "mail"])
+            subreddit = await reddit.subreddit("test")
+            await subreddit.moderator.invite("spez", ["posts", "mail"])
 
         """
         data = self._handle_permissions(permissions, other_settings)
         data.update({"name": str(redditor), "type": "moderator_invite"})
         url = API_PATH["friend"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def leave(self):
+    async def leave(self):
         """Abdicate the moderator position (use with care).
 
         For example:
 
         .. code-block:: python
 
-           reddit.subreddit("subredditname").moderator.leave()
+            subreddit = await reddit.subreddit("subredditname")
+            await subreddit.moderator.leave()
 
         """
-        self.remove(self.subreddit._reddit.config.username)
+        await self.remove(self.subreddit._reddit.config.username)
 
-    def remove_invite(self, redditor):
+    async def remove_invite(self, redditor):
         """Remove the moderator invite for ``redditor``.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2648,14 +2781,15 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-           reddit.subreddit("subredditname").moderator.remove_invite("spez")
+            subreddit = await reddit.subreddit("subredditname")
+            await subreddit.moderator.remove_invite("spez")
 
         """
         data = {"name": str(redditor), "type": "moderator_invite"}
         url = API_PATH["unfriend"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def update(self, redditor, permissions=None):
+    async def update(self, redditor, permissions=None):
         """Update the moderator permissions for ``redditor``.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2669,22 +2803,22 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-           subreddit.moderator.update("spez")
+            await subreddit.moderator.update("spez")
 
         To remove all permissions from the moderator, try:
 
         .. code-block:: python
 
-           subreddit.moderator.update("spez", [])
+            await subreddit.moderator.update("spez", [])
 
         """
         url = API_PATH["setpermissions"].format(subreddit=self.subreddit)
         data = self._handle_permissions(
             permissions, {"name": str(redditor), "type": "moderator"}
         )
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def update_invite(self, redditor, permissions=None):
+    async def update_invite(self, redditor, permissions=None):
         """Update the moderator invite permissions for ``redditor``.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2699,14 +2833,14 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-           subreddit.moderator.update_invite("spez", ["flair", "mail"])
+            await subreddit.moderator.update_invite("spez", ["flair", "mail"])
 
         """
         url = API_PATH["setpermissions"].format(subreddit=self.subreddit)
         data = self._handle_permissions(
             permissions, {"name": str(redditor), "type": "moderator_invite"}
         )
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
 
 class Modmail:
@@ -2718,11 +2852,12 @@ class Modmail:
 
     .. code-block:: python
 
-        reddit.subreddit("test").modmail.create("test", "hello", "spez")
+        subreddit = await reddit.subreddit("test")
+        await subreddit.modmail.create("test", "hello", "spez")
 
     """
 
-    def __call__(self, id=None, mark_read=False):  # noqa: D207, D301
+    async def __call__(self, id=None, mark_read=False):  # noqa: D207, D301
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
@@ -2733,16 +2868,17 @@ class Modmail:
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz", mark_read=True)
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.modmail("2gmz", mark_read=True)
 
         To print all messages from a conversation as Markdown source:
 
         .. code-block:: python
 
-           conversation = reddit.subreddit("redditdev").modmail("2gmz", \
-mark_read=True)
-           for message in conversation.messages:
-               print(message.body_markdown)
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz", mark_read=True)
+            for message in conversation.messages:
+                print(message.body_markdown)
 
         ``ModmailConversation.user`` is a special instance of
         :class:`.Redditor` with extra attributes describing the non-moderator
@@ -2754,21 +2890,25 @@ mark_read=True)
 
         .. code-block:: python
 
-           conversation = reddit.subreddit("redditdev").modmail("2gmz", \
-mark_read=True)
-           print(conversation.user.ban_status)
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz", mark_read=True)
+            print(conversation.user.ban_status)
 
         To print a list of recent submissions by the user:
 
         .. code-block:: python
 
-           conversation = reddit.subreddit("redditdev").modmail("2gmz", \
-mark_read=True)
-           print(conversation.user.recent_posts)
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz", mark_read=True)
+            print(conversation.user.recent_posts)
 
         """
         # pylint: disable=invalid-name,redefined-builtin
-        return ModmailConversation(self.subreddit._reddit, id=id, mark_read=mark_read)
+        modmail_conversation = ModmailConversation(
+            self.subreddit._reddit, id=id, mark_read=mark_read
+        )
+        await modmail_conversation._fetch()
+        return modmail_conversation
 
     def __init__(self, subreddit):
         """Construct an instance of the Modmail object."""
@@ -2779,7 +2919,7 @@ mark_read=True)
         subreddits = [self.subreddit] + (other_subreddits or [])
         return ",".join(str(subreddit) for subreddit in subreddits)
 
-    def bulk_read(self, other_subreddits=None, state=None):
+    async def bulk_read(self, other_subreddits=None, state=None):
         """Mark conversations for subreddit(s) as read.
 
         Due to server-side restrictions, "all" is not a valid subreddit for
@@ -2798,21 +2938,21 @@ mark_read=True)
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("redditdev")
-           subreddit.modmail.bulk_read(state="notifications")
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.modmail.bulk_read(state="notifications")
 
         """
         params = {"entity": self._build_subreddit_list(other_subreddits)}
         if state:
             params["state"] = state
-        response = self.subreddit._reddit.post(
+        response = await self.subreddit._reddit.post(
             API_PATH["modmail_bulk_read"], params=params
         )
         return [
             self(conversation_id) for conversation_id in response["conversation_ids"]
         ]
 
-    def conversations(
+    async def conversations(
         self, after=None, limit=None, other_subreddits=None, sort=None, state=None,
     ):  # noqa: D207, D301
         """Generate :class:`.ModmailConversation` objects for subreddit(s).
@@ -2835,8 +2975,9 @@ mark_read=True)
 
         .. code-block:: python
 
-            conversations = reddit.subreddit("all").modmail.conversations(\
-state="mod")
+            sub = await reddit.subreddit("all")
+            async for conversation in sub.modmail.conversations(state="mod"):
+                # do stuff with conversations
 
         """
         params = {}
@@ -2852,7 +2993,7 @@ state="mod")
             if value:
                 params[name] = value
 
-        response = self.subreddit._reddit.get(
+        response = await self.subreddit._reddit.get(
             API_PATH["modmail_conversations"], params=params
         )
         for conversation_id in response["conversationIds"]:
@@ -2864,7 +3005,7 @@ state="mod")
                 data, self.subreddit._reddit, convert_objects=False
             )
 
-    def create(self, subject, body, recipient, author_hidden=False):
+    async def create(self, subject, body, recipient, author_hidden=False):
         """Create a new modmail conversation.
 
         :param subject: The message subject. Cannot be empty.
@@ -2878,9 +3019,9 @@ state="mod")
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("redditdev")
-           redditor = reddit.redditor("bboe")
-           subreddit.modmail.create("Subject", "Body", redditor)
+            subreddit = await reddit.subreddit("redditdev")
+            redditor = await reddit.redditor("bboe")
+            await subreddit.modmail.create("Subject", "Body", redditor)
 
         """
         data = {
@@ -2890,25 +3031,29 @@ state="mod")
             "subject": subject,
             "to": recipient,
         }
-        return self.subreddit._reddit.post(API_PATH["modmail_conversations"], data=data)
+        return await self.subreddit._reddit.post(
+            API_PATH["modmail_conversations"], data=data
+        )
 
-    def subreddits(self):
+    async def subreddits(self):
         """Yield subreddits using the new modmail that the user moderates.
 
         For example:
 
         .. code-block:: python
 
-           subreddits = reddit.subreddit("all").modmail.subreddits()
+            sub = await reddit.subreddit("all")
+            async for subreddit in sub.modmail.subreddits():
+                # do stuff with subreddit
 
         """
-        response = self.subreddit._reddit.get(API_PATH["modmail_subreddits"])
+        response = await self.subreddit._reddit.get(API_PATH["modmail_subreddits"])
         for value in response["subreddits"].values():
             subreddit = self.subreddit._reddit.subreddit(value["display_name"])
             subreddit.last_updated = value["lastUpdated"]
             yield subreddit
 
-    def unread_count(self):
+    async def unread_count(self):
         """Return unread conversation count by conversation state.
 
         At time of writing, possible states are: archived, highlighted,
@@ -2920,12 +3065,12 @@ state="mod")
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("redditdev")
-           unread_counts = subreddit.modmail.unread_count()
-           print(unread_counts["mod"])
+            subreddit = await reddit.subreddit("redditdev")
+            unread_counts = await subreddit.modmail.unread_count()
+            print(unread_counts["mod"])
 
         """
-        return self.subreddit._reddit.get(API_PATH["modmail_unread_count"])
+        return await self.subreddit._reddit.get(API_PATH["modmail_unread_count"])
 
 
 class SubredditStream:
@@ -2947,7 +3092,7 @@ class SubredditStream:
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. note:: While PRAW tries to catch all new comments, some high-volume
+        .. note:: While Async PRAW tries to catch all new comments, some high-volume
             streams, especially the r/all stream, may drop some comments.
 
         For example, to retrieve all new comments made to the ``iama``
@@ -2955,17 +3100,18 @@ class SubredditStream:
 
         .. code-block:: python
 
-           for comment in reddit.subreddit("iama").stream.comments():
-               print(comment)
+            subreddit = await reddit.subreddit("iama")
+            async for comment in subreddit.stream.comments():
+                print(comment)
 
         To only retrieve new submissions starting when the stream is
         created, pass ``skip_existing=True``:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("iama")
-           for comment in subreddit.stream.comments(skip_existing=True):
-               print(comment)
+            subreddit = await reddit.subreddit("iama")
+            async for comment in subreddit.stream.comments(skip_existing=True):
+                print(comment)
 
         """
         return stream_generator(self.subreddit.comments, **stream_options)
@@ -2978,7 +3124,7 @@ class SubredditStream:
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. note:: While PRAW tries to catch all new submissions, some
+        .. note:: While Async PRAW tries to catch all new submissions, some
             high-volume streams, especially the r/all stream, may drop some
             submissions.
 
@@ -2986,8 +3132,9 @@ class SubredditStream:
 
         .. code-block:: python
 
-           for submission in reddit.subreddit("all").stream.submissions():
-               print(submission)
+            subreddit = await reddit.subreddit("all")
+            async for submission in subreddit.stream.submissions():
+                print(submission)
 
         """
         return stream_generator(self.subreddit.new, **stream_options)
@@ -3001,25 +3148,26 @@ class SubredditStylesheet:
 
     .. code-block:: python
 
-        subreddit = reddit.subreddit("SUBREDDIT")
-        stylesheet = subreddit.stylesheet()
-        stylesheet += ".test{color:blue}"
-        subreddit.stylesheet.update(stylesheet)
+        subreddit = await reddit.subreddit("SUBREDDIT")
+        stylesheet = await subreddit.stylesheet()
+        stylesheet.stylesheet += ".test{color:blue}"
+        await subreddit.stylesheet.update(stylesheet.stylesheet)
 
     """
 
-    def __call__(self):
+    async def __call__(self):
         """Return the subreddit's stylesheet.
 
         To be used as:
 
         .. code-block:: python
 
-           stylesheet = reddit.subreddit("SUBREDDIT").stylesheet()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            stylesheet = await subreddit.stylesheet()
 
         """
         url = API_PATH["about_stylesheet"].format(subreddit=self.subreddit)
-        return self.subreddit._reddit.get(url)
+        return await self.subreddit._reddit.get(url)
 
     def __init__(self, subreddit):
         """Create a SubredditStylesheet instance.
@@ -3030,54 +3178,56 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit.stylesheet
 
         """
         self.subreddit = subreddit
 
-    def _update_structured_styles(self, style_data):
+    async def _update_structured_styles(self, style_data):
         url = API_PATH["structured_styles"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.patch(url, style_data)
+        await self.subreddit._reddit.patch(url, style_data)
 
-    def _upload_image(self, image_path, data):
+    async def _upload_image(self, image_path, data):
         with open(image_path, "rb") as image:
             header = image.read(len(JPEG_HEADER))
             image.seek(0)
             data["img_type"] = "jpg" if header == JPEG_HEADER else "png"
             url = API_PATH["upload_image"].format(subreddit=self.subreddit)
-            response = self.subreddit._reddit.post(
-                url, data=data, files={"file": image}
-            )
+            data["file"] = image
+            response = await self.subreddit._reddit.post(url, data=data)
             if response["errors"]:
                 error_type = response["errors"][0]
                 error_value = response.get("errors_values", [""])[0]
                 assert error_type in [
                     "BAD_CSS_NAME",
                     "IMAGE_ERROR",
-                ], "Please file a bug with PRAW"
+                ], "Please file a bug with Async PRAW"
                 raise RedditAPIException([[error_type, error_value, None]])
             return response
 
-    def _upload_style_asset(self, image_path, image_type):
+    async def _upload_style_asset(self, image_path, image_type):
         data = {"imagetype": image_type, "filepath": basename(image_path)}
         data["mimetype"] = "image/jpeg"
         if image_path.lower().endswith(".png"):
             data["mimetype"] = "image/png"
         url = API_PATH["style_asset_lease"].format(subreddit=self.subreddit)
 
-        upload_lease = self.subreddit._reddit.post(url, data=data)["s3UploadLease"]
+        response = await self.subreddit._reddit.post(url, data=data)
+        upload_lease = response["s3UploadLease"]
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = "https:{}".format(upload_lease["action"])
 
         with open(image_path, "rb") as image:
-            response = self.subreddit._reddit._core._requestor._http.post(
-                upload_url, data=upload_data, files={"file": image}
+            upload_data["file"] = image
+            response = await self.subreddit._reddit._core._requestor._http.post(
+                upload_url, data=upload_data
             )
         response.raise_for_status()
 
         return "{}/{}".format(upload_url, upload_data["key"])
 
-    def delete_banner(self):
+    async def delete_banner(self):
         """Remove the current subreddit (redesign) banner image.
 
         Succeeds even if there is no banner image.
@@ -3086,13 +3236,14 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_banner()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_banner()
 
         """
         data = {"bannerBackgroundImage": ""}
-        self._update_structured_styles(data)
+        await self._update_structured_styles(data)
 
-    def delete_banner_additional_image(self):
+    async def delete_banner_additional_image(self):
         """Remove the current subreddit (redesign) banner additional image.
 
         Succeeds even if there is no additional image.  Will also delete any
@@ -3102,16 +3253,17 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_banner_additional_image()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_banner_additional_image()
 
         """
         data = {
             "bannerPositionedImage": "",
             "secondaryBannerPositionedImage": "",
         }
-        self._update_structured_styles(data)
+        await self._update_structured_styles(data)
 
-    def delete_banner_hover_image(self):
+    async def delete_banner_hover_image(self):
         """Remove the current subreddit (redesign) banner hover image.
 
         Succeeds even if there is no hover image.
@@ -3120,13 +3272,14 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_banner_hover_image()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_banner_hover_image()
 
         """
         data = {"secondaryBannerPositionedImage": ""}
-        self._update_structured_styles(data)
+        await self._update_structured_styles(data)
 
-    def delete_header(self):
+    async def delete_header(self):
         """Remove the current subreddit header image.
 
         Succeeds even if there is no header image.
@@ -3135,13 +3288,14 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_header()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_header()
 
         """
         url = API_PATH["delete_sr_header"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url)
+        await self.subreddit._reddit.post(url)
 
-    def delete_image(self, name):
+    async def delete_image(self, name):
         """Remove the named image from the subreddit.
 
         Succeeds even if the named image does not exist.
@@ -3150,13 +3304,14 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_image("smile")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_image("smile")
 
         """
         url = API_PATH["delete_sr_image"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data={"img_name": name})
+        await self.subreddit._reddit.post(url, data={"img_name": name})
 
-    def delete_mobile_header(self):
+    async def delete_mobile_header(self):
         """Remove the current subreddit mobile header.
 
         Succeeds even if there is no mobile header.
@@ -3165,13 +3320,14 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_mobile_header()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_mobile_header()
 
         """
         url = API_PATH["delete_sr_header"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url)
+        await self.subreddit._reddit.post(url)
 
-    def delete_mobile_icon(self):
+    async def delete_mobile_icon(self):
         """Remove the current subreddit mobile icon.
 
         Succeeds even if there is no mobile icon.
@@ -3180,13 +3336,14 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.delete_mobile_icon()
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.delete_mobile_icon()
 
         """
         url = API_PATH["delete_sr_icon"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url)
+        await self.subreddit._reddit.post(url)
 
-    def update(self, stylesheet, reason=None):
+    async def update(self, stylesheet, reason=None):
         """Update the subreddit's stylesheet.
 
         :param stylesheet: The CSS for the new stylesheet.
@@ -3196,7 +3353,8 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.update(
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.update(
                'p { color: green; }', "color text green")
 
         """
@@ -3206,9 +3364,9 @@ class SubredditStylesheet:
             "stylesheet_contents": stylesheet,
         }
         url = API_PATH["subreddit_stylesheet"].format(subreddit=self.subreddit)
-        self.subreddit._reddit.post(url, data=data)
+        await self.subreddit._reddit.post(url, data=data)
 
-    def upload(self, name, image_path):
+    async def upload(self, name, image_path):
         """Upload an image to the Subreddit.
 
         :param name: The name to use for the image. If an image already exists
@@ -3217,7 +3375,8 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too
+            large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -3228,12 +3387,13 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.upload("smile", "img.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload("smile", "img.png")
 
         """
         return self._upload_image(image_path, {"name": name, "upload_type": "img"})
 
-    def upload_banner(self, image_path):
+    async def upload_banner(self, image_path):
         """Upload an image for the subreddit's (redesign) banner image.
 
         :param image_path: A path to a jpeg or png image.
@@ -3249,14 +3409,15 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.upload_banner("banner.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload_banner("banner.png")
 
         """
         image_type = "bannerBackgroundImage"
         image_url = self._upload_style_asset(image_path, image_type)
-        self._update_structured_styles({image_type: image_url})
+        await self._update_structured_styles({image_type: image_url})
 
-    def upload_banner_additional_image(self, image_path, align=None):
+    async def upload_banner_additional_image(self, image_path, align=None):
         """Upload an image for the subreddit's (redesign) additional image.
 
         :param image_path: A path to a jpeg or png image.
@@ -3274,8 +3435,8 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("SUBREDDIT")
-           subreddit.stylesheet.upload_banner_additional_image("banner.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload_banner_additional_image("banner.png")
 
         """
         alignment = {}
@@ -3291,9 +3452,9 @@ class SubredditStylesheet:
         style_data = {image_type: image_url}
         if alignment:
             style_data.update(alignment)
-        self._update_structured_styles(style_data)
+        await self._update_structured_styles(style_data)
 
-    def upload_banner_hover_image(self, image_path):
+    async def upload_banner_hover_image(self, image_path):
         """Upload an image for the subreddit's (redesign) additional image.
 
         :param image_path: A path to a jpeg or png image.
@@ -3311,15 +3472,15 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           subreddit = reddit.subreddit("SUBREDDIT")
-           subreddit.stylesheet.upload_banner_hover_image("banner.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload_banner_hover_image("banner.png")
 
         """
         image_type = "secondaryBannerPositionedImage"
         image_url = self._upload_style_asset(image_path, image_type)
-        self._update_structured_styles({image_type: image_url})
+        await self._update_structured_styles({image_type: image_url})
 
-    def upload_header(self, image_path):
+    async def upload_header(self, image_path):
         """Upload an image to be used as the Subreddit's header image.
 
         :param image_path: A path to a jpeg or png image.
@@ -3337,12 +3498,13 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.upload_header("header.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload_header("header.png")
 
         """
         return self._upload_image(image_path, {"upload_type": "header"})
 
-    def upload_mobile_header(self, image_path):
+    async def upload_mobile_header(self, image_path):
         """Upload an image to be used as the Subreddit's mobile header.
 
         :param image_path: A path to a jpeg or png image.
@@ -3360,13 +3522,13 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.upload_mobile_header(
-               "header.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload_mobile_header("header.png")
 
         """
         return self._upload_image(image_path, {"upload_type": "banner"})
 
-    def upload_mobile_icon(self, image_path):
+    async def upload_mobile_icon(self, image_path):
         """Upload an image to be used as the Subreddit's mobile icon.
 
         :param image_path: A path to a jpeg or png image.
@@ -3384,28 +3546,31 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-           reddit.subreddit("SUBREDDIT").stylesheet.upload_mobile_icon(
-               "icon.png")
+            subreddit = await reddit.subreddit("SUBREDDIT")
+            await subreddit.stylesheet.upload_mobile_icon("icon.png")
 
         """
-        return self._upload_image(image_path, {"upload_type": "icon"})
+        return await self._upload_image(image_path, {"upload_type": "icon"})
 
 
 class SubredditWiki:
     """Provides a set of wiki functions to a Subreddit."""
 
-    def __getitem__(self, page_name):
-        """Lazily return the WikiPage for the subreddit named ``page_name``.
+    async def get_page(self, page_name):
+        """Return the WikiPage for the subreddit named ``page_name``.
 
         This method is to be used to fetch a specific wikipage, like so:
 
         .. code-block:: python
 
-           wikipage = reddit.subreddit("iama").wiki["proof"]
-           print(wikipage.content_md)
+            subreddit = await reddit.subreddit("iama")
+            wikipage = await subreddit.wiki.get_page("proof")
+            print(wikipage.content_md)
 
         """
-        return WikiPage(self.subreddit._reddit, self.subreddit, page_name.lower())
+        wikipage = WikiPage(self.subreddit._reddit, self.subreddit, page_name.lower())
+        await wikipage._fetch()
+        return wikipage
 
     def __init__(self, subreddit):
         """Create a SubredditWiki instance.
@@ -3417,25 +3582,26 @@ class SubredditWiki:
         self.contributor = SubredditRelationship(subreddit, "wikicontributor")
         self.subreddit = subreddit
 
-    def __iter__(self):
+    async def __aiter__(self):
         """Iterate through the pages of the wiki.
 
         This method is to be used to discover all wikipages for a subreddit:
 
         .. code-block:: python
 
-           for wikipage in reddit.subreddit("iama").wiki:
-               print(wikipage)
+            subreddit = await reddit.subreddit("iama")
+            async for wikipage in sureddit.wiki:
+                print(wikipage)
 
         """
-        response = self.subreddit._reddit.get(
+        response = await self.subreddit._reddit.get(
             API_PATH["wiki_pages"].format(subreddit=self.subreddit),
             params={"unique": self.subreddit._reddit._next_unique},
         )
         for page_name in response["data"]:
             yield WikiPage(self.subreddit._reddit, self.subreddit, page_name)
 
-    def create(self, name, content, reason=None, **other_settings):
+    async def create(self, name, content, reason=None, **other_settings):
         """Create a new wiki page.
 
         :param name: The name of the new WikiPage. This name will be
@@ -3448,13 +3614,14 @@ class SubredditWiki:
 
         .. code-block:: python
 
-           reddit.subreddit("test").wiki.create(
-               "praw_test", "wiki body text", reason="PRAW Test Creation")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.wiki.create("praw_test", "wiki body text", reason="PRAW
+            Test Creation")
 
         """
         name = name.replace(" ", "_").lower()
         new = WikiPage(self.subreddit._reddit, self.subreddit, name)
-        new.edit(content=content, reason=reason, **other_settings)
+        await new.edit(content=content, reason=reason, **other_settings)
         return new
 
     def revisions(self, **generator_kwargs):
@@ -3467,8 +3634,10 @@ class SubredditWiki:
 
         .. code-block:: python
 
-           for item in reddit.subreddit("test").wiki["praw_test"].revisions():
-               print(item)
+            subreddit = await reddit.subreddit("test")
+            page = await subreddit.wiki.get_page("praw_test")
+            async for item in.page.revisions():
+                print(item)
 
         """
         url = API_PATH["wiki_revisions"].format(subreddit=self.subreddit)
