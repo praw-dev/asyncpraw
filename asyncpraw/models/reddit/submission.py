@@ -447,7 +447,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     async def comments(self) -> CommentForest:
         """Provide an instance of :class:`.CommentForest`.
 
-        This attribute can use used, for example, to obtain a flat list of
+        This attribute can be used, for example, to obtain a flat list of
         comments, with any :class:`.MoreComments` removed:
 
         .. code-block:: python
