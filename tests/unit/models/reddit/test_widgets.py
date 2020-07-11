@@ -31,9 +31,8 @@ class TestWidgetEncoder(UnitTest):
         data = [
             1,
             "two",
-            AsPRAWBase(self.reddit, _data={"_secret": "no", "3": 3}),
             AsyncPRAWBase(self.reddit, _data={"_secret": "no", "3": 3}),
-            self.reddit.subreddit("four"),
+            Subreddit(self.reddit, "four"),
         ]
         assert '[1, "two", {"3": 3}, "four"]' == dumps(data, cls=WidgetEncoder)
 

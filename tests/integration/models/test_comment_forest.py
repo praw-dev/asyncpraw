@@ -45,7 +45,8 @@ class TestCommentForest(IntegrationTest):
             assert len(skipped) == 0
             assert len(await comments.list()) >= 500
 
-    async def test_replace__all_with_comment_sort(self):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_replace__all_with_comment_sort(self, _):
         with self.use_cassette(match_requests_on=["uri", "method", "body"]):
             submission = await self.reddit.submission("3hahrw")
             submission.comment_sort = "old"
@@ -83,7 +84,8 @@ class TestCommentForest(IntegrationTest):
             after_count = len(await comments.list())
             assert before_count == after_count + len(skipped)
 
-    async def test_replace__on_comment_from_submission(self):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_replace__on_comment_from_submission(self, _):
         with self.use_cassette(match_requests_on=["uri", "method", "body"]):
             submission = await self.reddit.submission("3hahrw")
             comments = await submission.comments()
@@ -97,7 +99,8 @@ class TestCommentForest(IntegrationTest):
             assert types.count(Comment) == 531
             assert types.count(MoreComments) == 3
 
-    async def test_replace__on_direct_comment(self):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_replace__on_direct_comment(self, _):
         with self.use_cassette(match_requests_on=["uri", "method", "body"]):
             comment = await self.reddit.comment("d8r4im1")
             await comment.refresh()

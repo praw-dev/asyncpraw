@@ -424,7 +424,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            my_sub = await reddit.subreddit("SUBREDDIT")
+            my_sub = await reddit.subreddit("SUBREDDIT", fetch=True)
             new_collection = await my_sub.collections.mod.create("Title", "desc")
 
         """
@@ -466,7 +466,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
             collection = await subreddit.collections(uuid, lazy=True)
             await collection.mod.add("submission_id")
 
@@ -504,6 +504,8 @@ class SubredditCollections(AsyncPRAWBase):
                 print(collection.permalink)
 
         """
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
         request = await self._reddit.get(
             API_PATH["collection_subreddit"],
             params={"sr_fullname": self.subreddit.fullname},
@@ -519,7 +521,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
         subreddit.collections.mod
 
     """
@@ -549,7 +551,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            sub = await reddit.subreddit("SUBREDDIT")
+            sub = await reddit.subreddit("SUBREDDIT", fetch=True)
             new_collection = await sub.collections.mod.create("Title", "desc")
             await new_collection.mod.add_post("bgibu9")
 

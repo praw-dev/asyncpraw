@@ -66,14 +66,14 @@ class TestRedditor(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             redditor = await self.reddit.redditor("subreddit_stats")
-            redditor.message("Async PRAW test", "This is a test fromAsync PRAW")
+            await redditor.message("Async PRAW test", "This is a test fromAsync PRAW")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_message_from_subreddit(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             redditor = await self.reddit.redditor("subreddit_stats")
-            redditor.message(
+            await redditor.message(
                 "Async PRAW test",
                 "This is a test from Async PRAW",
                 from_subreddit=pytest.placeholders.test_subreddit,
@@ -86,7 +86,7 @@ class TestRedditor(IntegrationTest):
             redditor_no_mod = await self.reddit.redditor("Turambar420")
             moderated = await redditor.moderated()
             assert len(moderated) > 0
-            assert len(moderated[0].name) > 0
+            assert len(moderated[0].display_name) > 0
             not_moderated = await redditor_no_mod.moderated()
             assert len(not_moderated) == 0
 

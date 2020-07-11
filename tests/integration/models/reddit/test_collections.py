@@ -45,7 +45,7 @@ class TestCollection(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections(uuid)
-            collection.follow()
+            await collection.follow()
 
     async def test_subreddit(self):
         uuid = self.NONEMPTY_REAL_UUID
@@ -60,7 +60,7 @@ class TestCollection(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections(uuid)
-            collection.unfollow()
+            await collection.unfollow()
 
 
 class TestCollectionModeration(IntegrationTest):
@@ -102,7 +102,9 @@ class TestCollectionModeration(IntegrationTest):
     async def test_delete(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            subreddit = await self.reddit.subreddit(
+                pytest.placeholders.test_subreddit, fetch=True
+            )
             collection = await subreddit.collections.mod.create("Title", "")
             await collection.mod.delete()
 
@@ -193,7 +195,9 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         description = "The description."
         self.reddit.read_only = False
         with self.use_cassette():
-            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            subreddit = await self.reddit.subreddit(
+                pytest.placeholders.test_subreddit, fetch=True
+            )
             collection = await subreddit.collections.mod.create(title, description)
             assert collection.title == title
             assert collection.description == description

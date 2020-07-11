@@ -49,8 +49,8 @@ class TestReddit(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_live_call(self, _):
         thread_id = "ukaeu1ik4sw5"
-        thread = await self.reddit.live(thread_id)
         with self.use_cassette():
+            thread = await self.reddit.live(thread_id, fetch=True)
             assert thread.title == "reddit updates"
 
     @mock.patch("asyncio.sleep", return_value=None)

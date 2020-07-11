@@ -7,6 +7,7 @@ from datetime import datetime
 from functools import wraps
 
 import pytest
+from _pytest.tmpdir import _mk_tmp
 from vcr import VCR
 from vcr.cassette import Cassette
 from vcr.persisters.filesystem import FilesystemPersister
@@ -183,3 +184,9 @@ class Placeholders:
 
 def pytest_configure():
     pytest.placeholders = Placeholders(placeholders)
+
+
+@pytest.fixture
+def tmp_path(request, tmp_path_factory):
+    """Manually create tmp_path fixture since asynctest does not play nicely with fixtures as args"""
+    request.cls.tmp_path = _mk_tmp(request, tmp_path_factory)

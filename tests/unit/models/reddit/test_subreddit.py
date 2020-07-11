@@ -1,9 +1,9 @@
-import json
+import aiohttp
 import pytest
 from asynctest import mock, CoroutineMock, MagicMock
 
 from asyncpraw.exceptions import MediaPostFailed
-from asyncpraw.models import Subreddit
+from asyncpraw.models import Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
 from ... import UnitTest
@@ -54,11 +54,12 @@ class TestSubreddit(UnitTest):
         "asyncpraw.Reddit.post", return_value={"json": {"data": {"websocket_url": ""}}},
     )
     @mock.patch("asyncpraw.models.Subreddit._upload_media", return_value="")
-    @mock.patch("websockets.connect")
+    @mock.patch("aiohttp.client.ClientSession.ws_connect")
     async def test_invalid_media(self, connection_mock, _mock_upload_media, _mock_post):
+        self.reddit._core._requestor._http = aiohttp.ClientSession()
         recv_mock = MagicMock()
-        recv_mock.recv = CoroutineMock(
-            return_value=json.dumps({"payload": {}, "type": "failed"})
+        recv_mock.receive_json = CoroutineMock(
+            return_value={"payload": {}, "type": "failed"}
         )
         context_manager = MagicMock()
         context_manager.__aenter__.return_value = recv_mock
@@ -69,6 +70,7 @@ class TestSubreddit(UnitTest):
             await Subreddit(self.reddit, display_name="test").submit_image(
                 "Test", "dummy path"
             )
+        await self.reddit._core._requestor._http.close()
 
     def test_repr(self):
         subreddit = Subreddit(self.reddit, display_name="name")
@@ -128,13 +130,12 @@ class TestSubredditFlairTemplates(UnitTest):
             ).__aiter__()
 
 
-# FIXME: unit tests can't make requests
-# class TestSubredditWiki(UnitTest):
-#     def test__getitem(self):
-#         subreddit = Subreddit(self.reddit, display_name="name")
-#         wikipage = subreddit.wiki.get_wiki("Foo")
-#         assert isinstance(wikipage, WikiPage)
-#         assert "foo" == wikipage.name
+class TestSubredditWiki(UnitTest):
+    async def test__getitem(self):
+        subreddit = Subreddit(self.reddit, display_name="name")
+        wikipage = await subreddit.wiki.get_page("Foo", lazy=True)
+        assert isinstance(wikipage, WikiPage)
+        assert "foo" == wikipage.name
 
 
 class TestSubredditModmailConversationsStream(UnitTest):

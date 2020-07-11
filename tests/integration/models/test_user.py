@@ -72,7 +72,8 @@ class TestUser(IntegrationTest):
         with self.use_cassette():
             me = await self.reddit.user.me()
             me.praw_is_cached = True
-            assert not hasattr(self.reddit.user.me(use_cache=False), "praw_is_cached")
+            me = await self.reddit.user.me(use_cache=False)
+            assert not hasattr(me, "praw_is_cached")
 
     async def test_multireddits(self):
         self.reddit.read_only = False

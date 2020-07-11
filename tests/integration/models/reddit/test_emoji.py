@@ -56,7 +56,7 @@ class TestEmoji(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             emoji = await subreddit.emoji.get_emoji("test_png")
-            emoji.update(mod_flair_only=True)
+            await emoji.update(mod_flair_only=True)
 
 
 class TestSubredditEmoji(IntegrationTest):

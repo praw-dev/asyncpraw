@@ -9,86 +9,69 @@ from ... import IntegrationTest
 
 
 class TestRemovalReason(IntegrationTest):
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
     @mock.patch("asyncio.sleep", return_value=None)
-    def test__fetch(self, _):
+    async def test__fetch(self, _):
         self.reddit.read_only = False
-        reason = self.subreddit.mod.removal_reasons["110nhral8vygf"]
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
+            reason = await subreddit.mod.removal_reasons.get_reason("159bqhvme3rxe")
             assert reason.title.startswith("Be Kind")
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test__fetch_int(self, _):
+    async def test__fetch__invalid_reason(self, _):
         self.reddit.read_only = False
-        with self.use_cassette("TestRemovalReason.test__fetch"):
-            reason = self.subreddit.mod.removal_reasons[0]
-            assert isinstance(reason, RemovalReason)
-
-    @mock.patch("asyncio.sleep", return_value=None)
-    def test__fetch_slice(self, _):
-        self.reddit.read_only = False
-        with self.use_cassette("TestRemovalReason.test__fetch"):
-            reasons = self.subreddit.mod.removal_reasons[-3:]
-            assert len(reasons) == 3
-            for reason in reasons:
-                assert isinstance(reason, RemovalReason)
-
-    @mock.patch("asyncio.sleep", return_value=None)
-    def test__fetch__invalid_reason(self, _):
-        self.reddit.read_only = False
-        reason = self.subreddit.mod.removal_reasons["invalid"]
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             with pytest.raises(ClientException) as excinfo:
-                reason.title
+                await subreddit.mod.removal_reasons.get_reason("invalid")
             assert str(excinfo.value) == (
                 "Subreddit {} does not have the removal reason {}".format(
-                    self.subreddit, "invalid"
+                    subreddit, "invalid"
                 )
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_update(self, _):
+    async def test_update(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            reason = self.subreddit.mod.removal_reasons["110nhk2cgmaxy"]
-            reason.update(message="New Message", title="New Title")
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            reason = await subreddit.mod.removal_reasons.get_reason("159bqhvme3rxe")
+            await reason.update(message="New Message", title="New Title")
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_update_empty(self, _):
+    async def test_update_empty(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            reason = self.subreddit.mod.removal_reasons[0]
-            reason.update()
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            reasons = [reason async for reason in subreddit.mod.removal_reasons]
+            reason = reasons[0]
+            await reason.update()
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_delete(self, _):
+    async def test_delete(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            reason = self.subreddit.mod.removal_reasons["110nhyk34m01d"]
-            reason.delete()
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            reason = await subreddit.mod.removal_reasons.get_reason("157l8fono55wf")
+            await reason.delete()
 
 
 class TestSubredditRemovalReasons(IntegrationTest):
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
     @mock.patch("asyncio.sleep", return_value=None)
-    def test__iter(self, _):
+    async def test__aiter(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             count = 0
-            for reason in self.subreddit.mod.removal_reasons:
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            async for reason in subreddit.mod.removal_reasons:
                 assert isinstance(reason, RemovalReason)
                 count += 1
             assert count > 0
 
     @mock.patch("asyncio.sleep", return_value=None)
-    def test_add(self, _):
+    async def test_add(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            reason = self.subreddit.mod.removal_reasons.add("test", "Test")
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            reason = await subreddit.mod.removal_reasons.add("test", "Test")
             assert isinstance(reason, RemovalReason)

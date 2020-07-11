@@ -1,0 +1,120 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "post",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "371",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 07 Jul 2020 00:48:13 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=ZNb057v26lsT8AR5lW; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5950-MCI",
+          "X-Timer": "S1594082893.917014,VS0,VE93",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/duplicates/avj2v/?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "[{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": 1, \"children\": [{\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"science\", \"selftext\": \"\", \"user_reports\": [], \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"xkcd: Spirit\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/science\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"parent_whitelist_status\": \"all_ads\", \"hide_score\": false, \"name\": \"t3_avj2v\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.91, \"author_flair_background_color\": null, \"subreddit_type\": \"public\", \"ups\": 2409, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"author_fullname\": \"t2_1p3e\", \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 2409, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": null, \"is_self\": false, \"mod_note\": null, \"created\": 1264771957.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": \"confidence\", \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://www.xkcd.com/695\", \"view_count\": null, \"archived\": true, \"no_follow\": false, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_mouw\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"avj2v\", \"is_robot_indexable\": true, \"num_duplicates\": 6, \"report_reasons\": null, \"author\": \"bobcat\", \"discussion_type\": null, \"num_comments\": 634, \"send_replies\": true, \"media\": null, \"contest_mode\": false, \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/science/comments/avj2v/xkcd_spirit/\", \"whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"http://www.xkcd.com/695\", \"subreddit_subscribers\": 24464365, \"created_utc\": 1264743157.0, \"num_crossposts\": 0, \"mod_reports\": [], \"is_video\": false}}], \"after\": null, \"before\": null}}, {\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": 6, \"children\": [{\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"comics\", \"selftext\": \"\", \"author_fullname\": \"t2_1p3e\", \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"xkcd: Spirit\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/comics\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"hide_score\": false, \"name\": \"t3_avj32\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.8, \"author_flair_background_color\": null, \"subreddit_type\": \"public\", \"ups\": 447, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"user_reports\": [], \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 447, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": [\"comics\"], \"is_self\": false, \"mod_note\": null, \"created\": 1264771982.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": null, \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://www.xkcd.com/695\", \"view_count\": null, \"archived\": true, \"no_follow\": false, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_2qh0s\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"avj32\", \"is_robot_indexable\": true, \"report_reasons\": null, \"author\": \"bobcat\", \"discussion_type\": null, \"num_comments\": 122, \"send_replies\": true, \"whitelist_status\": \"all_ads\", \"contest_mode\": false, \"mod_reports\": [], \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/comics/comments/avj32/xkcd_spirit/\", \"parent_whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"http://www.xkcd.com/695\", \"subreddit_subscribers\": 1406942, \"created_utc\": 1264743182.0, \"num_crossposts\": 0, \"media\": null, \"is_video\": false}}, {\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"space\", \"selftext\": \"\", \"author_fullname\": \"t2_1p3e\", \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"xkcd: Spirit\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/space\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"hide_score\": false, \"name\": \"t3_avj2r\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.8, \"author_flair_background_color\": null, \"subreddit_type\": \"public\", \"ups\": 272, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"user_reports\": [], \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 272, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": null, \"is_self\": false, \"mod_note\": null, \"created\": 1264771947.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": null, \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://www.xkcd.com/695\", \"view_count\": null, \"archived\": true, \"no_follow\": false, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_2qh87\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"avj2r\", \"is_robot_indexable\": true, \"report_reasons\": null, \"author\": \"bobcat\", \"discussion_type\": null, \"num_comments\": 72, \"send_replies\": true, \"whitelist_status\": \"all_ads\", \"contest_mode\": false, \"mod_reports\": [], \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/space/comments/avj2r/xkcd_spirit/\", \"parent_whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"http://www.xkcd.com/695\", \"subreddit_subscribers\": 17044131, \"created_utc\": 1264743147.0, \"num_crossposts\": 0, \"media\": null, \"is_video\": false}}, {\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"xkcd\", \"selftext\": \"\", \"author_fullname\": \"t2_y43f7\", \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"xkcd 695:Spirit\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/xkcd\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": \"xkcd\", \"downs\": 0, \"top_awarded_type\": null, \"hide_score\": false, \"name\": \"t3_4zgfc1\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.93, \"author_flair_background_color\": null, \"subreddit_type\": \"public\", \"ups\": 361, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"user_reports\": [], \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": \"XKCD\", \"can_mod_post\": false, \"score\": 361, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": null, \"is_self\": false, \"mod_note\": null, \"created\": 1472122774.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": null, \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://xkcd.com/695\", \"view_count\": null, \"archived\": true, \"no_follow\": false, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_2qh0z\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"4zgfc1\", \"is_robot_indexable\": true, \"report_reasons\": null, \"author\": \"jerryzhu2004\", \"discussion_type\": null, \"num_comments\": 40, \"send_replies\": true, \"whitelist_status\": \"all_ads\", \"contest_mode\": false, \"mod_reports\": [], \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/xkcd/comments/4zgfc1/xkcd_695spirit/\", \"parent_whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"http://xkcd.com/695\", \"subreddit_subscribers\": 135388, \"created_utc\": 1472093974.0, \"num_crossposts\": 0, \"media\": null, \"is_video\": false}}, {\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"BeachCity\", \"selftext\": \"\", \"author_fullname\": \"t2_101mty\", \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"Yellow Diamond trying to get White's attention reminds me of this xkcd comic\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/BeachCity\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"hide_score\": false, \"name\": \"t3_ajisxd\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.84, \"author_flair_background_color\": null, \"subreddit_type\": \"public\", \"ups\": 11, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"user_reports\": [], \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 11, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": null, \"is_self\": false, \"mod_note\": null, \"created\": 1548401986.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": null, \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://xkcd.com/695\", \"view_count\": null, \"archived\": true, \"no_follow\": false, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_3c6zb\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"ajisxd\", \"is_robot_indexable\": true, \"report_reasons\": null, \"author\": \"FredrickTheFish\", \"discussion_type\": null, \"num_comments\": 3, \"send_replies\": true, \"whitelist_status\": \"all_ads\", \"contest_mode\": false, \"mod_reports\": [], \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/BeachCity/comments/ajisxd/yellow_diamond_trying_to_get_whites_attention/\", \"parent_whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"http://xkcd.com/695\", \"subreddit_subscribers\": 53251, \"created_utc\": 1548373186.0, \"num_crossposts\": 0, \"media\": null, \"is_video\": false}}, {\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"eddit10yearsago\", \"selftext\": \"\", \"author_fullname\": \"t2_12z4mn\", \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"\\\"xkcd: Spirit\\\" - /r/science (+2410) [January 30, 2010]\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/eddit10yearsago\", \"hidden\": false, \"pwls\": null, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"hide_score\": false, \"name\": \"t3_ew5w3r\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 1.0, \"author_flair_background_color\": null, \"subreddit_type\": \"restricted\", \"ups\": 1, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"user_reports\": [], \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 1, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": null, \"is_self\": false, \"mod_note\": null, \"created\": 1580421819.0, \"link_flair_type\": \"text\", \"wls\": null, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": \"top\", \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://www.xkcd.com/695\", \"view_count\": null, \"archived\": false, \"no_follow\": true, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_vflnf\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"ew5w3r\", \"is_robot_indexable\": true, \"report_reasons\": null, \"author\": \"l_-_-_-_-_-_-_-_-_l\", \"discussion_type\": null, \"num_comments\": 1, \"send_replies\": false, \"whitelist_status\": null, \"contest_mode\": false, \"mod_reports\": [], \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/eddit10yearsago/comments/ew5w3r/xkcd_spirit_rscience_2410_january_30_2010/\", \"parent_whitelist_status\": null, \"stickied\": false, \"url\": \"http://www.xkcd.com/695\", \"subreddit_subscribers\": 2054, \"created_utc\": 1580393019.0, \"num_crossposts\": 0, \"media\": null, \"is_video\": false}}, {\"kind\": \"t3\", \"data\": {\"approved_at_utc\": null, \"subreddit\": \"reddit.com\", \"selftext\": \"\", \"author_fullname\": \"t2_3g6ao\", \"saved\": false, \"mod_reason_title\": null, \"gilded\": 0, \"clicked\": false, \"title\": \"Don't cry because it's over.  Smile because it happened.   (repost, because it's really over now)\", \"link_flair_richtext\": [], \"subreddit_name_prefixed\": \"r/reddit.com\", \"hidden\": false, \"pwls\": 6, \"link_flair_css_class\": null, \"downs\": 0, \"top_awarded_type\": null, \"hide_score\": false, \"name\": \"t3_hk49g\", \"quarantine\": false, \"link_flair_text_color\": \"dark\", \"upvote_ratio\": 0.5, \"author_flair_background_color\": null, \"subreddit_type\": \"archived\", \"ups\": 0, \"total_awards_received\": 0, \"media_embed\": {}, \"author_flair_template_id\": null, \"is_original_content\": false, \"user_reports\": [], \"secure_media\": null, \"is_reddit_media_domain\": false, \"is_meta\": false, \"category\": null, \"secure_media_embed\": {}, \"link_flair_text\": null, \"can_mod_post\": false, \"score\": 0, \"approved_by\": null, \"author_premium\": false, \"thumbnail\": \"\", \"edited\": false, \"author_flair_css_class\": null, \"author_flair_richtext\": [], \"gildings\": {}, \"content_categories\": null, \"is_self\": false, \"mod_note\": null, \"created\": 1306387665.0, \"link_flair_type\": \"text\", \"wls\": 6, \"removed_by_category\": null, \"banned_by\": null, \"author_flair_type\": \"text\", \"domain\": \"xkcd.com\", \"allow_live_comments\": false, \"selftext_html\": null, \"likes\": null, \"suggested_sort\": null, \"banned_at_utc\": null, \"url_overridden_by_dest\": \"http://xkcd.com/695\", \"view_count\": null, \"archived\": true, \"no_follow\": true, \"is_crosspostable\": true, \"pinned\": false, \"over_18\": false, \"all_awardings\": [], \"awarders\": [], \"media_only\": false, \"can_gild\": true, \"spoiler\": false, \"locked\": false, \"author_flair_text\": null, \"treatment_tags\": [], \"visited\": false, \"removed_by\": null, \"num_reports\": null, \"distinguished\": null, \"subreddit_id\": \"t5_6\", \"mod_reason_by\": null, \"removal_reason\": null, \"link_flair_background_color\": \"\", \"id\": \"hk49g\", \"is_robot_indexable\": true, \"report_reasons\": null, \"author\": \"one-half\", \"discussion_type\": null, \"num_comments\": 0, \"send_replies\": true, \"whitelist_status\": \"all_ads\", \"contest_mode\": false, \"mod_reports\": [], \"author_patreon_flair\": false, \"author_flair_text_color\": null, \"permalink\": \"/r/reddit.com/comments/hk49g/dont_cry_because_its_over_smile_because_it/\", \"parent_whitelist_status\": \"all_ads\", \"stickied\": false, \"url\": \"http://xkcd.com/695\", \"subreddit_subscribers\": 854735, \"created_utc\": 1306358865.0, \"num_crossposts\": 0, \"media\": null, \"is_video\": false}}], \"after\": null, \"before\": null}}]"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "17811",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 07 Jul 2020 00:48:13 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5926-MCI",
+          "X-Timer": "S1594082893.083359,VS0,VE272",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "415.0",
+          "x-ratelimit-reset": "107",
+          "x-ratelimit-used": "185",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/duplicates/avj2v/?limit=100&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-06T19:48:13",
+  "version": 1
+}

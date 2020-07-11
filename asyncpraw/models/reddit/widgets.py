@@ -296,13 +296,14 @@ class SubredditWidgets(AsyncPRAWBase):
 
     async def items(self):
         """Get this subreddit's widgets as a dict from ID to widget."""
-        items = {}
-        if not self._raw_items:
-            await self._fetch()
-        for item_name, data in self._raw_items.items():
-            data["subreddit"] = self.subreddit
-            items[item_name] = self._reddit._objector.objectify(data)
-        return items
+        if self._items is None:
+            if not self._raw_items:
+                await self._fetch()
+            self._items = {}
+            for item_name, data in self._raw_items.items():
+                data["subreddit"] = self.subreddit
+                self._items[item_name] = self._reddit._objector.objectify(data)
+        return self._items
 
     @cachedproperty
     def mod(self):
@@ -372,6 +373,7 @@ class SubredditWidgets(AsyncPRAWBase):
 
         """
         self._raw_items = None
+        self._items = None
         self._fetched = False
         self.subreddit = subreddit
         self.progressive_images = False
@@ -391,18 +393,8 @@ class SubredditWidgets(AsyncPRAWBase):
         )
 
         self._raw_items = data.pop("items")
+        self._items = None
         super().__init__(self.subreddit._reddit, data)
-
-        cached_property_names = [
-            "id_card",
-            "moderators_widget",
-            "sidebar",
-            "topbar",
-            "items",
-        ]
-        inst_dict_pop = self.__dict__.pop
-        for name in cached_property_names:
-            inst_dict_pop(name, None)
 
         self._fetched = True
 

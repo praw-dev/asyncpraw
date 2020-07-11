@@ -168,6 +168,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         if display_name:
             name = self.sluggify(display_name)
         else:
+            await self.load()
             display_name = self.display_name
             name = self.name
         data = {

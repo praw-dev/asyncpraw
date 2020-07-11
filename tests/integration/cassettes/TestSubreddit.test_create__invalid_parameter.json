@@ -1,0 +1,256 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "post",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 08 Jul 2020 01:24:09 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=bj8RZGwMQeyJ1XKt8P; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5940-MCI",
+          "X-Timer": "S1594171450.755368,VS0,VE93",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "allow_images",
+            null
+          ],
+          [
+            "allow_post_crossposts",
+            null
+          ],
+          [
+            "allow_top",
+            null
+          ],
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "collapse_deleted_comments",
+            null
+          ],
+          [
+            "comment_score_hide_mins",
+            null
+          ],
+          [
+            "description",
+            null
+          ],
+          [
+            "domain",
+            null
+          ],
+          [
+            "exclude_banned_modqueue",
+            null
+          ],
+          [
+            "header-title",
+            null
+          ],
+          [
+            "hide_ads",
+            null
+          ],
+          [
+            "key_color",
+            null
+          ],
+          [
+            "lang",
+            null
+          ],
+          [
+            "link_type",
+            "abcd"
+          ],
+          [
+            "name",
+            "PRAW_iavynavff2"
+          ],
+          [
+            "over_18",
+            null
+          ],
+          [
+            "public_description",
+            null
+          ],
+          [
+            "public_traffic",
+            null
+          ],
+          [
+            "show_media",
+            null
+          ],
+          [
+            "show_media_preview",
+            null
+          ],
+          [
+            "spam_comments",
+            null
+          ],
+          [
+            "spam_links",
+            null
+          ],
+          [
+            "spam_selfposts",
+            null
+          ],
+          [
+            "spoilers_enabled",
+            null
+          ],
+          [
+            "sr",
+            null
+          ],
+          [
+            "submit_link_label",
+            null
+          ],
+          [
+            "submit_text",
+            null
+          ],
+          [
+            "submit_text_label",
+            null
+          ],
+          [
+            "suggested_comment_sort",
+            null
+          ],
+          [
+            "title",
+            "sub"
+          ],
+          [
+            "type",
+            "public"
+          ],
+          [
+            "wiki_edit_age",
+            null
+          ],
+          [
+            "wiki_edit_karma",
+            null
+          ],
+          [
+            "wikimode",
+            "disabled"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/site_admin/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"json\": {\"errors\": [[\"INVALID_OPTION\", \"that option is not valid\", \"link_type\"]]}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "83",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 08 Jul 2020 01:24:10 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jmqadbdjrqnggelajg.0.1594171449977.Z0FBQUFBQmZCU0E1TnM4WGFJVWt1bWUzdkpMVHNiR0xFMS1rSklodUk1Z0tJbXpKQ2Zsc1JCUnB1T1Vtd2tjNkFhNXZCTzZwWTM0bUZ0YWF3NVYtbmdsUUlObWdGY3VMOUFMZ2NobnZUZ2JOQmhuN2xyWHRiQUlVVTJxaUJWTXJiXzBLMUQwZ183LTQ; Domain=reddit.com; Max-Age=7199; Path=/; expires=Wed, 08-Jul-2020 03:24:10 GMT; secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5922-MCI",
+          "X-Timer": "S1594171450.919766,VS0,VE132",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "364.0",
+          "x-ratelimit-reset": "351",
+          "x-ratelimit-used": "236",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/site_admin/?raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-07T20:24:10",
+  "version": 1
+}

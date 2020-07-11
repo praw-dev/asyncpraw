@@ -52,7 +52,7 @@ class TestLiveThread(IntegrationTest):
 
     async def test_init(self):
         with self.use_cassette():
-            thread = await self.reddit.live("ukaeu1ik4sw5")
+            thread = await self.reddit.live("ukaeu1ik4sw5", fetch=True)
             assert thread.title == "reddit updates"
 
     async def test_discussions(self):
@@ -235,7 +235,7 @@ class TestLiveThreadContribution(IntegrationTest):
         thread = LiveThread(self.reddit, "1595195m6j9zw")
         with self.use_cassette():
             await thread.contrib.update(**new_settings)
-            thread = await self.reddit.live("1595195m6j9zw")
+            thread = await self.reddit.live("1595195m6j9zw", fetch=True)
             assert thread.title == new_settings["title"]
             assert thread.description == old_settings["description"]
             assert thread.nsfw == new_settings["nsfw"]
@@ -253,7 +253,7 @@ class TestLiveThreadContribution(IntegrationTest):
         thread = LiveThread(self.reddit, "1595195m6j9zw")
         with self.use_cassette():
             await thread.contrib.update(**new_settings)
-            thread = await self.reddit.live("1595195m6j9zw")
+            thread = await self.reddit.live("1595195m6j9zw", fetch=True)
             assert thread.title == new_settings["title"]
             assert thread.description == new_settings["description"]
             assert thread.nsfw == new_settings["nsfw"]

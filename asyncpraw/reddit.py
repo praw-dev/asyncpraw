@@ -796,7 +796,7 @@ class Reddit:
                 # filed a bug against it.
                 raise Exception(
                     "Unexpected BadRequest without json body. Please file a "
-                    "bug at https://github.com/praw-dev/praw/issues"
+                    "bug at https://github.com/praw-dev/asyncpraw/issues"
                 ) from exception
             if set(data) == {"error", "message"}:
                 raise

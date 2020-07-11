@@ -276,6 +276,5 @@ class SubredditHelper(AsyncPRAWBase):
             wikimode=wikimode,
             **other_settings
         )
-        subreddit = self(name)
-        await subreddit._fetch()
+        subreddit = await self(name, fetch=True)
         return subreddit
