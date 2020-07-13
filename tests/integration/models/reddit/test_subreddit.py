@@ -322,15 +322,16 @@ class TestSubreddit(IntegrationTest):
             await submission.load()
             assert submission.spoiler is True
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: does not raise
-    # async def test_submit__verify_invalid(self, _):
-    #     self.reddit.read_only = False
-    #     self.reddit.validate_on_submit = True
-    #     with self.use_cassette():
-    #         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #         # with pytest.raises(
-    #         #     (RedditAPIException, BadRequest)):  # waiting for prawcore fix
-    #         await subreddit.submit("dfgfdgfdgdf", url="https://www.google.com")
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_submit__verify_invalid(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            self.reddit.validate_on_submit = True
+            with pytest.raises(
+                (RedditAPIException, BadRequest)
+            ):  # waiting for prawcore fix
+                await subreddit.submit("dfgfdgfdgdf", url="https://www.google.com")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_submit_poll(self, _):
@@ -798,7 +799,7 @@ class TestSubredditFilters(IntegrationTest):
             subreddit = await self.reddit.subreddit("all")
             await subreddit.filters.add(await self.reddit.subreddit("redditdev"))
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not passing
+    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: no longer rases not found; same with praw
     # async def test_add__non_special(self, _):
     #     self.reddit.read_only = False
     #     with self.use_cassette():
@@ -820,7 +821,7 @@ class TestSubredditFilters(IntegrationTest):
             subreddit = await self.reddit.subreddit("mod")
             await subreddit.filters.remove(await self.reddit.subreddit("redditdev"))
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not passing
+    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: no longer rases not found; same with praw
     # async def test_remove__non_special(self, _):
     #     self.reddit.read_only = False
     #     with self.use_cassette():
@@ -879,23 +880,23 @@ class TestSubredditFlair(IntegrationTest):
             assert len(response) == 1
             assert all("removed" in x["status"] for x in response)
 
-    # async def test_set__flair_id(self): # FIXME: not passing raises 403
-    #     self.reddit.read_only = False
-    #     with self.use_cassette():
-    #         redditor = await self.reddit.redditor(pytest.placeholders.username)
-    #         flair = "28ceb4e4-c248-11ea-90b9-0ee43b65cd4b"
-    #         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #         await subreddit.flair.set(
-    #             redditor, "redditor flair", flair_template_id=flair
-    #         )
-    #
-    # async def test_set__flair_id_default_text(self): # FIXME: not passing raises 403
-    #     self.reddit.read_only = False
-    #     with self.use_cassette():
-    #         redditor = await self.reddit.redditor(pytest.placeholders.username)
-    #         flair = "28ceb4e4-c248-11ea-90b9-0ee43b65cd4b"
-    #         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #         await subreddit.flair.set(redditor, flair_template_id=flair)
+    async def test_set__flair_id(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            flair = "c99ff6d0-c559-11ea-b93b-0ef0f80279f1"
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            await subreddit.flair.set(
+                redditor, "redditor flair", flair_template_id=flair
+            )
+
+    async def test_set__flair_id_default_text(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            redditor = await self.reddit.redditor(pytest.placeholders.username)
+            flair = "c99ff6d0-c559-11ea-b93b-0ef0f80279f1"
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            await subreddit.flair.set(redditor, flair_template_id=flair)
 
     async def test_set__redditor(self):
         self.reddit.read_only = False

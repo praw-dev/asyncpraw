@@ -44,7 +44,8 @@ class TestRedditor(IntegrationTest):
             assert self.FRIEND == redditor
             assert "date" in redditor.__dict__
             assert "created_utc" not in redditor.__dict__
-            # assert  hasattr(redditor, "created_utc") # FIXME: what is this for?
+            await redditor.load()
+            assert hasattr(redditor, "created_utc")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_fullname_init(self, _):

@@ -447,7 +447,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         """Return the class's kind."""
         return self._reddit.config.kinds["submission"]
 
-    async def comments(self) -> CommentForest:  # TODO: this might need changed
+    async def comments(self) -> CommentForest:
         """Provide an instance of :class:`.CommentForest`.
 
         This attribute can use used, for example, to obtain a flat list of

@@ -279,12 +279,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         """
         # pylint: disable=no-member
 
-        if "submission" in self.__dict__:  # TODO: needs test for coverage
-            if not self.submission._fetched:
-                await self.submission._fetch()
-        else:
-            await self._fetch()
-            await self.submission._fetch()
+        await self._fetch()
+        await self.submission._fetch()
         if self.parent_id == self.submission.fullname:
             return self.submission
 

@@ -39,16 +39,16 @@
           "Connection": "close",
           "Content-Length": "371",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Mon, 13 Jul 2020 22:24:42 GMT",
+          "Date": "Mon, 13 Jul 2020 23:14:27 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "edgebucket=JNodfTARQkoYvckE5b; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=50gtmGALh488rnsfdb; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5924-MCI",
-          "X-Timer": "S1594679083.697871,VS0,VE123",
+          "X-Served-By": "cache-mci5937-MCI",
+          "X-Timer": "S1594682067.212725,VS0,VE95",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -62,48 +62,7 @@
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "kind",
-            "link"
-          ],
-          [
-            "nsfw",
-            false
-          ],
-          [
-            "resubmit",
-            true
-          ],
-          [
-            "sendreplies",
-            true
-          ],
-          [
-            "spoiler",
-            false
-          ],
-          [
-            "sr",
-            "<TEST_SUBREDDIT>"
-          ],
-          [
-            "title",
-            "dfgfdgfdgdf"
-          ],
-          [
-            "url",
-            "https://www.google.com"
-          ],
-          [
-            "validate_on_submit",
-            true
-          ]
-        ],
+        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -115,34 +74,34 @@
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
-        "method": "POST",
-        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/recommend/sr/earthporn?omit=cityporn&raw_json=1"
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": [[\"SUBMIT_VALIDATION_TITLE_BLACKLISTED_STRING\", \"You may not have \\\"dfgfdgfdgdf\\\" in your title.\", \"title\"], [\"SUBMIT_VALIDATION_TITLE_REGEX_REQUIREMENT\", \"Your title does not meet the requirements for this community. See the rules for more details.\", \"title\"]]}}"
+          "string": "[]"
         },
         "headers": {
           "Accept-Ranges": "bytes",
           "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
-          "Content-Length": "283",
+          "Content-Length": "2",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Mon, 13 Jul 2020 22:24:43 GMT",
+          "Date": "Mon, 13 Jul 2020 23:14:27 GMT",
           "Expires": "-1",
           "Server": "snooserv",
-          "Set-Cookie": "session_tracker=qoamcolbipgcbfidre.0.1594679083015.Z0FBQUFBQmZETjhyb2k2VGxXcXZMQlZlbS1DaTlIRGsxZElBc0wtU3RFR1FiSDQ5TWE4NEpENG5wMC0yeFJXeGZwOExIQnJiNnFOUmtFVkVmNUZCd3pMUnBOd283Vk43SGd4VWxXdDAtS21mUUc0SHF4d3NkRTBXVXhEUDJudXN4cXN3SnNjd3pXdlY; Domain=reddit.com; Max-Age=7199; Path=/; expires=Tue, 14-Jul-2020 00:24:43 GMT; secure",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5944-MCI",
-          "X-Timer": "S1594679083.954178,VS0,VE127",
+          "X-Served-By": "cache-mci5931-MCI",
+          "X-Timer": "S1594682067.392460,VS0,VE104",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-ratelimit-remaining": "599.0",
-          "x-ratelimit-reset": "317",
+          "x-ratelimit-reset": "333",
           "x-ratelimit-used": "1",
           "x-ua-compatible": "IE=edge",
           "x-xss-protection": "1; mode=block"
@@ -151,10 +110,10 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/submit/?raw_json=1"
+        "url": "https://oauth.reddit.com/api/recommend/sr/earthporn?omit=cityporn&raw_json=1"
       }
     }
   ],
-  "recorded_at": "2020-07-13T17:24:43",
+  "recorded_at": "2020-07-13T18:14:27",
   "version": 1
 }

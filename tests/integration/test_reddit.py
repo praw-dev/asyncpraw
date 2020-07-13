@@ -62,7 +62,7 @@ class TestReddit(IntegrationTest):
             await live._fetch()
             assert live.title == "PRAW Create Test"
 
-    # async def test_live_info__contain_invalid_id(self): # FIXME: Currently not working
+    # async def test_live_info__contain_invalid_id(self): # FIXME: not currently working; returns 500; same with praw
     #     ids = [
     #         "3rgnbke2rai6hen7ciytwcxadi",
     #         "LiveUpdateEvent_sw7bubeycai6hey4ciytwamw3a",  # invalid
@@ -72,8 +72,8 @@ class TestReddit(IntegrationTest):
     #     with self.use_cassette():
     #         threads = await self.async_list(gen)
     #     assert len(threads) == 2
-    #
-    # @mock.patch("asyncio.sleep", return_value=None)
+
+    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working; returns 500; same with praw
     # async def test_live_info(self, _):
     #     ids = """
     #     ta40aifzobnv ta40l9u2ermf ta40ucdiq366 ta416hjgvbhy ta41ln5vsyaz
@@ -112,7 +112,7 @@ class TestReddit(IntegrationTest):
     #     assert thread_ids != ids
     #     assert sorted(thread_ids) == ids
 
-    # async def test_live_now__featured(self): # FIXME: nothing featured
+    # async def test_live_now__featured(self): # TODO: record when something is featured
     #     with self.use_cassette():
     #         thread = await self.reddit.live.now()
     #     assert isinstance(thread, LiveThread)

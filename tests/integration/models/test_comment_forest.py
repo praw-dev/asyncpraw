@@ -62,7 +62,7 @@ class TestCommentForest(IntegrationTest):
             skipped = await comments.replace_more(1)
             assert len(skipped) == 5
 
-    # async def test_replace__skip_below_threshold(self): # FIXME: test not currently working
+    # async def test_replace__skip_below_threshold(self): # FIXME: not currently working; same with praw
     #     with self.use_cassette(match_requests_on=["uri", "method", "body"]):
     #         submission = Submission(self.reddit, "hkwbo0")
     #         comments = await submission.comments()

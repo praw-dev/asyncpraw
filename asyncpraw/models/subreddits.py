@@ -137,7 +137,7 @@ class Subreddits(AsyncPRAWBase):
 
     async def search_by_topic(
         self, query: str
-    ) -> List[Subreddit]:  # pragma: no cover; not currently working
+    ) -> List[Subreddit]:  # pragma: no cover; TODO: not currently working
         """Return list of Subreddits whose topics match ``query``.
 
         :param query: Search for subreddits relevant to the search topic.

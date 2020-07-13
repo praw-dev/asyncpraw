@@ -2770,11 +2770,9 @@ class ModeratorRelationship(SubredditRelationship):
             await subreddit.moderator.leave()
 
         """
-        if self.subreddit._reddit.config.username:
-            username = self.subreddit._reddit.config.username
-        else:
-            me = await self.subreddit._reddit.user.me()
-            username = me.name
+        username = self.subreddit._reddit.config.username or str(
+            await self.subreddit._reddit.user.me()
+        )
         await self.remove(username)
 
     async def remove_invite(self, redditor):

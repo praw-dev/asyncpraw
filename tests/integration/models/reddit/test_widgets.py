@@ -57,7 +57,7 @@ class TestButtonWidget(IntegrationTest):
 
             assert subreddit == button_widget.subreddit
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working
+    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working; same with praw
     # async def test_create_and_update_and_delete(self, _):
     #     self.reddit.read_only = False
     #
@@ -298,7 +298,7 @@ class TestCommunityList(IntegrationTest):
 
 class TestCustomWidget(IntegrationTest):
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working
+    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working; same with praw
     # async def test_create_and_update_and_delete(self, _):
     #     self.reddit.read_only = False
     #
@@ -742,7 +742,7 @@ class TestSubredditWidgets(IntegrationTest):
         with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             assert isinstance(await widgets.items(), dict)
 
-    # async def test_progressive_images(self): # FIXME: not working
+    # async def test_progressive_images(self): # FIXME: not currently working; same with praw
     #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
     #     widgets = subreddit.widgets
     #
