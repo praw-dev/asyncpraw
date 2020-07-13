@@ -25,11 +25,10 @@ class TestEmoji(UnitTest):
         assert emoji1 != emoji6
         assert emoji1 != 5
 
-    # FIXME: unit tests can't make requests
-    # async def test__get(self):
-    #     subreddit = Subreddit(self.reddit, display_name="a")
-    #     emoji = subreddit.emoji.get_emoji("a")
-    #     assert isinstance(emoji, Emoji)
+    async def test__get(self):
+        subreddit = Subreddit(self.reddit, display_name="a")
+        emoji = await subreddit.emoji.get_emoji("a", lazy=True)
+        assert isinstance(emoji, Emoji)
 
     def test_hash(self):
         emoji1 = Emoji(self.reddit, subreddit=Subreddit(self.reddit, "a"), name="x")

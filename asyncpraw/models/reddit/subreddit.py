@@ -3203,8 +3203,9 @@ class SubredditStylesheet:
             image.seek(0)
             data["img_type"] = "jpg" if header == JPEG_HEADER else "png"
             url = API_PATH["upload_image"].format(subreddit=self.subreddit)
-            data["file"] = image
-            response = await self.subreddit._reddit.post(url, data=data)
+            response = await self.subreddit._reddit.post(
+                url, data=data, files={"file": image}
+            )
             if response["errors"]:
                 error_type = response["errors"][0]
                 error_value = response.get("errors_values", [""])[0]
@@ -3228,9 +3229,8 @@ class SubredditStylesheet:
         upload_url = "https:{}".format(upload_lease["action"])
 
         with open(image_path, "rb") as image:
-            upload_data["file"] = image
             response = await self.subreddit._reddit._core._requestor._http.post(
-                upload_url, data=upload_data
+                upload_url, data=upload_data, files={"file": image}
             )
         response.raise_for_status()
 

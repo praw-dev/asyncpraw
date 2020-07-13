@@ -145,10 +145,11 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a Subreddit for emoji."""
 
-    async def get_emoji(self, name: str) -> Emoji:
+    async def get_emoji(self, name: str, lazy: bool = False) -> Emoji:
         """Return the Emoji for the subreddit named ``name``.
 
         :param name: The name of the emoji
+        :param lazy: Determines if object is loaded lazily (default: False)
 
         This method is to be used to fetch a specific emoji url, like so:
 
@@ -158,9 +159,20 @@ class SubredditEmoji:
             emoji = await subreddit.emoji.get_emoji("test")
             print(emoji)
 
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("praw_test")
+            emoji = await subreddit.emoji.get_emoji("test", lazy=True)
+            await emoji.delete()
+
         """
         emoji = Emoji(self._reddit, self.subreddit, name)
-        await emoji._fetch()
+        if not lazy:
+            await emoji._fetch()
         return emoji
 
     def __init__(self, subreddit: "Subreddit"):

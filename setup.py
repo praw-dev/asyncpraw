@@ -27,8 +27,9 @@ extras = {
     "test": [
         "pytest >=2.7.3",
         "asynctest >=0.13.0",
-        "vcrpy @ git+https://github.com/LilSpazJoekp/vcrpy.git#egg=vcrpy-4.0.2",  # temporary fix
+        "pytest-asyncio",
         "pytest-vcr",
+        "vcrpy==4.0.2",
         "mock >=0.8",
         "testfixtures >4.13.2, <7",
     ],

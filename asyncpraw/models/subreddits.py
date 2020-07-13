@@ -135,18 +135,20 @@ class Subreddits(AsyncPRAWBase):
         )
         return [await self._reddit.subreddit(x) for x in result["names"]]
 
-    async def search_by_topic(self, query: str) -> List[Subreddit]:
+    async def search_by_topic(
+        self, query: str
+    ) -> List[Subreddit]:  # pragma: no cover; not currently working
         """Return list of Subreddits whose topics match ``query``.
 
         :param query: Search for subreddits relevant to the search topic.
 
         """
-        result = await self._reddit.get(
+        results = await self._reddit.get(
             API_PATH["subreddits_by_topic"], params={"query": query}
         )
-        return [
-            await self._reddit.subreddit(x["name"]) for x in result if x.get("name")
-        ]
+        for result in results:
+            subreddit = await self._reddit.subreddit(result["name"])
+            yield subreddit
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]

@@ -279,7 +279,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         """
         # pylint: disable=no-member
 
-        if "submission" in self.__dict__:
+        if "submission" in self.__dict__:  # TODO: needs test for coverage
             if not self.submission._fetched:
                 await self.submission._fetch()
         else:

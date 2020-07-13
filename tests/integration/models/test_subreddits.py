@@ -70,6 +70,14 @@ class TestSubreddits(IntegrationTest):
                 found = True
             assert found
 
+    # async def test_search_by_topic(self):
+    #     with self.use_cassette():
+    #         found = False
+    #         async for subreddit in self.reddit.subreddits.search_by_topic("sports"):
+    #             assert isinstance(subreddit, Subreddit)
+    #             found = True
+    #         assert found
+
     async def test_search_by_name(self):
         with self.use_cassette():
             subreddits = await self.reddit.subreddits.search_by_name("reddit")

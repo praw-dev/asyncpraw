@@ -11,10 +11,10 @@ from aiohttp.http_websocket import WebSocketError
 import pytest
 from asyncprawcore import (
     BadRequest,
-    # Forbidden,
+    Forbidden,
     NotFound,
     # RequestException,
-    # TooLarge,
+    TooLarge,
 )
 
 from asyncpraw.const import PNG_HEADER
@@ -201,27 +201,27 @@ class TestSubreddit(IntegrationTest):
             ]
             assert list(data) == tags
 
-    # async def test_random(self): # FIXME: passes the first time but fails after that
-    #     with self.use_cassette():
-    #         subreddit = await self.reddit.subreddit("pics")
-    #         submissions = [
-    #             await subreddit.random(),
-    #             await subreddit.random(),
-    #             await subreddit.random(),
-    #             await subreddit.random(),
-    #         ]
-    #     assert len(submissions) == len(set(submissions))
-    #
-    # async def test_random__returns_none(self):
-    #     with self.use_cassette():
-    #         subreddit = await self.reddit.subreddit("wallpapers")
-    #         assert await subreddit.random() is None
-    #
-    # async def test_sticky(self):
-    #     subreddit = await self.reddit.subreddit('pics')
-    #     with self.use_cassette():
-    #         submission = await subreddit.sticky()
-    #         assert isinstance(submission, Submission)
+    async def test_random(self):
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit("pics")
+            submissions = [
+                await subreddit.random(),
+                await subreddit.random(),
+                await subreddit.random(),
+                await subreddit.random(),
+            ]
+        assert len(submissions) == len(set(submissions))
+
+    async def test_random__returns_none(self):
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit("wallpapers")
+            assert await subreddit.random() is None
+
+    async def test_sticky(self):
+        subreddit = await self.reddit.subreddit("pics")
+        with self.use_cassette():
+            submission = await subreddit.sticky()
+            assert isinstance(submission, Submission)
 
     async def test_sticky__not_set(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1507,26 +1507,25 @@ class TestSubredditModmail(IntegrationTest):
             assert isinstance(await subreddit.modmail.unread_count(), dict)
 
 
-#
-# class TestSubredditQuarantine(IntegrationTest): # FIXME: passes the first time but fails after that
-#     @mock.patch("asyncio.sleep", return_value=None)
-#     async def test_opt_in(self, _):
-#         self.reddit.read_only = False
-#         subreddit = await self.reddit.subreddit("tiananmenaquarefalse")
-#         with self.use_cassette():
-#             with pytest.raises(Forbidden):
-#                 await self.async_next(subreddit.top())
-#             await subreddit.quaran.opt_in()
-#             assert isinstance(await self.async_next(subreddit.top()), Submission)
-#
-#     @mock.patch("asyncio.sleep", return_value=None)
-#     async def test_opt_out(self, _):
-#         self.reddit.read_only = False
-#         subreddit = await self.reddit.subreddit("tiananmenaquarefalse")
-#         with self.use_cassette():
-#             await subreddit.quaran.opt_out()
-#             with pytest.raises(Forbidden):
-#                 await self.async_next(subreddit.new())
+class TestSubredditQuarantine(IntegrationTest):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_opt_in(self, _):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit("tiananmenaquarefalse")
+        with self.use_cassette():
+            with pytest.raises(Forbidden):
+                await self.async_next(subreddit.top())
+            await subreddit.quaran.opt_in()
+            assert isinstance(await self.async_next(subreddit.top()), Submission)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_opt_out(self, _):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit("tiananmenaquarefalse")
+        with self.use_cassette():
+            await subreddit.quaran.opt_out()
+            with pytest.raises(Forbidden):
+                await self.async_next(subreddit.new())
 
 
 class TestSubredditRelationships(IntegrationTest):
@@ -1710,10 +1709,11 @@ class TestSubredditStreams(IntegrationTest):
             except TypeError:
                 pass
             # This test uses the same cassette as test_comments which shows
-            # that there are at least 400 comments in the stream.
+            # that there are at least 100 comments in the stream.
             assert count < 102
 
-    async def test_submissions(self):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_submissions(self, _):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit("all")
             generator = subreddit.stream.submissions()
@@ -1894,42 +1894,43 @@ class TestSubredditStylesheet(IntegrationTest):
         with self.use_cassette():
             await subreddit.stylesheet.update("div { color: red; }", reason="use div")
 
-    #
-    # async def test_upload(self): # FIXME: will pass when asyncprawcore is fixed
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         response = await subreddit.stylesheet.upload(
-    #             "asyncpraw", image_path("white-square.png")
-    #         )
-    #     assert response["img_src"].endswith(".png")
-    #
-    # async def test_upload__invalid(self):
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         with pytest.raises(RedditAPIException) as excinfo:
-    #             await subreddit.stylesheet.upload(
-    #                 "asyncpraw", image_path("invalid.jpg")
-    #             )
-    #     assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
+    async def test_upload(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            response = await subreddit.stylesheet.upload(
+                "asyncpraw", image_path("white-square.png")
+            )
+        assert response["img_src"].endswith(".png")
 
-    # async def test_upload__invalid_ext(self): FIXME: Does not throw error anymore
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         with pytest.raises(RedditAPIException) as excinfo:
-    #             await subreddit.stylesheet.upload("asyncpraw", image_path("white-square.png"))
-    #     assert excinfo.value.items[0].error_type == "BAD_CSS_NAME"
+    async def test_upload__invalid(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as excinfo:
+                await subreddit.stylesheet.upload(
+                    "asyncpraw", image_path("invalid.jpg")
+                )
+        assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
 
-    # async def test_upload__too_large(self): # FIXME: will pass when asyncprawcore is fixed
-    #     self.reddit.read_only = False
-    #     with self.use_cassette():
-    #         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #         with pytest.raises(TooLarge):
-    #             await subreddit.stylesheet.upload(
-    #                 "asyncpraw", image_path("too_large.jpg")
-    #             )
+    async def test_upload__invalid_ext(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as excinfo:
+                await subreddit.stylesheet.upload(
+                    "asyncpraw", image_path("white-square.png")
+                )
+        assert excinfo.value.items[0].error_type == "BAD_CSS_NAME"
+
+    async def test_upload__too_large(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            with pytest.raises(TooLarge):
+                await subreddit.stylesheet.upload(
+                    "asyncpraw", image_path("too_large.jpg")
+                )
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_upload_banner__jpg(self, _):
@@ -1997,71 +1998,71 @@ class TestSubredditStylesheet(IntegrationTest):
                 image_path("white-square.png")
             )
 
-    # async def test_upload_header__jpg(self): # FIXME: will pass when asyncprawcore is fixed
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         response = await subreddit.stylesheet.upload_header(
-    #             image_path("white-square.jpg")
-    #         )
-    #     assert response["img_src"].endswith(".jpg")
-    #
-    # async def test_upload_header__png(self):
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         response = await subreddit.stylesheet.upload_header(
-    #             image_path("white-square.png")
-    #         )
-    #     assert response["img_src"].endswith(".png")
-    #
-    # async def test_upload_mobile_header(self):
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         response = await subreddit.stylesheet.upload_mobile_header(
-    #             image_path("header.jpg")
-    #         )
-    #     assert response["img_src"].endswith(".jpg")
-    #
-    # async def test_upload_mobile_icon(self):
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         response = await subreddit.stylesheet.upload_mobile_icon(
-    #             image_path("icon.jpg")
-    #         )
-    #     assert response["img_src"].endswith(".jpg")
-    #
-    # @mock.patch("asyncio.sleep", return_value=None)
-    # async def test_upload__others_invalid(self, _):
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         for method in [
-    #             "upload_header",
-    #             "upload_mobile_header",
-    #             "upload_mobile_icon",
-    #         ]:
-    #             with pytest.raises(RedditAPIException) as excinfo:
-    #                 await getattr(subreddit.stylesheet, method)(
-    #                     image_path("invalid.jpg")
-    #                 )
-    #             assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
-    #
-    # async def test_upload__others_too_large(self):
-    #     self.reddit.read_only = False
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     with self.use_cassette():
-    #         for method in [
-    #             "upload_header",
-    #             "upload_mobile_header",
-    #             "upload_mobile_icon",
-    #         ]:
-    #             with pytest.raises(TooLarge):
-    #                 await getattr(subreddit.stylesheet, method,)(
-    #                     image_path("too_large.jpg")
-    #                 )
+    async def test_upload_header__jpg(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            response = await subreddit.stylesheet.upload_header(
+                image_path("white-square.jpg")
+            )
+        assert response["img_src"].endswith(".jpg")
+
+    async def test_upload_header__png(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            response = await subreddit.stylesheet.upload_header(
+                image_path("white-square.png")
+            )
+        assert response["img_src"].endswith(".png")
+
+    async def test_upload_mobile_header(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            response = await subreddit.stylesheet.upload_mobile_header(
+                image_path("header.jpg")
+            )
+        assert response["img_src"].endswith(".jpg")
+
+    async def test_upload_mobile_icon(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            response = await subreddit.stylesheet.upload_mobile_icon(
+                image_path("icon.jpg")
+            )
+        assert response["img_src"].endswith(".jpg")
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_upload__others_invalid(self, _):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            for method in [
+                "upload_header",
+                "upload_mobile_header",
+                "upload_mobile_icon",
+            ]:
+                with pytest.raises(RedditAPIException) as excinfo:
+                    await getattr(subreddit.stylesheet, method)(
+                        image_path("invalid.jpg")
+                    )
+                assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
+
+    async def test_upload__others_too_large(self):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            for method in [
+                "upload_header",
+                "upload_mobile_header",
+                "upload_mobile_icon",
+            ]:
+                with pytest.raises(TooLarge):
+                    await getattr(subreddit.stylesheet, method,)(
+                        image_path("too_large.jpg")
+                    )
 
 
 class TestSubredditWiki(IntegrationTest):

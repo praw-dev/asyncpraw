@@ -47,11 +47,10 @@ class TestRemovalReason(UnitTest):
                 _data={},
             )
 
-    # FIXME: unit tests can't make requests
-    # def test__get(self):
-    #     subreddit = Subreddit(self.reddit, display_name="a")
-    #     removal_reason = subreddit.mod.removal_reasons.get_reason("a")
-    #     assert isinstance(removal_reason, RemovalReason)
+    async def test__get(self):
+        subreddit = Subreddit(self.reddit, display_name="a")
+        removal_reason = await subreddit.mod.removal_reasons.get_reason("a", lazy=True)
+        assert isinstance(removal_reason, RemovalReason)
 
     def test_hash(self):
         reason1 = RemovalReason(

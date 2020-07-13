@@ -143,10 +143,11 @@ class RemovalReason(RedditBase):
 class SubredditRemovalReasons:
     """Provide a set of functions to a Subreddit's removal reasons."""
 
-    async def get_reason(self, reason_id: str) -> RemovalReason:
-        """Return the Removal Reason with the ID/number/slice ``reason_id``.
+    async def get_reason(self, reason_id: str, lazy: bool = False) -> RemovalReason:
+        """Return the Removal Reason with the ID ``reason_id``.
 
         :param reason_id: The ID or index of the removal reason
+        :param lazy: Determines if object is loaded lazily (default: False).
 
         This method is to be used to fetch a specific removal reason, like so:
 
@@ -157,9 +158,20 @@ class SubredditRemovalReasons:
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
             print(reason)
 
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            reason_id = "141vv5c16py7d"
+            subreddit = await reddit.subreddit("NAME")
+            reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
+            await reason.delete()
+
         """
         reason = RemovalReason(self._reddit, self.subreddit, reason_id)
-        await reason._fetch()
+        if not lazy:
+            await reason._fetch()
         return reason
 
     def __init__(self, subreddit: "Subreddit"):

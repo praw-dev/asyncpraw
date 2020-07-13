@@ -26,7 +26,6 @@ class LiveContributorRelationship:
             permissions = set(permissions)
         return ",".join("+{}".format(x) for x in permissions)
 
-    # TODO: this is implemented differently than in praw
     def __call__(self,) -> AsyncGenerator:  # noqa: D202
         """Return a :class:`.RedditorList` for live threads' contributors.
 
@@ -357,11 +356,11 @@ class LiveThread(RedditBase):
             return other == str(self)
         return isinstance(other, self.__class__) and str(self) == str(other)
 
-    async def get_update(self, update_id: str) -> "LiveUpdate":
+    async def get_update(self, update_id: str, lazy: bool = False) -> "LiveUpdate":
         """Return a :class:`.LiveUpdate` instance.
 
-        :param update_id: A live update ID, e.g.,
-            ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
+        :param update_id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
+        :param lazy: Determines if object is loaded lazily (default: False).
 
         Usage:
 
@@ -372,9 +371,19 @@ class LiveThread(RedditBase):
             update.thread     # LiveThread(id="ukaeu1ik4sw5")
             update.id         # "7827987a-c998-11e4-a0b9-22000b6a88d2"
             update.author     # "umbrae"
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", lazy=True)
+            update.contrib  # LiveUpdateContribution instance
         """
         update = LiveUpdate(self._reddit, self.id, update_id)
-        await update._fetch()
+        if not lazy:
+            await update._fetch()
         return update
 
     def __hash__(self) -> int:
@@ -595,7 +604,7 @@ class LiveThreadContribution:
         }
 
         url = API_PATH["live_update_thread"].format(id=self.thread.id)
-        # asyncprawcore (0.7.0) Session.request() modifies `data` kwarg
+        # prawcore (0.7.0) Session.request() modifies `data` kwarg
         await self.thread._reddit.post(url, data=data.copy())
         self.thread._reset_attributes(*data.keys())  # TODO: see if this is necessary
 
@@ -694,7 +703,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", lazy=True)
             update.contrib  # LiveUpdateContribution instance
 
         """
@@ -705,12 +714,6 @@ class LiveUpdate(FullnameMixin, RedditBase):
         """Return :class:`.LiveThread` object the update object belongs to."""
         return self._thread
 
-    # TODO: this will need implemented differently; possibly changed to async
-    # for example:
-    # async def __ainit__(..):
-    #     ...
-    # __init__ = __ainit__
-
     def __init__(
         self,
         reddit: "Reddit",
@@ -720,20 +723,18 @@ class LiveUpdate(FullnameMixin, RedditBase):
     ):
         """Initialize a lazy :class:`.LiveUpdate` instance.
 
-        Either ``thread_id`` and ``update_id``, or ``_data`` must be
-        provided.
+        Either ``thread_id`` and ``update_id``, or ``_data`` must be provided.
 
         :param reddit: An instance of :class:`.Reddit`.
         :param thread_id: A live thread ID, e.g., ``"ukaeu1ik4sw5"``.
-        :param update_id: A live update ID, e.g.,
-            ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
+        :param update_id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
 
         Usage:
 
         .. code-block:: python
 
-            update = LiveUpdate(reddit, "ukaeu1ik4sw5",
-                               "7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update = LiveUpdate(reddit, "ukaeu1ik4sw5", "7827987a-c998-11e4-a0b9-22000b6a88d2")
+            await update.load()
             update.thread     # LiveThread(id="ukaeu1ik4sw5")
             update.id         # "7827987a-c998-11e4-a0b9-22000b6a88d2"
             update.author     # "umbrae"

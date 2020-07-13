@@ -143,7 +143,6 @@ class CustomPersister(FilesystemPersister):
             f.write(data)
 
 
-vcr_placeholders = [(v, f"<{k.upper()}>") for k, v in placeholders.items()]
 VCR = CustomVCR(
     serializer="custom_serializer",
     cassette_library_dir="tests/integration/cassettes",

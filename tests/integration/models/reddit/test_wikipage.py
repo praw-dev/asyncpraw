@@ -61,8 +61,7 @@ class TestWikiPage(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             with pytest.raises(NotFound):
-                page = await subreddit.wiki.get_page("invalid")
-                page.content_md
+                await subreddit.wiki.get_page("invalid")
 
     async def test_revision_by(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)

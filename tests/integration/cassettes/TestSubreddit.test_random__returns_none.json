@@ -26,7 +26,7 @@
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
-        "method": "post",
+        "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
       },
       "response": {
@@ -37,18 +37,18 @@
           "Accept-Ranges": "bytes",
           "Cache-Control": "max-age=0, must-revalidate",
           "Connection": "close",
-          "Content-Length": "371",
+          "Content-Length": "367",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Wed, 08 Jul 2020 01:29:39 GMT",
+          "Date": "Mon, 13 Jul 2020 01:46:39 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "edgebucket=vjfTqqFmb58GqTZvOm; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=4vtJLj8GIsimNQm8Ol; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5947-MCI",
-          "X-Timer": "S1594171780.745409,VS0,VE124",
+          "X-Served-By": "cache-mci5932-MCI",
+          "X-Timer": "S1594604799.374607,VS0,VE118",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -87,7 +87,7 @@
           "Connection": "keep-alive",
           "Content-Length": "0",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Wed, 08 Jul 2020 01:29:40 GMT",
+          "Date": "Mon, 13 Jul 2020 01:46:40 GMT",
           "Expires": "-1",
           "Location": "https://www.reddit.com/r/wallpapers/.json?utm_campaign=redirect&utm_medium=desktop&utm_source=reddit&utm_name=random_link",
           "Server": "snooserv",
@@ -97,13 +97,13 @@
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5922-MCI",
-          "X-Timer": "S1594171780.940270,VS0,VE608",
+          "X-Served-By": "cache-mci5929-MCI",
+          "X-Timer": "S1594604800.566370,VS0,VE630",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-ratelimit-remaining": "584.0",
-          "x-ratelimit-reset": "20",
-          "x-ratelimit-used": "16",
+          "x-ratelimit-remaining": "230.0",
+          "x-ratelimit-reset": "201",
+          "x-ratelimit-used": "370",
           "x-ua-compatible": "IE=edge",
           "x-xss-protection": "1; mode=block"
         },
@@ -115,6 +115,6 @@
       }
     }
   ],
-  "recorded_at": "2020-07-07T20:29:40",
+  "recorded_at": "2020-07-12T20:46:40",
   "version": 1
 }

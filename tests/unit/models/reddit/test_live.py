@@ -57,14 +57,13 @@ class TestLiveThread(UnitTest):
         assert thread2 != "dummy1"
         assert thread2 == "Dummy1"
 
-    # FIXME: unit tests can't make requests
-    # async def test_getitem(self):
-    #     thread_id = "dummy_thread_id"
-    #     update_id = "dummy_update_id"
-    #     thread = LiveThread(self.reddit, id=thread_id)
-    #     update = await thread.get_update(update_id)
-    #     assert isinstance(update, LiveUpdate)
-    #     assert update.id == update_id
+    async def test_getitem(self):
+        thread_id = "dummy_thread_id"
+        update_id = "dummy_update_id"
+        thread = LiveThread(self.reddit, id=thread_id)
+        update = await thread.get_update(update_id, lazy=True)
+        assert isinstance(update, LiveUpdate)
+        assert update.id == update_id
 
     def test_hash(self):
         thread1 = LiveThread(self.reddit, id="dummy1")

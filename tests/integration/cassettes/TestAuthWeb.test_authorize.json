@@ -2,7 +2,7 @@
   "interactions": [
   {
     "request": {
-    "method": "post",
+    "method": "POST",
     "uri": "https://www.reddit.com/api/v1/access_token",
     "body": [
       [
