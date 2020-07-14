@@ -71,7 +71,7 @@ With the ``reddit`` instance you can then interact with Reddit:
     await subreddit.submit("Test Submission", url="https://reddit.com")
 
     # Comment on a known submission
-    submission = await reddit.submission(url="https://www.reddit.com/comments/5e1az9")
+    submission = await reddit.submission(url="https://www.reddit.com/comments/5e1az9", lazy=True)
     await submission.reply("Super rad!")
 
     # Reply to the first comment of a weekly top thread of a moderated community
@@ -154,13 +154,17 @@ newly created praw-dev organization on GitHub.
 <https://github.com/praw-dev/praw/commit/252083ef1dbfe6ea53c2dc99ac235b4ba330b658>`_:
 Bryce began work on PRAW4, a complete rewrite of PRAW.
 
+`February 2019
+<https://github.com/praw-dev/asyncpraw/commit/55480eb3d59dc7bc3d1480d83b98c95effc77181>`_:
+Joel forked PRAW and began work on Async PRAW, an asynchronous compatible version of PRAW.
 
 License
 -------
 
-Async PRAW uses the same license as PRAW uses. PRAW's source (v4.0.0+) is provided under the `Simplified BSD License
+PRAW's source (v4.0.0+) is provided under the `Simplified BSD License
 <https://github.com/praw-dev/praw/blob/0860c11a9309c80621c267af7caeb6a993933744/LICENSE.txt>`_.
 
+* Copyright (c), 2020, Joel Payne
 * Copyright (c), 2016, Bryce Boe
 
 Earlier versions of PRAW were released under `GPLv3
