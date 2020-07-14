@@ -143,8 +143,10 @@ class RemovalReason(RedditBase):
 class SubredditRemovalReasons:
     """Provide a set of functions to a Subreddit's removal reasons."""
 
-    async def get_reason(self, reason_id: str, lazy: bool = False) -> RemovalReason:
-        """Return the Removal Reason with the ID ``reason_id``.
+    async def get_reason(
+        self, reason_id: Union[str, int, slice], lazy: bool = False
+    ) -> RemovalReason:
+        """Return the Removal Reason with the ID/number/slice ``reason_id``.
 
         :param reason_id: The ID or index of the removal reason
         :param lazy: Determines if object is loaded lazily (default: False).
@@ -158,6 +160,31 @@ class SubredditRemovalReasons:
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
             print(reason)
 
+        You can also use indices to get a numbered removal reason. Since Python
+        uses 0-indexing, the first removal reason is index 0, and so on.
+
+        .. note:: Both negative indices and slices can be used to interact with
+            the removal reasons.
+
+        :raises: :py:class:`IndexError` if a removal reason of a specific
+            number does not exist.
+
+        For example, to get the second removal reason of the subreddit ``"NAME"``:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit('NAME')
+            await subreddit.mod.removal_reasons.get_reason(1)
+
+        To get the last three removal reasons in a subreddit:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit('NAME')
+            reasons = await subreddit.mod.removal_reasons.get_reason(slice(-3, None))
+            for reason in reasons:
+                print(reason)
+
         If you don't need the object fetched right away (e.g., to utilize a
         class method) you can do:
 
@@ -165,11 +192,15 @@ class SubredditRemovalReasons:
 
             reason_id = "141vv5c16py7d"
             subreddit = await reddit.subreddit("NAME")
-            reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
+            reason = await subreddit.mod.removal_reasons.get_reason(reason_id, lazy=True)
             await reason.delete()
 
         """
-        reason = RemovalReason(self._reddit, self.subreddit, reason_id)
+        if not isinstance(reason_id, str):
+            reasons = await self._removal_reason_list()
+            return reasons[reason_id]
+        else:
+            reason = RemovalReason(self._reddit, self.subreddit, reason_id)
         if not lazy:
             await reason._fetch()
         return reason
