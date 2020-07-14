@@ -747,7 +747,10 @@ class Reddit:
         return subreddit
 
     async def redditor(
-        self, name: Optional[str] = None, fullname: Optional[str] = None
+        self,
+        name: Optional[str] = None,
+        fullname: Optional[str] = None,
+        fetch: bool = False,
     ) -> Redditor:
         """Return an instance of :class:`~.Redditor`.
 
@@ -758,7 +761,8 @@ class Reddit:
 
         """
         redditor = models.Redditor(self, name=name, fullname=fullname)
-        await redditor._fetch()
+        if fetch:
+            await redditor._fetch()
         return redditor
 
     async def request(
@@ -785,8 +789,8 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        # this a fix for aiohttp not liking bool values in its params this needs to
-        # be fixed asyncprawcore
+        # this a fix for aiohttp not liking bool values in its params; this should be
+        # fixed asyncprawcore
         if params:
             new_params = {}
             for k, v in params.items():
@@ -833,6 +837,12 @@ class Reddit:
     ) -> Submission:
         """Return an instance of :class:`~.Submission`.
 
+        :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
+        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param lazy: Determines if object is loaded lazily (default: False).
+
+        Either ``id`` or ``url`` can be provided, but not both.
+
         If you don't need the object fetched right away (e.g., to utilize a
         class method) then you can do:
 
@@ -841,13 +851,8 @@ class Reddit:
             submission = await reddit.submission("submission_id", lazy=True)
             await submission.mod.remove()
 
-        :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
-        :param lazy: Determines if object is loaded lazily (default: False).
-
-        Either ``id`` or ``url`` can be provided, but not both.
-
         """
         submission = models.Submission(self, id=id, url=url)
-        await submission._fetch()
+        if not lazy:
+            await submission._fetch()
         return submission

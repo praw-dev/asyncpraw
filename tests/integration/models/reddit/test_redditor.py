@@ -18,20 +18,20 @@ class TestRedditor(IntegrationTest):
     async def test_block(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = await self.reddit.redditor(self.FRIEND)
+            redditor = await self.reddit.redditor(self.FRIEND, fetch=True)
             await redditor.block()
 
     async def test_friend(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = await self.reddit.redditor(self.FRIEND.lower())
+            redditor = await self.reddit.redditor(self.FRIEND.lower(), fetch=True)
             await redditor.friend()
 
     async def test_friend__with_note__no_gold(self):
         self.reddit.read_only = False
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
-                redditor = await self.reddit.redditor(self.FRIEND.lower())
+                redditor = await self.reddit.redditor(self.FRIEND.lower(), fetch=True)
                 await redditor.friend(note="asyncpraw")
             assert "GOLD_REQUIRED" == excinfo.value.error_type
 
@@ -39,7 +39,7 @@ class TestRedditor(IntegrationTest):
     async def test_friend_info(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            friend = await self.reddit.redditor(self.FRIEND)
+            friend = await self.reddit.redditor(self.FRIEND, fetch=True)
             redditor = await friend.friend_info()
             assert self.FRIEND == redditor
             assert "date" in redditor.__dict__
@@ -51,7 +51,9 @@ class TestRedditor(IntegrationTest):
     async def test_fullname_init(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            redditor = await self.reddit.redditor(fullname=self.FRIEND_FULLNAME)
+            redditor = await self.reddit.redditor(
+                fullname=self.FRIEND_FULLNAME, fetch=True
+            )
             assert redditor.name == self.FRIEND
 
     async def test_gild__no_creddits(self):

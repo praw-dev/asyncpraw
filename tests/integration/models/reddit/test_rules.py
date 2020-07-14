@@ -73,6 +73,26 @@ class TestRule(IntegrationTest):
                 0
             ] == "Subreddit {} does not have the rule {}".format(subreddit, "fake rule")
 
+    async def test_iter_rule_int(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            rule = await subreddit.rules.get_rule(0)
+            assert isinstance(rule, Rule)
+
+    async def test_iter_rule_negative_int(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            rule = await subreddit.rules.get_rule(-1)
+            assert isinstance(rule, Rule)
+
+    async def test_iter_rule_slice(self):
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            rules = await subreddit.rules.get_rule(slice(-3, None))
+            assert len(rules) == 3
+            for rule in rules:
+                assert isinstance(rule, Rule)
+
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_reorder_rules(self, _):
         self.reddit.read_only = False

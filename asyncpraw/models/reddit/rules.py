@@ -207,7 +207,29 @@ class SubredditRules:
             rule = await subreddit.rules.get_rule(rule_name)
             print(rule)
 
+        You can also fetch a numbered rule of a subreddit.
+
+        Rule numbers start at ``0``, so the first rule is at index ``0``, and the
+        second rule is at index ``1``, and so on.
+
+        :raises: :py:class:`IndexError` if a rule of a specific number does not
+            exist.
+
+        .. note:: You can use negative indexes, such as ``-1``, to get the last
+            rule. You can also use slices, to get a subset of rules, such as
+            the last three rules with ``get_rule(slice(-3, None))``.
+
+        For example, to fetch the second rule of ``AskReddit``:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("NAME")
+            rule = await subreddit.rules.get_rule(1)
+
         """
+        if not isinstance(short_name, str):
+            rules = await self._rule_list()
+            return rules[short_name]
         rule = Rule(self._reddit, subreddit=self.subreddit, short_name=short_name)
         await rule._fetch()
         return rule

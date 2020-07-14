@@ -2861,12 +2861,12 @@ class Modmail:
 
     """
 
-    async def __call__(self, id=None, mark_read=False, fetch=True):  # noqa: D207, D301
+    async def __call__(self, id=None, mark_read=False, lazy=False):  # noqa: D207, D301
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
         :param mark_read: If True, conversation is marked as read (default: False).
-        :param fetch: If True, conversation fully fetched (default: True).
+        :param lazy: Determines if object is loaded lazily (default: False)
 
         For example:
 
@@ -2874,6 +2874,15 @@ class Modmail:
 
             subreddit = await reddit.subreddit("redditdev")
             await subreddit.modmail("2gmz", mark_read=True)
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("redditdev")
+            message = await subreddit.modmail("2gmz", lazy=True)
+            await message.archive()
 
         To print all messages from a conversation as Markdown source:
 
@@ -2911,7 +2920,8 @@ class Modmail:
         modmail_conversation = ModmailConversation(
             self.subreddit._reddit, id=id, mark_read=mark_read
         )
-        await modmail_conversation._fetch()
+        if not lazy:
+            await modmail_conversation._fetch()
         return modmail_conversation
 
     def __init__(self, subreddit):
