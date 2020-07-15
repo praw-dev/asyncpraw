@@ -137,6 +137,10 @@ History
 <https://github.com/praw-dev/asyncpraw/commit/55480eb3d59dc7bc3d1480d83b98c95effc77181>`_:
 Joel forked PRAW and began work on Async PRAW, an asynchronous compatible version of PRAW.
 
+`July 2020
+<https://github.com/praw-dev/asyncpraw/commit/b8b8a4bf3618639968e8be379e85e2ff84f2307a>`_:
+Async PRAW was moved into the praw-dev namespace.
+
 License
 -------
 
