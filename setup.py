@@ -52,7 +52,7 @@ setup(
         "Topic :: Utilities",
     ],
     description=(
-        "PRAW, an acronym for `Python Reddit API Wrapper`, is a "
+        "Async PRAW, an acronym for `Asynchronous Python Reddit API Wrapper`, is a "
         "python package that allows for simple access to "
         "reddit's API."
     ),
@@ -60,12 +60,11 @@ setup(
     install_requires=[
         "asyncprawcore >=1.0.1, <2.0",
         "update_checker >=0.17",
-        "websockets >=8.1",
     ],
-    keywords="reddit api wrapper async",
+    keywords="reddit api wrapper async asynchronous praw",
     license="Simplified BSD License",
     long_description=README,
-    package_data={"": ["LICENSE.txt"], PACKAGE_NAME: ["*.ini", "images/*.jpg"]},
+    package_data={"": ["LICENSE.txt", "praw_license.txt"], PACKAGE_NAME: ["*.ini", "images/*.jpg"]},
     packages=find_packages(exclude=["tests", "tests.*", "tools", "tools.*"]),
     url="https://asyncpraw.readthedocs.org/",
     version=VERSION,
