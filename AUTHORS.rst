@@ -18,6 +18,12 @@ Documentation Contributors
 <!-- - Add "Name <email (optional)> and github profile link" above this line. -->
 
 
+PRAW Author
+===========
+
+- Bryce Boe <bbzbryce@gmail.com> `@bboe <https://github.com/bboe>`_
+
+
 Logo Creator
 ============
 
@@ -48,7 +54,6 @@ Source Contributors
 - Elaina Martineau `@CrackedP0t <https://github.com/CrackedP0t>`_
 - Rob Curtis <BourbonInExile@gmail.com> `@waab76 <https://github.com/waab76>`_
 - Pyprohly <pyprohly@outlook.com> `@Pyprohly <https://github.com/Pyprohly>`_
-- LilSpazJoekp `@LilSpazJoekp <https://github.com/LilSpazJoekp>`_
 - Timendum `@timendum <https://github.com/timendum>`_
 - vaclav-2012 `@vaclav-2012 <https://github.com/vaclav-2012>`_
 - Jon Meager `@H4CKY54CK <https://github.com/H4CKY54CK>`_

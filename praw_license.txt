@@ -1,4 +1,4 @@
-Copyright (c) 2020, Joel Payne
+Copyright (c) 2016, Bryce Boe
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

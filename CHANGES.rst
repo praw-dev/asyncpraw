@@ -1,5 +1,6 @@
 Change Log
 ==========
 
-For changes prior to version 7.0 please see: `PRAW changelog
-<http://praw.readthedocs.io/en/latest/pages/changelog.html>`_
+
+For changes in PRAW please see: `PRAW Changelog
+<https://praw.readthedocs.io/en/latest/pages/changelog.html>`_
