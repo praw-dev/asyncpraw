@@ -41,11 +41,6 @@ class TestConfig:
                 else:
                     os.environ[env_name] = prev_environment[env_name]
 
-    def test_check_for_updates__false(self):
-        for value in [False, "False", "other"]:
-            config = Config("DEFAULT", check_for_updates=value)
-            assert config.check_for_updates is False
-
     def test_custom__extra_values_set(self):
         config = Config("DEFAULT", user1="foo", user2="bar")
         assert config.custom == {"user1": "foo", "user2": "bar"}
@@ -53,11 +48,6 @@ class TestConfig:
     def test_custom__no_extra_values_set(self):
         config = Config("DEFAULT")
         assert config.custom == {}
-
-    def test_check_for_updates__true(self):
-        for value in [True, "1", "true", "YES", "on"]:
-            config = Config("DEFAULT", check_for_updates=value)
-            assert config.check_for_updates is True
 
     @mock.patch("configparser.ConfigParser")
     def test_load_ini_from_appdata(self, mock_config):
