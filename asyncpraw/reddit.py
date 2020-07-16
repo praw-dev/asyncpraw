@@ -125,7 +125,7 @@ class Reddit:
         config_interpolation: Optional[str] = None,
         requestor_class: Optional[Type[Requestor]] = None,
         requestor_kwargs: Dict[str, Any] = None,
-        **config_settings: str
+        **config_settings: str,
     ):  # noqa: D207, D301
         """Initialize a Reddit instance.
 
@@ -410,7 +410,7 @@ class Reddit:
             USER_AGENT_FORMAT.format(self.config.user_agent),
             self.config.oauth_url,
             self.config.reddit_url,
-            **requestor_kwargs
+            **requestor_kwargs,
         )
 
         if self.config.client_secret:
@@ -684,9 +684,7 @@ class Reddit:
         except RedditAPIException as exception:
             seconds = self._handle_rate_limit(exception=exception)
             if seconds is not None:
-                logger.debug(
-                    "Rate limit hit, sleeping for {:.2f} seconds".format(seconds)
-                )
+                logger.debug(f"Rate limit hit, sleeping for {seconds:.2f} seconds")
                 await asyncio.sleep(seconds)
                 return await self._objectify_request(
                     data=data, files=files, method="POST", params=params, path=path,

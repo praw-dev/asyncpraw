@@ -39,7 +39,7 @@ class CommentHelper(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('redditdev')
+            subreddit = await reddit.subreddit("redditdev")
             async for comment in subreddit.comments(limit=25):
                 print(comment.author)
 
@@ -59,7 +59,7 @@ class SubredditListingMixin(BaseListingMixin, GildedListingMixin, RisingListingM
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('redditdev')
+            subreddit = await reddit.subreddit("redditdev")
             async for comment in subreddit.comments(limit=25):
                 print(comment.author)
 

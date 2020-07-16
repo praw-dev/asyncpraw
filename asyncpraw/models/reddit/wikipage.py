@@ -201,7 +201,7 @@ class WikiPage(RedditBase):
 
     def __str__(self) -> str:
         """Return a string representation of the instance."""
-        return "{}/{}".format(self.subreddit, self.name)
+        return f"{self.subreddit}/{self.name}"
 
     def _fetch_info(self):
         return (

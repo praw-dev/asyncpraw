@@ -95,9 +95,7 @@ class RemovalReason(RedditBase):
                 self._fetched = True
                 return
         raise ClientException(
-            "Subreddit {} does not have the removal reason {}".format(
-                self.subreddit, self.id
-            )
+            f"Subreddit {self.subreddit} does not have the removal reason {self.id}"
         )
 
     async def delete(self):
@@ -173,14 +171,14 @@ class SubredditRemovalReasons:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('NAME')
+            subreddit = await reddit.subreddit("NAME")
             await subreddit.mod.removal_reasons.get_reason(1)
 
         To get the last three removal reasons in a subreddit:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit('NAME')
+            subreddit = await reddit.subreddit("NAME")
             reasons = await subreddit.mod.removal_reasons.get_reason(slice(-3, None))
             for reason in reasons:
                 print(reason)

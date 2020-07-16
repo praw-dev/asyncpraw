@@ -35,10 +35,7 @@ class StaticChecker:
             if self.replace:
                 with open(filename, "w") as fp:
                     fp.write(newcontent)
-                print(
-                    "{filename}: Replaced all ``code::`` to "
-                    "``code-block::``".format(filename=filename)
-                )
+                print(f"{filename}: Replaced all ``code::`` to ``code-block::``")
                 return True
             print(
                 "{filename}; This file uses the `code::` syntax, please change"

@@ -219,7 +219,7 @@ class TestReddit(UnitTest):
                 settings[setting] = Config.CONFIG_NOT_SET
                 Reddit(**settings)
             assert str(excinfo.value).startswith(
-                "Required configuration setting '{}' missing.".format(setting)
+                f"Required configuration setting {setting!r} missing."
             )
             if setting == "client_secret":
                 assert "set to None" in str(excinfo.value)
@@ -233,7 +233,7 @@ class TestReddit(UnitTest):
                 settings[setting] = None
                 Reddit(**settings)
             assert str(excinfo.value).startswith(
-                "Required configuration setting '{}' missing.".format(setting)
+                f"Required configuration setting {setting!r} missing."
             )
 
     def test_reddit__site_name_no_section(self):

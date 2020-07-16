@@ -138,12 +138,9 @@ class SubmissionModeration(ThingModerationMixin):
     ):
         """Set flair for the submission.
 
-        :param text: The flair text to associate with the Submission (default:
-            '').
-        :param css_class: The css class to associate with the flair html
-            (default: '').
-        :param flair_template_id: The flair template id to use when flairing
-            (Optional).
+        :param text: The flair text to associate with the Submission (default: "").
+        :param css_class: The css class to associate with the flair html (default: "").
+        :param flair_template_id: The flair template id to use when flairing (Optional).
 
         This method can only be used by an authenticated user who is a
         moderator of the Submission's Subreddit.

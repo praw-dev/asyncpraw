@@ -143,7 +143,7 @@ class MultiredditHelper(AsyncPRAWBase):
         :param name: The name of the multireddit.
         :param fetch: Determines if the object is lazily loaded (default: False).
         """
-        path = "/user/{}/m/{}".format(redditor, name)
+        path = f"/user/{redditor}/m/{name}"
         multireddit = Multireddit(self._reddit, _data={"name": name, "path": path})
         if fetch:
             await multireddit._fetch()
@@ -231,7 +231,7 @@ class SubredditHelper(AsyncPRAWBase):
         link_type: str = "any",
         subreddit_type: str = "public",
         wikimode: str = "disabled",
-        **other_settings: Optional[str]
+        **other_settings: Optional[str],
     ) -> Subreddit:
         """Create a new subreddit.
 
@@ -261,7 +261,7 @@ class SubredditHelper(AsyncPRAWBase):
             subreddit_type=subreddit_type,
             title=title or name,
             wikimode=wikimode,
-            **other_settings
+            **other_settings,
         )
         subreddit = await self(name, fetch=True)
         return subreddit

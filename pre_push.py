@@ -20,11 +20,11 @@ def do_process(args, shell=False):
 
     Exit if command is not found.
     """
-    print("Running: {}".format(" ".join(args)))
+    print(f"Running: {' '.join(args)}")
     try:
         check_call(args, shell=shell)
     except CalledProcessError:
-        print("\nFailed: {}".format(" ".join(args)))
+        print(f"\nFailed: {' '.join(args)}")
         return False
     except Exception as exc:
         sys.stderr.write(str(exc) + "\n")
