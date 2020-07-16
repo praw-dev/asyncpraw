@@ -24,6 +24,6 @@ Steps to reproduce the behavior:
 <!-- include your code, without the Reddit() initialization, so as to not leak private credentials. -->
 
 **System Info**
- - OS: 
- - Python: 
- - PRAW Version:
+ - OS:
+ - Python:
+ - Async PRAW Version:

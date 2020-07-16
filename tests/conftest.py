@@ -49,9 +49,6 @@ def filter_access_token(response):
     return response
 
 
-os.environ["praw_check_for_updates"] = "False"
-
-
 placeholders = {
     x: env_default(x)
     for x in (

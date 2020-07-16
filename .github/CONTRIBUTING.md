@@ -90,8 +90,7 @@ from os.path import abspath, join
 import sys
 import traceback
 
-from prawcore import NotFound
-import requests
+from asyncprawcore import NotFound
 
 from ...const import API_PATH
 from ..listing.mixins import SubmissionListingMixin
