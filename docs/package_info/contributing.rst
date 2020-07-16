@@ -50,11 +50,19 @@ Running the Test Suite
 all updates to known branches and pull requests. However, it's useful to be
 able to run the tests locally. The simplest way is via:
 
-.. code:: bash
+.. code-block:: bash
 
-   pytest
+    pytest
 
 Without any configuration or modification, all the tests should pass.
+
+.. note::
+
+    Async PRAW uses a fork of `vcrpy` before you can run tests locally you must install the forked version.
+    .. code-block:: bash
+
+        pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip
+
 
 Adding and Updating Integration Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,7 +134,7 @@ For feature additions, bugfixes, or code removal please add an appropriate
 entry to ``CHANGES.rst``. If the ``Unreleased`` section does not exist at the
 top of ``CHANGES.rst`` please add it. See `commit
 280525c16ba28cdd69cdbb272a0e2764b1c7e6a0
-<https://github.com/praw-dev/asyncpraw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0>`_
+<https://github.com/praw-dev/praw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0>`_
 for an example.
 
 See Also

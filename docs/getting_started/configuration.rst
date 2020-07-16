@@ -3,6 +3,10 @@
 Configuring Async PRAW
 ======================
 
+.. note::
+
+    Async PRAW is fully compatible with the configuration system that PRAW uses.
+
 .. toctree::
    :maxdepth: 2
 

@@ -8,17 +8,17 @@ sys.path.insert(1, "..")
 from asyncpraw import __version__
 
 
-copyright = "2020, Bryce Boe"
+copyright = "2020, Joel Payne"
 exclude_patterns = ["_build"]
 extensions = ["sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinxcontrib_trio"]
 html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {"collapse_navigation": True}
-htmlhelp_basename = "PRAW"
+htmlhelp_basename = "Async PRAW"
 intersphinx_mapping = {"python": ("https://docs.python.org/3.8", None)}
 master_doc = "index"
 nitpicky = True
-project = "PRAW"
+project = "Async PRAW"
 pygments_style = "sphinx"
 release = __version__
 source_suffix = ".rst"

@@ -5,13 +5,23 @@ Frequently Asked Questions
 
 Q: How can I refresh a comment/subreddit/submission?
 
-A: Directly calling the constructors will refresh the value:
+A: There is two ways to do this:
 
-.. code-block:: python
+    * Directly calling the constructors will refresh the value:
 
-   await reddit.comment(id=comment.id)
-   await reddit.subreddit(display_name=subreddit.display_name)
-   await reddit.submission(id=submission.id)
+        .. code-block:: python
+
+            await reddit.comment(id=comment.id)
+            await reddit.subreddit(display_name=subreddit.display_name)
+            await reddit.submission(id=submission.id)
+
+    * Calling :meth:`~.RedditBase.load`:
+
+        .. code-block:: python
+
+            await comment.load()
+            await subreddit.load()
+            await submission.load()
 
 .. _faq2:
 
