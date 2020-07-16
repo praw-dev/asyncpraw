@@ -360,7 +360,7 @@ class LiveThread(RedditBase):
         """Return a :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
-        :param lazy: Determines if object is loaded lazily (default: False).
+        :param lazy: If True, object is loaded lazily (default: False).
 
         Usage:
 

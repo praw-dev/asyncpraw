@@ -22,15 +22,15 @@ class TestSubmission(IntegrationTest):
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").clear_vote()
 
-    # @mock.patch("asyncio.sleep", return_value=None)
-    # async def test_delete(self, _):
-    #     self.reddit.read_only = False
-    #     with self.use_cassette():
-    #         submission = Submission(self.reddit, "hmkbt8")
-    #         await submission.delete()
-    #         await submission.load()
-    #         assert submission.author is None
-    #         assert submission.selftext == "[deleted]"
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_delete(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            await submission.delete()
+            await submission.load()
+            assert submission.author is None
+            assert submission.selftext == "[deleted]"
 
     async def test_disable_inbox_replies(self):
         self.reddit.read_only = False
@@ -125,7 +125,7 @@ class TestSubmission(IntegrationTest):
             assert comment.body == "Test reply"
             assert comment.parent_id == submission.fullname
 
-    # async def test_reply__none(self):
+    # async def test_reply__none(self): # TODO: I have not been able to reproduce this again; same with praw
     #     self.reddit.read_only = False
     #     submission = Submission(self.reddit, "ah19vv")
     #     with self.use_cassette():
@@ -362,7 +362,7 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_distinguish(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Submission(self.reddit, "hmkbt8").mod.distinguish()
+            await Submission(self.reddit, "hrzz2x").mod.distinguish()
 
     async def test_ignore_reports(self):
         self.reddit.read_only = False
@@ -494,7 +494,7 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_undistinguish(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Submission(self.reddit, "hmkbt8").mod.undistinguish()
+            await Submission(self.reddit, "hrzz2x").mod.undistinguish()
 
     async def test_unignore_reports(self):
         self.reddit.read_only = False

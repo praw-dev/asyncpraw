@@ -44,7 +44,7 @@ Redditor = models.Redditor
 Submission = models.Submission
 Subreddit = models.Subreddit
 
-logger = getLogger("praw")
+logger = getLogger("asyncpraw")
 
 
 class Reddit:
@@ -477,7 +477,7 @@ class Reddit:
 
         :param id: The ID of the comment.
         :param url: A permalink pointing to the comment.
-        :param lazy: Determines if object is loaded lazily (default: False).
+        :param lazy: If True, object is loaded lazily (default: False).
 
         If you don't need the object fetched right away (e.g., to utilize a
         class method) then you can do:
@@ -839,7 +839,7 @@ class Reddit:
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
         :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
-        :param lazy: Determines if object is loaded lazily (default: False).
+        :param lazy: If True, object is loaded lazily (default: False).
 
         Either ``id`` or ``url`` can be provided, but not both.
 

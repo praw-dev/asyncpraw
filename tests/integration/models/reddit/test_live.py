@@ -56,7 +56,7 @@ class TestLiveThread(IntegrationTest):
             assert thread.title == "reddit updates"
 
     async def test_discussions(self):
-        thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
         with self.use_cassette():
             async for submission in thread.discussions(limit=None):
                 assert isinstance(submission, Submission)

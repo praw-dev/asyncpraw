@@ -160,16 +160,16 @@ class BaseListingMixin(AsyncPRAWBase):
 
            reddit.domain("imgur.com").top("week")
 
-           multireddit = await reddit.multireddit("samuraisam", "programming", lazy=False)
+           multireddit = await reddit.multireddit("samuraisam", "programming")
            multireddit.top("day")
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.top("month")
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.comments.top("year")
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.submissions.top("all")
 
            subreddit = await reddit.subreddit("all")

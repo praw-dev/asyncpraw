@@ -428,7 +428,7 @@ class SubredditCollections(AsyncPRAWBase):
             new_collection = await my_sub.collections.mod.create("Title", "desc")
 
         """
-        return SubredditCollectionsModeration(self._reddit, self.subreddit.fullname)
+        return SubredditCollectionsModeration(self._reddit, self.subreddit)
 
     async def __call__(
         self,
@@ -440,7 +440,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
-        :param lazy: Determines if object is loaded lazily (default: False)
+        :param lazy: If True, object is loaded lazily (default: False)
         :returns: The specified Collection.
 
         Exactly one of ``collection_id`` and ``permalink`` is required.
@@ -521,7 +521,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
+        subreddit = await reddit.subreddit("SUBREDDIT")
         subreddit.collections.mod
 
     """
@@ -529,12 +529,12 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
     def __init__(
         self,
         reddit: "Reddit",
-        sub_fullname: str,
+        subreddit: Subreddit,
         _data: Optional[Dict[str, Any]] = None,
     ):
         """Initialize the SubredditCollectionsModeration instance."""
         super().__init__(reddit, _data)
-        self.subreddit_fullname = sub_fullname
+        self.subreddit = subreddit
 
     async def create(self, title: str, description: str):
         """Create a new :class:`.Collection`.
@@ -551,17 +551,19 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            sub = await reddit.subreddit("SUBREDDIT", fetch=True)
+            sub = await reddit.subreddit("SUBREDDIT")
             new_collection = await sub.collections.mod.create("Title", "desc")
             await new_collection.mod.add_post("bgibu9")
 
         .. seealso:: :meth:`~CollectionModeration.delete`
 
         """
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
         return await self._reddit.post(
             API_PATH["collection_create"],
             data={
-                "sr_fullname": self.subreddit_fullname,
+                "sr_fullname": self.subreddit.fullname,
                 "title": title,
                 "description": description,
             },

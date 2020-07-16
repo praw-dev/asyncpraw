@@ -13,7 +13,6 @@ from asyncprawcore import (
     BadRequest,
     Forbidden,
     NotFound,
-    # RequestException,
     TooLarge,
 )
 
@@ -64,44 +63,12 @@ class WebsocketMock:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    async def close(self, *args, **kwargs):
-        pass
-
     async def receive_json(self):
         if not self.post_ids:
             raise WebSocketError(None, None)
         assert 0 <= self.i + 1 < len(self.post_ids)
         self.i += 1
         return self.make_dict(self.post_ids[self.i])
-
-
-class WebsocketMockException:
-    def __init__(self, recv_exc=None, close_exc=None):
-        """Initialize a WebsocketMockException.
-
-        :param recv_exc: An exception to be raised during a call to recv().
-        :param close_exc: An exception to be raised during close().
-
-        The purpose of this class is to mock a WebSockets connection that is
-        faulty or times out, to see how Async PRAW handles it.
-        """
-        self._recv_exc = recv_exc
-        self._close_exc = close_exc
-
-    async def close(self, *args, **kwargs):
-        if self._close_exc is not None:
-            raise self._close_exc
-
-    async def receive_json(self):
-        if self._recv_exc is not None:
-            raise self._recv_exc
-        else:
-            return {
-                "payload": {
-                    "redirect": "https://reddit.com/r/<TEST_SUBREDDIT>/"
-                    "comments/abcdef/test_title/"
-                }
-            }
 
 
 class TestSubreddit(IntegrationTest):
@@ -233,7 +200,7 @@ class TestSubreddit(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit("all")
             async for item in subreddit.search(
-                "asyncpraw oauth search", limit=None, syntax="cloudsearch"
+                "praw oauth search", limit=None, syntax="cloudsearch"
             ):
                 assert isinstance(item, Submission)
 
@@ -799,7 +766,7 @@ class TestSubredditFilters(IntegrationTest):
             subreddit = await self.reddit.subreddit("all")
             await subreddit.filters.add(await self.reddit.subreddit("redditdev"))
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: no longer rases not found; same with praw
+    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: no longer raises not found; same with praw
     # async def test_add__non_special(self, _):
     #     self.reddit.read_only = False
     #     with self.use_cassette():
@@ -1413,10 +1380,6 @@ class TestSubredditModeration(IntegrationTest):
 
 
 class TestSubredditModmail(IntegrationTest):
-    @property
-    async def redditor(self):
-        return self.reddit.redditor(pytest.placeholders.username)
-
     async def test_bulk_read(self):
         self.reddit.read_only = False
         with self.use_cassette():
@@ -1428,7 +1391,7 @@ class TestSubredditModmail(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_call(self, _):
         self.reddit.read_only = False
-        conversation_id = "fccdg"
+        conversation_id = "fjhla"
         subreddit = await self.reddit.subreddit("all")
         with self.use_cassette():
             conversation = await subreddit.modmail(conversation_id)
@@ -1589,6 +1552,14 @@ class TestSubredditRelationships(IntegrationTest):
             assert self.REDDITOR not in await subreddit.moderator()
 
     @mock.patch("asyncio.sleep", return_value=None)
+    async def test_moderator_aiter(self, _):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            async for moderator in subreddit.moderator:
+                assert isinstance(moderator, Redditor)
+
+    @mock.patch("asyncio.sleep", return_value=None)
     async def test_moderator__limited_permissions(self, _):
         self.reddit.read_only = False
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1675,10 +1646,10 @@ class TestSubredditRelationships(IntegrationTest):
 class TestSubredditStreams(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_comments(self, _):
-        subreddit = await self.reddit.subreddit("askreddit")
+        subreddit = await self.reddit.subreddit("all")
         with self.use_cassette():
             generator = subreddit.stream.comments()
-            for i in range(101):
+            for i in range(400):
                 assert isinstance(await self.async_next(generator), Comment)
 
     @mock.patch("asyncio.sleep", return_value=None)

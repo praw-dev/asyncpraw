@@ -90,7 +90,9 @@ class TestSubreddits(IntegrationTest):
 
     async def test_search_by_name(self):
         with self.use_cassette():
-            subreddits = await self.reddit.subreddits.search_by_name("reddit")
+            subreddits = await self.async_list(
+                self.reddit.subreddits.search_by_name("reddit")
+            )
             assert isinstance(subreddits, list)
             assert len(subreddits) > 1
             assert all(isinstance(x, Subreddit) for x in subreddits)

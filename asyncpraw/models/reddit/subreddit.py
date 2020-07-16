@@ -1362,7 +1362,7 @@ class SubredditFilters:
         """
         user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
-            special=self.subreddit, user=user, subreddit=str(subreddit),
+            special=self.subreddit, user=user, subreddit=subreddit,
         )
         await self.subreddit._reddit.delete(url)
 
@@ -2861,12 +2861,12 @@ class Modmail:
 
     """
 
-    async def __call__(self, id=None, mark_read=False, lazy=False):  # noqa: D207, D301
+    async def __call__(self, id=None, mark_read=False, fetch=True):  # noqa: D207, D301
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
         :param mark_read: If True, conversation is marked as read (default: False).
-        :param lazy: Determines if object is loaded lazily (default: False)
+        :param fetch: If True, conversation fully fetched (default: True).
 
         For example:
 
@@ -2920,7 +2920,7 @@ class Modmail:
         modmail_conversation = ModmailConversation(
             self.subreddit._reddit, id=id, mark_read=mark_read
         )
-        if not lazy:
+        if fetch:
             await modmail_conversation._fetch()
         return modmail_conversation
 
@@ -2945,7 +2945,7 @@ class Modmail:
         :param state: Can be one of: all, archived, highlighted, inprogress,
             mod, new, notifications, (default: all). "all" does not include
             internal or archived conversations.
-        :returns: A list of unfetched :class:`.ModmailConversation` instances that were
+        :returns: A list of lazy :class:`.ModmailConversation` instances that were
             marked read.
 
         For example, to mark all notifications for a subreddit as read:

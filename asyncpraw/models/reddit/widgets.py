@@ -360,7 +360,7 @@ class SubredditWidgets(AsyncPRAWBase):
                     self.__class__.__name__, attr
                 )
             )
-        raise AttributeError(
+        raise AttributeError(  # pragma: no cover; I have no idea how to cover this
             "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
                 self.__class__.__name__, attr
             )
@@ -870,7 +870,7 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
-            subreddit = await subreddit("mysub", lazy=True)
+            subreddit = await subreddit("mysub")
             widget_moderation = subreddit.widgets.mod
             flairs = [f["id"] async for f in subreddit.flair.link_templates]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}

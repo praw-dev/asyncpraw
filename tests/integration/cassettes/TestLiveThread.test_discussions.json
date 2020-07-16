@@ -19,7 +19,7 @@
             "close"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post2"
           ]
         },
         "method": "POST",
@@ -35,19 +35,19 @@
           "Connection": "close",
           "Content-Length": "106",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Mon, 06 Jul 2020 01:11:50 GMT",
+          "Date": "Thu, 16 Jul 2020 01:06:48 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "edgebucket=lgVAaEWQIQy3GXE7NG; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=tugU5TL086bvbMJmt0; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5933-MCI",
-          "X-Timer": "S1593997911.705796,VS0,VE74",
+          "X-Served-By": "cache-mci5944-MCI",
+          "X-Timer": "S1594861608.170079,VS0,VE73",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-reddit-loid": "000000000076c39fk9.2.1593997910746.Z0FBQUFBQmZBbnBXdXdvNktnN084V3p5ZkxfTEN4NkVFeGpscjJLYzNka2NvN1RvaFF1YkF1MmJmenl2NHJ1eTJnbVlEbmNzcHdGd29DQTBOMFpRS2R4OVd2Q2JTdnZGR1RNdXB5TVdrQnNtbUdfeWE5TDVyaW5ZcE4wdzZvQThqZTdJVmhJVzREWlg",
+          "x-reddit-loid": "00000000007agxk9qw.2.1594861608213.Z0FBQUFBQmZENmdvcWN3c0l4V2pLTjhQRUcxcTRyOEQySUU5dXdfc1pXT0tOMGF0clFkclFmOHUybUtGTm5mZGhzSXNKemYzZldvblNFTTN0UkVybXF5ZXBPQi1zVldqQVVESjhDVjVzQ2pSak1qVjViSDRXVzNldU5TVGlOTlpkUGRFZXNVS1RNa1E",
           "x-xss-protection": "1; mode=block"
         },
         "status": {
@@ -68,11 +68,11 @@
             "bearer <ACCESS_TOKEN>"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post2"
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/live/ukaeu1ik4sw5/discussions?limit=1024&raw_json=1"
+        "uri": "https://oauth.reddit.com/live/1595195m6j9zw/discussions?limit=1024&raw_json=1"
       },
       "response": {
         "body": {
@@ -86,7 +86,7 @@
           "Connection": "keep-alive",
           "Content-Length": "102",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Mon, 06 Jul 2020 01:11:50 GMT",
+          "Date": "Thu, 16 Jul 2020 01:06:48 GMT",
           "Server": "snooserv",
           "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
@@ -94,8 +94,8 @@
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5923-MCI",
-          "X-Timer": "S1593997911.854528,VS0,VE130",
+          "X-Served-By": "cache-mci5936-MCI",
+          "X-Timer": "S1594861608.371738,VS0,VE100",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-ua-compatible": "IE=edge",
@@ -105,10 +105,10 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/live/ukaeu1ik4sw5/discussions?limit=1024&raw_json=1"
+        "url": "https://oauth.reddit.com/live/1595195m6j9zw/discussions?limit=1024&raw_json=1"
       }
     }
   ],
-  "recorded_at": "2020-07-05T20:11:50",
+  "recorded_at": "2020-07-15T20:06:48",
   "version": 1
 }

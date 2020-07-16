@@ -210,7 +210,7 @@ class TestComment(IntegrationTest):
             assert not comment.is_root
             assert comment.parent_id == parent_comment.fullname
 
-    # async def test_reply__none(self): # get rid of maybe?
+    # async def test_reply__none(self): # TODO: I have not been able to reproduce this again; same with praw
     #     self.reddit.read_only = False
     #     comment = Comment(self.reddit, "fx1rxr1")
     #     with self.use_cassette():
@@ -247,13 +247,13 @@ class TestCommentModeration(IntegrationTest):
     async def test_distinguish(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Comment(self.reddit, "fx1jgsp").mod.distinguish()
+            await Comment(self.reddit, "fy79crc").mod.distinguish()
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_distinguish__sticky(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Comment(self.reddit, "fx1jgsp").mod.distinguish(sticky=True)
+            await Comment(self.reddit, "fy79crc").mod.distinguish(sticky=True)
 
     async def test_ignore_reports(self):
         self.reddit.read_only = False
@@ -347,7 +347,7 @@ class TestCommentModeration(IntegrationTest):
     async def test_undistinguish(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Comment(self.reddit, "fx1jgsp").mod.undistinguish()
+            await Comment(self.reddit, "fy79crc").mod.undistinguish()
 
     async def test_unignore_reports(self):
         self.reddit.read_only = False

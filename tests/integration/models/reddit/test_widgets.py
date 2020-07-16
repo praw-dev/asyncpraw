@@ -57,122 +57,122 @@ class TestButtonWidget(IntegrationTest):
 
             assert subreddit == button_widget.subreddit
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working; same with praw
-    # async def test_create_and_update_and_delete(self, _):
-    #     self.reddit.read_only = False
-    #
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     widgets = subreddit.widgets
-    #
-    #     with self.use_cassette():
-    #         styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-    #         my_image = await widgets.mod.upload_image(image_path("test.png"))
-    #         buttons = [
-    #             {
-    #                 "kind": "text",
-    #                 "text": "View source",
-    #                 "url": "https://github.com/praw-dev/asyncpraw",
-    #                 "color": "#FF0000",
-    #                 "textColor": "#00FF00",
-    #                 "fillColor": "#0000FF",
-    #                 "hoverState": {
-    #                     "kind": "text",
-    #                     "text": "VIEW SOURCE!",
-    #                     "color": "#FFFFFF",
-    #                     "textColor": "#000000",
-    #                     "fillColor": "#0000FF",
-    #                 },
-    #             },
-    #             {
-    #                 "kind": "image",
-    #                 "text": "View documentation",
-    #                 "linkUrl": "https://asyncpraw.readthedocs.io",
-    #                 "url": my_image,
-    #                 "height": 200,
-    #                 "width": 200,
-    #                 "hoverState": {
-    #                     "kind": "image",
-    #                     "url": my_image,
-    #                     "height": 200,
-    #                     "width": 200,
-    #                 },
-    #             },
-    #             {
-    #                 "kind": "text",
-    #                 "text": "/r/redditdev",
-    #                 "url": "https://reddit.com/r/redditdev",
-    #                 "color": "#000000",
-    #                 "textColor": "#FF00FF",
-    #                 "fillColor": "#005500",
-    #             },
-    #         ]
-    #         widget = await widgets.mod.add_button_widget(
-    #             "Things to click", "Click some of these *cool* links!", buttons, styles,
-    #         )
-    #
-    #         assert isinstance(widget, ButtonWidget)
-    #         assert len(widget) == 3
-    #         assert all(isinstance(item, Button) for item in widget)
-    #         assert widget.shortName == "Things to click"
-    #         assert widget.description == "Click some of these *cool* links!"
-    #         assert widget.styles == styles
-    #
-    #         assert widget[0].text == "View source"
-    #         assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
-    #         assert widget[2].text == "/r/redditdev"
-    #         assert widget[2].url == "https://reddit.com/r/redditdev"
-    #
-    #         assert widget[1].text == "View documentation"
-    #         assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
-    #         assert widget[1].hoverState["kind"] == "image"
-    #         assert widget[1].hoverState["height"] == 200
-    #
-    #         await widgets.refresh()  # the links are initially invalid
-    #         async for new_widget in widgets.sidebar():
-    #             if new_widget == widget:
-    #                 widget = new_widget
-    #                 break
-    #
-    #         widget = await widget.mod.update(shortName="New short name")
-    #
-    #         assert isinstance(widget, ButtonWidget)
-    #         assert len(widget) == 3
-    #         assert all(isinstance(item, Button) for item in widget)
-    #         assert widget.shortName == "New short name"
-    #         assert widget.description == "Click some of these *cool* links!"
-    #         assert widget.styles == styles
-    #
-    #         assert widget[0].text == "View source"
-    #         assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
-    #         assert widget[2].text == "/r/redditdev"
-    #         assert widget[2].url == "https://reddit.com/r/redditdev"
-    #
-    #         assert widget[1].text == "View documentation"
-    #         assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
-    #         assert widget[1].hoverState["kind"] == "image"
-    #         assert widget[1].hoverState["height"] == 200
-    #
-    #         buttons.reverse()
-    #         widget = await widget.mod.update(buttons=buttons)
-    #
-    #         assert isinstance(widget, ButtonWidget)
-    #         assert len(widget) == 3
-    #         assert all(isinstance(item, Button) for item in widget)
-    #         assert widget.shortName == "New short name"
-    #         assert widget.description == "Click some of these *cool* links!"
-    #         assert widget.styles == styles
-    #
-    #         assert widget[0].text == "/r/redditdev"
-    #         assert widget[0].url == "https://reddit.com/r/redditdev"
-    #         assert widget[2].text == "View source"
-    #         assert widget[2].url == "https://github.com/praw-dev/asyncpraw"
-    #
-    #         assert widget[1].text == "View documentation"
-    #         assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
-    #         assert widget[1].hoverState["kind"] == "image"
-    #         assert widget[1].hoverState["height"] == 200
-    #
-    #         await widget.mod.delete()
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
+        self.reddit.read_only = False
+
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        widgets = subreddit.widgets
+
+        with self.use_cassette():
+            styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+            my_image = await widgets.mod.upload_image(image_path("test.png"))
+            buttons = [
+                {
+                    "kind": "text",
+                    "text": "View source",
+                    "url": "https://github.com/praw-dev/asyncpraw",
+                    "color": "#FF0000",
+                    "textColor": "#00FF00",
+                    "fillColor": "#0000FF",
+                    "hoverState": {
+                        "kind": "text",
+                        "text": "VIEW SOURCE!",
+                        "color": "#FFFFFF",
+                        "textColor": "#000000",
+                        "fillColor": "#0000FF",
+                    },
+                },
+                {
+                    "kind": "image",
+                    "text": "View documentation",
+                    "linkUrl": "https://asyncpraw.readthedocs.io",
+                    "url": my_image,
+                    "height": 200,
+                    "width": 200,
+                    "hoverState": {
+                        "kind": "image",
+                        "url": my_image,
+                        "height": 200,
+                        "width": 200,
+                    },
+                },
+                {
+                    "kind": "text",
+                    "text": "/r/redditdev",
+                    "url": "https://reddit.com/r/redditdev",
+                    "color": "#000000",
+                    "textColor": "#FF00FF",
+                    "fillColor": "#005500",
+                },
+            ]
+            widget = await widgets.mod.add_button_widget(
+                "Things to click", "Click some of these *cool* links!", buttons, styles,
+            )
+
+            assert isinstance(widget, ButtonWidget)
+            assert len(widget) == 3
+            assert all(isinstance(item, Button) for item in widget)
+            assert widget.shortName == "Things to click"
+            assert widget.description == "Click some of these *cool* links!"
+            assert widget.styles == styles
+
+            assert widget[0].text == "View source"
+            assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
+            assert widget[2].text == "/r/redditdev"
+            assert widget[2].url == "https://reddit.com/r/redditdev"
+
+            assert widget[1].text == "View documentation"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
+            assert widget[1].hoverState["kind"] == "image"
+            assert widget[1].hoverState["height"] == 200
+
+            await widgets.refresh()  # the links are initially invalid
+            async for new_widget in widgets.sidebar():
+                if new_widget == widget:
+                    widget = new_widget
+                    break
+
+            widget = await widget.mod.update(shortName="New short name")
+
+            assert isinstance(widget, ButtonWidget)
+            assert len(widget) == 3
+            assert all(isinstance(item, Button) for item in widget)
+            assert widget.shortName == "New short name"
+            assert widget.description == "Click some of these *cool* links!"
+            assert widget.styles == styles
+
+            assert widget[0].text == "View source"
+            assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
+            assert widget[2].text == "/r/redditdev"
+            assert widget[2].url == "https://reddit.com/r/redditdev"
+
+            assert widget[1].text == "View documentation"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
+            assert widget[1].hoverState["kind"] == "image"
+            assert widget[1].hoverState["height"] == 200
+
+            buttons.reverse()
+            widget = await widget.mod.update(buttons=buttons)
+
+            assert isinstance(widget, ButtonWidget)
+            assert len(widget) == 3
+            assert all(isinstance(item, Button) for item in widget)
+            assert widget.shortName == "New short name"
+            assert widget.description == "Click some of these *cool* links!"
+            assert widget.styles == styles
+
+            assert widget[0].text == "/r/redditdev"
+            assert widget[0].url == "https://reddit.com/r/redditdev"
+            assert widget[2].text == "View source"
+            assert widget[2].url == "https://github.com/praw-dev/asyncpraw"
+
+            assert widget[1].text == "View documentation"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
+            assert widget[1].hoverState["kind"] == "image"
+            assert widget[1].hoverState["height"] == 200
+
+            await widget.mod.delete()
 
 
 class TestCalendar(IntegrationTest):
@@ -297,58 +297,58 @@ class TestCommunityList(IntegrationTest):
 
 
 class TestCustomWidget(IntegrationTest):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
+        self.reddit.read_only = False
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: not currently working; same with praw
-    # async def test_create_and_update_and_delete(self, _):
-    #     self.reddit.read_only = False
-    #
-    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     widgets = subreddit.widgets
-    #
-    #     with self.use_cassette():
-    #         image_dicts = [
-    #             {
-    #                 "width": 0,
-    #                 "height": 0,
-    #                 "name": "a",
-    #                 "url": await widgets.mod.upload_image(image_path("test.png")),
-    #             }
-    #         ]
-    #
-    #         styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-    #         widget = await widgets.mod.add_custom_widget(
-    #             "My widget", "# Hello world!", "/**/", 200, image_dicts, styles
-    #         )
-    #
-    #         assert isinstance(widget, CustomWidget)
-    #         assert widget.shortName == "My widget"
-    #         assert widget.text == "# Hello world!"
-    #         assert widget.css == "/**/"
-    #         assert widget.height == 200
-    #         assert widget.styles == styles
-    #         assert len(widget.imageData) == 1
-    #         assert all(isinstance(img, ImageData) for img in widget.imageData)
-    #
-    #         # initially, image URLs are incorrect, so we much refresh to get
-    #         # the proper ones.
-    #         await widgets.refresh()
-    #         refreshed = await self.async_list(widgets.sidebar())[-1]
-    #         assert refreshed == widget
-    #         widget = refreshed
-    #
-    #         new_css = "h1,h2,h3,h4,h5,h6 {color: #00ff00;}"
-    #         widget = await widget.mod.update(css=new_css)
-    #
-    #         assert isinstance(widget, CustomWidget)
-    #         assert widget.shortName == "My widget"
-    #         assert widget.text == "# Hello world!"
-    #         assert widget.css == new_css
-    #         assert widget.height == 200
-    #         assert widget.styles == styles
-    #         assert len(widget.imageData) == 1
-    #         assert all(isinstance(img, ImageData) for img in widget.imageData)
-    #
-    #         await widget.mod.delete()
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        widgets = subreddit.widgets
+
+        with self.use_cassette():
+            image_dicts = [
+                {
+                    "width": 0,
+                    "height": 0,
+                    "name": "a",
+                    "url": await widgets.mod.upload_image(image_path("test.png")),
+                }
+            ]
+
+            styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+            widget = await widgets.mod.add_custom_widget(
+                "My widget", "# Hello world!", "/**/", 200, image_dicts, styles
+            )
+
+            assert isinstance(widget, CustomWidget)
+            assert widget.shortName == "My widget"
+            assert widget.text == "# Hello world!"
+            assert widget.css == "/**/"
+            assert widget.height == 200
+            assert widget.styles == styles
+            assert len(widget.imageData) == 1
+            assert all(isinstance(img, ImageData) for img in widget.imageData)
+
+            # initially, image URLs are incorrect, so we much refresh to get
+            # the proper ones.
+            await widgets.refresh()
+            sidebar = await self.async_list(widgets.sidebar())
+            refreshed = sidebar[-1]
+            assert refreshed == widget
+            widget = refreshed
+
+            new_css = "h1,h2,h3,h4,h5,h6 {color: #00ff00;}"
+            widget = await widget.mod.update(css=new_css)
+
+            assert isinstance(widget, CustomWidget)
+            assert widget.shortName == "My widget"
+            assert widget.text == "# Hello world!"
+            assert widget.css == new_css
+            assert widget.height == 200
+            assert widget.styles == styles
+            assert len(widget.imageData) == 1
+            assert all(isinstance(img, ImageData) for img in widget.imageData)
+
+            await widget.mod.delete()
 
     async def test_custom_widget(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)

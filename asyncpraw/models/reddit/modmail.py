@@ -79,7 +79,8 @@ class ModmailConversation(RedditBase):
             objects = []
             for thing_id, summary in data[kind].items():
                 thing = parser(reddit, id=thing_id.rsplit("_", 1)[-1])
-                if parser is not ModmailConversation:
+                # I have no idea how to cover this
+                if parser is not ModmailConversation:  # pragma: no cover
                     del summary["permalink"]
                 for key, value in summary.items():
                     setattr(thing, key, value)

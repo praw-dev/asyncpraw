@@ -23,7 +23,7 @@
             "close"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post2"
           ]
         },
         "method": "POST",
@@ -39,16 +39,16 @@
           "Connection": "close",
           "Content-Length": "367",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 11 Jul 2020 00:19:18 GMT",
+          "Date": "Thu, 16 Jul 2020 01:16:13 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "edgebucket=czBzZmyIXxP3cfUpJH; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=MBvbdJj0kdF7xUL3mt; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5927-MCI",
-          "X-Timer": "S1594426758.212573,VS0,VE122",
+          "X-Served-By": "cache-mci5944-MCI",
+          "X-Timer": "S1594862173.302765,VS0,VE80",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -71,23 +71,23 @@
             "bearer <ACCESS_TOKEN>"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post2"
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/mod/conversations/fccdg?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/mod/conversations/fjhla?raw_json=1"
       },
       "response": {
         "body": {
-          "string": "{\"conversation\": {\"isAuto\": true, \"objIds\": [{\"id\": \"o4g0y\", \"key\": \"messages\"}], \"isRepliable\": true, \"lastUserUpdate\": \"2020-07-08T01:25:28.771010+00:00\", \"isInternal\": false, \"lastModUpdate\": null, \"lastUpdated\": \"2020-07-08T01:25:28.771010+00:00\", \"authors\": [{\"isMod\": false, \"isAdmin\": true, \"name\": \"reddit\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 81524, \"isDeleted\": false}], \"owner\": {\"displayName\": \"PRAW_iavynavff2\", \"type\": \"subreddit\", \"id\": \"t5_2u7jes\"}, \"id\": \"fccdg\", \"isHighlighted\": false, \"subject\": \"r/PRAW_iavynavff2 is now enrolled in the New Modmail\", \"participant\": {}, \"state\": 0, \"lastUnread\": null, \"numMessages\": 1}, \"messages\": {\"o4g0y\": {\"body\": \"<!-- SC_OFF --><div class=\\\"md\\\"><p>Please read the <a href=\\\"https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail\\\">help document</a> to familiarize yourself with the new features. Now that you have finished reading this message, click the archive button and it will be moved to the Archived folder and keep your main inbox nice and clean.</p>\\n</div><!-- SC_ON -->\", \"author\": {\"isMod\": false, \"isAdmin\": true, \"name\": \"reddit\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 81524, \"isDeleted\": false}, \"isInternal\": false, \"date\": \"2020-07-08T01:25:28.771010+00:00\", \"bodyMarkdown\": \"Please read the [help document](https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail) to familiarize yourself with the new features. Now that you have finished reading this message, click the archive button and it will be moved to the Archived folder and keep your main inbox nice and clean.\", \"id\": \"o4g0y\"}}, \"user\": {\"recentComments\": {}, \"muteStatus\": {\"isMuted\": false, \"endDate\": null, \"reason\": \"\"}, \"name\": \"reddit\", \"created\": \"2005-12-09T05:00:00+00:00\", \"banStatus\": {\"endDate\": null, \"reason\": \"\", \"isBanned\": false, \"isPermanent\": false}, \"isSuspended\": false, \"isShadowBanned\": false, \"recentPosts\": {}, \"recentConvos\": {\"fccdg\": {\"date\": \"2020-07-08T01:25:28.771010+00:00\", \"permalink\": \"https://mod.reddit.com/mail/perma/fccdg\", \"id\": \"fccdg\", \"subject\": \"r/PRAW_iavynavff2 is now enrolled in the New Modmail\"}}, \"id\": \"t2_1qwk\"}, \"modActions\": {}}"
+          "string": "{\"conversation\": {\"isAuto\": false, \"objIds\": [{\"id\": \"of2iw\", \"key\": \"messages\"}, {\"id\": \"9ca9v\", \"key\": \"modActions\"}, {\"id\": \"of2oa\", \"key\": \"messages\"}, {\"id\": \"9ca9w\", \"key\": \"modActions\"}], \"isRepliable\": true, \"lastUserUpdate\": \"2020-07-16T01:11:32.862019+00:00\", \"isInternal\": false, \"lastModUpdate\": \"2020-07-16T01:15:55.263702+00:00\", \"lastUpdated\": \"2020-07-16T01:15:55.263702+00:00\", \"authors\": [{\"isMod\": true, \"isAdmin\": false, \"name\": \"<USERNAME>\", \"isOp\": false, \"isParticipant\": false, \"isHidden\": false, \"id\": 40646879, \"isDeleted\": false}, {\"isMod\": false, \"isAdmin\": false, \"name\": \"Lil_SpazTest\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 561251419067, \"isDeleted\": false}, {\"isMod\": true, \"isAdmin\": false, \"name\": \"<USERNAME>\", \"isOp\": false, \"isParticipant\": false, \"isHidden\": false, \"id\": 40646879, \"isDeleted\": false}, {\"isMod\": true, \"isAdmin\": false, \"name\": \"<USERNAME>\", \"isOp\": false, \"isParticipant\": false, \"isHidden\": false, \"id\": 40646879, \"isDeleted\": false}], \"owner\": {\"displayName\": \"<TEST_SUBREDDIT>\", \"type\": \"subreddit\", \"id\": \"t5_29ey0j\"}, \"id\": \"fjhla\", \"isHighlighted\": false, \"subject\": \"Spam\", \"participant\": {}, \"state\": 0, \"lastUnread\": null, \"numMessages\": 2}, \"messages\": {\"of2iw\": {\"body\": \"<!-- SC_OFF --><div class=\\\"md\\\"><p>test</p>\\n</div><!-- SC_ON -->\", \"author\": {\"isMod\": false, \"isAdmin\": false, \"name\": \"Lil_SpazTest\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 561251419067, \"isDeleted\": false}, \"isInternal\": false, \"date\": \"2020-07-16T01:11:32.862019+00:00\", \"bodyMarkdown\": \"test\", \"id\": \"of2iw\"}, \"of2oa\": {\"body\": \"<!-- SC_OFF --><div class=\\\"md\\\"><p>You have been <a href=\\\"https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail-muting\\\">temporarily muted</a> from <a href=\\\"/r/<TEST_SUBREDDIT>\\\">r/<TEST_SUBREDDIT></a>. You will not be able to message the moderators of <a href=\\\"/r/<TEST_SUBREDDIT>\\\">r/<TEST_SUBREDDIT></a> for 72 hours.</p>\\n</div><!-- SC_ON -->\", \"author\": {\"isMod\": true, \"isAdmin\": false, \"name\": \"<USERNAME>\", \"isOp\": false, \"isParticipant\": false, \"isHidden\": false, \"id\": 40646879, \"isDeleted\": false}, \"isInternal\": false, \"date\": \"2020-07-16T01:15:55.263702+00:00\", \"bodyMarkdown\": \"You have been [temporarily muted](https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail-muting) from r/<TEST_SUBREDDIT>. You will not be able to message the moderators of r/<TEST_SUBREDDIT> for 72 hours.\", \"id\": \"of2oa\"}}, \"user\": {\"recentComments\": {}, \"muteStatus\": {\"isMuted\": false, \"endDate\": null, \"reason\": \"\"}, \"name\": \"Lil_SpazTest\", \"created\": \"2020-07-04T21:34:49.063000+00:00\", \"banStatus\": {\"endDate\": null, \"reason\": \"\", \"isBanned\": false, \"isPermanent\": false}, \"isSuspended\": false, \"isShadowBanned\": false, \"recentPosts\": {}, \"recentConvos\": {\"fjhla\": {\"date\": \"2020-07-16T01:11:32.862019+00:00\", \"permalink\": \"https://mod.reddit.com/mail/perma/fjhla\", \"id\": \"fjhla\", \"subject\": \"Spam\"}, \"fjhnq\": {\"date\": \"2020-07-16T01:15:07.219133+00:00\", \"permalink\": \"https://mod.reddit.com/mail/perma/fjhnq\", \"id\": \"fjhnq\", \"subject\": \"Spam\"}}, \"id\": \"t2_75u2lqkb\"}, \"modActions\": {\"9ca9w\": {\"date\": \"2020-07-16T01:15:58.098997+00:00\", \"actionTypeId\": 6, \"id\": \"9ca9w\", \"author\": {\"name\": \"<USERNAME>\", \"isMod\": true, \"isAdmin\": false, \"isHidden\": false, \"id\": 40646879, \"isDeleted\": false}}, \"9ca9v\": {\"date\": \"2020-07-16T01:15:55.255614+00:00\", \"actionTypeId\": 5, \"id\": \"9ca9v\", \"author\": {\"name\": \"<USERNAME>\", \"isMod\": true, \"isAdmin\": false, \"isHidden\": false, \"id\": 40646879, \"isDeleted\": false}}}}"
         },
         "headers": {
           "Accept-Ranges": "bytes",
           "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
-          "Content-Length": "2205",
+          "Content-Length": "3519",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 11 Jul 2020 00:19:18 GMT",
+          "Date": "Thu, 16 Jul 2020 01:16:13 GMT",
           "Expires": "-1",
           "Server": "snooserv",
           "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
@@ -97,23 +97,23 @@
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5951-MCI",
-          "X-Timer": "S1594426758.409276,VS0,VE186",
+          "X-Served-By": "cache-mci5949-MCI",
+          "X-Timer": "S1594862173.496350,VS0,VE121",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-ratelimit-remaining": "59.0",
-          "x-ratelimit-reset": "42",
-          "x-ratelimit-used": "541",
+          "x-ratelimit-remaining": "251.0",
+          "x-ratelimit-reset": "227",
+          "x-ratelimit-used": "349",
           "x-xss-protection": "1; mode=block"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/mod/conversations/fccdg?raw_json=1"
+        "url": "https://oauth.reddit.com/api/mod/conversations/fjhla?raw_json=1"
       }
     }
   ],
-  "recorded_at": "2020-07-10T19:19:18",
+  "recorded_at": "2020-07-15T20:16:13",
   "version": 1
 }

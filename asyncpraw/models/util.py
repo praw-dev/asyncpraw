@@ -131,7 +131,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit('redditdev', lazy=True)
+        subreddit = await reddit.subreddit('redditdev')
         async for comment in subreddit.stream.comments(pause_after=6):
             if comment is None:
                 break

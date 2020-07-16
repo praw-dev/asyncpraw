@@ -185,19 +185,13 @@ class TestSubredditCollections(IntegrationTest):
 
 
 class TestSubredditCollectionsModeration(IntegrationTest):
-    @property
-    async def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_create(self, _):
         title = "The title!"
         description = "The description."
         self.reddit.read_only = False
         with self.use_cassette():
-            subreddit = await self.reddit.subreddit(
-                pytest.placeholders.test_subreddit, fetch=True
-            )
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections.mod.create(title, description)
             assert collection.title == title
             assert collection.description == description
