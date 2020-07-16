@@ -55,6 +55,7 @@ applications and **web** applications.
    package_info/change_log
    package_info/contributing
    package_info/glossary
+   package_info/asyncpraw_migration
    package_info/praw7_migration
    package_info/references
 

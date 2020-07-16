@@ -3416,7 +3416,7 @@ class SubredditStylesheet:
 
         :param image_path: A path to a jpeg or png image.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -3442,7 +3442,7 @@ class SubredditStylesheet:
         :param align: Either ``left``, ``centered``, or ``right``. (default:
             ``left``).
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -3479,7 +3479,7 @@ class SubredditStylesheet:
 
         Fails if the Subreddit does not have an additional image defined
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -3505,7 +3505,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -3529,7 +3529,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very
@@ -3553,7 +3553,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``prawcore.TooLarge`` if the overall request body is too large.
+        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         Raises :class:`.RedditAPIException` if there are other issues with the
         uploaded image. Unfortunately the exception info might not be very

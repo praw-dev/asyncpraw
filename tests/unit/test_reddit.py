@@ -7,7 +7,7 @@ import pytest
 from asyncprawcore import Requestor
 from asyncprawcore.exceptions import BadRequest
 
-from asyncpraw import Reddit, __version__
+from asyncpraw import Reddit
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.models import Comment
@@ -20,28 +20,12 @@ class TestReddit(UnitTest):
         x: "dummy" for x in ["client_id", "client_secret", "user_agent"]
     }
 
-    @mock.patch("asyncpraw.reddit.update_check", create=True)
-    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", False)
-    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
-    def test_check_for_updates(self, mock_update_check):
-        Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
-        assert Reddit.update_checked
-        mock_update_check.assert_called_with("asyncpraw", __version__)
-
-    @mock.patch("asyncpraw.reddit.update_check", create=True)
-    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", True)
-    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
-    def test_check_for_updates_update_checker_missing(self, mock_update_check):
-        Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
-        assert not Reddit.update_checked
-        assert not mock_update_check.called
-
     def test_comment(self):
         assert Comment(self.reddit, id="cklfmye").id == "cklfmye"
 
     def test_context_manager(self):
         with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
-            assert not reddit.config.check_for_updates
+            assert not reddit._validate_on_submit
 
     def test_info__invalid_param(self):
         with pytest.raises(TypeError) as excinfo:

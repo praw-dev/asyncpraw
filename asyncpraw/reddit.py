@@ -23,20 +23,13 @@ from asyncprawcore.exceptions import BadRequest
 
 from . import models
 from .config import Config
-from .const import API_PATH, USER_AGENT_FORMAT, __version__
+from .const import API_PATH, USER_AGENT_FORMAT
 from .exceptions import (
     ClientException,
     MissingRequiredAttributeException,
     RedditAPIException,
 )
 from .objector import Objector
-
-try:
-    from update_checker import update_check
-
-    UPDATE_CHECKER_MISSING = False
-except ImportError:  # pragma: no cover
-    UPDATE_CHECKER_MISSING = True
 
 
 Comment = models.Comment
@@ -63,7 +56,6 @@ class Reddit:
 
     """
 
-    update_checked = False
     _ratelimit_regex = re.compile(r"([0-9]{1,2}) (seconds?|minutes?)")
 
     @property
@@ -146,7 +138,7 @@ class Reddit:
             variable praw_site. If it is not found there, the DEFAULT site will
             be used.
         :param requestor_class: A class that will be used to create a
-            requestor. If not set, use ``prawcore.Requestor`` (default: None).
+            requestor. If not set, use ``asyncprawcore.Requestor`` (default: None).
         :param requestor_kwargs: Dictionary with additional keyword arguments
             used to initialize the requestor (default: None).
 
@@ -228,9 +220,8 @@ class Reddit:
                 "to the `Reddit` class constructor."
             )
 
-        self._check_for_update()
         self._prepare_objector()
-        self._prepare_prawcore(requestor_class, requestor_kwargs)
+        self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
 
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
@@ -370,13 +361,6 @@ class Reddit:
 
         """
 
-    def _check_for_update(self):
-        if UPDATE_CHECKER_MISSING:
-            return
-        if not Reddit.update_checked and self.config.check_for_updates:
-            update_check(__package__, __version__)
-            Reddit.update_checked = True
-
     def _prepare_objector(self):
         mappings = {
             self.config.kinds["comment"]: models.Comment,
@@ -418,7 +402,7 @@ class Reddit:
         }
         self._objector = Objector(self, mappings)
 
-    def _prepare_prawcore(self, requestor_class=None, requestor_kwargs=None):
+    def _prepare_asyncprawcore(self, requestor_class=None, requestor_kwargs=None):
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
 
@@ -430,11 +414,11 @@ class Reddit:
         )
 
         if self.config.client_secret:
-            self._prepare_trusted_prawcore(requestor)
+            self._prepare_trusted_asyncprawcore(requestor)
         else:
-            self._prepare_untrusted_prawcore(requestor)
+            self._prepare_untrusted_asyncprawcore(requestor)
 
-    def _prepare_trusted_prawcore(self, requestor):
+    def _prepare_trusted_asyncprawcore(self, requestor):
         authenticator = TrustedAuthenticator(
             requestor,
             self.config.client_id,
@@ -455,7 +439,7 @@ class Reddit:
         else:
             self._core = self._read_only_core
 
-    def _prepare_untrusted_prawcore(self, requestor):
+    def _prepare_untrusted_asyncprawcore(self, requestor):
         authenticator = UntrustedAuthenticator(
             requestor, self.config.client_id, self.config.redirect_uri
         )

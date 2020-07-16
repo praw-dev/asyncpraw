@@ -1,7 +1,8 @@
 References
 ==========
 
-* `PRAW Source Code <https://github.com/praw-dev/asyncpraw>`_.
+* `Async PRAW Source Code <https://github.com/praw-dev/asyncpraw>`_.
+* `PRAW Source Code <https://github.com/praw-dev/praw>`_.
 * `Reddit Source Code <https://github.com/reddit/reddit>`_.
   This repository has been archived and is no longer updated.
 * `Reddit API Wiki Page <https://github.com/reddit/reddit/wiki/API>`_.

@@ -34,7 +34,7 @@ part of the installation command:
 
 .. code-block:: bash
 
-   pip install asyncpraw==7.0.0
+   pip install asyncpraw==7.1.0
 
 Installing the Latest Development Version
 -----------------------------------------

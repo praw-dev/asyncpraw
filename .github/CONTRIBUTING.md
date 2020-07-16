@@ -22,7 +22,7 @@ participating in this project you agree to abide by its terms.
 
 ## Responding to Issues
 
-One of the simplest ways to help with PRAW is by answering others'
+One of the simplest ways to help with Async PRAW is by answering others'
 questions. When responding, always be positive. While something may be obvious
 to you, it likely is not to the person asking the question.
 
@@ -32,24 +32,24 @@ to you, it likely is not to the person asking the question.
    commenting on the issue. This act will hopefully minimize any duplicate
    work.
 
-0. Prior to creating a pull request run the `pre_push.py` script. This script
-   depends on the tools `black` `flake8`, `pylint`, `pydocstyle`, `sphinx` and `sphinx_rtd_theme`. They can
-   be installed via `pip install black flake8 pydocstyle pylint sphinx sphinx_rtd_theme` or via
+1. Prior to creating a pull request run the `pre_push.py` script. This script
+   depends on the tools `black` `flake8`, `pylint`, `pydocstyle`, `sphinx`, `sphinx_rtd_theme`, and `sphinxcontrib-trio`. They can
+   be installed via `pip install black flake8 pydocstyle pylint sphinx sphinx_rtd_theme sphinxcontrib-trio` or via
    `pip install asyncpraw[lint]`.
 
-0. Add yourself as a contributor to the ``AUTHORS.rst``.
+2. Add yourself as a contributor to the ``AUTHORS.rst``.
 
-0. Once pushed, ensure that your Github Actions build succeeds. Actions will error
+3. Once pushed, ensure that your Github Actions build succeeds. Actions will error
    before running any tests if there are _any_ `flake8` or `pydocstyle`
    issues. Resolve any issues by updating your pull request.
 
-0. Ensure that your change has complete test coverage. Tests on methods that do
+4. Ensure that your change has complete test coverage. Tests on methods that do
    not require fetching data from Reddit, e.g., method argument validation,
    should be saved as a unit test. Tests that hit Reddit's servers should be an
-   integration test and all network activity should be recorded via Betamax.
+   integration test and all network activity should be recorded via vcrpy.
    The required packages can be installed with `pip install asyncpraw[test]`.
 
-0. Feel free to check on the status of your pull request periodically by adding
+5. Feel free to check on the status of your pull request periodically by adding
    a comment.
 
 ## Becoming a Team Member
@@ -61,7 +61,7 @@ we would like to see you push a number of contributions before we add you on.
 
 ## Style Recommendations
 
-To keep PRAW's source consistent, all contribution code must pass the
+To keep Async PRAW's source consistent, all contribution code must pass the
 `pre_push.py` script. Github Actions will enforce the passing of the automated
 tests, as well as style checking done via the `pre_push.py` script. While this
 script helps ensure consistency with much of PEP8 and PEP257 there are a few
@@ -90,8 +90,7 @@ from os.path import abspath, join
 import sys
 import traceback
 
-from prawcore import NotFound
-import requests
+from asyncprawcore import NotFound
 
 from ...const import API_PATH
 from ..listing.mixins import SubmissionListingMixin
