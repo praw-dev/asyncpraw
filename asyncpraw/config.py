@@ -29,12 +29,6 @@ class Config:
         "extended": configparser.ExtendedInterpolation,
     }
 
-    @staticmethod
-    def _config_boolean(item):
-        if isinstance(item, bool):
-            return item
-        return item.lower() in {"1", "yes", "true", "on"}
-
     @classmethod
     def _load_config(cls, config_interpolation: Optional[str] = None):
         """Attempt to load settings from various praw.ini files."""
