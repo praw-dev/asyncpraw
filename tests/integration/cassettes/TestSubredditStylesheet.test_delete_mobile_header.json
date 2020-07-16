@@ -1,45 +1,54 @@
 {
-  "http_interactions": [
+  "interactions": [
     {
-      "recorded_at": "2017-01-29T20:37:39",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "grant_type=password&password=<PASSWORD>&username=<USERNAME>"
-        },
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
         "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "Basic <BASIC_AUTH>",
-          "Connection": "keep-alive",
-          "Content-Length": "57",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.3.1.dev0 prawcore/0.8.0"
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
         },
         "headers": {
           "Accept-Ranges": "bytes",
-          "Connection": "keep-alive",
-          "Content-Length": "105",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sun, 29 Jan 2017 20:37:39 GMT",
+          "Date": "Sat, 11 Jul 2020 02:23:34 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "loid=Mw1tAjsst4jj6LeDsV; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=GxXX9ywjVU18l03UMS; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-lax8646-LAX",
-          "X-Timer": "S1485722259.283941,VS0,VE400",
-          "cache-control": "max-age=0, must-revalidate",
+          "X-Served-By": "cache-mci5937-MCI",
+          "X-Timer": "S1594434214.449205,VS0,VE155",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -52,51 +61,53 @@
       }
     },
     {
-      "recorded_at": "2017-01-29T20:37:40",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "api_type=json"
-        },
+        "body": [
+          [
+            "api_type",
+            "json"
+          ]
+        ],
         "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "bearer <ACCESS_TOKEN>",
-          "Connection": "keep-alive",
-          "Content-Length": "13",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cookie": "loid=Mw1tAjsst4jj6LeDsV; loidcreated=1485722259000",
-          "User-Agent": "<USER_AGENT> PRAW/4.3.1.dev0 prawcore/0.8.0"
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/delete_sr_header?raw_json=1"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
           "string": "{\"json\": {\"errors\": []}}"
         },
         "headers": {
           "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
           "Content-Length": "24",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sun, 29 Jan 2017 20:37:40 GMT",
+          "Date": "Sat, 11 Jul 2020 02:23:34 GMT",
+          "Expires": "-1",
           "Server": "snooserv",
+          "Set-Cookie": "session_tracker=ngahehefjqfqnhijqg.0.1594434214901.Z0FBQUFBQmZDU0ttdXU3a1FVa0lVNTVrSW5zWWZCRXlvQ1hKQncySjQxTVlOTUwtS2NGUVJ2Ry01STRFZjY5RHB6bnpiTFV0SnF1ZGRZQ2otVzhFQjkzZFpEQU1aSDJmcVlGQzlUN25lS1FDQnZqb0gwaHRkX1NPZi1EYzdYRjB1WWZfb0VhUXRQLUo; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sat, 11-Jul-2020 04:23:34 GMT; secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-lax8643-LAX",
-          "X-Timer": "S1485722259.888280,VS0,VE217",
-          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, max-age=0, must-revalidate",
-          "expires": "-1",
+          "X-Served-By": "cache-mci5948-MCI",
+          "X-Timer": "S1594434215.676840,VS0,VE257",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-ratelimit-remaining": "598.0",
-          "x-ratelimit-reset": "141",
-          "x-ratelimit-used": "2",
+          "x-ratelimit-remaining": "402.0",
+          "x-ratelimit-reset": "386",
+          "x-ratelimit-used": "198",
           "x-ua-compatible": "IE=edge",
           "x-xss-protection": "1; mode=block"
         },
@@ -108,5 +119,6 @@
       }
     }
   ],
-  "recorded_with": "betamax/0.8.0"
+  "recorded_at": "2020-07-10T21:23:34",
+  "version": 1
 }

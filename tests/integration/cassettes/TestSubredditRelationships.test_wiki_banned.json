@@ -1,0 +1,304 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 01:51:11 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=lTJpw9DI8oOkUtsio8; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5921-MCI",
+          "X-Timer": "S1594432272.602120,VS0,VE97",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "name",
+            "pyapitestuser3"
+          ],
+          [
+            "type",
+            "wikibanned"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/friend/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"json\": {\"errors\": []}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "24",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 01:51:12 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=imlkplidfiohqheoeg.0.1594432272091.Z0FBQUFBQmZDUnNRMWJEZTRJVzZTM0hfZ2hYTHV3TWE5T0NPVTRUMGlnRFlneDBVcndqNUVrNmM2RHFjdFZ2TTdscVRCRzNHVVNHTGFfbXEtcHZWdEphNzNmSnFHS205TGZyTWtxZmJySlJqVWFxOXlJMzR3LUtZU0NSQ0RTSkdQSHhDcW1iUjVqV2Q; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sat, 11-Jul-2020 03:51:12 GMT; secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5924-MCI",
+          "X-Timer": "S1594432272.771413,VS0,VE481",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "534.0",
+          "x-ratelimit-reset": "528",
+          "x-ratelimit-used": "66",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/friend/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/wikibanned/?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": null, \"children\": [{\"name\": \"PyAPITestUser3\", \"days_left\": null, \"note\": \"\", \"date\": 1594432272.0, \"rel_id\": \"rb_21ifqhz\", \"id\": \"t2_6c1xj\"}], \"after\": null, \"before\": null}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "228",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 01:51:12 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5924-MCI",
+          "X-Timer": "S1594432272.334749,VS0,VE169",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "532.0",
+          "x-ratelimit-reset": "528",
+          "x-ratelimit-used": "68",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/wikibanned/?limit=100&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "name",
+            "pyapitestuser3"
+          ],
+          [
+            "type",
+            "wikibanned"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/unfriend/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "2",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 01:51:12 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=imlkplidfiohqheoeg.0.1594432272593.Z0FBQUFBQmZDUnNRVHVKWFgzUFdGb2ZidVQ0UTJNMGdHRnc4YmFpSmJQZExCSlpCdVpoemNLMzRPb1pBemJVV0VEclVqYmNidlcwUkxhTThpYlpkSi1GUnJzWE1VUndSN01aT01RM0twcE94OVA3eTNMWTJZYnhCaEJJZF9GS1hvVjZmeDI5c0VxUlo; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sat, 11-Jul-2020 03:51:12 GMT; secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5924-MCI",
+          "X-Timer": "S1594432273.524394,VS0,VE246",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "531.0",
+          "x-ratelimit-reset": "528",
+          "x-ratelimit-used": "69",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/unfriend/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/wikibanned/?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": null, \"dist\": null, \"children\": [], \"after\": null, \"before\": null}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "107",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 01:51:12 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=imlkplidfiohqheoeg.0.1594432272907.Z0FBQUFBQmZDUnNRcWlBck1GT2F2MXRZVFcyb3Y5TXZsSGtuTllVbFotWWRTMFV6MWJ1eXgzRTlRdlUxU1N0bHJqZGxDbl9LV1lCSVZ1NFpLdkdfV1NaRTk0ZEhJUWp6Si1OajVxalN4M0Z3TGdjQXdPb3hqQWV6aDRkT25MY2dLSEpoSzlPQXBTcFU; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sat, 11-Jul-2020 03:51:12 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5924-MCI",
+          "X-Timer": "S1594432273.845877,VS0,VE113",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "530.0",
+          "x-ratelimit-reset": "528",
+          "x-ratelimit-used": "70",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/wikibanned/?limit=100&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-10T20:51:12",
+  "version": 1
+}

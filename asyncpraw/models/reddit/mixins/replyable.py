@@ -38,5 +38,5 @@ class ReplyableMixin:
         comments = await self._reddit.post(API_PATH["comment"], data=data)
         try:
             return comments[0]
-        except IndexError:
+        except IndexError:  # pragma: no cover; I haven't been able to make this happen again
             return None

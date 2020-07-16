@@ -1,0 +1,112 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "client_credentials"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "106",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 07 Jul 2020 02:58:46 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=b8om4CoSoKCZVuvMBn; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1594090727.702868,VS0,VE79",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-reddit-loid": "000000000076sqsbo0.2.1594090726746.Z0FBQUFBQmZBLVRtOENUYVhnb09ZN1BBaEhqY3V6X293bkJCamlYTjF1SDBXUE9pZ0N2ZHhQazd1RWo2UTQ4em12WDMyRF84dEZDTFhqcEoxRUladzlybEJwNEVDM1F6QkpIaktXTFBvRklVQ09Bc0xLc3YyMDJ0QzZ1UFE3VU05NXJEYXdZemJuNWI",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widgets?progressive_images=false&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"items\": {\"widget_157rvnzne31kl\": {\"styles\": {\"headerColor\": \"#3333ee\", \"backgroundColor\": \"#ffff66\"}, \"kind\": \"button\", \"description\": \"Click some of these *cool* links!\", \"buttons\": [{\"kind\": \"text\", \"hoverState\": {\"color\": \"#ffffff\", \"text\": \"ecruos weiV\", \"kind\": \"text\", \"textColor\": \"#000000\", \"fillColor\": \"#0000ff\"}, \"url\": \"https://github.com/praw-dev/praw\", \"text\": \"View source\", \"color\": \"#ff0000\", \"fillColor\": \"#0000ff\", \"textColor\": \"#00ff00\"}, {\"kind\": \"image\", \"hoverState\": {\"url\": \"https://styles.redditmedia.com/t5_7ss0q/styles/image_widget_iqf47qrjvr751.PNG\", \"width\": 200, \"kind\": \"image\", \"height\": 200}, \"url\": \"https://styles.redditmedia.com/t5_7ss0q/styles/image_widget_iqf47qrjvr751.PNG\", \"text\": \"View documentation\", \"height\": 200, \"width\": 200, \"linkUrl\": \"https://praw.readthedocs.io\"}], \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EClick some of these \\u003Cem\\u003Ecool\\u003C/em\\u003E links!\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"Things to click\", \"id\": \"widget_157rvnzne31kl\"}, \"widget_moderators-7ss0q\": {\"styles\": {\"headerColor\": null, \"backgroundColor\": null}, \"kind\": \"moderators\", \"mods\": [{\"name\": \"<TEST_SUBREDDIT>\", \"authorFlairType\": \"text\", \"authorFlairTextColor\": \"dark\", \"authorFlairBackgroundColor\": \"\", \"authorFlairRichText\": [], \"authorFlairText\": null}, {\"name\": \"sloth_on_meth\", \"authorFlairType\": \"text\", \"authorFlairTextColor\": \"dark\", \"authorFlairBackgroundColor\": \"\", \"authorFlairRichText\": [], \"authorFlairText\": null}, {\"name\": \"SuzyModQ\", \"authorFlairType\": \"text\", \"authorFlairTextColor\": \"dark\", \"authorFlairBackgroundColor\": \"\", \"authorFlairRichText\": [], \"authorFlairText\": null}, {\"name\": \"<USERNAME>\", \"authorFlairType\": \"text\", \"authorFlairTextColor\": \"dark\", \"authorFlairBackgroundColor\": \"\", \"authorFlairRichText\": [], \"authorFlairText\": null}, {\"name\": \"Sponge-Tron\", \"authorFlairType\": \"text\", \"authorFlairTextColor\": \"dark\", \"authorFlairBackgroundColor\": \"\", \"authorFlairRichText\": [], \"authorFlairText\": null}], \"totalMods\": 5, \"id\": \"widget_moderators-7ss0q\"}, \"widget_id-card-7ss0q\": {\"styles\": {\"headerColor\": null, \"backgroundColor\": null}, \"subscribersCount\": 13, \"currentlyViewingText\": \"\", \"description\": \"<TEST_SUBREDDIT>\\u2019s Personal Subreddit\", \"id\": \"widget_id-card-7ss0q\", \"shortName\": \"Community Details\", \"currentlyViewingCount\": 9, \"kind\": \"id-card\", \"subscribersText\": \"\"}, \"widget_rules-7ss0q\": {\"styles\": {\"headerColor\": null, \"backgroundColor\": null}, \"kind\": \"subreddit-rules\", \"id\": \"widget_rules-7ss0q\", \"shortName\": \"Subreddit Rules\", \"data\": [{\"violationReason\": \"No spa5\", \"description\": \"Do not spam. Spam bad\", \"createdUtc\": 1593594899.0, \"priority\": 0, \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"Test post 12\"}, {\"violationReason\": \"No spa2\", \"description\": \"Do not spam. Spam bad\", \"createdUtc\": 1593594883.0, \"priority\": 1, \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"No spa2\"}, {\"violationReason\": \"No spa6\", \"description\": \"Do not spam. Spam bad\", \"createdUtc\": 1593594903.0, \"priority\": 2, \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"No spa6\"}, {\"violationReason\": \"PUpdate\", \"description\": \"Updated rule\", \"createdUtc\": 1594108751.0, \"priority\": 3, \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EUpdated rule\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"PRAW Update\"}, {\"violationReason\": \"PTest\", \"description\": \"Test by Async PRAW\", \"createdUtc\": 1594109380.0, \"priority\": 4, \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"PRAW Test\"}], \"display\": \"compact\"}, \"widget_159cndl6g3bs8\": {\"styles\": {\"headerColor\": null, \"backgroundColor\": null}, \"kind\": \"menu\", \"data\": [{\"url\": \"https://reddit.com\", \"text\": \"test\"}], \"id\": \"widget_159cndl6g3bs8\", \"showWiki\": false}, \"widget_158ajag9yebv3\": {\"styles\": {\"headerColor\": \"#3333ee\", \"backgroundColor\": \"#ffff66\"}, \"kind\": \"button\", \"description\": \"Click some of these *cool* links!\", \"buttons\": [{\"kind\": \"text\", \"hoverState\": {\"color\": \"#ffffff\", \"text\": \"ecruos weiV\", \"kind\": \"text\", \"textColor\": \"#000000\", \"fillColor\": \"#0000ff\"}, \"url\": \"https://github.com/praw-dev/praw\", \"text\": \"View source\", \"color\": \"#ff0000\", \"fillColor\": \"#0000ff\", \"textColor\": \"#00ff00\"}, {\"kind\": \"image\", \"hoverState\": {\"url\": \"https://styles.redditmedia.com/t5_7ss0q/styles/image_widget_17q1yncaja851.PNG\", \"width\": 200, \"kind\": \"image\", \"height\": 200}, \"url\": \"https://styles.redditmedia.com/t5_7ss0q/styles/image_widget_17q1yncaja851.PNG\", \"text\": \"View documentation\", \"height\": 200, \"width\": 200, \"linkUrl\": \"https://praw.readthedocs.io\"}], \"descriptionHtml\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EClick some of these \\u003Cem\\u003Ecool\\u003C/em\\u003E links!\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"shortName\": \"Things to click\", \"id\": \"widget_158ajag9yebv3\"}}, \"layout\": {\"idCardWidget\": \"widget_id-card-7ss0q\", \"topbar\": {\"order\": [\"widget_159cndl6g3bs8\"]}, \"sidebar\": {\"order\": [\"widget_158ajag9yebv3\", \"widget_157rvnzne31kl\", \"widget_rules-7ss0q\"]}, \"moderatorWidget\": \"widget_moderators-7ss0q\"}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "5668",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 07 Jul 2020 02:58:47 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5938-MCI",
+          "X-Timer": "S1594090727.859002,VS0,VE151",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widgets?progressive_images=false&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-06T21:58:47",
+  "version": 1
+}

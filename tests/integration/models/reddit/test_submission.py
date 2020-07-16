@@ -1,456 +1,435 @@
-from unittest import mock
+from asynctest import mock
 
 import pytest
 
-from praw.exceptions import RedditAPIException
-from praw.models import Comment, Submission
+from asyncpraw.exceptions import RedditAPIException
+from asyncpraw.models import Comment, Submission
 
 from ... import IntegrationTest
 
 
 class TestSubmission(IntegrationTest):
-    def test_comments(self):
-        with self.recorder.use_cassette("TestSubmission.test_comments"):
-            submission = Submission(self.reddit, "2gmzqe")
-            assert len(submission.comments) == 1
-            assert isinstance(submission.comments[0], Comment)
-            assert isinstance(submission.comments[0].replies[0], Comment)
+    async def test_comments(self):
+        with self.use_cassette():
+            submission = await self.reddit.submission("2gmzqe")
+            comments = await submission.comments()
+            assert len(comments) == 1
+            assert isinstance(comments[0], Comment)
+            assert isinstance(comments[0].replies[0], Comment)
 
-    def test_clear_vote(self):
+    async def test_clear_vote(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_clear_vote"):
-            Submission(self.reddit, "4b536p").clear_vote()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").clear_vote()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_delete(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_delete"):
-            submission = Submission(self.reddit, "4b1tfm")
-            submission.delete()
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            await submission.delete()
+            await submission.load()
             assert submission.author is None
             assert submission.selftext == "[deleted]"
 
-    def test_disable_inbox_replies(self):
+    async def test_disable_inbox_replies(self):
         self.reddit.read_only = False
-        submission = Submission(self.reddit, "6ckfdz")
-        with self.recorder.use_cassette("TestSubmission.test_disable_inbox_replies"):
-            submission.disable_inbox_replies()
+        submission = Submission(self.reddit, "hmkbt8")
+        with self.use_cassette():
+            await submission.disable_inbox_replies()
 
-    def test_downvote(self):
+    async def test_downvote(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_downvote"):
-            Submission(self.reddit, "4b536p").downvote()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").downvote()
 
-    def test_duplicates(self):
-        with self.recorder.use_cassette("TestSubmission.test_duplicates"):
+    async def test_duplicates(self):
+        with self.use_cassette():
             submission = Submission(self.reddit, "avj2v")
-            assert len(list(submission.duplicates())) > 0
+            assert len(await self.async_list(submission.duplicates())) > 0
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_edit(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_edit(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_edit"):
-            submission = Submission(self.reddit, "4b1tfm")
-            submission.edit("New text")
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            await submission.edit("New text")
             assert submission.selftext == "New text"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_edit_invalid(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_edit_invalid(self, _):
         self.reddit.read_only = False
         self.reddit.validate_on_submit = True
-        with self.recorder.use_cassette("TestSubmission.test_edit_invalid"):
-            submission = Submission(self.reddit, "eippcc")
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkfoy")
             with pytest.raises(RedditAPIException):
-                submission.edit("rewtwert")
+                await submission.edit("rewtwert")
 
-    def test_enable_inbox_replies(self):
+    async def test_enable_inbox_replies(self):
         self.reddit.read_only = False
-        submission = Submission(self.reddit, "6ckfdz")
-        with self.recorder.use_cassette("TestSubmission.test_enable_inbox_replies"):
-            submission.enable_inbox_replies()
+        submission = Submission(self.reddit, "hmkbt8")
+        with self.use_cassette():
+            await submission.enable_inbox_replies()
 
-    def test_gild__no_creddits(self):
+    async def test_gild__no_creddits(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_gild__no_creddits"):
+        with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
-                Submission(self.reddit, "4b1tfm").gild()
+                await Submission(self.reddit, "hmkbt8").gild()
             exception = excinfo.value
-            assert "INSUFFICIENT_CREDDITS" == exception.error_type
+            assert "INSUFFICIENT_COINS" == exception.error_type
 
-    def test_gilded(self):
-        with self.recorder.use_cassette("TestSubmission.test_gilded"):
-            assert 1 == Submission(self.reddit, "2gmzqe").gilded
+    async def test_gilded(self):
+        with self.use_cassette():
+            submission = await self.reddit.submission("2gmzqe")
+            assert 1 == submission.gilded
 
-    def test_hide(self):
+    async def test_hide(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_hide"):
-            Submission(self.reddit, "4b1tfm").hide()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").hide()
 
-    def test_hide_multiple(self):
+    async def test_hide_multiple(self):
         self.reddit.read_only = False
         submissions = [
             Submission(self.reddit, "fewoh"),
             Submission(self.reddit, "c625v"),
         ]
-        with self.recorder.use_cassette("TestSubmission.test_hide__multiple"):
-            Submission(self.reddit, "1eipl7").hide(submissions)
+        with self.use_cassette():
+            await Submission(self.reddit, "1eipl7").hide(submissions)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_hide_multiple_in_batches(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_hide_multiple_in_batches(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmission.test_hide__multiple_in_batches"
-        ):
-            submissions = list(self.reddit.subreddit("popular").hot(limit=100))
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit("popular")
+            submissions = await self.async_list(subreddit.hot(limit=100))
             assert len(submissions) == 100
-            submissions[0].hide(submissions[1:])
+            await submissions[0].hide(submissions[1:])
 
-    def test_invalid_attribute(self):
-        with self.recorder.use_cassette("TestSubmission.test_invalid_attribute"):
-            submission = Submission(self.reddit, "2gmzqe")
+    async def test_invalid_attribute(self):
+        with self.use_cassette():
             with pytest.raises(AttributeError) as excinfo:
+                submission = await self.reddit.submission("2gmzqe")
                 submission.invalid_attribute
         assert excinfo.value.args[0] == (
             "'Submission' object has no attribute 'invalid_attribute'"
         )
 
-    def test_reply(self):
+    async def test_reply(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_reply"):
-            submission = Submission(self.reddit, "4b1tfm")
-            comment = submission.reply("Test reply")
-            assert comment.author == self.reddit.config.username
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            comment = await submission.reply("Test reply")
+            assert comment.author == pytest.placeholders.username
             assert comment.body == "Test reply"
             assert comment.parent_id == submission.fullname
 
-    def test_reply__none(self):
-        self.reddit.read_only = False
-        submission = Submission(self.reddit, "ah19vv")
-        with self.recorder.use_cassette("TestSubmission.test_reply__none"):
-            reply = submission.reply("TEST")
-        assert reply is None
+    # async def test_reply__none(self): # TODO: I have not been able to reproduce this again; same with praw
+    #     self.reddit.read_only = False
+    #     submission = Submission(self.reddit, "ah19vv")
+    #     with self.use_cassette():
+    #         reply = submission.reply("TEST")
+    #     assert reply is None
 
-    def test_report(self):
+    async def test_report(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_report"):
-            Submission(self.reddit, "4b536h").report("praw")
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").report("praw")
 
-    def test_save(self):
+    async def test_save(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_save"):
-            Submission(self.reddit, "4b536p").save()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").save()
 
-    def test_mark_visited(self):
+    async def test_mark_visited(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_mark_visited"):
-            Submission(self.reddit, "8s529q").mark_visited()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkfoi").mark_visited()
 
-    def test_unhide(self):
+    async def test_unhide(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_unhide"):
-            Submission(self.reddit, "4b1tfm").unhide()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").unhide()
 
-    def test_unhide_multiple(self):
+    async def test_unhide_multiple(self):
         self.reddit.read_only = False
         submissions = [
             Submission(self.reddit, "fewoh"),
             Submission(self.reddit, "c625v"),
         ]
-        with self.recorder.use_cassette("TestSubmission.test_unhide__multiple"):
-            Submission(self.reddit, "1eipl7").unhide(submissions)
+        with self.use_cassette():
+            await Submission(self.reddit, "1eipl7").unhide(submissions)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_unhide_multiple_in_batches(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_unhide_multiple_in_batches(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmission.test_unhide__multiple_in_batches"
-        ):
-            submissions = list(self.reddit.subreddit("popular").hot(limit=100))
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit("popular")
+            submissions = await self.async_list(subreddit.hot(limit=100))
             assert len(submissions) == 100
-            submissions[0].unhide(submissions[1:])
+            await submissions[0].unhide(submissions[1:])
 
-    def test_unsave(self):
+    async def test_unsave(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_unsave"):
-            Submission(self.reddit, "4b536p").unsave()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").unsave()
 
-    def test_upvote(self):
+    async def test_upvote(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_upvote"):
-            Submission(self.reddit, "4b536p").upvote()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").upvote()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_crosspost(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_crosspost(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_crosspost"):
+        with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission(id="6vx01b")
 
-            submission = crosspost_parent.crosspost(subreddit)
-            assert submission.author == self.reddit.config.username
+            submission = await crosspost_parent.crosspost(subreddit)
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
             assert submission.title == "Test Title"
             assert submission.crosspost_parent == "t3_6vx01b"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_crosspost__subreddit_object(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_crosspost__subreddit_object(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmission.test_crosspost__subreddit_object"
-        ):
-            subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            crosspost_parent = self.reddit.submission(id="6vx01b")
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            crosspost_parent = await self.reddit.submission(id="6vx01b")
 
-            submission = crosspost_parent.crosspost(subreddit)
-            assert submission.author == self.reddit.config.username
+            submission = await crosspost_parent.crosspost(subreddit)
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
             assert submission.title == "Test Title"
             assert submission.crosspost_parent == "t3_6vx01b"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_crosspost__custom_title(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_crosspost__custom_title(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_crosspost__custom_title"):
-            subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            crosspost_parent = self.reddit.submission(id="6vx01b")
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            crosspost_parent = await self.reddit.submission(id="6vx01b")
 
-            submission = crosspost_parent.crosspost(subreddit, "my title")
-            assert submission.author == self.reddit.config.username
+            submission = await crosspost_parent.crosspost(subreddit, "my title")
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
             assert submission.title == "my title"
             assert submission.crosspost_parent == "t3_6vx01b"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_crosspost__flair(self, _):
-        flair_id = "2d2321ca-9205-11e9-a847-0e9f3cfadcac"
-        flair_text = "Test flair text"
-        flair_class = "test-flair-class"
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_crosspost__flair(self, _):
+        flair_id = "94f13282-e2e8-11e8-8291-0eae4e167256"
+        flair_text = "AF"
+        flair_class = ""
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_crosspost__flair"):
+        with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission(id="6vx01b")
 
-            submission = crosspost_parent.crosspost(
+            submission = await crosspost_parent.crosspost(
                 subreddit, flair_id=flair_id, flair_text=flair_text
             )
+            await submission.load()
             assert submission.link_flair_css_class == flair_class
             assert submission.link_flair_text == flair_text
             assert submission.crosspost_parent == "t3_6vx01b"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_crosspost__nsfw(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_crosspost__nsfw(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_crosspost__nsfw"):
+        with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission(id="6vx01b")
 
-            submission = crosspost_parent.crosspost(subreddit, nsfw=True)
+            submission = await crosspost_parent.crosspost(subreddit, nsfw=True)
+            await submission.load()
             assert submission.over_18 is True
             assert submission.crosspost_parent == "t3_6vx01b"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_crosspost__spoiler(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_crosspost__spoiler(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmission.test_crosspost__spoiler"):
+        with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission(id="6vx01b")
 
-            submission = crosspost_parent.crosspost(subreddit, spoiler=True)
+            submission = await crosspost_parent.crosspost(subreddit, spoiler=True)
+            await submission.load()
             assert submission.spoiler is True
             assert submission.crosspost_parent == "t3_6vx01b"
 
 
 class TestSubmissionFlair(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
-    def test_choices(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_choices(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionFlair.test_choices"):
-            submission = Submission(self.reddit, "4t4t2h")
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
             expected = [
                 {
-                    "flair_text": "SATISFIED",
-                    "flair_template_id": "680f43b8-1fec-11e3-80d1-12313b0b80bc",  # noqa:E501
-                    "flair_text_editable": False,
-                    "flair_position": "left",
                     "flair_css_class": "",
-                },
-                {
-                    "flair_text": "STATS",
-                    "flair_template_id": "16cabd0a-a68d-11e5-8349-0e8ff96e6679",  # noqa:E501
-                    "flair_text_editable": False,
-                    "flair_position": "left",
-                    "flair_css_class": "",
-                },
+                    "flair_position": "right",
+                    "flair_template_id": "94f13282-e2e8-11e8-8291-0eae4e167256",
+                    "flair_text": "AF",
+                    "flair_text_editable": True,
+                }
             ]
-            assert expected == submission.flair.choices()
+            choices = await submission.flair.choices()
+            assert expected == choices
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_select(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_select(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionFlair.test_select"):
-            submission = Submission(self.reddit, "4t4t2h")
-            submission.flair.select("16cabd0a-a68d-11e5-8349-0e8ff96e6679")
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            await submission.flair.select("94f13282-e2e8-11e8-8291-0eae4e167256")
 
 
 class TestSubmissionModeration(IntegrationTest):
-    def test_approve(self):
+    async def test_approve(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_approve"):
-            self.reddit.submission("4b536h").mod.approve()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.approve()
 
-    def test_contest_mode(self):
+    async def test_contest_mode(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_contest_mode"):
-            submission = Submission(self.reddit, "4s2idz")
-            submission.mod.contest_mode()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.contest_mode()
 
-    def test_contest_mode__disable(self):
+    async def test_contest_mode__disable(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_contest_mode__disable"
-        ):
-            submission = Submission(self.reddit, "4s2idz")
-            submission.mod.contest_mode(state=False)
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.contest_mode(state=False)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_flair"):
-            self.reddit.submission("4b536p").mod.flair("submission flair")
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair("AF")
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair_template_id(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair_template_id(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_flair_with_template_id"
-        ):
-            self.reddit.submission("eh9xy1").mod.flair(
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair(
                 "submission flair",
-                flair_template_id="0f7349d8-2a6d-11ea-8529-0e5dee3e1a9d",
+                flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
             )
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair_text_only(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair_text_only(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_flair_text_only"
-        ):
-            self.reddit.submission("eh9xy1").mod.flair("submission flair")
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair("submission flair")
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair_text_and_css_class(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair_text_and_css_class(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_flair_text_and_css_class"
-        ):
-            self.reddit.submission("eh9xy1").mod.flair(
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair(
                 "submission flair", css_class="submission flair"
             )
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair_all(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair_all(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_flair_all"):
-            self.reddit.submission("eh9xy1").mod.flair(
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair(
                 "submission flair",
                 css_class="submission flair",
-                flair_template_id="0f7349d8-2a6d-11ea-8529-0e5dee3e1a9d",
+                flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
             )
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair_just_template_id(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair_just_template_id(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_flair_just_template_id"
-        ):
-            self.reddit.submission("eh9xy1").mod.flair(
-                flair_template_id="0f7349d8-2a6d-11ea-8529-0e5dee3e1a9d"
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair(
+                flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256"
             )
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_flair_just_css_class(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_flair_just_css_class(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_flair_just_css_class"
-        ):
-            self.reddit.submission("eh9xy1").mod.flair(css_class="submission flair")
-
-    def test_distinguish(self):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_distinguish"):
-            self.reddit.submission("4b536h").mod.distinguish()
-
-    def test_ignore_reports(self):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_ignore_reports"):
-            self.reddit.submission("31ybt2").mod.ignore_reports()
-
-    def test_nsfw(self):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_nsfw"):
-            Submission(self.reddit, "4s2idz").mod.nsfw()
-
-    def test_lock(self):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_lock"):
-            Submission(self.reddit, "4s2idz").mod.lock()
-
-    def test_remove(self):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_remove"):
-            self.reddit.submission("4b536h").mod.remove(spam=True)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_remove_with_reason_id(self, _):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_remove_with_reason_id"
-        ):
-            self.reddit.submission("e3op46").mod.remove(reason_id="110nhral8vygf")
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_add_removal_reason(self, _):
-        self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_add_removal_reason"
-        ):
-            submission = Submission(self.reddit, "e3oo6a")
-            submission.mod.remove()
-            submission.mod._add_removal_reason(
-                mod_note="Foobar", reason_id="110nhral8vygf"
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.flair(
+                css_class="submission flair"
             )
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_add_removal_reason_without_id(self, _):
+    async def test_distinguish(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_add_removal_reason_without_id"
-        ):
-            submission = Submission(self.reddit, "e3om6k")
-            submission.mod.remove()
-            submission.mod._add_removal_reason(mod_note="Foobar")
+        with self.use_cassette():
+            await Submission(self.reddit, "hrzz2x").mod.distinguish()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_add_removal_reason_without_id_or_note(self, _):
+    async def test_ignore_reports(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_add_removal_reason_invalid"
-        ):
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.ignore_reports()
+
+    async def test_nsfw(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.nsfw()
+
+    async def test_lock(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.lock()
+
+    async def test_remove(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.remove(spam=True)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_remove_with_reason_id(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.remove(
+                reason_id="159bqhvme3rxe"
+            )
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_add_removal_reason(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            await submission.mod.remove()
+            await submission.mod._add_removal_reason(
+                mod_note="Foobar", reason_id="159bqhvme3rxe"
+            )
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_add_removal_reason_without_id(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            submission = Submission(self.reddit, "hmkbt8")
+            await submission.mod.remove()
+            await submission.mod._add_removal_reason(mod_note="Foobar")
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_add_removal_reason_without_id_or_note(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
             with pytest.raises(ValueError) as excinfo:
-                submission = Submission(self.reddit, "e4ds11")
-                submission.mod.remove()
-                submission.mod._add_removal_reason()
+                submission = Submission(self.reddit, "hmkbt8")
+                await submission.mod.remove()
+                await submission.mod._add_removal_reason()
             assert excinfo.value.args[0].startswith("mod_note cannot be blank")
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_send_removal_message(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_send_removal_message(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_send_removal_message"
-        ):
-            submission = self.reddit.submission("aezo6s")
+        with self.use_cassette():
+            submission = await self.reddit.submission("hmkutx")
             mod = submission.mod
-            mod.remove()
+            await mod.remove()
             message = "message"
             res = [
-                mod.send_removal_message(type, "title", message)
+                await mod.send_removal_message(message, "Be Kind", type)
                 for type in ("public", "private", "private_exposed")
             ]
             assert isinstance(res[0], Comment)
@@ -460,94 +439,84 @@ class TestSubmissionModeration(IntegrationTest):
             assert res[1] is None
             assert res[2] is None
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_set_original_content(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_set_original_content(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_set_original_content"
-        ):
-            submission = Submission(self.reddit, "dueqm6")
+        with self.use_cassette():
+            submission = await self.reddit.submission("hmkbt8")
             assert not submission.is_original_content
-            submission.mod.set_original_content()
-            submission = Submission(self.reddit, "dueqm6")
+            await submission.mod.set_original_content()
+            submission = await self.reddit.submission("hmkbt8")
             assert submission.is_original_content
 
-    def test_sfw(self):
+    async def test_sfw(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_sfw"):
-            Submission(self.reddit, "4s2idz").mod.sfw()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.sfw()
 
-    def test_spoiler(self):
+    async def test_spoiler(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_spoiler"):
-            Submission(self.reddit, "5ouli3").mod.spoiler()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.spoiler()
 
-    def test_sticky(self):
+    async def test_sticky(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_sticky"):
-            Submission(self.reddit, "4s2idz").mod.sticky()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.sticky()
 
-    def test_sticky__remove(self):
+    async def test_sticky__remove(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_sticky__remove"):
-            Submission(self.reddit, "4s2idz").mod.sticky(state=False)
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.sticky(state=False)
 
-    def test_sticky__top(self):
+    async def test_sticky__top(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_sticky__top"):
-            Submission(self.reddit, "4s2idz").mod.sticky(bottom=False)
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.sticky(bottom=False)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_sticky__ignore_conflicts(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_sticky__ignore_conflicts(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_sticky__ignore_conflicts"
-        ):
-            Submission(self.reddit, "f1iczt").mod.sticky(bottom=False)
-            Submission(self.reddit, "f1iczt").mod.sticky(bottom=False)
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.sticky(bottom=False)
+            await Submission(self.reddit, "hmkbt8").mod.sticky(bottom=False)
 
-    def test_suggested_sort(self):
+    async def test_suggested_sort(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_suggested_sort"):
-            Submission(self.reddit, "4s2idz").mod.suggested_sort(sort="random")
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.suggested_sort(sort="random")
 
-    def test_suggested_sort__clear(self):
+    async def test_suggested_sort__clear(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_suggested_sort__clear"
-        ):
-            Submission(self.reddit, "4s2idz").mod.suggested_sort(sort="blank")
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.suggested_sort(sort="blank")
 
-    def test_undistinguish(self):
+    async def test_undistinguish(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_undistinguish"):
-            self.reddit.submission("4b536h").mod.undistinguish()
+        with self.use_cassette():
+            await Submission(self.reddit, "hrzz2x").mod.undistinguish()
 
-    def test_unignore_reports(self):
+    async def test_unignore_reports(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_unignore_reports"
-        ):
-            self.reddit.submission("31ybt2").mod.unignore_reports()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.unignore_reports()
 
-    def test_unlock(self):
+    async def test_unlock(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_unlock"):
-            Submission(self.reddit, "4s2idz").mod.unlock()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.unlock()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_unset_original_content(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_unset_original_content(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubmissionModeration.test_unset_original_content"
-        ):
-            submission = Submission(self.reddit, "duig7f")
+        with self.use_cassette():
+            submission = await self.reddit.submission("hmkbt8")
             assert submission.is_original_content
-            submission.mod.unset_original_content()
-            submission = Submission(self.reddit, "duig7f")
+            await submission.mod.unset_original_content()
+            submission = await self.reddit.submission("hmkbt8")
             assert not submission.is_original_content
 
-    def test_unspoiler(self):
+    async def test_unspoiler(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestSubmissionModeration.test_unspoiler"):
-            Submission(self.reddit, "5ouli3").mod.unspoiler()
+        with self.use_cassette():
+            await Submission(self.reddit, "hmkbt8").mod.unspoiler()

@@ -1,6 +1,6 @@
 import pytest
 
-from praw.exceptions import ClientException, RedditAPIException
+from asyncpraw.exceptions import ClientException, RedditAPIException
 
 from . import UnitTest
 

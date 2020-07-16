@@ -1,0 +1,114 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "client_credentials"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "106",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 06 Jul 2020 01:11:30 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=izl8LCXlI6F4aR7O21; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5928-MCI",
+          "X-Timer": "S1593997891.837873,VS0,VE85",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-reddit-loid": "000000000076c2mjcu.2.1593997890888.Z0FBQUFBQmZBbnBDZkpvdHV0UVYwVzdXVmk4a0p4aUdCNTc4dHNkT1R5elNSbXg1Y1RVaXRjODZQYU5CNmJMLTRKemlFZ1ZmNDZ1U0pEWi13eElmbEZuRnhZcUJRZUxMTzZGX1J6M0EzUWtRRUItWEVjY0FhOWlQSDIydzFVUms4RkRsTW53Ylg4MW8",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/live/ukaeu1ik4sw5/updates/7827987a-c998-11e4-a0b9-22000b6a88d2?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": \"\", \"dist\": null, \"children\": [{\"kind\": \"LiveUpdate\", \"data\": {\"body\": \"Small change: Piloting a live thread of reddit updates!\", \"name\": \"LiveUpdate_7827987a-c998-11e4-a0b9-22000b6a88d2\", \"mobile_embeds\": [], \"author\": \"umbrae\", \"embeds\": [], \"created\": 1426290541.0, \"created_utc\": 1426261741.0, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ESmall change: Piloting a live thread of reddit updates!\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"stricken\": false, \"id\": \"7827987a-c998-11e4-a0b9-22000b6a88d2\"}}], \"after\": null, \"before\": null}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "X-Moose",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "582",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 06 Jul 2020 01:11:31 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5934-MCI",
+          "X-Timer": "S1593997891.011402,VS0,VE94",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/live/ukaeu1ik4sw5/updates/7827987a-c998-11e4-a0b9-22000b6a88d2?raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-05T20:11:31",
+  "version": 1
+}

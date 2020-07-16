@@ -121,7 +121,7 @@ class Subreddits(AsyncPRAWBase):
 
     async def search_by_name(
         self, query: str, include_nsfw: bool = True, exact: bool = False
-    ) -> List[Subreddit]:
+    ) -> AsyncGenerator[Subreddit, None]:
         """Return list of Subreddits whose names begin with ``query``.
 
         :param query: Search for subreddits beginning with this string.
@@ -129,24 +129,29 @@ class Subreddits(AsyncPRAWBase):
         :param exact: Return only exact matches to ``query`` (default: False).
 
         """
-        result = await self._reddit.post(
+        results = await self._reddit.post(
             API_PATH["subreddits_name_search"],
             data={"include_over_18": include_nsfw, "exact": exact, "query": query},
         )
-        return [await self._reddit.subreddit(x) for x in result["names"]]
+        for result in results["names"]:
+            yield await self._reddit.subreddit(result)
 
-    async def search_by_topic(self, query: str) -> List[Subreddit]:
+    async def search_by_topic(
+        self, query: str
+    ) -> AsyncGenerator[
+        Subreddit, None
+    ]:  # pragma: no cover; TODO: not currently working
         """Return list of Subreddits whose topics match ``query``.
 
         :param query: Search for subreddits relevant to the search topic.
 
         """
-        result = await self._reddit.get(
+        results = await self._reddit.get(
             API_PATH["subreddits_by_topic"], params={"query": query}
         )
-        return [
-            await self._reddit.subreddit(x["name"]) for x in result if x.get("name")
-        ]
+        for result in results:
+            subreddit = await self._reddit.subreddit(result["name"])
+            yield subreddit
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]

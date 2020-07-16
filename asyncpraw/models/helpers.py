@@ -2,8 +2,6 @@
 from json import dumps
 from typing import AsyncGenerator, List, Optional, Union
 
-from asyncprawcore import NotFound
-
 from ..const import API_PATH
 from .base import AsyncPRAWBase
 from .reddit.live import LiveThread
@@ -33,7 +31,7 @@ class LiveHelper(AsyncPRAWBase):
             await livethread.close()
 
         :param id: A live thread ID, e.g., ``ukaeu1ik4sw5``.
-        :param fetch: Determines if the object is loaded on call (default: False).
+        :param fetch: Determines if the object is lazily loaded (default: False).
         """
         live_thread = LiveThread(self._reddit, id=id)
         if fetch:
@@ -70,7 +68,7 @@ class LiveHelper(AsyncPRAWBase):
         if not isinstance(ids, list):
             raise TypeError("ids must be a list")
 
-        async def generator():
+        async def generator():  # pragma: no cover; FIXME this endpoint does not work as of 07/12/2020
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
@@ -143,7 +141,7 @@ class MultiredditHelper(AsyncPRAWBase):
         :param redditor: A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance who owns the multireddit.
         :param name: The name of the multireddit.
-        :param fetch: Determines if the object is loaded on call (default: False).
+        :param fetch: Determines if the object is lazily loaded (default: False).
         """
         path = "/user/{}/m/{}".format(redditor, name)
         multireddit = Multireddit(self._reddit, _data={"name": name, "path": path})
@@ -213,7 +211,7 @@ class SubredditHelper(AsyncPRAWBase):
                 print(comment.author)
 
         :param display_name: The name of the subreddit.
-        :param fetch: Determines if the object is loaded on call (default: False).
+        :param fetch: Determines if the object is lazily loaded (default: False).
         """
         lower_name = display_name.lower()
 
@@ -221,21 +219,10 @@ class SubredditHelper(AsyncPRAWBase):
             return await self._reddit.random_subreddit()
         if lower_name == "randnsfw":
             return await self._reddit.random_subreddit(nsfw=True)
-        sub = Subreddit(self._reddit, display_name=display_name)
+        subreddit = Subreddit(self._reddit, display_name=display_name)
         if fetch:
-            sub = await self._determine_fetch(lower_name, sub)
-        return sub
-
-    async def _determine_fetch(self, lower_name, sub):
-        # if the sub doesn't exist then check to see if it is a special subreddit
-        # construct and re-raise the exception if it is not
-        if "+" not in lower_name and lower_name not in ["mod", "all"]:
-            try:
-                await sub._fetch()
-                return sub
-            except NotFound:
-                if not lower_name.startswith(("mod", "all")) and "-" not in lower_name:
-                    raise NotFound
+            await subreddit._fetch()
+        return subreddit
 
     async def create(
         self,
@@ -276,6 +263,5 @@ class SubredditHelper(AsyncPRAWBase):
             wikimode=wikimode,
             **other_settings
         )
-        subreddit = self(name)
-        await subreddit._fetch()
+        subreddit = await self(name, fetch=True)
         return subreddit

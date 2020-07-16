@@ -1,4 +1,4 @@
-from praw.util import camel_to_snake, snake_case_keys
+from asyncpraw.util import camel_to_snake, snake_case_keys
 
 from .. import UnitTest
 

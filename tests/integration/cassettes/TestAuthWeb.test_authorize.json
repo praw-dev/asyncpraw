@@ -1,56 +1,70 @@
 {
-  "http_interactions": [
-    {
-      "recorded_at": "2016-09-26T01:30:51",
-      "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "code=<AUTH_CODE>&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A8080"
-        },
-        "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "Basic <BASIC_AUTH>",
-          "Connection": "keep-alive",
-          "Content-Length": "105",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b19 prawcore/0.2.1"
-        },
-        "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
-      },
-      "response": {
-        "body": {
-          "encoding": "UTF-8",
-          "string": "{\"access_token\": \"HYGtnURVekY4C9kDwWZQEMvfG8Y\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"refresh_token\": \"6250838-MUT1KNpBK2VXSau3oGPQy1uHiKM\", \"scope\": \"submit\"}"
-        },
-        "headers": {
-          "Accept-Ranges": "bytes",
-          "Connection": "keep-alive",
-          "Content-Length": "166",
-          "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Mon, 26 Sep 2016 01:30:51 GMT",
-          "Server": "snooserv",
-          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
-          "Via": "1.1 varnish",
-          "X-Cache": "MISS",
-          "X-Cache-Hits": "0",
-          "X-Moose": "majestic",
-          "X-Served-By": "cache-sea1925-SEA",
-          "X-Timer": "S1474853451.566203,VS0,VE143",
-          "cache-control": "max-age=0, must-revalidate",
-          "set-cookie": "loid=pjDxQox1jCTlRmE6qO; Domain=reddit.com; Max-Age=63071999; Path=/; expires=Wed, 26-Sep-2018 01:30:51 GMT; secure",
-          "x-content-type-options": "nosniff",
-          "x-frame-options": "SAMEORIGIN",
-          "x-xss-protection": "1; mode=block"
-        },
-        "status": {
-          "code": 200,
-          "message": "OK"
-        },
-        "url": "https://www.reddit.com/api/v1/access_token"
-      }
+  "interactions": [
+  {
+    "request": {
+    "method": "POST",
+    "uri": "https://www.reddit.com/api/v1/access_token",
+    "body": [
+      [
+      "code",
+      "<AUTH_CODE>"
+      ],
+      [
+      "grant_type",
+      "authorization_code"
+      ],
+      [
+      "redirect_uri",
+      "<REDIRECT_URI>"
+      ]
+    ],
+    "headers": {
+      "User-Agent": [
+      "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+      ],
+      "Accept-Encoding": [
+      "identity"
+      ],
+      "Connection": [
+      "close"
+      ],
+      "AUTHORIZATION": [
+      "Basic <BASIC_AUTH>"
+      ]
     }
+    },
+    "response": {
+    "status": {
+      "code": 200,
+      "message": "OK"
+    },
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "176",
+      "Content-Type": "application/json; charset=UTF-8",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "1; mode=block",
+      "Cache-Control": "max-age=0, must-revalidate",
+      "X-Moose": "majestic",
+      "Accept-Ranges": "bytes",
+      "Date": "Sat, 04 Jul 2020 20:47:13 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-mci5949-MCI",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1593895633.443734,VS0,VE169",
+      "Set-Cookie": "edgebucket=jAOlvRQiwVTzbZ17mQ; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+      "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+      "Server": "snooserv"
+    },
+    "body": {
+      "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"refresh_token\": \"40646879-jy7U4xwiZr66H1H3lmI9_3ARDWQ\", \"scope\": \"submit\"}"
+    },
+    "url": "https://www.reddit.com/api/v1/access_token"
+    }
+  }
   ],
-  "recorded_with": "betamax/0.7.2"
+  "recorded_at": "2020-07-04T18:07:23",
+  "version": 1
 }

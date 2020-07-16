@@ -424,11 +424,11 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            my_sub = await reddit.subreddit("SUBREDDIT")
+            my_sub = await reddit.subreddit("SUBREDDIT", fetch=True)
             new_collection = await my_sub.collections.mod.create("Title", "desc")
 
         """
-        return SubredditCollectionsModeration(self._reddit, self.subreddit.fullname)
+        return SubredditCollectionsModeration(self._reddit, self.subreddit)
 
     async def __call__(
         self,
@@ -440,7 +440,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
-        :param lazy: Determines if object is loaded lazily (default: False)
+        :param lazy: If True, object is loaded lazily (default: False)
         :returns: The specified Collection.
 
         Exactly one of ``collection_id`` and ``permalink`` is required.
@@ -466,7 +466,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
             collection = await subreddit.collections(uuid, lazy=True)
             await collection.mod.add("submission_id")
 
@@ -504,6 +504,8 @@ class SubredditCollections(AsyncPRAWBase):
                 print(collection.permalink)
 
         """
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
         request = await self._reddit.get(
             API_PATH["collection_subreddit"],
             params={"sr_fullname": self.subreddit.fullname},
@@ -527,12 +529,12 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
     def __init__(
         self,
         reddit: "Reddit",
-        sub_fullname: str,
+        subreddit: Subreddit,
         _data: Optional[Dict[str, Any]] = None,
     ):
         """Initialize the SubredditCollectionsModeration instance."""
         super().__init__(reddit, _data)
-        self.subreddit_fullname = sub_fullname
+        self.subreddit = subreddit
 
     async def create(self, title: str, description: str):
         """Create a new :class:`.Collection`.
@@ -556,10 +558,12 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         .. seealso:: :meth:`~CollectionModeration.delete`
 
         """
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
         return await self._reddit.post(
             API_PATH["collection_create"],
             data={
-                "sr_fullname": self.subreddit_fullname,
+                "sr_fullname": self.subreddit.fullname,
                 "title": title,
                 "description": description,
             },

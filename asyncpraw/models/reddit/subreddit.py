@@ -5,13 +5,13 @@ import socket
 from copy import deepcopy
 from csv import writer
 from io import StringIO
-from json import dumps, loads
+from json import dumps
 from os.path import basename, dirname, join
 from typing import List
 from urllib.parse import urljoin
 from xml.etree.ElementTree import XML
 
-import websockets
+from aiohttp.web_ws import WebSocketError
 from asyncprawcore import Redirect
 
 from ...const import API_PATH, JPEG_HEADER
@@ -612,8 +612,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         # significant time between the POST request just above this
         # comment and the creation of the websocket connection just
         # below, the code will become stuck in an infinite loop at the
-        # connection.recv() call. I believe this is because only one message is
-        # sent over the websocket, and if the client doesn't connect
+        # connection.receive_json() call. I believe this is because only one
+        # message is sent over the websocket, and if the client doesn't connect
         # soon enough, it will miss the message and get stuck forever
         # waiting for another.
         #
@@ -625,15 +625,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             return
 
         try:
-            async with websockets.connect(
-                response["json"]["data"]["websocket_url"], close_timeout=timeout
+            async with self._reddit._core._requestor._http.ws_connect(
+                response["json"]["data"]["websocket_url"], timeout=timeout
             ) as websocket:
-                ws_update = loads(await websocket.recv())
-        except (
-            websockets.WebSocketException,
-            socket.error,
-            BlockingIOError,
-        ) as ws_exception:
+                ws_update = await websocket.receive_json()
+        except (WebSocketError, socket.error, BlockingIOError,) as ws_exception:
             raise WebSocketException(
                 "Websocket error. Check your media file. "
                 "Your post may still have been created. "
@@ -1319,8 +1315,9 @@ class SubredditFilters:
                ...
 
         """
+        user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter_list"].format(
-            special=self.subreddit, user=self.subreddit._reddit.user.me()
+            special=self.subreddit, user=user
         )
         params = {"unique": self.subreddit._reddit._next_unique}
         response_data = await self.subreddit._reddit.get(url, params=params)
@@ -1346,10 +1343,9 @@ class SubredditFilters:
             subreddit.
 
         """
+        user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
-            special=self.subreddit,
-            user=self.subreddit._reddit.user.me(),
-            subreddit=subreddit,
+            special=self.subreddit, user=user, subreddit=subreddit,
         )
         await self.subreddit._reddit.put(
             url, data={"model": dumps({"name": str(subreddit)})}
@@ -1364,10 +1360,9 @@ class SubredditFilters:
             subreddit.
 
         """
+        user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
-            special=self.subreddit,
-            user=self.subreddit._reddit.user.me(),
-            subreddit=str(subreddit),
+            special=self.subreddit, user=user, subreddit=subreddit,
         )
         await self.subreddit._reddit.delete(url)
 
@@ -1409,7 +1404,7 @@ class SubredditFlair:
         """
         return SubredditRedditorFlairTemplates(self.subreddit)
 
-    async def __call__(self, redditor=None, **generator_kwargs):
+    def __call__(self, redditor=None, **generator_kwargs):
         """Return a :class:`.ListingGenerator` for Redditors and their flairs.
 
         :param redditor: When provided, yield at most a single
@@ -1427,7 +1422,7 @@ class SubredditFlair:
                 print(flair)
 
         """
-        Subreddit._safely_add_arguments(generator_kwargs, "params", name=redditor)
+        Subreddit._safely_add_arguments(generator_kwargs, "params", name=str(redditor))
         generator_kwargs.setdefault("limit", None)
         url = API_PATH["flairlist"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
@@ -1496,7 +1491,8 @@ class SubredditFlair:
             each delete.
 
         """
-        return self.update(x["user"] for x in self())
+        all_flairs = [x["user"] async for x in self()]
+        return await self.update(all_flairs)
 
     async def set(self, redditor, text="", css_class="", flair_template_id=None):
         """Set flair for a Redditor.
@@ -2130,7 +2126,8 @@ class SubredditModeration:
     async def settings(self):
         """Return a dictionary of the subreddit's current settings."""
         url = API_PATH["subreddit_settings"].format(subreddit=self.subreddit)
-        return await self.subreddit._reddit.get(url)["data"]
+        response = await self.subreddit._reddit.get(url)
+        return response["data"]
 
     def spam(self, only=None, **generator_kwargs):
         """Return a :class:`.ListingGenerator` for spam comments and submissions.
@@ -2290,6 +2287,8 @@ class SubredditModeration:
         value. If they do not please file a bug.
 
         """
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
         settings["sr"] = self.subreddit.fullname
         return await self.subreddit._reddit.patch(
             API_PATH["update_settings"], json=settings
@@ -2519,7 +2518,7 @@ class SubredditQuarantine:
                 print(submission)  # Returns Submission
 
         """
-        data = {"sr_name": self.subreddit}
+        data = {"sr_name": str(self.subreddit)}
         try:
             await self.subreddit._reddit.post(API_PATH["quarantine_opt_in"], data=data)
         except Redirect:
@@ -2541,7 +2540,7 @@ class SubredditQuarantine:
                 print(submission)
 
         """
-        data = {"sr_name": self.subreddit}
+        data = {"sr_name": str(self.subreddit)}
         try:
             await self.subreddit._reddit.post(API_PATH["quarantine_opt_out"], data=data)
         except Redirect:
@@ -2633,6 +2632,8 @@ class ContributorRelationship(SubredditRelationship):
 
     async def leave(self):
         """Abdicate the contributor position."""
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
         await self.subreddit._reddit.post(
             API_PATH["leavecontributor"], data={"id": self.subreddit.fullname}
         )
@@ -2769,7 +2770,10 @@ class ModeratorRelationship(SubredditRelationship):
             await subreddit.moderator.leave()
 
         """
-        await self.remove(self.subreddit._reddit.config.username)
+        username = self.subreddit._reddit.config.username or str(
+            await self.subreddit._reddit.user.me()
+        )
+        await self.remove(username)
 
     async def remove_invite(self, redditor):
         """Remove the moderator invite for ``redditor``.
@@ -2857,12 +2861,12 @@ class Modmail:
 
     """
 
-    async def __call__(self, id=None, mark_read=False):  # noqa: D207, D301
+    async def __call__(self, id=None, mark_read=False, fetch=True):  # noqa: D207, D301
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
-        :param mark_read: If True, conversation is marked as read
-            (default: False).
+        :param mark_read: If True, conversation is marked as read (default: False).
+        :param fetch: If True, conversation fully fetched (default: True).
 
         For example:
 
@@ -2870,6 +2874,15 @@ class Modmail:
 
             subreddit = await reddit.subreddit("redditdev")
             await subreddit.modmail("2gmz", mark_read=True)
+
+        If you don't need the object fetched right away (e.g., to utilize a
+        class method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("redditdev")
+            message = await subreddit.modmail("2gmz", lazy=True)
+            await message.archive()
 
         To print all messages from a conversation as Markdown source:
 
@@ -2907,7 +2920,8 @@ class Modmail:
         modmail_conversation = ModmailConversation(
             self.subreddit._reddit, id=id, mark_read=mark_read
         )
-        await modmail_conversation._fetch()
+        if fetch:
+            await modmail_conversation._fetch()
         return modmail_conversation
 
     def __init__(self, subreddit):
@@ -2931,7 +2945,7 @@ class Modmail:
         :param state: Can be one of: all, archived, highlighted, inprogress,
             mod, new, notifications, (default: all). "all" does not include
             internal or archived conversations.
-        :returns: A list of :class:`.ModmailConversation` instances that were
+        :returns: A list of lazy :class:`.ModmailConversation` instances that were
             marked read.
 
         For example, to mark all notifications for a subreddit as read:
@@ -2949,7 +2963,8 @@ class Modmail:
             API_PATH["modmail_bulk_read"], params=params
         )
         return [
-            self(conversation_id) for conversation_id in response["conversation_ids"]
+            await self(conversation_id, fetch=False)
+            for conversation_id in response["conversation_ids"]
         ]
 
     async def conversations(
@@ -3027,9 +3042,9 @@ class Modmail:
         data = {
             "body": body,
             "isAuthorHidden": author_hidden,
-            "srName": self.subreddit,
+            "srName": str(self.subreddit),
             "subject": subject,
-            "to": recipient,
+            "to": str(recipient),
         }
         return await self.subreddit._reddit.post(
             API_PATH["modmail_conversations"], data=data
@@ -3049,7 +3064,9 @@ class Modmail:
         """
         response = await self.subreddit._reddit.get(API_PATH["modmail_subreddits"])
         for value in response["subreddits"].values():
-            subreddit = self.subreddit._reddit.subreddit(value["display_name"])
+            subreddit = type(self.subreddit)(
+                self.subreddit._reddit, value["display_name"]
+            )
             subreddit.last_updated = value["lastUpdated"]
             yield subreddit
 
@@ -3194,8 +3211,9 @@ class SubredditStylesheet:
             image.seek(0)
             data["img_type"] = "jpg" if header == JPEG_HEADER else "png"
             url = API_PATH["upload_image"].format(subreddit=self.subreddit)
-            data["file"] = image
-            response = await self.subreddit._reddit.post(url, data=data)
+            response = await self.subreddit._reddit.post(
+                url, data=data, files={"file": image}
+            )
             if response["errors"]:
                 error_type = response["errors"][0]
                 error_value = response.get("errors_values", [""])[0]
@@ -3219,9 +3237,8 @@ class SubredditStylesheet:
         upload_url = "https:{}".format(upload_lease["action"])
 
         with open(image_path, "rb") as image:
-            upload_data["file"] = image
             response = await self.subreddit._reddit._core._requestor._http.post(
-                upload_url, data=upload_data
+                upload_url, data=upload_data, files={"file": image}
             )
         response.raise_for_status()
 
@@ -3354,8 +3371,7 @@ class SubredditStylesheet:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT")
-            await subreddit.stylesheet.update(
-               'p { color: green; }', "color text green")
+            await subreddit.stylesheet.update('p { color: green; }', "color text green")
 
         """
         data = {
@@ -3391,7 +3407,9 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload("smile", "img.png")
 
         """
-        return self._upload_image(image_path, {"name": name, "upload_type": "img"})
+        return await self._upload_image(
+            image_path, {"name": name, "upload_type": "img"}
+        )
 
     async def upload_banner(self, image_path):
         """Upload an image for the subreddit's (redesign) banner image.
@@ -3414,7 +3432,7 @@ class SubredditStylesheet:
 
         """
         image_type = "bannerBackgroundImage"
-        image_url = self._upload_style_asset(image_path, image_type)
+        image_url = await self._upload_style_asset(image_path, image_type)
         await self._update_structured_styles({image_type: image_url})
 
     async def upload_banner_additional_image(self, image_path, align=None):
@@ -3448,7 +3466,7 @@ class SubredditStylesheet:
             alignment["bannerPositionedImagePosition"] = align
 
         image_type = "bannerPositionedImage"
-        image_url = self._upload_style_asset(image_path, image_type)
+        image_url = await self._upload_style_asset(image_path, image_type)
         style_data = {image_type: image_url}
         if alignment:
             style_data.update(alignment)
@@ -3477,7 +3495,7 @@ class SubredditStylesheet:
 
         """
         image_type = "secondaryBannerPositionedImage"
-        image_url = self._upload_style_asset(image_path, image_type)
+        image_url = await self._upload_style_asset(image_path, image_type)
         await self._update_structured_styles({image_type: image_url})
 
     async def upload_header(self, image_path):
@@ -3502,7 +3520,7 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload_header("header.png")
 
         """
-        return self._upload_image(image_path, {"upload_type": "header"})
+        return await self._upload_image(image_path, {"upload_type": "header"})
 
     async def upload_mobile_header(self, image_path):
         """Upload an image to be used as the Subreddit's mobile header.
@@ -3526,7 +3544,7 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload_mobile_header("header.png")
 
         """
-        return self._upload_image(image_path, {"upload_type": "banner"})
+        return await self._upload_image(image_path, {"upload_type": "banner"})
 
     async def upload_mobile_icon(self, image_path):
         """Upload an image to be used as the Subreddit's mobile icon.
@@ -3556,8 +3574,10 @@ class SubredditStylesheet:
 class SubredditWiki:
     """Provides a set of wiki functions to a Subreddit."""
 
-    async def get_page(self, page_name):
+    async def get_page(self, page_name, lazy=False):
         """Return the WikiPage for the subreddit named ``page_name``.
+
+        Set ``lazy=True`` to skip fetching the wiki page.
 
         This method is to be used to fetch a specific wikipage, like so:
 
@@ -3569,7 +3589,8 @@ class SubredditWiki:
 
         """
         wikipage = WikiPage(self.subreddit._reddit, self.subreddit, page_name.lower())
-        await wikipage._fetch()
+        if not lazy:
+            await wikipage._fetch()
         return wikipage
 
     def __init__(self, subreddit):

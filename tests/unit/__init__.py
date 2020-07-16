@@ -1,11 +1,12 @@
 """PRAW Unit test suite."""
-from praw import Reddit
+import asynctest
+from asyncpraw import Reddit
 
 
-class UnitTest:
-    """Base class for Async PRAW unit tests."""
+class UnitTest(asynctest.TestCase):
+    """Base class for PRAW unit tests."""
 
-    def setup(self):
+    async def setUp(self):
         """Setup runs before all test cases."""
         self.reddit = Reddit(
             client_id="dummy", client_secret="dummy", user_agent="dummy"

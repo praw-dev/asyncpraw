@@ -92,6 +92,7 @@ class ThingModerationMixin:
 
         """
         data = {"how": how, "id": self.thing.fullname}
+        await self.thing._fetch()
         if sticky and getattr(self.thing, "is_root", False):
             data["sticky"] = True
         await self.thing._reddit.post(API_PATH["distinguish"], data=data)

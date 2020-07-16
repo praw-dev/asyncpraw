@@ -1,45 +1,54 @@
 {
-  "http_interactions": [
+  "interactions": [
     {
-      "recorded_at": "2016-11-15T06:44:29",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "grant_type=client_credentials"
-        },
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
         "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "Basic <BASIC_AUTH>",
-          "Connection": "keep-alive",
-          "Content-Length": "29",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b22 prawcore/0.2.1"
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"access_token\": \"e4ygfdGOQoer3uEkiC_IOPpKdcE\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
         },
         "headers": {
           "Accept-Ranges": "bytes",
-          "Connection": "keep-alive",
-          "Content-Length": "105",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 15 Nov 2016 06:44:29 GMT",
+          "Date": "Mon, 13 Jul 2020 23:49:32 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "loid=i047c6txQuSolDvZAt; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=dvid3A9pbHZd87MQZA; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-sea1922-SEA",
-          "X-Timer": "S1479192269.148460,VS0,VE85",
-          "cache-control": "max-age=0, must-revalidate",
+          "X-Served-By": "cache-mci5932-MCI",
+          "X-Timer": "S1594684172.248592,VS0,VE137",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -52,48 +61,48 @@
       }
     },
     {
-      "recorded_at": "2016-11-15T06:44:29",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": ""
-        },
+        "body": null,
         "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "bearer e4ygfdGOQoer3uEkiC_IOPpKdcE",
-          "Connection": "keep-alive",
-          "Cookie": "loidcreated=1479192269000; loid=i047c6txQuSolDvZAt",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b22 prawcore/0.2.1"
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/recommend/sr/cityporn,earthporn?raw_json=1&omit=skyporn%2Cwinterporn"
+        "uri": "https://oauth.reddit.com/api/recommend/sr/cityporn,earthporn?omit=skyporn,winterporn&raw_json=1"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "[{\"sr_name\": \"BackYardChickens\"}, {\"sr_name\": \"NoShitSherlock\"}, {\"sr_name\": \"Quebec\"}, {\"sr_name\": \"DesignPorn\"}, {\"sr_name\": \"AbandonedPorn\"}, {\"sr_name\": \"earthgifs\"}, {\"sr_name\": \"ruralporn\"}, {\"sr_name\": \"unfazed\"}, {\"sr_name\": \"seinfeldgifs\"}, {\"sr_name\": \"waterporn\"}]"
+          "string": "[]"
         },
         "headers": {
           "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
-          "Content-Length": "275",
+          "Content-Length": "2",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 15 Nov 2016 06:44:29 GMT",
+          "Date": "Mon, 13 Jul 2020 23:49:32 GMT",
+          "Expires": "-1",
           "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
           "X-Cache": "MISS",
           "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-sea1925-SEA",
-          "X-Timer": "S1479192269.458683,VS0,VE96",
-          "access-control-allow-origin": "*",
-          "access-control-expose-headers": "X-Reddit-Tracking, X-Moose",
-          "cache-control": "max-age=0, must-revalidate",
+          "X-Served-By": "cache-mci5930-MCI",
+          "X-Timer": "S1594684172.481658,VS0,VE103",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-reddit-tracking": "https://pixel.redditmedia.com/pixel/of_destiny.png?v=AcDkd4G9%2Fna%2FH%2FgmJHzWWj0Cigk0DNXYrKOoTsuDjXJD4kFM2MJN1nuZ%2Fkzy099%2BZIzNUXk0xklZU4TV7tujYSkcJzUpQjEIx0qlXvEGmUggGrQdSX%2Fpsw%3D%3D",
+          "x-ratelimit-remaining": "47.0",
+          "x-ratelimit-reset": "28",
+          "x-ratelimit-used": "553",
           "x-ua-compatible": "IE=edge",
           "x-xss-protection": "1; mode=block"
         },
@@ -101,9 +110,10 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/recommend/sr/cityporn,earthporn?raw_json=1&omit=skyporn%2Cwinterporn"
+        "url": "https://oauth.reddit.com/api/recommend/sr/cityporn,earthporn?omit=skyporn,winterporn&raw_json=1"
       }
     }
   ],
-  "recorded_with": "betamax/0.8.0"
+  "recorded_at": "2020-07-13T18:49:32",
+  "version": 1
 }

@@ -1,9 +1,7 @@
-import pickle
-
 import pytest
 
-from praw.models import Emoji, Subreddit
-from praw.models.reddit.emoji import SubredditEmoji
+from asyncpraw.models import Emoji, Subreddit
+from asyncpraw.models.reddit.emoji import SubredditEmoji
 
 from ... import UnitTest
 
@@ -27,9 +25,9 @@ class TestEmoji(UnitTest):
         assert emoji1 != emoji6
         assert emoji1 != 5
 
-    def test__get(self):
-        subreddit = self.reddit.subreddit("a")
-        emoji = subreddit.emoji["a"]
+    async def test__get(self):
+        subreddit = Subreddit(self.reddit, display_name="a")
+        emoji = await subreddit.emoji.get_emoji("a", lazy=True)
         assert isinstance(emoji, Emoji)
 
     def test_hash(self):
@@ -48,12 +46,6 @@ class TestEmoji(UnitTest):
         assert hash(emoji1) != hash(emoji5)
         assert hash(emoji1) != hash(emoji6)
 
-    def test_pickle(self):
-        emoji = Emoji(self.reddit, subreddit=Subreddit(self.reddit, "a"), name="x")
-        for level in range(pickle.HIGHEST_PROTOCOL + 1):
-            other = pickle.loads(pickle.dumps(emoji, protocol=level))
-            assert emoji == other
-
     def test_repr(self):
         emoji = Emoji(self.reddit, subreddit=Subreddit(self.reddit, "a"), name="x")
         assert repr(emoji) == ("Emoji(name='x')")
@@ -62,10 +54,10 @@ class TestEmoji(UnitTest):
         emoji = Emoji(self.reddit, subreddit=Subreddit(self.reddit, "a"), name="x")
         assert str(emoji) == "x"
 
-    def test_update(self):
+    async def test_update(self):
         emoji = Emoji(self.reddit, subreddit=Subreddit(self.reddit, "a"), name="x")
         with pytest.raises(TypeError) as excinfo:
-            emoji.update()
+            await emoji.update()
         assert str(excinfo.value) == "At least one attribute must be provided"
 
 

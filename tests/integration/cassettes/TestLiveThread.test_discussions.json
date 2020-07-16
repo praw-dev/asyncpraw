@@ -1,0 +1,114 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "client_credentials"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post2"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "106",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Thu, 16 Jul 2020 01:06:48 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=tugU5TL086bvbMJmt0; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5944-MCI",
+          "X-Timer": "S1594861608.170079,VS0,VE73",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-reddit-loid": "00000000007agxk9qw.2.1594861608213.Z0FBQUFBQmZENmdvcWN3c0l4V2pLTjhQRUcxcTRyOEQySUU5dXdfc1pXT0tOMGF0clFkclFmOHUybUtGTm5mZGhzSXNKemYzZldvblNFTTN0UkVybXF5ZXBPQi1zVldqQVVESjhDVjVzQ2pSak1qVjViSDRXVzNldU5TVGlOTlpkUGRFZXNVS1RNa1E",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post2"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/live/1595195m6j9zw/discussions?limit=1024&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": \"\", \"dist\": 0, \"children\": [], \"after\": null, \"before\": null}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "X-Moose",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "102",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Thu, 16 Jul 2020 01:06:48 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5936-MCI",
+          "X-Timer": "S1594861608.371738,VS0,VE100",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/live/1595195m6j9zw/discussions?limit=1024&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-15T20:06:48",
+  "version": 1
+}

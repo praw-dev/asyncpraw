@@ -1,0 +1,174 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 03:59:43 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=2AaxFgjPo3ah28fyJx; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5920-MCI",
+          "X-Timer": "S1594439984.824102,VS0,VE93",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": {
+          "sr_name": "tiananmenaquarefalse"
+        },
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/quarantine_optout?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "2",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 03:59:44 GMT",
+          "Expires": "-1",
+          "Location": "https://oauth.reddit.com/.json",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=kpdphmornpodeofkkg.0.1594439984058.Z0FBQUFBQmZDVGt3ZlFfTWJ3OHd4Q21UNEFFX1pKdWY5T0twMDBxVmk1eS14VV9Vcy14YjBHR25JdF9mRkNtVmRLWTVWQ0JVdGp2YzRIcWZoRG9zTjA5ZkJQX09vcjVDRndZREtRVkhqSnhUSklWd1Bubl9JM0ViN1hmcDRMbVlmeG1uSVptVDJBcGc; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sat, 11-Jul-2020 05:59:44 GMT; secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5924-MCI",
+          "X-Timer": "S1594439984.991713,VS0,VE112",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "22.0",
+          "x-ratelimit-reset": "16",
+          "x-ratelimit-used": "578",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 302,
+          "message": "Found"
+        },
+        "url": "https://oauth.reddit.com/api/quarantine_optout?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/tiananmenaquarefalse/new?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"reason\": \"quarantined\", \"quarantine_message_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EIt may contain a high degree of misinformation. If you are seeking historical information about the events in Tiananmen Square, please note the Pulitzer Prize-winning archival coverage available \\u003Ca href=\\\"https://www.pulitzer.org/article/army-clears-tiananmen-square\\\"\\u003Ehere\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"message\": \"Forbidden\", \"quarantine_message\": \"It may contain a high degree of misinformation. If you are seeking historical information about the events in Tiananmen Square, please note the Pulitzer Prize-winning archival coverage available [here](https://www.pulitzer.org/article/army-clears-tiananmen-square).\", \"error\": 403}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "X-Moose",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "805",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 11 Jul 2020 03:59:44 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5924-MCI",
+          "X-Timer": "S1594439984.122655,VS0,VE136",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 403,
+          "message": "Forbidden"
+        },
+        "url": "https://oauth.reddit.com/r/tiananmenaquarefalse/new?limit=100&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2020-07-10T22:59:44",
+  "version": 1
+}

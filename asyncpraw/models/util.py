@@ -1,6 +1,6 @@
 """Provide helper classes used by other models."""
 import random
-import time
+import asyncio
 from typing import Any, Callable, AsyncGenerator, List, Optional, Set
 
 
@@ -131,7 +131,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit('redditdev', lazy=True)
+        subreddit = await reddit.subreddit('redditdev')
         async for comment in subreddit.stream.comments(pause_after=6):
             if comment is None:
                 break
@@ -209,4 +209,4 @@ async def stream_generator(
                 responses_without_new = 0
                 yield None
             else:
-                time.sleep(exponential_counter.counter())
+                await asyncio.sleep(exponential_counter.counter())

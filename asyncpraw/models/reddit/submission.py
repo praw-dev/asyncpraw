@@ -43,6 +43,8 @@ class SubmissionFlair:
             choices = await submission.flair.choices()
 
         """
+        if not self.submission._fetched:
+            await self.submission._fetch()
         url = API_PATH["flairselector"].format(subreddit=self.submission.subreddit)
         data = await self.submission._reddit.post(
             url, data={"link": self.submission.fullname}
@@ -74,6 +76,8 @@ class SubmissionFlair:
             "link": self.submission.fullname,
             "text": text,
         }
+        if not self.submission._fetched:
+            await self.submission._fetch()
         url = API_PATH["select_flair"].format(subreddit=self.submission.subreddit)
         await self.submission._reddit.post(url, data=data)
 
@@ -157,6 +161,8 @@ class SubmissionModeration(ThingModerationMixin):
             "link": self.thing.fullname,
             "text": text,
         }
+        if not self.thing._fetched:
+            await self.thing._fetch()
         url = API_PATH["flair"].format(subreddit=self.thing.subreddit)
         if flair_template_id is not None:
             data["flair_template_id"] = flair_template_id
@@ -208,7 +214,7 @@ class SubmissionModeration(ThingModerationMixin):
             "fullname": self.thing.fullname,
             "should_set_oc": True,
             "executed": False,
-            "r": self.thing.subreddit,
+            "r": str(self.thing.subreddit),
         }
         await self.thing._reddit.post(API_PATH["set_original_content"], data=data)
 
@@ -321,7 +327,7 @@ class SubmissionModeration(ThingModerationMixin):
             "fullname": self.thing.fullname,
             "should_set_oc": False,
             "executed": False,
-            "r": self.thing.subreddit,
+            "r": str(self.thing.subreddit),
         }
         await self.thing._reddit.post(API_PATH["set_original_content"], data=data)
 
@@ -441,7 +447,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         """Return the class's kind."""
         return self._reddit.config.kinds["submission"]
 
-    async def comments(self) -> CommentForest:  # TODO: this might need changed
+    async def comments(self) -> CommentForest:
         """Provide an instance of :class:`.CommentForest`.
 
         This attribute can use used, for example, to obtain a flat list of

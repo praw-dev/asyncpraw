@@ -1,10 +1,10 @@
 import sys
 from os.path import abspath, dirname, join
-from unittest import mock
+from asynctest import mock
 
 import pytest
 
-from praw.models import (
+from asyncpraw.models import (
     Button,
     ButtonWidget,
     Calendar,
@@ -28,22 +28,19 @@ from praw.models import (
 
 from ... import IntegrationTest
 
-if sys.version_info.major > 2:
-    basestring = str  # pylint: disable=invalid-name
+
+def image_path(name):
+    test_dir = abspath(dirname(sys.modules[__name__].__file__))
+    return abspath(join(test_dir, "..", "..", "files", name))
 
 
 class TestButtonWidget(IntegrationTest):
-    @staticmethod
-    def image_path(name):
-        test_dir = abspath(dirname(sys.modules[__name__].__file__))
-        return join(test_dir, "..", "..", "files", name)
-
-    def test_button_widget(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_button_widget(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             button_widget = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, ButtonWidget):
                     button_widget = widget
                     break
@@ -52,7 +49,7 @@ class TestButtonWidget(IntegrationTest):
             assert all(isinstance(button, Button) for button in button_widget.buttons)
             assert button_widget == button_widget
             assert button_widget.id == button_widget
-            assert button_widget in widgets.sidebar
+            assert button_widget in await self.async_list(widgets.sidebar())
 
             assert button_widget[0].text
             assert button_widget.shortName
@@ -60,23 +57,21 @@ class TestButtonWidget(IntegrationTest):
 
             assert subreddit == button_widget.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestButtonWidget.test_create_and_update_and_delete"
-        ):
+        with self.use_cassette():
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            my_image = widgets.mod.upload_image(self.image_path("test.png"))
+            my_image = await widgets.mod.upload_image(image_path("test.png"))
             buttons = [
                 {
                     "kind": "text",
                     "text": "View source",
-                    "url": "https://github.com/praw-dev/praw",
+                    "url": "https://github.com/praw-dev/asyncpraw",
                     "color": "#FF0000",
                     "textColor": "#00FF00",
                     "fillColor": "#0000FF",
@@ -91,7 +86,7 @@ class TestButtonWidget(IntegrationTest):
                 {
                     "kind": "image",
                     "text": "View documentation",
-                    "linkUrl": "https://praw.readthedocs.io",
+                    "linkUrl": "https://asyncpraw.readthedocs.io",
                     "url": my_image,
                     "height": 200,
                     "width": 200,
@@ -111,7 +106,7 @@ class TestButtonWidget(IntegrationTest):
                     "fillColor": "#005500",
                 },
             ]
-            widget = widgets.mod.add_button_widget(
+            widget = await widgets.mod.add_button_widget(
                 "Things to click", "Click some of these *cool* links!", buttons, styles,
             )
 
@@ -123,22 +118,22 @@ class TestButtonWidget(IntegrationTest):
             assert widget.styles == styles
 
             assert widget[0].text == "View source"
-            assert widget[0].url == "https://github.com/praw-dev/praw"
+            assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
             assert widget[2].text == "/r/redditdev"
             assert widget[2].url == "https://reddit.com/r/redditdev"
 
             assert widget[1].text == "View documentation"
-            assert widget[1].linkUrl == "https://praw.readthedocs.io"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
             assert widget[1].hoverState["kind"] == "image"
             assert widget[1].hoverState["height"] == 200
 
-            widgets.refresh()  # the links are initially invalid
-            for new_widget in widgets.sidebar:
+            await widgets.refresh()  # the links are initially invalid
+            async for new_widget in widgets.sidebar():
                 if new_widget == widget:
                     widget = new_widget
                     break
 
-            widget = widget.mod.update(shortName="New short name")
+            widget = await widget.mod.update(shortName="New short name")
 
             assert isinstance(widget, ButtonWidget)
             assert len(widget) == 3
@@ -148,17 +143,17 @@ class TestButtonWidget(IntegrationTest):
             assert widget.styles == styles
 
             assert widget[0].text == "View source"
-            assert widget[0].url == "https://github.com/praw-dev/praw"
+            assert widget[0].url == "https://github.com/praw-dev/asyncpraw"
             assert widget[2].text == "/r/redditdev"
             assert widget[2].url == "https://reddit.com/r/redditdev"
 
             assert widget[1].text == "View documentation"
-            assert widget[1].linkUrl == "https://praw.readthedocs.io"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
             assert widget[1].hoverState["kind"] == "image"
             assert widget[1].hoverState["height"] == 200
 
             buttons.reverse()
-            widget = widget.mod.update(buttons=buttons)
+            widget = await widget.mod.update(buttons=buttons)
 
             assert isinstance(widget, ButtonWidget)
             assert len(widget) == 3
@@ -170,46 +165,44 @@ class TestButtonWidget(IntegrationTest):
             assert widget[0].text == "/r/redditdev"
             assert widget[0].url == "https://reddit.com/r/redditdev"
             assert widget[2].text == "View source"
-            assert widget[2].url == "https://github.com/praw-dev/praw"
+            assert widget[2].url == "https://github.com/praw-dev/asyncpraw"
 
             assert widget[1].text == "View documentation"
-            assert widget[1].linkUrl == "https://praw.readthedocs.io"
+            assert widget[1].linkUrl == "https://asyncpraw.readthedocs.io"
             assert widget[1].hoverState["kind"] == "image"
             assert widget[1].hoverState["height"] == 200
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
 
 class TestCalendar(IntegrationTest):
-    def test_calendar(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_calendar(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             calendar = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, Calendar):
                     calendar = widget
                     break
             assert isinstance(calendar, Calendar)
             assert calendar == calendar
             assert calendar.id == calendar
-            assert calendar in widgets.sidebar
+            assert calendar in await self.async_list(widgets.sidebar())
 
             assert isinstance(calendar.configuration, dict)
             assert hasattr(calendar, "requiresSync")
 
             assert subreddit == calendar.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestCalendar.test_create_and_update_and_delete"
-        ):
+        with self.use_cassette():
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
             config = {
                 "numEvents": 10,
@@ -220,7 +213,7 @@ class TestCalendar(IntegrationTest):
                 "showTitle": True,
             }
             cal_id = "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
-            widget = widgets.mod.add_calendar(
+            widget = await widgets.mod.add_calendar(
                 "Upcoming Events", cal_id, True, config, styles
             )
 
@@ -233,7 +226,7 @@ class TestCalendar(IntegrationTest):
             assert widget.configuration == config
             assert widget.styles == styles
 
-            widget = widget.mod.update(shortName="Past Events :(")
+            widget = await widget.mod.update(shortName="Past Events :(")
 
             assert isinstance(widget, Calendar)
             assert widget.shortName == "Past Events :("
@@ -244,16 +237,16 @@ class TestCalendar(IntegrationTest):
             assert widget.configuration == config
             assert widget.styles == styles
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
 
 class TestCommunityList(IntegrationTest):
-    def test_community_list(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_community_list(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             comm_list = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, CommunityList):
                     comm_list = widget
                     break
@@ -262,78 +255,67 @@ class TestCommunityList(IntegrationTest):
             assert all(isinstance(subreddit, Subreddit) for subreddit in comm_list)
             assert comm_list == comm_list
             assert comm_list.id == comm_list
-            assert comm_list in widgets.sidebar
+            assert comm_list in await self.async_list(widgets.sidebar())
 
             assert comm_list.shortName
             assert comm_list[0] in comm_list
 
             assert subreddit == comm_list.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestCommunityList.test_create_and_update_and_delete"
-        ):
+        with self.use_cassette():
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            subreddits = ["learnpython", self.reddit.subreddit("redditdev")]
-            widget = widgets.mod.add_community_list(
-                "My fav subs", subreddits, styles, "My description"
+            redditdev = await self.reddit.subreddit("redditdev")
+            subreddits = ["learnpython", redditdev]
+            widget = await widgets.mod.add_community_list(
+                "My fav subs", subreddits, styles
             )
-
             assert isinstance(widget, CommunityList)
             assert widget.shortName == "My fav subs"
             assert widget.styles == styles
-            assert widget.description == "My description"
-            assert self.reddit.subreddit("learnpython") in widget
+            learnpython = await self.reddit.subreddit("learnpython")
+            assert learnpython in widget
             assert "redditdev" in widget
 
-            widget = widget.mod.update(
-                shortName="My least fav subs :(",
-                data=["redesign"],
-                description="My new description",
+            widget = await widget.mod.update(
+                shortName="My least fav subs :(", data=["redesign"],
             )
 
             assert isinstance(widget, CommunityList)
             assert widget.shortName == "My least fav subs :("
             assert widget.styles == styles
-            assert widget.description == "My new description"
-            assert self.reddit.subreddit("redesign") in widget
+            redesign = await self.reddit.subreddit("redesign")
+            assert redesign in widget
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
 
 class TestCustomWidget(IntegrationTest):
-    @staticmethod
-    def image_path(name):
-        test_dir = abspath(dirname(sys.modules[__name__].__file__))
-        return join(test_dir, "..", "..", "files", name)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestCustomWidget.test_create_and_update_and_delete"
-        ):
+        with self.use_cassette():
             image_dicts = [
                 {
                     "width": 0,
                     "height": 0,
                     "name": "a",
-                    "url": widgets.mod.upload_image(self.image_path("test.png")),
+                    "url": await widgets.mod.upload_image(image_path("test.png")),
                 }
             ]
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            widget = widgets.mod.add_custom_widget(
+            widget = await widgets.mod.add_custom_widget(
                 "My widget", "# Hello world!", "/**/", 200, image_dicts, styles
             )
 
@@ -348,13 +330,14 @@ class TestCustomWidget(IntegrationTest):
 
             # initially, image URLs are incorrect, so we much refresh to get
             # the proper ones.
-            widgets.refresh()
-            refreshed = widgets.sidebar[-1]
+            await widgets.refresh()
+            sidebar = await self.async_list(widgets.sidebar())
+            refreshed = sidebar[-1]
             assert refreshed == widget
             widget = refreshed
 
             new_css = "h1,h2,h3,h4,h5,h6 {color: #00ff00;}"
-            widget = widget.mod.update(css=new_css)
+            widget = await widget.mod.update(css=new_css)
 
             assert isinstance(widget, CustomWidget)
             assert widget.shortName == "My widget"
@@ -365,14 +348,14 @@ class TestCustomWidget(IntegrationTest):
             assert len(widget.imageData) == 1
             assert all(isinstance(img, ImageData) for img in widget.imageData)
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
-    def test_custom_widget(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_custom_widget(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             custom = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, CustomWidget):
                     custom = widget
                     break
@@ -381,7 +364,7 @@ class TestCustomWidget(IntegrationTest):
             assert all(isinstance(img_data, ImageData) for img_data in custom.imageData)
             assert custom == custom
             assert custom.id == custom
-            assert custom in widgets.sidebar
+            assert custom in await self.async_list(widgets.sidebar())
 
             assert 500 >= custom.height >= 50
             assert custom.text
@@ -392,11 +375,11 @@ class TestCustomWidget(IntegrationTest):
 
 
 class TestIDCard(IntegrationTest):
-    def test_id_card(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_id_card(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            card = widgets.id_card
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
+            card = await widgets.id_card()
             assert isinstance(card, IDCard)
             assert card == card
             assert card.id == card
@@ -407,58 +390,54 @@ class TestIDCard(IntegrationTest):
 
             assert subreddit == card.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestIDCard.test_update"):
-            assert widgets.id_card.currentlyViewingText != "Users here NOW!"
-            assert widgets.id_card.subscribersText != "Loyal readers"
+        with self.use_cassette():
+            id_card = await widgets.id_card()
+            assert id_card.currentlyViewingText != "Users here NOW!"
+            assert id_card.subscribersText != "Loyal readers"
 
-            widgets.id_card.mod.update(currentlyViewingText="Users here NOW!")
-            widgets.refresh()
+            await id_card.mod.update(currentlyViewingText="Users here NOW!")
+            await widgets.refresh()
+            id_card = await widgets.id_card()
 
-            assert widgets.id_card.currentlyViewingText == "Users here NOW!"
-            assert widgets.id_card.subscribersText != "Loyal readers"
+            assert id_card.currentlyViewingText == "Users here NOW!"
+            assert id_card.subscribersText != "Loyal readers"
 
-            widgets.id_card.mod.update(subscribersText="Loyal readers")
-            widgets.refresh()
+            await id_card.mod.update(subscribersText="Loyal readers")
+            await widgets.refresh()
+            id_card = await widgets.id_card()
 
-            assert widgets.id_card.currentlyViewingText == "Users here NOW!"
-            assert widgets.id_card.subscribersText == "Loyal readers"
+            assert id_card.currentlyViewingText == "Users here NOW!"
+            assert id_card.subscribersText == "Loyal readers"
 
 
 class TestImageWidget(IntegrationTest):
-    @staticmethod
-    def image_path(name):
-        test_dir = abspath(dirname(sys.modules[__name__].__file__))
-        return join(test_dir, "..", "..", "files", name)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestImageWidget.test_create_and_update_and_delete"
-        ):
-            image_paths = (self.image_path(name) for name in ("test.jpg", "test.png"))
+        with self.use_cassette():
+            image_paths = (image_path(name) for name in ("test.jpg", "test.png"))
             image_dicts = [
                 {
-                    "width": 0,
-                    "height": 0,
+                    "width": 10,
+                    "height": 10,
                     "linkUrl": "",
-                    "url": widgets.mod.upload_image(img_path),
+                    "url": await widgets.mod.upload_image(img_path),
                 }
                 for img_path in image_paths
             ]
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            widget = widgets.mod.add_image_widget(
+            widget = await widgets.mod.add_image_widget(
                 short_name="My new pics!", data=image_dicts, styles=styles
             )
 
@@ -468,7 +447,9 @@ class TestImageWidget(IntegrationTest):
             assert len(widget) == 2
             assert all(isinstance(img, Image) for img in widget)
 
-            widget = widget.mod.update(shortName="My old pics :(", data=image_dicts[:1])
+            widget = await widget.mod.update(
+                shortName="My old pics :(", data=image_dicts[:1]
+            )
 
             assert isinstance(widget, ImageWidget)
             assert widget.shortName == "My old pics :("
@@ -476,14 +457,14 @@ class TestImageWidget(IntegrationTest):
             assert len(widget) == 1
             assert all(isinstance(img, Image) for img in widget)
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
-    def test_image_widget(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_image_widget(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             img_widget = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, ImageWidget):
                     img_widget = widget
                     break
@@ -492,7 +473,7 @@ class TestImageWidget(IntegrationTest):
             assert all(isinstance(image, Image) for image in img_widget)
             assert img_widget == img_widget
             assert img_widget.id == img_widget
-            assert img_widget in widgets.sidebar
+            assert img_widget in await self.async_list(widgets.sidebar())
 
             assert img_widget[0].linkUrl
             assert img_widget.shortName
@@ -501,11 +482,11 @@ class TestImageWidget(IntegrationTest):
 
 
 class TestMenu(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
         menu_contents = [
@@ -513,15 +494,15 @@ class TestMenu(IntegrationTest):
             {
                 "text": "Python packages",
                 "children": [
-                    {"text": "PRAW", "url": "https://praw.readthedocs.io/"},
+                    {"text": "PRAW", "url": "https://asyncpraw.readthedocs.io/"},
                     {"text": "requests", "url": "http://python-requests.org"},
                 ],
             },
             {"text": "Reddit homepage", "url": "https://reddit.com"},
         ]
 
-        with self.recorder.use_cassette("TestMenu.test_create_and_update_and_delete"):
-            widget = widgets.mod.add_menu(menu_contents)
+        with self.use_cassette():
+            widget = await widgets.mod.add_menu(menu_contents)
 
             assert isinstance(widget, Menu)
             assert len(widget) == 3
@@ -539,12 +520,12 @@ class TestMenu(IntegrationTest):
 
             assert widget[1].text == "Python packages"
             assert widget[1][0].text == "PRAW"
-            assert widget[1][0].url == "https://praw.readthedocs.io/"
+            assert widget[1][0].url == "https://asyncpraw.readthedocs.io/"
             assert widget[1][1].text == "requests"
             assert widget[1][1].url == "http://python-requests.org"
 
             menu_contents.reverse()
-            widget = widget.mod.update(data=menu_contents)
+            widget = await widget.mod.update(data=menu_contents)
 
             assert isinstance(widget, Menu)
             assert len(widget) == 3
@@ -562,18 +543,18 @@ class TestMenu(IntegrationTest):
 
             assert widget[1].text == "Python packages"
             assert widget[1][0].text == "PRAW"
-            assert widget[1][0].url == "https://praw.readthedocs.io/"
+            assert widget[1][0].url == "https://asyncpraw.readthedocs.io/"
             assert widget[1][1].text == "requests"
             assert widget[1][1].url == "http://python-requests.org"
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
-    def test_menu(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_menu(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             menu = None
-            for widget in widgets.topbar:
+            async for widget in widgets.topbar():
                 if isinstance(widget, Menu):
                     menu = widget
                     break
@@ -581,7 +562,7 @@ class TestMenu(IntegrationTest):
             assert all(isinstance(item, (MenuLink, Submenu)) for item in menu)
             assert menu == menu
             assert menu.id == menu
-            assert menu in widgets.topbar
+            assert menu in await self.async_list(widgets.topbar())
             assert len(menu) >= 1
             assert menu[0].text
 
@@ -600,11 +581,11 @@ class TestMenu(IntegrationTest):
 
 
 class TestModeratorsWidget(IntegrationTest):
-    def test_moderators_widget(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_moderators_widget(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            mods = widgets.moderators_widget
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
+            mods = await widgets.moderators_widget()
             assert isinstance(mods, ModeratorsWidget)
             assert all(isinstance(mod, Redditor) for mod in mods)
             assert mods == mods
@@ -615,37 +596,36 @@ class TestModeratorsWidget(IntegrationTest):
 
             assert subreddit == mods.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         new_styles = {"backgroundColor": "#bababa", "headerColor": "#407bee"}
-        with self.recorder.use_cassette("TestModeratorsWidget.test_update"):
-            assert widgets.moderators_widget.styles != new_styles
+        with self.use_cassette():
+            mod_widget = await widgets.moderators_widget()
+            assert mod_widget.styles != new_styles
+            await mod_widget.mod.update(styles=new_styles)
+            await widgets.refresh()
+            mod_widget = await widgets.moderators_widget()
 
-            widgets.moderators_widget.mod.update(styles=new_styles)
-            widgets.refresh()
-
-            assert widgets.moderators_widget.styles == new_styles
+            assert mod_widget.styles == new_styles
 
 
 class TestPostFlairWidget(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestPostFlairWidget.test_create_and_update_and_delete"
-        ):
-            flairs = [f["id"] for f in subreddit.flair.link_templates][:30]
+        with self.use_cassette():
+            flairs = [f["id"] async for f in subreddit.flair.link_templates][:30]
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            widget = widgets.mod.add_post_flair_widget(
+            widget = await widgets.mod.add_post_flair_widget(
                 "Some flairs", "list", flairs, styles
             )
 
@@ -657,7 +637,7 @@ class TestPostFlairWidget(IntegrationTest):
             assert len(widget) == len(flairs)
             assert all(flair_id in widget.templates for flair_id in widget)
 
-            widget = widget.mod.update(display="cloud")
+            widget = await widget.mod.update(display="cloud")
 
             assert isinstance(widget, PostFlairWidget)
             assert widget.shortName == "Some flairs"
@@ -667,7 +647,7 @@ class TestPostFlairWidget(IntegrationTest):
             assert len(widget) == len(flairs)
             assert all(flair_id in widget.templates for flair_id in widget)
 
-            widget = widget.mod.update(order=widget.order[:1])
+            widget = await widget.mod.update(order=widget.order[:1])
 
             assert isinstance(widget, PostFlairWidget)
             assert widget.shortName == "Some flairs"
@@ -677,14 +657,14 @@ class TestPostFlairWidget(IntegrationTest):
             assert len(widget) == 1
             assert all(flair_id in widget.templates for flair_id in widget)
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
-    def test_post_flair_widget(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_post_flair_widget(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             pf_widget = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, PostFlairWidget):
                     pf_widget = widget
                     break
@@ -693,7 +673,7 @@ class TestPostFlairWidget(IntegrationTest):
             assert all(flair_id in widget.templates for flair_id in widget)
             assert pf_widget == pf_widget
             assert pf_widget.id == pf_widget
-            assert pf_widget in widgets.sidebar
+            assert pf_widget in await self.async_list(widgets.sidebar())
 
             assert pf_widget.shortName
             assert all(flair in pf_widget for flair in pf_widget)
@@ -702,13 +682,13 @@ class TestPostFlairWidget(IntegrationTest):
 
 
 class TestRulesWidget(IntegrationTest):
-    def test_rules_widget(self):
+    async def test_rules_widget(self):
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             rules = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, RulesWidget):
                     rules = widget
                     break
@@ -721,16 +701,16 @@ class TestRulesWidget(IntegrationTest):
             assert len(rules) > 0
             assert subreddit == rules.subreddit
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         new_styles = {"backgroundColor": "#fedcba", "headerColor": "#012345"}
-        with self.recorder.use_cassette("TestRulesWidget.test_update"):
+        with self.use_cassette():
             rules = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, RulesWidget):
                     rules = widget
                     break
@@ -739,7 +719,7 @@ class TestRulesWidget(IntegrationTest):
             assert rules.shortName != "Our regulations"
             assert rules.styles != new_styles
 
-            rules = rules.mod.update(
+            rules = await rules.mod.update(
                 display="compact", shortName="Our regulations", styles=new_styles,
             )
 
@@ -749,157 +729,157 @@ class TestRulesWidget(IntegrationTest):
 
 
 class TestSubredditWidgets(IntegrationTest):
-    def test_bad_attribute(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_bad_attribute(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             with pytest.raises(AttributeError):
                 widgets.nonexistant_attribute
 
-    def test_items(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_items(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            assert isinstance(widgets.items, dict)
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
+            assert isinstance(await widgets.items(), dict)
 
-    def test_progressive_images(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    # async def test_progressive_images(self): # FIXME: not currently working; same with praw
+    #     subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    #     widgets = subreddit.widgets
+    #
+    #     async def has_progressive(widgets_):
+    #         # best way I could figure if an image is progressive
+    #         sign = "fm=pjpg"
+    #
+    #         async for widget in widgets_.sidebar():
+    #             if isinstance(widget, ImageWidget):
+    #                 for image in widget:
+    #                     if sign in image.url:
+    #                         return True
+    #             elif isinstance(widget, CustomWidget):
+    #                 for image_data in widget.imageData:
+    #                     if sign in image_data.url:
+    #                         return True
+    #
+    #         return False
+    #
+    #     with self.use_cassette():
+    #         widgets.progressive_images = True
+    #         assert await has_progressive(widgets)
+    #         widgets.progressive_images = False
+    #         await widgets.refresh()
+    #         assert not await has_progressive(widgets)
+    #         widgets.progressive_images = True
+    #         await widgets.refresh()
+    #         assert await has_progressive(widgets)
+
+    async def test_refresh(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
+        with self.use_cassette():
+            assert await self.async_list(widgets.sidebar())  # to fetch
+            old_sidebar = await self.async_list(
+                widgets.sidebar()
+            )  # reference, not value
+            await widgets.refresh()
+            new_sidebar = await self.async_list(widgets.sidebar())
+            assert old_sidebar is not new_sidebar  # should be new list
 
-        def has_progressive(widgets_):
-            # best way I could figure if an image is progressive
-            sign = "fm=pjpg"
-
-            for widget in widgets_.sidebar:
-                if isinstance(widget, ImageWidget):
-                    for image in widget:
-                        if sign in image.url:
-                            return True
-                elif isinstance(widget, CustomWidget):
-                    for image_data in widget.imageData:
-                        if sign in image_data.url:
-                            return True
-
-            return False
-
-        with self.recorder.use_cassette("TestSubredditWidgets.test_progressive_images"):
-            widgets.progressive_images = True
-            assert has_progressive(widgets)
-            widgets.progressive_images = False
-            widgets.refresh()
-            assert not has_progressive(widgets)
-            widgets.progressive_images = True
-            widgets.refresh()
-            assert has_progressive(widgets)
-
-    def test_refresh(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.test_refresh"):
-            assert widgets.sidebar  # to fetch
-            old_sidebar = widgets.sidebar  # reference, not value
-            widgets.refresh()
-            assert old_sidebar is not widgets.sidebar  # should be new list
-
-    def test_repr(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_repr(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         assert ("SubredditWidgets(subreddit=Subreddit(display_name='{}'))").format(
             pytest.placeholders.test_subreddit
         ) == repr(widgets)
 
-    def test_sidebar(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_sidebar(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            assert len(widgets.sidebar) >= 1  # also tests lazy-loading
-
-        # all items should be Widget subclasses
-        assert all(
-            isinstance(widget, Widget) and type(widget) != Widget
-            for widget in widgets.sidebar
-        )
-
-    def test_specials(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            assert isinstance(widgets.id_card, IDCard)
-            assert isinstance(widgets.moderators_widget, ModeratorsWidget)
-
-    def test_topbar(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            assert 1 <= len(widgets.topbar)
-            assert all(
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
+            sidebar = [
                 isinstance(widget, Widget) and type(widget) != Widget
-                for widget in widgets.topbar
+                async for widget in widgets.sidebar()
+            ]
+            assert all(sidebar)
+
+    async def test_specials(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        widgets = subreddit.widgets
+        with self.use_cassette():
+            assert isinstance(await widgets.id_card(), IDCard)
+            assert isinstance(await widgets.moderators_widget(), ModeratorsWidget)
+
+    async def test_topbar(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        widgets = subreddit.widgets
+        with self.use_cassette():
+            assert 1 <= len(await self.async_list(widgets.topbar()))
+            assert all(
+                [
+                    isinstance(widget, Widget) and type(widget) != Widget
+                    async for widget in widgets.topbar()
+                ]
             )
 
 
 class TestSubredditWidgetsModeration(IntegrationTest):
-    @staticmethod
-    def image_path(name):
-        test_dir = abspath(dirname(sys.modules[__name__].__file__))
-        return join(test_dir, "..", "..", "files", name)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder(self, _):
         self.reddit.read_only = False
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette("TestSubredditWidgetsModeration.test_reorder"):
-            old_order = list(widgets.sidebar)
+        with self.use_cassette():
+            old_order = await self.async_list(widgets.sidebar())
             new_order = list(reversed(old_order))
 
-            widgets.mod.reorder(new_order)
-            widgets.refresh()
-            assert list(widgets.sidebar) == new_order
+            await widgets.mod.reorder(new_order)
+            await widgets.refresh()
+            order = await self.async_list(widgets.sidebar())
+            assert order == new_order
 
-            widgets.mod.reorder(old_order)
-            widgets.refresh()
-            assert list(widgets.sidebar) == old_order
+            old_order = await self.async_list(widgets.sidebar())
+            new_order = list(reversed(old_order))
+
+            await widgets.mod.reorder(new_order)
+            await widgets.refresh()
+            order = await self.async_list(widgets.sidebar())
+            assert order == new_order
 
             mixed_types = [
                 thing if i % 2 == 0 else thing.id for i, thing in enumerate(new_order)
             ]
             # mixed_types has some str and some Widget.
-            assert any(isinstance(thing, basestring) for thing in mixed_types)
+            assert any(isinstance(thing, str) for thing in mixed_types)
             assert any(isinstance(thing, Widget) for thing in mixed_types)
 
-            widgets.mod.reorder(mixed_types)
-            widgets.refresh()
-            assert list(widgets.sidebar) == new_order
+            await widgets.mod.reorder(mixed_types)
+            await widgets.refresh()
+            order = await self.async_list(widgets.sidebar())
+            assert order == new_order
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_upload_image(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_upload_image(self, _):
         self.reddit.read_only = False
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestSubredditWidgetsModeration.test_upload_image"
-        ):
+        with self.use_cassette():
             for image in ("test.jpg", "test.png"):
-                image_url = widgets.mod.upload_image(self.image_path(image))
+                image_url = await widgets.mod.upload_image(image_path(image))
                 assert image_url
 
 
 class TestTextArea(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
-    def test_create_and_update_and_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create_and_update_and_delete(self, _):
         self.reddit.read_only = False
 
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
 
-        with self.recorder.use_cassette(
-            "TestTextArea.test_create_and_update_and_delete"
-        ):
+        with self.use_cassette():
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            widget = widgets.mod.add_text_area(
+            widget = await widgets.mod.add_text_area(
                 short_name="My new widget!", text="Hello world!", styles=styles
             )
 
@@ -908,29 +888,31 @@ class TestTextArea(IntegrationTest):
             assert widget.styles == styles
             assert widget.text == "Hello world!"
 
-            widget = widget.mod.update(shortName="My old widget :(", text="Feed me")
+            widget = await widget.mod.update(
+                shortName="My old widget :(", text="Feed me"
+            )
 
             assert isinstance(widget, TextArea)
             assert widget.shortName == "My old widget :("
             assert widget.styles == styles
             assert widget.text == "Feed me"
 
-            widget.mod.delete()
+            await widget.mod.delete()
 
-    def test_text_area(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_text_area(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
             text = None
-            for widget in widgets.sidebar:
+            async for widget in widgets.sidebar():
                 if isinstance(widget, TextArea):
                     text = widget
                     break
             assert isinstance(text, TextArea)
             assert text == text
             assert text.id == text
-            assert text in widgets.sidebar
-            assert text in widgets.sidebar
+            side_bar = await self.async_list(widgets.sidebar())
+            assert text in side_bar
 
             assert text.shortName
             assert text.text
@@ -939,10 +921,11 @@ class TestTextArea(IntegrationTest):
 
 
 class TestWidget(IntegrationTest):
-    def test_inequality(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_inequality(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        with self.recorder.use_cassette("TestSubredditWidgets.fetch_widgets"):
-            assert len(widgets.sidebar) >= 2
-        assert widgets.sidebar[0] != widgets.sidebar[1]
-        assert widgets.sidebar[0] != widgets.sidebar[1].id
+        with self.use_cassette("TestSubredditWidgets.fetch_widgets"):
+            sidebar = await self.async_list(widgets.sidebar())
+            assert len(sidebar) >= 2
+        assert sidebar[0] != sidebar[1]
+        assert sidebar[0] != sidebar[1].id

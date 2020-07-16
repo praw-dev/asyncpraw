@@ -1,40 +1,54 @@
 {
-  "http_interactions": [
+  "interactions": [
     {
-      "recorded_at": "2016-07-12T15:29:25",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "grant_type=client_credentials"
-        },
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
         "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "Basic <BASIC_AUTH>",
-          "Connection": "keep-alive",
-          "Content-Length": "29",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
         },
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"access_token\": \"ptiKMleNDJaU0-6nVfQboZDJEyo\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
         },
         "headers": {
-          "CF-RAY": "2c1587d3fa972957-DUB",
-          "Connection": "keep-alive",
-          "Content-Length": "105",
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "367",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 12 Jul 2016 15:29:25 GMT",
-          "Server": "cloudflare-nginx",
-          "Set-Cookie": "__cfduid=d99b43d035728a36b296d0299a46039d21468337365; expires=Wed, 12-Jul-17 15:29:25 GMT; path=/; domain=.reddit.com; HttpOnly",
+          "Date": "Sun, 05 Jul 2020 01:14:24 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=SwYqMopaasocwFG94Q; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "cache-control": "max-age=0, must-revalidate",
+          "X-Served-By": "cache-mci5921-MCI",
+          "X-Timer": "S1593911664.228673,VS0,VE122",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -47,42 +61,65 @@
       }
     },
     {
-      "recorded_at": "2016-07-12T15:29:25",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "api_type=json&exact=False&include_over_18=True&query=reddit"
-        },
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "exact",
+            false
+          ],
+          [
+            "include_over_18",
+            true
+          ],
+          [
+            "query",
+            "reddit"
+          ]
+        ],
         "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "bearer ptiKMleNDJaU0-6nVfQboZDJEyo",
-          "Connection": "keep-alive",
-          "Content-Length": "59",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cookie": "__cfduid=d99b43d035728a36b296d0299a46039d21468337365; loidcreated=2016-07-12T15%3A29%3A25.415Z; loid=5ufxuoEJWEE0vugzWB",
-          "User-Agent": "<USER_AGENT> PRAW/4.0.0b7 prawcore/0.0.10"
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
         },
         "method": "POST",
         "uri": "https://oauth.reddit.com/api/search_reddit_names/?raw_json=1"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"names\": [\"RedditLaqueristas\", \"redditgetsdrawn\", \"redditsync\", \"redditmobile\", \"RedditWritesSeinfeld\", \"RedditDayOf\", \"RedditForGrownups\", \"RedditDads\", \"RedditorCum\", \"REDDITORSINRECOVERY\"]}"
+          "string": "{\"names\": [\"redditrequest\", \"redditdev\", \"redditsecurity\", \"redditasajob\", \"redditisajob\", \"redditgetsdrawn\", \"reddit.com\", \"RedditLaqueristas\", \"redditmobile\", \"RedditorCum\", \"RedditsMuseumofFilth\", \"redditsings\"]}"
         },
         "headers": {
-          "CF-RAY": "2c1587d778fe2993-DUB",
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
-          "Content-Length": "193",
+          "Content-Length": "215",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 12 Jul 2016 15:29:25 GMT",
-          "Server": "cloudflare-nginx",
+          "Date": "Sun, 05 Jul 2020 01:14:24 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911664482.Z0FBQUFBQmZBU2x3X2ZUMDNQUGVFb0pQX05lWElRWHJIb0hXcURlN0VIbm5XcUlNWi1lYzRrZzdwWWYzX3EyVnFTM01PMnNRcnFDaWpWLWxlcFFCVDk2UnViWFcwTE5BRWF1UUtpQTNYdnp1dHZrWmFXd0dpTm5nSkpTUXdXNlpYdUJGbkY3RHd1LXM; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:24 GMT; secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "cache-control": "max-age=0, must-revalidate",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911664.423182,VS0,VE139",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "352.0",
+          "x-ratelimit-reset": "336",
+          "x-ratelimit-used": "248",
           "x-ua-compatible": "IE=edge",
           "x-xss-protection": "1; mode=block"
         },
@@ -92,7 +129,656 @@
         },
         "url": "https://oauth.reddit.com/api/search_reddit_names/?raw_json=1"
       }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditrequest/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003E\\u003Cstrong\\u003EPLEASE READ OUR RULES BEFORE POSTING\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EYou may request \\u003Cstrong\\u003Eone subreddit every 15 days\\u003C/strong\\u003E. Choose wisely.  Multiple requests will be auto removed.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003ESubreddits aren\\u0026#39;t considered \\u0026quot;abandoned\\u0026quot; if any mod has been active anywhere on reddit in the past \\u003Cstrong\\u003E60 days\\u003C/strong\\u003E.  Activity is not limited to publicly posting and commenting.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EAccounts less than \\u003Cstrong\\u003E90 days old\\u003C/strong\\u003E and without at least \\u003Cstrong\\u003E500 combined karma\\u003C/strong\\u003E will not be given subreddits.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EThere will be times when the admins have other issues which are a higher priority than the posts in this subreddit. Responding to requests is something that happens in otherwise free time. \\u003Cstrong\\u003EPlease be patient\\u003C/strong\\u003E.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"/r/redditrequest/about/sidebar\\\"\\u003EThe full set of rules may be found in the sidebar.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"/r/redditrequest/wiki/faq\\\"\\u003EAdditional information is available in the FAQ.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EThis is an admin-sponsored subreddit.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": null, \"display_name\": \"redditrequest\", \"header_img\": null, \"title\": \"Request a defunct or spam reddit\", \"allow_galleries\": true, \"icon_size\": [256, 256], \"primary_color\": \"#fc471e\", \"active_user_count\": 304, \"icon_img\": \"https://a.thumbs.redditmedia.com/l5vL_osXwCthD0GVe2FmmfVOmja8RXwPUHSd_638QC4.png\", \"display_name_prefixed\": \"r/redditrequest\", \"accounts_active\": 304, \"public_traffic\": false, \"subscribers\": 145992, \"user_flair_richtext\": [], \"name\": \"t5_2rlnw\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_2rlnw/styles/communityIcon_s4c3lvscu5x11.png?width=256\\u0026s=27a7e5edddf7d81f2591f5c0deb78e74cacfadf6\", \"banner_background_image\": \"https://styles.redditmedia.com/t5_2rlnw/styles/bannerBackgroundImage_m1rtyjm9u5x11.jpg?width=4000\\u0026s=680788980e8f16cc09bec22ba3703363ca0ec4e3\", \"original_content_tag_enabled\": false, \"submit_text\": \"**PLEASE READ OUR RULES BEFORE POSTING**\\n\\n+ You may request **one subreddit every 15 days**. Choose wisely.  Multiple requests will be auto removed.\\n\\n+ Subreddits aren't considered \\\"abandoned\\\" if any mod has been active anywhere on reddit in the past **60 days**.  Activity is not limited to publicly posting and commenting.\\n\\n+ Accounts less than **90 days old** and without at least **500 combined karma** will not be given subreddits.\\n\\n+ There will be times when the admins have other issues which are a higher priority than the posts in this subreddit. Responding to requests is something that happens in otherwise free time. **Please be patient**.\\n\\n[The full set of rules may be found in the sidebar.](/r/redditrequest/about/sidebar)\\n\\n[Additional information is available in the FAQ.](/r/redditrequest/wiki/faq)\\n\\nThis is an admin-sponsored subreddit.\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EFound a banned or abandoned subreddit that you\\u0026#39;d like to mod? Do you mod a subreddit with an inactive top mod? Submit a request on this page by posting a link to the subreddit in question. \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EIf you already moderate a subreddit that has a top moderator who is inactive in that particular subreddit, but are otherwise active on the site, you will need to use the \\u003Ca href=\\\"https://www.reddit.com/r/redditrequest/wiki/top_mod_removal\\\"\\u003Etop mod removal process here.\\u003C/a\\u003E Otherwise, if you are not a moderator of the subreddit, you still need \\u003Ca href=\\\"https://www.reddit.com/r/redditrequest/wiki/faq\\\"\\u003Efollow the regular r/redditrequest process.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EPLEASE READ BEFORE POSTING\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EThe exact criteria used in evaluating requests is left to admin discretion.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003ECommunity input is helpful, but please respect that redditrequest is \\u003Cstrong\\u003Enot\\u003C/strong\\u003E a popularity contest and that any input must be strictly on topic.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003ENO DRAMA. Engaging in flaming, accusations, and general drama will result in a ban from \\u003Ca href=\\\"https://www.reddit.com/r/redditrequest/\\\"\\u003E/r/redditrequest\\u003C/a\\u003E. Keep discussion directly relevant to the request at hand.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u201cAbandoned\\u201d subreddits are available for \\u003Ca href=\\\"/r/redditrequest\\\"\\u003Er/redditrequest\\u003C/a\\u003E. Subreddits are considered \\u0026quot;abandoned\\u0026quot; in the event that none of its mods have been active anywhere on reddit in the past \\u003Cstrong\\u003E60 days.\\u003C/strong\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u201cAnywhere on reddit\\u201d \\u003Cem\\u003Emeans anywhere on reddit.\\u003C/em\\u003E If you are a current mod, and have a top mod who is inactive in your subreddit but active elsewhere \\u003Ca href=\\\"https://www.reddit.com/r/redditrequest/wiki/top_mod_removal\\\"\\u003Eplease follow this process\\u003C/a\\u003E.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003ENote that \\u201cactivity anywhere on reddit\\u201d IS NOT limited to publicly visible posts and comments.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EYou are allowed to request only one subreddit for every 15 days. Choose wisely and make sure the subreddit is eligible before making the request. Multiple requests and ineligible requests will be auto removed.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EMultiple people can request the same subreddit, though requests are reviewed in a chronological order.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EYou \\u003Cstrong\\u003Emay not\\u003C/strong\\u003E use multiple accounts to request subreddits.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EYou \\u003Cstrong\\u003Emay not\\u003C/strong\\u003E request subreddits on behalf of other users.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EAccounts must be at least 90 days old and must have accumulated at least 500 (combined) karma to be granted a subreddit. \\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EIn requesting active subreddits that show recent activity, we may require requesters to have 300+ combined karma that is specific to that subreddit.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EWhen a subreddit is requested, an automatic message will be sent to the mods of that subreddit directing them to respond to the request. We allow a 3 day grace period for moderators of requested subreddits to receive and respond to this message.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EThe 3 day grace period should not be taken as an indication of the timeframe within which you can expect a response to your request from the admin. \\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EThere will be times when the admins have other issues which are a higher priority than the posts in this subreddit. Responding to requests is something that happens in otherwise free time. Please be patient: modmail status inquiries will not receive a response.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EPlease don\\u0026#39;t ask for an exemption from the rules.\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EThis is reddit \\u0026quot;request\\u0026quot;. Politeness will be enforced. \\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/redditrequest/wiki/faq\\\"\\u003E\\u003Cstrong\\u003EAdditional information may be found in the FAQ\\u003C/strong\\u003E\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EThis is an admin-sponsored subreddit.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": \"\", \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": true, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"#46d160\", \"can_assign_user_flair\": false, \"created\": 1269059143.0, \"wls\": 0, \"show_media_preview\": true, \"submission_type\": \"link\", \"user_is_subscriber\": true, \"disable_contributor_requests\": false, \"allow_videogifs\": false, \"user_flair_type\": \"text\", \"allow_polls\": false, \"collapse_deleted_comments\": false, \"emojis_custom_size\": null, \"public_description_html\": null, \"allow_videos\": false, \"is_crosspostable_subreddit\": null, \"notification_level\": \"low\", \"can_assign_link_flair\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": false, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": false, \"id\": \"2rlnw\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"Found a banned or abandoned subreddit that you'd like to mod? Do you mod a subreddit with an inactive top mod? Submit a request on this page by posting a link to the subreddit in question. \\n \\nIf you already moderate a subreddit that has a top moderator who is inactive in that particular subreddit, but are otherwise active on the site, you will need to use the [top mod removal process here.](https://www.reddit.com/r/redditrequest/wiki/top_mod_removal) Otherwise, if you are not a moderator of the subreddit, you still need [follow the regular r/redditrequest process.](https://www.reddit.com/r/redditrequest/wiki/faq)\\n\\n\\n**PLEASE READ BEFORE POSTING**\\n\\n+ The exact criteria used in evaluating requests is left to admin discretion.\\n\\n+ Community input is helpful, but please respect that redditrequest is **not** a popularity contest and that any input must be strictly on topic.\\n\\n+ NO DRAMA. Engaging in flaming, accusations, and general drama will result in a ban from [/r/redditrequest](https://www.reddit.com/r/redditrequest/). Keep discussion directly relevant to the request at hand.\\n\\n+ \\u201cAbandoned\\u201d subreddits are available for r/redditrequest. Subreddits are considered \\\"abandoned\\\" in the event that none of its mods have been active anywhere on reddit in the past **60 days.**\\n\\n+ \\u201cAnywhere on reddit\\u201d _means anywhere on reddit._ If you are a current mod, and have a top mod who is inactive in your subreddit but active elsewhere [please follow this process](https://www.reddit.com/r/redditrequest/wiki/top_mod_removal).\\n\\n+ Note that \\u201cactivity anywhere on reddit\\u201d IS NOT limited to publicly visible posts and comments.\\n\\n+ You are allowed to request only one subreddit for every 15 days. Choose wisely and make sure the subreddit is eligible before making the request. Multiple requests and ineligible requests will be auto removed.\\n\\n+ Multiple people can request the same subreddit, though requests are reviewed in a chronological order.\\n\\n+ You **may not** use multiple accounts to request subreddits.\\n\\n+ You **may not** request subreddits on behalf of other users.\\n\\n+ Accounts must be at least 90 days old and must have accumulated at least 500 (combined) karma to be granted a subreddit. \\n\\n+ In requesting active subreddits that show recent activity, we may require requesters to have 300+ combined karma that is specific to that subreddit.\\n\\n+ When a subreddit is requested, an automatic message will be sent to the mods of that subreddit directing them to respond to the request. We allow a 3 day grace period for moderators of requested subreddits to receive and respond to this message.\\n\\n+ The 3 day grace period should not be taken as an indication of the timeframe within which you can expect a response to your request from the admin. \\n\\n+ There will be times when the admins have other issues which are a higher priority than the posts in this subreddit. Responding to requests is something that happens in otherwise free time. Please be patient: modmail status inquiries will not receive a response.\\n\\n+ Please don't ask for an exemption from the rules.\\n\\n+ This is reddit \\\"request\\\". Politeness will be enforced. \\n\\n[**Additional information may be found in the FAQ**](http://www.reddit.com/r/redditrequest/wiki/faq)\\n\\nThis is an admin-sponsored subreddit.\", \"submit_link_label\": \"\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": false, \"lang\": \"en\", \"whitelist_status\": \"no_ads\", \"url\": \"/r/redditrequest/\", \"created_utc\": 1269030343.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "13621",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:24 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911665.582162,VS0,VE250",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "351.0",
+          "x-ratelimit-reset": "336",
+          "x-ratelimit-used": "249",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditrequest/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditdev/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EGet faster, better responses by including more information, such as:\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EThe exact API URL you were hitting\\u003C/li\\u003E\\n\\u003Cli\\u003EThe request headers (but obfuscate cookies and secrets!!)\\u003C/li\\u003E\\n\\u003Cli\\u003EThe POST data you\\u0026#39;re sending, if any\\u003C/li\\u003E\\n\\u003Cli\\u003EAny response headers\\u003C/li\\u003E\\n\\u003Cli\\u003EThe response \\u003Cstrong\\u003Ebody\\u003C/strong\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u0026quot;XYZ isn\\u0026#39;t working\\u0026quot; is \\u003Cstrong\\u003ENOT\\u003C/strong\\u003E enough information for us to help you!\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": true, \"display_name\": \"redditdev\", \"header_img\": \"https://e.thumbs.redditmedia.com/bOToSJt13ylszjE4.png\", \"title\": \"reddit Development\", \"allow_galleries\": false, \"icon_size\": [256, 256], \"primary_color\": \"#666666\", \"active_user_count\": 83, \"icon_img\": \"https://b.thumbs.redditmedia.com/7GVLmrH9CdZeqXceSEWkmL8_DSUKRGUfwMxnUNh8D8A.png\", \"display_name_prefixed\": \"r/redditdev\", \"accounts_active\": 83, \"public_traffic\": false, \"subscribers\": 38934, \"user_flair_richtext\": [], \"name\": \"t5_2qizd\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"A subreddit for discussion of reddit API clients.\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"\", \"banner_background_image\": \"\", \"original_content_tag_enabled\": false, \"submit_text\": \"Get faster, better responses by including more information, such as:\\n\\n* The exact API URL you were hitting\\n* The request headers (but obfuscate cookies and secrets!!)\\n* The POST data you're sending, if any\\n* Any response headers\\n* The response **body**\\n\\n\\\"XYZ isn't working\\\" is **NOT** enough information for us to help you!\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EA subreddit for discussion of reddit API clients.\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"https://github.com/reddit/reddit/wiki/API\\\"\\u003ERead the API Overview \\u0026amp; Rules\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"http://www.reddit.com/dev/api\\\"\\u003ECheck out the API documentation\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"https://join.slack.com/t/praw/shared_invite/enQtOTUwMDcxOTQ0NzY5LWVkMGQ3ZDk5YmQ5MDEwYTZmMmJkMTJkNjBkNTY3OTU0Y2E2NGRlY2ZhZTAzMWZmMWRiMTMwYjdjODkxOGYyZjY\\\"\\u003EPRAW chat\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"https://gitter.im/not-an-aardvark/snoowrap\\\"\\u003ESnoowrap chat\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"http://webchat.freenode.net/?channels=reddit-dev\\\"\\u003EJoin us on IRC: \\u003Ccode\\u003E#reddit-dev\\u003C/code\\u003E on irc.freenode.net\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"https://discord.gg/hVMhxpV\\\"\\u003EUnofficial Discord\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003EPlease do not request bots here. Consider \\u003Ca href=\\\"/r/requestabot\\\"\\u003E/r/requestabot\\u003C/a\\u003E instead.\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003EPlease confine discussion to reddit\\u0026#39;s API instead of using this as a soapbox to talk to the admins. In particular, use \\u003Ca href=\\\"/r/ideasfortheadmins\\\"\\u003E/r/ideasfortheadmins\\u003C/a\\u003E for feature ideas and \\u003Ca href=\\\"/r/bugs\\\"\\u003E/r/bugs\\u003C/a\\u003E for bugs. If you have general reddit questions, try \\u003Ca href=\\\"/r/help\\\"\\u003E/r/help\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ETo see an explanation of recent user-facing changes to reddit (and the code behind them), check out \\u003Ca href=\\\"/r/changelog\\\"\\u003E/r/changelog\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003ETo report a security issue with reddit, please send an email to \\u003Ca href=\\\"mailto:security@reddit.com\\\"\\u003Esecurity@reddit.com\\u003C/a\\u003E .\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EThis is an admin-sponsored subreddit.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": false, \"header_title\": \"from reddit import code\", \"header_size\": [120, 40], \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": true, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"#222222\", \"can_assign_user_flair\": true, \"created\": 1213830977.0, \"wls\": 6, \"show_media_preview\": false, \"submission_type\": \"self\", \"user_is_subscriber\": true, \"disable_contributor_requests\": false, \"allow_videogifs\": false, \"user_flair_type\": \"text\", \"allow_polls\": false, \"collapse_deleted_comments\": false, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EA subreddit for discussion of reddit API clients.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": false, \"is_crosspostable_subreddit\": true, \"notification_level\": \"low\", \"can_assign_link_flair\": true, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"left\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_chat_post_creation\": false, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": true, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"#666666\", \"show_media\": false, \"id\": \"2qizd\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"A subreddit for discussion of reddit API clients.\\n\\n* [Read the API Overview \\u0026 Rules](https://github.com/reddit/reddit/wiki/API)\\n* [Check out the API documentation](http://www.reddit.com/dev/api)\\n* [PRAW chat](https://join.slack.com/t/praw/shared_invite/enQtOTUwMDcxOTQ0NzY5LWVkMGQ3ZDk5YmQ5MDEwYTZmMmJkMTJkNjBkNTY3OTU0Y2E2NGRlY2ZhZTAzMWZmMWRiMTMwYjdjODkxOGYyZjY)\\n* [Snoowrap chat](https://gitter.im/not-an-aardvark/snoowrap)\\n* [Join us on IRC: `#reddit-dev` on irc.freenode.net](http://webchat.freenode.net/?channels=reddit-dev)\\n* [Unofficial Discord](https://discord.gg/hVMhxpV)\\n* Please do not request bots here. Consider /r/requestabot instead.\\n\\n\\nPlease confine discussion to reddit's API instead of using this as a soapbox to talk to the admins. In particular, use [/r/ideasfortheadmins](/r/ideasfortheadmins) for feature ideas and [/r/bugs](/r/bugs) for bugs. If you have general reddit questions, try [/r/help](/r/help).\\n\\nTo see an explanation of recent user-facing changes to reddit (and the code behind them), check out /r/changelog.\\n\\n---\\n\\nTo report a security issue with reddit, please send an email to \\u003Csecurity@reddit.com\\u003E .\\n\\nThis is an admin-sponsored subreddit.\", \"is_chat_post_feature_enabled\": true, \"submit_link_label\": \"\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": false, \"lang\": \"en\", \"whitelist_status\": \"all_ads\", \"url\": \"/r/redditdev/\", \"created_utc\": 1213802177.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "7336",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:25 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911664928.Z0FBQUFBQmZBU2x3eHU5UEFJeXYtbU9GMDNTRzM3clB1Y2RZTlp1empsZm5rVXVIZU5vbmczOGFmbExvaFpGZDZMMTEtcmJZM0xIN1ZDUTRWR0IwOExSOUwxT2ZuUnVhVFZ0SHNfV2lxdHg0WU1QV0RzS1ZERTBoeHdjTktIaDhFc19GUGNvQkdYQUY; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:24 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911665.867934,VS0,VE150",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "349.0",
+          "x-ratelimit-reset": "336",
+          "x-ratelimit-used": "251",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditdev/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditsecurity/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": null, \"user_is_muted\": false, \"user_can_flair_in_sr\": null, \"display_name\": \"redditsecurity\", \"header_img\": null, \"title\": \"News from reddit about site security\", \"allow_galleries\": true, \"icon_size\": null, \"primary_color\": \"#ff4500\", \"active_user_count\": 5, \"icon_img\": \"\", \"display_name_prefixed\": \"r/redditsecurity\", \"accounts_active\": 5, \"public_traffic\": false, \"subscribers\": 26173, \"user_flair_richtext\": [], \"videostream_links_count\": 0, \"name\": \"t5_vm1db\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"/r/redditsecurity is a running log of actions taken to ensure the safety and security of reddit.com\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_vm1db/styles/communityIcon_5nthugyr0ef21.png?width=256\\u0026s=3a163f7135b93df0dab0921dba35f760baea5945\", \"banner_background_image\": \"https://styles.redditmedia.com/t5_vm1db/styles/bannerBackgroundImage_cs93o1ts0ef21.png?width=4000\\u0026s=5995ce9552e547bba00b0dd7f259b07d8d44abf9\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/redditsecurity\\\"\\u003E/r/redditsecurity\\u003C/a\\u003E is a running log of actions taken to ensure the safety and security of reddit.com\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ESee \\u003Ca href=\\\"/r/blog\\\"\\u003E/r/blog\\u003C/a\\u003E and \\u003Ca href=\\\"/r/announcements\\\"\\u003E/r/announcements\\u003C/a\\u003E for other important news about the site\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ETo report content policy violations to the admins, please use \\u003Ca href=\\\"https://www.reddithelp.com/en/submit-request\\\"\\u003Ethis form\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EIf you think you\\u0026#39;ve located a significant security concern, send it to \\u003Ca href=\\\"mailto:security@reddit.com\\\"\\u003Esecurity@reddit.com\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ECheck out \\u003Ca href=\\\"/r/ModSupport\\\"\\u003E/r/ModSupport\\u003C/a\\u003E for information related to subreddit moderation\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EThis is an admin-sponsored subreddit.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": null, \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": false, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"\", \"can_assign_user_flair\": false, \"created\": 1548821989.0, \"wls\": 0, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": true, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": false, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/redditsecurity\\\"\\u003E/r/redditsecurity\\u003C/a\\u003E is a running log of actions taken to ensure the safety and security of reddit.com\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": \"low\", \"can_assign_link_flair\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": null, \"link_flair_position\": \"\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": false, \"subreddit_type\": \"restricted\", \"suggested_comment_sort\": \"qa\", \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": true, \"id\": \"vm1db\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"/r/redditsecurity is a running log of actions taken to ensure the safety and security of reddit.com\\n\\nSee /r/blog and /r/announcements for other important news about the site\\n\\nTo report content policy violations to the admins, please use [this form](https://www.reddithelp.com/en/submit-request)\\n\\nIf you think you've located a significant security concern, send it to security@reddit.com\\n\\nCheck out /r/ModSupport for information related to subreddit moderation\\n\\nThis is an admin-sponsored subreddit.\", \"submit_link_label\": null, \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"no_ads\", \"url\": \"/r/redditsecurity/\", \"created_utc\": 1548793189.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "4708",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:25 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911665089.Z0FBQUFBQmZBU2x4cm9oTExqMlFfN2EtUUdTenJYWmVTVzRLWlY1WFdFbWR0YkgtbWRfeHF0SkVkRGlYNE1RNnZ0aHRNbFhCQmJPRnFTcFl2Y1NoLXROZlRZSUlqZXRuVGRyNVRUOXhVMTlqOHpmUWFGWDJYRlNKZXVBc3VELWJ3U1ZvRGQ5aG02R2g; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:25 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911665.037642,VS0,VE142",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "347.0",
+          "x-ratelimit-reset": "335",
+          "x-ratelimit-used": "253",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditsecurity/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditasajob/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": true, \"display_name\": \"redditasajob\", \"header_img\": null, \"title\": \"Reddit as a Job\", \"allow_galleries\": true, \"icon_size\": null, \"primary_color\": \"\", \"active_user_count\": 4, \"icon_img\": \"\", \"display_name_prefixed\": \"r/redditasajob\", \"accounts_active\": 4, \"public_traffic\": false, \"subscribers\": 1, \"user_flair_richtext\": [], \"videostream_links_count\": 0, \"name\": \"t5_265bn0\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"\", \"banner_background_image\": \"\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": null, \"spoilers_enabled\": true, \"header_title\": \"\", \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"collections_enabled\": true, \"is_enrolled_in_new_modmail\": true, \"key_color\": \"\", \"event_posts_enabled\": true, \"can_assign_user_flair\": false, \"created\": 1570461386.0, \"wls\": null, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": true, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": false, \"coins\": 0, \"emojis_custom_size\": null, \"public_description_html\": null, \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": \"low\", \"can_assign_link_flair\": false, \"has_menu_widget\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": false, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": true, \"id\": \"265bn0\", \"user_is_moderator\": true, \"over18\": false, \"description\": \"\", \"submit_link_label\": \"\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": null, \"url\": \"/r/redditasajob/\", \"created_utc\": 1570432586.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": true}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "2499",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:25 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911665250.Z0FBQUFBQmZBU2x4VEpQUENydUZFUTdTZUlmZWJKUE5jX1NMWnlSTFo1QS1nN252WTk1WTh6SUJ3Wkxqb0s5NTZ2ZloycUYzRFROZEtmQTltZnpVcVRhVXNwdjEtSm1ZTVlQNnRWRGZ2QTQ5b3ZLcHVEZk9udERfTjNvRU01bUUtYUowTmxuUlNEVzM; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:25 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911665.196757,VS0,VE175",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "346.0",
+          "x-ratelimit-reset": "335",
+          "x-ratelimit-used": "254",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditasajob/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditisajob/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": true, \"display_name\": \"redditisajob\", \"header_img\": null, \"title\": \"Reddit is a job\", \"allow_galleries\": true, \"icon_size\": null, \"primary_color\": \"\", \"active_user_count\": 4, \"icon_img\": \"\", \"display_name_prefixed\": \"r/redditisajob\", \"accounts_active\": 4, \"public_traffic\": false, \"subscribers\": 1, \"user_flair_richtext\": [], \"videostream_links_count\": 0, \"name\": \"t5_265c0t\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"\", \"banner_background_image\": \"\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": null, \"spoilers_enabled\": true, \"header_title\": \"\", \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"collections_enabled\": true, \"is_enrolled_in_new_modmail\": true, \"key_color\": \"\", \"event_posts_enabled\": true, \"can_assign_user_flair\": false, \"created\": 1570461987.0, \"wls\": null, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": true, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": false, \"coins\": 0, \"emojis_custom_size\": null, \"public_description_html\": null, \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": \"low\", \"can_assign_link_flair\": false, \"has_menu_widget\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": false, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": true, \"id\": \"265c0t\", \"user_is_moderator\": true, \"over18\": false, \"description\": \"\", \"submit_link_label\": \"\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": null, \"url\": \"/r/redditisajob/\", \"created_utc\": 1570433187.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": true}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "2499",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:25 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911665454.Z0FBQUFBQmZBU2x4V29Vd3RxTXp2WWd0aVJLcEtVclNsSEtXemYwcTF6OTctYk5rSmRaaXBCb21fTktxczRubXBDNHJnR2xJV3hjYnM0dkpVLVhQMlpoZzBIRnlDQmNJdTBCd3oxTm5iNHB6VzcwY0RRZXhZY0tjTTVHYUR6YVkyRTZyTGVDajJfRXA; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:25 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911665.389922,VS0,VE189",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "345.0",
+          "x-ratelimit-reset": "335",
+          "x-ratelimit-used": "255",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditisajob/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditgetsdrawn/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003E**PLEASE NOTE: Art and photos are posted here at your own risk and may be shared without your permission. By submitting your photo you, are agreeing that artists can distribute and sell work based on the photos uploaded. Submitters should only upload photos with consent from the photographer.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EYou MUST\\u003C/strong\\u003E read our submission rules before posting. We are very strict about submission rules, and failing to follow the submission rules may result in a ban. It is your responsibility to read \\u003Ca href=\\\"http://www.reddit.com/r/redditgetsdrawn/wiki/index\\\"\\u003Eour rules in full before participating.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EYour submission title may \\u003Cstrong\\u003Eonly\\u003C/strong\\u003E include your relationship to the photo subject, and optionally the location of the photo. \\u003Cstrong\\u003ENo backstory, descriptors, or emojis of any kind are allowed. Referencing non-pet animals is NOT allowed\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": null, \"display_name\": \"redditgetsdrawn\", \"header_img\": \"https://b.thumbs.redditmedia.com/8AfRUTLoOxpfrW1nuES8hKIX5s4tjS6m4Ua6Wrf-lts.png\", \"title\": \"Reddit Gets Drawn\", \"allow_galleries\": false, \"icon_size\": [256, 256], \"primary_color\": \"#ffb000\", \"active_user_count\": 311, \"icon_img\": \"https://b.thumbs.redditmedia.com/2bsldfqYEVVdnEqxT_S_FHmepOkCFG5hsq1vnDQYD5E.png\", \"display_name_prefixed\": \"r/redditgetsdrawn\", \"accounts_active\": 311, \"public_traffic\": false, \"subscribers\": 561223, \"user_flair_richtext\": [], \"videostream_links_count\": 0, \"name\": \"t5_2tjl7\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"We are a community for redditors who want to get drawn and redditors who want to draw them! Post a photo of yourself or a loved one, and we'll draw you!\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_2tjl7/styles/communityIcon_7ior7v2fib101.png?width=256\\u0026s=1aaaf9b4be6fc281dc6a6ad70df303659b1d8c58\", \"banner_background_image\": \"https://styles.redditmedia.com/t5_2tjl7/styles/bannerBackgroundImage_oyjt9c31eb101.png?width=4000\\u0026s=974611866f08ae5e152987c27505830dc3382498\", \"original_content_tag_enabled\": false, \"submit_text\": \"**PLEASE NOTE: Art and photos are posted here at your own risk and may be shared without your permission. By submitting your photo you, are agreeing that artists can distribute and sell work based on the photos uploaded. Submitters should only upload photos with consent from the photographer.\\n\\n**You MUST** read our submission rules before posting. We are very strict about submission rules, and failing to follow the submission rules may result in a ban. It is your responsibility to read [our rules in full before participating.](http://www.reddit.com/r/redditgetsdrawn/wiki/index)\\n\\nYour submission title may **only** include your relationship to the photo subject, and optionally the location of the photo. **No backstory, descriptors, or emojis of any kind are allowed. Referencing non-pet animals is NOT allowed**\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Ch6\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditgetsdrawn/comments/aw50p6/congrats_to_our_artist_spotlight_recipient_for/\\\"\\u003ECheck out our latest artist spotlight, /u/ValenceScribbles!\\u003C/a\\u003E\\u003C/h6\\u003E\\n\\n\\u003Cp\\u003EOur banner was designed by \\u003Ca href=\\\"/u/MrFudg\\\"\\u003E/u/MrFudg\\u003C/a\\u003E \\u003C/p\\u003E\\n\\n\\u003Ch2\\u003E\\u003Ca href=\\\"https://discord.gg/8QRMSVm\\\"\\u003ERGD Discord server\\u003C/a\\u003E\\u003C/h2\\u003E\\n\\n\\u003Ch2\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditgetsdrawn/wiki/posting-guide-for-submitters\\\"\\u003ESubmission Tips from RGD Artists\\u003C/a\\u003E\\u003C/h2\\u003E\\n\\n\\u003Ch2\\u003E\\u003Ca href=\\\"http://redditartistnetwork.tumblr.com/\\\"\\u003EReddit Artist Network\\u003C/a\\u003E\\u003C/h2\\u003E\\n\\n\\u003Ch2\\u003EWhat is RedditGetsDrawn?\\u003C/h2\\u003E\\n\\n\\u003Cp\\u003EWe are a community for redditors who want to get drawn and redditors who want to draw them! Post a photo of yourself or a loved one, and we\\u0026#39;ll draw you!\\u003C/p\\u003E\\n\\n\\u003Ch2\\u003EBefore you get started...\\u003C/h2\\u003E\\n\\n\\u003Cp\\u003EIn the dropdowns below, you will find some general rules and tips for participating in RGD. For more details, please see the full wiki \\u00bb \\u003Ca href=\\\"https://www.reddit.com/r/redditgetsdrawn/wiki/index\\\"\\u003Ehere.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003ECheck out our \\u003Ca href=\\\"http://www.reddit.com/r/redditgetsdrawn/wiki/directory\\\"\\u003EArtist Directory\\u003C/a\\u003E to commission artists directly.\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EWant to know why you can\\u0026#39;t see your post, or you\\u0026#39;re having post fail issues? Check out the FAQ:\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditgetsdrawn/wiki/index#wiki_faqs\\\"\\u003EFrequently Asked Questions\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EFor any questions, comments, or concerns, \\u003Ca href=\\\"https://www.reddit.com/message/compose?to=%2Fr%2Fredditgetsdrawn\\\"\\u003Emessage the moderators.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003EAll Users\\u003C/h3\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EBehave with courtesy to all other users and mods.\\u003Cbr/\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003EParent comments must contain art.\\u003C/strong\\u003E Send off topic discussions to others directly.\\u003C/li\\u003E\\n\\u003Cli\\u003EYou may not critique the art unless the artist has specifically requested it. \\u003Cem\\u003ESubmitters cannot critique art given to them under any circumstances.\\u003C/em\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch3\\u003E\\u003Cstrong\\u003EPost Title Rules\\u003C/strong\\u003E\\u003C/h3\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003ENO EMOJIS OR SMILEY FACES, AT ALL.\\u003C/strong\\u003E Your post will be rejected if there are any in the title. \\u003C/li\\u003E\\n\\u003Cli\\u003EYour post title can only consist of your relation to the subject and a location (\\u003Cstrong\\u003EONLY if it\\u0026#39;s a city or landmark showing in the photo\\u003C/strong\\u003E) but NO other details or descriptions about the photo or the subjects in it will be accepted. Post titles with any adjectives like \\u0026quot;late\\u0026quot;, \\u0026quot;favourite\\u0026quot;, \\u0026quot;younger\\u0026quot;, \\u0026quot;older\\u0026quot;, \\u0026quot;tiny\\u0026quot;, etc. will all be removed.\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Ch2\\u003E* You may only credit a professional photographer. \\u0026quot;Photo by me\\u0026quot; is not acceptable.\\u003C/h2\\u003E\\n\\n\\u003Ch3\\u003E\\u003Cstrong\\u003EAnimal Rules\\u003C/strong\\u003E\\u003C/h3\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EPosts of animals cannot use \\u0026quot;cute\\u0026quot; words. Words like \\u0026quot;doggo, pupper, snek, best friend, good girl/boy, etc\\u0026quot; are no longer acceptable. Your post title should only be \\u0026quot;This is my dog/cat/snake/bird.\\u0026quot; You may include their name, but it is not required. \\u003Cstrong\\u003EDo not add breed names or your post will be removed\\u003C/strong\\u003E.\\u003C/li\\u003E\\n\\u003Cli\\u003EIf the animal in the photo is not your pet or the pet of an approved relation, \\u003Cstrong\\u003EDO NOT PUT IT IN THE TITLE OR YOUR POST WILL BE REMOVED.\\u003C/strong\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch3\\u003E\\u003Cstrong\\u003EPhoto Rules\\u003C/strong\\u003E\\u003C/h3\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EYour photo(s) must be of yourself, close friends, family, or pets. Specify your relation within the title. If there are children present, they must be yours or a close relation. Friends\\u0026#39; children are not allowed. Referencing non-pet animals or inanimate objects will result in your post being removed.\\u003C/li\\u003E\\n\\u003Cli\\u003ELast names and/or social media handles cannot be visible in your photo or mentioned in your title, unless used for the purpose of crediting a photographer.\\u003C/li\\u003E\\n\\u003Cli\\u003EYou may only post a new photo(s) once every 4 days if your post has been approved. \\u003Cstrong\\u003EIf it was rejected for breaking a rule, you may repost immediately.\\u003C/strong\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003EYou may only post the same photo once every 3 months.\\u003C/li\\u003E\\n\\u003Cli\\u003ENo more than 20 photos at a time.\\u003C/li\\u003E\\n\\u003Cli\\u003EWhen posting photos of children, they must be fully clothed.\\u003C/li\\u003E\\n\\u003Cli\\u003ENo text overlays of any kind.\\u003C/li\\u003E\\n\\u003Cli\\u003ENo snapchat filters, stickers, or anything that alters the photo in any way.\\u003C/li\\u003E\\n\\u003Cli\\u003EYour photo cannot contain dead animals. This includes fishing trophies. \\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch3\\u003E\\u003Cstrong\\u003EGeneral Rules\\u003C/strong\\u003E\\u003C/h3\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EYou must thank each of the artists within 24 hours.\\u003C/li\\u003E\\n\\u003Cli\\u003EYou cannot delete an approved post until it is 3 months old or older. If this is done and your post contained art, you will be banned. If the post has no art, you will be warned. Frequent infractions will also result in a ban.\\u003C/li\\u003E\\n\\u003Cli\\u003EYou cannot ask for further work.\\u003C/li\\u003E\\n\\u003Cli\\u003EYou cannot use the art received for anything other than personal use.\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch3\\u003EArtists\\u003C/h3\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EYour artwork must be a serious attempt.\\u003C/li\\u003E\\n\\u003Cli\\u003EFilter/photo manipulations are not allowed. Art submitted here must be handmade.\\u003C/li\\u003E\\n\\u003Cli\\u003EYour artwork must contain recognizable components from the photo.\\u003C/li\\u003E\\n\\u003Cli\\u003EYour artwork mustn\\u2019t add nudity/sexualisation, unless otherwise requested by the submitter.\\u003C/li\\u003E\\n\\u003Cli\\u003EYou cannot request compensation. Small links to websites, galleries, storefronts, patreon, etc are fine.\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Ch2\\u003EOur Subreddit Friends\\u003C/h2\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/ArtistLounge/\\\"\\u003EArtist Lounge (RGD\\u0026#39;s Sister Sub)\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/addon\\\"\\u003EAdd On\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/adorableart\\\"\\u003EAdorable Art\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/art\\\"\\u003EArt\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/ArtCrit\\\"\\u003EArt Crit\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/ArtHistory\\\"\\u003EArt History\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/artporn\\\"\\u003EArt Porn\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/ArtProgressPics\\\"\\u003EArt Progress Pics\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/artistmemes/\\\"\\u003EArtistMemes\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/AnimeSketch\\\"\\u003EAnime Sketch\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/Caricatures\\\"\\u003ECaricatures\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/CasualDraw\\\"\\u003ECasualDraw\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/comicbookart\\\"\\u003EComic Book Art\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/deviantart\\\"\\u003EDeviantArt\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/drawmeNSFW\\\"\\u003EDraw Me NSFW\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/drawing\\\"\\u003EDrawing\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/drawingsrevisited\\\"\\u003EDrawings Revisited\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/Erotic_Art\\\"\\u003EErotic Art\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/icandrawthat\\\"\\u003EI Can Draw That\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/idap\\\"\\u003EIDAP\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/learnart\\\"\\u003ELearn Art\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/learntodraw/\\\"\\u003ELearn To Draw\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/minimalist_art\\\"\\u003EMinimalist Art\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/NSFWart\\\"\\u003ENSFW Art\\u003C/a\\u003E \\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/photoshopbattles\\\"\\u003EPhotoshop Battles\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/randomactsofdrawing\\\"\\u003ERandom Acts of Drawing\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/sketchdaily\\\"\\u003ESketchdaily\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/usasanime\\\"\\u003EUs As Anime\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://reddit.com/r/watercolor101\\\"\\u003EWatercolor101\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"http://reddit.com//r/InterstellarArt\\\"\\u003EInterstellarArt\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/ArtifyMemes/\\\"\\u003EArtifyMemes\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Ch4\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/redditgetsdrawn/wiki/index\\\"\\u003ERGD Rules\\u003C/a\\u003E, \\u003Ca href=\\\"http://www.reddit.com/r/redditgetsdrawn/wiki/modpost\\\"\\u003ERGD Wall of Fame\\u003C/a\\u003E, \\u003Ca href=\\\"http://www.reddit.com/r/redditgetsdrawn/wiki/directory\\\"\\u003ERGD Artist Directory\\u003C/a\\u003E, \\u003Ca href=\\\"https://instagram.com/redditgetsdrawnofficial\\\"\\u003EInstagram\\u003C/a\\u003E, \\u003Ca href=\\\"https://www.facebook.com/ArtofRGD\\\"\\u003EFacebook\\u003C/a\\u003E, \\u003Ca href=\\\"https://twitter.com/RGD_Official\\\"\\u003ETwitter\\u003C/a\\u003E\\u003C/h4\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": false, \"header_title\": \"\", \"header_size\": [70, 50], \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": true, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"#24a0ed\", \"can_assign_user_flair\": false, \"created\": 1329066253.0, \"wls\": 6, \"show_media_preview\": true, \"submission_type\": \"link\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": false, \"collapse_deleted_comments\": true, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EWe are a community for redditors who want to get drawn and redditors who want to draw them! Post a photo of yourself or a loved one, and we\\u0026#39;ll draw you!\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": null, \"can_assign_link_flair\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"left\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": false, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": true, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"https://b.thumbs.redditmedia.com/FF520pHZcgGw5uOJ7eUEzEOBwee1Cb5hQo3RaIEXziA.png\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": true, \"id\": \"2tjl7\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"###### [Check out our latest artist spotlight, /u/ValenceScribbles!](https://www.reddit.com/r/redditgetsdrawn/comments/aw50p6/congrats_to_our_artist_spotlight_recipient_for/)\\n\\nOur banner was designed by /u/MrFudg \\n##[RGD Discord server](https://discord.gg/8QRMSVm)\\n\\n##[Submission Tips from RGD Artists](https://www.reddit.com/r/redditgetsdrawn/wiki/posting-guide-for-submitters)\\n\\n\\n##[Reddit Artist Network](http://redditartistnetwork.tumblr.com/)\\n\\n##What is RedditGetsDrawn?\\nWe are a community for redditors who want to get drawn and redditors who want to draw them! Post a photo of yourself or a loved one, and we'll draw you!\\n\\n##Before you get started...\\n\\nIn the dropdowns below, you will find some general rules and tips for participating in RGD. For more details, please see the full wiki \\u00bb [here.](https://www.reddit.com/r/redditgetsdrawn/wiki/index)\\n\\n___\\n\\nCheck out our [Artist Directory](http://www.reddit.com/r/redditgetsdrawn/wiki/directory) to commission artists directly.\\n\\n___\\n\\n**Want to know why you can't see your post, or you're having post fail issues? Check out the FAQ:**\\n\\n[Frequently Asked Questions](https://www.reddit.com/r/redditgetsdrawn/wiki/index#wiki_faqs)\\n\\n___\\n\\nFor any questions, comments, or concerns, [message the moderators.](https://www.reddit.com/message/compose?to=%2Fr%2Fredditgetsdrawn)\\n\\n###All Users\\n\\n* Behave with courtesy to all other users and mods.  \\n* **Parent comments must contain art.** Send off topic discussions to others directly.\\n* You may not critique the art unless the artist has specifically requested it. *Submitters cannot critique art given to them under any circumstances.*\\n\\n---\\n\\n### **Post Title Rules**\\n\\n* **NO EMOJIS OR SMILEY FACES, AT ALL.** Your post will be rejected if there are any in the title. \\n* Your post title can only consist of your relation to the subject and a location (**ONLY if it's a city or landmark showing in the photo**) but NO other details or descriptions about the photo or the subjects in it will be accepted. Post titles with any adjectives like \\\"late\\\", \\\"favourite\\\", \\\"younger\\\", \\\"older\\\", \\\"tiny\\\", etc. will all be removed.\\n* You may only credit a professional photographer. \\\"Photo by me\\\" is not acceptable.\\n---\\n\\n###**Animal Rules**\\n\\n* Posts of animals cannot use \\\"cute\\\" words. Words like \\\"doggo, pupper, snek, best friend, good girl/boy, etc\\\" are no longer acceptable. Your post title should only be \\\"This is my dog/cat/snake/bird.\\\" You may include their name, but it is not required. **Do not add breed names or your post will be removed**.\\n* If the animal in the photo is not your pet or the pet of an approved relation, **DO NOT PUT IT IN THE TITLE OR YOUR POST WILL BE REMOVED.**\\n\\n---\\n\\n###**Photo Rules**\\n\\n* Your photo(s) must be of yourself, close friends, family, or pets. Specify your relation within the title. If there are children present, they must be yours or a close relation. Friends' children are not allowed. Referencing non-pet animals or inanimate objects will result in your post being removed.\\n* Last names and/or social media handles cannot be visible in your photo or mentioned in your title, unless used for the purpose of crediting a photographer.\\n* You may only post a new photo(s) once every 4 days if your post has been approved. **If it was rejected for breaking a rule, you may repost immediately.**\\n* You may only post the same photo once every 3 months.\\n* No more than 20 photos at a time.\\n* When posting photos of children, they must be fully clothed.\\n* No text overlays of any kind.\\n* No snapchat filters, stickers, or anything that alters the photo in any way.\\n* Your photo cannot contain dead animals. This includes fishing trophies. \\n\\n---\\n\\n### **General Rules**\\n\\n* You must thank each of the artists within 24 hours.\\n* You cannot delete an approved post until it is 3 months old or older. If this is done and your post contained art, you will be banned. If the post has no art, you will be warned. Frequent infractions will also result in a ban.\\n* You cannot ask for further work.\\n* You cannot use the art received for anything other than personal use.\\n \\n---\\n\\n###Artists\\n\\n* Your artwork must be a serious attempt.\\n* Filter/photo manipulations are not allowed. Art submitted here must be handmade.\\n* Your artwork must contain recognizable components from the photo.\\n* Your artwork mustn\\u2019t add nudity/sexualisation, unless otherwise requested by the submitter.\\n* You cannot request compensation. Small links to websites, galleries, storefronts, patreon, etc are fine.\\n\\n\\n##Our Subreddit Friends\\n\\n[Artist Lounge (RGD's Sister Sub)](http://www.reddit.com/r/ArtistLounge/)\\n\\n[Add On](http://www.reddit.com/r/addon)\\n\\n[Adorable Art](http://www.reddit.com/r/adorableart)\\n\\n[Art](http://www.reddit.com/r/art)\\n\\n[Art Crit](http://www.reddit.com/r/ArtCrit)\\n\\n[Art History](http://www.reddit.com/r/ArtHistory)\\n\\n[Art Porn](http://www.reddit.com/r/artporn)\\n\\n[Art Progress Pics](https://www.reddit.com/r/ArtProgressPics)\\n\\n[ArtistMemes](https://www.reddit.com/r/artistmemes/)\\n\\n[Anime Sketch](http://www.reddit.com/r/AnimeSketch)\\n\\n[Caricatures](http://www.reddit.com/r/Caricatures)\\n\\n[CasualDraw](https://www.reddit.com/r/CasualDraw)\\n\\n[Comic Book Art](http://www.reddit.com/r/comicbookart)\\n\\n[DeviantArt](http://www.reddit.com/r/deviantart)\\n\\n[Draw Me NSFW](https://www.reddit.com/r/drawmeNSFW)\\n\\n[Drawing](http://www.reddit.com/r/drawing)\\n\\n[Drawings Revisited](http://www.reddit.com/r/drawingsrevisited)\\n\\n[Erotic Art](https://www.reddit.com/r/Erotic_Art)\\n\\n[I Can Draw That](http://www.reddit.com/r/icandrawthat)\\n\\n[IDAP](http://www.reddit.com/r/idap)\\n\\n[Learn Art](http://www.reddit.com/r/learnart)\\n\\n[Learn To Draw](https://www.reddit.com/r/learntodraw/)\\n\\n[Minimalist Art](http://www.reddit.com/r/minimalist_art)\\n\\n[NSFW Art](http://www.reddit.com/r/NSFWart) \\n\\n[Photoshop Battles](http://www.reddit.com/r/photoshopbattles)\\n\\n[Random Acts of Drawing](http://www.reddit.com/r/randomactsofdrawing)\\n\\n[Sketchdaily](http://www.reddit.com/r/sketchdaily)\\n\\n[Us As Anime](http://www.reddit.com/r/usasanime)\\n\\n[Watercolor101](http://reddit.com/r/watercolor101)\\n\\n[InterstellarArt](http://reddit.com//r/InterstellarArt)\\n\\n[ArtifyMemes](https://www.reddit.com/r/ArtifyMemes/)\\n\\n\\n\\n#### [RGD Rules](http://www.reddit.com/r/redditgetsdrawn/wiki/index), [RGD Wall of Fame](http://www.reddit.com/r/redditgetsdrawn/wiki/modpost), [RGD Artist Directory](http://www.reddit.com/r/redditgetsdrawn/wiki/directory), [Instagram](https://instagram.com/redditgetsdrawnofficial), [Facebook](https://www.facebook.com/ArtofRGD), [Twitter](https://twitter.com/RGD_Official)\", \"submit_link_label\": \"Submit a Photo\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"all_ads\", \"url\": \"/r/redditgetsdrawn/\", \"created_utc\": 1329037453.0, \"banner_size\": [640, 192], \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "23430",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:25 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911665653.Z0FBQUFBQmZBU2x4QkhrcUV3NU1OU0tLeG5tY1FobmdTTnZHUVRNVm1fbjc3MjFsWlAyMEhTT1l5dHkyZVdJQlc3R1gzV1poWERHZktlNEx5Q0tFT1BSVXJJanF3RkRDcXFzOFZpQW1PM0Q4aUpXSURvOHFVamUwMU9MVW1fVWxWdEs3b3l0S183dEI; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:25 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911666.598725,VS0,VE191",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "344.0",
+          "x-ratelimit-reset": "335",
+          "x-ratelimit-used": "256",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditgetsdrawn/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/reddit.com/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": null, \"display_name\": \"reddit.com\", \"header_img\": \"\", \"title\": \"reddit.com\", \"allow_galleries\": false, \"icon_size\": null, \"primary_color\": \"#0079d3\", \"active_user_count\": 473, \"icon_img\": null, \"display_name_prefixed\": \"r/reddit.com\", \"accounts_active\": 473, \"public_traffic\": false, \"subscribers\": 854511, \"user_flair_richtext\": [], \"videostream_links_count\": 0, \"name\": \"t5_6\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"The original subreddit, now archived.\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_6/styles/communityIcon_a8uzjit9bwr21.png?width=256\\u0026s=d28ea66f16da5a6c2ccae0d069cc4d42322d69a9\", \"banner_background_image\": \"https://styles.redditmedia.com/t5_6/styles/bannerBackgroundImage_yddlxq1m39r21.jpg?width=4000\\u0026s=f91d1be5c5a1ea6e492818ecb8a846ea4978563c\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ETo report a site-wide rule violation to the Reddit Admins, please use our \\u003Ca href=\\\"https://www.reddit.com/report\\\"\\u003Ereport forms\\u003C/a\\u003E or message \\u003Ca href=\\\"https://www.reddit.com/message/compose?to=%2Fr%2Freddit.com\\\"\\u003E/r/reddit.com modmail\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EThis subreddit is \\u003Ca href=\\\"https://redditblog.com/2011/10/18/saying-goodbye-to-an-old-friend-and-revising-the-default-subreddits/\\\"\\u003Earchived and no longer accepting submissions.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": \"\", \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": false, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"\", \"can_assign_user_flair\": false, \"created\": 1137566705.0, \"wls\": 6, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": false, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EThe original subreddit, now archived.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": null, \"can_assign_link_flair\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": false, \"subreddit_type\": \"archived\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"#0dd3bb\", \"show_media\": false, \"id\": \"6\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"To report a site-wide rule violation to the Reddit Admins, please use our [report forms](https://www.reddit.com/report) or message [/r/reddit.com modmail](https://www.reddit.com/message/compose?to=%2Fr%2Freddit.com).\\n\\nThis subreddit is [archived and no longer accepting submissions.](https://redditblog.com/2011/10/18/saying-goodbye-to-an-old-friend-and-revising-the-default-subreddits/)\", \"submit_link_label\": \"\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"all_ads\", \"url\": \"/r/reddit.com/\", \"created_utc\": 1137537905.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "3930",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:25 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911665864.Z0FBQUFBQmZBU2x4WE5wSDVwZEVOOWhxR0M4RkxfVU9vZkI1WFBtZVJ6aHdNN2VzNVRLZEcxYnlXcHc4cFhIM1NQM1RaaVBiMTl5U1E4MmlRb3BJb21sVXNBOXBoei1Yb3ZOUjJYVm5NbU5xVHJDVGVMT2xkUDVhVmM3aGV0X1hab284cG1YU1M4R18; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:25 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911666.811731,VS0,VE142",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "342.0",
+          "x-ratelimit-reset": "335",
+          "x-ratelimit-used": "258",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/reddit.com/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/RedditLaqueristas/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EREAD OUR RULES BEFORE POSTING \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EManicures must include a complete polish/product list, or be tagged with the appropriate flair (e.g. \\u0026quot;Salon (List N/A)\\u0026quot; if done at a salon). Use bracket tags in the post title, if you wish, for the following topics: [Polish] [Gel] [Acrylics] [Mixed Media] [Beginner] [Intermediate] [Advanced] [Holo] [Chrome] [Glitter]\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": false, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": true, \"display_name\": \"RedditLaqueristas\", \"header_img\": \"https://b.thumbs.redditmedia.com/GB3ySuF8QQWdTqRwImjOSKrbBGvUMoN_x8_-OjJjO7E.png\", \"title\": \"The C was sold to pay for polish \\ud83d\\udc85\", \"allow_galleries\": true, \"icon_size\": [256, 256], \"primary_color\": \"#314a7b\", \"active_user_count\": 415, \"icon_img\": \"https://b.thumbs.redditmedia.com/Mnqg4GvaLPwmjZbuYHXno7CDtsK2f0S2TOu-fWugIeI.png\", \"display_name_prefixed\": \"r/RedditLaqueristas\", \"accounts_active\": 415, \"public_traffic\": false, \"subscribers\": 203216, \"user_flair_richtext\": [], \"videostream_links_count\": 4, \"name\": \"t5_2se5q\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": true, \"advertiser_category\": \"Lifestyles\", \"public_description\": \"The C was sold to pay for polish \\ud83d\\udc85\", \"comment_score_hide_mins\": 60, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_2se5q/styles/communityIcon_bm010pcu7v111.png?width=256\\u0026s=4076168c111391922aea2b197997201e5ed13499\", \"banner_background_image\": \"https://styles.redditmedia.com/t5_2se5q/styles/bannerBackgroundImage_v305n5goc9y01.png?width=4000\\u0026s=bb9bf565925b7c4a8d60fe379fdaf5ac707258ed\", \"original_content_tag_enabled\": false, \"submit_text\": \"READ OUR RULES BEFORE POSTING \\n\\nManicures must include a complete polish/product list, or be tagged with the appropriate flair (e.g. \\\"Salon (List N/A)\\\" if done at a salon). Use bracket tags in the post title, if you wish, for the following topics: [Polish] [Gel] [Acrylics] [Mixed Media] [Beginner] [Intermediate] [Advanced] [Holo] [Chrome] [Glitter]\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EWelcome to \\u003Ca href=\\\"/r/RedditLaqueristas\\\"\\u003Er/RedditLaqueristas\\u003C/a\\u003E!\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003EJoin us\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003ECome Chat with us on \\u003Ca href=\\\"https://discord.gg/4rRptpG\\\"\\u003Eour Discord Channel!\\u003C/a\\u003E \\u003C/p\\u003E\\n\\n\\u003Ch3\\u003EWIKI\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003ECheck out our \\u003Ca href=\\\"https://www.reddit.com/r/RedditLaqueristas/wiki/index\\\"\\u003EWiki\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003EWeeklies\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EClick \\u003Ca href=\\\"https://old.reddit.com/r/RedditLaqueristas/wiki/weeklies\\\"\\u003Ehere\\u003C/a\\u003E to get more info on our\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003ENo Dumb Questions Monday\\u003C/li\\u003E\\n\\u003Cli\\u003E52 Week Challenge\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Ch3\\u003EFull detailed rules\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/RedditLaqueristas/wiki/rules#wiki_rules.3A\\\"\\u003EREAD OUR FULL RULES HERE!!\\u003C/a\\u003E\\u003Cstrong\\u003ERules\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E1) Support One Another; Downvoting is Discouraged\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EOur community is built around supporting and appreciating \\nnail art, no matter the artist\\u0026#39;s current skill level. \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EDo be kind with constructive criticism, don\\u0026#39;t comment anything that is needlessly rude or hurtful.\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E2) List Polishes /Products\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EInclude a complete list of polishes (including brand and shade names/numbers) and products used for your manicure/pedicure, as a comment below your post or in the post\\u0026#39;s title.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EPosts without complete lists will be removed after 12 hours.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/RedditLaqueristas/comments/dgr96k/updated_polish_and_product_faq\\\"\\u003EPolish/ Product FAQ here\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/RedditLaqueristas/wiki/index#wiki_2._list_polishes_and_products\\\"\\u003EFull detailed rule here\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E3) Credit others work\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EIf your post is not your own original work, you MUST credit the original artist/creator either in the title or as a comment on the post.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EPosts that do not properly credit the Original artist/creator will be removed and your account may be banned.\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E4) Tag/Flair Your Posts Appropriately\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EFlairs ARE required for NSFW images, sponsored posts, and manicures not made by the OP. \\u003C/p\\u003E\\n\\n\\u003Cp\\u003ETagging with other flairs is highly encouraged, if possible, tag your post.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EIf you do not see a tag that meets your needs, reach out to the mod team to make a suggestion.\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E5) NSFW content must be tagged\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003E\\u0026quot;Not Safe For Work (NSFW)\\u0026quot; content includes any images with blood, realistic gore, or nails painted/sculpted to portray nudity or sexual content.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EFinal ruling is up to mod discretion.\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E6) Explicit comments/post titles aren\\u0026#39;t welcome\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EAppreciate nails/nail art WITHOUT mentioning explicit, graphic, or sexual terms- this will generally make users feel uncomfortable and feel uneasy. Critiques or comments including harassment, slurs, and -isms are off the table as well.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EEngaging in the same type of behavior\\nretaliation is also not acceptable. Report inflammatory comments.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ERemember you can block users that make you feel uncomfortable, but haven\\u0026#39;t necessarily broken rules.\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E7) Share nail related content\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EThis subreddit is about nails: your nails, others nails, nail art, nail care, nail issues, nail progress, nail product reviews, tutorials, etc., are all welcome.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003ECasual content (e.g. memes, venting/ranting posts that don\\u0026#39;t include a question, battle stations, hauls, swatch collections,polish crafts, polish toys, etc.) are allowed on \\u0026quot;Casual \\nWeekends\\u0026quot; (Fridays, Saturdays, Sundays) only.\\u003C/p\\u003E\\n\\n\\u003Ch3\\u003E8) Shameless advertising is not welcome\\u003C/h3\\u003E\\n\\n\\u003Cp\\u003EOutside links to products and stores are allowed when appropriate within the context of your post or comment, however promoting products solely for financial gain is not. \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EDO NOT spam posts or comments linking to your blog, discount codes, referral links, etc., unless necessary. \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EAdditionally, videos posted from your YouTube channel and Instagram link posts must have a link to the final nail art image hosted on Reddit or Imgur in the comments.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003ETutorials and Help\\u003C/strong\\u003E\\nWiki: Work in progress. Feel free to browse, but pages are not fully updated. If you wish to contribute to the wiki please let the mod team know.\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"http://www.reddit.com/r/RedditLaqueristas/comments/xq0l8/nail_art_tutorials/\\\"\\u003ENail Art Tutorials:\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003ENail Care Help and Advice: \\u003Ca href=\\\"http://www.reddit.com/r/RedditLaqueristas/comments/2rodly/all_about_nail_care_ask_about_nail_care_share/\\\"\\u003EPart 1\\u003C/a\\u003E, \\u003Ca href=\\\"http://www.reddit.com/r/RedditLaqueristas/comments/33epvx/discussion_nail_care_questions_comments_answers/\\\"\\u003EPart 2\\u003C/a\\u003E - Ask and answer questions here too!\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/RedditLaqueristas/comments/3iv7i4/where_can_i_find_polish_that_ships_to_my/\\\"\\u003EInternational Shipping Guide\\u003C/a\\u003E \\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003ERelated Communities:\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/nailart\\\"\\u003E/r/nailart\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/RandomActsofPolish\\\"\\u003E/r/RandomActsofPolish\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/CalmHands\\\"\\u003E/r/CalmHands\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/nails\\\"\\u003E/r/nails\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/lacqueristas\\\"\\u003E/r/lacqueristas\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/malepolish\\\"\\u003E/r/malepolish\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/redditlaqueristaswap\\\"\\u003E/r/redditlaqueristaswap\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": \"There's a canvas on my fingers!\", \"header_size\": [93, 120], \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": true, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"#222222\", \"can_assign_user_flair\": true, \"created\": 1301088708.0, \"wls\": 6, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": true, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EThe C was sold to pay for polish \\ud83d\\udc85\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": null, \"can_assign_link_flair\": true, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"Submit Text Post\", \"link_flair_position\": \"right\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": true, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"https://a.thumbs.redditmedia.com/DmpDJsFDVSjtbi5sIG-afcT-NmMirgyAWQ7XGHEdfq0.png\", \"user_flair_text\": null, \"banner_background_color\": \"#314a7b\", \"show_media\": true, \"id\": \"2se5q\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"Welcome to r/RedditLaqueristas!\\n\\n### Join us\\nCome Chat with us on [our Discord Channel!](https://discord.gg/4rRptpG) \\n\\n### WIKI\\nCheck out our [Wiki](https://www.reddit.com/r/RedditLaqueristas/wiki/index)\\n\\n### Weeklies\\nClick [here](https://old.reddit.com/r/RedditLaqueristas/wiki/weeklies) to get more info on our\\n\\n* No Dumb Questions Monday\\n* 52 Week Challenge\\n\\n### Full detailed rules\\n[READ OUR FULL RULES HERE!!](https://www.reddit.com/r/RedditLaqueristas/wiki/rules#wiki_rules.3A)**Rules**\\n\\n###1) Support One Another; Downvoting is Discouraged\\nOur community is built around supporting and appreciating \\nnail art, no matter the artist's current skill level. \\n\\n\\nDo be kind with constructive criticism, don't comment anything that is needlessly rude or hurtful.\\n\\n###2) List Polishes /Products\\nInclude a complete list of polishes (including brand and shade names/numbers) and products used for your manicure/pedicure, as a comment below your post or in the post's title.\\n\\nPosts without complete lists will be removed after 12 hours.\\n \\n[Polish/ Product FAQ here](https://www.reddit.com/r/RedditLaqueristas/comments/dgr96k/updated_polish_and_product_faq)\\n\\n[Full detailed rule here](https://www.reddit.com/r/RedditLaqueristas/wiki/index#wiki_2._list_polishes_and_products)\\n\\n###3) Credit others work\\nIf your post is not your own original work, you MUST credit the original artist/creator either in the title or as a comment on the post.\\n\\nPosts that do not properly credit the Original artist/creator will be removed and your account may be banned.\\n\\n###4) Tag/Flair Your Posts Appropriately\\nFlairs ARE required for NSFW images, sponsored posts, and manicures not made by the OP. \\n\\nTagging with other flairs is highly encouraged, if possible, tag your post.\\n\\nIf you do not see a tag that meets your needs, reach out to the mod team to make a suggestion.\\n\\n###5) NSFW content must be tagged\\n\\\"Not Safe For Work (NSFW)\\\" content includes any images with blood, realistic gore, or nails painted/sculpted to portray nudity or sexual content.\\n\\nFinal ruling is up to mod discretion.\\n\\n###6) Explicit comments/post titles aren't welcome\\nAppreciate nails/nail art WITHOUT mentioning explicit, graphic, or sexual terms- this will generally make users feel uncomfortable and feel uneasy. Critiques or comments including harassment, slurs, and -isms are off the table as well.\\n\\nEngaging in the same type of behavior\\nretaliation is also not acceptable. Report inflammatory comments.\\n\\nRemember you can block users that make you feel uncomfortable, but haven't necessarily broken rules.\\n\\n###7) Share nail related content\\nThis subreddit is about nails: your nails, others nails, nail art, nail care, nail issues, nail progress, nail product reviews, tutorials, etc., are all welcome.\\n\\nCasual content (e.g. memes, venting/ranting posts that don't include a question, battle stations, hauls, swatch collections,polish crafts, polish toys, etc.) are allowed on \\\"Casual \\nWeekends\\\" (Fridays, Saturdays, Sundays) only.\\n\\n###8) Shameless advertising is not welcome\\nOutside links to products and stores are allowed when appropriate within the context of your post or comment, however promoting products solely for financial gain is not. \\n\\nDO NOT spam posts or comments linking to your blog, discount codes, referral links, etc., unless necessary. \\n\\nAdditionally, videos posted from your YouTube channel and Instagram link posts must have a link to the final nail art image hosted on Reddit or Imgur in the comments.\\n\\n**Tutorials and Help**\\nWiki: Work in progress. Feel free to browse, but pages are not fully updated. If you wish to contribute to the wiki please let the mod team know.\\n\\n* [Nail Art Tutorials:](http://www.reddit.com/r/RedditLaqueristas/comments/xq0l8/nail_art_tutorials/)\\n* Nail Care Help and Advice: [Part 1](http://www.reddit.com/r/RedditLaqueristas/comments/2rodly/all_about_nail_care_ask_about_nail_care_share/), [Part 2](http://www.reddit.com/r/RedditLaqueristas/comments/33epvx/discussion_nail_care_questions_comments_answers/) - Ask and answer questions here too!\\n\\n* [International Shipping Guide](https://www.reddit.com/r/RedditLaqueristas/comments/3iv7i4/where_can_i_find_polish_that_ships_to_my/) \\n\\n**Related Communities:**\\n\\n* /r/nailart\\n* /r/RandomActsofPolish\\n* /r/CalmHands\\n* /r/nails\\n* /r/lacqueristas\\n* /r/malepolish\\n* /r/redditlaqueristaswap\", \"submit_link_label\": \"Submit Photo or Link\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"all_ads\", \"url\": \"/r/RedditLaqueristas/\", \"created_utc\": 1301059908.0, \"banner_size\": [1280, 384], \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "15654",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:26 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911666029.Z0FBQUFBQmZBU2x5b2wtUmJlU2Vfa3FsSEZ6RlpOMmh2MWo3WlR3dmRaQ0dMc0FXX3o4YUwxY0hQdnJKc2RXakVFVjZ6bzBfYkRXNndJNUNNczc4M2l3YUFYZjNlcDRYOXFKOTB5cXU4NmdDZlRyOE9WUUxZREZob1llS3V4cGRlMzJwZzJvTEZOS08; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:26 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911666.973647,VS0,VE259",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "341.0",
+          "x-ratelimit-reset": "334",
+          "x-ratelimit-used": "259",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/RedditLaqueristas/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditmobile/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EPlease flair your post according to device.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": true, \"display_name\": \"redditmobile\", \"header_img\": \"https://b.thumbs.redditmedia.com/mkqMWBEWGRveGRqIGcHfgQYi4UEaGm6-e6E3pOE6XKA.png\", \"title\": \"Reddit Mobile\", \"allow_galleries\": true, \"icon_size\": [256, 256], \"primary_color\": \"#fc471e\", \"active_user_count\": 201, \"icon_img\": \"https://a.thumbs.redditmedia.com/AQBPcKrVFH15JjmzzFgg0AU2Mxs9xAfEV4hJuymN_98.png\", \"display_name_prefixed\": \"r/redditmobile\", \"accounts_active\": 201, \"public_traffic\": false, \"subscribers\": 121967, \"user_flair_richtext\": [], \"videostream_links_count\": 1, \"name\": \"t5_2rmtr\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": true, \"advertiser_category\": \"\", \"public_description\": \"An official community for announcements from Reddit, Inc. and discussion about official Reddit apps for mobile phones and tablets.\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_2rmtr/styles/communityIcon_c8n81j8k56x11.png?width=256\\u0026s=d412145cc9baa13e83298b83057a00a5b3d6d19c\", \"banner_background_image\": \"https://styles.redditmedia.com/t5_2rmtr/styles/bannerBackgroundImage_eesrxb7m56x11.jpg?width=4000\\u0026s=f3337222f3a9a439c6f0eaa2a4fa499f1be5d02d\", \"original_content_tag_enabled\": false, \"submit_text\": \"Please flair your post according to device.\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/mobile/download\\\"\\u003EThe official Reddit app\\u003C/a\\u003E is now available everywhere!\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://itunes.apple.com/us/app/reddit-the-official-app/id1064216828\\\"\\u003EReddit for iPhone\\u003C/a\\u003E | \\u003Ca href=\\\"https://play.google.com/store/apps/details?id=com.reddit.frontpage\\\"\\u003EReddit for Android\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Ch5\\u003ECommunity Guidelines\\u003C/h5\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E1. No low-effort or off-topic posts\\u003C/strong\\u003E \\nThis community is focused on announcements, feedback, bug reports, and discussion in regards to the official Reddit App. Low-effort and Off-topic posts will be removed.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditmobile/comments/7yzl3j/rredditmobile_101_how_to_report_a_bug/?st=JPKI29YU\\u0026amp;sh=620cd320\\\"\\u003EHere is a helpful reference on how to propery report a bug if you wish to proceed.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E2. Check the help center before posting\\u003C/strong\\u003E\\n\\u003Cstrong\\u003E\\u003Ca href=\\\"https://www.reddithelp.com/en/categories/reddit-apps\\\"\\u003Ereddithelp.com\\u003C/a\\u003E\\u003C/strong\\u003E - Please search the native apps FAQ before posting about an issue or asking a question. The most commonly asked questions are already answered here.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EReddit Premium\\u003C/strong\\u003E - any coin transaction issues can be sent to \\u003Ca href=\\\"https://www.reddithelp.com/en/submit-request/premium-coins-support\\\"\\u003Ethis contact form.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003EiOS purchases should include their Apple receipt as a screencap\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E3. Remember the Human\\u003C/strong\\u003E\\nPerhaps the most important rule. Treat others as you\\u0026#39;d like to be treated. Constructive criticism is appreciated, please keep it respectful!\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E4. Posts must be tagged with platform and version\\u003C/strong\\u003E \\nAll posts must have either an [iOS] or [android] tag in the post title according to what platform the poster is talking about, as well as app version e.g. [4.1.0]. We also ask that the user sets their flair as well. \\u003Ca href=\\\"https://www.reddit.com/r/redditmobile/comments/9cwocm/iosandroid_new_post_title_requirement_and_a/?st=JPKGVFL0\\u0026amp;sh=0c3d36fa\\\"\\u003EPost title requirements can be found here.\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E5. No NSFW or Personal Content\\u003C/strong\\u003E\\nThe publishing of the personal information of yourself/someone else is strictly prohibited, and could even get you banned from Reddit itself. Additionally, NSFW posts have no place on \\u003Ca href=\\\"/r/redditmobile\\\"\\u003E/r/redditmobile\\u003C/a\\u003E and posting one may result in a ban. It\\u0026#39;s okay to post a screenshot of NSFW subreddits if it clearly is about the app, those posts must be tagged as NSFW.\\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E6. No common posts or recent reposts\\u003C/strong\\u003E\\nPosts that are commonly/were recently posted to the subreddit will be removed at the discretion of the moderation team. Please search before posting and if you find a similar recent post, comment and upvote there for better visibility. Please also reference the most recent changelog stickied to subreddit to see if the issue you are experiencing has already been acknowledged or even been recently patched in a newly shipped update.\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch5\\u003ENative Mobile FAQ\\u003C/h5\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003EFor additional help please see our mobile section of \\u003Ca href=\\\"https://www.reddithelp.com/en/categories/reddit-apps\\\"\\u003Ereddithelp.com\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/live/yxqpthqf8dff/\\\"\\u003EReddit Mobile Live Thread\\u003C/a\\u003E - Log of news, changes, and upcoming features to the native apps. \\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditmobile/wiki/index\\\"\\u003EPlease Check our Wiki\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EBeta Subreddits\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditiOSbeta/\\\"\\u003EiOS Beta\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/redditandroidbeta\\\"\\u003EAndroid Beta\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EHelp Center\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"https://www.reddithelp.com/en/categories/reddit-apps\\\"\\u003EMobile Help Center\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003ERelated Subreddits\\u003C/strong\\u003E\\u003C/p\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/mobileweb\\\"\\u003E/r/mobileweb\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/help\\\"\\u003E/r/help\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/redesign\\\"\\u003E/r/redesign\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/changelog\\\"\\u003E/r/changelog\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cp\\u003E\\u003Ca href=\\\"/r/ideasfortheadmins\\\"\\u003E/r/ideasfortheadmins\\u003C/a\\u003E\\u003C/p\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Cp\\u003EThis is an official reddit admin-sponsored community.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": \"Front Page\", \"header_size\": [96, 96], \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": true, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"#ff4500\", \"can_assign_user_flair\": true, \"created\": 1270100381.0, \"wls\": 1, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": false, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EAn official community for announcements from Reddit, Inc. and discussion about official Reddit apps for mobile phones and tablets.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": null, \"can_assign_link_flair\": true, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": \"\", \"link_flair_position\": \"right\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_chat_post_creation\": false, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": true, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"#ff4500\", \"show_media\": true, \"id\": \"2rmtr\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"[The official Reddit app](https://www.reddit.com/mobile/download) is now available everywhere!\\n\\n[Reddit for iPhone](https://itunes.apple.com/us/app/reddit-the-official-app/id1064216828) | [Reddit for Android](https://play.google.com/store/apps/details?id=com.reddit.frontpage)\\n\\n#####Community Guidelines\\n\\n**1. No low-effort or off-topic posts** \\nThis community is focused on announcements, feedback, bug reports, and discussion in regards to the official Reddit App. Low-effort and Off-topic posts will be removed.\\n\\n[Here is a helpful reference on how to propery report a bug if you wish to proceed.](https://www.reddit.com/r/redditmobile/comments/7yzl3j/rredditmobile_101_how_to_report_a_bug/?st=JPKI29YU\\u0026sh=620cd320)\\n\\n**2. Check the help center before posting**\\n**[reddithelp.com](https://www.reddithelp.com/en/categories/reddit-apps)** - Please search the native apps FAQ before posting about an issue or asking a question. The most commonly asked questions are already answered here.\\n\\n**Reddit Premium** - any coin transaction issues can be sent to [this contact form.](https://www.reddithelp.com/en/submit-request/premium-coins-support)\\n\\niOS purchases should include their Apple receipt as a screencap\\n\\n**3. Remember the Human**\\nPerhaps the most important rule. Treat others as you'd like to be treated. Constructive criticism is appreciated, please keep it respectful!\\n\\n**4. Posts must be tagged with platform and version** \\nAll posts must have either an [iOS] or [android] tag in the post title according to what platform the poster is talking about, as well as app version e.g. [4.1.0]. We also ask that the user sets their flair as well. [Post title requirements can be found here.](https://www.reddit.com/r/redditmobile/comments/9cwocm/iosandroid_new_post_title_requirement_and_a/?st=JPKGVFL0\\u0026sh=0c3d36fa)\\n\\n**5. No NSFW or Personal Content**\\nThe publishing of the personal information of yourself/someone else is strictly prohibited, and could even get you banned from Reddit itself. Additionally, NSFW posts have no place on /r/redditmobile and posting one may result in a ban. It's okay to post a screenshot of NSFW subreddits if it clearly is about the app, those posts must be tagged as NSFW.\\n\\n**6. No common posts or recent reposts**\\nPosts that are commonly/were recently posted to the subreddit will be removed at the discretion of the moderation team. Please search before posting and if you find a similar recent post, comment and upvote there for better visibility. Please also reference the most recent changelog stickied to subreddit to see if the issue you are experiencing has already been acknowledged or even been recently patched in a newly shipped update.\\n\\n---\\n\\n#####Native Mobile FAQ\\n\\n* For additional help please see our mobile section of [reddithelp.com](https://www.reddithelp.com/en/categories/reddit-apps)\\n\\n* [Reddit Mobile Live Thread](https://www.reddit.com/live/yxqpthqf8dff/) - Log of news, changes, and upcoming features to the native apps. \\n\\n* [Please Check our Wiki](https://www.reddit.com/r/redditmobile/wiki/index)\\n\\n**Beta Subreddits**\\n\\n* [iOS Beta](https://www.reddit.com/r/redditiOSbeta/)\\n\\n* [Android Beta](https://www.reddit.com/r/redditandroidbeta)\\n\\n**Help Center**\\n\\n* [Mobile Help Center](https://www.reddithelp.com/en/categories/reddit-apps)\\n\\n**Related Subreddits**\\n\\n* /r/mobileweb\\n\\n* /r/help\\n\\n* /r/redesign\\n\\n* /r/changelog\\n\\n* /r/ideasfortheadmins\\n\\nThis is an official reddit admin-sponsored community.\", \"is_chat_post_feature_enabled\": true, \"submit_link_label\": \"\", \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"house_only\", \"url\": \"/r/redditmobile/\", \"created_utc\": 1270071581.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "12984",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:26 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911666305.Z0FBQUFBQmZBU2x5dUF2X1MxYVRkUWtSOHV1T3FvOENEMGEya2RlYVJBWXYzYTNWUlJiYUhZcEVONUlzcmZSWFlmRGx4V1VUVVFSUjltUTF1ZURJcU92c18wT0E3bHo4T3ZmZXU4Njk5OWZlZ3FQaWxsSlJVOTU0cW9DUENYcXlVajlnMjYybmprZTE; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:26 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911666.249606,VS0,VE209",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "340.0",
+          "x-ratelimit-reset": "334",
+          "x-ratelimit-used": "260",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditmobile/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/RedditorCum/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": null, \"user_is_muted\": false, \"user_can_flair_in_sr\": null, \"display_name\": \"RedditorCum\", \"header_img\": \"https://b.thumbs.redditmedia.com/2TePPprfiAy0jQjAC-pjzgT-cQ4S1hmx50_dY-CylTs.png\", \"title\": \"Amateur's Hot Cum\", \"allow_galleries\": true, \"icon_size\": null, \"primary_color\": \"\", \"active_user_count\": 161, \"icon_img\": \"\", \"display_name_prefixed\": \"r/RedditorCum\", \"accounts_active\": 161, \"public_traffic\": false, \"subscribers\": 110963, \"user_flair_richtext\": [], \"name\": \"t5_2webb\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"Amateur pictures and videos of hot cum!\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"\", \"banner_background_image\": \"\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EThis is a subreddit dedicated entirely to cum. Anything you can think of can be posted here as long as it\\u0026#39;s related to cum; images, videos, stories, discussions, questions, requests etc. \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EThe only difference between this and other cum-related subs is that we\\u0026#39;re interested in \\u003Cstrong\\u003Eamateur\\u003C/strong\\u003E cum here - your own, your friends\\u0026#39;, your partners\\u0026#39;, or some guy on the internet.\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch2\\u003EOther Communities\\u003C/h2\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/OhCumOn\\\"\\u003E/r/OhCumOn\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/GayCumSluts\\\"\\u003E/r/GayCumSluts\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/MaleTributeMe\\\"\\u003E/r/MaleTributeMe\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/CumCannonAddicts\\\"\\u003E/r/CumCannonAddicts\\u003C/a\\u003E \\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/CockPulse\\\"\\u003E/r/CockPulse\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/WetSpotGuys\\\"\\u003E/r/WetSpotGuys\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"http://www.reddit.com/user/GayGiles/m/gaygiles\\\"\\u003EMulti-reddit of all gay-related subreddits I moderate\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003ESnoo by: \\u003Ca href=\\\"/u/LieOrChicken\\\"\\u003E/u/LieOrChicken\\u003C/a\\u003E\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": false, \"header_title\": null, \"header_size\": [256, 70], \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": false, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"\", \"can_assign_user_flair\": false, \"created\": 1361249934.0, \"wls\": 3, \"show_media_preview\": false, \"submission_type\": \"any\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": false, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EAmateur pictures and videos of hot cum!\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": false, \"is_crosspostable_subreddit\": null, \"notification_level\": null, \"can_assign_link_flair\": true, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": null, \"link_flair_position\": \"left\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_chat_post_creation\": false, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": true, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": true, \"id\": \"2webb\", \"user_is_moderator\": false, \"over18\": true, \"description\": \"This is a subreddit dedicated entirely to cum. Anything you can think of can be posted here as long as it's related to cum; images, videos, stories, discussions, questions, requests etc. \\n\\nThe only difference between this and other cum-related subs is that we're interested in **amateur** cum here - your own, your friends', your partners', or some guy on the internet.\\n\\n---\\n\\n##Other Communities\\n\\n- /r/OhCumOn\\n- /r/GayCumSluts\\n- /r/MaleTributeMe\\n- /r/CumCannonAddicts \\n- /r/CockPulse\\n- /r/WetSpotGuys\\n- [Multi-reddit of all gay-related subreddits I moderate](http://www.reddit.com/user/GayGiles/m/gaygiles)\\n\\n---\\n\\nSnoo by: /u/LieOrChicken\", \"is_chat_post_feature_enabled\": true, \"submit_link_label\": null, \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"promo_adult_nsfw\", \"url\": \"/r/RedditorCum/\", \"created_utc\": 1361221134.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "5000",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:26 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911666541.Z0FBQUFBQmZBU2x5aEZUMlRXLVQ4eDg5M3NoTEhOcTBRUDM4elk2SnhRZkh0dUZmQUc1Q2E3SFNnaklGZnQxZXpsd2JacFhSMS02Nk9Eak95ZVZhX0cwcTBxbXh5WVRaNlNMVnc5R0tZNUdlbWRKQlIzUTFhanlCX2NWVElWTFJuc2R2Qm91WjA3QTM; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:26 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911666.477824,VS0,VE164",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "339.0",
+          "x-ratelimit-reset": "334",
+          "x-ratelimit-used": "261",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/RedditorCum/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/RedditsMuseumofFilth/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": true, \"user_is_muted\": false, \"user_can_flair_in_sr\": true, \"display_name\": \"RedditsMuseumofFilth\", \"header_img\": null, \"title\": \"The repository of the worst stories\", \"allow_galleries\": true, \"icon_size\": null, \"primary_color\": \"\", \"active_user_count\": 126, \"icon_img\": \"\", \"display_name_prefixed\": \"r/RedditsMuseumofFilth\", \"accounts_active\": 126, \"public_traffic\": false, \"subscribers\": 107786, \"user_flair_richtext\": [], \"name\": \"t5_353mk\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": false, \"advertiser_category\": \"\", \"public_description\": \"Out of the Loop on these  oft-referenced horror stories ? Come here and get up-to-date on Reddit's gruesome filth !  \\n\\nBeware, do not read after eating.\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"\", \"banner_background_image\": \"\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EOut of the Loop on these  oft-referenced horror stories ?   Come here and get up-to-date on Reddit\\u0026#39;s gruesome filth !  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"/r/RedditsMuseumofFilth\\\"\\u003E/r/RedditsMuseumofFilth\\u003C/a\\u003E is a subreddit dedicated to cataloguing the posts and comments that will go down as the worst in reddit history. Looking for a famous post that you\\u0026#39;ve seen referenced? Just type some keywords into the search bar (\\u0026quot;broken arms\\u0026quot;, \\u0026quot;swamps of daggobah\\u0026quot; etc), limit your search to this subreddit and it should appear.  Please check out the most famous from the list, inked here:  \\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/r/RedditsMuseumofFilth/comments/82bfs2/hi_welcome_the_reddits_museum_of_filth_new_thread/\\\"\\u003EThe Reddit\\u2019s Museum of Filth Best of\\u003C/a\\u003E\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EWhile similar to \\u003Ca href=\\\"/r/MuseumofReddit\\\"\\u003E/r/MuseumofReddit\\u003C/a\\u003E, this is not the same. Both infamous and most horrible posts and comments are welcome here.  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003EPlease note:\\u003C/strong\\u003E This sub is about appreciating the worst of Reddit\\u0026#39;s most infamous and horrible; not to produce it.  Anything not Reddit will be removed. No OC will be permitted.  \\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EIf the comment you\\u0026#39;re linking to requires some context, just add \\u0026quot;?context=x\\u0026quot; to the URL, where \\u0026quot;x\\u0026quot; is the number of previous comments you want displayed.\\u003Cbr/\\u003E\\nex: for a comment which needs the \\u003Cstrong\\u003E3\\u003C/strong\\u003E previous comment for context, simply add \\u003Ccode\\u003E?context=3\\u003C/code\\u003E \\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EIf a post is less than 6 months old, please use the No Participation domain to avoid vote brigading.  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EReplace the\\n\\u003Ccode\\u003Ehttp://www.reddit.com/r/example/...\\u003C/code\\u003E  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EURL with\\n\\u003Ccode\\u003Ehttp://np.reddit.com/r/example/...\\u003C/code\\u003E\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EPlease remember to respect reddiquette. If you see a post in here that you have a problem with, keep your opinions in here. Don\\u0026#39;t go after the person who posted it. Also, note that downvotes have been disabled. Please respect the subreddit by not going around this.\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EWhile anybody is allowed to post, approval is at moderator discretion to ensure quality.  \\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Cp\\u003EIf there\\u0026#39;s a particular event in reddit\\u0026#39;s history you\\u0026#39;re looking for, please message the mods to avoid filling the subreddit with clutter.\\u003C/p\\u003E\\n\\n\\u003Chr/\\u003E\\n\\n\\u003Ch1\\u003ERules\\u003C/h1\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E1-\\u003C/strong\\u003E Please use np links, especially on young posts/comments.   You just have to replace the \\u003Ccode\\u003Ewww\\u003C/code\\u003E in your link by \\u003Ccode\\u003Enp\\u003C/code\\u003E  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003ESee above for an example.  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E2-\\u003C/strong\\u003E No OC. No content from outside Reddit.  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E3-\\u003C/strong\\u003E Normal Reddiquette is enforced. If you see a post in here that you have a problem with, keep your opinions in here.  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003E\\u003Cstrong\\u003E4-\\u003C/strong\\u003E Gore isn\\u2019t filth, go find a gore subreddit.\\u003C/p\\u003E\\n\\n\\u003Ch1\\u003EMore normal subreddits\\u003C/h1\\u003E\\n\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/Meme_Graveyard\\\"\\u003E/r/Meme_Graveyard\\u003C/a\\u003E\\u003Cbr/\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Ca href=\\\"/r/ShittyLifeProTips\\\"\\u003E/r/ShittyLifeProTips\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": null, \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": false, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"#545452\", \"can_assign_user_flair\": true, \"created\": 1416926971.0, \"wls\": 1, \"show_media_preview\": false, \"submission_type\": \"any\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": false, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": true, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EOut of the Loop on these  oft-referenced horror stories ? Come here and get up-to-date on Reddit\\u0026#39;s gruesome filth !  \\u003C/p\\u003E\\n\\n\\u003Cp\\u003EBeware, do not read after eating.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": false, \"is_crosspostable_subreddit\": true, \"notification_level\": null, \"can_assign_link_flair\": true, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": null, \"link_flair_position\": \"right\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": true, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"\", \"show_media\": false, \"id\": \"353mk\", \"user_is_moderator\": false, \"over18\": true, \"description\": \"Out of the Loop on these  oft-referenced horror stories ?   Come here and get up-to-date on Reddit's gruesome filth !  \\n\\n/r/RedditsMuseumofFilth is a subreddit dedicated to cataloguing the posts and comments that will go down as the worst in reddit history. Looking for a famous post that you've seen referenced? Just type some keywords into the search bar (\\\"broken arms\\\", \\\"swamps of daggobah\\\" etc), limit your search to this subreddit and it should appear.  Please check out the most famous from the list, inked here:  \\n________________________________________\\n[The Reddit\\u2019s Museum of Filth Best of](https://www.reddit.com/r/RedditsMuseumofFilth/comments/82bfs2/hi_welcome_the_reddits_museum_of_filth_new_thread/)\\n________________________________________\\nWhile similar to /r/MuseumofReddit, this is not the same. Both infamous and most horrible posts and comments are welcome here.  \\n\\n**Please note:** This sub is about appreciating the worst of Reddit's most infamous and horrible; not to produce it.  Anything not Reddit will be removed. No OC will be permitted.  \\n________________________________________\\nIf the comment you're linking to requires some context, just add \\\"?context=x\\\" to the URL, where \\\"x\\\" is the number of previous comments you want displayed.   \\nex: for a comment which needs the **3** previous comment for context, simply add `?context=3` \\n\\n________________________________________\\nIf a post is less than 6 months old, please use the No Participation domain to avoid vote brigading.  \\n\\nReplace the\\n`http://www.reddit.com/r/example/...`  \\n\\nURL with\\n`http://np.reddit.com/r/example/...`\\n\\n________________________________________\\nPlease remember to respect reddiquette. If you see a post in here that you have a problem with, keep your opinions in here. Don't go after the person who posted it. Also, note that downvotes have been disabled. Please respect the subreddit by not going around this.\\n\\n________________________________________\\nWhile anybody is allowed to post, approval is at moderator discretion to ensure quality.  \\n________________________________________\\nIf there's a particular event in reddit's history you're looking for, please message the mods to avoid filling the subreddit with clutter.\\n________________________________________\\n#Rules\\n\\n**1-** Please use np links, especially on young posts/comments.   You just have to replace the `www` in your link by `np`  \\n\\nSee above for an example.  \\n\\n**2-** No OC. No content from outside Reddit.  \\n\\n**3-** Normal Reddiquette is enforced. If you see a post in here that you have a problem with, keep your opinions in here.  \\n\\n**4-** Gore isn\\u2019t filth, go find a gore subreddit.\\n\\n#More normal subreddits\\n\\n* /r/Meme_Graveyard  \\n* /r/ShittyLifeProTips\", \"submit_link_label\": null, \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": false, \"lang\": \"en\", \"whitelist_status\": \"house_only\", \"url\": \"/r/RedditsMuseumofFilth/\", \"created_utc\": 1416898171.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "9820",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:26 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911666725.Z0FBQUFBQmZBU2x5VWJwRWNPa1lKUG11T0w1V1Bmbm1EQ1FZYkRybXhjdTEwUEZWNUg4eGRSNG5qT0c3alFWenVqLVFXUzd1aFdrVThlb2tsRXdNTVc3ZlRWR0lQZ2lhcnc3OGxRQ080MFpXTEZ1NGQzeFRvMk1qRkdCdVJfRS1SMjNfd0Riajl0VTI; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:26 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911667.661253,VS0,VE190",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "338.0",
+          "x-ratelimit-reset": "334",
+          "x-ratelimit-used": "262",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/RedditsMuseumofFilth/about/?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/redditsings/about/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"t5\", \"data\": {\"user_flair_background_color\": null, \"submit_text_html\": null, \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"wiki_enabled\": null, \"user_is_muted\": false, \"user_can_flair_in_sr\": null, \"display_name\": \"redditsings\", \"header_img\": null, \"title\": \"Take it away\", \"allow_galleries\": true, \"icon_size\": null, \"primary_color\": \"#261447\", \"active_user_count\": 71, \"icon_img\": \"\", \"display_name_prefixed\": \"r/redditsings\", \"accounts_active\": 71, \"public_traffic\": false, \"subscribers\": 144444, \"user_flair_richtext\": [], \"videostream_links_count\": 0, \"name\": \"t5_2x1az\", \"quarantine\": false, \"hide_ads\": false, \"emojis_enabled\": true, \"advertiser_category\": \"\", \"public_description\": \"Redditors working together to sing a song\", \"comment_score_hide_mins\": 0, \"user_has_favorited\": false, \"user_flair_template_id\": null, \"community_icon\": \"https://styles.redditmedia.com/t5_2x1az/styles/communityIcon_qu5imvouamx11.jpg?width=256\\u0026s=741c43c75347ce22835797ffe046b6e797121137\", \"banner_background_image\": \"\", \"original_content_tag_enabled\": false, \"submit_text\": \"\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Ch2\\u003E\\u003Ca href=\\\"/u/music-bot\\\"\\u003Eu/music-bot\\u003C/a\\u003E\\u003C/h2\\u003E\\n\\n\\u003Cp\\u003ERedditsings has its very own bot.\\u003Cbr/\\u003E\\nUse the bot with the \\u003Cstrong\\u003E/play\\u003C/strong\\u003E command to play any song you\\u0026#39;d like.  \\u003C/p\\u003E\\n\\n\\u003Cpre\\u003E\\u003Ccode\\u003E/play \\u0026lt;song title\\u0026gt;\\n\\u003C/code\\u003E\\u003C/pre\\u003E\\n\\n\\u003Cp\\u003EExamples:\\u003C/p\\u003E\\n\\n\\u003Cpre\\u003E\\u003Ccode\\u003E/play country roads\\n/play all star smash mouth\\n/play Goodbye Horses - Q Lazzarus\\n\\u003C/code\\u003E\\u003C/pre\\u003E\\n\\n\\u003Cp\\u003EThe bot searches youtube for whatever you put after /play and returns the first result.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"spoilers_enabled\": true, \"header_title\": null, \"header_size\": null, \"user_flair_position\": \"right\", \"all_original_content\": false, \"has_menu_widget\": true, \"is_enrolled_in_new_modmail\": null, \"key_color\": \"\", \"can_assign_user_flair\": false, \"created\": 1366808798.0, \"wls\": 7, \"show_media_preview\": true, \"submission_type\": \"any\", \"user_is_subscriber\": false, \"disable_contributor_requests\": false, \"allow_videogifs\": true, \"user_flair_type\": \"text\", \"allow_polls\": true, \"collapse_deleted_comments\": true, \"emojis_custom_size\": null, \"public_description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ERedditors working together to sing a song\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"allow_videos\": true, \"is_crosspostable_subreddit\": true, \"notification_level\": null, \"can_assign_link_flair\": false, \"accounts_active_is_fuzzed\": false, \"submit_text_label\": null, \"link_flair_position\": \"\", \"user_sr_flair_enabled\": true, \"user_flair_enabled_in_sr\": true, \"allow_discovery\": true, \"user_sr_theme_enabled\": true, \"link_flair_enabled\": false, \"subreddit_type\": \"public\", \"suggested_comment_sort\": null, \"banner_img\": \"\", \"user_flair_text\": null, \"banner_background_color\": \"#0d0221\", \"show_media\": false, \"id\": \"2x1az\", \"user_is_moderator\": false, \"over18\": false, \"description\": \"##u/music-bot\\nRedditsings has its very own bot.  \\nUse the bot with the **/play** command to play any song you'd like.  \\n\\n    /play \\u003Csong title\\u003E\\n\\nExamples:\\n    \\n    /play country roads\\n    /play all star smash mouth\\n    /play Goodbye Horses - Q Lazzarus\\n\\nThe bot searches youtube for whatever you put after /play and returns the first result.\", \"submit_link_label\": null, \"user_flair_text_color\": null, \"restrict_commenting\": false, \"user_flair_css_class\": null, \"allow_images\": true, \"lang\": \"en\", \"whitelist_status\": \"some_ads\", \"url\": \"/r/redditsings/\", \"created_utc\": 1366779998.0, \"banner_size\": null, \"mobile_banner_image\": \"\", \"user_is_contributor\": false}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "3940",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sun, 05 Jul 2020 01:14:27 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=jjlhmcbrgjgfjcgniq.0.1593911666925.Z0FBQUFBQmZBU2x5SmhScnlLaUM0RmFBbnJRUkFVcENyYzRGeEliV2FQWTBVeTRySnAtOVVGcFktNnZhdUpkZG91ZTBUS0ZzbTI5UV9VUHI2Y2htbEw2YzFWaHRYRDV3V09IWWZCcFk1TDBMaE5xR2xHTTJqU2RaM0pXTVlzUmdpeGtZamVDWmh2cVI; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 05-Jul-2020 03:14:26 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5942-MCI",
+          "X-Timer": "S1593911667.869419,VS0,VE144",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "337.0",
+          "x-ratelimit-reset": "334",
+          "x-ratelimit-used": "263",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/redditsings/about/?raw_json=1"
+      }
     }
   ],
-  "recorded_with": "betamax/0.7.1"
+  "recorded_at": "2020-07-04T20:14:27",
+  "version": 1
 }

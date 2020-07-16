@@ -1,33 +1,29 @@
 {
-  "http_interactions": [
+  "interactions": [
     {
-      "recorded_at": "2019-12-01T19:51:18",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "grant_type=password&password=<PASSWORD>&username=<USERNAME>"
-        },
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
         "headers": {
-          "Accept": [
-            "*/*"
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
           ],
           "Accept-Encoding": [
             "identity"
           ],
-          "Authorization": [
-            "Basic <BASIC_AUTH>"
-          ],
           "Connection": [
-            "keep-alive"
-          ],
-          "Content-Length": [
-            "80"
-          ],
-          "Content-Type": [
-            "application/x-www-form-urlencoded"
+            "close"
           ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.4.1.dev0 prawcore/1.0.1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
         "method": "POST",
@@ -35,64 +31,27 @@
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
         },
         "headers": {
-          "Accept-Ranges": [
-            "bytes"
-          ],
-          "Connection": [
-            "keep-alive"
-          ],
-          "Content-Length": [
-            "118"
-          ],
-          "Content-Type": [
-            "application/json; charset=UTF-8"
-          ],
-          "Date": [
-            "Sun, 01 Dec 2019 19:51:18 GMT"
-          ],
-          "Server": [
-            "snooserv"
-          ],
-          "Set-Cookie": [
-            "edgebucket=woCzsToymOEZ633Rdx; Domain=reddit.com; Max-Age=63071999; Path=/;  secure"
-          ],
-          "Strict-Transport-Security": [
-            "max-age=15552000; includeSubDomains; preload"
-          ],
-          "Via": [
-            "1.1 varnish"
-          ],
-          "X-Cache": [
-            "MISS"
-          ],
-          "X-Cache-Hits": [
-            "0"
-          ],
-          "X-Moose": [
-            "majestic"
-          ],
-          "X-Served-By": [
-            "cache-lga21943-LGA"
-          ],
-          "X-Timer": [
-            "S1575229878.900830,VS0,VE393"
-          ],
-          "cache-control": [
-            "max-age=0, must-revalidate"
-          ],
-          "x-content-type-options": [
-            "nosniff"
-          ],
-          "x-frame-options": [
-            "SAMEORIGIN"
-          ],
-          "x-xss-protection": [
-            "1; mode=block"
-          ]
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "371",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 06 Jul 2020 23:55:17 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=196LCNV8I1jWCx4gjM; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5926-MCI",
+          "X-Timer": "S1594079718.795120,VS0,VE94",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
         },
         "status": {
           "code": 200,
@@ -102,30 +61,17 @@
       }
     },
     {
-      "recorded_at": "2019-12-01T19:51:18",
       "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": ""
-        },
+        "body": null,
         "headers": {
-          "Accept": [
-            "*/*"
-          ],
           "Accept-Encoding": [
             "identity"
           ],
           "Authorization": [
             "bearer <ACCESS_TOKEN>"
           ],
-          "Connection": [
-            "keep-alive"
-          ],
-          "Cookie": [
-            "edgebucket=woCzsToymOEZ633Rdx"
-          ],
           "User-Agent": [
-            "<USER_AGENT> PRAW/6.4.1.dev0 prawcore/1.0.1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
           ]
         },
         "method": "GET",
@@ -133,80 +79,32 @@
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"data\": {\"12w9jt703c54s\": {\"message\": \"Please review our sidebar for the complete list of rules.\", \"id\": \"12w9jt703c54s\", \"title\": \"Generic\"}, \"110nhk2cgmaxy\": {\"message\": \"New Message\", \"id\": \"110nhk2cgmaxy\", \"title\": \"PRAW updated\"}, \"110nihwu2yodi\": {\"message\": \"Please do not post about sneaking in drugs, any illegal items, or any items against HQ's Guidelines.\", \"id\": \"110nihwu2yodi\", \"title\": \"Follow HQ Rules\"}, \"110niezjjw156\": {\"message\": \"This subreddit is not the place, please visit the [Knowledge Base Wiki](https://www.reddit.com/r/Drugs/wiki/knowledgebase) in /r/drugs. Some other helpful subreddits:\\n\\n* /r/reagenttesting\\n\\n* /r/psychonaut\", \"id\": \"110niezjjw156\", \"title\": \"Drugs\"}, \"110nhyk34m01d\": {\"message\": \"Rule 3 - No buying/selling/trading is allowed on our subreddit. If you are trying to give something away, please message the moderators first\\n\\nIf you are looking to buy or sell a ticket, please head on over to the [Official EF Ticket Exchange](https://www.electricforestfestival.com/tickets/wristband-exchange/)!\", \"id\": \"110nhyk34m01d\", \"title\": \"Buy/Sell\"}, \"141z26rkjp1oa\": {\"message\": \"Test\", \"id\": \"141z26rkjp1oa\", \"title\": \"test\"}, \"110nil6tchrhg\": {\"message\": \"Rule 7 - Please follow general reddiquette.\\n\\nFor information regarding this and similar issues please see the sidebar. If you have any questions, [please feel free to message the mods](https://www.reddit.com/message/compose?to=%2Fr%2FElectricForest). Thank you!\", \"id\": \"110nil6tchrhg\", \"title\": \"Reddiquette\"}, \"110nib8nlsz79\": {\"message\": \"That\\u2019s not forest vibes, [fam.](https://media.giphy.com/media/12ClTeBg4yvkiI/200.gif)\", \"id\": \"110nib8nlsz79\", \"title\": \"Forest Vibes\"}, \"110niqgkuz8ab\": {\"message\": \"Welcome to attending the forest for the first time! Before you have quetions, here are two threads that will be of much help to you. \\n\\n* [Our Guide to EF](https://drive.google.com/file/d/0B0rIiDle2lgpOXFmZnJPTWVTeDQ/view)\\n* [List of Useful Posts](https://www.reddit.com/r/ElectricForest/comments/7l599k/list_of_useful_posts/)\\n\\nIf you still have questions, try using our search function or asking in our daily \\\"no dumb question\\\" thread and you will more than likely find the answer you're looking for!\", \"id\": \"110niqgkuz8ab\", \"title\": \"New to Forest\"}, \"110nhral8vygf\": {\"message\": \"Rule 2 - Be kind and respectful to others.\", \"id\": \"110nhral8vygf\", \"title\": \"Be Kind\"}}, \"order\": [\"110nhk2cgmaxy\", \"110nhral8vygf\", \"110nhyk34m01d\", \"110nib8nlsz79\", \"110niezjjw156\", \"110nihwu2yodi\", \"110nil6tchrhg\", \"110niqgkuz8ab\", \"12w9jt703c54s\", \"141z26rkjp1oa\"]}"
+          "string": "{\"data\": {\"157qev8rc5109\": {\"message\": \"new\", \"id\": \"157qev8rc5109\", \"title\": \"new\"}, \"157l6b2gdsz84\": {\"message\": \"title\", \"id\": \"157l6b2gdsz84\", \"title\": \"test\"}, \"157l8b23bg2ww\": {\"message\": \"title\", \"id\": \"157l8b23bg2ww\", \"title\": \"test\"}, \"157l7gt5pnw1c\": {\"message\": \"title\", \"id\": \"157l7gt5pnw1c\", \"title\": \"test\"}, \"159bqhvme3rxe\": {\"message\": \"New Message\", \"id\": \"159bqhvme3rxe\", \"title\": \"Be Kind\"}, \"157l6k4g6s365\": {\"message\": \"title\", \"id\": \"157l6k4g6s365\", \"title\": \"test\"}, \"159br6itukx4h\": {\"message\": \"test\", \"id\": \"159br6itukx4h\", \"title\": \"Test\"}, \"157l5z8solj8j\": {\"message\": \"title\", \"id\": \"157l5z8solj8j\", \"title\": \"test\"}, \"157l7q0o5buzq\": {\"message\": \"title\", \"id\": \"157l7q0o5buzq\", \"title\": \"test\"}, \"157l8y33vkwkc\": {\"message\": \"test\", \"id\": \"157l8y33vkwkc\", \"title\": \"test\"}, \"157l87scy3s0g\": {\"message\": \"title\", \"id\": \"157l87scy3s0g\", \"title\": \"test\"}}, \"order\": [\"157l5z8solj8j\", \"157l6b2gdsz84\", \"157l6k4g6s365\", \"157l7gt5pnw1c\", \"157l7q0o5buzq\", \"157l87scy3s0g\", \"157l8b23bg2ww\", \"157l8y33vkwkc\", \"157qev8rc5109\", \"159bqhvme3rxe\", \"159br6itukx4h\"]}"
         },
         "headers": {
-          "Accept-Ranges": [
-            "bytes"
-          ],
-          "Connection": [
-            "keep-alive"
-          ],
-          "Content-Length": [
-            "2581"
-          ],
-          "Content-Type": [
-            "application/json; charset=UTF-8"
-          ],
-          "Date": [
-            "Sun, 01 Dec 2019 19:51:18 GMT"
-          ],
-          "Server": [
-            "snooserv"
-          ],
-          "Strict-Transport-Security": [
-            "max-age=15552000; includeSubDomains; preload"
-          ],
-          "Vary": [
-            "accept-encoding"
-          ],
-          "Via": [
-            "1.1 varnish"
-          ],
-          "X-Cache": [
-            "MISS"
-          ],
-          "X-Cache-Hits": [
-            "0"
-          ],
-          "X-Moose": [
-            "majestic"
-          ],
-          "X-Served-By": [
-            "cache-lga21927-LGA"
-          ],
-          "X-Timer": [
-            "S1575229879.568496,VS0,VE107"
-          ],
-          "cache-control": [
-            "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate"
-          ],
-          "expires": [
-            "-1"
-          ],
-          "set-cookie": [
-            "loid=0000000000364wflpm.2.1549507701753.Z0FBQUFBQmQ1Qm0ydW9jWjJnYUVndlFIWVVvY1Z3a1JLNFczZFpEdDZNOEpiMjRVMFlnQnh6UzlqaW4zQ29nU09ORW5SY0kyQTNtcjZYQTRNbWhFdnJSVHp4SF82LUxibzNNVUdjbUJLMHdSZzNwYUVwMEJMaTc3VDRLVUJqR05pOVZuM05vd0l1bTY; Domain=reddit.com; Max-Age=63071999; Path=/; expires=Tue, 30-Nov-2021 19:51:18 GMT; secure",
-            "session_tracker=ECw1rd1TgHqIwsHdjJ.0.1575229878593.Z0FBQUFBQmQ1Qm0yazBWaXpTWnQySXRiN0VjSmViM2t0UDlYWm1JdllnU28xLTBNYjQ4OU15dlBwczFCT2YxX1NaYTlxbm9QWXhKT1N5akVqS056U0JId3BCbjMxeVZlanBvcDB1QkRlbzJXUUc3d1FPOHBrQnExLWJvYUlmQ2ZnM0hqZDNHVVd6ZWs; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 01-Dec-2019 21:51:18 GMT; secure"
-          ],
-          "x-content-type-options": [
-            "nosniff"
-          ],
-          "x-frame-options": [
-            "SAMEORIGIN"
-          ],
-          "x-ratelimit-remaining": [
-            "592.0"
-          ],
-          "x-ratelimit-reset": [
-            "522"
-          ],
-          "x-ratelimit-used": [
-            "8"
-          ],
-          "x-xss-protection": [
-            "1; mode=block"
-          ]
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "1081",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 06 Jul 2020 23:55:18 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Cache": "MISS",
+          "X-Cache-Hits": "0",
+          "X-Moose": "majestic",
+          "X-Served-By": "cache-mci5936-MCI",
+          "X-Timer": "S1594079718.980222,VS0,VE138",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "585.0",
+          "x-ratelimit-reset": "282",
+          "x-ratelimit-used": "15",
+          "x-xss-protection": "1; mode=block"
         },
         "status": {
           "code": 200,
@@ -216,5 +114,6 @@
       }
     }
   ],
-  "recorded_with": "betamax/0.8.1"
+  "recorded_at": "2020-07-06T18:55:18",
+  "version": 1
 }

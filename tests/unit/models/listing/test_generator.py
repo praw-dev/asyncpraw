@@ -1,5 +1,5 @@
-"""Test praw.models.front."""
-from praw.models.listing.generator import ListingGenerator
+"""Test asyncpraw.models.front."""
+from asyncpraw.models.listing.generator import ListingGenerator
 
 from ... import UnitTest
 

@@ -1,22 +1,19 @@
-from unittest import mock
+from asynctest import mock
 
 import pytest
 
-from praw.exceptions import ClientException, RedditAPIException
-from praw.models import Rule
+from asyncpraw.exceptions import ClientException, RedditAPIException
+from asyncpraw.models import Rule
 
 from ... import IntegrationTest
 
 
 class TestRule(IntegrationTest):
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
-    def test_add_rule(self):
+    async def test_add_rule(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_add_rule"):
-            rule = self.subreddit.rules.mod.add(
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule = await subreddit.rules.mod.add(
                 "PRAW Test",
                 "all",
                 description="Test by Async PRAW",
@@ -27,118 +24,132 @@ class TestRule(IntegrationTest):
         assert rule.description == "Test by Async PRAW"
         assert rule.violation_reason == "PTest"
 
-    def test_add_rule_without_violation_reason(self):
+    async def test_add_rule_without_violation_reason(self):
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestRule.test_add_rule_without_violation_reason"
-        ):
-            rule = self.subreddit.rules.mod.add("PRAW Test 2", "comment")
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule = await subreddit.rules.mod.add("PRAW Test 2", "comment")
             assert rule.short_name == "PRAW Test 2"
             assert rule.kind == "comment"
             assert rule.description == ""
             assert rule.violation_reason == "PRAW Test 2"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_delete_rule(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_delete_rule(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_delete_rule"):
-            rules = list(self.subreddit.rules)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rules = await self.async_list(subreddit.rules)
             rule = rules[-1]
-            rule.mod.delete()
-            assert len(list(self.subreddit.rules)) == (len(rules) - 1)
+            await rule.mod.delete()
+            assert len(await self.async_list(subreddit.rules)) == (len(rules) - 1)
 
-    def test_iter_rules(self):
-        with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            for rule in self.subreddit.rules:
+    async def test_aiter_rules(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            async for rule in subreddit.rules:
                 assert isinstance(rule, Rule)
 
     @pytest.mark.filterwarnings("ignore", category=DeprecationWarning)
-    def test_iter_call(self):
-        with self.recorder.use_cassette("TestRule.test_call"):
-            assert self.subreddit.rules()["rules"][0]["short_name"] == "Test post 12"
+    async def test_aiter_call(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rules = await subreddit.rules()
+            assert rules["rules"][0]["short_name"] == "Test post 12"
 
-    def test_iter_rule_string(self):
-        with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            rule = self.subreddit.rules["PRAW Test"]
+    async def test_iter_rule_string(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            rule = await subreddit.rules.get_rule("PRAW Test")
             assert isinstance(rule, Rule)
-            rule._fetch()
             assert rule.kind
 
-    def test_iter_rule_invalid(self):
-        with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            rule = self.subreddit.rules["fake rule"]
+    async def test_iter_rule_invalid(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette("TestRule.test_aiter_rules"):
             with pytest.raises(ClientException) as excinfo:
-                rule.kind
+                await subreddit.rules.get_rule("fake rule")
             assert excinfo.value.args[
                 0
-            ] == "Subreddit {} does not have the rule {}".format(
-                self.subreddit, "fake rule"
-            )
+            ] == "Subreddit {} does not have the rule {}".format(subreddit, "fake rule")
 
-    def test_iter_rule_int(self):
-        with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            assert isinstance(self.subreddit.rules[0], Rule)
+    async def test_iter_rule_int(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            rule = await subreddit.rules.get_rule(0)
+            assert isinstance(rule, Rule)
 
-    def test_iter_rule_negative_int(self):
-        with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            assert isinstance(self.subreddit.rules[-1], Rule)
+    async def test_iter_rule_negative_int(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            rule = await subreddit.rules.get_rule(-1)
+            assert isinstance(rule, Rule)
 
-    def test_iter_rule_slice(self):
-        with self.recorder.use_cassette("TestRule.test_iter_rules"):
-            rules = self.subreddit.rules[-3:]
+    async def test_iter_rule_slice(self):
+        with self.use_cassette("TestRule.test_aiter_rules"):
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            rules = await subreddit.rules.get_rule(slice(-3, None))
             assert len(rules) == 3
             for rule in rules:
                 assert isinstance(rule, Rule)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder_rules(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder_rules(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_reorder_rules"):
-            rule_list = list(self.subreddit.rules)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule_list = await self.async_list(subreddit.rules)
             reordered = rule_list[2:3] + rule_list[0:2] + rule_list[3:]
             rule_info = {rule.short_name: rule for rule in rule_list}
-            self.subreddit.rules.mod.reorder(reordered)
-            new_rules = list(self.subreddit.rules)
+            await subreddit.rules.mod.reorder(reordered)
+            new_rules = await self.async_list(subreddit.rules)
             assert new_rules != rule_list
             for rule in new_rules:
                 assert rule_info[rule.short_name] == rule
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder_rules_double(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder_rules_double(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_reorder_rules_double"):
-            rule_list = list(self.subreddit.rules)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule_list = await self.async_list(subreddit.rules)
             with pytest.raises(RedditAPIException):
-                self.subreddit.rules.mod.reorder(rule_list + rule_list[0:1])
+                await subreddit.rules.mod.reorder(rule_list + rule_list[0:1])
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder_rules_empty(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder_rules_empty(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_reorder_rules_empty"):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
             with pytest.raises(RedditAPIException):
-                self.subreddit.rules.mod.reorder([])
+                await subreddit.rules.mod.reorder([])
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder_rules_no_reorder(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder_rules_no_reorder(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_reorder_rules_no_reorder"):
-            rule_list = list(self.subreddit.rules)
-            assert self.subreddit.rules.mod.reorder(rule_list) == rule_list
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule_list = await self.async_list(subreddit.rules)
+            new_list = await subreddit.rules.mod.reorder(rule_list)
+            assert new_list == rule_list
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder_rules_omit(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder_rules_omit(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_reorder_rules_omit"):
-            rule_list = list(self.subreddit.rules)
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule_list = await self.async_list(subreddit.rules)
             with pytest.raises(RedditAPIException):
-                self.subreddit.rules.mod.reorder(rule_list[:-1])
+                await subreddit.rules.mod.reorder(rule_list[:-1])
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update_rule(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_rule(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_update_rule"):
-            rule = self.subreddit.rules[0]
-            rule2 = rule.mod.update(
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule_list = await self.async_list(subreddit.rules)
+            rule = rule_list[0]
+            rule2 = await rule.mod.update(
                 description="Updated rule", kind="link", violation_reason="PUpdate",
             )
             assert rule.description != rule2.description
@@ -148,12 +159,13 @@ class TestRule(IntegrationTest):
             assert rule.violation_reason != rule2.violation_reason
             assert rule2.violation_reason == "PUpdate"
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update_rule_short_name(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_rule_short_name(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_update_rule_short_name"):
-            rule = self.subreddit.rules[1]
-            rule2 = rule.mod.update(
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule = await subreddit.rules.get_rule("Test Rule")
+            rule2 = await rule.mod.update(
                 short_name="PRAW Update",
                 description="Updated rule",
                 kind="comment",
@@ -167,15 +179,16 @@ class TestRule(IntegrationTest):
             assert rule2.kind == "comment"
             assert rule.violation_reason != rule2.violation_reason
             assert rule2.violation_reason == "PUpdate"
-            for new_rule in self.subreddit.rules:
+            async for new_rule in subreddit.rules:
                 assert new_rule.short_name != rule.short_name
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update_rule_no_params(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_rule_no_params(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestRule.test_update_rule_no_params"):
-            rule = self.subreddit.rules[1]
-            rule2 = rule.mod.update()
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            rule = await subreddit.rules.get_rule("Test Rule")
+            rule2 = await rule.mod.update()
             for attr in (
                 "created_utc",
                 "description",

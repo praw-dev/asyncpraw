@@ -1,14 +1,16 @@
 import configparser
 import types
-from unittest import mock
+from asynctest import mock
+from mock import AsyncMock
 
 import pytest
-from prawcore import Requestor
-from prawcore.exceptions import BadRequest
+from asyncprawcore import Requestor
+from asyncprawcore.exceptions import BadRequest
 
-from praw import Reddit, __version__
-from praw.config import Config
-from praw.exceptions import ClientException, RedditAPIException
+from asyncpraw import Reddit, __version__
+from asyncpraw.config import Config
+from asyncpraw.exceptions import ClientException, RedditAPIException
+from asyncpraw.models import Comment
 
 from . import UnitTest
 
@@ -18,24 +20,24 @@ class TestReddit(UnitTest):
         x: "dummy" for x in ["client_id", "client_secret", "user_agent"]
     }
 
-    @mock.patch("praw.reddit.update_check", create=True)
-    @mock.patch("praw.reddit.UPDATE_CHECKER_MISSING", False)
-    @mock.patch("praw.reddit.Reddit.update_checked", False)
+    @mock.patch("asyncpraw.reddit.update_check", create=True)
+    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", False)
+    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
     def test_check_for_updates(self, mock_update_check):
         Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
         assert Reddit.update_checked
-        mock_update_check.assert_called_with("praw", __version__)
+        mock_update_check.assert_called_with("asyncpraw", __version__)
 
-    @mock.patch("praw.reddit.update_check", create=True)
-    @mock.patch("praw.reddit.UPDATE_CHECKER_MISSING", True)
-    @mock.patch("praw.reddit.Reddit.update_checked", False)
+    @mock.patch("asyncpraw.reddit.update_check", create=True)
+    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", True)
+    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
     def test_check_for_updates_update_checker_missing(self, mock_update_check):
         Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
         assert not Reddit.update_checked
         assert not mock_update_check.called
 
     def test_comment(self):
-        assert self.reddit.comment("cklfmye").id == "cklfmye"
+        assert Comment(self.reddit, id="cklfmye").id == "cklfmye"
 
     def test_context_manager(self):
         with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
@@ -77,18 +79,29 @@ class TestReddit(UnitTest):
 
     def test_live_info__valid_param(self):
         gen = self.reddit.live.info(["dummy", "dummy2"])
-        assert isinstance(gen, types.GeneratorType)
+        assert isinstance(gen, types.AsyncGeneratorType)
 
     def test_live_info__invalid_param(self):
         with pytest.raises(TypeError) as excinfo:
             self.reddit.live.info(None)
         assert str(excinfo.value) == "ids must be a list"
 
-    def test_multireddit(self):
-        assert self.reddit.multireddit("bboe", "aa").path == "/user/bboe/m/aa"
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
+            {"kind": "t2", "data": {"name": "bboe"}},
+            {
+                "kind": "LabeledMulti",
+                "data": {"path": "/user/bboe/m/aa", "name": "aa"},
+            },
+        ],
+    )
+    async def test_multireddit(self, _):
+        multireddit = await self.reddit.multireddit("bboe", "aa")
+        assert multireddit.path == "/user/bboe/m/aa"
 
     @mock.patch(
-        "praw.Reddit.request",
+        "asyncpraw.Reddit.request",
         side_effect=[
             {
                 "json": {
@@ -137,30 +150,31 @@ class TestReddit(UnitTest):
             {},
         ],
     )
-    @mock.patch("time.sleep", return_value=None)
-    def test_post_ratelimit(self, __, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_post_ratelimit(self, __, _):
         with pytest.raises(RedditAPIException) as exc:
-            self.reddit.post("test")
+            await self.reddit.post("test")
         assert (
             exc.value.message == "You are doing that too much. Try again in 5 seconds."
         )
         with pytest.raises(RedditAPIException) as exc2:
-            self.reddit.post("test")
+            await self.reddit.post("test")
         assert (
             exc2.value.message
             == "You are doing that too much. Try again in 10 minutes."
         )
         with pytest.raises(RedditAPIException) as exc3:
-            self.reddit.post("test")
+            await self.reddit.post("test")
         assert exc3.value.message == "APRIL FOOLS FROM REDDIT, TRY AGAIN"
-        assert self.reddit.post("test") == {}
+        response = await self.reddit.post("test")
+        assert response == {}
 
     def test_read_only__with_authenticated_core(self):
         with Reddit(
             password=None,
             refresh_token="refresh",
             username=None,
-            **self.REQUIRED_DUMMY_SETTINGS
+            **self.REQUIRED_DUMMY_SETTINGS,
         ) as reddit:
             assert not reddit.read_only
             reddit.read_only = True
@@ -241,10 +255,10 @@ class TestReddit(UnitTest):
     def test_reddit__site_name_no_section(self):
         with pytest.raises(configparser.NoSectionError) as excinfo:
             Reddit("bad_site_name")
-        assert "praw.readthedocs.io" in excinfo.value.message
+        assert "asyncpraw.readthedocs.io" in excinfo.value.message
 
-    @mock.patch("prawcore.sessions.Session")
-    def test_request__badrequest_with_no_json_body(self, mock_session):
+    @mock.patch("asyncprawcore.sessions.Session")
+    async def test_request__badrequest_with_no_json_body(self, mock_session):
         response = mock.Mock(status_code=400)
         response.json.side_effect = ValueError
         mock_session.return_value.request = mock.Mock(
@@ -253,24 +267,61 @@ class TestReddit(UnitTest):
 
         reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
         with pytest.raises(Exception) as excinfo:
-            reddit.request("POST", "/")
+            await reddit.request("POST", "/")
         assert str(excinfo.value).startswith("Unexpected BadRequest without json body.")
 
-    def test_request__json_and_body(self):
+    async def test_request__json_and_body(self):
         reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
         with pytest.raises(ClientException) as excinfo:
-            reddit.request(
+            await reddit.request(
                 method="POST", path="/", data={"key": "value"}, json={"key": "value"},
             )
         assert str(excinfo.value).startswith(
             "At most one of `data` and `json` is supported."
         )
 
-    def test_submission(self):
-        assert self.reddit.submission("2gmzqe").id == "2gmzqe"
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
+            [
+                {
+                    "kind": "Listing",
+                    "data": {
+                        "children": [
+                            {"kind": "t3", "data": {"name": "t3_2gmzqe", "url": "url"}}
+                        ],
+                        "after": None,
+                        "before": None,
+                    },
+                },
+                {
+                    "kind": "Listing",
+                    "data": {"children": [], "after": None, "before": None},
+                },
+            ]
+        ],
+    )
+    async def test_submission(self, _):
+        submission = await self.reddit.submission("2gmzqe")
+        assert submission.id == "2gmzqe"
 
-    def test_subreddit(self):
-        assert self.reddit.subreddit("redditdev").display_name == "redditdev"
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
+            {
+                "kind": "t5",
+                "data": {
+                    "isSubscribed": True,
+                    "name": "t5_2qizd",
+                    "subscribers": 33817,
+                    "display_name": "redditdev",
+                },
+            },
+        ],
+    )
+    async def test_subreddit(self, _):
+        subreddit = await self.reddit.subreddit("redditdev")
+        assert subreddit.display_name == "redditdev"
 
 
 class TestRedditCustomRequestor(UnitTest):
@@ -298,8 +349,8 @@ class TestRedditCustomRequestor(UnitTest):
         assert isinstance(reddit._core._requestor, CustomRequestor)
         assert not isinstance(self.reddit._core._requestor, CustomRequestor)
 
-    def test_requestor_kwargs(self):
-        session = mock.Mock(headers={})
+    async def test_requestor_kwargs(self):
+        session = AsyncMock(headers={})
         reddit = Reddit(
             client_id="dummy",
             client_secret="dummy",

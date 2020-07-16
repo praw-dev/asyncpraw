@@ -1,15 +1,14 @@
-"""Test praw.models.LiveThread"""
-from unittest import mock
+"""Test asyncpraw.models.LiveThread"""
+from asynctest import mock
 
 import pytest
 
-from praw.const import API_PATH
-from praw.exceptions import RedditAPIException
-from praw.models import (
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import RedditAPIException
+from asyncpraw.models import (
     LiveThread,
     LiveUpdate,
     Redditor,
-    RedditorList,
     Submission,
 )
 
@@ -17,11 +16,10 @@ from ... import IntegrationTest
 
 
 class TestLiveUpdate(IntegrationTest):
-    def test_attributes(self):
-        update = LiveUpdate(
-            self.reddit, "ukaeu1ik4sw5", "7827987a-c998-11e4-a0b9-22000b6a88d2"
-        )
-        with self.recorder.use_cassette("TestLiveUpdate_test_attributes"):
+    async def test_attributes(self):
+        thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
+        with self.use_cassette():
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
             assert isinstance(update.author, Redditor)
             assert update.author == "umbrae"
             assert update.name == ("LiveUpdate_7827987a-c998-11e4-a0b9-22000b6a88d2")
@@ -29,229 +27,203 @@ class TestLiveUpdate(IntegrationTest):
 
 
 class TestLiveThread(IntegrationTest):
-    def test_contributor(self):
+    async def test_contributor(self):
         thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
-        with self.recorder.use_cassette("TestLiveThread_test_contributor"):
-            contributors = thread.contributor()
-        assert isinstance(contributors, RedditorList)
+        with self.use_cassette():
+            contributors = [contributor async for contributor in thread.contributor()]
+        assert isinstance(contributors, list)
         assert len(contributors) > 0
         for contributor in contributors:
             assert "permissions" in contributor.__dict__
             assert isinstance(contributor, Redditor)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_contributor__with_manage_permission(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_contributor__with_manage_permission(self, _):
         # see issue #710 for more info
         self.reddit.read_only = False
         thread = LiveThread(self.reddit, "xyu8kmjvfrww")
         url = API_PATH["live_contributors"].format(id=thread.id)
-        with self.recorder.use_cassette(
-            "TestLiveThread_test_contributor__with_manage_permission"
-        ):
-            data = thread._reddit.request("GET", url)
-            contributors = thread.contributor()
-        assert isinstance(data, list)
-        assert isinstance(contributors, RedditorList)
+        with self.use_cassette():
+            data = await thread._reddit.request("GET", url)
+            contributors = [contributor async for contributor in thread.contributor()]
+        assert isinstance(data, dict)
+        assert isinstance(contributors, list)
         assert len(contributors) > 0
 
-    def test_init(self):
-        thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
-        with self.recorder.use_cassette("TestLiveThread_test_init"):
+    async def test_init(self):
+        with self.use_cassette():
+            thread = await self.reddit.live("ukaeu1ik4sw5", fetch=True)
             assert thread.title == "reddit updates"
 
-    def test_discussions(self):
-        thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
-        with self.recorder.use_cassette("TestLiveThread_test_discussions"):
-            for submission in thread.discussions(limit=None):
+    async def test_discussions(self):
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            async for submission in thread.discussions(limit=None):
                 assert isinstance(submission, Submission)
-        assert submission.title == "reddit updates"
+                assert submission.title == "reddit updates"
 
-    def test_report(self):
+    async def test_report(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette("TestLiveThread_test_report"):
-            thread.report("spam")
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.report("spam")
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_updates(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_updates(self, _):
         thread = LiveThread(self.reddit, "ukaeu1ik4sw5")
-        with self.recorder.use_cassette("TestLiveThread_test_updates"):
-            for update in thread.updates(limit=None):
+        with self.use_cassette():
+            async for update in thread.updates(limit=None):
                 assert update.thread == thread
         assert update.body.startswith("Small change:")
 
 
 class TestLiveThreadStream(IntegrationTest):
-    @property
-    def live_thread(self):
-        return self.reddit.live("ta535s1hq2je")
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_updates(self, _):
-        with self.recorder.use_cassette("TestLiveThreadStream.test_updates"):
-            generator = self.live_thread.stream.updates()
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_updates(self, _):
+        with self.use_cassette():
+            live_thread = await self.reddit.live("ta535s1hq2je")
+            generator = live_thread.stream.updates()
             for i in range(101):
-                assert isinstance(next(generator), LiveUpdate)
+                assert isinstance(await self.async_next(generator), LiveUpdate)
 
 
 class TestLiveContributorRelationship(IntegrationTest):
-    def test_accept_invite(self):
+    async def test_accept_invite(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_accept_invite"
-        ):
-            thread.contributor.accept_invite()
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.accept_invite()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_invite__already_invited(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_invite__already_invited(self, _):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_invite__already_invited"
-        ):
-            thread.contributor.invite("nmtake")
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
-                thread.contributor.invite("nmtake")
+                await thread.contributor.invite(pytest.placeholders.username)
         assert excinfo.value.items[0].error_type == "LIVEUPDATE_ALREADY_CONTRIBUTOR"
 
-    def test_invite__empty_list(self):
+    async def test_invite__empty_list(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_invite__empty_list"
-        ):
-            thread.contributor.invite("nmtake", [])
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.invite(pytest.placeholders.username, [])
 
-    def test_invite__limited(self):
+    async def test_invite__limited(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_invite__limited"
-        ):
-            thread.contributor.invite("nmtake", ["manage", "edit"])
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.invite(
+                pytest.placeholders.username, ["manage", "edit"]
+            )
 
-    def test_invite__none(self):
+    async def test_invite__none(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_invite__none"
-        ):
-            thread.contributor.invite("nmtake", None)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.invite(pytest.placeholders.username, None)
 
-    def test_invite__redditor(self):
+    async def test_invite__redditor(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        redditor = Redditor(self.reddit, _data={"name": "nmtake", "id": "ll32z"})
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_invite__redditor"
-        ):
-            thread.contributor.invite(redditor)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        redditor = Redditor(
+            self.reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"}
+        )
+        with self.use_cassette():
+            await thread.contributor.invite(redditor)
 
-    def test_leave(self):
+    async def test_leave(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette("TestLiveContributorRelationship_test_leave"):
-            thread.contributor.leave()
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.leave()
 
-    def test_remove__fullname(self):
+    async def test_remove__fullname(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_remove__fullname"
-        ):
-            thread.contributor.remove("t2_ll32z")
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.remove("t2_3ebyblla")
 
-    def test_remove__redditor(self):
+    async def test_remove__redditor(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        redditor = Redditor(self.reddit, _data={"name": "nmtake", "id": "ll32z"})
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_remove__redditor"
-        ):
-            thread.contributor.remove(redditor)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        redditor = Redditor(
+            self.reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"}
+        )
+        with self.use_cassette():
+            await thread.contributor.remove(redditor)
 
-    def test_remove_invite__fullname(self):
+    async def test_remove_invite__fullname(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_remove_invite__fullname"
-        ):
-            thread.contributor.remove_invite("t2_ll32z")
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.remove_invite("t2_3ebyblla")
 
-    def test_remove_invite__redditor(self):
+    async def test_remove_invite__redditor(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        redditor = Redditor(self.reddit, _data={"name": "nmtake", "id": "ll32z"})
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_remove_invite__redditor"
-        ):
-            thread.contributor.remove_invite(redditor)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        redditor = Redditor(
+            self.reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"}
+        )
+        with self.use_cassette():
+            await thread.contributor.remove_invite(redditor)
 
-    def test_update__empty_list(self):
+    async def test_update__empty_list(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_update__empty_list"
-        ):
-            thread.contributor.update("nmtake", [])
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.update(pytest.placeholders.username, [])
 
-    def test_update__limited(self):
+    async def test_update__limited(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_update__limited"
-        ):
-            thread.contributor.update("nmtake", ["manage", "edit"])
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.update(
+                pytest.placeholders.username, ["manage", "edit"]
+            )
 
-    def test_update__none(self):
+    async def test_update__none(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_update__none"
-        ):
-            thread.contributor.update("nmtake", None)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.update(pytest.placeholders.username, None)
 
-    def test_update_invite__empty_list(self):
+    async def test_update_invite__empty_list(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_update_invite__empty_list"
-        ):
-            thread.contributor.update_invite("nmtake", [])
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.update_invite(pytest.placeholders.username, [])
 
-    def test_update_invite__limited(self):
+    async def test_update_invite__limited(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_update_invite__limited"
-        ):
-            thread.contributor.update_invite("nmtake", ["manage", "edit"])
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.update_invite(
+                pytest.placeholders.username, ["manage", "edit"]
+            )
 
-    def test_update_invite__none(self):
+    async def test_update_invite__none(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ydwwxneu7vsa")
-        with self.recorder.use_cassette(
-            "TestLiveContributorRelationship_test_update_invite__none"
-        ):
-            thread.contributor.update_invite("nmtake", None)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contributor.update_invite(pytest.placeholders.username, None)
 
 
 class TestLiveThreadContribution(IntegrationTest):
-    def test_add(self):
+    async def test_add(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette("TestLiveThreadContribution_add"):
-            thread.contrib.add("* `LiveThreadContribution.add() test`")
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contrib.add("* `LiveThreadContribution.add() test`")
 
-    def test_close(self):
+    async def test_close(self):
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "ya2tmqiyb064")
-        with self.recorder.use_cassette("TestLiveThreadContribution_close"):
-            thread.contrib.close()
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contrib.close()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update__partial_settings(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update__partial_settings(self, _):
         old_settings = {
             "title": "old title",
             "description": "## old description",
@@ -260,18 +232,17 @@ class TestLiveThreadContribution(IntegrationTest):
         }
         new_settings = {"title": "new title", "nsfw": True}
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveThreadContribution.test_update__partial_settings"
-        ):
-            thread.contrib.update(**new_settings)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contrib.update(**new_settings)
+            thread = await self.reddit.live("1595195m6j9zw", fetch=True)
             assert thread.title == new_settings["title"]
             assert thread.description == old_settings["description"]
             assert thread.nsfw == new_settings["nsfw"]
             assert thread.resources == old_settings["resources"]
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update__full_settings(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update__full_settings(self, _):
         new_settings = {
             "title": "new title 2",
             "description": "## new description 2",
@@ -279,45 +250,42 @@ class TestLiveThreadContribution(IntegrationTest):
             "resources": "## new resources 2",
         }
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveThreadContribution.test_update__full_settings"
-        ):
-            thread.contrib.update(**new_settings)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contrib.update(**new_settings)
+            thread = await self.reddit.live("1595195m6j9zw", fetch=True)
             assert thread.title == new_settings["title"]
             assert thread.description == new_settings["description"]
             assert thread.nsfw == new_settings["nsfw"]
             assert thread.resources == new_settings["resources"]
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update__other_settings(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update__other_settings(self, _):
         new_settings = {
             "title": "new title",
             "other1": "other 1",
             "other2": "other 2",
         }
         self.reddit.read_only = False
-        thread = LiveThread(self.reddit, "xyu8kmjvfrww")
-        with self.recorder.use_cassette(
-            "TestLiveThreadContribution.test_update__other_settings"
-        ):
-            thread.contrib.update(**new_settings)
+        thread = LiveThread(self.reddit, "1595195m6j9zw")
+        with self.use_cassette():
+            await thread.contrib.update(**new_settings)
 
 
 class TestLiveUpdateContribution(IntegrationTest):
-    @mock.patch("time.sleep", return_value=None)
-    def test_remove(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_remove(self, _):
         self.reddit.read_only = False
         update = LiveUpdate(
-            self.reddit, "xyu8kmjvfrww", "5d556760-dbee-11e6-9f46-0e78de675452"
+            self.reddit, "1595195m6j9zw", "ec5ead40-bf2a-11ea-a3be-0e0d584e0b0b"
         )
-        with self.recorder.use_cassette("TestLiveUpdateContribution_remove"):
-            update.contrib.remove()
+        with self.use_cassette():
+            await update.contrib.remove()
 
-    def test_strike(self):
+    async def test_strike(self):
         self.reddit.read_only = False
         update = LiveUpdate(
-            self.reddit, "xyu8kmjvfrww", "cb5fe532-dbee-11e6-9a91-0e6d74fabcc4"
+            self.reddit, "1595195m6j9zw", "3e95636e-bf2c-11ea-9488-0e29bbfe5f37"
         )
-        with self.recorder.use_cassette("TestLiveUpdateContribution_strike"):
-            update.contrib.strike()
+        with self.use_cassette():
+            await update.contrib.strike()

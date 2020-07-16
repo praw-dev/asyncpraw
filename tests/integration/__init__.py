@@ -1,29 +1,39 @@
 """PRAW Integration test suite."""
+import inspect
+import logging
 
+import aiohttp
+import asynctest
 import pytest
-import requests
-from betamax import Betamax
 
-from praw import Reddit
+from asyncpraw import Reddit
+
+from tests.conftest import VCR
 
 
-class IntegrationTest:
-    """Base class for Async PRAW integration tests."""
+class IntegrationTest(asynctest.TestCase):
+    """Base class for PRAW integration tests."""
 
-    def setup(self):
+    logger = logging.getLogger(__name__)
+
+    def setUp(self):
         """Setup runs before all test cases."""
         self._overrode_reddit_setup = True
         self.setup_reddit()
-        self.setup_betamax()
+        self.setup_vcr()
 
-    def setup_betamax(self):
-        """Configure betamax instance based off of the reddit instance."""
-        http = self.reddit._core._requestor._http
-        self.recorder = Betamax(http)
+    async def tearDown(self) -> None:
+        await self.reddit._core._requestor._http.close()
+
+    def setup_vcr(self):
+        """Configure VCR instance."""
+        self.recorder = VCR
 
         # Disable response compression in order to see the response bodies in
-        # the betamax cassettes.
-        http.headers["Accept-Encoding"] = "identity"
+        # the VCR cassettes.
+        self.reddit._core._requestor._http._default_headers[
+            "Accept-Encoding"
+        ] = "identity"
 
         # Require tests to explicitly disable read_only mode.
         self.reddit.read_only = True
@@ -33,16 +43,24 @@ class IntegrationTest:
     def setup_reddit(self):
         self._overrode_reddit_setup = False
 
-        self._session = requests.Session()
-
-        self.reddit = Reddit(
-            requestor_kwargs={"session": self._session},
-            client_id=pytest.placeholders.client_id,
-            client_secret=pytest.placeholders.client_secret,
-            password=pytest.placeholders.password,
-            user_agent=pytest.placeholders.user_agent,
-            username=pytest.placeholders.username,
-        )
+        self._session = aiohttp.ClientSession()
+        if pytest.placeholders.refresh_token != "placeholder_refresh_token":
+            self.reddit = Reddit(
+                requestor_kwargs={"session": self._session},
+                client_id=pytest.placeholders.client_id,
+                client_secret=pytest.placeholders.client_secret,
+                user_agent=pytest.placeholders.user_agent,
+                refresh_token=pytest.placeholders.refresh_token,
+            )
+        else:
+            self.reddit = Reddit(
+                requestor_kwargs={"session": self._session},
+                client_id=pytest.placeholders.client_id,
+                client_secret=pytest.placeholders.client_secret,
+                password=pytest.placeholders.password,
+                user_agent=pytest.placeholders.user_agent,
+                username=pytest.placeholders.username,
+            )
 
     def set_up_record(self):
         if not self._overrode_reddit_setup:
@@ -54,3 +72,41 @@ class IntegrationTest:
                     user_agent=pytest.placeholders.user_agent,
                     refresh_token=pytest.placeholders.refresh_token,
                 )
+
+    @staticmethod
+    async def async_list(async_generator):
+        """Return a list from an async iterator."""
+        return [item async for item in async_generator]
+
+    @staticmethod
+    async def async_next(async_generator):
+        """Return the next item from an async iterator."""
+        async for item in async_generator:
+            return item
+
+    def use_cassette(self, cassette_name=None, **kwargs):
+        """Use a cassette. The cassette name is dynamically generated.
+
+        :param cassette_name: (Deprecated) The name to use for the cassette. All names
+            that are not equal to the dynamically generated name will be logged.
+        :param kwargs: All keyword arguments for the main function
+            (``VCR.use_cassette``).
+        """
+        dynamic_name = self.get_cassette_name()
+        if cassette_name:
+            self.logger.debug(
+                "Static cassette name provided by {}. The following "
+                "name was provided: {}".format(dynamic_name, cassette_name)
+            )
+            if cassette_name != dynamic_name:
+                self.logger.warning(
+                    "Dynamic cassette name for function {} does not "
+                    "match the provided cassette name: {}".format(
+                        dynamic_name, cassette_name
+                    )
+                )
+        return self.recorder.use_cassette(cassette_name or dynamic_name, **kwargs)
+
+    def get_cassette_name(self) -> str:
+        function_name = inspect.currentframe().f_back.f_back.f_code.co_name
+        return "{}.{}".format(type(self).__name__, function_name)

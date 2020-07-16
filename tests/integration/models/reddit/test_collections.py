@@ -1,125 +1,129 @@
 """Test classes from collections.py."""
 
-from unittest import mock
+from asynctest import mock
 
 import pytest
 
-from praw.exceptions import ClientException
-from praw.models import Submission
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models import Submission
 
 from ... import IntegrationTest
 
 
 class TestCollection(IntegrationTest):
-    NONEMPTY_REAL_UUID = "847e4548-a3b5-4ad7-afb4-edbfc2ed0a6b"
+    NONEMPTY_REAL_UUID = "3aa31024-711b-46b2-9514-3fd50619f6e8"
 
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
-    def test_bad_fetch(self):
+    async def test_bad_fetch(self):
         uuid = "A" * 36
-        with self.recorder.use_cassette("TestCollection.test_bad_fetch"):
-            collection = self.subreddit.collections(uuid)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             with pytest.raises(ClientException):
-                collection._fetch()
+                await subreddit.collections(uuid)
 
-    def test_init(self):
+    async def test_init(self):
         uuid = self.NONEMPTY_REAL_UUID
-        with self.recorder.use_cassette("TestCollection.test_init"):
-            collection1 = self.subreddit.collections(uuid)
-            collection2 = self.subreddit.collections(permalink=collection1.permalink)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection1 = await subreddit.collections(uuid)
+            collection2 = await subreddit.collections(permalink=collection1.permalink)
             assert collection1 == collection2
 
-    def test_iter(self):
+    async def test_iter(self):
         uuid = self.NONEMPTY_REAL_UUID
         found_some = False
-        with self.recorder.use_cassette("TestCollection.test_iter"):
-            collection = self.subreddit.collections(uuid)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
             for post in collection:
                 assert isinstance(post, Submission)
                 found_some = True
         assert found_some
 
-    def test_follow(self):
+    async def test_follow(self):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
-        with self.recorder.use_cassette("TestCollection.test_follow"):
-            collection = self.subreddit.collections(uuid)
-            collection.follow()
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
+            await collection.follow()
 
-    def test_subreddit(self):
+    async def test_subreddit(self):
         uuid = self.NONEMPTY_REAL_UUID
-        with self.recorder.use_cassette("TestCollection.test_subreddit"):
-            collection = self.subreddit.collections(uuid)
-            assert str(collection.subreddit) in collection.permalink
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
+            assert str(await collection.subreddit()) in collection.permalink
 
-    def test_unfollow(self):
+    async def test_unfollow(self):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
-        with self.recorder.use_cassette("TestCollection.test_unfollow"):
-            collection = self.subreddit.collections(uuid)
-            collection.unfollow()
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
+            await collection.unfollow()
 
 
 class TestCollectionModeration(IntegrationTest):
-    NONEMPTY_REAL_UUID = "847e4548-a3b5-4ad7-afb4-edbfc2ed0a6b"
+    NONEMPTY_REAL_UUID = "3aa31024-711b-46b2-9514-3fd50619f6e8"
 
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_add_post(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_add_post(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
-        with self.recorder.use_cassette("TestCollectionModeration.test_add_post"):
-            collection = self.subreddit.collections(uuid)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
             posts = [
-                self.subreddit.submit("Post #{}".format(i), selftext="")
+                await subreddit.submit("Post #{}".format(i), selftext="")
                 for i in range(4)
             ]
-
+            for post in posts:
+                await post._fetch()
             # Testing different types for _post_fullname
-            collection.mod.add_post(posts[0])  # Subreddit object
-            collection.mod.add_post(posts[1].fullname)  # fullname
-            collection.mod.add_post("https://reddit.com" + posts[2].permalink)
-            collection.mod.add_post(posts[3].id)  # id
+            await collection.mod.add_post(posts[0])  # Subreddit object
+            await collection.mod.add_post(posts[1].fullname)  # fullname
+            await collection.mod.add_post("https://reddit.com" + posts[2].permalink)
+            await collection.mod.add_post(posts[3].id)  # id
 
             posts.append(
-                self.subreddit.submit("Post #4", selftext="", collection_id=uuid)
+                await subreddit.submit("Post #4", selftext="", collection_id=uuid)
             )
 
             with pytest.raises(TypeError):
-                collection.mod.add_post(12345)
+                await collection.mod.add_post(12345)
 
-            collection._fetch()
+            await collection._fetch()
 
             collection_set = set(collection)
             for post in posts:
                 assert post in collection_set
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_delete(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_delete(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestCollectionModeration.test_delete"):
-            collection = self.subreddit.collections.mod.create("Title", "")
-            collection.mod.delete()
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(
+                pytest.placeholders.test_subreddit, fetch=True
+            )
+            collection = await subreddit.collections.mod.create("Title", "")
+            await collection.mod.delete()
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_remove_post(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_remove_post(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
-        with self.recorder.use_cassette("TestCollectionModeration.test_remove_post"):
-            post = self.subreddit.submit("The title", selftext="", collection_id=uuid)
-            collection = self.subreddit.collections(uuid)
-            collection.mod.remove_post(post)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            post = await subreddit.submit("The title", selftext="", collection_id=uuid)
+            collection = await subreddit.collections(uuid)
+            await collection.mod.remove_post(post)
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_reorder(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_reorder(self, _):
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestCollectionModeration.test_reorder"):
-            collection = self.subreddit.collections(self.NONEMPTY_REAL_UUID)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(self.NONEMPTY_REAL_UUID)
             original_order = collection.link_ids
             new_order = (
                 collection.link_ids[len(collection.link_ids) // 2 :]
@@ -127,52 +131,52 @@ class TestCollectionModeration(IntegrationTest):
             )
             assert len(original_order) == len(new_order)
             assert original_order != new_order
-            collection.mod.reorder(new_order)
-            collection._fetch()
+            await collection.mod.reorder(new_order)
+            await collection._fetch()
             assert collection.link_ids == new_order
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update_description(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_description(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
         new_description = "b" * 250
-        with self.recorder.use_cassette(
-            "TestCollectionModeration.test_update_description"
-        ):
-            collection = self.subreddit.collections(uuid)
-            collection.mod.update_description(new_description)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
+            await collection.mod.update_description(new_description)
             assert new_description == collection.description
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_update_title(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_title(self, _):
         self.reddit.read_only = False
         uuid = self.NONEMPTY_REAL_UUID
         new_title = "a" * 100
-        with self.recorder.use_cassette("TestCollectionModeration.test_update_title"):
-            collection = self.subreddit.collections(uuid)
-            collection.mod.update_title(new_title)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid)
+            await collection.mod.update_title(new_title)
             assert new_title == collection.title
 
 
 class TestSubredditCollections(IntegrationTest):
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_call(self, _):
-        with self.recorder.use_cassette("TestSubredditCollections.test_call"):
-            collection = next(iter(self.subreddit.collections))
-            assert collection == self.subreddit.collections(collection.collection_id)
-            assert collection == self.subreddit.collections(
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_call(self, _):
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await self.async_next(subreddit.collections)
+            test_collection = await subreddit.collections(collection.collection_id)
+            assert collection == test_collection
+            test_collection = await subreddit.collections(
                 permalink=collection.permalink
             )
+            assert collection == test_collection
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_iter(self, _):
-        with self.recorder.use_cassette("TestSubredditCollections.test_iter"):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_iter(self, _):
+        with self.use_cassette():
             found_any = False
-            for collection in self.subreddit.collections:
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            async for collection in subreddit.collections:
                 assert collection.permalink
                 assert collection.title is not None
                 assert collection.description is not None
@@ -181,19 +185,14 @@ class TestSubredditCollections(IntegrationTest):
 
 
 class TestSubredditCollectionsModeration(IntegrationTest):
-    @property
-    def subreddit(self):
-        return self.reddit.subreddit(pytest.placeholders.test_subreddit)
-
-    @mock.patch("time.sleep", return_value=None)
-    def test_create(self, _):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_create(self, _):
         title = "The title!"
         description = "The description."
         self.reddit.read_only = False
-        with self.recorder.use_cassette(
-            "TestSubredditCollectionsModeration.test_create"
-        ):
-            collection = self.subreddit.collections.mod.create(title, description)
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections.mod.create(title, description)
             assert collection.title == title
             assert collection.description == description
             assert len(collection) == 0

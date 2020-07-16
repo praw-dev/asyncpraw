@@ -96,6 +96,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip
         pip install .[test]
     - name: Test with pytest
       run: pytest
@@ -121,6 +122,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip
         pip install .[test]
         pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
     - name: Test with pytest
@@ -154,6 +156,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip
         pip install .[test]
     - name: Run network test
       run: pytest tests/integration/test_github_actions.py::test_github_actions

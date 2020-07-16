@@ -1,15 +1,15 @@
-from praw.models import MoreComments
+from asyncpraw.models import MoreComments
 
 from ... import IntegrationTest
 
 
 class TestMore(IntegrationTest):
-    def setup(self):
-        super().setup()
+    async def setUp(self):
+        super().setUp()
         # Responses do not decode well on travis so manually renable gzip.
-        self.reddit._core._requestor._http.headers["Accept-Encoding"] = "gzip"
+        self.reddit._core._requestor._http._default_headers["Accept-Encoding"] = "gzip"
 
-    def test_comments(self):
+    async def test_comments(self):
         data = {
             "count": 9,
             "name": "t1_cu5tt8h",
@@ -27,14 +27,13 @@ class TestMore(IntegrationTest):
                 "cu5pbdh",
             ],
         }
-        with self.recorder.use_cassette(
-            "TestMore.test_comments", match_requests_on=["uri", "method", "body"],
-        ):
+        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
             more = MoreComments(self.reddit, data)
-            more.submission = self.reddit.submission("3hahrw")
-            assert len(more.comments()) == 7
+            more.submission = await self.reddit.submission("3hahrw")
+            comments = await more.comments()
+            assert len(comments) == 7
 
-    def test_comments__continue_thread_type(self):
+    async def test_comments__continue_thread_type(self):
         data = {
             "count": 0,
             "name": "t1__",
@@ -42,10 +41,8 @@ class TestMore(IntegrationTest):
             "parent_id": "t1_cu5v5h7",
             "children": [],
         }
-        with self.recorder.use_cassette(
-            "TestMore.test_comments__continue_thread_type",
-            match_requests_on=["uri", "method", "body"],
-        ):
+        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
             more = MoreComments(self.reddit, data)
-            more.submission = self.reddit.submission("3hahrw")
-            assert len(more.comments()) == 1
+            more.submission = await self.reddit.submission("3hahrw")
+            comments = await more.comments()
+            assert len(comments) == 1

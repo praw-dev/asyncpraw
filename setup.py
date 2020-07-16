@@ -25,9 +25,13 @@ extras = {
         "sphinxcontrib-trio",
     ],
     "test": [
-        "betamax >=0.8, <0.9",
-        "betamax-matchers >=0.3.0, <0.5",
+        "asynctest >=0.13.0",
+        "mock >=0.8",
         "pytest >=2.7.3",
+        "pytest-asyncio",
+        "pytest-vcr",
+        "testfixtures >4.13.2, <7",
+        "vcrpy==4.0.2",
     ],
 }
 extras["dev"] += extras["lint"] + extras["test"]
@@ -57,14 +61,14 @@ setup(
         "reddit's API."
     ),
     extras_require=extras,
-    install_requires=[
-        "asyncprawcore >=1.0.1, <2.0",
-        "update_checker >=0.17",
-    ],
+    install_requires=["asyncprawcore >=1.0.1, <2.0", "update_checker >=0.17"],
     keywords="reddit api wrapper async asynchronous praw",
     license="Simplified BSD License",
     long_description=README,
-    package_data={"": ["LICENSE.txt", "praw_license.txt"], PACKAGE_NAME: ["*.ini", "images/*.jpg"]},
+    package_data={
+        "": ["LICENSE.txt", "praw_license.txt"],
+        PACKAGE_NAME: ["*.ini", "images/*.jpg"],
+    },
     packages=find_packages(exclude=["tests", "tests.*", "tools", "tools.*"]),
     url="https://asyncpraw.readthedocs.org/",
     version=VERSION,

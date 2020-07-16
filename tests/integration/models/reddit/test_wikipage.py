@@ -1,136 +1,142 @@
-from unittest import mock
+from asynctest import mock
 
 import pytest
-from prawcore import NotFound
+from asyncprawcore import NotFound
 
-from praw.models import Redditor, WikiPage
+from asyncpraw.models import Redditor, WikiPage
 
 from ... import IntegrationTest
 
 
 class TestWikiPage(IntegrationTest):
-    def test_content_md(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_content_md(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-        with self.recorder.use_cassette("TestWikiPage.test_content_md"):
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("test")
             assert page.content_md
 
-    def test_edit(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_edit(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestWikiPage.test_edit"):
-            page.edit("PRAW updated")
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("test")
+            await page.edit("PRAW updated")
 
-    def test_edit__with_reason(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_edit__with_reason(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestWikiPage.test_edit__with_reason"):
-            page.edit("PRAW updated with reason", reason="PRAW testing")
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("test")
+            await page.edit("PRAW updated with reason", reason="PRAW testing")
 
-    def test_init__with_revision(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(
-            self.reddit,
-            subreddit,
-            "index",
-            revision="2f38e910-b109-11e2-ba44-12313b0d4e76",
-        )
-        with self.recorder.use_cassette("TestWikiPage.test_init__with_revision"):
+    async def test_init__with_revision(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            page = WikiPage(
+                self.reddit,
+                subreddit,
+                "index",
+                revision="08a4ddfa-c000-11ea-999f-0e1fd5dedea1",
+            )
+            await page.load()
             assert isinstance(page.revision_by, Redditor)
-            assert page.revision_date == 1367295177
+            assert page.revision_date == 1594091696
 
-    def test_init__with_revision__author_deleted(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    async def test_init__with_revision__author_deleted(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         page = WikiPage(
             self.reddit,
             subreddit,
-            "index",
-            revision="873933a0-5550-11e2-82f1-12313b0c1e2b",
+            "config/stylesheet",
+            revision="75390fec-8b8f-11e8-8a49-0edb077d29ac",
         )
-        with self.recorder.use_cassette(
-            "TestWikiPage.test_init__with_revision__author_deleted"
-        ):
+        with self.use_cassette():
+            await page.load()
             assert page.revision_by is None
 
-    def test_invalid_page(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "invalid")
-        with self.recorder.use_cassette("TestWikiPage.test_invalid_page"):
+    async def test_invalid_page(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
             with pytest.raises(NotFound):
-                page.content_md
+                await subreddit.wiki.get_page("invalid")
 
-    def test_revision_by(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_revision_by(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-        with self.recorder.use_cassette("TestWikiPage.test_revision_by"):
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("index")
             assert isinstance(page.revision_by, Redditor)
 
-    def test_revision(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        revision_id = "f31e1988-07d0-11e6-b927-0ea0743a0543"
-        page = subreddit.wiki["index"].revision(revision_id)
+    async def test_revision(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        revision_id = "08a4ddfa-c000-11ea-999f-0e1fd5dedea1"
 
-        with self.recorder.use_cassette("TestWikiPage.test_revision"):
-            assert len(page.content_md) > 0
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("index")
+            revision = await page.revision(revision_id)
+            assert len(revision.content_md) > 0
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_revisions(self, _):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_revisions(self, _):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-        with self.recorder.use_cassette("TestWikiPage.test_revisions"):
+        with self.use_cassette():
             count = 0
-            for revision in subreddit.wiki["index"].revisions(limit=None):
+            page = await subreddit.wiki.get_page("index")
+            async for revision in page.revisions(limit=None):
                 count += 1
                 assert isinstance(revision["author"], Redditor)
                 assert isinstance(revision["page"], WikiPage)
             assert count > 0
 
-    @mock.patch("time.sleep", return_value=None)
-    def test_revisions__author_deleted(self, _):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_revisions__author_deleted(self, _):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
-        with self.recorder.use_cassette("TestWikiPage.test_revisions__author_deleted"):
-            revisions = subreddit.wiki["index"].revisions(limit=10)
-            assert any(revision["author"] is None for revision in revisions)
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("config/submit_text")
+            assert any(
+                [
+                    revision["author"] is None
+                    async for revision in page.revisions(limit=10)
+                ]
+            )
 
 
 class TestWikiPageModeration(IntegrationTest):
-    def test_add(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_add(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestWikiPageModeration.test_add"):
-            page.mod.add("bboe")
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("index")
+            await page.mod.add("Lil_SpazTest")
 
-    def test_remove(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
-
-        self.reddit.read_only = False
-        with self.recorder.use_cassette("TestWikiPageModeration.test_remove"):
-            page.mod.remove("bboe")
-
-    def test_settings(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_remove(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestWikiPageModeration.test_settings"):
-            settings = page.mod.settings()
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("index")
+            await page.mod.remove("Lil_SpazTest")
+
+    async def test_settings(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        self.reddit.read_only = False
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("index")
+            settings = await page.mod.settings()
         assert {"editors": [], "listed": True, "permlevel": 0} == settings
 
-    def test_update(self):
-        subreddit = self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(self.reddit, subreddit, "test")
+    async def test_update(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
 
         self.reddit.read_only = False
-        with self.recorder.use_cassette("TestWikiPageModeration.test_update"):
-            updated = page.mod.update(listed=False, permlevel=1)
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("index")
+            updated = await page.mod.update(listed=False, permlevel=1)
         assert {"editors": [], "listed": False, "permlevel": 1} == updated
