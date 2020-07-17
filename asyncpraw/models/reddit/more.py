@@ -38,9 +38,7 @@ class MoreComments(AsyncPRAWBase):
         children = self.children[:4]
         if len(self.children) > 4:
             children[-1] = "..."
-        return "<{} count={}, children={!r}>".format(
-            self.__class__.__name__, self.count, children
-        )
+        return f"<{self.__class__.__name__} count={self.count}, children={children!r}>"
 
     async def _continue_comments(self, update):
         assert not self.children, "Please file a bug report with Async PRAW."
@@ -52,9 +50,8 @@ class MoreComments(AsyncPRAWBase):
         return self._comments
 
     async def _load_comment(self, comment_id):
-        path = "{}_/{}".format(
-            API_PATH["submission"].format(id=self.submission.id), comment_id
-        )
+        submission_path = API_PATH["submission"].format(id=self.submission.id)
+        path = f"{submission_path}_/{comment_id}"
         _, comments = await self._reddit.get(
             path,
             params={

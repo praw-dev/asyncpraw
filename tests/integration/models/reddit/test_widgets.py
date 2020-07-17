@@ -787,9 +787,10 @@ class TestSubredditWidgets(IntegrationTest):
     async def test_repr(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        assert ("SubredditWidgets(subreddit=Subreddit(display_name='{}'))").format(
-            pytest.placeholders.test_subreddit
-        ) == repr(widgets)
+        assert (
+            f"SubredditWidgets(subreddit=Subreddit(display_name='"
+            f"{pytest.placeholders.test_subreddit}'))" == repr(widgets)
+        )
 
     async def test_sidebar(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)

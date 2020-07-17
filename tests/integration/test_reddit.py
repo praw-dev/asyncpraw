@@ -31,7 +31,7 @@ class TestReddit(IntegrationTest):
         items = []
         for i in range(100):
             for base in bases:
-                items.append("{}{:02d}".format(base, i))
+                items.append(f"{base}{i:02d}")
 
         with self.use_cassette():
             results = await self.async_list(self.reddit.info(items))

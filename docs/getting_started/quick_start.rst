@@ -291,5 +291,5 @@ attributes are available along with their values, use the built-in
     import pprint
 
     # assume you have a Reddit instance bound to variable `reddit`
-    submission = await reddit.submission(id="39zje0")
+    submission = await reddit.submission(id="39zje0", lazy=False)
     pprint.pprint(vars(submission))

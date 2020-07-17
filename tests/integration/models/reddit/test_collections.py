@@ -74,8 +74,7 @@ class TestCollectionModeration(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections(uuid)
             posts = [
-                await subreddit.submit("Post #{}".format(i), selftext="")
-                for i in range(4)
+                await subreddit.submit(f"Post #{i}", selftext="") for i in range(4)
             ]
             for post in posts:
                 await post._fetch()

@@ -69,9 +69,10 @@ class TestRule(IntegrationTest):
         with self.use_cassette("TestRule.test_aiter_rules"):
             with pytest.raises(ClientException) as excinfo:
                 await subreddit.rules.get_rule("fake rule")
-            assert excinfo.value.args[
-                0
-            ] == "Subreddit {} does not have the rule {}".format(subreddit, "fake rule")
+            assert (
+                excinfo.value.args[0]
+                == f"Subreddit {subreddit} does not have the rule fake rule"
+            )
 
     async def test_iter_rule_int(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)

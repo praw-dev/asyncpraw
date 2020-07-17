@@ -29,7 +29,7 @@ def b64_string(input_string):
 
 def env_default(key):
     """Return environment variable or placeholder string."""
-    return os.environ.get("prawtest_{}".format(key), "placeholder_{}".format(key))
+    return os.environ.get(f"prawtest_{key}", f"placeholder_{key}")
 
 
 def filter_access_token(response):
@@ -58,7 +58,7 @@ placeholders = {
 }
 
 placeholders["basic_auth"] = b64_string(
-    "{}:{}".format(placeholders["client_id"], placeholders["client_secret"])
+    f"{placeholders['client_id']}:{placeholders['client_secret']}"
 )
 
 

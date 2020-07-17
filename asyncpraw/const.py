@@ -1,9 +1,9 @@
 """Async PRAW constants."""
 from .endpoints import API_PATH  # noqa: F401
 
-__version__ = "7.1.0.pre1"
+__version__ = "7.1.0"
 
-USER_AGENT_FORMAT = "{} Async PRAW/" + __version__
+USER_AGENT_FORMAT = f"{{}} Async PRAW/{__version__}"
 
 MAX_IMAGE_SIZE = 512000
 MIN_JPEG_SIZE = 128

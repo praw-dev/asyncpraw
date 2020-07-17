@@ -153,7 +153,7 @@ class Inbox(AsyncPRAWBase):
         .. code-block:: python
 
             async for mention in reddit.inbox.mentions(limit=25):
-                print("{}\n{}\n".format(mention.author, mention.body))
+                print(f"{mention.author}\n{mention.body}\n")
 
         """
         return ListingGenerator(self._reddit, API_PATH["mentions"], **generator_kwargs)

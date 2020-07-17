@@ -356,14 +356,10 @@ class SubredditWidgets(AsyncPRAWBase):
         """Return the value of `attr`."""
         if not attr.startswith("_") and not self._fetched:
             raise AttributeError(
-                "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
-                    self.__class__.__name__, attr
-                )
+                f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"
             )
         raise AttributeError(  # pragma: no cover; I have no idea how to cover this
-            "{!r} object has no attribute {!r}, did you forget to run '.refresh()'?".format(
-                self.__class__.__name__, attr
-            )
+            f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"
         )
 
     def __init__(self, subreddit):
@@ -382,9 +378,7 @@ class SubredditWidgets(AsyncPRAWBase):
 
     def __repr__(self):
         """Return an object initialization representation of the object."""
-        return "SubredditWidgets(subreddit={subreddit!r})".format(
-            subreddit=self.subreddit
-        )
+        return f"SubredditWidgets(subreddit={self.subreddit!r})"
 
     async def _fetch(self):
         data = await self._reddit.get(
@@ -525,7 +519,7 @@ class SubredditWidgetsModeration:
                {
                    "kind": "text",
                    "text": "View source",
-                   "url": 'https://github.com/praw-dev/praw',
+                   "url": "https://github.com/praw-dev/praw",
                    "color": "#FF0000",
                    "textColor": "#00FF00",
                    "fillColor": "#0000FF",
@@ -540,7 +534,7 @@ class SubredditWidgetsModeration:
                {
                    "kind": "image",
                    "text": "View documentation",
-                   "linkUrl": 'https://praw.readthedocs.io',
+                   "linkUrl": "https://praw.readthedocs.io",
                    "url": my_image,
                    "height": 200,
                    "width": 200,
@@ -575,7 +569,7 @@ class SubredditWidgetsModeration:
         requires_sync,
         configuration,
         styles,
-        **other_settings
+        **other_settings,
     ):
         """Add and return a :class:`.Calendar` widget.
 
@@ -699,10 +693,10 @@ class SubredditWidgetsModeration:
 
             .. code-block:: python
 
-               [{"url": 'https://some.link',  # from upload_image()
+               [{"url": "https://some.link",  # from upload_image()
                  "width": 600, "height": 450,
                  "name": "logo"},
-                {"url": 'https://other.link',  # from upload_image()
+                {"url": "https://other.link",  # from upload_image()
                  "width": 450, "height": 600,
                  "name": "icon"}]
 
@@ -757,12 +751,12 @@ class SubredditWidgetsModeration:
 
             .. code-block:: python
 
-               [{"url": 'https://some.link',  # from upload_image()
+               [{"url": "https://some.link",  # from upload_image()
                  "width": 600, "height": 450,
-                 "linkUrl": 'https://github.com/praw-dev/praw'},
-                {"url": 'https://other.link',  # from upload_image()
+                 "linkUrl": "https://github.com/praw-dev/praw"},
+                {"url": "https://other.link",  # from upload_image()
                  "width": 450, "height": 600,
-                 "linkUrl": 'https://praw.readthedocs.io'}]
+                 "linkUrl": "https://praw.readthedocs.io"}]
 
         :param styles: A ``dict`` with keys ``backgroundColor`` and
             ``headerColor``, and values of hex colors. For example,
@@ -777,7 +771,7 @@ class SubredditWidgetsModeration:
             subreddit = await reddit.subreddit("mysub")
             widget_moderation = subreddit.widgets.mod
             image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-            image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
+            image_dicts = [{"width": 600, "height": 450, "linkUrl": "",
                            "url": widget_moderation.upload_image(img_path)}
                           for img_path in image_paths]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
@@ -832,13 +826,13 @@ class SubredditWidgetsModeration:
             subreddit = await reddit.subreddit("mysub")
             widget_moderation = subreddit.widgets.mod
             menu_contents = [
-               {"text": "My homepage", "url": 'https://example.com'},
+               {"text": "My homepage", "url": "https://example.com"},
                {"text": "Python packages",
                 "children": [
-                    {"text": "PRAW", "url": 'https://praw.readthedocs.io/'},
-                    {"text": "requests", "url": 'http://python-requests.org'}
+                    {"text": "PRAW", "url": "https://praw.readthedocs.io/"},
+                    {"text": "requests", "url": "http://python-requests.org"}
                 ]},
-               {"text": "Reddit homepage", "url": 'https://reddit.com'}
+               {"text": "Reddit homepage", "url": "https://reddit.com"}
            ]
             new_widget = await widget_moderation.add_menu(menu_contents)
 
@@ -963,7 +957,7 @@ class SubredditWidgetsModeration:
 
             my_sub = await reddit.subreddit("my_sub")
             image_url = await my_sub.widgets.mod.upload_image("/path/to/image.jpg")
-            images = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ''}]
+            images = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ""}]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             await my_sub.widgets.mod.add_image_widget("My cool pictures", images, styles)
         """
@@ -979,7 +973,7 @@ class SubredditWidgetsModeration:
         response = await self._reddit.post(url, data=img_data)
         upload_lease = response["s3UploadLease"]
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
-        upload_url = "https:{}".format(upload_lease["action"])
+        upload_url = f"https:{upload_lease['action']}"
 
         with open(file_path, "rb") as image:
             upload_data["file"] = image
@@ -1048,7 +1042,7 @@ class ButtonWidget(Widget, BaseList):
            {
                "kind": "text",
                "text": "View source",
-               "url": 'https://github.com/praw-dev/praw',
+               "url": "https://github.com/praw-dev/praw",
                "color": "#FF0000",
                "textColor": "#00FF00",
                "fillColor": "#0000FF",
@@ -1063,7 +1057,7 @@ class ButtonWidget(Widget, BaseList):
            {
                "kind": "text",
                "text": "View documentation",
-               "url": 'https://praw.readthedocs.io',
+               "url": "https://praw.readthedocs.io",
                "color": "#FFFFFF",
                "textColor": "#FFFF00",
                "fillColor": "#0000FF"
@@ -1418,7 +1412,7 @@ class ImageWidget(Widget, BaseList):
         subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
         image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-        image_dicts = [{"width": 600, "height": 450, "linkUrl": '',
+        image_dicts = [{"width": 600, "height": 450, "linkUrl": "",
                        "url": await widgets.mod.upload_image(img_path)}
                       for img_path in image_paths]
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
@@ -1496,13 +1490,13 @@ class Menu(Widget, BaseList):
         subreddit = await reddit.subreddit("redditdev")
         widgets = subreddit.widgets
         menu_contents = [
-           {"text": "My homepage", "url": 'https://example.com'},
+           {"text": "My homepage", "url": "https://example.com"},
            {"text": "Python packages",
             "children": [
-                {"text": "PRAW", "url": 'https://praw.readthedocs.io/'},
-                {"text": "requests", "url": 'http://python-requests.org'}
+                {"text": "PRAW", "url": "https://praw.readthedocs.io/"},
+                {"text": "requests", "url": "http://python-requests.org"}
             ]},
-           {"text": "Reddit homepage", "url": 'https://reddit.com'}
+           {"text": "Reddit homepage", "url": "https://reddit.com"}
        ]
         menu = await widgets.mod.add_menu(menu_contents)
 

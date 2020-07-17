@@ -233,7 +233,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
             subreddit = await reddit.subreddit("SUBREDDIT")
             async for ban in subreddit.banned():
-                print('{}: {}'.format(ban, ban.note))
+                print(f"{ban}: {ban.note}")
 
         """
         return SubredditRelationship(self, "banned")
@@ -259,8 +259,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             subreddit = await reddit.subreddit("SUBREDDIT")
 
             collection = subreddit.collections("some_uuid")
-            collection = subreddit.collections(
-                permalink='https://reddit.com/r/SUBREDDIT/collection/some_uuid')
+            collection = subreddit.collections(permalink="https://reddit.com/r/SUBREDDIT/collection/some_uuid")
 
         """
         return self._subreddit_collections_class(self._reddit, self)
@@ -376,7 +375,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
             subreddit = await reddit.subreddit("SUBREDDIT")
             async for moderator in subreddit.moderator:
-                print('{}: {}'.format(moderator, moderator.mod_permissions))
+                print(f"{moderator}: {moderator.mod_permissions}")
 
         """
         return ModeratorRelationship(self, "moderator")
@@ -407,7 +406,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
             subreddit = await reddit.subreddit("redditdev")
             async for mute in subreddit.muted():
-                print('{}: {}'.format(mute, mute.note))
+                print("{mute}: {mute.note}")
 
         """
         return SubredditRelationship(self, "muted")
@@ -670,10 +669,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             and mime_type.partition("/")[0] != expected_mime_prefix
         ):
             raise ClientException(
-                "Expected a mimetype starting with {!r} but got mimetype {!r} "
-                "(from file extension {!r}).".format(
-                    expected_mime_prefix, mime_type, file_extension
-                )
+                f"Expected a mimetype starting with {expected_mime_prefix!r} but got "
+                f"mimetype {mime_type!r} (from file extension {file_extension!r})."
             )
         img_data = {"filepath": file_name, "mimetype": mime_type}
 
@@ -681,7 +678,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         # until we learn otherwise, assume this request always succeeds
         response = await self._reddit.post(url, data=img_data)
         upload_lease = response["args"]
-        upload_url = "https:{}".format(upload_lease["action"])
+        upload_url = f"https:{upload_lease['action']}"
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
 
         with open(media_path, "rb") as media:
@@ -880,7 +877,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         .. code-block:: python
 
             title = "PRAW documentation"
-            url = 'https://asyncpraw.readthedocs.io'
+            url = "https://asyncpraw.readthedocs.io"
             subreddit = await reddit.subreddit("reddit_api_test")
             await subreddit.submit(title, url=url)
 
@@ -1500,9 +1497,9 @@ class SubredditFlair:
         :param redditor: (Required) A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance.
         :param text: The flair text to associate with the Redditor or
-            Submission (default: '').
+            Submission (default: "").
         :param css_class: The css class to associate with the flair html
-            (default: ''). Use either this or ``flair_template_id``.
+            (default: ""). Use either this or ``flair_template_id``.
         :param flair_template_id: The ID of the flair template to be used
             (default: ``None``). Use either this or ``css_class``.
 
@@ -1547,9 +1544,9 @@ class SubredditFlair:
             arguments.
 
         :param text: The flair text to use when not explicitly provided in
-            ``flair_list`` (default: '').
+            ``flair_list`` (default: "").
         :param css_class: The css class to use when not explicitly provided in
-            ``flair_list`` (default: '').
+            ``flair_list`` (default: "").
         :returns: List of dictionaries indicating the success or failure of
             each update.
 
@@ -1686,7 +1683,7 @@ class SubredditFlairTemplates:
         :param template_id: The flair template to update. If not valid then
             an exception will be thrown.
         :param text: The flair template's new text (required).
-        :param css_class: The flair template's new css_class (default: '').
+        :param css_class: The flair template's new css_class (default: "").
         :param text_editable: (boolean) Indicate if the flair text can be
             modified for each Redditor that sets it (default: False).
         :param background_color: The flair template's new background color,
@@ -1783,7 +1780,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
         """Add a Redditor flair template to the associated subreddit.
 
         :param text: The flair template's text (required).
-        :param css_class: The flair template's css_class (default: '').
+        :param css_class: The flair template's css_class (default: "").
         :param text_editable: (boolean) Indicate if the flair text can be
             modified for each Redditor that sets it (default: False).
         :param background_color: The flair template's new background color,
@@ -1867,7 +1864,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         """Add a link flair template to the associated subreddit.
 
         :param text: The flair template's text (required).
-        :param css_class: The flair template's css_class (default: '').
+        :param css_class: The flair template's css_class (default: "").
         :param text_editable: (boolean) Indicate if the flair text can be
             modified for each Redditor that sets it (default: False).
         :param background_color: The flair template's new background color,
@@ -2559,7 +2556,7 @@ class SubredditRelationship:
 
         subreddit = await reddit.subreddit("redditdev")
         async for ban in subreddit.banned():
-            print('{}: {}'.format(ban, ban.note))
+            print("{ban}: {ban.note}")
 
     """
 
@@ -2576,9 +2573,7 @@ class SubredditRelationship:
 
         """
         Subreddit._safely_add_arguments(generator_kwargs, "params", user=redditor)
-        url = API_PATH["list_{}".format(self.relationship)].format(
-            subreddit=self.subreddit
-        )
+        url = API_PATH[f"list_{self.relationship}"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
     def __init__(self, subreddit, relationship):
@@ -2671,12 +2666,10 @@ class ModeratorRelationship(SubredditRelationship):
 
             subreddit = await reddit.subreddit("SUBREDDIT")
             async for moderator in subreddit.moderator:
-                print('{}: {}'.format(moderator, moderator.mod_permissions))
+                print(f"{moderator}: {moderator.mod_permissions}")
 
         """
-        url = API_PATH["list_{}".format(self.relationship)].format(
-            subreddit=self.subreddit
-        )
+        url = API_PATH[f"list_{self.relationship}"].format(subreddit=self.subreddit)
         results = await self.subreddit._reddit.get(url)
         for result in results:
             yield result
@@ -2702,9 +2695,7 @@ class ModeratorRelationship(SubredditRelationship):
 
         """
         params = {} if redditor is None else {"user": redditor}
-        url = API_PATH["list_{}".format(self.relationship)].format(
-            subreddit=self.subreddit
-        )
+        url = API_PATH[f"list_{self.relationship}"].format(subreddit=self.subreddit)
         return await self.subreddit._reddit.get(url, params=params)
 
     # pylint: disable=arguments-differ
@@ -3234,7 +3225,7 @@ class SubredditStylesheet:
         response = await self.subreddit._reddit.post(url, data=data)
         upload_lease = response["s3UploadLease"]
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
-        upload_url = "https:{}".format(upload_lease["action"])
+        upload_url = f"https:{upload_lease['action']}"
 
         with open(image_path, "rb") as image:
             response = await self.subreddit._reddit._core._requestor._http.post(
@@ -3242,7 +3233,7 @@ class SubredditStylesheet:
             )
         response.raise_for_status()
 
-        return "{}/{}".format(upload_url, upload_data["key"])
+        return f"{upload_url}/{upload_data['key']}"
 
     async def delete_banner(self):
         """Remove the current subreddit (redesign) banner image.
@@ -3371,7 +3362,7 @@ class SubredditStylesheet:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT")
-            await subreddit.stylesheet.update('p { color: green; }', "color text green")
+            await subreddit.stylesheet.update("p { color: green; }", "color text green")
 
         """
         data = {
