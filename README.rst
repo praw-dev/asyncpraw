@@ -104,7 +104,7 @@ Otherwise, there are a few official places to ask questions about Async PRAW:
 
 `r/redditdev <https://www.reddit.com/r/redditdev>`_ is the best place on
 Reddit to ask Async PRAW related questions. This subreddit is for all Reddit API
-related discussion so please tag submissions with *[PRAW]*. Please perform a
+related discussion so please tag submissions with *[Async PRAW]*. Please perform a
 search on the subreddit first to see if anyone has similar questions.
 
 Real-time chat can be conducted via the `PRAW Slack Organization
