@@ -66,9 +66,7 @@ class Emoji(RedditBase):
                 self.__dict__.update(emoji.__dict__)
                 self._fetched = True
                 return
-        raise ClientException(
-            f"r/{self.subreddit} does not have the emoji {self.name}"
-        )
+        raise ClientException(f"r/{self.subreddit} does not have the emoji {self.name}")
 
     async def delete(self):
         """Delete an emoji from this subreddit by Emoji.
