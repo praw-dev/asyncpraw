@@ -467,7 +467,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             submission.comment_sort = "new"
             comments = await submission.comments()
             comment_list = await comments.list()
-            for comment in list:
+            for comment in comment_list:
                 # do stuff with comment
 
         .. note:: The appropriate values for ``comment_sort`` include
