@@ -454,7 +454,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
             comments = await submission.comments()
             await comments.replace_more(limit=0)
-            async for comment in comments.list():
+            comment_list = await comments.list()
+            for comment in comment_list:
                 # do stuff with comment
 
         Sort order and comment limit can be set with the ``comment_sort`` and
