@@ -31,6 +31,7 @@ Unreleased
 
 **Fixed**
 
+* An issue where leaving as a moderator fails if you are using token auth.
 * A bug where if you call `.parent()` on a comment it clears its replies.
 * An issue where performing a deepcopy on an :class:`.RedditBase` object will fail.
 * Some cases where streams yield the same item multiple times. This cannot be
