@@ -353,6 +353,85 @@ class TestSubreddit(IntegrationTest):
             await submission.load()
             assert submission.discussion_type == "CHAT"
 
+    async def test_submit_gallery(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            images = [
+                {"image_path": image_path("test.png")},
+                {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+                {
+                    "image_path": image_path("test.gif"),
+                    "outbound_url": "https://example.com",
+                },
+                {
+                    "image_path": image_path("test.png"),
+                    "caption": "test.png",
+                    "outbound_url": "https://example.com",
+                },
+            ]
+
+            submission = await subreddit.submit_gallery("Test Title", images)
+            assert submission.author == pytest.placeholders.username
+            assert submission.is_gallery
+            assert submission.title == "Test Title"
+            items = submission.gallery_data["items"]
+            assert isinstance(submission.gallery_data["items"], list)
+            for i, item in enumerate(items):
+                test_data = images[i]
+                test_data.pop("image_path")
+                item.pop("id")
+                item.pop("media_id")
+                assert item == test_data
+
+    async def test_submit_gallery_disabled(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            images = [
+                {"image_path": image_path("test.png")},
+                {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+                {
+                    "image_path": image_path("test.gif"),
+                    "outbound_url": "https://example.com",
+                },
+                {
+                    "image_path": image_path("test.png"),
+                    "caption": "test.png",
+                    "outbound_url": "https://example.com",
+                },
+            ]
+
+            with pytest.raises(RedditAPIException):
+                await subreddit.submit_gallery("Test Title", images)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_submit_gallery__flair(self, _):
+        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
+        flair_text = "test"
+        flair_class = "test-flair-class"
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            images = [
+                {"image_path": image_path("test.png")},
+                {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+                {
+                    "image_path": image_path("test.gif"),
+                    "outbound_url": "https://example.com",
+                },
+                {
+                    "image_path": image_path("test.png"),
+                    "caption": "test.png",
+                    "outbound_url": "https://example.com",
+                },
+            ]
+            submission = await subreddit.submit_gallery(
+                "Test Title", images, flair_id=flair_id, flair_text=flair_text
+            )
+            assert submission.link_flair_css_class == flair_class
+            assert submission.link_flair_text == flair_text
+
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
         return_value=WebsocketMock(

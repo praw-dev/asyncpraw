@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Unreleased
+----------
+
+**Added**
+
+* Ability to submit image galleries with :meth:`.submit_gallery`.
+
 7.1.0 (2020/07/16)
 ------------------
 
