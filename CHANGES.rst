@@ -7,6 +7,7 @@ Unreleased
 **Added**
 
 * Ability to submit image galleries with :meth:`.submit_gallery`.
+* Ability to specify modmail mute duration.
 
 7.1.0 (2020/07/16)
 ------------------

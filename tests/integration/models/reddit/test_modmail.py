@@ -1,3 +1,4 @@
+from datetime import datetime
 from asynctest import mock
 
 from asyncpraw.models import ModmailMessage, Subreddit
@@ -35,6 +36,20 @@ class TestModmailConversation(IntegrationTest):
             await conversation.mute()
             conversation = await subreddit.modmail("faj6z")
             assert conversation.user.mute_status["isMuted"]
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_mute_duration(self, _):
+        self.reddit.read_only = False
+        subreddit = Subreddit(self.reddit, "all")
+        with self.use_cassette():
+            conversation = await subreddit.modmail("g46rw")
+            await conversation.mute(7)
+            conversation = await subreddit.modmail("g46rw")
+            assert conversation.user.mute_status["isMuted"]
+            diff = datetime.fromisoformat(
+                conversation.user.mute_status["endDate"]
+            ) - datetime.fromisoformat(conversation.mod_actions[-1].date)
+            assert diff.days == 6  # 6 here because it is not 7 whole days
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_read(self, _):

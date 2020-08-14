@@ -187,8 +187,11 @@ class ModmailConversation(RedditBase):
         """
         await self._reddit.post(API_PATH["modmail_highlight"].format(id=self.id))
 
-    async def mute(self):
+    async def mute(self, num_days=3):
         """Mute the non-mod user associated with the conversation.
+
+        :param num_days: Duration of mute in days. Valid options are 3, 7, or 28.
+            (default: 3)
 
         For example:
 
@@ -198,8 +201,21 @@ class ModmailConversation(RedditBase):
             conversation = await subreddit.modmail("2gmz")
             await conversation.mute()
 
+        To mute for 7 days:
+
+        .. code-block:: python
+
+           reddit.subreddit("redditdev").modmail("2gmz").mute(7)
+
+
         """
-        await self._reddit.request("POST", API_PATH["modmail_mute"].format(id=self.id))
+        if num_days != 3:  # no need to pass params if it's the default
+            params = {"num_hours": num_days * 24}
+        else:
+            params = {}
+        await self._reddit.request(
+            "POST", API_PATH["modmail_mute"].format(id=self.id), params=params
+        )
 
     async def read(
         self, other_conversations: Optional[List["ModmailConversation"]] = None
