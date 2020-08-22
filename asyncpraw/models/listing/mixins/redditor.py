@@ -159,7 +159,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         .. code-block:: python
 
             current_user = await reddit.user.me()
-            async for item in current_user.saved():
+            async for item in current_user.saved(limit=None):
                 print(item.id)
 
         """
