@@ -151,7 +151,9 @@ class TestRule(IntegrationTest):
             rule_list = await self.async_list(subreddit.rules)
             rule = rule_list[0]
             rule2 = await rule.mod.update(
-                description="Updated rule", kind="link", violation_reason="PUpdate",
+                description="Updated rule",
+                kind="link",
+                violation_reason="PUpdate",
             )
             assert rule.description != rule2.description
             assert rule2.description == "Updated rule"

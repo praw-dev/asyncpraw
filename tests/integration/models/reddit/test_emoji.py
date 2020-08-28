@@ -47,7 +47,9 @@ class TestEmoji(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             emoji = await subreddit.emoji.get_emoji("test_png")
             await emoji.update(
-                mod_flair_only=False, post_flair_allowed=True, user_flair_allowed=True,
+                mod_flair_only=False,
+                post_flair_allowed=True,
+                user_flair_allowed=True,
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -78,7 +80,8 @@ class TestSubredditEmoji(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             for extension in ["jpg", "png"]:
                 emoji = await subreddit.emoji.add(
-                    f"test_{extension}", f"tests/integration/files/test.{extension}",
+                    f"test_{extension}",
+                    f"tests/integration/files/test.{extension}",
                 )
                 assert isinstance(emoji, Emoji)
 

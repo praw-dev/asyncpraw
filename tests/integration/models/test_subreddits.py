@@ -63,7 +63,8 @@ class TestSubreddits(IntegrationTest):
     ):  # FIXME: always seems to return []; same with praw
         with self.use_cassette():
             subreddits = await self.reddit.subreddits.recommended(
-                ["cityporn", "earthporn"], omit_subreddits=["skyporn", "winterporn"],
+                ["cityporn", "earthporn"],
+                omit_subreddits=["skyporn", "winterporn"],
             )
         assert (
             len(subreddits) == 0

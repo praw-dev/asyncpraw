@@ -307,7 +307,10 @@ class TestSubreddit(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             submission = await subreddit.submit_poll(
-                "Test Poll", selftext="Test poll text.", options=options, duration=6,
+                "Test Poll",
+                selftext="Test poll text.",
+                options=options,
+                duration=6,
             )
             await submission.load()
             assert submission.author == pytest.placeholders.username
@@ -2111,9 +2114,10 @@ class TestSubredditStylesheet(IntegrationTest):
                 "upload_mobile_icon",
             ]:
                 with pytest.raises(TooLarge):
-                    await getattr(subreddit.stylesheet, method,)(
-                        image_path("too_large.jpg")
-                    )
+                    await getattr(
+                        subreddit.stylesheet,
+                        method,
+                    )(image_path("too_large.jpg"))
 
 
 class TestSubredditWiki(IntegrationTest):

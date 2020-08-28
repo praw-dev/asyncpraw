@@ -90,7 +90,10 @@ class ModmailConversation(RedditBase):
 
     @classmethod
     def parse(  # pylint: disable=arguments-differ
-        cls, data: Dict[str, Any], reddit: "Reddit", convert_objects: bool = True,
+        cls,
+        data: Dict[str, Any],
+        reddit: "Reddit",
+        convert_objects: bool = True,
     ):
         """Return an instance of ModmailConversation from ``data``.
 
@@ -205,7 +208,9 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-           reddit.subreddit("redditdev").modmail("2gmz").mute(7)
+            subreddit = await reddit.subreddit("redditdev")
+            conversation = await subreddit.modmail("2gmz")
+            await conversation.mute(7)
 
 
         """

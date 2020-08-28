@@ -246,7 +246,8 @@ class WikiPage(RedditBase):
         """
         other_settings.update({"content": content, "page": self.name, "reason": reason})
         await self._reddit.post(
-            API_PATH["wiki_edit"].format(subreddit=self.subreddit), data=other_settings,
+            API_PATH["wiki_edit"].format(subreddit=self.subreddit),
+            data=other_settings,
         )
 
     async def revision(self, revision: str):
