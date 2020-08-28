@@ -107,7 +107,10 @@ class TestButtonWidget(IntegrationTest):
                 },
             ]
             widget = await widgets.mod.add_button_widget(
-                "Things to click", "Click some of these *cool* links!", buttons, styles,
+                "Things to click",
+                "Click some of these *cool* links!",
+                buttons,
+                styles,
             )
 
             assert isinstance(widget, ButtonWidget)
@@ -284,7 +287,8 @@ class TestCommunityList(IntegrationTest):
             assert "redditdev" in widget
 
             widget = await widget.mod.update(
-                shortName="My least fav subs :(", data=["redesign"],
+                shortName="My least fav subs :(",
+                data=["redesign"],
             )
 
             assert isinstance(widget, CommunityList)
@@ -720,7 +724,9 @@ class TestRulesWidget(IntegrationTest):
             assert rules.styles != new_styles
 
             rules = await rules.mod.update(
-                display="compact", shortName="Our regulations", styles=new_styles,
+                display="compact",
+                shortName="Our regulations",
+                styles=new_styles,
             )
 
             assert rules.display == "compact"

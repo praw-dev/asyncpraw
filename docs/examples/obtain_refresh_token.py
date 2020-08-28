@@ -83,7 +83,8 @@ async def main():
 
     if state != params["state"]:
         send_message(
-            client, f"State mismatch. Expected: {state} Received: {params['state']}",
+            client,
+            f"State mismatch. Expected: {state} Received: {params['state']}",
         )
         return 1
     elif "error" in params:

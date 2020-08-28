@@ -73,7 +73,9 @@ class CommentForest:
             yield comment
 
     def __init__(
-        self, submission: "Submission", comments: Optional[List["Comment"]] = None,
+        self,
+        submission: "Submission",
+        comments: Optional[List["Comment"]] = None,
     ):
         """Initialize a CommentForest instance.
 

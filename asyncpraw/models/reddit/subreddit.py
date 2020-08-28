@@ -217,9 +217,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             image_path = image.get("image_path", "")
             if image_path:
                 if not isfile(image_path):
-                    raise TypeError(
-                        "{!r} is not a valid image path.".format(image_path)
-                    )
+                    raise TypeError(f"{image_path!r} is not a valid image path.")
             else:
                 raise TypeError("'image_path' is required.")
             if not len(image.get("caption", "")) <= 180:
@@ -642,7 +640,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 response["json"]["data"]["websocket_url"], timeout=timeout
             ) as websocket:
                 ws_update = await websocket.receive_json()
-        except (WebSocketError, socket.error, BlockingIOError,) as ws_exception:
+        except (
+            WebSocketError,
+            socket.error,
+            BlockingIOError,
+        ) as ws_exception:
             raise WebSocketException(
                 "Websocket error. Check your media file. "
                 "Your post may still have been created. "
@@ -1028,7 +1030,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                     "caption": image.get("caption", ""),
                     "outbound_url": image.get("outbound_url", ""),
                     "media_id": await self._upload_media(
-                        image["image_path"], expected_mime_prefix="image", gallery=True,
+                        image["image_path"],
+                        expected_mime_prefix="image",
+                        gallery=True,
                     ),
                 }
             )
@@ -1136,7 +1140,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 data[key] = value
         url = await self._upload_media(image_path, expected_mime_prefix="image")
         data.update(
-            kind="image", url=url,
+            kind="image",
+            url=url,
         )
         return await self._submit_media(
             data, timeout, without_websockets=without_websockets
@@ -1470,7 +1475,9 @@ class SubredditFilters:
         """
         user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
-            special=self.subreddit, user=user, subreddit=subreddit,
+            special=self.subreddit,
+            user=user,
+            subreddit=subreddit,
         )
         await self.subreddit._reddit.put(
             url, data={"model": dumps({"name": str(subreddit)})}
@@ -1487,7 +1494,9 @@ class SubredditFilters:
         """
         user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
-            special=self.subreddit, user=user, subreddit=subreddit,
+            special=self.subreddit,
+            user=user,
+            subreddit=subreddit,
         )
         await self.subreddit._reddit.delete(url)
 
@@ -3087,7 +3096,12 @@ class Modmail:
         ]
 
     async def conversations(
-        self, after=None, limit=None, other_subreddits=None, sort=None, state=None,
+        self,
+        after=None,
+        limit=None,
+        other_subreddits=None,
+        sort=None,
+        state=None,
     ):  # noqa: D207, D301
         """Generate :class:`.ModmailConversation` objects for subreddit(s).
 

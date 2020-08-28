@@ -504,7 +504,9 @@ class Reddit:
         return await self._objectify_request(method="GET", params=params, path=path)
 
     def info(
-        self, fullnames: Optional[Iterable[str]] = None, url: Optional[str] = None,
+        self,
+        fullnames: Optional[Iterable[str]] = None,
+        url: Optional[str] = None,
     ) -> AsyncGenerator[Union[Subreddit, Comment, Submission], None]:
         """Fetch information about each item in ``fullnames`` or from ``url``.
 
@@ -687,7 +689,11 @@ class Reddit:
                 logger.debug(f"Rate limit hit, sleeping for {seconds:.2f} seconds")
                 await asyncio.sleep(seconds)
                 return await self._objectify_request(
-                    data=data, files=files, method="POST", params=params, path=path,
+                    data=data,
+                    files=files,
+                    method="POST",
+                    params=params,
+                    path=path,
                 )
             raise
 

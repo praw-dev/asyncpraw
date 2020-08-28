@@ -26,7 +26,9 @@ class LiveContributorRelationship:
             permissions = set(permissions)
         return ",".join(f"+{x}" for x in permissions)
 
-    def __call__(self,) -> AsyncGenerator:  # noqa: D202
+    def __call__(
+        self,
+    ) -> AsyncGenerator:  # noqa: D202
         """Return a :class:`.RedditorList` for live threads' contributors.
 
         Usage:

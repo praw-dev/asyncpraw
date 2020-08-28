@@ -308,7 +308,8 @@ class CollectionModeration(AsyncPRAWBase):
 
         """
         await self._reddit.post(
-            API_PATH["collection_delete"], data={"collection_id": self.collection_id},
+            API_PATH["collection_delete"],
+            data={"collection_id": self.collection_id},
         )
 
     async def remove_post(self, submission: Submission):
