@@ -9,6 +9,10 @@ Unreleased
 * Ability to submit image galleries with :meth:`.submit_gallery`.
 * Ability to specify modmail mute duration.
 
+**Fixed**
+
+* A bug where if you call `.parent()` on a comment it clears its replies.
+
 7.1.0 (2020/07/16)
 ------------------
 
