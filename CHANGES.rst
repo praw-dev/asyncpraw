@@ -9,6 +9,10 @@ Unreleased
 * Ability to submit image galleries with :meth:`.submit_gallery`.
 * Ability to specify modmail mute duration.
 
+**Fixed**
+
+* An issue where performing a deepcopy on an :class:`.RedditBase` object will fail.
+
 7.1.0 (2020/07/16)
 ------------------
 

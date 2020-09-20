@@ -12,6 +12,10 @@ if TYPE_CHECKING:  # pragma: no cover
 class RedditBase(AsyncPRAWBase):
     """Base class that represents actual Reddit objects."""
 
+    def __deepcopy__(self, memodict={}):
+        """Only return the str attribute when performing a deepcopy."""
+        return str(self)
+
     @staticmethod
     def _url_parts(url):
         parsed = urlparse(url)
