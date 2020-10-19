@@ -103,7 +103,7 @@ class CommentForest:
             self._comments.append(comment)
         else:
             assert comment.parent_id in self._submission._comments_by_id, (
-                "PRAW Error occured. Please file a bug report and include "
+                "PRAW Error occurred. Please file a bug report and include "
                 "the code that caused the error."
             )
             parent = self._submission._comments_by_id[comment.parent_id]
@@ -114,7 +114,7 @@ class CommentForest:
         for comment in comments:
             comment.submission = self._submission
 
-    async def list(self) -> Union["Comment", "MoreComments"]:
+    async def list(self) -> List[Union["Comment", "MoreComments"]]:
         """Return a flattened list of all Comments.
 
         This list may contain :class:`.MoreComments` instances if
