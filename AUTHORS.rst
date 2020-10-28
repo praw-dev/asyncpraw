@@ -69,5 +69,6 @@ Source Contributors
 - MaybeNetwork `@MaybeNetwork <https://github.com/MaybeNetwork>`_
 - Nick Kelly `@nickatnight <https://github.com/nickatnight>`_
 - Yash Chhabria `@Cyatos <https://github.com/Cyatos>`_
+- Justin Krejcha <justin@justinkrejcha.com> `@jkrejcha <https://github.com/jkrejcha>`_
 - Gerard Rodes <GerardRodesVidal@gmail.com> `@GerardRodes <https://github.com/GerardRodes>`_
 <!-- - Add "Name <email (optional)> and github profile link" above this line. -->
