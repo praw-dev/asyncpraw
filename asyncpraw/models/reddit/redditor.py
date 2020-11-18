@@ -147,12 +147,12 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             assert (
                 isinstance(_data, dict) and "name" in _data
             ), "Please file a bug with Async PRAW"
-        super().__init__(reddit, _data=_data)
         self._listing_use_sort = True
         if name:
             self.name = name
         elif fullname:
             self._fullname = fullname
+        super().__init__(reddit, _data=_data, _extra_attribute_to_check="_fullname")
 
     async def _fetch_username(self, fullname):
         response = await self._reddit.get(

@@ -1,7 +1,6 @@
 import pytest
 
 from asyncpraw.models import Rule, Subreddit
-
 from ... import UnitTest
 
 
@@ -9,6 +8,10 @@ class TestRules(UnitTest):
     @property
     def subreddit(self):
         return Subreddit(self.reddit, display_name=pytest.placeholders.test_subreddit)
+
+    def test_empty_value(self):
+        with pytest.raises(ValueError):
+            Rule(self.reddit, self.subreddit, short_name="")
 
     def test_no_data(self):
         with pytest.raises(ValueError) as excinfo:
