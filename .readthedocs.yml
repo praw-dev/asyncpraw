@@ -1,11 +1,10 @@
 formats:
   - htmlzip
-  - pdf
 python:
   install:
     - method: pip
       extra_requirements:
-        - readthedocs
+        - lint
       path: .
   version: 3.8
 version: 2
