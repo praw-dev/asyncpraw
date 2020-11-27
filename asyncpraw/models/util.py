@@ -187,7 +187,7 @@ async def stream_generator(
         if before_attribute is None:
             limit -= without_before_counter
             without_before_counter = (without_before_counter + 1) % 30
-        if not exclude_before and before_attribute:
+        if not exclude_before:
             function_kwargs["params"] = {"before": before_attribute}
         for item in reversed(
             [result async for result in function(limit=limit, **function_kwargs)]
