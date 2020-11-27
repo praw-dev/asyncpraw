@@ -1,16 +1,11 @@
-version: 2
-
 formats:
   - htmlzip
-
+  - pdf
 python:
-   version: 3.6
-   install:
-      - method: pip
-        path: .
-        extra_requirements:
-            - lint
-   system_packages: true
-
-sphinx:
-  configuration: docs/conf.py
+  install:
+    - method: pip
+      extra_requirements:
+        - readthedocs
+      path: .
+  version: 3.8
+version: 2
