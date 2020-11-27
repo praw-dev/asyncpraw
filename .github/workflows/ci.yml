@@ -38,7 +38,7 @@ jobs:
     - name: Run pydocstyle
       run: pydocstyle asyncpraw
     - name: Run sphinx
-      run: sphinx-build -W --keep-going docs/ /tmp/foo
+      run: sphinx-build --keep-going docs/ /tmp/foo
     strategy:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
@@ -73,7 +73,7 @@ jobs:
     - name: Run pydocstyle
       run: pydocstyle asyncpraw
     - name: Run sphinx
-      run: sphinx-build -W --keep-going docs/ /tmp/foo
+      run: sphinx-build --keep-going docs/ /tmp/foo
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
