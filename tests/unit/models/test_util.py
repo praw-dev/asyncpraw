@@ -76,12 +76,12 @@ class TestBoundedSet(UnitTest):
 
 class TestStream(UnitTest):
     @mock.patch("time.sleep", return_value=None)
-    def test_stream(self, _):
+    async def test_stream(self, _):
         Thing = namedtuple("Thing", ["fullname"])
         initial_things = [Thing(n) for n in reversed(range(100))]
         counter = 99
 
-        def generate(limit, **kwargs):
+        async def generate(limit, **kwargs):
             nonlocal counter
             counter += 1
             if counter % 2 == 0:
@@ -90,10 +90,13 @@ class TestStream(UnitTest):
 
         stream = stream_generator(generate)
         seen = set()
-        for _ in range(400):
-            thing = next(stream)
+        loop_counter = 0
+        async for thing in stream:
             assert thing not in seen
             seen.add(thing)
+            counter += 1
+            if counter == 400:
+                break
 
 
 class TestPermissionsString(UnitTest):
