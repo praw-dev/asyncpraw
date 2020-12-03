@@ -475,14 +475,14 @@ class TestSubreddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            for file_name in ("test.png", "test.jpg", "test.gif"):
+            for i, file_name in enumerate(("test.png", "test.jpg", "test.gif")):
                 image = image_path(file_name)
 
-                submission = await subreddit.submit_image("Test Title", image)
+                submission = await subreddit.submit_image(f"Test Title {i}", image)
                 await submission.load()
                 assert submission.author == pytest.placeholders.username
                 assert submission.is_reddit_media_domain
-                assert submission.title == "Test Title"
+                assert submission.title == f"Test Title {i}"
 
     @pytest.mark.usefixtures("tmp_path")
     @mock.patch("asyncio.sleep", return_value=None)
@@ -666,13 +666,13 @@ class TestSubreddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            for file_name in ("test.mov", "test.mp4"):
+            for i, file_name in enumerate(("test.mov", "test.mp4")):
                 video = image_path(file_name)
-                submission = await subreddit.submit_video("Test Title", video)
+                submission = await subreddit.submit_video(f"Test Title {i}", video)
                 await submission.load()
                 assert submission.author == pytest.placeholders.username
                 assert submission.is_reddit_media_domain
-                assert submission.title == "Test Title"
+                assert submission.title == f"Test Title {i}"
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_submit_video__bad_filetype(self, _):
