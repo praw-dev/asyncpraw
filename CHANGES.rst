@@ -24,6 +24,9 @@ Unreleased
 
 * :class:`~.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
   which will change the order in which elements are removed from the set.
+* Improved :meth:`.submit_image` and :meth:`.submit_video` performance in slow
+  network environments by removing a race condition when establishing a
+  websocket connection.
 
 **Deprecated**
 
