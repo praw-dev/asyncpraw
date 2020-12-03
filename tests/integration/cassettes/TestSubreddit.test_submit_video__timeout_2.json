@@ -1,0 +1,388 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "close",
+          "Content-Length": "370",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 27 Jan 2021 19:49:58 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=lQHrBBfuLGAa4cI1T8; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "filepath",
+            "test.mov"
+          ],
+          [
+            "mimetype",
+            "video/quicktime"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/media/asset.json?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"args\": {\"action\": \"//reddit-uploaded-video.s3-accelerate.amazonaws.com\", \"fields\": [{\"name\": \"acl\", \"value\": \"public-read\"}, {\"name\": \"key\", \"value\": \"6t5o0m21jxd61\"}, {\"name\": \"X-Amz-Credential\", \"value\": \"ASIATB45ILA5SP6ZP37K/20210127/us-east-1/s3/aws4_request\"}, {\"name\": \"X-Amz-Algorithm\", \"value\": \"AWS4-HMAC-SHA256\"}, {\"name\": \"X-Amz-Date\", \"value\": \"20210127T195003Z\"}, {\"name\": \"success_action_status\", \"value\": \"201\"}, {\"name\": \"content-type\", \"value\": \"video/quicktime\"}, {\"name\": \"x-amz-storage-class\", \"value\": \"STANDARD\"}, {\"name\": \"x-amz-meta-ext\", \"value\": \"mov\"}, {\"name\": \"policy\", \"value\": \"eyJjb25kaXRpb25zIjogW3siYnVja2V0IjogInJlZGRpdC11cGxvYWRlZC12aWRlbyJ9LCB7ImtleSI6ICI2dDVvMG0yMWp4ZDYxIn0sIHsiYWNsIjogInB1YmxpYy1yZWFkIn0sIHsieC1hbXotc3RvcmFnZS1jbGFzcyI6ICJTVEFOREFSRCJ9LCB7IngtYW16LWNyZWRlbnRpYWwiOiAiQVNJQVRCNDVJTEE1U1A2WlAzN0svMjAyMTAxMjcvdXMtZWFzdC0xL3MzL2F3czRfcmVxdWVzdCJ9LCB7IngtYW16LWFsZ29yaXRobSI6ICJBV1M0LUhNQUMtU0hBMjU2In0sIHsieC1hbXotZGF0ZSI6ICIyMDIxMDEyN1QxOTUwMDNaIn0sIHsieC1hbXotc2VjdXJpdHktdG9rZW4iOiAiSVFvSmIzSnBaMmx1WDJWakVHUWFDWFZ6TFdWaGMzUXRNU0pITUVVQ0lFMmlnbG5kWW5xWlZBTUVYOUlpNzV3MnZKSG5ZcER1UFVySjZYcm5JcmVWQWlFQWc4a1d5a29yeU44amVaRzZneGJLMGdhcXVIVVUrR2lZU3dxbmZzNXN6bjBxdEFNSVRCQUFHZ3d5TVRBeU5EWXpNall6TXpFaURQblZKWGZnQkx1SlZ1dXdXaXFSQXhLRzRKUHFxaFRXMUY2eVNqMjdaVHVwU3lrNDEyTVhBUFl0L3JzZDU3UzNVVDNSRmNMSCt0b0VrQ2pXVXRkUWQzcnE0U010ci9STHhTWE9taWFZeEF0cUw1d0QwOUtmTm1UR0J5QVFpM0R4Y0tIS1BqRW5IcWlyNUJjUi81a2ZLZjRDa1dLTlc5WVdNWUdSci9xSXlCSi9saVpUd2krRFEwMElOTjFXOHkzV240TXdiaHRwZnoxL24wRkdVb0hmcTVMcUYvRU83SlUxMVF4SWxpYmI5QjdNQ3oxMDE4OE8wd0lTUWx3TEFGYkF4aCs1bVIyRzViU2FkL0NCU3YrZ2dVeDdwZGh2dkJzL0taVnRWaEc1NXE2VDFaZEpZSExCZFpXQVVnQVVLUkxyMGw1Um05MDlvMTZSLy9vYlJDeGRPOW1lYWZoc1M5ZFJyQjQ3WFVOS2ZNdVJ6MDR5RFk4QzlaYW5Ia1ZrL3BZU04rVExiWGFVK2phWjhyTTBXTUhITkF3cVdPZEdlSTdhaitmbFE3NFNXalYwem1vVGcxd0lKS0s1Z20rbmhYc09BaU54YWZiV1Z5Y2ZaenNLNFlzT2Voa3U5ektidmpQVGprV3pMczJmby9rbWg2a0kyMHYrVFZkODVIazFRSWNKQ1ExYjUxTFJ2NFpDam1reHczbXNpQWhLNW9Pb0w0bmJadWlsUVhVVTBoZ09NSkw0eG9BR091c0JTSjF6dXFNNkJYQnBrVVlvWHBlWlJVRjZ5SWNrYkhTTlJrbE5qOWFKcXpHTVRlZStzaWZUemN0d29VZzEwUU9mbnFQaVVJUXZtSGV5TUw5NnpkbXd5SHlpUmVjQkpQK3VUbUROUjkwVjZwWVlRZFNFdU1MenBWb2lQWjdHTnYyVnpFeDdzeWlXbS9yREFJd2V5bThNTVZiK1BqaTZZMHBjTS9kM1ltOUdhc3RBNEE2VVprWGRnSG5HOWNKU1BrdFlUOFZSbHFZRTYzbjhVWXVqOWZLTG80aHN6VktYYjVkUmMxNUM3TFJCZDZDYytjWStZOUxCdlYwVi82SjBiODc2K3l3NGRrVCsybzFYZm12MVR1eHRuT01RVjRiN25SRjJvdURYbXBzeWhnaWVZbk1ETTlqVFU2RmNqQT09In0sIHsic3VjY2Vzc19hY3Rpb25fc3RhdHVzIjogIjIwMSJ9LCBbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwgMCwgMjE0NzQ4MzY0OF0sIHsieC1hbXotbWV0YS1leHQiOiAibW92In0sIHsiY29udGVudC10eXBlIjogInZpZGVvL3F1aWNrdGltZSJ9XSwgImV4cGlyYXRpb24iOiAiMjAyMS0wMS0yN1QxOTo1MTowM1oifQ==\"}, {\"name\": \"X-Amz-Signature\", \"value\": \"9b785fd00c9ae22fe97d6acd3dd932bb777818d1addb4d9c85cd3881f36f313d\"}, {\"name\": \"x-amz-security-token\", \"value\": \"IQoJb3JpZ2luX2VjEGQaCXVzLWVhc3QtMSJHMEUCIE2iglndYnqZVAMEX9Ii75w2vJHnYpDuPUrJ6XrnIreVAiEAg8kWykoryN8jeZG6gxbK0gaquHUU+GiYSwqnfs5szn0qtAMITBAAGgwyMTAyNDYzMjYzMzEiDPnVJXfgBLuJVuuwWiqRAxKG4JPqqhTW1F6ySj27ZTupSyk412MXAPYt/rsd57S3UT3RFcLH+toEkCjWUtdQd3rq4SMtr/RLxSXOmiaYxAtqL5wD09KfNmTGByAQi3DxcKHKPjEnHqir5BcR/5kfKf4CkWKNW9YWMYGRr/qIyBJ/liZTwi+DQ00INN1W8y3Wn4Mwbhtpfz1/n0FGUoHfq5LqF/EO7JU11QxIlibb9B7MCz10188O0wISQlwLAFbAxh+5mR2G5bSad/CBSv+ggUx7pdhvvBs/KZVtVhG55q6T1ZdJYHLBdZWAUgAUKRLr0l5Rm909o16R//obRCxdO9meafhsS9dRrB47XUNKfMuRz04yDY8C9ZanHkVk/pYSN+TLbXaU+jaZ8rM0WMHHNAwqWOdGeI7aj+flQ74SWjV0zmoTg1wIJKK5gm+nhXsOAiNxafbWVycfZzsK4YsOehku9zKbvjPTjkWzLs2fo/kmh6kI20v+TVd85Hk1QIcJCQ1b51LRv4ZCjmkxw3msiAhK5oOoL4nbZuilQXUU0hgOMJL4xoAGOusBSJ1zuqM6BXBpkUYoXpeZRUF6yIckbHSNRklNj9aJqzGMTee+sifTzctwoUg10QOfnqPiUIQvmHeyML96zdmwyHyiRecBJP+uTmDNR90V6pYYQdSEuMLzpVoiPZ7GNv2VzEx7syiWm/rDAIweym8MMVb+Pji6Y0pcM/d3Ym9GastA4A6UZkXdgHnG9cJSPktYT8VRlqYE63n8UYuj9fKLo4hszVKXb5dRc15C7LRBd6Cc+cY+Y9LBvV0V/6J0b876+yw4dkT+2o1Xfmv1TuxtnOMQV4b7nRF2ouDXmpsyhgieYnMDM9jTU6FcjA==\"}]}, \"asset\": {\"asset_id\": \"6t5o0m21jxd61\", \"processing_state\": \"incomplete\", \"payload\": {\"filepath\": \"test.mov\"}, \"websocket_url\": \"wss://ws-0ec0cf6b4e835f4a5.wss.redditmedia.com/6t5o0m21jxd61?m=AQAAQ8YRYCzQLG_3wgX7KmZ4VGsYtdufOTDiWbyrl_-qSRp4ruMA\"}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "4128",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 27 Jan 2021 19:50:03 GMT",
+          "Server": "snooserv",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "expires": "-1",
+          "set-cookie": "session_tracker=pjcpgelkohpneniecp.0.1611777003585.Z0FBQUFBQmdFY1ByZkhZczZ4dkFwaTJ5MUFESmxPR1FzQ0ZOWHZvWVNnclRNaHZUd3RNYm1zZkxtOExNNEZsZS0xWWxPNkNrYU9UYlZEZ1JpdXZPZFJINTZwR3FoQVJFcnU1VndEeEl0R0xwaU9hWDI2Y29oaGIwMEVCYWhLYkJ0b3VLMzJuOWp0NDc; Domain=reddit.com; Max-Age=7199; Path=/; expires=Wed, 27-Jan-2021 21:50:03 GMT; secure",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "594.0",
+          "x-ratelimit-reset": "597",
+          "x-ratelimit-used": "6",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/media/asset.json?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": {
+          "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+          "X-Amz-Credential": "ASIATB45ILA5SP6ZP37K/20210127/us-east-1/s3/aws4_request",
+          "X-Amz-Date": "20210127T195003Z",
+          "X-Amz-Signature": "9b785fd00c9ae22fe97d6acd3dd932bb777818d1addb4d9c85cd3881f36f313d",
+          "acl": "public-read",
+          "content-type": "video/quicktime",
+          "key": "6t5o0m21jxd61",
+          "policy": "eyJjb25kaXRpb25zIjogW3siYnVja2V0IjogInJlZGRpdC11cGxvYWRlZC12aWRlbyJ9LCB7ImtleSI6ICI2dDVvMG0yMWp4ZDYxIn0sIHsiYWNsIjogInB1YmxpYy1yZWFkIn0sIHsieC1hbXotc3RvcmFnZS1jbGFzcyI6ICJTVEFOREFSRCJ9LCB7IngtYW16LWNyZWRlbnRpYWwiOiAiQVNJQVRCNDVJTEE1U1A2WlAzN0svMjAyMTAxMjcvdXMtZWFzdC0xL3MzL2F3czRfcmVxdWVzdCJ9LCB7IngtYW16LWFsZ29yaXRobSI6ICJBV1M0LUhNQUMtU0hBMjU2In0sIHsieC1hbXotZGF0ZSI6ICIyMDIxMDEyN1QxOTUwMDNaIn0sIHsieC1hbXotc2VjdXJpdHktdG9rZW4iOiAiSVFvSmIzSnBaMmx1WDJWakVHUWFDWFZ6TFdWaGMzUXRNU0pITUVVQ0lFMmlnbG5kWW5xWlZBTUVYOUlpNzV3MnZKSG5ZcER1UFVySjZYcm5JcmVWQWlFQWc4a1d5a29yeU44amVaRzZneGJLMGdhcXVIVVUrR2lZU3dxbmZzNXN6bjBxdEFNSVRCQUFHZ3d5TVRBeU5EWXpNall6TXpFaURQblZKWGZnQkx1SlZ1dXdXaXFSQXhLRzRKUHFxaFRXMUY2eVNqMjdaVHVwU3lrNDEyTVhBUFl0L3JzZDU3UzNVVDNSRmNMSCt0b0VrQ2pXVXRkUWQzcnE0U010ci9STHhTWE9taWFZeEF0cUw1d0QwOUtmTm1UR0J5QVFpM0R4Y0tIS1BqRW5IcWlyNUJjUi81a2ZLZjRDa1dLTlc5WVdNWUdSci9xSXlCSi9saVpUd2krRFEwMElOTjFXOHkzV240TXdiaHRwZnoxL24wRkdVb0hmcTVMcUYvRU83SlUxMVF4SWxpYmI5QjdNQ3oxMDE4OE8wd0lTUWx3TEFGYkF4aCs1bVIyRzViU2FkL0NCU3YrZ2dVeDdwZGh2dkJzL0taVnRWaEc1NXE2VDFaZEpZSExCZFpXQVVnQVVLUkxyMGw1Um05MDlvMTZSLy9vYlJDeGRPOW1lYWZoc1M5ZFJyQjQ3WFVOS2ZNdVJ6MDR5RFk4QzlaYW5Ia1ZrL3BZU04rVExiWGFVK2phWjhyTTBXTUhITkF3cVdPZEdlSTdhaitmbFE3NFNXalYwem1vVGcxd0lKS0s1Z20rbmhYc09BaU54YWZiV1Z5Y2ZaenNLNFlzT2Voa3U5ektidmpQVGprV3pMczJmby9rbWg2a0kyMHYrVFZkODVIazFRSWNKQ1ExYjUxTFJ2NFpDam1reHczbXNpQWhLNW9Pb0w0bmJadWlsUVhVVTBoZ09NSkw0eG9BR091c0JTSjF6dXFNNkJYQnBrVVlvWHBlWlJVRjZ5SWNrYkhTTlJrbE5qOWFKcXpHTVRlZStzaWZUemN0d29VZzEwUU9mbnFQaVVJUXZtSGV5TUw5NnpkbXd5SHlpUmVjQkpQK3VUbUROUjkwVjZwWVlRZFNFdU1MenBWb2lQWjdHTnYyVnpFeDdzeWlXbS9yREFJd2V5bThNTVZiK1BqaTZZMHBjTS9kM1ltOUdhc3RBNEE2VVprWGRnSG5HOWNKU1BrdFlUOFZSbHFZRTYzbjhVWXVqOWZLTG80aHN6VktYYjVkUmMxNUM3TFJCZDZDYytjWStZOUxCdlYwVi82SjBiODc2K3l3NGRrVCsybzFYZm12MVR1eHRuT01RVjRiN25SRjJvdURYbXBzeWhnaWVZbk1ETTlqVFU2RmNqQT09In0sIHsic3VjY2Vzc19hY3Rpb25fc3RhdHVzIjogIjIwMSJ9LCBbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwgMCwgMjE0NzQ4MzY0OF0sIHsieC1hbXotbWV0YS1leHQiOiAibW92In0sIHsiY29udGVudC10eXBlIjogInZpZGVvL3F1aWNrdGltZSJ9XSwgImV4cGlyYXRpb24iOiAiMjAyMS0wMS0yN1QxOTo1MTowM1oifQ==",
+          "success_action_status": "201",
+          "x-amz-meta-ext": "mov",
+          "x-amz-security-token": "IQoJb3JpZ2luX2VjEGQaCXVzLWVhc3QtMSJHMEUCIE2iglndYnqZVAMEX9Ii75w2vJHnYpDuPUrJ6XrnIreVAiEAg8kWykoryN8jeZG6gxbK0gaquHUU+GiYSwqnfs5szn0qtAMITBAAGgwyMTAyNDYzMjYzMzEiDPnVJXfgBLuJVuuwWiqRAxKG4JPqqhTW1F6ySj27ZTupSyk412MXAPYt/rsd57S3UT3RFcLH+toEkCjWUtdQd3rq4SMtr/RLxSXOmiaYxAtqL5wD09KfNmTGByAQi3DxcKHKPjEnHqir5BcR/5kfKf4CkWKNW9YWMYGRr/qIyBJ/liZTwi+DQ00INN1W8y3Wn4Mwbhtpfz1/n0FGUoHfq5LqF/EO7JU11QxIlibb9B7MCz10188O0wISQlwLAFbAxh+5mR2G5bSad/CBSv+ggUx7pdhvvBs/KZVtVhG55q6T1ZdJYHLBdZWAUgAUKRLr0l5Rm909o16R//obRCxdO9meafhsS9dRrB47XUNKfMuRz04yDY8C9ZanHkVk/pYSN+TLbXaU+jaZ8rM0WMHHNAwqWOdGeI7aj+flQ74SWjV0zmoTg1wIJKK5gm+nhXsOAiNxafbWVycfZzsK4YsOehku9zKbvjPTjkWzLs2fo/kmh6kI20v+TVd85Hk1QIcJCQ1b51LRv4ZCjmkxw3msiAhK5oOoL4nbZuilQXUU0hgOMJL4xoAGOusBSJ1zuqM6BXBpkUYoXpeZRUF6yIckbHSNRklNj9aJqzGMTee+sifTzctwoUg10QOfnqPiUIQvmHeyML96zdmwyHyiRecBJP+uTmDNR90V6pYYQdSEuMLzpVoiPZ7GNv2VzEx7syiWm/rDAIweym8MMVb+Pji6Y0pcM/d3Ym9GastA4A6UZkXdgHnG9cJSPktYT8VRlqYE63n8UYuj9fKLo4hszVKXb5dRc15C7LRBd6Cc+cY+Y9LBvV0V/6J0b876+yw4dkT+2o1Xfmv1TuxtnOMQV4b7nRF2ouDXmpsyhgieYnMDM9jTU6FcjA==",
+          "x-amz-storage-class": "STANDARD"
+        },
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://reddit-uploaded-video.s3-accelerate.amazonaws.com"
+      },
+      "response": {
+        "body": {
+          "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<PostResponse><Location>https://reddit-uploaded-video.s3-accelerate.amazonaws.com/6t5o0m21jxd61</Location><Bucket>reddit-uploaded-video</Bucket><Key>6t5o0m21jxd61</Key><ETag>\"846c13cb92a6ec9c82febd99b043e8f5\"</ETag></PostResponse>"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "269",
+          "Content-Type": "application/xml",
+          "Date": "Wed, 27 Jan 2021 19:50:04 GMT",
+          "ETag": "\"846c13cb92a6ec9c82febd99b043e8f5\"",
+          "Location": "https://reddit-uploaded-video.s3-accelerate.amazonaws.com/6t5o0m21jxd61",
+          "Server": "AmazonS3",
+          "Via": "1.1 0209805a6de9378002cd83ce3696e0b5.cloudfront.net (CloudFront)",
+          "X-Amz-Cf-Id": "KCQaCpUTkdRx4W3LaL0Iy64iC0UG1lMYJ-ka4HlHdplKg7HTbfvBvA==",
+          "X-Amz-Cf-Pop": "DFW55-C2",
+          "X-Cache": "Miss from cloudfront",
+          "x-amz-expiration": "expiry-date=\"Fri, 29 Jan 2021 00:00:00 GMT\", rule-id=\"delete-after-one-day\"",
+          "x-amz-id-2": "4GEn2A8/juXr4Qo9ku2E3kcyBNLtenWV+4MdigyKQWWJD5lpsLik1SLsNQZQWdltwbZHwpANjd8=",
+          "x-amz-request-id": "A891F374EDA26B0B"
+        },
+        "status": {
+          "code": 201,
+          "message": "Created"
+        },
+        "url": "https://reddit-uploaded-video.s3-accelerate.amazonaws.com"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "filepath",
+            "praw logo.png"
+          ],
+          [
+            "mimetype",
+            "image/png"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/media/asset.json?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"args\": {\"action\": \"//reddit-uploaded-media.s3-accelerate.amazonaws.com\", \"fields\": [{\"name\": \"acl\", \"value\": \"public-read\"}, {\"name\": \"key\", \"value\": \"rte_images/dyj5yqp1jxd61\"}, {\"name\": \"X-Amz-Credential\", \"value\": \"ASIATB45ILA5VGFIW47N/20210127/us-east-1/s3/aws4_request\"}, {\"name\": \"X-Amz-Algorithm\", \"value\": \"AWS4-HMAC-SHA256\"}, {\"name\": \"X-Amz-Date\", \"value\": \"20210127T195009Z\"}, {\"name\": \"success_action_status\", \"value\": \"201\"}, {\"name\": \"content-type\", \"value\": \"image/png\"}, {\"name\": \"x-amz-storage-class\", \"value\": \"STANDARD\"}, {\"name\": \"x-amz-meta-ext\", \"value\": \"png\"}, {\"name\": \"policy\", \"value\": \"eyJjb25kaXRpb25zIjogW3siYnVja2V0IjogInJlZGRpdC11cGxvYWRlZC1tZWRpYSJ9LCB7ImtleSI6ICJydGVfaW1hZ2VzL2R5ajV5cXAxanhkNjEifSwgeyJhY2wiOiAicHVibGljLXJlYWQifSwgeyJ4LWFtei1zdG9yYWdlLWNsYXNzIjogIlNUQU5EQVJEIn0sIHsieC1hbXotY3JlZGVudGlhbCI6ICJBU0lBVEI0NUlMQTVWR0ZJVzQ3Ti8yMDIxMDEyNy91cy1lYXN0LTEvczMvYXdzNF9yZXF1ZXN0In0sIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwgeyJ4LWFtei1kYXRlIjogIjIwMjEwMTI3VDE5NTAwOVoifSwgeyJ4LWFtei1zZWN1cml0eS10b2tlbiI6ICJJUW9KYjNKcFoybHVYMlZqRUdRYUNYVnpMV1ZoYzNRdE1TSkdNRVFDSUcrMFhzTUx6bnRwMUJNTUhqcVhvYUVNQzR3MXlOd2RKc05pVnJNdjVZbEtBaUJnNURXTHpaU0E4WkI2MTByTEFncGFxeG1VQ1BTc1hPRDcrU1A1UDk3ay9DcTBBd2hORUFBYURESXhNREkwTmpNeU5qTXpNU0lNOWJkMmpaSy9lUlJxMWJ3aktwRURpTHJSMk1Ub2xINEFvV0VqQ2dpeDRtcGhyWWhlNFZwUXQ1VzcxTXJNSFVUZWJTSjh0YlRMM3laQXRsbVV4Sy9GMHl2eTRoVzRRWXZWNUs4VmdudHAzWi9LcU9qdXBhdmg1RWpFT3BwZ0NHUVU4Zmc5cGdjQkIvejBXNVFNZWdhZHRXNUFCbzh2MEsrcHBHWlFVZW9wYkIwZDUvVXF3NGtSV013QzEvdm5wUGlIbVlRcUdaK09RTksrU0NyZ1dIWlJXZlZ0bEh3dlBaRTdyYmJMZm1sQ3pXazZHazBJM2xoOTZmOTFvRkhPWWkrZ2FzdFhYZzA0K2tIaDVqVHp2d0R2L0QrM3V4cFBUQXhqbTRISGZKYVcwb1JYZmtyZkVlVkNqZVB5N2ZOWGtFL3BNYUQvLzloenNLSXpWRGdWUXpQRGltUDZOeGdBbEZnbGlwMDJKVFhCTnJkM0N4Y1NDL0FkakJWa2VobTB0VmJrRlQwZzNKS0c3Yy9Ob00rZFZYK29ROHFnaWdEdnNTWHh1TFZyNlJ6K0pSQTdVSjZSN3FvK3FXb3pRdkhnQ0VNQnhkWFZsVTZobHpFRmRBMHl0SzA4ZnQ0SWlyRFhyaFFpYWZ5VmlJbVpDNEpvUkFXbS9rSDdsaSs0b0pXTlZpU1gxVTVKQ1ViT0trMEV1ZFkxZ2lNZmU4VVdka3lVK2lxUWFmY1RhTTdyemc4d2k0YkhnQVk2N0FHbEIzVnlUdmQzVmM4RHFwZFI4cElENzJkNFdMcm0zaThiTzFFODFqdUd4ZmE0STI4ZWYwWUNFQjRzZ1V3RmV3eExVY0sxNjhIOVhPeWZtdzV4TkZtNTdRL1BtL3JnL1A4eWQ4WWdmcTJsVXdSd0drMGxpU1d0bU9MOEhJSGZnL21jT2VHNnpIQ0N6U2hnSG0xaXZBMVhHQ3o3U1pBWFpFd3lyVFNZeFFydVgxN1o2aWw4QnVMZGd1cXJsc2pJLzloVlVKUVBDVE1HK0NCczZRbFh0TUZKVWhsT01MTjRrd2ZMbkF0dVZxc3I2NnV1TnlkL1R3UlZtV1lLY013WFRCWnllRHRlNnR4NWFRNEV3MUxrK0UxR1dEbFBiT2lZdVpkZ0F5bTAxdm9PbXNvMlNDQTRpak4rMG9iLzN3PT0ifSwgeyJzdWNjZXNzX2FjdGlvbl9zdGF0dXMiOiAiMjAxIn0sIFsiY29udGVudC1sZW5ndGgtcmFuZ2UiLCAwLCAyMDk3MTUyMF0sIHsieC1hbXotbWV0YS1leHQiOiAicG5nIn0sIHsiY29udGVudC10eXBlIjogImltYWdlL3BuZyJ9XSwgImV4cGlyYXRpb24iOiAiMjAyMS0wMS0yN1QxOTo1MTowOVoifQ==\"}, {\"name\": \"X-Amz-Signature\", \"value\": \"2c5cde71f98ac7891d8c9b9d0957e36139bf52243e60cf199e8b95295125077e\"}, {\"name\": \"x-amz-security-token\", \"value\": \"IQoJb3JpZ2luX2VjEGQaCXVzLWVhc3QtMSJGMEQCIG+0XsMLzntp1BMMHjqXoaEMC4w1yNwdJsNiVrMv5YlKAiBg5DWLzZSA8ZB610rLAgpaqxmUCPSsXOD7+SP5P97k/Cq0AwhNEAAaDDIxMDI0NjMyNjMzMSIM9bd2jZK/eRRq1bwjKpEDiLrR2MTolH4AoWEjCgix4mphrYhe4VpQt5W71MrMHUTebSJ8tbTL3yZAtlmUxK/F0yvy4hW4QYvV5K8Vgntp3Z/KqOjupavh5EjEOppgCGQU8fg9pgcBB/z0W5QMegadtW5ABo8v0K+ppGZQUeopbB0d5/Uqw4kRWMwC1/vnpPiHmYQqGZ+OQNK+SCrgWHZRWfVtlHwvPZE7rbbLfmlCzWk6Gk0I3lh96f91oFHOYi+gastXXg04+kHh5jTzvwDv/D+3uxpPTAxjm4HHfJaW0oRXfkrfEeVCjePy7fNXkE/pMaD//9hzsKIzVDgVQzPDimP6NxgAlFglip02JTXBNrd3CxcSC/AdjBVkehm0tVbkFT0g3JKG7c/NoM+dVX+oQ8qgigDvsSXxuLVr6Rz+JRA7UJ6R7qo+qWozQvHgCEMBxdXVlU6hlzEFdA0ytK08ft4IirDXrhQiafyViImZC4JoRAWm/kH7li+4oJWNViSX1U5JCUbOKk0EudY1giMfe8UWdkyU+iqQafcTaM7rzg8wi4bHgAY67AGlB3VyTvd3Vc8DqpdR8pID72d4WLrm3i8bO1E81juGxfa4I28ef0YCEB4sgUwFewxLUcK168H9XOyfmw5xNFm57Q/Pm/rg/P8yd8Ygfq2lUwRwGk0liSWtmOL8HIHfg/mcOeG6zHCCzShgHm1ivA1XGCz7SZAXZEwyrTSYxQruX17Z6il8BuLdguqrlsjI/9hVUJQPCTMG+CBs6QlXtMFJUhlOMLN4kwfLnAtuVqsr66uuNyd/TwRVmWYKcMwXTBZyeDte6tx5aQ4Ew1Lk+E1GWDlPbOiYuZdgAym01voOmso2SCA4ijN+0ob/3w==\"}]}, \"asset\": {\"asset_id\": \"dyj5yqp1jxd61\", \"processing_state\": \"incomplete\", \"payload\": {\"filepath\": \"praw logo.png\"}, \"websocket_url\": \"wss://ws-0ec0cf6b4e835f4a5.wss.redditmedia.com/rte_images/dyj5yqp1jxd61?m=AQAAScYRYKdWdrOGUJaXIT-iVLegrw96HahVYgUvDKb01iLlG16K\"}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "4153",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 27 Jan 2021 19:50:09 GMT",
+          "Server": "snooserv",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "expires": "-1",
+          "set-cookie": "session_tracker=pjcpgelkohpneniecp.0.1611777009589.Z0FBQUFBQmdFY1B4OUpwaWlkaFlYSFRJUWtoMVhRU0dOLWhCVXJSWWd6SGl4YUROekp4eHZBSl9HT1V3UE02cmthUVZiZHBiU0tNN1FSNzlGSmFPWnlmcngxQTBtM0U5SGlnMVo2akUtWXFRWUdJemFvUnk4MTdWMVNISXI1NnMzSVZsRHFycVBzYWU; Domain=reddit.com; Max-Age=7199; Path=/; expires=Wed, 27-Jan-2021 21:50:09 GMT; secure",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "589.0",
+          "x-ratelimit-reset": "591",
+          "x-ratelimit-used": "11",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/media/asset.json?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": {
+          "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+          "X-Amz-Credential": "ASIATB45ILA5VGFIW47N/20210127/us-east-1/s3/aws4_request",
+          "X-Amz-Date": "20210127T195009Z",
+          "X-Amz-Signature": "2c5cde71f98ac7891d8c9b9d0957e36139bf52243e60cf199e8b95295125077e",
+          "acl": "public-read",
+          "content-type": "image/png",
+          "key": "rte_images/dyj5yqp1jxd61",
+          "policy": "eyJjb25kaXRpb25zIjogW3siYnVja2V0IjogInJlZGRpdC11cGxvYWRlZC1tZWRpYSJ9LCB7ImtleSI6ICJydGVfaW1hZ2VzL2R5ajV5cXAxanhkNjEifSwgeyJhY2wiOiAicHVibGljLXJlYWQifSwgeyJ4LWFtei1zdG9yYWdlLWNsYXNzIjogIlNUQU5EQVJEIn0sIHsieC1hbXotY3JlZGVudGlhbCI6ICJBU0lBVEI0NUlMQTVWR0ZJVzQ3Ti8yMDIxMDEyNy91cy1lYXN0LTEvczMvYXdzNF9yZXF1ZXN0In0sIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwgeyJ4LWFtei1kYXRlIjogIjIwMjEwMTI3VDE5NTAwOVoifSwgeyJ4LWFtei1zZWN1cml0eS10b2tlbiI6ICJJUW9KYjNKcFoybHVYMlZqRUdRYUNYVnpMV1ZoYzNRdE1TSkdNRVFDSUcrMFhzTUx6bnRwMUJNTUhqcVhvYUVNQzR3MXlOd2RKc05pVnJNdjVZbEtBaUJnNURXTHpaU0E4WkI2MTByTEFncGFxeG1VQ1BTc1hPRDcrU1A1UDk3ay9DcTBBd2hORUFBYURESXhNREkwTmpNeU5qTXpNU0lNOWJkMmpaSy9lUlJxMWJ3aktwRURpTHJSMk1Ub2xINEFvV0VqQ2dpeDRtcGhyWWhlNFZwUXQ1VzcxTXJNSFVUZWJTSjh0YlRMM3laQXRsbVV4Sy9GMHl2eTRoVzRRWXZWNUs4VmdudHAzWi9LcU9qdXBhdmg1RWpFT3BwZ0NHUVU4Zmc5cGdjQkIvejBXNVFNZWdhZHRXNUFCbzh2MEsrcHBHWlFVZW9wYkIwZDUvVXF3NGtSV013QzEvdm5wUGlIbVlRcUdaK09RTksrU0NyZ1dIWlJXZlZ0bEh3dlBaRTdyYmJMZm1sQ3pXazZHazBJM2xoOTZmOTFvRkhPWWkrZ2FzdFhYZzA0K2tIaDVqVHp2d0R2L0QrM3V4cFBUQXhqbTRISGZKYVcwb1JYZmtyZkVlVkNqZVB5N2ZOWGtFL3BNYUQvLzloenNLSXpWRGdWUXpQRGltUDZOeGdBbEZnbGlwMDJKVFhCTnJkM0N4Y1NDL0FkakJWa2VobTB0VmJrRlQwZzNKS0c3Yy9Ob00rZFZYK29ROHFnaWdEdnNTWHh1TFZyNlJ6K0pSQTdVSjZSN3FvK3FXb3pRdkhnQ0VNQnhkWFZsVTZobHpFRmRBMHl0SzA4ZnQ0SWlyRFhyaFFpYWZ5VmlJbVpDNEpvUkFXbS9rSDdsaSs0b0pXTlZpU1gxVTVKQ1ViT0trMEV1ZFkxZ2lNZmU4VVdka3lVK2lxUWFmY1RhTTdyemc4d2k0YkhnQVk2N0FHbEIzVnlUdmQzVmM4RHFwZFI4cElENzJkNFdMcm0zaThiTzFFODFqdUd4ZmE0STI4ZWYwWUNFQjRzZ1V3RmV3eExVY0sxNjhIOVhPeWZtdzV4TkZtNTdRL1BtL3JnL1A4eWQ4WWdmcTJsVXdSd0drMGxpU1d0bU9MOEhJSGZnL21jT2VHNnpIQ0N6U2hnSG0xaXZBMVhHQ3o3U1pBWFpFd3lyVFNZeFFydVgxN1o2aWw4QnVMZGd1cXJsc2pJLzloVlVKUVBDVE1HK0NCczZRbFh0TUZKVWhsT01MTjRrd2ZMbkF0dVZxc3I2NnV1TnlkL1R3UlZtV1lLY013WFRCWnllRHRlNnR4NWFRNEV3MUxrK0UxR1dEbFBiT2lZdVpkZ0F5bTAxdm9PbXNvMlNDQTRpak4rMG9iLzN3PT0ifSwgeyJzdWNjZXNzX2FjdGlvbl9zdGF0dXMiOiAiMjAxIn0sIFsiY29udGVudC1sZW5ndGgtcmFuZ2UiLCAwLCAyMDk3MTUyMF0sIHsieC1hbXotbWV0YS1leHQiOiAicG5nIn0sIHsiY29udGVudC10eXBlIjogImltYWdlL3BuZyJ9XSwgImV4cGlyYXRpb24iOiAiMjAyMS0wMS0yN1QxOTo1MTowOVoifQ==",
+          "success_action_status": "201",
+          "x-amz-meta-ext": "png",
+          "x-amz-security-token": "IQoJb3JpZ2luX2VjEGQaCXVzLWVhc3QtMSJGMEQCIG+0XsMLzntp1BMMHjqXoaEMC4w1yNwdJsNiVrMv5YlKAiBg5DWLzZSA8ZB610rLAgpaqxmUCPSsXOD7+SP5P97k/Cq0AwhNEAAaDDIxMDI0NjMyNjMzMSIM9bd2jZK/eRRq1bwjKpEDiLrR2MTolH4AoWEjCgix4mphrYhe4VpQt5W71MrMHUTebSJ8tbTL3yZAtlmUxK/F0yvy4hW4QYvV5K8Vgntp3Z/KqOjupavh5EjEOppgCGQU8fg9pgcBB/z0W5QMegadtW5ABo8v0K+ppGZQUeopbB0d5/Uqw4kRWMwC1/vnpPiHmYQqGZ+OQNK+SCrgWHZRWfVtlHwvPZE7rbbLfmlCzWk6Gk0I3lh96f91oFHOYi+gastXXg04+kHh5jTzvwDv/D+3uxpPTAxjm4HHfJaW0oRXfkrfEeVCjePy7fNXkE/pMaD//9hzsKIzVDgVQzPDimP6NxgAlFglip02JTXBNrd3CxcSC/AdjBVkehm0tVbkFT0g3JKG7c/NoM+dVX+oQ8qgigDvsSXxuLVr6Rz+JRA7UJ6R7qo+qWozQvHgCEMBxdXVlU6hlzEFdA0ytK08ft4IirDXrhQiafyViImZC4JoRAWm/kH7li+4oJWNViSX1U5JCUbOKk0EudY1giMfe8UWdkyU+iqQafcTaM7rzg8wi4bHgAY67AGlB3VyTvd3Vc8DqpdR8pID72d4WLrm3i8bO1E81juGxfa4I28ef0YCEB4sgUwFewxLUcK168H9XOyfmw5xNFm57Q/Pm/rg/P8yd8Ygfq2lUwRwGk0liSWtmOL8HIHfg/mcOeG6zHCCzShgHm1ivA1XGCz7SZAXZEwyrTSYxQruX17Z6il8BuLdguqrlsjI/9hVUJQPCTMG+CBs6QlXtMFJUhlOMLN4kwfLnAtuVqsr66uuNyd/TwRVmWYKcMwXTBZyeDte6tx5aQ4Ew1Lk+E1GWDlPbOiYuZdgAym01voOmso2SCA4ijN+0ob/3w==",
+          "x-amz-storage-class": "STANDARD"
+        },
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://reddit-uploaded-media.s3-accelerate.amazonaws.com"
+      },
+      "response": {
+        "body": {
+          "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<PostResponse><Location>https://reddit-uploaded-media.s3-accelerate.amazonaws.com/rte_images%2Fdyj5yqp1jxd61</Location><Bucket>reddit-uploaded-media</Bucket><Key>rte_images/dyj5yqp1jxd61</Key><ETag>\"7a09ed5e77029132863f168a6e0d2353\"</ETag></PostResponse>"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "293",
+          "Content-Type": "application/xml",
+          "Date": "Wed, 27 Jan 2021 19:50:10 GMT",
+          "ETag": "\"7a09ed5e77029132863f168a6e0d2353\"",
+          "Location": "https://reddit-uploaded-media.s3-accelerate.amazonaws.com/rte_images%2Fdyj5yqp1jxd61",
+          "Server": "AmazonS3",
+          "Via": "1.1 2eca91e9524c190392ad4c8340207295.cloudfront.net (CloudFront)",
+          "X-Amz-Cf-Id": "Yy8-L76juq0P7kb1YOeFAzXwOsZah5OX4ndQY7zUyDY_A9uzLqI9BA==",
+          "X-Amz-Cf-Pop": "DFW55-C3",
+          "X-Cache": "Miss from cloudfront",
+          "x-amz-expiration": "expiry-date=\"Fri, 29 Jan 2021 00:00:00 GMT\", rule-id=\"delete-after-1-day\"",
+          "x-amz-id-2": "dSbwpbRiFio3CFKdHr8Gi70vpbQ0gypR9uVcJ4SOrXTdvbltpezmMYOWTEf1uf1xlPchYN8s8n8=",
+          "x-amz-request-id": "23FACCD9C0419068"
+        },
+        "status": {
+          "code": 201,
+          "message": "Created"
+        },
+        "url": "https://reddit-uploaded-media.s3-accelerate.amazonaws.com"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "kind",
+            "video"
+          ],
+          [
+            "nsfw",
+            false
+          ],
+          [
+            "resubmit",
+            true
+          ],
+          [
+            "sendreplies",
+            true
+          ],
+          [
+            "spoiler",
+            false
+          ],
+          [
+            "sr",
+            "<TEST_SUBREDDIT>"
+          ],
+          [
+            "title",
+            "Test Title"
+          ],
+          [
+            "url",
+            "https://reddit-uploaded-video.s3-accelerate.amazonaws.com/6t5o0m21jxd61"
+          ],
+          [
+            "validate_on_submit",
+            false
+          ],
+          [
+            "video_poster_url",
+            "https://reddit-uploaded-media.s3-accelerate.amazonaws.com/rte_images/dyj5yqp1jxd61"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"json\": {\"errors\": [], \"data\": {\"websocket_url\": \"wss://ws-06a9d4455a99e86c7.wss.redditmedia.com/6t5o0m21jxd61?m=AQAATsYRYJXcTerM-rq-IwC7xHMw3PVjtQhBzHGFap_MLociXv9m\"}}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "170",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 27 Jan 2021 19:50:14 GMT",
+          "Server": "snooserv",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "expires": "-1",
+          "set-cookie": "redesign_optout=true; Domain=reddit.com; Max-Age=94607999; Path=/; expires=Sat, 27-Jan-2024 19:50:14 GMT; secure",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "585.0",
+          "x-ratelimit-reset": "586",
+          "x-ratelimit-used": "15",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/submit/?raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2021-01-27T13:50:14",
+  "version": 1
+}

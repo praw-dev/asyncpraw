@@ -2,6 +2,7 @@
 
 # pylint: disable=too-many-lines
 import socket
+from asyncio import TimeoutError
 from copy import deepcopy
 from csv import writer
 from io import StringIO
@@ -658,9 +659,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             ) as websocket:
                 ws_update = await websocket.receive_json()
         except (
-            WebSocketError,
-            socket.error,
             BlockingIOError,
+            socket.error,
+            TimeoutError,
+            WebSocketError,
         ) as ws_exception:
             raise WebSocketException(
                 "Websocket error. Check your media file. "

@@ -597,7 +597,7 @@ class TestSubreddit(IntegrationTest):
     )  # happens with timeout=0
     async def test_submit_image__timeout_1(self, _, __):
         self.reddit.read_only = False
-        with self.use_cassette("TestSubreddit.test_submit_image__timeout"):
+        with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             image = image_path("test.jpg")
             with pytest.raises(WebSocketException):
@@ -606,15 +606,43 @@ class TestSubreddit(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
-        side_effect=TimeoutError
+        side_effect=socket.timeout
         # happens with timeout=0.00001
     )
     async def test_submit_image__timeout_2(self, _, __):
         self.reddit.read_only = False
-        with self.use_cassette("TestSubreddit.test_submit_image__timeout"):
+        with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             image = image_path("test.jpg")
-            with pytest.raises(TimeoutError):
+            with pytest.raises(WebSocketException):
+                await subreddit.submit_image("Test Title", image)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        side_effect=TimeoutError,
+        # could happen but Async PRAW should handle it
+    )
+    async def test_submit_image__timeout_3(self, _, __):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            image = image_path("test.jpg")
+            with pytest.raises(WebSocketException):
+                await subreddit.submit_image("Test Title", image)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        side_effect=WebSocketError(None, None),
+        # could happen but Async PRAW should handle it
+    )
+    async def test_submit_image__timeout_4(self, _, __):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            image = image_path("test.jpg")
+            with pytest.raises(WebSocketException):
                 await subreddit.submit_image("Test Title", image)
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -624,7 +652,6 @@ class TestSubreddit(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             for file_name in ("test.png", "test.jpg", "test.gif"):
                 image = image_path(file_name)
-
                 submission = await subreddit.submit_image(
                     "Test Title", image, without_websockets=True
                 )
@@ -641,7 +668,6 @@ class TestSubreddit(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             for file_name in ("test.mov", "test.mp4"):
                 video = image_path(file_name)
-
                 submission = await subreddit.submit_video("Test Title", video)
                 await submission.load()
                 assert submission.author == pytest.placeholders.username
@@ -666,7 +692,6 @@ class TestSubreddit(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             for file_name in ("test.mov", "test.mp4"):
                 video = image_path(file_name)
-
                 with pytest.raises(ClientException):
                     await subreddit.submit_video("Test Title", video)
 
@@ -744,9 +769,8 @@ class TestSubreddit(IntegrationTest):
         "aiohttp.client.ClientSession.ws_connect", side_effect=BlockingIOError
     )  # happens with timeout=0
     async def test_submit_video__timeout_1(self, _, __):
-
         self.reddit.read_only = False
-        with self.use_cassette("TestSubreddit.test_submit_video__timeout"):
+        with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             video = image_path("test.mov")
             with pytest.raises(WebSocketException):
@@ -759,9 +783,36 @@ class TestSubreddit(IntegrationTest):
         # happens with timeout=0.00001
     )
     async def test_submit_video__timeout_2(self, _, __):
-
         self.reddit.read_only = False
-        with self.use_cassette("TestSubreddit.test_submit_video__timeout"):
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            video = image_path("test.mov")
+            with pytest.raises(WebSocketException):
+                await subreddit.submit_video("Test Title", video)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        side_effect=TimeoutError,
+        # could happen but Async PRAW should handle it
+    )
+    async def test_submit_video__timeout_3(self, _, __):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            video = image_path("test.mov")
+            with pytest.raises(WebSocketException):
+                await subreddit.submit_video("Test Title", video)
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        side_effect=WebSocketError(None, None),
+        # could happen but Async PRAW should handle it
+    )
+    async def test_submit_video__timeout_4(self, _, __):
+        self.reddit.read_only = False
+        with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             video = image_path("test.mov")
             with pytest.raises(WebSocketException):
