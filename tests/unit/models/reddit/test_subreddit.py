@@ -54,10 +54,12 @@ class TestSubreddit(UnitTest):
         assert hash(subreddit1) != hash(subreddit3)
 
     @mock.patch(
-        "asyncpraw.Reddit.post",
-        return_value={"json": {"data": {"websocket_url": ""}}},
+        "asyncpraw.Reddit.post", return_value={"json": {"data": {"websocket_url": ""}}}
     )
-    @mock.patch("asyncpraw.models.Subreddit._upload_media", return_value="")
+    @mock.patch(
+        "asyncpraw.models.Subreddit._upload_media",
+        return_value=("fake_media_url", "fake_websocket_url"),
+    )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
     async def test_invalid_media(self, connection_mock, _mock_upload_media, _mock_post):
         self.reddit._core._requestor._http = aiohttp.ClientSession()

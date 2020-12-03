@@ -667,12 +667,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def _upload_media(
         self, media_path, expected_mime_prefix=None, upload_type="link"
     ):
-        """Upload media and return its URL. Uses undocumented endpoint.
+        """Upload media and return its URL and a websocket (Undocumented endpoint).
 
         :param expected_mime_prefix: If provided, enforce that the media has a
             mime type that starts with the provided prefix.
         :param upload_type: One of ``link``, ``gallery'', or ``selfpost``. (default:
             ``link``)
+
+        :returns: A tuple containing ``(media_url, websocket_url)`` for the
+            piece of media. The websocket URL can be used to determine when
+            media processing is finished, or it can be ignored.
+
         """
         if media_path is None:
             media_path = join(
@@ -716,10 +721,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if not response.status == 201:
             self._parse_xml_response(response)
         response.raise_for_status()
+
+        websocket_url = upload_response["asset"]["websocket_url"]
+
         if upload_type == "link":
-            return f"{upload_url}/{upload_data['key']}"
+            return f"{upload_url}/{upload_data['key']}", websocket_url
         else:
-            return upload_response["asset"]["asset_id"]
+            return upload_response["asset"]["asset_id"], websocket_url
 
     async def _upload_inline_media(self, inline_media: InlineMedia):
         """Upload media for use in self posts and return ``inline_media``.
@@ -728,7 +736,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         """
         self._validate_inline_media(inline_media)
-        inline_media.media_id = await self._upload_media(
+        inline_media.media_id, _ = await self._upload_media(
             inline_media.path, upload_type="selfpost"
         )
         return inline_media
@@ -1102,11 +1110,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 {
                     "caption": image.get("caption", ""),
                     "outbound_url": image.get("outbound_url", ""),
-                    "media_id": await self._upload_media(
-                        image["image_path"],
-                        expected_mime_prefix="image",
-                        upload_type="gallery",
-                    ),
+                    "media_id": (
+                        await self._upload_media(
+                            image["image_path"],
+                            expected_mime_prefix="image",
+                            upload_type="gallery",
+                        )
+                    )[0],
                 }
             )
         response = await self._reddit.request(
