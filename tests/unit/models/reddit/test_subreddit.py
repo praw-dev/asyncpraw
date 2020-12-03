@@ -3,7 +3,7 @@ import pytest
 from asynctest import mock, CoroutineMock, MagicMock
 
 from asyncpraw.exceptions import MediaPostFailed
-from asyncpraw.models import Subreddit, WikiPage
+from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
 from ... import UnitTest
@@ -141,6 +141,18 @@ class TestSubreddit(UnitTest):
             await subreddit.submit_gallery(
                 "Cool title", images=[{"image_path": __file__, "caption": caption}]
             )
+        assert str(excinfo.value) == message
+
+    async def test_submit_inline_media__invalid_path(self):
+        message = "'invalid_image_path' is not a valid file path."
+        subreddit = Subreddit(self.reddit, display_name="name")
+        gif = InlineGif("invalid_image_path", "optional caption")
+        image = InlineImage("invalid_image_path", "optional caption")
+        video = InlineVideo("invalid_image_path", "optional caption")
+        selftext = "Text with {gif1}, {image1}, and {video1} inline"
+        media = {"gif1": gif, "image1": image, "video1": video}
+        with pytest.raises(ValueError) as excinfo:
+            await subreddit.submit("title", selftext=selftext, inline_media=media)
         assert str(excinfo.value) == message
 
 

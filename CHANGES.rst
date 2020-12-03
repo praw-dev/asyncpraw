@@ -13,6 +13,7 @@ Unreleased
 * Add method :meth:`.invited` to get invited moderators of a subreddit.
 * Add method :meth:`~.Submission.award` and :meth:`~.Comment.award` with the ability to
   specify type of award, anonymity, and message when awarding a submission or comment.
+* Ability to submit text/self posts with inline media.
 * Added :meth:`.Reddit.close` to close the requestor session.
 * Ability to use :class:`.Reddit` as an asynchronous context manager that automatically
   closes the requestor session on exit.
