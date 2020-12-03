@@ -1221,13 +1221,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         ):
             if value is not None:
                 data[key] = value
-        url = await self._upload_media(image_path, expected_mime_prefix="image")
-        data.update(
-            kind="image",
-            url=url,
+
+        image_url, websocket_url = await self._upload_media(
+            image_path, expected_mime_prefix="image"
         )
+        data.update(kind="image", url=image_url)
         return await self._submit_media(
-            data, timeout, without_websockets=without_websockets
+            data,
+            timeout,
+            without_websockets=without_websockets,
+            websocket_url=websocket_url,
         )
 
     async def submit_poll(
@@ -1407,16 +1410,22 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         ):
             if value is not None:
                 data[key] = value
-        url = await self._upload_media(video_path, expected_mime_prefix="video")
-        video_poster_url = await self._upload_media(thumbnail_path)
+
+        video_url, websocket_url = await self._upload_media(
+            video_path, expected_mime_prefix="video"
+        )
+        video_poster_url, _ = await self._upload_media(thumbnail_path)
         data.update(
             kind="videogif" if videogif else "video",
-            url=url,
+            url=video_url,
             # if thumbnail_path is None, it uploads the PRAW logo
             video_poster_url=video_poster_url,
         )
         return await self._submit_media(
-            data, timeout, without_websockets=without_websockets
+            data,
+            timeout,
+            without_websockets=without_websockets,
+            websocket_url=websocket_url,
         )
 
     async def subscribe(self, other_subreddits=None):
