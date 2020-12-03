@@ -589,7 +589,9 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(
                 (RedditAPIException, BadRequest)
             ):  # waiting for prawcore fix
-                await subreddit.submit_image("gdfgfdgdgdgfgfdgdfgfdgfdg", image)
+                await subreddit.submit_image(
+                    "gdfgfdgdgdgfgfdgdfgfdgfdg", image, without_websockets=True
+                )
 
     @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
@@ -738,7 +740,9 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(
                 (RedditAPIException, BadRequest)
             ):  # waiting for prawcore fix
-                await subreddit.submit_video("gdfgfdgdgdgfgfdgdfgfdgfdg", image)
+                await subreddit.submit_video(
+                    "gdfgfdgdgdgfgfdgdfgfdgfdg", image, without_websockets=True
+                )
 
     @mock.patch("asyncio.sleep", return_value=None)
     @mock.patch(
