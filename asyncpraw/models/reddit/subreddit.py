@@ -621,13 +621,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             code, message, actual, maximum_size = [element.text for element in root[:4]]
             raise TooLargeMediaException(int(maximum_size), int(actual))
 
-    async def _submit_media(self, data, timeout, without_websockets, websocket_url):
+    async def _submit_media(self, data, timeout, websocket_url=None):
         """Submit and return an `image`, `video`, or `videogif`.
 
         This is a helper method for submitting posts that are not link posts or
         self posts.
         """
-        if without_websockets:
+        if websocket_url is None:
             await self._reddit.post(API_PATH["submit"], data=data)
         else:
             try:
@@ -1226,10 +1226,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             image_path, expected_mime_prefix="image"
         )
         data.update(kind="image", url=image_url)
+        if without_websockets:
+            websocket_url = None
         return await self._submit_media(
             data,
             timeout,
-            without_websockets=without_websockets,
             websocket_url=websocket_url,
         )
 
@@ -1421,10 +1422,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             # if thumbnail_path is None, it uploads the PRAW logo
             video_poster_url=video_poster_url,
         )
+        if without_websockets:
+            websocket_url = None
         return await self._submit_media(
             data,
             timeout,
-            without_websockets=without_websockets,
             websocket_url=websocket_url,
         )
 
