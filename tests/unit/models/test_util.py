@@ -75,7 +75,7 @@ class TestBoundedSet(UnitTest):
 
 
 class TestStream(UnitTest):
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     async def test_stream(self, _):
         Thing = namedtuple("Thing", ["fullname"])
         initial_things = [Thing(n) for n in reversed(range(100))]
