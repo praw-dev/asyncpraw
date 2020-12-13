@@ -23,7 +23,7 @@ class IntegrationTest(asynctest.TestCase):
         self.setup_vcr()
 
     async def tearDown(self) -> None:
-        await self.reddit._core._requestor._http.close()
+        await self.reddit._core.close()
 
     def setup_vcr(self):
         """Configure VCR instance."""
