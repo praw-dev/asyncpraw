@@ -12,4 +12,5 @@ class UnitTest(asynctest.TestCase):
             client_id="dummy", client_secret="dummy", user_agent="dummy"
         )
         # Unit tests should never issue requests
+        await self.reddit._core.close()
         self.reddit._core._requestor._http = None
