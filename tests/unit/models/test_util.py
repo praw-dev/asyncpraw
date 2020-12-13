@@ -93,7 +93,6 @@ class TestStream(UnitTest):
 
         stream = stream_generator(generate)
         seen = set()
-        loop_counter = 0
         async for thing in stream:
             assert thing not in seen
             seen.add(thing)
