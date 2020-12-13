@@ -85,8 +85,11 @@ class TestStream(UnitTest):
             nonlocal counter
             counter += 1
             if counter % 2 == 0:
-                return initial_things
-            return [Thing(counter)] + initial_things[:-1]
+                things = initial_things
+            else:
+                things = [Thing(counter)] + initial_things[:-1]
+            for thing in things:
+                yield thing
 
         stream = stream_generator(generate)
         seen = set()
