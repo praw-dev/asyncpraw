@@ -13,6 +13,7 @@ Unreleased
 
 * A bug where if you call `.parent()` on a comment it clears its replies.
 * An issue where performing a deepcopy on an :class:`.RedditBase` object will fail.
+* Added close method to close requestor session
 
 7.1.0 (2020/07/16)
 ------------------

@@ -9,3 +9,5 @@
 _build/
 build/
 dist/
+.venv
+.vscode
