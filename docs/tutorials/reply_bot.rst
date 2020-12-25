@@ -127,7 +127,7 @@ phrases:
             # do something with a matched submission
             break
 
-String comparison in python is case sensitive. As a result, we only compare a
+String comparison in Python is case sensitive. As a result, we only compare a
 normalized version of the title to our lower-case question phrases. In this
 case, "normalized" means only lower-case.
 
@@ -144,12 +144,12 @@ those submissions with an appropriate lmgtfy_ link.
 
 First we will need to construct a working lmgtfy_ link. In essence we want to
 pass the entire submission title to lmgtfy_. However, there are certain
-characters that are not permitted in URLs or have other . For instance, the
+characters that are not permitted in URLs or have other meanings. For instance, the
 space character, " ", is not permitted, and the question mark, "?", has a
 special meaning. Thus we will transform those into their URL-safe
 representation so that a question like "What is the capital of Canada?" is
 transformed into the link
-``https://lmgtfy.com/?q=What+is+the+capital+of+Canada%3F)``.
+``https://lmgtfy.com/?q=What+is+the+capital+of+Canada%3F``.
 
 There are a number of ways we could accomplish this task. For starters we could
 write a function to replace spaces with pluses, ``+``, and question marks with
