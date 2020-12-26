@@ -17,6 +17,7 @@ Documentation Contributors
 - Richard Hoekstra `@RichardHoekstra <https://github.com/RichardHoekstra>`_
 - Pim Tholhuijsen `@mandjevant <https://github.com/mandjevant>`_
 - Martin Michlmayr `@tbm <https://github.com/tbm>`_
+- jac0b-w `@jac0b-w <https://github.com/jac0b-w>`_
 - Kenneth Yang `@kennethy <https://github.com/kennethy>`_
 - Tarak Oueriache <Igosad@protonmail.com> `@igosad <https://github.com/igosad>`_
 
