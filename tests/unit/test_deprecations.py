@@ -60,3 +60,14 @@ class TestDeprecation(UnitTest):
                 excinfo.value.args[0]
                 == "`subreddits.gold` has be renamed to `subreddits.premium`."
             )
+
+    def test_synchronous_context_manager(self):
+        with pytest.raises(DeprecationWarning) as excinfo:
+            with self.reddit:
+                pass
+            assert (
+                excinfo.value.args[0]
+                == "Using this class as a synchronous context manager is deprecated"
+                " and will be removed in the next release. Use this class as an "
+                "asynchronous context manager instead."
+            )

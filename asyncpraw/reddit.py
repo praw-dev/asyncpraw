@@ -112,9 +112,32 @@ class Reddit:
     def validate_on_submit(self, val: bool):
         self._validate_on_submit = val
 
-    def __enter__(self):
+    async def __aenter__(self):
         """Handle the context manager open."""
         return self
+
+    async def __aexit__(self, *_args):
+        """Handle the context manager close."""
+        await self.close()
+
+    def __enter__(self):
+        """Handle the context manager open.
+
+        .. deprecated:: 7.1.1
+
+            Using this class as a synchronous context manager is deprecated and will
+            be removed in the next release. Use this class as an asynchronous context
+            manager instead.
+
+        """
+        warn(
+            "Using this class as a synchronous context manager is deprecated and will "
+            "be removed in the next release. Use this class as an asynchronous context "
+            "manager instead.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
+        return self  # pragma: no cover
 
     def __exit__(self, *_args):
         """Handle the context manager close."""
@@ -178,6 +201,24 @@ class Reddit:
             my_session = aiohttp.ClientSession(trust_env=True)
             reddit = Reddit(..., requestor_class=JSONDebugRequestor,
                             requestor_kwargs={"session": my_session})
+
+        You can automatically close the requestor session by using this class as an
+        context manager:
+
+        .. code-block:: python
+
+            async with Reddit(...) as reddit:
+                print(await reddit.user.me()
+
+        You can also call :meth:`.Reddit.close`:
+
+        .. code-block:: python
+
+            reddit = Reddit(...)
+            # do stuff with reddit
+            ...
+            # then close the reqestor when done
+            await reddit.close()
 
         """
         self._core = self._authorized_core = self._read_only_core = None

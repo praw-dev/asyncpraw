@@ -10,6 +10,8 @@ Unreleased
 * Ability to pass a gallery url to :meth:`.Reddit.submission`.
 * Ability to specify modmail mute duration.
 * Added :meth:`.Reddit.close` to close the requestor session.
+* Ability to use :class:`.Reddit` as an asynchronous context manager that automatically
+  closes the requestor session on exit.
 
 **Changed**
 
