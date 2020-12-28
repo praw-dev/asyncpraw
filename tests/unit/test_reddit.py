@@ -20,6 +20,12 @@ class TestReddit(UnitTest):
         x: "dummy" for x in ["client_id", "client_secret", "user_agent"]
     }
 
+    async def test_close_session(self):
+        assert not self.reddit.requestor._http.closed
+        async with self.reddit as reddit:
+            pass
+        assert reddit.requestor._http.closed and self.reddit.requestor._http.closed
+
     def test_comment(self):
         assert Comment(self.reddit, id="cklfmye").id == "cklfmye"
 
