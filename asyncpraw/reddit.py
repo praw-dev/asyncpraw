@@ -119,6 +119,10 @@ class Reddit:
     def __exit__(self, *_args):
         """Handle the context manager close."""
 
+    async def close(self):
+        """Close the requestor."""
+        await self.requestor.close()
+
     def __init__(
         self,
         site_name: str = None,
@@ -221,7 +225,7 @@ class Reddit:
             )
 
         self._prepare_objector()
-        self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
+        self.requestor = self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
 
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
@@ -417,6 +421,8 @@ class Reddit:
             self._prepare_trusted_asyncprawcore(requestor)
         else:
             self._prepare_untrusted_asyncprawcore(requestor)
+
+        return requestor
 
     def _prepare_trusted_asyncprawcore(self, requestor):
         authenticator = TrustedAuthenticator(
