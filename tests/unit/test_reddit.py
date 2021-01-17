@@ -20,12 +20,21 @@ class TestReddit(UnitTest):
         x: "dummy" for x in ["client_id", "client_secret", "user_agent"]
     }
 
+    async def test_close_session(self):
+        temp_reddit = Reddit(**self.REQUIRED_DUMMY_SETTINGS)
+        assert not temp_reddit.requestor._http.closed
+        async with temp_reddit as reddit:
+            pass
+        assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
+
     def test_comment(self):
         assert Comment(self.reddit, id="cklfmye").id == "cklfmye"
 
-    def test_context_manager(self):
-        with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
+    async def test_context_manager(self):
+        async with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
             assert not reddit._validate_on_submit
+            assert not reddit.requestor._http.closed
+        assert reddit.requestor._http.closed
 
     def test_info__invalid_param(self):
         with pytest.raises(TypeError) as excinfo:
@@ -153,8 +162,8 @@ class TestReddit(UnitTest):
         response = await self.reddit.post("test")
         assert response == {}
 
-    def test_read_only__with_authenticated_core(self):
-        with Reddit(
+    async def test_read_only__with_authenticated_core(self):
+        async with Reddit(
             password=None,
             refresh_token="refresh",
             username=None,
@@ -166,8 +175,8 @@ class TestReddit(UnitTest):
             reddit.read_only = False
             assert not reddit.read_only
 
-    def test_read_only__with_authenticated_core__non_confidential(self):
-        with Reddit(
+    async def test_read_only__with_authenticated_core__non_confidential(self):
+        async with Reddit(
             client_id="dummy",
             client_secret=None,
             redirect_uri="dummy",
@@ -180,8 +189,8 @@ class TestReddit(UnitTest):
             reddit.read_only = False
             assert not reddit.read_only
 
-    def test_read_only__with_script_authenticated_core(self):
-        with Reddit(
+    async def test_read_only__with_script_authenticated_core(self):
+        async with Reddit(
             password="dummy", username="dummy", **self.REQUIRED_DUMMY_SETTINGS
         ) as reddit:
             assert not reddit.read_only
@@ -190,8 +199,8 @@ class TestReddit(UnitTest):
             reddit.read_only = False
             assert not reddit.read_only
 
-    def test_read_only__without_trusted_authenticated_core(self):
-        with Reddit(
+    async def test_read_only__without_trusted_authenticated_core(self):
+        async with Reddit(
             password=None, username=None, **self.REQUIRED_DUMMY_SETTINGS
         ) as reddit:
             assert reddit.read_only
@@ -201,10 +210,10 @@ class TestReddit(UnitTest):
             reddit.read_only = True
             assert reddit.read_only
 
-    def test_read_only__without_untrusted_authenticated_core(self):
+    async def test_read_only__without_untrusted_authenticated_core(self):
         required_settings = self.REQUIRED_DUMMY_SETTINGS.copy()
         required_settings["client_secret"] = None
-        with Reddit(password=None, username=None, **required_settings) as reddit:
+        async with Reddit(password=None, username=None, **required_settings) as reddit:
             assert reddit.read_only
             with pytest.raises(ClientException):
                 reddit.read_only = False
