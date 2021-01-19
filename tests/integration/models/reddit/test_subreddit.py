@@ -36,6 +36,7 @@ from asyncpraw.models import (
     Subreddit,
     SubredditMessage,
     WikiPage,
+    ListingGenerator,
 )
 
 from ... import IntegrationTest
@@ -1670,6 +1671,16 @@ class TestSubredditRelationships(IntegrationTest):
             # invite list.
             await subreddit.moderator.invite(self.REDDITOR, permissions=[])
             assert self.REDDITOR not in await subreddit.moderator()
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_moderator_invited_moderators(self, _):
+        self.reddit.read_only = False
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        with self.use_cassette():
+            invited = subreddit.moderator.invited()
+            assert isinstance(invited, ListingGenerator)
+            async for moderator in invited:
+                assert isinstance(moderator, Redditor)
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_moderator_leave(self, _):
