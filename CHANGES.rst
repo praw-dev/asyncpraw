@@ -6,6 +6,7 @@ Unreleased
 
 **Added**
 
+* Add method :meth:`~.Subreddits.premium` to reflect the naming change in Reddit's API.
 * Ability to submit image galleries with :meth:`.submit_gallery`.
 * Ability to pass a gallery url to :meth:`.Reddit.submission`.
 * Ability to specify modmail mute duration.
@@ -18,6 +19,10 @@ Unreleased
 
 * :class:`~.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
   which will change the order in which elements are removed from the set.
+
+**Deprecated**
+
+* :meth:`~.Subreddits.gold` is superseded by :meth:`~.Subreddits.premium`.
 
 **Fixed**
 
