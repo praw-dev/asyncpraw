@@ -9,6 +9,7 @@ Unreleased
 * Ability to submit image galleries with :meth:`.submit_gallery`.
 * Ability to pass a gallery url to :meth:`.Reddit.submission`.
 * Ability to specify modmail mute duration.
+* Add method :meth:`.invited` to get invited moderators of a subreddit.
 * Added :meth:`.Reddit.close` to close the requestor session.
 * Ability to use :class:`.Reddit` as an asynchronous context manager that automatically
   closes the requestor session on exit.
