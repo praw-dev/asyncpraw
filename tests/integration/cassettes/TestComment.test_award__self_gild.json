@@ -1,0 +1,116 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "close",
+          "Content-Length": "370",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 19 Jan 2021 22:34:27 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=ASb910ghFU5b9nrQ1S; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=award_2385c499-a1fb-44ec-b9b7-d260f3dc55de&is_anonymous=true&thing_id=t1_g7cn9xb&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"json\": {\"errors\": [[\"SELF_GILDING_NOT_ALLOWED\", \"you're not allowed to gild your own submissions\", null]]}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "109",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 19 Jan 2021 22:34:27 GMT",
+          "Server": "snooserv",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "expires": "-1",
+          "set-cookie": "session_tracker=dldfhmjmhhnakrhggp.0.1611095667194.Z0FBQUFBQmdCMTV6dVRLajdZSmplc2hJYUNLZnRRNjRhdDduUmdUOEJpa0JmN2JGU1VYVXN3UnRxWmJmcjFoa2tHZVZINmstMXhKVDZnamVQNkRSNUlWOFJSMmtYeDBHdXFiZU0zVFhCWFNNTnZiM2FpZW1pSEpONlhJNkxxVTZwRUpkeVltTE9sRWc; Domain=reddit.com; Max-Age=7199; Path=/; expires=Wed, 20-Jan-2021 00:34:27 GMT; secure",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "362.0",
+          "x-ratelimit-reset": "333",
+          "x-ratelimit-used": "238",
+          "x-reddit-decoy-snail": "1248,900",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=award_2385c499-a1fb-44ec-b9b7-d260f3dc55de&is_anonymous=true&thing_id=t1_g7cn9xb&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2021-01-19T16:34:27",
+  "version": 1
+}

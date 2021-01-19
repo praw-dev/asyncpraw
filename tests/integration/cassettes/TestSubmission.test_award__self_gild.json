@@ -23,7 +23,7 @@
             "close"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
           ]
         },
         "method": "POST",
@@ -35,20 +35,16 @@
         },
         "headers": {
           "Accept-Ranges": "bytes",
-          "Cache-Control": "max-age=0, must-revalidate",
           "Connection": "close",
-          "Content-Length": "371",
+          "Content-Length": "370",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 07 Jul 2020 00:48:15 GMT",
+          "Date": "Tue, 19 Jan 2021 22:25:33 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "edgebucket=9wW8gapGrbArtFSJCF; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=7lL0k5SanuC9bIww1F; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
-          "X-Cache": "MISS",
-          "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5947-MCI",
-          "X-Timer": "S1594082895.923454,VS0,VE94",
+          "cache-control": "max-age=0, must-revalidate",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -76,49 +72,45 @@
             "bearer <ACCESS_TOKEN>"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/v1/gold/gild/t3_hmkbt8/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=award_2385c499-a1fb-44ec-b9b7-d260f3dc55de&is_anonymous=true&thing_id=t3_j3fkiw&raw_json=1"
       },
       "response": {
         "body": {
-          "string": "{\"explanation\": \"You do not have enough coins to do that.\", \"message\": \"Bad Request\", \"reason\": \"INSUFFICIENT_COINS\"}"
+          "string": "{\"json\": {\"errors\": [[\"SELF_GILDING_NOT_ALLOWED\", \"you're not allowed to gild your own submissions\", null]]}}"
         },
         "headers": {
           "Accept-Ranges": "bytes",
-          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
-          "Content-Length": "117",
+          "Content-Length": "109",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 07 Jul 2020 00:48:15 GMT",
-          "Expires": "-1",
+          "Date": "Tue, 19 Jan 2021 22:25:33 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "session_tracker=SUdhiXtuGdMjVbYCnA.0.1594082895217.Z0FBQUFBQmZBOFpQLU9RTFlLbTNuUmdadUduaEpydk5XMEw5ZVZQTFhPNmg2dDNhRG5fSVdlb0VBN2R1MXVJRGZvbU5KTkttSlh6RmV4SlFrZFBfd2xsZUJuWFdOOF9iTTJ1Z1kwT2VvY1VvN0xxN1BWWC1MbkJNNlg0NTZSSUxtT0E3WF91S21JX2I; Domain=reddit.com; Max-Age=7199; Path=/; expires=Tue, 07-Jul-2020 02:48:15 GMT; secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
-          "X-Cache": "MISS",
-          "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5941-MCI",
-          "X-Timer": "S1594082895.086290,VS0,VE155",
+          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "expires": "-1",
+          "set-cookie": "session_tracker=qdldnkerecrplnahlh.0.1611095133749.Z0FBQUFBQmdCMXhkajZGZTVXUEo3dGo4alF5ZExCQnYyQi1tNEpLcFlSSjJsZ0tsQ0Y1ajNmaHZkS09mMzV0UWNyRUVNdXNyTjhLUjdoLTFmdF82eVQtNHhWamM3bnQyMHdlalVHX0Z5X1NraU9TSDM5emFoTUhtQ3NGQjVMU3NRMExoMnEwMDBvbEU; Domain=reddit.com; Max-Age=7199; Path=/; expires=Wed, 20-Jan-2021 00:25:33 GMT; secure",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-ratelimit-remaining": "411.0",
-          "x-ratelimit-reset": "105",
-          "x-ratelimit-used": "189",
-          "x-ua-compatible": "IE=edge",
+          "x-ratelimit-remaining": "297.0",
+          "x-ratelimit-reset": "267",
+          "x-ratelimit-used": "303",
+          "x-reddit-decoy-snail": "3178,900",
           "x-xss-protection": "1; mode=block"
         },
         "status": {
-          "code": 400,
-          "message": "Bad Request"
+          "code": 200,
+          "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/v1/gold/gild/t3_hmkbt8/?raw_json=1"
+        "url": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=award_2385c499-a1fb-44ec-b9b7-d260f3dc55de&is_anonymous=true&thing_id=t3_j3fkiw&raw_json=1"
       }
     }
   ],
-  "recorded_at": "2020-07-06T19:48:15",
+  "recorded_at": "2021-01-19T16:25:33",
   "version": 1
 }

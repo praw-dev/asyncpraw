@@ -71,13 +71,37 @@ class TestSubmission(IntegrationTest):
         with self.use_cassette():
             await submission.enable_inbox_replies()
 
-    async def test_gild__no_creddits(self):
+    async def test_award(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            award_data = await Submission(self.reddit, "j3kyoo").award()
+            assert award_data["gildings"]["gid_2"] == 2
+
+    async def test_award__not_enough_coins(self):
         self.reddit.read_only = False
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
-                await Submission(self.reddit, "hmkbt8").gild()
+                await Submission(self.reddit, "j3kyoo").award(
+                    gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
+                )
             exception = excinfo.value
-            assert "INSUFFICIENT_COINS" == exception.error_type
+            assert "INSUFFICIENT_COINS_WITH_AMOUNT" == exception.error_type
+
+    async def test_award__self_gild(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as excinfo:
+                await Submission(self.reddit, "j3fkiw").award(
+                    gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
+                )
+            exception = excinfo.value
+            assert "SELF_GILDING_NOT_ALLOWED" == exception.error_type
+
+    async def test_gild(self):
+        self.reddit.read_only = False
+        with self.use_cassette("TestSubmission.test_award"):
+            award_data = await Submission(self.reddit, "j3kyoo").gild()
+            assert award_data["gildings"]["gid_2"] == 2
 
     async def test_gilded(self):
         with self.use_cassette():

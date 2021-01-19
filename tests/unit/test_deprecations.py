@@ -61,6 +61,12 @@ class TestDeprecation(UnitTest):
                 == "`subreddits.gold` has be renamed to `subreddits.premium`."
             )
 
+    async def test_gild_method(self):
+        with pytest.raises(DeprecationWarning) as excinfo:
+            submission = await self.reddit.submission("1234", lazy=True)
+            await submission.gild()
+            assert excinfo.value.args[0] == "`.gild` has been renamed to `.award`."
+
     def test_synchronous_context_manager(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             with self.reddit:
