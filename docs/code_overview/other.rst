@@ -99,6 +99,10 @@ instances of them bound to an attribute of one of the Async PRAW models.
    other/listinggenerator
    other/image
    other/imagedata
+   other/inlinemedia
+   other/inlinegif
+   other/inlineimage
+   other/inlinevideo
    other/menulink
    other/modmail
    other/modmailmessage

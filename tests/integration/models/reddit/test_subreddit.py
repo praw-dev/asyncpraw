@@ -26,6 +26,9 @@ from asyncpraw.exceptions import (
 )
 from asyncpraw.models import (
     Comment,
+    InlineGif,
+    InlineImage,
+    InlineVideo,
     ModAction,
     ModmailAction,
     ModmailConversation,
@@ -244,6 +247,29 @@ class TestSubreddit(IntegrationTest):
             assert submission.author == pytest.placeholders.username
             assert submission.selftext == ""
             assert submission.title == "Test Title"
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_submit__selftext_inline_media(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            gif = InlineGif(image_path("test.gif"), "optional caption")
+            image = InlineImage(image_path("test.png"), "optional caption")
+            video = InlineVideo(image_path("test.mp4"), "optional caption")
+            selftext = (
+                "Text with a gif {gif1} an image {image1} and a video {video1} inline"
+            )
+            media = {"gif1": gif, "image1": image, "video1": video}
+            submission = await subreddit.submit(
+                "title", selftext=selftext, inline_media=media
+            )
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
+            assert (
+                submission.selftext
+                == "Text with a gif\n\n[optional caption](https://i.redd.it/s1i7ejqkgdc61.gif)\n\nan image\n\n[optional caption](https://preview.redd.it/95pza2skgdc61.png?width=128&format=png&auto=webp&s=c81d303645d9792afcdb9c47f0a6039708714274)\n\nand a video\n\n[optional caption](https://reddit.com/link/l0vyxc/video/qeg2azskgdc61/player)\n\ninline"
+            )
+            assert submission.title == "title"
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_submit_live_chat(self, _):
