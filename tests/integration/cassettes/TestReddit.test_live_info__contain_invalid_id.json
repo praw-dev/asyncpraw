@@ -1,0 +1,200 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "client_credentials"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "close",
+          "Content-Length": "109",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 25 Jan 2021 04:37:05 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=Iq8NeUeVcycXMkWlRq; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "cache-control": "max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-reddit-loid": "00000000009z9yedrw.2.1611549425470.Z0FBQUFBQmdEa3J4ZC1YMzRORm9qNW05eDNaSmp1ZGsyY0p5cE5uSnpPVEFkbXhPcy02X25DQ0FUQ3F1M3poVmVOamdfUzRpa1JocDVrcS05M1RWeWFsWDRGcU82YjN1VjBUcUpySmJoSFJhYndyZTYxYkcyNmNKd0t6aTlxbWx2eV9QQURTb01TZS0",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/live/by_id/invalid?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"message\": \"Internal Server Error\", \"error\": 500}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "50",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 25 Jan 2021 04:37:05 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "access-control-allow-origin": "*",
+          "access-control-expose-headers": "X-Moose",
+          "cache-control": "max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 500,
+          "message": "Internal Server Error"
+        },
+        "url": "https://oauth.reddit.com/api/live/by_id/invalid?limit=100&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/live/by_id/invalid?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"message\": \"Internal Server Error\", \"error\": 500}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "50",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 25 Jan 2021 04:37:06 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=6N4yborFltAyDmfbRL.0.1611549425977.Z0FBQUFBQmdEa3J4LXUzZTJrTkpBWnUtUW8wMFExUm9xUXhzRDdkRnVFLXVFRXBtQ1A5UkVrY3NEaGtZeVBVNWZqRUZfRmVsczJDbTNRemhudjQyejlmRU1xUDRrWjFNS0NicHUzMDhhOFhmaDV5X3pUTlBFN3dSa2VQZHlXOEZCYmNaLTN3Vkt3Nm8; Domain=reddit.com; Max-Age=7199; Path=/; expires=Mon, 25-Jan-2021 06:37:05 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "access-control-allow-origin": "*",
+          "access-control-expose-headers": "X-Moose",
+          "cache-control": "max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 500,
+          "message": "Internal Server Error"
+        },
+        "url": "https://oauth.reddit.com/api/live/by_id/invalid?limit=100&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.0"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/live/by_id/invalid?limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"message\": \"Internal Server Error\", \"error\": 500}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Connection": "keep-alive",
+          "Content-Length": "50",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 25 Jan 2021 04:37:06 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=6N4yborFltAyDmfbRL.0.1611549426414.Z0FBQUFBQmdEa3J5Z1lEOXJkRDQ4a0hubFNpWGppeVpOT1FwYm5lVmpBWmUzcWVCX3BGcTBrSkF6Tm41QVk4bXI5VzdyU2duN0xEeXlYZ0t2OFVkQTQ0NGlWUWJwekZLTnhjOEVwbEZOV1NSNHc1MWJ6N2tGaENJMEhkVFdOcWFKdmNTM1pLOFJDdXQ; Domain=reddit.com; Max-Age=7199; Path=/; expires=Mon, 25-Jan-2021 06:37:06 GMT; secure; SameSite=None; Secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Moose": "majestic",
+          "access-control-allow-origin": "*",
+          "access-control-expose-headers": "X-Moose",
+          "cache-control": "max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 500,
+          "message": "Internal Server Error"
+        },
+        "url": "https://oauth.reddit.com/api/live/by_id/invalid?limit=100&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2021-01-24T22:37:06",
+  "version": 1
+}
