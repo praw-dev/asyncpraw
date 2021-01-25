@@ -71,4 +71,6 @@ Source Contributors
 - Yash Chhabria `@Cyatos <https://github.com/Cyatos>`_
 - Justin Krejcha <justin@justinkrejcha.com> `@jkrejcha <https://github.com/jkrejcha>`_
 - Gerard Rodes <GerardRodesVidal@gmail.com> `@GerardRodes <https://github.com/GerardRodes>`_
+- cmays90 `@cmays90 <https://github.com/cmays90>`_
+
 <!-- - Add "Name <email (optional)> and github profile link" above this line. -->
