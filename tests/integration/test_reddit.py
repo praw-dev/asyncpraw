@@ -7,6 +7,7 @@ from asyncprawcore.exceptions import BadRequest
 from asyncpraw.models import LiveThread
 from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.models.reddit.submission import Submission
+from asyncpraw.models.reddit.subreddit import Subreddit
 
 from . import IntegrationTest
 
@@ -45,6 +46,15 @@ class TestReddit(IntegrationTest):
         assert len(results) > 0
         for item in results:
             assert isinstance(item, Submission)
+
+    async def test_info_sr_names(self):
+        items = [await self.reddit.subreddit("redditdev"), "reddit.com", "t:1337", "nl"]
+        item_generator = self.reddit.info(subreddits=items)
+        with self.use_cassette():
+            results = await self.async_list(item_generator)
+        assert len(results) == 4
+        for item in results:
+            assert isinstance(item, Subreddit)
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_live_call(self, _):
