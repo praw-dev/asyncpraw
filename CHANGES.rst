@@ -40,6 +40,7 @@ Unreleased
 * Some cases where streams yield the same item multiple times. This cannot be
   prevented in every case.
 * An issue where streams could get stuck on a deleted item and never pull new items.
+* Fix subreddit style asset uploading.
 
 7.1.0 (2020/07/16)
 ------------------

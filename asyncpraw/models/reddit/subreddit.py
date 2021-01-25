@@ -3484,8 +3484,9 @@ class SubredditStylesheet:
         upload_url = f"https:{upload_lease['action']}"
 
         with open(image_path, "rb") as image:
+            upload_data["file"] = image
             response = await self.subreddit._reddit._core._requestor._http.post(
-                upload_url, data=upload_data, files={"file": image}
+                upload_url, data=upload_data
             )
         response.raise_for_status()
 
