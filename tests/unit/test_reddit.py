@@ -79,17 +79,7 @@ class TestReddit(UnitTest):
             self.reddit.live.info(None)
         assert str(excinfo.value) == "ids must be a list"
 
-    @mock.patch(
-        "asyncpraw.Reddit.request",
-        side_effect=[
-            {"kind": "t2", "data": {"name": "bboe"}},
-            {
-                "kind": "LabeledMulti",
-                "data": {"path": "/user/bboe/m/aa", "name": "aa"},
-            },
-        ],
-    )
-    async def test_multireddit(self, _):
+    async def test_multireddit(self):
         multireddit = await self.reddit.multireddit("bboe", "aa")
         assert multireddit.path == "/user/bboe/m/aa"
 
@@ -276,46 +266,11 @@ class TestReddit(UnitTest):
             "At most one of `data` and `json` is supported."
         )
 
-    @mock.patch(
-        "asyncpraw.Reddit.request",
-        side_effect=[
-            [
-                {
-                    "kind": "Listing",
-                    "data": {
-                        "children": [
-                            {"kind": "t3", "data": {"name": "t3_2gmzqe", "url": "url"}}
-                        ],
-                        "after": None,
-                        "before": None,
-                    },
-                },
-                {
-                    "kind": "Listing",
-                    "data": {"children": [], "after": None, "before": None},
-                },
-            ]
-        ],
-    )
-    async def test_submission(self, _):
-        submission = await self.reddit.submission("2gmzqe")
+    async def test_submission(self):
+        submission = await self.reddit.submission("2gmzqe", lazy=True)
         assert submission.id == "2gmzqe"
 
-    @mock.patch(
-        "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "kind": "t5",
-                "data": {
-                    "isSubscribed": True,
-                    "name": "t5_2qizd",
-                    "subscribers": 33817,
-                    "display_name": "redditdev",
-                },
-            },
-        ],
-    )
-    async def test_subreddit(self, _):
+    async def test_subreddit(self):
         subreddit = await self.reddit.subreddit("redditdev")
         assert subreddit.display_name == "redditdev"
 
