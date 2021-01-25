@@ -44,13 +44,14 @@ class LiveHelper(AsyncPRAWBase):
         :param ids: A list of IDs for a live thread.
         :returns: A generator that yields :class:`.LiveThread` instances.
 
-        Live threads that cannot be matched will not be generated.
+        :raises: ``asyncprawcore.ServerError`` if invalid live threads are requested.
+
         Requests will be issued in batches for each 100 IDs.
 
         .. note::
             This method doesn't support IDs for live updates.
 
-        .. warning:
+        .. warning::
             Unlike :meth:`.Reddit.info`, the output of this method
             may not reflect the order of input.
 
@@ -59,16 +60,17 @@ class LiveHelper(AsyncPRAWBase):
         .. code-block:: python
 
             ids = ["3rgnbke2rai6hen7ciytwcxadi",
+                   "LiveUpdateEvent_sw7bubeycai6hey4ciytwamw3a",
                    "sw7bubeycai6hey4ciytwamw3a",
                    "t8jnufucss07"]
-            async for thread in reddit.live.info(ids)
+            async for thread in reddit.live.info(ids):
                 print(thread.title)
 
         """
         if not isinstance(ids, list):
             raise TypeError("ids must be a list")
 
-        async def generator():  # pragma: no cover; FIXME this endpoint does not work as of 07/12/2020
+        async def generator():
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
