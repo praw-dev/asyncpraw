@@ -1,4 +1,5 @@
 """Provide the RedditBase class."""
+from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 from urllib.parse import urlparse
 
@@ -13,8 +14,11 @@ class RedditBase(AsyncPRAWBase):
     """Base class that represents actual Reddit objects."""
 
     def __deepcopy__(self, memodict={}):
-        """Only return the str attribute when performing a deepcopy."""
-        return str(self)
+        """Skip copying _reddit attribute when deepcopying."""
+        return type(self)(
+            self._reddit,
+            _data=deepcopy({k: v for k, v in self.__dict__.items() if k != "_reddit"}),
+        )
 
     @staticmethod
     def _url_parts(url):

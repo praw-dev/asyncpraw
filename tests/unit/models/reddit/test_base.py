@@ -7,10 +7,22 @@ from ... import UnitTest
 
 class TestRedditBase(UnitTest):
     def test_deepcopy(self):
-        test_string = "test_string"
+        class Test:
+            def __init__(self, attr):
+                self.attr = attr
+
+        test_attr = Test("test")
+        test_object = Test(test_attr)
         reddit_base = RedditBase(
-            None, _data={"title": test_string, "STR_FIELD": "title"}
+            self.reddit,
+            _data={
+                "title": "test_title",
+                "STR_FIELD": "title",
+                "test_object": test_object,
+            },
         )
         result = deepcopy(reddit_base)
-        assert isinstance(result, str)
-        assert result == test_string
+        assert isinstance(result, type(reddit_base))
+        assert result._reddit == self.reddit
+        assert result.test_object != test_object
+        assert result.test_object.attr != test_attr
