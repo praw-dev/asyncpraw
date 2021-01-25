@@ -435,8 +435,13 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
                 raise InvalidURL(
                     url, message="Invalid URL (subreddit, not submission): {}"
                 )
+
         elif "gallery" in parts:
             submission_id = parts[parts.index("gallery") + 1]
+
+        elif parts[-1] == "comments":
+            raise InvalidURL(url, message="Invalid URL (submission id not present): {}")
+
         else:
             submission_id = parts[parts.index("comments") + 1]
 
