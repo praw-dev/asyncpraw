@@ -1785,8 +1785,8 @@ class TestSubredditStreams(IntegrationTest):
             while comment is None:
                 pause_count += 1
                 comment = await self.async_next(comment_stream)
-            assert comment_count == 104
-            assert pause_count == 2
+            assert comment_count == 108
+            assert pause_count == 3
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_comments__with_skip_existing(self, _):

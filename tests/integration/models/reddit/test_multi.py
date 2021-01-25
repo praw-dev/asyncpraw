@@ -174,7 +174,7 @@ class TestMultiredditStreams(IntegrationTest):
                 pause_count += 1
                 comment = await self.async_next(comment_stream)
             assert comment_count == 101
-            assert pause_count == 9
+            assert pause_count == 2
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_submissions(self, _):
