@@ -837,16 +837,6 @@ class Reddit:
             (default: None). If ``json`` is provided, ``data`` should not be.
 
         """
-        # this a fix for aiohttp not liking bool values in its params; this should be
-        # fixed asyncprawcore
-        if params:
-            new_params = {}
-            for k, v in params.items():
-                if isinstance(v, bool):
-                    new_params[k] = str(v).lower()
-                elif v:
-                    new_params[k] = v
-            params = new_params
         if data and json:
             raise ClientException("At most one of `data` and `json` is supported.")
         try:
