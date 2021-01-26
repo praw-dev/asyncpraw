@@ -23,7 +23,7 @@
             "close"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
           ]
         },
         "method": "POST",
@@ -35,20 +35,16 @@
         },
         "headers": {
           "Accept-Ranges": "bytes",
-          "Cache-Control": "max-age=0, must-revalidate",
           "Connection": "close",
-          "Content-Length": "367",
+          "Content-Length": "370",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 11 Jul 2020 03:34:08 GMT",
+          "Date": "Tue, 26 Jan 2021 00:07:37 GMT",
           "Server": "snooserv",
-          "Set-Cookie": "edgebucket=eMuKhUjScFujI7DdK4; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Set-Cookie": "edgebucket=pKcYBh6NTaqFube4IT; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
-          "X-Cache": "MISS",
-          "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5934-MCI",
-          "X-Timer": "S1594438448.032249,VS0,VE82",
+          "cache-control": "max-age=0, must-revalidate",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
           "x-xss-protection": "1; mode=block"
@@ -71,38 +67,34 @@
             "bearer <ACCESS_TOKEN>"
           ],
           "User-Agent": [
-            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
+            "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.5.1"
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/wiki/pages/?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/wiki/pages/?unique=0&raw_json=1"
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"wikipagelisting\", \"data\": [\"config/stylesheet\"]}"
+          "string": "{\"kind\": \"wikipagelisting\", \"data\": [\"async_praw_new_page\", \"config/stylesheet\", \"praw_new_page\"]}"
         },
         "headers": {
           "Accept-Ranges": "bytes",
-          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
           "Connection": "keep-alive",
-          "Content-Length": "58",
+          "Content-Length": "98",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 11 Jul 2020 03:34:08 GMT",
-          "Expires": "-1",
+          "Date": "Tue, 26 Jan 2021 00:07:37 GMT",
           "Server": "snooserv",
           "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
           "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
           "Via": "1.1 varnish",
-          "X-Cache": "MISS",
-          "X-Cache-Hits": "0",
           "X-Moose": "majestic",
-          "X-Served-By": "cache-mci5923-MCI",
-          "X-Timer": "S1594438448.189531,VS0,VE168",
+          "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "expires": "-1",
           "x-content-type-options": "nosniff",
           "x-frame-options": "SAMEORIGIN",
-          "x-ratelimit-remaining": "371.0",
-          "x-ratelimit-reset": "352",
-          "x-ratelimit-used": "229",
+          "x-ratelimit-remaining": "173.0",
+          "x-ratelimit-reset": "143",
+          "x-ratelimit-used": "427",
           "x-ua-compatible": "IE=edge",
           "x-xss-protection": "1; mode=block"
         },
@@ -110,10 +102,10 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/wiki/pages/?raw_json=1"
+        "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/wiki/pages/?unique=0&raw_json=1"
       }
     }
   ],
-  "recorded_at": "2020-07-10T22:34:08",
+  "recorded_at": "2021-01-25T18:07:37",
   "version": 1
 }
