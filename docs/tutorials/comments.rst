@@ -17,8 +17,8 @@ As always, you need to begin by creating an instance of :class:`.Reddit`:
 .. note:: If you are only analyzing public comments, entering a username and
    password is optional.
 
-In this document we will detail the process of finding all the comments for a
-given submission. If you instead want process all comments on Reddit, or
+In this document, we will detail the process of finding all the comments for a
+given submission. If you instead want to process all comments on Reddit, or
 comments belonging to one or more specific subreddits, please see
 :meth:`asyncpraw.models.reddit.subreddit.SubredditStream.comments`.
 
