@@ -18,6 +18,7 @@ Documentation Contributors
 - Pim Tholhuijsen `@mandjevant <https://github.com/mandjevant>`_
 - Martin Michlmayr `@tbm <https://github.com/tbm>`_
 - Kenneth Yang `@kennethy <https://github.com/kennethy>`_
+- Tarak Oueriache <Igosad@protonmail.com> `@igosad <https://github.com/igosad>`_
 
 <!-- - Add "Name <email (optional)> and github profile link" above this line. -->
 
