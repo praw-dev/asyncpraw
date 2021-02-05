@@ -2,6 +2,7 @@
 
 # pylint: disable=too-many-lines
 import socket
+from asyncio import TimeoutError
 from copy import deepcopy
 from csv import writer
 from io import StringIO
@@ -620,69 +621,63 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             code, message, actual, maximum_size = [element.text for element in root[:4]]
             raise TooLargeMediaException(int(maximum_size), int(actual))
 
-    async def _submit_media(self, data, timeout, without_websockets):
+    async def _submit_media(self, data, timeout, websocket_url=None):
         """Submit and return an `image`, `video`, or `videogif`.
 
         This is a helper method for submitting posts that are not link posts or
         self posts.
         """
-        response = await self._reddit.post(API_PATH["submit"], data=data)
+        if websocket_url is None:
+            await self._reddit.post(API_PATH["submit"], data=data)
+        else:
+            try:
+                async with self._reddit._core._requestor._http.ws_connect(
+                    websocket_url, timeout=timeout
+                ) as websocket:
+                    await self._reddit.post(API_PATH["submit"], data=data)
+                    try:
+                        ws_update = await websocket.receive_json()
+                    except (
+                        BlockingIOError,
+                        socket.error,
+                        TimeoutError,
+                        WebSocketError,
+                    ) as ws_exception:
+                        raise WebSocketException(
+                            "Websocket error. Check your media file. Your post may"
+                            " still have been created.",
+                            ws_exception,
+                        )
+            except (
+                BlockingIOError,
+                socket.error,
+                TimeoutError,
+                WebSocketError,
+            ) as ws_exception:
+                raise WebSocketException(
+                    "Error establishing websocket connection.",
+                    ws_exception,
+                )
 
-        # About the websockets:
-        #
-        # Reddit responds to this request with only two fields: a link to
-        # the user's /submitted page, and a websocket URL. We can use the
-        # websocket URL to get a link to the new post once it is created.
-        #
-        # An important note to Async PRAW contributors or anyone who would
-        # wish to step through this section with a debugger: This block
-        # of code is NOT debugger-friendly. If there is *any*
-        # significant time between the POST request just above this
-        # comment and the creation of the websocket connection just
-        # below, the code will become stuck in an infinite loop at the
-        # connection.receive_json() call. I believe this is because only one
-        # message is sent over the websocket, and if the client doesn't connect
-        # soon enough, it will miss the message and get stuck forever
-        # waiting for another.
-        #
-        # So if you need to debug this section of code, please let the
-        # websocket creation happen right after the POST request,
-        # otherwise you will have trouble.
-
-        if without_websockets:
-            return
-
-        try:
-            async with self._reddit._core._requestor._http.ws_connect(
-                response["json"]["data"]["websocket_url"], timeout=timeout
-            ) as websocket:
-                ws_update = await websocket.receive_json()
-        except (
-            WebSocketError,
-            socket.error,
-            BlockingIOError,
-        ) as ws_exception:
-            raise WebSocketException(
-                "Websocket error. Check your media file. "
-                "Your post may still have been created. "
-                "Use this exception's .original_exception attribute to get "
-                "the original exception.",
-                ws_exception,
-            )
-        if ws_update.get("type") == "failed":
-            raise MediaPostFailed
-        url = ws_update["payload"]["redirect"]
-        return await self._reddit.submission(url=url)
+            if ws_update.get("type") == "failed":
+                raise MediaPostFailed
+            url = ws_update["payload"]["redirect"]
+            return await self._reddit.submission(url=url)
 
     async def _upload_media(
         self, media_path, expected_mime_prefix=None, upload_type="link"
     ):
-        """Upload media and return its URL. Uses undocumented endpoint.
+        """Upload media and return its URL and a websocket (Undocumented endpoint).
 
         :param expected_mime_prefix: If provided, enforce that the media has a
             mime type that starts with the provided prefix.
         :param upload_type: One of ``link``, ``gallery'', or ``selfpost``. (default:
             ``link``)
+
+        :returns: A tuple containing ``(media_url, websocket_url)`` for the
+            piece of media. The websocket URL can be used to determine when
+            media processing is finished, or it can be ignored.
+
         """
         if media_path is None:
             media_path = join(
@@ -726,10 +721,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if not response.status == 201:
             self._parse_xml_response(response)
         response.raise_for_status()
+
+        websocket_url = upload_response["asset"]["websocket_url"]
+
         if upload_type == "link":
-            return f"{upload_url}/{upload_data['key']}"
+            return f"{upload_url}/{upload_data['key']}", websocket_url
         else:
-            return upload_response["asset"]["asset_id"]
+            return upload_response["asset"]["asset_id"], websocket_url
 
     async def _upload_inline_media(self, inline_media: InlineMedia):
         """Upload media for use in self posts and return ``inline_media``.
@@ -738,7 +736,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         """
         self._validate_inline_media(inline_media)
-        inline_media.media_id = await self._upload_media(
+        inline_media.media_id, _ = await self._upload_media(
             inline_media.path, upload_type="selfpost"
         )
         return inline_media
@@ -1112,11 +1110,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 {
                     "caption": image.get("caption", ""),
                     "outbound_url": image.get("outbound_url", ""),
-                    "media_id": await self._upload_media(
-                        image["image_path"],
-                        expected_mime_prefix="image",
-                        upload_type="gallery",
-                    ),
+                    "media_id": (
+                        await self._upload_media(
+                            image["image_path"],
+                            expected_mime_prefix="image",
+                            upload_type="gallery",
+                        )
+                    )[0],
                 }
             )
         response = await self._reddit.request(
@@ -1221,13 +1221,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         ):
             if value is not None:
                 data[key] = value
-        url = await self._upload_media(image_path, expected_mime_prefix="image")
-        data.update(
-            kind="image",
-            url=url,
+
+        image_url, websocket_url = await self._upload_media(
+            image_path, expected_mime_prefix="image"
         )
+        data.update(kind="image", url=image_url)
+        if without_websockets:
+            websocket_url = None
         return await self._submit_media(
-            data, timeout, without_websockets=without_websockets
+            data,
+            timeout,
+            websocket_url=websocket_url,
         )
 
     async def submit_poll(
@@ -1407,16 +1411,23 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         ):
             if value is not None:
                 data[key] = value
-        url = await self._upload_media(video_path, expected_mime_prefix="video")
-        video_poster_url = await self._upload_media(thumbnail_path)
+
+        video_url, websocket_url = await self._upload_media(
+            video_path, expected_mime_prefix="video"
+        )
+        video_poster_url, _ = await self._upload_media(thumbnail_path)
         data.update(
             kind="videogif" if videogif else "video",
-            url=url,
+            url=video_url,
             # if thumbnail_path is None, it uploads the PRAW logo
             video_poster_url=video_poster_url,
         )
+        if without_websockets:
+            websocket_url = None
         return await self._submit_media(
-            data, timeout, without_websockets=without_websockets
+            data,
+            timeout,
+            websocket_url=websocket_url,
         )
 
     async def subscribe(self, other_subreddits=None):
