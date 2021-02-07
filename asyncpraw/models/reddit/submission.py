@@ -392,6 +392,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     ``poll_data``               A :class:`.PollData` object representing the
                                 data of this submission, if it is a poll
                                 submission.
+    ``saved``                   Whether or not the submission is saved.
     ``score``                   The number of upvotes for the submission.
     ``selftext``                The submissions' selftext - an empty string if
                                 a link post.
