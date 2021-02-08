@@ -1,4 +1,4 @@
-from asyncpraw.models import InlineMedia, InlineGif, InlineImage, InlineVideo
+from asyncpraw.models import InlineGif, InlineImage, InlineMedia, InlineVideo
 
 from ... import UnitTest
 

@@ -1,8 +1,7 @@
 """Test classes from collections.py."""
 
-from asynctest import mock
-
 import pytest
+from asynctest import mock
 
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models import Submission

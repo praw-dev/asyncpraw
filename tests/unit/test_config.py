@@ -1,8 +1,8 @@
 import os
 import sys
-from asynctest import mock
 
 import pytest
+from asynctest import mock
 
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException

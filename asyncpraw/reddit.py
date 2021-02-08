@@ -1,11 +1,11 @@
 """Provide the Reddit class."""
+import asyncio
 import configparser
 import os
 import re
-import asyncio
 from itertools import islice
 from logging import getLogger
-from typing import IO, Any, Dict, AsyncGenerator, Iterable, Optional, Type, Union
+from typing import IO, Any, AsyncGenerator, Dict, Iterable, Optional, Type, Union
 from warnings import warn
 
 from asyncprawcore import (

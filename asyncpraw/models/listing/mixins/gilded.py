@@ -1,5 +1,5 @@
 """Provide the GildedListingMixin class."""
-from typing import Any, Dict, AsyncGenerator, Union
+from typing import Any, AsyncGenerator, Dict, Union
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase

@@ -2,6 +2,7 @@
 from copy import deepcopy
 
 from asyncpraw.models.reddit.base import RedditBase
+
 from ... import UnitTest
 
 

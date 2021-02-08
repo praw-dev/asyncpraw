@@ -1,11 +1,10 @@
 """Test asyncpraw.models.redditor."""
-from asynctest import mock
-
 import pytest
 from asyncprawcore import Forbidden
+from asynctest import mock
 
 from asyncpraw.exceptions import RedditAPIException
-from asyncpraw.models import Comment, Submission, Redditor
+from asyncpraw.models import Comment, Redditor, Submission
 
 from ... import IntegrationTest
 

@@ -1,8 +1,8 @@
 import sys
 from os.path import abspath, dirname, join
-from asynctest import mock
 
 import pytest
+from asynctest import mock
 
 from asyncpraw.models import (
     Button,

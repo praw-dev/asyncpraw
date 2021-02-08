@@ -1,6 +1,6 @@
 """Provide CommentForest for Submission comments."""
 from heapq import heappop, heappush
-from typing import TYPE_CHECKING, AsyncIterator, Optional, Union, List
+from typing import TYPE_CHECKING, AsyncIterator, List, Optional, Union
 
 from ..exceptions import DuplicateReplaceException
 from .reddit.more import MoreComments

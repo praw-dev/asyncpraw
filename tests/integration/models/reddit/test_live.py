@@ -1,16 +1,10 @@
 """Test asyncpraw.models.LiveThread"""
-from asynctest import mock
-
 import pytest
+from asynctest import mock
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import RedditAPIException
-from asyncpraw.models import (
-    LiveThread,
-    LiveUpdate,
-    Redditor,
-    Submission,
-)
+from asyncpraw.models import LiveThread, LiveUpdate, Redditor, Submission
 
 from ... import IntegrationTest
 

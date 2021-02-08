@@ -1,6 +1,5 @@
-from asynctest import mock
-
 import pytest
+from asynctest import mock
 
 from asyncpraw.exceptions import ClientException, PRAWException, RedditAPIException
 from asyncpraw.models import Comment, Submission

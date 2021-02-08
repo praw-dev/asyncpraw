@@ -3,6 +3,7 @@ import pytest
 
 from asyncpraw.models import Collection
 from asyncpraw.models.reddit.collections import SubredditCollections
+
 from ... import UnitTest
 
 

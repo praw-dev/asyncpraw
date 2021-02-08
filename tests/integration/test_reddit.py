@@ -1,8 +1,7 @@
 """Test asyncpraw.reddit."""
-from asynctest import mock
-
 import pytest
 from asyncprawcore.exceptions import BadRequest, ServerError
+from asynctest import mock
 
 from asyncpraw.models import LiveThread
 from asyncpraw.models.reddit.base import RedditBase

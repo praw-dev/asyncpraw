@@ -1,6 +1,6 @@
 import aiohttp
 import pytest
-from asynctest import mock, CoroutineMock, MagicMock
+from asynctest import CoroutineMock, MagicMock, mock
 
 from asyncpraw.exceptions import MediaPostFailed
 from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage

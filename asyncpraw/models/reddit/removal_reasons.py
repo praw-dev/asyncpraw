@@ -1,5 +1,5 @@
 """Provide the Removal Reason class."""
-from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Optional, Union
 from warnings import warn
 
 from ...const import API_PATH

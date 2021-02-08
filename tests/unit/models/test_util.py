@@ -3,11 +3,12 @@ from collections import namedtuple
 from unittest import mock
 
 from asyncpraw.models.util import (
+    BoundedSet,
     ExponentialCounter,
     permissions_string,
     stream_generator,
-    BoundedSet,
 )
+
 from .. import UnitTest
 
 

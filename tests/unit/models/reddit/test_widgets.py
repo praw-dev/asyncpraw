@@ -3,14 +3,14 @@ from json import dumps
 from pytest import raises
 
 from asyncpraw.models import (
+    Subreddit,
     SubredditWidgets,
     SubredditWidgetsModeration,
     Widget,
     WidgetModeration,
-    Subreddit,
 )
-from asyncpraw.models.reddit.widgets import WidgetEncoder
 from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.widgets import WidgetEncoder
 
 from ... import UnitTest
 

@@ -1,7 +1,7 @@
 """Prepare py.test."""
+import asyncio
 import json
 import os
-import asyncio
 from base64 import b64encode
 from datetime import datetime
 from functools import wraps

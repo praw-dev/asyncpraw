@@ -7,7 +7,6 @@ import asynctest
 import pytest
 
 from asyncpraw import Reddit
-
 from tests.conftest import VCR
 
 

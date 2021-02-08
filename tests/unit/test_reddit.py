@@ -1,11 +1,11 @@
 import configparser
 import types
-from asynctest import mock
-from mock import AsyncMock
 
 import pytest
 from asyncprawcore import Requestor
 from asyncprawcore.exceptions import BadRequest
+from asynctest import mock
+from mock import AsyncMock
 
 from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config

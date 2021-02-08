@@ -1,5 +1,5 @@
 """Provide the Rule class."""
-from typing import TYPE_CHECKING, Any, Dict, AsyncIterator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Union
 from urllib.parse import quote
 from warnings import warn
 

@@ -1,7 +1,6 @@
 """Test asyncpraw.models.comment_forest."""
-from asynctest import mock
-
 import pytest
+from asynctest import mock
 
 from asyncpraw.exceptions import DuplicateReplaceException
 from asyncpraw.models import Comment, MoreComments, Submission

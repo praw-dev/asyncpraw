@@ -1,6 +1,6 @@
 """Provide the Redditor class."""
 from json import dumps
-from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty

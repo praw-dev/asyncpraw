@@ -1,5 +1,5 @@
 """Provide the WikiPage class."""
-from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
