@@ -14,7 +14,7 @@ class RedditBase(AsyncPRAWBase):
     """Base class that represents actual Reddit objects."""
 
     def __deepcopy__(self, memodict={}):
-        """Skip copying _reddit attribute when deepcopying."""
+        """Skip copying ``_reddit`` attribute when preforming a deep copy."""
         return type(self)(
             self._reddit,
             _data=deepcopy({k: v for k, v in self.__dict__.items() if k != "_reddit"}),
@@ -103,8 +103,8 @@ class RedditBase(AsyncPRAWBase):
     async def load(self):
         """Re-fetches the object.
 
-        This is used to explicitly fetch the object from reddit. This method can be used
-        on any :class:`.RedditBase` object.
+        This is used to explicitly fetch or re-fetch the object from reddit. This method
+        can be used on any :class:`.RedditBase` object.
 
         .. code-block:: python
 

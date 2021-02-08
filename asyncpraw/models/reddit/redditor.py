@@ -399,7 +399,7 @@ class RedditorStream:
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        For example to retrieve all new submissions made by redditor
+        For example, to retrieve all new submissions made by redditor
         ``spez``, try:
 
         .. code-block:: python

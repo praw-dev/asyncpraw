@@ -68,6 +68,7 @@ class APIException(AsyncPRAWException):
     """Old class preserved for alias purposes.
 
     .. deprecated:: 7.0
+
         Class :class:`.APIException` has been deprecated in favor of
         :class:`.RedditAPIException`. This class will be removed in Async PRAW 8.0.
     """

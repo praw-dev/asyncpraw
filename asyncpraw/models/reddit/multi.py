@@ -159,6 +159,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
             name and name as this multireddit.
 
         To copy the multireddit ``bboe/test`` with a name of ``testing``:
+
         .. code-block:: python
 
             multireddit = await reddit.multireddit("bboe", "test")

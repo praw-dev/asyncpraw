@@ -60,7 +60,6 @@ class LiveHelper(AsyncPRAWBase):
         .. code-block:: python
 
             ids = ["3rgnbke2rai6hen7ciytwcxadi",
-                   "LiveUpdateEvent_sw7bubeycai6hey4ciytwamw3a",
                    "sw7bubeycai6hey4ciytwamw3a",
                    "t8jnufucss07"]
             async for thread in reddit.live.info(ids):
@@ -252,7 +251,9 @@ class SubredditHelper(AsyncPRAWBase):
         Any keyword parameters not provided, or set explicitly to None, will
         take on a default value assigned by the Reddit server.
 
-        .. seealso:: :meth:`~.SubredditModeration.update` for documentation
+        .. seealso::
+
+            :meth:`~.SubredditModeration.update` for documentation
             of other available settings.
 
         """

@@ -441,57 +441,57 @@ class SubredditWidgetsModeration:
             Each button is either a text button or an image button. A text
             button looks like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "text",
-                 "text": a string no longer than 30 characters,
-                 "url": a valid URL,
-                 "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "hoverState": {...}
-               }
+                {
+                    "kind": "text",
+                    "text": a string no longer than 30 characters,
+                    "url": a valid URL,
+                    "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "hoverState": {...}
+                }
 
             An image button looks like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "image",
-                 "text": a string no longer than 30 characters,
-                 "linkUrl": a valid URL,
-                 "url": a valid URL of a reddit-hosted image,
-                 "height": an integer,
-                 "width": an integer,
-                 "hoverState": {...}
-               }
+                {
+                    "kind": "image",
+                    "text": a string no longer than 30 characters,
+                    "linkUrl": a valid URL,
+                    "url": a valid URL of a reddit-hosted image,
+                    "height": an integer,
+                    "width": an integer,
+                    "hoverState": {...}
+                }
 
             Both types of buttons have the field ``hoverState``. The field does
             not have to be included (it is optional). If it is included, it can
             be one of two types: text or image. A text ``hoverState`` looks
             like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "text",
-                 "text": a string no longer than 30 characters,
-                 "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`
-               }
+                {
+                    "kind": "text",
+                    "text": a string no longer than 30 characters,
+                    "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`
+                }
 
             An image ``hoverState`` looks like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "image",
-                 "url": a valid URL of a reddit-hosted image,
-                 "height": an integer,
-                 "width": an integer
-               }
+                {
+                    "kind": "image",
+                    "url": a valid URL of a reddit-hosted image,
+                    "height": an integer,
+                    "width": an integer
+                }
 
 
             .. note::
@@ -797,28 +797,28 @@ class SubredditWidgetsModeration:
         :param data: A ``list`` of ``dict``\ s describing menu contents, as
             specified in `Reddit docs`_. As of this writing, the format is:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               [
-                 {
-                   "text": a string no longer than 20 characters,
-                   "url": a valid URL
-                 },
-
-                 OR
-
-                 {
-                   "children": [
-                     {
+                [
+                    {
                         "text": a string no longer than 20 characters,
-                        "url": a valid URL,
-                     },
-                     ...
-                    ],
-                   "text": a string no longer than 20 characters,
-                 },
-                 ...
-               ]
+                        "url": a valid URL
+                    },
+
+                    OR
+
+                    {
+                        "children": [
+                            {
+                                "text": a string no longer than 20 characters,
+                                "url": a valid URL,
+                            },
+                            ...
+                        ],
+                        "text": a string no longer than 20 characters,
+                    },
+                    ...
+                ]
 
         .. _Reddit docs: https://www.reddit.com/dev/api#POST_api_widget
 
@@ -1853,6 +1853,7 @@ class WidgetModeration:
         `Reddit documentation
         <https://www.reddit.com/dev/api#PUT_api_widget_{widget_id}>`_ or the
         document of the particular type of widget.
+
         For example, update a text widget like so:
 
         .. code-block:: python

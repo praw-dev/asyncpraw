@@ -147,4 +147,4 @@ License
 Async PRAW's source (v7.1.1+) is provided under the `Simplified BSD License
 <https://github.com/praw-dev/asyncpraw/blob/30796acc29b4ba2335cf0eab414477702c29452f/LICENSE.txt>`_.
 
-* Copyright (c), 2020, Joel Payne
+* Copyright ©, 2020, Joel Payne

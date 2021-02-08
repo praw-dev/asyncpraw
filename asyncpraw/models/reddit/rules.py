@@ -169,6 +169,7 @@ class SubredditRules:
         :returns: A list of instances of :class:`.Rule`.
 
         .. deprecated:: 7.1
+
             Use the iterator by removing the call to :class:`.SubredditRules`.
             For example, in order to use the iterator:
 

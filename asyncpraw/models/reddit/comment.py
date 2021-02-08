@@ -91,8 +91,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     def is_root(self) -> bool:
         """Return True when the comment is a top level comment.
 
-        .. note:: This property requires the comment to be fetched. Otherwise, an
-                   ``AttributeError`` will be raised.
+        :raises: :py:class:`AttributeError` if the comment is not fetched.
+
         """
         parent_type = self.parent_id.split("_", 1)[0]
         return parent_type == self._reddit.config.kinds["submission"]

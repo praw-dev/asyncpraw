@@ -4,12 +4,12 @@ from urllib.parse import quote_plus
 import asyncpraw
 
 QUESTIONS = ["what is", "who is", "what are"]
-REPLY_TEMPLATE = "[Let me google that for you](http://lmgtfy.com/?q={})"
+REPLY_TEMPLATE = "[Let me google that for you](https://lmgtfy.com/?q={})"
 
 
 async def main():
     reddit = asyncpraw.Reddit(
-        user_agent="LMGTFY (by /u/USERNAME)",
+        user_agent="LMGTFY (by u/USERNAME)",
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
         username="USERNAME",

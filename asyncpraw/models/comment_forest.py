@@ -46,7 +46,7 @@ class CommentForest:
             first_comment = comments[0]
 
         Alternatively, the presence of this method enables one to iterate over
-        all top_level comments, like so:
+        all top level comments, like so:
 
         .. code-block:: python
 

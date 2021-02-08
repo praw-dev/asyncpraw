@@ -17,5 +17,5 @@ without using the ``bot3`` site, we would initialize :class:`.Reddit` as:
    reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         password="1guiwevlfo00esyy",
-                        user_agent="testscript by /u/fakebot3",
+                        user_agent="testscript by u/fakebot3",
                         username="fakebot3")

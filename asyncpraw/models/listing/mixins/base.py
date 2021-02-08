@@ -21,7 +21,11 @@ class BaseListingMixin(AsyncPRAWBase):
 
     @staticmethod
     def _validate_time_filter(time_filter):
-        """Raise :py:class:`.ValueError` if ``time_filter`` is not valid."""
+        """Validate ``time_filter``.
+
+        :raises: :py:class:`.ValueError` if ``time_filter`` is not valid.
+
+        """
         if time_filter not in BaseListingMixin.VALID_TIME_FILTERS:
             valid_time_filters = ", ".join(BaseListingMixin.VALID_TIME_FILTERS)
             raise ValueError(f"time_filter must be one of: {valid_time_filters}")
@@ -50,13 +54,13 @@ class BaseListingMixin(AsyncPRAWBase):
            multireddit = await reddit.multireddit("samuraisam", "programming")
            multireddit.controversial("day")
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.controversial("month")
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.comments.controversial("year")
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.submissions.controversial("all")
 
            subreddit = await reddit.subreddit("all")
@@ -85,13 +89,13 @@ class BaseListingMixin(AsyncPRAWBase):
            multireddit = await reddit.multireddit("samuraisam", "programming")
            multireddit.hot()
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.hot()
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.comments.hot()
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.submissions.hot()
 
            subreddit = await reddit.subreddit("all")
@@ -119,13 +123,13 @@ class BaseListingMixin(AsyncPRAWBase):
            multireddit = await reddit.multireddit("samuraisam", "programming")
            multireddit.new()
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.new()
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.comments.new()
 
-           redditor = await reddit.redditor("spez", lazy=True)
+           redditor = await reddit.redditor("spez")
            redditor.submissions.new()
 
            subreddit = await reddit.subreddit("all")

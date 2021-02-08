@@ -260,7 +260,7 @@ want to iterate over *all* comments as a flattened list you can call the
           ``comment_sort`` on the :class:`.Submission` instance prior to
           accessing ``comments`` (see: `/api/set_suggested_sort
           <https://www.reddit.com/dev/api#POST_api_set_suggested_sort>`_ for
-          possible values). For example to have comments sorted by ``new`` try
+          possible values). For example, to have comments sorted by ``new`` try
           something like:
 
           .. code-block:: python

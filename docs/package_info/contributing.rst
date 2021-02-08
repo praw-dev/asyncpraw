@@ -59,6 +59,7 @@ Without any configuration or modification, all the tests should pass.
 .. note::
 
     Async PRAW uses a fork of `vcrpy` before you can run tests locally you must install the forked version.
+
     .. code-block:: bash
 
         pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip

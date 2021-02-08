@@ -111,12 +111,13 @@ class SubmissionModeration(ThingModerationMixin):
             (default: True).
 
         Contest mode have the following effects:
-          * The comment thread will default to being sorted randomly.
-          * Replies to top-level comments will be hidden behind
-            "[show replies]" buttons.
-          * Scores will be hidden from non-moderators.
-          * Scores accessed through the API (mobile apps, bots) will be
-            obscured to "1" for non-moderators.
+
+        * The comment thread will default to being sorted randomly.
+        * Replies to top-level comments will be hidden behind "[show replies]"
+          buttons.
+        * Scores will be hidden from non-moderators.
+        * Scores accessed through the API (mobile apps, bots) will be obscured to
+          "1" for non-moderators.
 
         Example usage:
 
@@ -181,7 +182,9 @@ class SubmissionModeration(ThingModerationMixin):
             submission = await subreddit.submit("nsfw test", selftext="nsfw")
             await submission.mod.nsfw()
 
-        .. seealso:: :meth:`~.sfw`
+        .. seealso::
+
+             :meth:`~.sfw`
 
         """
         await self.thing._reddit.post(
@@ -204,7 +207,9 @@ class SubmissionModeration(ThingModerationMixin):
             submission = await subreddit.submit("oc test", selftext="original")
             await submission.mod.set_original_content()
 
-        .. seealso:: :meth:`.unset_original_content`
+        .. seealso::
+
+             :meth:`.unset_original_content`
 
         """
         data = {
@@ -229,7 +234,9 @@ class SubmissionModeration(ThingModerationMixin):
             submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.sfw()
 
-        .. seealso:: :meth:`~.nsfw`
+        .. seealso::
+
+            :meth:`~.nsfw`
 
         """
         await self.thing._reddit.post(
@@ -249,7 +256,9 @@ class SubmissionModeration(ThingModerationMixin):
             submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.mod.spoiler()
 
-        .. seealso:: :meth:`~.unspoiler`
+        .. seealso::
+
+            :meth:`~.unspoiler`
 
         """
         await self.thing._reddit.post(
@@ -318,7 +327,9 @@ class SubmissionModeration(ThingModerationMixin):
             submission = await subreddit.submit("oc test", selftext="original")
             await submission.mod.unset_original_content()
 
-        .. seealso:: :meth:`.set_original_content`
+        .. seealso::
+
+            :meth:`.set_original_content`
 
         """
         data = {
@@ -344,7 +355,9 @@ class SubmissionModeration(ThingModerationMixin):
             submission = await sub.submit("not spoiler", selftext="spoiler")
             await submission.mod.unspoiler()
 
-        .. seealso:: :meth:`~.spoiler`
+        .. seealso::
+
+            :meth:`~.spoiler`
 
         """
         await self.thing._reddit.post(
@@ -534,7 +547,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     def shortlink(self) -> str:
         """Return a shortlink to the submission.
 
-        For example http://redd.it/eorhm is a shortlink for
+        For example, https://redd.it/eorhm is a shortlink for
         https://www.reddit.com/r/announcements/comments/eorhm/reddit_30_less_typing/.
 
         """
@@ -649,7 +662,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.hide()
 
-        .. seealso:: :meth:`~.unhide`
+        .. seealso::
+
+            :meth:`~.unhide`
 
         """
         for submissions in self._chunk(other_submissions, 50):
@@ -669,7 +684,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             submission = await reddit.submission(id="5or86n")
             await submission.unhide()
 
-        .. seealso:: :meth:`~.hide`
+        .. seealso::
+
+            :meth:`~.hide`
 
         """
         for submissions in self._chunk(other_submissions, 50):
@@ -715,7 +732,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             cross_post = await submission.crosspost(subreddit="learnprogramming",
                                               send_replies=False)
 
-        .. seealso:: :meth:`~.hide`
+        .. seealso::
+
+            :meth:`~.hide`
 
         """
         if title is None:
