@@ -62,7 +62,7 @@ setup(
         "reddit's API."
     ),
     extras_require=extras,
-    install_requires=["asyncprawcore >=1.0.1, <2.0"],
+    install_requires=["asyncprawcore >=1.0.1, <2.0", "update_checker >=0.18"],
     keywords="reddit api wrapper async asynchronous praw",
     license="Simplified BSD License",
     long_description=README,

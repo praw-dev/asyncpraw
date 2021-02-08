@@ -7,7 +7,7 @@ import pytest
 from asyncprawcore import Requestor
 from asyncprawcore.exceptions import BadRequest
 
-from asyncpraw import Reddit
+from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.models import Comment
@@ -26,6 +26,22 @@ class TestReddit(UnitTest):
         async with temp_reddit as reddit:
             pass
         assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
+
+    @mock.patch("asyncpraw.reddit.update_check", create=True)
+    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", False)
+    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
+    async def test_check_for_updates(self, mock_update_check):
+        Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
+        assert Reddit.update_checked
+        mock_update_check.assert_called_with("asyncpraw", __version__)
+
+    @mock.patch("asyncpraw.reddit.update_check", create=True)
+    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", True)
+    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
+    async def test_check_for_updates_update_checker_missing(self, mock_update_check):
+        Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
+        assert not Reddit.update_checked
+        assert not mock_update_check.called
 
     def test_comment(self):
         assert Comment(self.reddit, id="cklfmye").id == "cklfmye"
