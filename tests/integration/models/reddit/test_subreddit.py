@@ -1653,8 +1653,7 @@ class TestSubredditQuarantine(IntegrationTest):
 class TestSubredditRelationships(IntegrationTest):
     REDDITOR = "pyapitestuser3"
 
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def add_remove(self, base, user, relationship, _):
+    async def add_remove(self, base, user, relationship):
         relationship = getattr(base, relationship)
         await relationship.add(user)
         relationships = await self.async_list(relationship())
@@ -1786,7 +1785,8 @@ class TestSubredditRelationships(IntegrationTest):
         assert len(moderator) == 1
         assert "mod_permissions" in moderator[0].__dict__
 
-    async def test_muted(self):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_muted(self, _):
         self.reddit.read_only = False
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():

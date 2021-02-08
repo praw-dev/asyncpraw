@@ -7,7 +7,6 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel-finished: true
-
   lint-multi-os:
     name: Lint ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -43,41 +42,6 @@ jobs:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
 
-  lint-multi-python:
-    name: Lint Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-      with:
-        python-version: 3.x
-    - uses: actions/cache@v1
-      with:
-        key: v0-${{ runner.os }}-pip-lint-${{ hashFiles('setup.py') }}
-        path: ~/.cache/pip
-        restore-keys: |
-          v0-${{ runner.os }}-pip-lint-
-          v0-${{ runner.os }}-pip-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .[lint]
-    - name: Check other phrase usages
-      run: python ./tools/static_word_checks.py
-    - name: Run black
-      run: black --check --verbose .
-    - name: Run flake8
-      run: flake8 --exclude docs --statistics
-    - name: Check documentation
-      run: python ./tools/check_documentation.py
-    - name: Run pydocstyle
-      run: pydocstyle asyncpraw
-    - name: Run sphinx
-      run: sphinx-build --keep-going docs/ /tmp/foo
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
-
   test-multi-os:
     name: Test ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -111,7 +75,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
       with:
-        python-version: 3.x
+        python-version: ${{ matrix.python-version }}
     - uses: actions/cache@v1
       with:
         key: v0-${{ runner.os }}-pip-test-${{ hashFiles('setup.py') }}
