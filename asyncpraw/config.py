@@ -29,6 +29,12 @@ class Config:
         "extended": configparser.ExtendedInterpolation,
     }
 
+    @staticmethod
+    def _config_boolean(item):
+        if isinstance(item, bool):
+            return item
+        return item.lower() in {"1", "yes", "true", "on"}
+
     @classmethod
     def _load_config(cls, config_interpolation: Optional[str] = None):
         """Attempt to load settings from various praw.ini files."""
@@ -101,6 +107,9 @@ class Config:
 
     def _initialize_attributes(self):
         self._short_url = self._fetch_default("short_url") or self.CONFIG_NOT_SET
+        self.check_for_updates = self._config_boolean(
+            self._fetch_or_not_set("check_for_updates")
+        )
         self.kinds = {
             x: self._fetch(f"{x}_kind")
             for x in [

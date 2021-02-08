@@ -23,13 +23,20 @@ from asyncprawcore.exceptions import BadRequest
 
 from . import models
 from .config import Config
-from .const import API_PATH, USER_AGENT_FORMAT
+from .const import API_PATH, USER_AGENT_FORMAT, __version__
 from .exceptions import (
     ClientException,
     MissingRequiredAttributeException,
     RedditAPIException,
 )
 from .objector import Objector
+
+try:
+    from update_checker import update_check
+
+    UPDATE_CHECKER_MISSING = False
+except ImportError:  # pragma: no cover
+    UPDATE_CHECKER_MISSING = True
 
 
 Comment = models.Comment
@@ -56,6 +63,7 @@ class Reddit:
 
     """
 
+    update_checked = False
     _ratelimit_regex = re.compile(r"([0-9]{1,2}) (seconds?|minutes?)")
 
     @property
@@ -152,7 +160,7 @@ class Reddit:
         config_interpolation: Optional[str] = None,
         requestor_class: Optional[Type[Requestor]] = None,
         requestor_kwargs: Dict[str, Any] = None,
-        **config_settings: str,
+        **config_settings: Union[str, bool],
     ):  # noqa: D207, D301
         """Initialize a Reddit instance.
 
@@ -264,7 +272,7 @@ class Reddit:
                 "must be set to None via a keyword argument "
                 "to the `Reddit` class constructor."
             )
-
+        self._check_for_update()
         self._prepare_objector()
         self.requestor = self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
 
@@ -405,6 +413,13 @@ class Reddit:
             print(await reddit.user.me())
 
         """
+
+    def _check_for_update(self):
+        if UPDATE_CHECKER_MISSING:
+            return
+        if not Reddit.update_checked and self.config.check_for_updates:
+            update_check(__package__, __version__)
+            Reddit.update_checked = True
 
     def _prepare_objector(self):
         mappings = {
