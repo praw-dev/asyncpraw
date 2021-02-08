@@ -1,5 +1,5 @@
 """Provide the BaseListingMixin class."""
-from typing import Any, AsyncGenerator, Dict, Union
+from typing import Any, AsyncIterator, Dict, Union
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase
@@ -30,7 +30,7 @@ class BaseListingMixin(AsyncPRAWBase):
         self,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for controversial submissions.
 
         :param time_filter: Can be one of: all, day, hour, month, week, year
@@ -70,7 +70,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
     def hot(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for hot items.
 
         Additional keyword arguments are passed in the initialization of
@@ -104,7 +104,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
     def new(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for new items.
 
         Additional keyword arguments are passed in the initialization of
@@ -140,7 +140,7 @@ class BaseListingMixin(AsyncPRAWBase):
         self,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for top submissions.
 
         :param time_filter: Can be one of: all, day, hour, month, week, year

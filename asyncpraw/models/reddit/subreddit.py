@@ -597,7 +597,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return rte_body["output"]
 
     def _fetch_info(self):
-        return ("subreddit_about", {"subreddit": self}, None)
+        return "subreddit_about", {"subreddit": self}, None
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
@@ -658,7 +658,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                     "Error establishing websocket connection.",
                     ws_exception,
                 )
-
             if ws_update.get("type") == "failed":
                 raise MediaPostFailed
             url = ws_update["payload"]["redirect"]
@@ -1962,7 +1961,6 @@ class SubredditFlairTemplates:
             "text_editable": text_editable,
         }
         if fetch:
-
             _existing_data = [
                 template async for template in self if template["id"] == template_id
             ]
@@ -3535,10 +3533,7 @@ class SubredditStylesheet:
             await subreddit.stylesheet.delete_banner_additional_image()
 
         """
-        data = {
-            "bannerPositionedImage": "",
-            "secondaryBannerPositionedImage": "",
-        }
+        data = {"bannerPositionedImage": "", "secondaryBannerPositionedImage": ""}
         await self._update_structured_styles(data)
 
     async def delete_banner_hover_image(self):

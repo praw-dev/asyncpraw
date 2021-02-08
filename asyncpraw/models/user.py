@@ -1,5 +1,5 @@
 """Provides the User class."""
-from typing import TYPE_CHECKING, AsyncGenerator, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, AsyncIterator, Dict, List, Optional, Union
 
 from ..const import API_PATH
 from ..models import Preferences
@@ -63,7 +63,7 @@ class User(AsyncPRAWBase):
 
     def contributor_subreddits(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Subreddit, None]:
+    ) -> AsyncIterator[Subreddit]:
         """Return a :class:`.ListingGenerator` of subreddits user is a contributor of.
 
         Additional keyword arguments are passed in the initialization of
@@ -141,7 +141,7 @@ class User(AsyncPRAWBase):
 
     def subreddits(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Subreddit, None]:
+    ) -> AsyncIterator[Subreddit]:
         """Return a :class:`.ListingGenerator` of subreddits the user is subscribed to.
 
         Additional keyword arguments are passed in the initialization of

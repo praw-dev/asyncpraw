@@ -20,7 +20,7 @@ class TestRemovalReason(IntegrationTest):
     async def test__fetch_int(self, _):
         self.reddit.read_only = False
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestRemovalReason.test__fetch"):
+        with self.use_cassette("TestRemovalReason.test__fetch"):
             reason = await subreddit.mod.removal_reasons.get_reason(0)
             assert isinstance(reason, RemovalReason)
 
@@ -28,7 +28,7 @@ class TestRemovalReason(IntegrationTest):
     async def test__fetch_slice(self, _):
         self.reddit.read_only = False
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-        with self.recorder.use_cassette("TestRemovalReason.test__fetch"):
+        with self.use_cassette("TestRemovalReason.test__fetch"):
             reasons = await subreddit.mod.removal_reasons.get_reason(slice(-3, None))
             assert len(reasons) == 3
             for reason in reasons:

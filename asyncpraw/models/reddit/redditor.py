@@ -163,7 +163,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     async def _fetch_info(self):
         if hasattr(self, "_fullname"):
             self.name = await self._fetch_username(self._fullname)
-        return ("user_about", {"user": self.name}, None)
+        return "user_about", {"user": self.name}, None
 
     async def _fetch_data(self):
         name, fields, params = await self._fetch_info()

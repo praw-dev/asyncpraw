@@ -88,7 +88,7 @@ class TestRemovalReason(UnitTest):
         reason = RemovalReason(
             self.reddit, subreddit=Subreddit(self.reddit, display_name="a"), id="x"
         )
-        assert repr(reason) == ("RemovalReason(id='x')")
+        assert repr(reason) == "RemovalReason(id='x')"
 
     def test_str(self):
         reason = RemovalReason(

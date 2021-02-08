@@ -13,11 +13,11 @@ from .mixins import (
     UserContentMixin,
 )
 from .redditor import Redditor
+from .subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     from ... import Reddit
     from .submission import Submission
-    from .subreddit import Subreddit  # noqa: F401
 
 
 class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
@@ -198,13 +198,11 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             attribute = "_replies"
         elif attribute == "subreddit":
             if isinstance(value, str):
-                from .. import Subreddit
-
                 value = Subreddit(self._reddit, display_name=value)
         super().__setattr__(attribute, value)
 
     def _fetch_info(self):
-        return ("info", {}, {"id": self.fullname})
+        return "info", {}, {"id": self.fullname}
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()

@@ -1,4 +1,4 @@
-"""PRAW exception classes.
+"""Async PRAW exception classes.
 
 Includes two main exceptions: :class:`.RedditAPIException` for when something
 goes wrong on the server side, and :class:`.ClientException` when something

@@ -1,5 +1,5 @@
 """Provide the RedditorListingMixin class."""
-from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Union
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
@@ -65,7 +65,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def downvoted(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for items the user has downvoted.
 
         May raise ``asyncprawcore.Forbidden`` after issuing the request if the
@@ -91,7 +91,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def gildings(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for items the user has gilded.
 
         May raise ``asyncprawcore.Forbidden`` after issuing the request if the
@@ -117,7 +117,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def hidden(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for items the user has hidden.
 
         May raise ``asyncprawcore.Forbidden`` after issuing the request if the
@@ -143,7 +143,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def saved(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for items the user has saved.
 
         May raise ``asyncprawcore.Forbidden`` after issuing the request if the
@@ -169,7 +169,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def upvoted(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for items the user has upvoted.
 
         May raise ``asyncprawcore.Forbidden`` after issuing the request if the

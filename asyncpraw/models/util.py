@@ -73,7 +73,6 @@ def permissions_string(
        permissions.
 
     """
-    to_set = []
     if permissions is None:
         to_set = ["+all"]
     else:

@@ -1,5 +1,5 @@
 """Provide the LiveThread class."""
-from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
@@ -26,9 +26,7 @@ class LiveContributorRelationship:
             permissions = set(permissions)
         return ",".join(f"+{x}" for x in permissions)
 
-    def __call__(
-        self,
-    ) -> AsyncGenerator:  # noqa: D202
+    def __call__(self) -> AsyncIterator[Redditor]:
         """Return a :class:`.RedditorList` for live threads' contributors.
 
         Usage:
@@ -410,7 +408,7 @@ class LiveThread(RedditBase):
         super().__init__(reddit, _data=_data)
 
     def _fetch_info(self):
-        return ("liveabout", {"id": self.id}, None)
+        return "liveabout", {"id": self.id}, None
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
@@ -426,7 +424,7 @@ class LiveThread(RedditBase):
 
     def discussions(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Submission", None]:
+    ) -> AsyncIterator["Submission"]:
         """Get submissions linking to the thread.
 
         :param generator_kwargs: keyword arguments passed to
@@ -469,7 +467,7 @@ class LiveThread(RedditBase):
 
     async def updates(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["LiveUpdate", None]:
+    ) -> AsyncIterator["LiveUpdate"]:
         """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
 
         :param generator_kwargs: keyword arguments passed to
@@ -629,9 +627,7 @@ class LiveThreadStream:
         """
         self.live_thread = live_thread
 
-    def updates(
-        self, **stream_options: Dict[str, Any]
-    ) -> AsyncGenerator["LiveUpdate", None]:
+    def updates(self, **stream_options: Dict[str, Any]) -> AsyncIterator["LiveUpdate"]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created
@@ -741,9 +737,9 @@ class LiveUpdate(FullnameMixin, RedditBase):
             update.author     # "umbrae"
         """
         if _data is not None:
-            # Since _data (part of JSON returned from reddit) have no
-            # thread ID, self._thread must be set by the caller of
-            # LiveUpdate(). See the code of LiveThread.updates() for example.
+            # Since _data (part of JSON returned from reddit) have no thread ID,
+            # self._thread must be set by the caller of LiveUpdate(). See the code of
+            # LiveThread.updates() for example.
             super().__init__(reddit, _data=_data, _fetched=True)
         elif thread_id and update_id:
             self.id = update_id

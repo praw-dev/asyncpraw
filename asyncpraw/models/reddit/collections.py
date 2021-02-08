@@ -6,6 +6,7 @@ from ...exceptions import ClientException
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
 from .base import RedditBase
+from .redditor import Redditor
 from .submission import Submission
 from .subreddit import Subreddit
 
@@ -163,13 +164,13 @@ class Collection(RedditBase):
     def __setattr__(self, attribute: str, value: Any):
         """Objectify author, subreddit, and sorted_links attributes."""
         if attribute == "author_name":
-            self.author = value
+            self.author = Redditor(self._reddit, name=attribute)
         elif attribute == "sorted_links":
             value = self._reddit._objector.objectify(value)
         super().__setattr__(attribute, value)
 
     def _fetch_info(self):
-        return ("collection", {}, self._info_params)
+        return "collection", {}, self._info_params
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
@@ -190,7 +191,6 @@ class Collection(RedditBase):
             )
 
         other = type(self)(self._reddit, _data=data)
-        other.author_name = await self._reddit.redditor(other.author_name)
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
