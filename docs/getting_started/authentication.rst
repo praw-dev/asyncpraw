@@ -74,7 +74,7 @@ To verify that you are authenticated as the correct user run:
 
 .. code-block:: python
 
-   print(reddit.user.me())
+   print(await reddit.user.me())
 
 The output should contain the same name as you entered for ``username``.
 
@@ -164,8 +164,8 @@ token via:
 
 .. code-block:: python
 
-    print(reddit.auth.authorize(code))
-    print(reddit.user.me())
+    print(await reddit.auth.authorize(code))
+    print(await reddit.user.me())
 
 The first line of output is the ``refresh_token``. You can save this for later
 use (see :ref:`using_refresh_token`).
@@ -189,7 +189,7 @@ part of the redirect. For the implicit flow call :meth:`.url` like so:
 
 .. code-block:: python
 
-   print(reddit.auth.url(["identity"], "...", implicit=True)
+   print(reddit.auth.url(["identity"], "...", implicit=True))
 
 Then use :meth:`.implicit` to provide the authorization to the :class:`.Reddit`
 instance.
@@ -271,7 +271,7 @@ of :class:`.Reddit` like so:
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         refresh_token="WeheY7PwgeCZj4S3QgUcLhKE5S2s4eAYdxM",
                         user_agent="testscript by u/fakebot3")
-   print(reddit.auth.scopes())
+   print(await reddit.auth.scopes())
 
 The output from the above code displays which scopes are available on the
 :class:`.Reddit` instance.

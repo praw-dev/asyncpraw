@@ -256,7 +256,7 @@ class SubredditRemovalReasons:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("NAME")
-            await subreddit.mod.removal_reasons.add(message="Foobar", "title="Test")
+            await subreddit.mod.removal_reasons.add(message="Foobar", title="Test")
 
         """
         data = {"message": message, "title": title}

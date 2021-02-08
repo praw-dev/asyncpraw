@@ -231,13 +231,14 @@ class SubredditWidgets(AsyncPRAWBase):
         widgets.progressive_images = True
         async for widget in widgets.sidebar():
            # do something
+           ...
 
     Access a subreddit's widgets with the following attributes:
 
     .. code-block:: python
 
-        print(await widgets.id_card()
-        print(await widgets.moderators_widget()
+        print(await widgets.id_card())
+        print(await widgets.moderators_widget())
         print([widget async for widget in widgets.sidebar()])
         print([widget async for widget in widgets.topbar()])
 
@@ -545,7 +546,7 @@ class SubredditWidgetsModeration:
                        "width": 200
                    }
                }
-           ]
+            ]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             new_widget = await widget_moderation.add_button_widget(
                "Things to click", "Click some of these *cool* links!",
@@ -833,7 +834,7 @@ class SubredditWidgetsModeration:
                     {"text": "requests", "url": "http://python-requests.org"}
                 ]},
                {"text": "Reddit homepage", "url": "https://reddit.com"}
-           ]
+            ]
             new_widget = await widget_moderation.add_menu(menu_contents)
 
         """
@@ -927,7 +928,7 @@ class SubredditWidgetsModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("mysub")
-            widgets = [async for widget in subreddit.widgets]
+            widgets = [widget async for widget in subreddit.widgets]
             order = list(widgets.sidebar)
             order.reverse()
             await widgets.mod.reorder(order)
@@ -1062,7 +1063,7 @@ class ButtonWidget(Widget, BaseList):
                "textColor": "#FFFF00",
                "fillColor": "#0000FF"
            },
-       ]
+        ]
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         button_widget = await widgets.mod.add_button_widget(
            "Things to click", "Click some of these *cool* links!",
@@ -1497,7 +1498,7 @@ class Menu(Widget, BaseList):
                 {"text": "requests", "url": "http://python-requests.org"}
             ]},
            {"text": "Reddit homepage", "url": "https://reddit.com"}
-       ]
+        ]
         menu = await widgets.mod.add_menu(menu_contents)
 
     For more information on creation, see :meth:`.add_menu`.

@@ -87,6 +87,7 @@ subreddit. To indefinitely iterate over new submissions to a subreddit add:
     subreddit = await reddit.subreddit("AskReddit")
     async for submission in subreddit.stream.submissions():
         # do something with submission
+        ...
 
 Replace ``AskReddit`` with the name of another subreddit if you want to iterate
 through its new submissions. Additionally multiple subreddits can be specified

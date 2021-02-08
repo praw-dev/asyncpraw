@@ -72,7 +72,7 @@ class GildableMixin:
             await comment.award()
 
             submission = await reddit.submission("8dmv8z")
-            sawait ubmission.award()
+            await submission.award()
 
         To award the platinum award with the message 'Nice!' and reveal your username to
         the recipient do:

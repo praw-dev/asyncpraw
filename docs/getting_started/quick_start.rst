@@ -167,7 +167,7 @@ calling ``subreddit`` on your :class:`.Reddit` instance. For example:
 .. code-block:: python
 
     # assume you have a Reddit instance bound to variable `reddit`
-    subreddit = await reddit.subreddit("redditdev")
+    subreddit = await reddit.subreddit("redditdev", fetch=True)
 
     print(subreddit.display_name)  # Output: redditdev
     print(subreddit.title)         # Output: reddit Development
@@ -238,7 +238,7 @@ For example:
     print(redditor1.name)  # Output: name of the redditor
 
     # assume you have a Reddit instance bound to variable `reddit`
-    redditor2 = await reddit.redditor("bboe")
+    redditor2 = await reddit.redditor("bboe", fetch=True)
     print(redditor2.link_karma)  # Output: u/bboe's karma
 
 Obtain :class:`.Comment` Instances

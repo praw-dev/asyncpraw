@@ -49,7 +49,7 @@ Q: Help, I keep on getting redirected to ``/r/subreddit/login/``!
 
 Q2: I keep on getting this exception:
 
-.. code-block:: none
+.. code-block:: text
 
     asyncprawcore.exceptions.Redirect: Redirect to /r/subreddit/login/ (You may be trying to perform a non-read-only action via a read-only instance.)
 
@@ -74,6 +74,7 @@ For example, the code block:
     subreddit = await reddit.subreddit('all')
     async for result in subreddit.search('https://google.com'):
         # do things with results
+        ...
 
 Will become this code block:
 
@@ -82,3 +83,4 @@ Will become this code block:
     subreddit = await reddit.subreddit('all')
     async for result in subreddit.search('url:"https://google.com"'):
         # do things with results
+        ...

@@ -216,7 +216,7 @@ class Reddit:
         .. code-block:: python
 
             async with Reddit(...) as reddit:
-                print(await reddit.user.me()
+                print(await reddit.user.me())
 
         You can also call :meth:`.Reddit.close`:
 

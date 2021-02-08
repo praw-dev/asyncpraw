@@ -28,6 +28,7 @@ class SubmissionListingMixin(AsyncPRAWBase):
 
             async for duplicate in submission.duplicates():
                 # process each duplicate
+                ...
 
         .. seealso:: :meth:`~.upvote`
 
