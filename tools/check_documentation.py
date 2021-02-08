@@ -53,8 +53,8 @@ class DocumentationChecker:
                 continue
             if not cls.HAS_ATTRIBUTE_TABLE.search(subclass.__doc__):
                 print(
-                    f"Subclass {subclass.__module__}.{subclass.__name__} is missing a "
-                    f"table of common attributes."
+                    f"Subclass {subclass.__module__}.{subclass.__name__} is missing a"
+                    " table of common attributes."
                 )
                 success = False
             for method_name in dir(subclass):

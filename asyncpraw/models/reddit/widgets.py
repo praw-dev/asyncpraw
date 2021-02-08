@@ -357,10 +357,12 @@ class SubredditWidgets(AsyncPRAWBase):
         """Return the value of `attr`."""
         if not attr.startswith("_") and not self._fetched:
             raise AttributeError(
-                f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"
+                f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you"
+                " forget to run '.refresh()'?"
             )
         raise AttributeError(  # pragma: no cover; I have no idea how to cover this
-            f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"
+            f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you"
+            " forget to run '.refresh()'?"
         )
 
     def __init__(self, subreddit):

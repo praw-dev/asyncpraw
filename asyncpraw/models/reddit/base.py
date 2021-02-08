@@ -40,8 +40,8 @@ class RedditBase(AsyncPRAWBase):
         """Return the value of `attribute`."""
         if not attribute.startswith("_") and not self._fetched:
             raise AttributeError(
-                "{0!r} object has no attribute {1!r}. {0!r} object has not been fetched, "
-                "did you forget to execute '.load()'?".format(
+                "{0!r} object has no attribute {1!r}. {0!r} object has not been"
+                " fetched, did you forget to execute '.load()'?".format(
                     self.__class__.__name__, attribute
                 )
             )

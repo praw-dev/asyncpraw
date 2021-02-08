@@ -42,8 +42,8 @@ def send_message(client, message):
 async def main():
     """Provide the program's entry point when directly executed."""
     print(
-        "Go here while logged into the account you want to create a token for: "
-        "https://www.reddit.com/prefs/apps/"
+        "Go here while logged into the account you want to create a token for:"
+        " https://www.reddit.com/prefs/apps/"
     )
     print(
         "Click the create an app button. Put something in the name field and select the"

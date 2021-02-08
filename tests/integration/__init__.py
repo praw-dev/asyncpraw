@@ -94,13 +94,13 @@ class IntegrationTest(asynctest.TestCase):
         dynamic_name = self.get_cassette_name()
         if cassette_name:
             self.logger.debug(
-                f"Static cassette name provided by {dynamic_name}. The following name "
-                f"was provided: {cassette_name}"
+                f"Static cassette name provided by {dynamic_name}. The following name"
+                f" was provided: {cassette_name}"
             )
             if cassette_name != dynamic_name:
                 self.logger.warning(
-                    f"Dynamic cassette name for function {dynamic_name} does not "
-                    f"match the provided cassette name: {cassette_name}"
+                    f"Dynamic cassette name for function {dynamic_name} does not match"
+                    f" the provided cassette name: {cassette_name}"
                 )
         return self.recorder.use_cassette(cassette_name or dynamic_name, **kwargs)
 

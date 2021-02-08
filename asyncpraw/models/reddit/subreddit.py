@@ -700,8 +700,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             and mime_type.partition("/")[0] != expected_mime_prefix
         ):
             raise ClientException(
-                f"Expected a mimetype starting with {expected_mime_prefix!r} but got "
-                f"mimetype {mime_type!r} (from file extension {file_extension!r})."
+                f"Expected a mimetype starting with {expected_mime_prefix!r} but got"
+                f" mimetype {mime_type!r} (from file extension {file_extension!r})."
             )
         img_data = {"filepath": file_name, "mimetype": mime_type}
 
@@ -1749,8 +1749,8 @@ class SubredditFlair:
         """
         if css_class and flair_template_id is not None:
             raise TypeError(
-                "Parameter `css_class` cannot be used in "
-                "conjunction with `flair_template_id`."
+                "Parameter `css_class` cannot be used in conjunction with"
+                " `flair_template_id`."
             )
         data = {"name": str(redditor), "text": text}
         if flair_template_id is not None:

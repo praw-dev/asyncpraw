@@ -52,8 +52,8 @@ def filter_access_token(response):
 placeholders = {
     x: env_default(x)
     for x in (
-        "auth_code client_id client_secret password redirect_uri "
-        "test_subreddit user_agent username refresh_token"
+        "auth_code client_id client_secret password redirect_uri test_subreddit"
+        " user_agent username refresh_token"
     ).split()
 }
 
