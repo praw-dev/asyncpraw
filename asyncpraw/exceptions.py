@@ -32,7 +32,7 @@ class RedditErrorItem:
         return error_str
 
     def __init__(self, error_type: str, message: str, field: Optional[str] = None):
-        """Instantiate an error item.
+        """Initialize an error item.
 
         :param error_type: The error type set on Reddit's end.
         :param message: The associated message for the error.
@@ -193,7 +193,7 @@ class InvalidImplicitAuth(ClientException):
     """Indicate exceptions where an implicit auth type is used incorrectly."""
 
     def __init__(self):
-        """Instantize the class."""
+        """Initialize the class."""
         super().__init__("Implicit authorization can only be used with installed apps.")
 
 
@@ -271,7 +271,7 @@ class MediaPostFailed(WebSocketException):
     """Indicate exceptions where media uploads failed.."""
 
     def __init__(self):
-        """Instantiate MediaPostFailed."""
+        """Initialize MediaPostFailed."""
         super().__init__(
             "The attempted media upload action has failed. Possible causes"
             " include the corruption of media files. Check that the media "

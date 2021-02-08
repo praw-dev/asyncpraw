@@ -225,7 +225,7 @@ class Reddit:
             reddit = Reddit(...)
             # do stuff with reddit
             ...
-            # then close the reqestor when done
+            # then close the requestor when done
             await reddit.close()
 
         """

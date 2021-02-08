@@ -45,7 +45,7 @@ class RemovalReason(RedditBase):
             warn(
                 "Parameter ``reason_id`` is deprecated. Either use positional"
                 ' arguments (reason_id="x" -> "x") or change the parameter '
-                'name to ``id`` (resaon_id="x" -> id="x"). The parameter will'
+                'name to ``id`` (reason_id="x" -> id="x"). The parameter will'
                 " be removed in Async PRAW 8.",
                 category=DeprecationWarning,
                 stacklevel=3,
