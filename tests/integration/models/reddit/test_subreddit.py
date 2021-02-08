@@ -1,20 +1,14 @@
 """Test asyncpraw.models.subreddit."""
-from asyncio import TimeoutError
 import socket
 import sys
-
+from asyncio import TimeoutError
 from os.path import abspath, dirname, join
 
-from aiohttp import ClientResponse
-from asynctest import mock
-from aiohttp.http_websocket import WebSocketError
 import pytest
-from asyncprawcore import (
-    BadRequest,
-    Forbidden,
-    NotFound,
-    TooLarge,
-)
+from aiohttp import ClientResponse
+from aiohttp.http_websocket import WebSocketError
+from asyncprawcore import BadRequest, Forbidden, NotFound, TooLarge
+from asynctest import mock
 
 from asyncpraw.const import PNG_HEADER
 from asyncpraw.exceptions import (
@@ -29,6 +23,7 @@ from asyncpraw.models import (
     InlineGif,
     InlineImage,
     InlineVideo,
+    ListingGenerator,
     ModAction,
     ModmailAction,
     ModmailConversation,
@@ -39,7 +34,6 @@ from asyncpraw.models import (
     Subreddit,
     SubredditMessage,
     WikiPage,
-    ListingGenerator,
 )
 
 from ... import IntegrationTest
@@ -1521,7 +1515,7 @@ class TestSubredditModeration(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             before_settings = await subreddit.mod.settings()
-            new_title = before_settings["title"] + "x"
+            new_title = f"{before_settings['title']}x"
             new_title = (
                 "x"
                 if (len(new_title) >= 20 and "placeholder" not in new_title)

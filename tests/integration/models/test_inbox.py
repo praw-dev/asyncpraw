@@ -1,8 +1,7 @@
 """Test asyncpraw.models.inbox."""
-from asynctest import mock
-
 import pytest
 from asyncprawcore import Forbidden
+from asynctest import mock
 
 from asyncpraw.models import Comment, Message, Redditor, Subreddit
 

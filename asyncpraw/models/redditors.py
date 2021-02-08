@@ -1,7 +1,7 @@
 """Provide the Redditors class."""
 from itertools import islice
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, AsyncGenerator, Iterable, Dict, Union
+from typing import TYPE_CHECKING, AsyncGenerator, Dict, Iterable, Union
 
 import asyncprawcore
 

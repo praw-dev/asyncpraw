@@ -27,7 +27,7 @@ def do_process(args, shell=False):
         print(f"\nFailed: {' '.join(args)}")
         return False
     except Exception as exc:
-        sys.stderr.write(str(exc) + "\n")
+        sys.stderr.write(f"{str(exc)}\n")
         sys.exit(1)
     return True
 
@@ -39,6 +39,7 @@ def run_static():
     Otherwise, it will return statuscode 1
     """
     success = True
+    # Formatters
     success &= do_process(
         [
             sys.executable,
@@ -46,13 +47,17 @@ def run_static():
             "--replace",
         ]
     )
+    success &= do_process(["flynt", "-q", "-tc", "-ll", "1000", "."])
+    # needs to be first because flynt is not black compliant
+    success &= do_process(["black", "."])
+    success &= do_process(["isort", "."])
+    # Linters
     success &= do_process(
         [
             sys.executable,
             path.join(current_directory, "tools", "check_documentation.py"),
         ]
     )
-    success &= do_process(["black", "."])
     success &= do_process(["flake8", "--exclude=.eggs,build,docs,.venv"])
     success &= do_process(["pydocstyle", "asyncpraw"])
     # success &= do_process(["pylint", "--rcfile=.pylintrc", "asyncpraw"])

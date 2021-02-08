@@ -1,5 +1,6 @@
 import sys
 from datetime import datetime
+
 from asynctest import mock
 
 from asyncpraw.models import ModmailMessage, Subreddit

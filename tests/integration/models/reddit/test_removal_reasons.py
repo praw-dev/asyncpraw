@@ -1,6 +1,5 @@
-from asynctest import mock
-
 import pytest
+from asynctest import mock
 
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models import RemovalReason

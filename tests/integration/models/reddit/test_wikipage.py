@@ -1,7 +1,6 @@
-from asynctest import mock
-
 import pytest
 from asyncprawcore import NotFound
+from asynctest import mock
 
 from asyncpraw.models import Redditor, WikiPage
 

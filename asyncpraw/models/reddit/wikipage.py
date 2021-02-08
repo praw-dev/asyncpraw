@@ -1,5 +1,5 @@
 """Provide the WikiPage class."""
-from typing import TYPE_CHECKING, Any, Dict, AsyncGenerator, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
@@ -195,9 +195,7 @@ class WikiPage(RedditBase):
 
     def __repr__(self) -> str:
         """Return an object initialization representation of the instance."""
-        return "{}(subreddit={!r}, name={!r})".format(
-            self.__class__.__name__, self.subreddit, self.name
-        )
+        return f"{self.__class__.__name__}(subreddit={self.subreddit!r}, name={self.name!r})"
 
     def __str__(self) -> str:
         """Return a string representation of the instance."""

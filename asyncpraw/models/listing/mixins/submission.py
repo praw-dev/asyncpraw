@@ -1,5 +1,5 @@
 """Provide the SubmissionListingMixin class."""
-from typing import TYPE_CHECKING, Dict, AsyncGenerator, Union
+from typing import TYPE_CHECKING, AsyncGenerator, Dict, Union
 
 from ....const import API_PATH
 from ...base import AsyncPRAWBase

@@ -1,5 +1,6 @@
 """PRAW Unit test suite."""
 import asynctest
+
 from asyncpraw import Reddit
 
 

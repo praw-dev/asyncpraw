@@ -1,5 +1,5 @@
 """Provide the Front class."""
-from typing import TYPE_CHECKING, Dict, AsyncGenerator, List, Union
+from typing import TYPE_CHECKING, AsyncGenerator, Dict, List, Union
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase

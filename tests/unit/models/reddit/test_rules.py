@@ -1,6 +1,7 @@
 import pytest
 
 from asyncpraw.models import Rule, Subreddit
+
 from ... import UnitTest
 
 

@@ -1,7 +1,7 @@
 """Prepare py.test."""
+import asyncio
 import json
 import os
-import asyncio
 from base64 import b64encode
 from datetime import datetime
 from functools import wraps
@@ -103,7 +103,7 @@ class CustomSerializer(object):
     def serialize(cassette_dict):
         cassette_dict["recorded_at"] = datetime.now().isoformat()[:-7]
         return (
-            json.dumps(serialize_dict(cassette_dict), sort_keys=True, indent=2) + "\n"
+            f"{json.dumps(serialize_dict(cassette_dict), sort_keys=True, indent=2)}\n"
         )
 
     @staticmethod
