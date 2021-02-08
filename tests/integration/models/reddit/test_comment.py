@@ -1,7 +1,7 @@
 import pytest
 from asynctest import mock
 
-from asyncpraw.exceptions import ClientException, PRAWException, RedditAPIException
+from asyncpraw.exceptions import AsyncPRAWException, ClientException, RedditAPIException
 from asyncpraw.models import Comment, Submission
 
 from ... import IntegrationTest
@@ -104,7 +104,7 @@ class TestComment(IntegrationTest):
 
     async def test_invalid(self):
         with self.use_cassette():
-            with pytest.raises(PRAWException) as excinfo:
+            with pytest.raises(AsyncPRAWException) as excinfo:
                 await self.reddit.comment("0")
             assert excinfo.value.args[0].startswith("No data returned for comment")
 

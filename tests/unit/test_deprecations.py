@@ -2,7 +2,8 @@
 
 import pytest
 
-from asyncpraw.exceptions import APIException, WebSocketException
+from asyncpraw import Reddit
+from asyncpraw.exceptions import APIException, AsyncPRAWException, WebSocketException
 from asyncpraw.models import Subreddit
 
 from . import UnitTest
@@ -27,6 +28,23 @@ class TestDeprecation(UnitTest):
             exc.message
         with pytest.raises(DeprecationWarning):
             exc.field
+
+    def test_praw_exception_rename(self):
+        with pytest.raises(AsyncPRAWException):
+            Reddit()
+
+        with pytest.raises(DeprecationWarning):
+            import asyncpraw
+
+            asyncpraw.exceptions.PRAWException
+
+        with pytest.raises(DeprecationWarning):
+            from asyncpraw import exceptions
+
+            exceptions.PRAWException
+
+        with pytest.raises(DeprecationWarning):
+            from asyncpraw.exceptions import PRAWException  # noqa: F401
 
     async def test_subreddit_rules_call(self):
         with pytest.raises(DeprecationWarning) as excinfo:
