@@ -3,6 +3,7 @@ import pytest
 
 from asyncpraw.exceptions import (
     APIException,
+    AsyncPRAWException,
     ClientException,
     DuplicateReplaceException,
     InvalidFlairTemplateID,
@@ -10,20 +11,19 @@ from asyncpraw.exceptions import (
     InvalidURL,
     MediaPostFailed,
     MissingRequiredAttributeException,
-    PRAWException,
     RedditAPIException,
     RedditErrorItem,
     WebSocketException,
 )
 
 
-class TestPRAWException:
+class TestAsyncPRAWException:
     def test_inheritance(self):
-        assert issubclass(PRAWException, Exception)
+        assert issubclass(AsyncPRAWException, Exception)
 
     def test_str(self):
-        assert str(PRAWException()) == ""
-        assert str(PRAWException("foo")) == "foo"
+        assert str(AsyncPRAWException()) == ""
+        assert str(AsyncPRAWException("foo")) == "foo"
 
 
 class TestRedditErrorItem:
@@ -62,7 +62,7 @@ class TestAPIException:
 
 class TestRedditAPIException:
     def test_inheritance(self):
-        assert issubclass(RedditAPIException, PRAWException)
+        assert issubclass(RedditAPIException, AsyncPRAWException)
 
     def test_items(self):
         container = RedditAPIException(
@@ -86,7 +86,7 @@ class TestRedditAPIException:
 
 class TestClientException:
     def test_inheritance(self):
-        assert issubclass(ClientException, PRAWException)
+        assert issubclass(ClientException, AsyncPRAWException)
 
     def test_str(self):
         assert str(ClientException()) == ""

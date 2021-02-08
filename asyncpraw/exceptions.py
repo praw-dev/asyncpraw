@@ -3,17 +3,21 @@
 Includes two main exceptions: :class:`.RedditAPIException` for when something
 goes wrong on the server side, and :class:`.ClientException` when something
 goes wrong on the client side. Both of these classes extend
-:class:`.PRAWException`.
+:class:`.AsyncPRAWException`.
 
 All other exceptions are subclassed from :class:`.ClientException`.
 
 """
+import sys
 from typing import List, Optional, Union
 from warnings import warn
 
 
-class PRAWException(Exception):
+class AsyncPRAWException(Exception):
     """The base Async PRAW Exception that all other exception classes extend."""
+
+
+PRAWException = AsyncPRAWException
 
 
 class RedditErrorItem:
@@ -57,7 +61,7 @@ class RedditErrorItem:
         return self.error_message
 
 
-class APIException(PRAWException):
+class APIException(AsyncPRAWException):
     """Old class preserved for alias purposes.
 
     .. deprecated:: 7.0
@@ -103,7 +107,7 @@ class APIException(PRAWException):
             Accessing attributes through instances of
             :class:`.RedditAPIException` is deprecated. This behavior will be
             removed in Async PRAW 8.0. Check out the
-            :ref:`PRAW 7 Migration tutorial <Exception_Handling>` on how to
+            :ref:`Async PRAW 7 Migration tutorial <Exception_Handling>` on how to
             migrate code from this behavior.
 
         """
@@ -159,7 +163,7 @@ class RedditAPIException(APIException):
     """Container for error messages from Reddit's API."""
 
 
-class ClientException(PRAWException):
+class ClientException(AsyncPRAWException):
     """Indicate exceptions that don't involve interaction with Reddit's API."""
 
 
@@ -274,3 +278,27 @@ class MediaPostFailed(WebSocketException):
             "file can be opened on your local machine.",
             None,
         )
+
+
+# Adapted from https://stackoverflow.com/a/40546615
+class ExceptionWrapper(object):
+    """Wrapper to facilitate showing depreciation for PRAWException class rename."""
+
+    def __init__(self, wrapped):
+        """Initialize Wrapper instance."""
+        self.wrapped = wrapped
+
+    def __getattr__(self, attribute):
+        """Return the value of `attribute`."""
+        if attribute == "PRAWException":
+            warn(
+                "PRAWException as been renamed to AsyncPRAWException. PRAWException "
+                " will be removed in the next version Async PRAW.",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+        return getattr(self.wrapped, attribute)
+
+
+if "sphinx" not in sys.modules:
+    sys.modules[__name__] = ExceptionWrapper(sys.modules[__name__])

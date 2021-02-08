@@ -33,6 +33,7 @@ Unreleased
 * :meth:`~.Subreddits.gold` is superseded by :meth:`~.Subreddits.premium`.
 * :meth:`~.Submission.gild` is superseded by :meth:`~.Submission.award`.
 * :meth:`~.Comment.gild` is superseded by :meth:`~.Comment.award`.
+* ``PRAWException`` is superseded by :class:`.AsyncPRAWException`.
 
 **Fixed**
 
