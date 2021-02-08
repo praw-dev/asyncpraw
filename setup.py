@@ -59,9 +59,8 @@ setup(
         "Topic :: Utilities",
     ],
     description=(
-        "Async PRAW, an acronym for `Asynchronous Python Reddit API Wrapper`, is a "
-        "python package that allows for simple access to "
-        "reddit's API."
+        "Async PRAW, an abbreviation for `Asynchronous Python Reddit API Wrapper`, is a"
+        " python package that allows for simple access to reddit's API."
     ),
     extras_require=extras,
     install_requires=["asyncprawcore >=1.0.1, <2.0", "update_checker >=0.18"],
