@@ -81,7 +81,7 @@ class TestCollectionModeration(IntegrationTest):
             # Testing different types for _post_fullname
             await collection.mod.add_post(posts[0])  # Subreddit object
             await collection.mod.add_post(posts[1].fullname)  # fullname
-            await collection.mod.add_post("https://reddit.com" + posts[2].permalink)
+            await collection.mod.add_post(f"https://reddit.com{posts[2].permalink}")
             await collection.mod.add_post(posts[3].id)  # id
 
             posts.append(

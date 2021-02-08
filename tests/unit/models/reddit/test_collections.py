@@ -9,7 +9,7 @@ from ... import UnitTest
 class TestCollection(UnitTest):
     def test_eq(self):
         uuid = "fake_uuid"
-        permalink = "https://reddit.com/r/subreddit/collection/" + uuid
+        permalink = f"https://reddit.com/r/subreddit/collection/{uuid}"
         collection1 = Collection(self.reddit, collection_id=uuid)
         collection2 = Collection(self.reddit, permalink=permalink)
         assert collection1 == collection2
@@ -21,7 +21,7 @@ class TestCollection(UnitTest):
     def test_init(self):
         uuid = "fake_uuid"
         assert uuid == Collection(self.reddit, collection_id=uuid).collection_id
-        permalink = "https://reddit.com/r/subreddit/collection/" + uuid
+        permalink = f"https://reddit.com/r/subreddit/collection/{uuid}"
         assert uuid == Collection(self.reddit, permalink=permalink).collection_id
 
     def test_init_bad(self):

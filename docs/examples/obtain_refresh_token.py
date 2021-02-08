@@ -71,7 +71,7 @@ async def main():
     )
     state = str(random.randint(0, 65000))
     url = reddit.auth.url(scopes, state, "permanent")
-    print("Now open this url in your browser: " + url)
+    print(f"Now open this url in your browser: {url}")
     sys.stdout.flush()
 
     client = receive_connection()

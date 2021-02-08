@@ -1521,7 +1521,7 @@ class TestSubredditModeration(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             before_settings = await subreddit.mod.settings()
-            new_title = before_settings["title"] + "x"
+            new_title = f"{before_settings['title']}x"
             new_title = (
                 "x"
                 if (len(new_title) >= 20 and "placeholder" not in new_title)
