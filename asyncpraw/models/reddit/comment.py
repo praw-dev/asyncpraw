@@ -1,6 +1,8 @@
 """Provide the Comment class."""
 from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
+from async_property import AwaitableOnly, AwaitLoader, async_cached_property
+
 from ...const import API_PATH
 from ...exceptions import ClientException, InvalidURL
 from ...util.cache import cachedproperty
@@ -13,14 +15,14 @@ from .mixins import (
     UserContentMixin,
 )
 from .redditor import Redditor
+from .submission import Submission
 
 if TYPE_CHECKING:  # pragma: no cover
     from ... import Reddit
-    from .submission import Submission
     from .subreddit import Subreddit  # noqa: F401
 
 
-class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
+class Comment(AwaitLoader, InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     """A class that represents a reddit comments.
 
     **Typical Attributes**
@@ -87,14 +89,10 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         """Return the class's kind."""
         return self._reddit.config.kinds["comment"]
 
-    @property
-    def is_root(self) -> bool:
-        """Return True when the comment is a top level comment.
-
-        .. note:: This property requires the comment to be fetched. Otherwise, an
-                   ``AttributeError`` will be raised.
-        """
-        parent_type = self.parent_id.split("_", 1)[0]
+    @async_cached_property
+    async def is_root(self) -> bool:
+        """Return True when the comment is a top level comment."""
+        parent_type = (await self.parent_id).split("_", 1)[0]
         return parent_type == self._reddit.config.kinds["submission"]
 
     @cachedproperty
@@ -110,6 +108,10 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         """
         return CommentModeration(self)
+
+    @async_cached_property
+    async def parent_id(self) -> str:
+        """Return the parent id of the comment."""
 
     @property
     def replies(self) -> CommentForest:
@@ -137,25 +139,19 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             self._replies = CommentForest(self.submission, self._replies)
         return self._replies
 
-    @property
-    def submission(self) -> "Submission":
+    @async_cached_property
+    async def submission(self) -> "Submission":
         """Return the Submission object this comment belongs to."""
-        if not self._submission and self._fetched:  # Comment not from submission
-            from .. import Submission
-
+        if not self._submission:  # Comment not from submission
             self._submission = Submission(
-                self._reddit, id=self._extract_submission_id()
+                reddit=self._reddit, id=await self._extract_submission_id()
             )
-            return self._submission
-        elif self._submission:
-            return self._submission
-        else:
-            return None
+        return self._submission
 
     @submission.setter
     def submission(self, submission: "Submission"):
         """Update the Submission associated with the Comment."""
-        submission._comments_by_id[self.name] = self
+        submission._comments_by_id[self.fullname] = self
         self._submission = submission
         # pylint: disable=not-an-iterable
         for reply in self.replies:
@@ -223,9 +219,11 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def _extract_submission_id(self):
+    async def _extract_submission_id(self):
         if "context" in self.__dict__:
             return self.context.rsplit("/", 4)[1]
+        if "link_id" not in self.__dict__:
+            await self._fetch()
         return self.link_id.split("_", 1)[1]
 
     async def parent(self) -> Union["Comment", "Submission"]:
@@ -264,7 +262,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            ancestor =  await reddit.comment("dkk4qjd")
+            ancestor = await reddit.comment("dkk4qjd")
             refresh_counter = 0
             while not ancestor.is_root:
                 ancestor = await ancestor.parent()
@@ -282,10 +280,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         if not self._fetched:
             await self._fetch()
-
-        if not self.submission._fetched:
-            await self.submission._fetch()
-
+        if isinstance(self.submission, AwaitableOnly):
+            self.submission = await self.submission
         if self.parent_id == self.submission.fullname:
             return self.submission
 
@@ -312,8 +308,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         if "context" in self.__dict__:  # Using hasattr triggers a fetch
             comment_path = self.context.split("?", 1)[0]
         else:
-            if not self.submission:
-                await self._fetch()
+            if isinstance(self.submission, AwaitableOnly):
+                self.submission = await self.submission
             path = API_PATH["submission"].format(id=self.submission.id)
             comment_path = f"{path}_/{self.id}"
 
@@ -323,8 +319,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             params["limit"] = self.reply_limit
         if "reply_sort" in self.__dict__:
             params["sort"] = self.reply_sort
-        response = await self._reddit.get(comment_path, params=params)
-        comment_list = response[1].children
+        comment_list = (await self._reddit.get(comment_path, params=params))[1].children
         if not comment_list:
             raise ClientException(self.MISSING_COMMENT_MESSAGE)
 
@@ -344,7 +339,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         self.__dict__.update(comment.__dict__)
 
         for reply in comment_list:
-            reply.submission = self.submission
+            reply.submission = await self.submission
         return self
 
 

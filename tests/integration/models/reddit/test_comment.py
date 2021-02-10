@@ -13,8 +13,8 @@ class TestComment(IntegrationTest):
             comment = await self.reddit.comment("cklhv0f")
             assert comment.author == "bboe"
             assert comment.body.startswith("Yes it does.")
-            assert not comment.is_root
-            assert comment.submission == "2gmzqe"
+            assert not await comment.is_root
+            assert await comment.submission == "2gmzqe"
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_block(self, _):
@@ -147,7 +147,7 @@ class TestComment(IntegrationTest):
     async def test_parent__comment_from_forest(self):
         with self.use_cassette():
             submission = await self.reddit.submission("2gmzqe")
-            comments = await submission.comments()
+            comments = await submission.comments
             comment = comments[0].replies[0]
             parent = await comment.parent()
         assert comment in parent.replies
@@ -167,7 +167,7 @@ class TestComment(IntegrationTest):
         comment = Comment(self.reddit, "cklfmye")
         with self.use_cassette():
             parent = await comment.parent()
-            parent_comments = await parent.comments()
+            parent_comments = await parent.comments
             assert comment in parent_comments
         assert isinstance(parent, Submission)
         assert parent.fullname == comment.parent_id
@@ -230,8 +230,8 @@ class TestComment(IntegrationTest):
             comment = await parent_comment.reply("Comment reply")
             assert comment.author == pytest.placeholders.username
             assert comment.body == "Comment reply"
-            assert not comment.is_root
-            assert comment.parent_id == parent_comment.fullname
+            assert not await comment.is_root
+            assert await comment.parent_id == parent_comment.fullname
 
     # async def test_reply__none(self): # TODO: I have not been able to reproduce this again; same with praw
     #     self.reddit.read_only = False

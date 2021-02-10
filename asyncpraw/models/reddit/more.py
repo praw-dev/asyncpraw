@@ -45,13 +45,12 @@ class MoreComments(AsyncPRAWBase):
         parent = await self._load_comment(self.parent_id.split("_", 1)[1])
         self._comments = parent.replies
         if update:
-            async for comment in self._comments:
+            for comment in self._comments:
                 comment.submission = self.submission
         return self._comments
 
     async def _load_comment(self, comment_id):
-        submission_path = API_PATH["submission"].format(id=self.submission.id)
-        path = f"{submission_path}_/{comment_id}"
+        path = f"{API_PATH['submission'].format(id=self.submission.id)}_/{comment_id}"
         _, comments = await self._reddit.get(
             path,
             params={

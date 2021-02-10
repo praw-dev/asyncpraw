@@ -11,7 +11,7 @@ class TestSubmission(IntegrationTest):
     async def test_comments(self):
         with self.use_cassette():
             submission = await self.reddit.submission("2gmzqe")
-            comments = await submission.comments()
+            comments = await submission.comments
             assert len(comments) == 1
             assert isinstance(comments[0], Comment)
             assert isinstance(comments[0].replies[0], Comment)

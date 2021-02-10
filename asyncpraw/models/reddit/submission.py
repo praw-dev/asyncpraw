@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 from urllib.parse import urljoin
 
+from async_property import AwaitLoader, async_cached_property
 from asyncprawcore import Conflict
 
 from ...const import API_PATH
@@ -352,7 +353,9 @@ class SubmissionModeration(ThingModerationMixin):
         )
 
 
-class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, RedditBase):
+class Submission(
+    AwaitLoader, SubmissionListingMixin, UserContentMixin, FullnameMixin, RedditBase
+):
     """A class for submissions to reddit.
 
     **Typical Attributes**
@@ -455,6 +458,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         """Return the class's kind."""
         return self._reddit.config.kinds["submission"]
 
+    @async_cached_property
     async def comments(self) -> CommentForest:
         """Provide an instance of :class:`.CommentForest`.
 
@@ -463,9 +467,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            comments = await submission.comments()
+            comments = await submission.comments
             await comments.replace_more(limit=0)
-            comment_list = await comments.list()
+            comment_list = comments.list()
             for comment in comment_list:
                 # do stuff with comment
 
@@ -476,10 +480,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         .. code-block:: python
 
             submission.comment_sort = "new"
-            comments = await submission.comments()
-            comment_list = await comments.list()
-            for comment in comment_list:
-                # do stuff with comment
+            comments = submission.comments.list()
 
         .. note:: The appropriate values for ``comment_sort`` include
            ``confidence``, ``controversial``, ``new``, ``old``, ``q&a``,
@@ -490,7 +491,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         """
         # This assumes _comments is set so that _fetch is called when it's not.
-        if "_comments" not in self.__dict__:
+        if not self._fetched:
             await self._fetch()
         return self._comments
 
