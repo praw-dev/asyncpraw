@@ -8,7 +8,7 @@ class StaticChecker:
     """Run simple checks on the entire document or specific lines."""
 
     def __init__(self, replace: bool):
-        """Instantiates the class.
+        """Initializes the class.
 
         :param replace: Whether or not to make replacements.
         """
@@ -38,7 +38,8 @@ class StaticChecker:
                 print(f"{filename}: Replaced all ``code::`` to ``code-block::``")
                 return True
             print(
-                f"{filename}; This file uses the `code::` syntax, please change the syntax to ``code-block::``."
+                f"{filename}; This file uses the `code::` syntax, please change the"
+                " syntax to ``code-block::``."
             )
             return False
         return True
@@ -63,11 +64,13 @@ class StaticChecker:
             with open(filename, "w") as fp:
                 fp.write(newcontent)
             print(
-                f"{filename}: Replaced all instances of ``/r/`` and/or ``/u/`` to ``r/`` and/or ``u/``."
+                f"{filename}: Replaced all instances of ``/r/`` and/or ``/u/`` to"
+                " ``r/`` and/or ``u/``."
             )
             return True
         print(
-            f"{filename}: This file contains instances of ``/r/`` and/or ``/u/``. Please change them to ``r/`` and/or ``u/``."
+            f"{filename}: This file contains instances of ``/r/`` and/or ``/u/``."
+            " Please change them to ``r/`` and/or ``u/``."
         )
         return False
 
@@ -81,7 +84,8 @@ class StaticChecker:
         """
         if "noreturn" in content.lower():
             print(
-                f"{filename}: Line {line_number} has phrase ``noreturn``, please edit and remove this."
+                f"{filename}: Line {line_number} has phrase ``noreturn``, please edit"
+                " and remove this."
             )
             return False
         return True
@@ -101,12 +105,12 @@ class StaticChecker:
 
         * Full file checks:
 
-           * :meth:`.check_for_code_statement`
-           * :meth:`.check_for_double_syntax`
+          * :meth:`.check_for_code_statement`
+          * :meth:`.check_for_double_syntax`
 
         * Line checks
 
-           * :meth:`.check_for_noreturn`
+          * :meth:`.check_for_noreturn`
         """
         status = True
         directory = os.path.abspath(os.path.join(__file__, "..", "..", "asyncpraw"))
@@ -134,16 +138,20 @@ class StaticChecker:
 def main():
     """The main function."""
     parser = argparse.ArgumentParser(
-        description="Run static line checks and optionally replace values that"
-        " should not be used."
+        description=(
+            "Run static line checks and optionally replace values that should not be"
+            " used."
+        )
     )
     parser.add_argument(
         "-r",
         "--replace",
         action="store_true",
         default=False,
-        help="If it is possible, tries to reformat values. Not all checks "
-        "can reformat values, and those will have to be edited manually.",
+        help=(
+            "If it is possible, tries to reformat values. Not all checks can reformat"
+            " values, and those will have to be edited manually."
+        ),
     )
     args = parser.parse_args()
     check = StaticChecker(args.replace)

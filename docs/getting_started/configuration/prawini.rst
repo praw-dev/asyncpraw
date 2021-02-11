@@ -80,7 +80,7 @@ site and can override whichever settings desired.
 
 Defining additional sites is a convenient way to store :ref:`OAuth credentials
 <oauth_options>` for various accounts, or distinct OAuth applications. For
-example if you have three separate bots, you might create a site for each:
+example, if you have three separate bots, you might create a site for each:
 
 .. _custom_site_example:
 .. code-block:: ini
@@ -137,7 +137,7 @@ individual variables, for example:
    bot_name=MyBot
    bot_version=1.2.3
    bot_author=MyUser
-   user_agent=script:%(bot_name)s:v%(bot_version)s (by /u/%(bot_author)s)
+   user_agent=script:%(bot_name)s:v%(bot_version)s (by u/%(bot_author)s)
 
 This uses basic interpolation thus :class:`.Reddit` need to be initialized as
 follows:

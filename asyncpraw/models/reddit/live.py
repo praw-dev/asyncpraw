@@ -1,5 +1,5 @@
 """Provide the LiveThread class."""
-from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Union
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
@@ -26,9 +26,7 @@ class LiveContributorRelationship:
             permissions = set(permissions)
         return ",".join(f"+{x}" for x in permissions)
 
-    def __call__(
-        self,
-    ) -> AsyncGenerator:  # noqa: D202
+    def __call__(self) -> AsyncIterator[Redditor]:
         """Return a :class:`.RedditorList` for live threads' contributors.
 
         Usage:
@@ -80,15 +78,15 @@ class LiveContributorRelationship:
     ):
         """Invite a redditor to be a contributor of the live thread.
 
-        :raises: :class:`asyncpraw.exceptions.APIException` if the invitation
-            already exists.
-
         :param redditor: A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance.
         :param permissions: When provided (not ``None``), permissions should
             be a list of strings specifying which subset of permissions to
             grant. An empty list ``[]`` indicates no permissions, and when
             not provided (``None``), indicates full permissions.
+
+        :raises: :class:`.RedditAPIException` if the invitation
+            already exists.
 
         Usage:
 
@@ -165,8 +163,9 @@ class LiveContributorRelationship:
             await thread.contributor.remove_invite(redditor)
             await thread.contributor.remove_invite("t2_1w72")  # with fullname
 
-        :seealso: :meth:`.LiveContributorRelationship.invite` to
-            invite a redditor to be a contributor of the live thread.
+        .. seealso::
+
+             :meth:`.LiveContributorRelationship.invite` to invite a redditor to be a contributor of the live thread.
 
         """
         if isinstance(redditor, Redditor):
@@ -410,7 +409,7 @@ class LiveThread(RedditBase):
         super().__init__(reddit, _data=_data)
 
     def _fetch_info(self):
-        return ("liveabout", {"id": self.id}, None)
+        return "liveabout", {"id": self.id}, None
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
@@ -426,7 +425,7 @@ class LiveThread(RedditBase):
 
     def discussions(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Submission", None]:
+    ) -> AsyncIterator["Submission"]:
         """Get submissions linking to the thread.
 
         :param generator_kwargs: keyword arguments passed to
@@ -469,7 +468,7 @@ class LiveThread(RedditBase):
 
     async def updates(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["LiveUpdate", None]:
+    ) -> AsyncIterator["LiveUpdate"]:
         """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
 
         :param generator_kwargs: keyword arguments passed to
@@ -629,9 +628,7 @@ class LiveThreadStream:
         """
         self.live_thread = live_thread
 
-    def updates(
-        self, **stream_options: Dict[str, Any]
-    ) -> AsyncGenerator["LiveUpdate", None]:
+    def updates(self, **stream_options: Dict[str, Any]) -> AsyncIterator["LiveUpdate"]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created
@@ -741,9 +738,9 @@ class LiveUpdate(FullnameMixin, RedditBase):
             update.author     # "umbrae"
         """
         if _data is not None:
-            # Since _data (part of JSON returned from reddit) have no
-            # thread ID, self._thread must be set by the caller of
-            # LiveUpdate(). See the code of LiveThread.updates() for example.
+            # Since _data (part of JSON returned from reddit) have no thread ID,
+            # self._thread must be set by the caller of LiveUpdate(). See the code of
+            # LiveThread.updates() for example.
             super().__init__(reddit, _data=_data, _fetched=True)
         elif thread_id and update_id:
             self.id = update_id
@@ -794,11 +791,11 @@ class LiveUpdateContribution:
 
         Usage:
 
-         .. code-block:: python
+        .. code-block:: python
 
-             thread = await reddit.live("ydwwxneu7vsa")
-             update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
-             await update.contrib.remove()
+            thread = await reddit.live("ydwwxneu7vsa")
+            update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
+            await update.contrib.remove()
 
         """
         url = API_PATH["live_remove_update"].format(id=self.update.thread.id)
@@ -815,9 +812,12 @@ class LiveUpdateContribution:
             await update.contrib.strike()
 
         To check whether the update is stricken or not, use ``update.stricken``
-        attribute. But note that accessing lazy attributes on updates
-        (includes ``update.stricken``) may raises ``AttributeError``.
-        See :class:`.LiveUpdate` for details.
+        attribute.
+
+        .. note::
+
+            Accessing lazy attributes on updates (includes ``update.stricken``)
+            may raise :py:class:`AttributeError`. See :class:`.LiveUpdate` for details.
 
         """
         url = API_PATH["live_strike"].format(id=self.update.thread.id)

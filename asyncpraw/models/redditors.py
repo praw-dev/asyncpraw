@@ -1,7 +1,7 @@
 """Provide the Redditors class."""
 from itertools import islice
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, AsyncGenerator, Dict, Iterable, Union
+from typing import TYPE_CHECKING, AsyncIterator, Dict, Iterable, Union
 
 import asyncprawcore
 
@@ -23,7 +23,7 @@ class Redditors(AsyncPRAWBase):
 
     def new(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Subreddit", None]:
+    ) -> AsyncIterator["Subreddit"]:
         """Return a :class:`.ListingGenerator` for new Redditors.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
@@ -35,7 +35,7 @@ class Redditors(AsyncPRAWBase):
 
     def popular(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Subreddit", None]:
+    ) -> AsyncIterator["Subreddit"]:
         """Return a :class:`.ListingGenerator` for popular Redditors.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
@@ -49,7 +49,7 @@ class Redditors(AsyncPRAWBase):
 
     def search(
         self, query: str, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Subreddit", None]:
+    ) -> AsyncIterator["Subreddit"]:
         r"""Return a :class:`.ListingGenerator` of Redditors for ``query``.
 
         :param query: The query string to filter Redditors by.
@@ -66,7 +66,7 @@ class Redditors(AsyncPRAWBase):
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Subreddit", None]:
+    ) -> AsyncIterator["Subreddit"]:
         """Yield new Redditors as they are created.
 
         Redditors are yielded oldest first. Up to 100 historical Redditors
@@ -80,7 +80,7 @@ class Redditors(AsyncPRAWBase):
 
     async def partial_redditors(
         self, ids: Iterable[str]
-    ) -> AsyncGenerator[PartialRedditor, None]:
+    ) -> AsyncIterator[PartialRedditor]:
         """Get user summary data by redditor IDs.
 
         :param ids: An iterable of redditor fullname IDs.

@@ -26,7 +26,7 @@ Basic Configuration Options
 :user_agent: (Required) A unique description of your application. The following
              format is recommended according to `Reddit's API Rules
              <https://github.com/reddit/reddit/wiki/API#rules>`_:
-             ``<platform>:<app ID>:<version string> (by /u/<reddit
+             ``<platform>:<app ID>:<version string> (by u/<reddit
              username>)``.
 
 .. _oauth_options:

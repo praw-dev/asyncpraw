@@ -1,5 +1,5 @@
 """Provide the Removal Reason class."""
-from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Union
 from warnings import warn
 
 from ...const import API_PATH
@@ -45,7 +45,7 @@ class RemovalReason(RedditBase):
             warn(
                 "Parameter ``reason_id`` is deprecated. Either use positional"
                 ' arguments (reason_id="x" -> "x") or change the parameter '
-                'name to ``id`` (resaon_id="x" -> id="x"). The parameter will'
+                'name to ``id`` (reason_id="x" -> id="x"). The parameter will'
                 " be removed in Async PRAW 8.",
                 category=DeprecationWarning,
                 stacklevel=3,
@@ -213,7 +213,7 @@ class SubredditRemovalReasons:
         self.subreddit = subreddit
         self._reddit = subreddit._reddit
 
-    async def __aiter__(self) -> AsyncGenerator[RemovalReason, None]:
+    async def __aiter__(self) -> AsyncIterator[RemovalReason]:
         """Return a list of Removal Reasons for the subreddit.
 
         This method is used to discover all removal reasons for a
@@ -256,7 +256,7 @@ class SubredditRemovalReasons:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("NAME")
-            await subreddit.mod.removal_reasons.add(message="Foobar", "title="Test")
+            await subreddit.mod.removal_reasons.add(message="Foobar", title="Test")
 
         """
         data = {"message": message, "title": title}

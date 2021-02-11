@@ -28,9 +28,9 @@ class MoreComments(AsyncPRAWBase):
 
     def __lt__(self, other: "MoreComments") -> bool:
         """Provide a sort order on the MoreComments object."""
-        # To work with heapq a "smaller" item is the one with the most comments
-        # We are intentionally making the biggest element the smallest element
-        # to turn the min-heap implementation in heapq into a max-heap.
+        # To work with heapq a "smaller" item is the one with the most comments. We are
+        # intentionally making the biggest element the smallest element to turn the
+        # min-heap implementation in heapq into a max-heap.
         return self.count > other.count
 
     def __repr__(self) -> str:
@@ -50,8 +50,7 @@ class MoreComments(AsyncPRAWBase):
         return self._comments
 
     async def _load_comment(self, comment_id):
-        submission_path = API_PATH["submission"].format(id=self.submission.id)
-        path = f"{submission_path}_/{comment_id}"
+        path = f"{API_PATH['submission'].format(id=self.submission.id)}_/{comment_id}"
         _, comments = await self._reddit.get(
             path,
             params={

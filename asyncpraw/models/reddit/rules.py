@@ -83,9 +83,9 @@ class Rule(RedditBase):
             raise ValueError("Either short_name or _data needs to be given.")
         if short_name:
             self.short_name = short_name
-        # Note: The subreddit parameter can be None, because the objector
-        # does not know this info. In that case, it is the responsibility of
-        # the caller to set the `subreddit` property on the returned value.
+        # Note: The subreddit parameter can be None, because the objector does not know
+        # this info. In that case, it is the responsibility of the caller to set the
+        # `subreddit` property on the returned value
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
@@ -169,6 +169,7 @@ class SubredditRules:
         :returns: A list of instances of :class:`.Rule`.
 
         .. deprecated:: 7.1
+
             Use the iterator by removing the call to :class:`.SubredditRules`.
             For example, in order to use the iterator:
 
@@ -179,12 +180,10 @@ class SubredditRules:
                     print(rule)
         """
         warn(
-            "Calling SubredditRules to get a list of rules is deprecated. "
-            "Remove the parentheses to use the iterator. View the "
-            "Async PRAW documentation on how to change the code in order to use the"
-            "iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview"
-            "/other/subredditrules.html#asyncpraw.models.reddit.rules."
-            "SubredditRules.__call__).",
+            "Calling SubredditRules to get a list of rules is deprecated. Remove the"
+            " parentheses to use the iterator. View the Async PRAW documentation on how"
+            " to change the code in order to use the iterator"
+            " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__).",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -297,7 +296,7 @@ class RuleModeration:
     """
 
     def __init__(self, rule: Rule):
-        """Instantize the RuleModeration class."""
+        """Initialize the RuleModeration class."""
         self.rule = rule
 
     async def delete(self):
@@ -393,7 +392,7 @@ class SubredditRulesModeration:
     """
 
     def __init__(self, subreddit_rules: SubredditRules):
-        """Instantize the SubredditRulesModeration class."""
+        """Initialize the SubredditRulesModeration class."""
         self.subreddit_rules = subreddit_rules
 
     async def add(

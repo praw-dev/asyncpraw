@@ -1,5 +1,5 @@
 """Provide the Front class."""
-from typing import TYPE_CHECKING, AsyncGenerator, Dict, List, Union
+from typing import TYPE_CHECKING, AsyncIterator, Dict, List, Union
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase
@@ -16,7 +16,7 @@ class Inbox(AsyncPRAWBase):
 
     def all(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Union["Message", "Comment"], None]:
+    ) -> AsyncIterator[Union["Message", "Comment"]]:
         """Return a :class:`.ListingGenerator` for all inbox comments and messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -62,7 +62,7 @@ class Inbox(AsyncPRAWBase):
 
     def comment_replies(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Comment", None]:
+    ) -> AsyncIterator["Comment"]:
         """Return a :class:`.ListingGenerator` for comment replies.
 
         Additional keyword arguments are passed in the initialization of
@@ -138,11 +138,11 @@ class Inbox(AsyncPRAWBase):
 
     def mentions(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Comment", None]:
+    ) -> AsyncIterator["Comment"]:
         r"""Return a :class:`.ListingGenerator` for mentions.
 
         A mention is :class:`.Comment` in which the authorized redditor is
-        named in its body like ``/u/redditor_name``.
+        named in its body like ``u/redditor_name``.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -179,7 +179,7 @@ class Inbox(AsyncPRAWBase):
 
     def messages(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Message", None]:
+    ) -> AsyncIterator["Message"]:
         """Return a :class:`.ListingGenerator` for inbox messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -197,7 +197,7 @@ class Inbox(AsyncPRAWBase):
 
     def sent(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Message", None]:
+    ) -> AsyncIterator["Message"]:
         """Return a :class:`.ListingGenerator` for sent messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -216,7 +216,7 @@ class Inbox(AsyncPRAWBase):
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Union["Comment", "Message"], None]:
+    ) -> AsyncIterator[Union["Comment", "Message"]]:
         """Yield new inbox items as they become available.
 
         Items are yielded oldest first. Up to 100 historical items will
@@ -236,7 +236,7 @@ class Inbox(AsyncPRAWBase):
 
     def submission_replies(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Comment", None]:
+    ) -> AsyncIterator["Comment"]:
         """Return a :class:`.ListingGenerator` for submission replies.
 
         Additional keyword arguments are passed in the initialization of
@@ -286,7 +286,7 @@ class Inbox(AsyncPRAWBase):
         self,
         mark_read: bool = False,
         **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Union["Comment", "Message"], None]:
+    ) -> AsyncIterator[Union["Comment", "Message"]]:
         """Return a :class:`.ListingGenerator` for unread comments and messages.
 
         :param mark_read: Marks the inbox as read (default: False).

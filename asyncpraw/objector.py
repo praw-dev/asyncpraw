@@ -181,9 +181,8 @@ class Objector:
                 if data["json"]["data"]["id"].startswith(
                     f"{self._reddit.config.kinds['submission']}_"
                 ):
-                    # With polls, Reddit returns a fullname but calls it an
-                    # "id". This fixes this by coercing the fullname into an
-                    # id.
+                    # With polls, Reddit returns a fullname but calls it an "id". This
+                    # fixes this by coercing the fullname into an id.
                     data["json"]["data"]["id"] = data["json"]["data"]["id"].split(
                         "_", 1
                     )[1]

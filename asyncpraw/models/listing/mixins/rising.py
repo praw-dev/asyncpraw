@@ -1,5 +1,5 @@
 """Provide the RisingListingMixin class."""
-from typing import TYPE_CHECKING, AsyncGenerator, Dict, Union
+from typing import TYPE_CHECKING, AsyncIterator, Dict, Union
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase
@@ -14,7 +14,7 @@ class RisingListingMixin(AsyncPRAWBase):
 
     def random_rising(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Submission", None]:
+    ) -> AsyncIterator["Submission"]:
         """Return a :class:`.ListingGenerator` for random rising submissions.
 
         Additional keyword arguments are passed in the initialization of
@@ -35,7 +35,7 @@ class RisingListingMixin(AsyncPRAWBase):
 
     def rising(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Submission", None]:
+    ) -> AsyncIterator["Submission"]:
         """Return a :class:`.ListingGenerator` for rising submissions.
 
         Additional keyword arguments are passed in the initialization of

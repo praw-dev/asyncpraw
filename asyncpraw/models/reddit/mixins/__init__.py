@@ -203,8 +203,8 @@ class ThingModerationMixin:
 
         If ``type`` is "public", the new :class:`~.Comment` is returned.
         """
-        # The API endpoint used to send removal messages is different
-        # for posts and comments, so the derived classes specify which one.
+        # The API endpoint used to send removal messages is different for posts and
+        # comments, so the derived classes specify which one.
         if self.REMOVAL_MESSAGE_API is None:
             raise NotImplementedError("ThingModerationMixin must be extended.")
         url = API_PATH[self.REMOVAL_MESSAGE_API]

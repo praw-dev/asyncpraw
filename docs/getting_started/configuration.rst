@@ -61,7 +61,7 @@ aiohttp and configuring Async PRAW like so:
                          client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                          password="1guiwevlfo00esyy",
                          requestor_kwargs={"session": session},  # pass Session
-                         user_agent="testscript by /u/fakebot3",
+                         user_agent="testscript by u/fakebot3",
                          username="fakebot3")
 
 
@@ -95,7 +95,7 @@ export the certificate as a ``.pem`` file. Then configure Async PRAW like so:
                          client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                          password="1guiwevlfo00esyy",
                          requestor_kwargs={"session": session},  # pass Session
-                         user_agent="testscript by /u/fakebot3",
+                         user_agent="testscript by u/fakebot3",
                          username="fakebot3")
 
 

@@ -39,8 +39,11 @@ class ExponentialCounter:
     def __init__(self, max_counter: int):
         """Initialize an instance of ExponentialCounter.
 
-        :param max_counter: The maximum base value. Note that the computed
-            value may be 3.125% higher due to jitter.
+        :param max_counter: The maximum base value.
+
+            .. note::
+
+                The computed value may be 3.125% higher due to jitter.
         """
         self._base = 1
         self._max = max_counter
@@ -67,13 +70,12 @@ def permissions_string(
        all. When prefixed, the resulting string will simply be the joining of
        these inputs. When not prefixed, all permissions are considered to be
        additions, and all permissions in the ``known_permissions`` set that
-       aren't provided are considered to be removals. When None, the result is
-       ``+all``.
+       aren't provided are considered to be removals. When ``None``, the result is
+       ``"+all"``.
     :param known_permissions: A set of strings representing the available
        permissions.
 
     """
-    to_set = []
     if permissions is None:
         to_set = ["+all"]
     else:
@@ -127,8 +129,7 @@ async def stream_generator(
     .. code-block:: python
 
         reply_function = reddit.inbox.comment_replies
-        reply_stream = asyncpraw.models.util.stream_generator(reply_function)
-        async for reply in reply_stream:
+        async for reply in asyncpraw.models.util.stream_generator(reply_function):
             print(reply)
 
     To pause a comment stream after six responses with no new

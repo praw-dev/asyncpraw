@@ -51,7 +51,6 @@ Unreleased
 
 * First official Async PRAW release!
 
-
 7.1.0.pre1 (2020/07/16)
 -----------------------
 

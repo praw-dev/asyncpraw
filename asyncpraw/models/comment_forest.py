@@ -46,7 +46,7 @@ class CommentForest:
             first_comment = comments[0]
 
         Alternatively, the presence of this method enables one to iterate over
-        all top_level comments, like so:
+        all top level comments, like so:
 
         .. code-block:: python
 
@@ -103,8 +103,8 @@ class CommentForest:
             self._comments.append(comment)
         else:
             assert comment.parent_id in self._submission._comments_by_id, (
-                "PRAW Error occurred. Please file a bug report and include "
-                "the code that caused the error."
+                "Async PRAW Error occurred. Please file a bug report and include the"
+                " code that caused the error."
             )
             parent = self._submission._comments_by_id[comment.parent_id]
             parent.replies._comments.append(comment)

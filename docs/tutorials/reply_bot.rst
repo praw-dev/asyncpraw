@@ -14,7 +14,7 @@ With Async PRAW, there is now support for interacting with Reddit inside an
 asynchronous environment, most commonly, Discord bots.
 
 This tutorial will show you how to build a bot that monitors a particular
-subreddit, `/r/AskReddit <https://www.reddit.com/r/AskReddit/>`_, for new
+subreddit, `r/AskReddit <https://www.reddit.com/r/AskReddit/>`_, for new
 submissions containing simple questions and replies with an appropriate link to
 lmgtfy_ (Let Me Google That For You).
 
@@ -87,16 +87,17 @@ subreddit. To indefinitely iterate over new submissions to a subreddit add:
     subreddit = await reddit.subreddit("AskReddit")
     async for submission in subreddit.stream.submissions():
         # do something with submission
+        ...
 
 Replace ``AskReddit`` with the name of another subreddit if you want to iterate
 through its new submissions. Additionally multiple subreddits can be specified
-by joining them with pluses, for example ``AskReddit+NoStupidQuestions``. All
+by joining them with pluses, for example, ``AskReddit+NoStupidQuestions``. All
 subreddits can be specified using the special name ``all``.
 
 Step 3: Analyzing the Submission Titles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now that we have a stream of new submissions to /r/AskReddit, it is time to see
+Now that we have a stream of new submissions to r/AskReddit, it is time to see
 if their titles contain a simple question. We naïvely define a simple question
 as:
 
@@ -167,9 +168,6 @@ comment is located:
 
     url_title = quote_plus(submission.title)
     reply_text = reply_template.format(url_title)
-
-.. note:: This example assumes the use of Python 3. For Python 2 replace ``from
-    urllib.parse import quote_plus`` with ``from urllib import quote_plus``.
 
 Now that we have the reply text, replying to the submission is easy:
 

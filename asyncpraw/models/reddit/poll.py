@@ -15,10 +15,10 @@ class PollOption(AsyncPRAWBase):
 
         poll_data = submission.poll_data
 
-       # By index -- print the first option
+        # By index -- print the first option
         print(poll_data.options[0])
 
-       # By ID -- print the option with ID "576797"
+        # By ID -- print the option with ID "576797"
         print(poll_data.option("576797"))
 
     **Typical Attributes**
@@ -110,7 +110,8 @@ class PollData(AsyncPRAWBase):
         :param option_id: The ID of a poll option, as a ``str``.
         :returns: The specified :class:`.PollOption`.
 
-        Raises ``KeyError`` if no option exists with the specified ID.
+        :raises: :py:class:`KeyError` if no option exists with the specified ID.
+
         """
         for option in self.options:
             if option.id == option_id:

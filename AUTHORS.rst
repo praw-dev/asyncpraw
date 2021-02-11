@@ -1,5 +1,5 @@
-Maintainers
-===========
+Author/Maintainer
+=================
 
 - Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/lilspazjoekp>`_
 

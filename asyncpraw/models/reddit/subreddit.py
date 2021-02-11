@@ -72,11 +72,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         async for submission in subreddit.top("all"):
             print(submission)
 
-    Subreddits can be filtered from combined listings as follows. Note that
-    these filters are ignored by certain methods, including
-    :attr:`~asyncpraw.models.Subreddit.comments`,
-    :meth:`~asyncpraw.models.Subreddit.gilded`, and
-    :meth:`.SubredditStream.comments`.
+    Subreddits can be filtered from combined listings as follows.
+
+    .. note::
+
+        These filters are ignored by certain methods, including :attr:`.comments`, :meth:`.gilded`,
+        and :meth:`.SubredditStream.comments`.
 
     .. code-block:: python
 
@@ -239,7 +240,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def banned(self):
         """Provide an instance of :class:`.SubredditRelationship`.
 
-        For example to ban a user try:
+        For example, to ban a user try:
 
         .. code-block:: python
 
@@ -343,7 +344,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """Provide an instance of :class:`.SubredditFlair`.
 
         Use this attribute for interacting with a subreddit's flair. For
-        example to list all the flair for a subreddit which you have the
+        example, to list all the flair for a subreddit which you have the
         ``flair`` moderator permission on try:
 
         .. code-block:: python
@@ -381,7 +382,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def moderator(self):
         """Provide an instance of :class:`.ModeratorRelationship`.
 
-        For example to add a moderator try:
+        For example, to add a moderator try:
 
         .. code-block:: python
 
@@ -513,8 +514,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
             subreddit = await reddit.subreddit("SUBREDDIT")
             stylesheet = await subreddit.stylesheet()
-            stylesheet += ".test{color:blue}"
-            await subreddit.stylesheet.update(stylesheet)
+            stylesheet.stylesheet += ".test{color:blue}"
+            await subreddit.stylesheet.update(stylesheet.stylesheet)
 
         """
         return SubredditStylesheet(self)
@@ -574,8 +575,15 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param display_name: The name of the subreddit.
 
         .. note:: This class should not be initialized directly. Instead obtain
-           an instance via: ``await reddit.subreddit("subreddit_name")`` or lazily
-           ``await reddit.subreddit("subreddit_name")``
+            an instance via:
+
+            .. code-block:: python
+
+                # to lazily load a subreddit instance
+                await reddit.subreddit("subreddit_name")
+
+                # to fully load a subreddit instance
+                await reddit.subreddit("subreddit_name", fetch=True)
 
         """
         if (display_name, _data).count(None) != 1:
@@ -597,7 +605,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return rte_body["output"]
 
     def _fetch_info(self):
-        return ("subreddit_about", {"subreddit": self}, None)
+        return "subreddit_about", {"subreddit": self}, None
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
@@ -658,7 +666,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                     "Error establishing websocket connection.",
                     ws_exception,
                 )
-
             if ws_update.get("type") == "failed":
                 raise MediaPostFailed
             url = ws_update["payload"]["redirect"]
@@ -701,8 +708,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             and mime_type.partition("/")[0] != expected_mime_prefix
         ):
             raise ClientException(
-                f"Expected a mimetype starting with {expected_mime_prefix!r} but got "
-                f"mimetype {mime_type!r} (from file extension {file_extension!r})."
+                f"Expected a mimetype starting with {expected_mime_prefix!r} but got"
+                f" mimetype {mime_type!r} (from file extension {file_extension!r})."
             )
         img_data = {"filepath": file_name, "mimetype": mime_type}
 
@@ -830,7 +837,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         For more information on building a search query see:
         https://www.reddit.com/wiki/search
 
-        For example to search all subreddits for ``praw`` try:
+        For example, to search all subreddits for ``praw`` try:
 
         .. code-block:: python
 
@@ -859,7 +866,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param number: Specify which sticky to return. 1 appears at the top
             (default: 1).
 
-        Raises ``asyncprawcore.NotFound`` if the sticky does not exist.
+        :raises: ``asyncprawcore.NotFound`` if the sticky does not exist.
 
         For example, to get the stickied post on the subreddit ``r/test``:
 
@@ -924,16 +931,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         Either ``selftext`` or ``url`` can be provided, but not both.
 
-        For example to submit a URL to ``r/reddit_api_test`` do:
+        For example, to submit a URL to ``r/reddit_api_test`` do:
 
         .. code-block:: python
 
-            title = "PRAW documentation"
+            title = "Async PRAW documentation"
             url = "https://asyncpraw.readthedocs.io"
             subreddit = await reddit.subreddit("reddit_api_test")
             await subreddit.submit(title, url=url)
 
-        For example to submit a self post with inline media do:
+        For example, to submit a self post with inline media do:
 
         .. code-block:: python
 
@@ -1049,10 +1056,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             (default: False).
         :returns: A :class:`.Submission` object for the newly created submission.
 
-        If ``image_path`` in ``images`` refers to a file that is not an image, PRAW will
-        raise a :class:`.ClientException`.
+        :raises: :class:`.ClientException` if ``image_path`` in ``images`` refers to a file that is not an image.
 
-        For example to submit an image gallery to ``r/reddit_api_test`` do:
+        For example, to submit an image gallery to ``r/reddit_api_test`` do:
 
         .. code-block:: python
 
@@ -1170,8 +1176,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`.Submission` object for the newly created
             submission, unless ``without_websockets`` is ``True``.
 
-        If ``image_path`` refers to a file that is not an image, Async PRAW will
-        raise a :class:`.ClientException`.
+        :raises: :class:`.ClientException` if ``image_path`` refers to a file that is not an image.
 
         .. note::
 
@@ -1188,7 +1193,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
            program in a restricted network environment, or using a proxy
            that doesn't support WebSockets connections.
 
-        For example to submit an image to ``r/reddit_api_test`` do:
+        For example, to submit an image to ``r/reddit_api_test`` do:
 
         .. code-block:: python
 
@@ -1276,14 +1281,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`~.Submission` object for the newly created
             submission.
 
-        For example to submit a poll to ``r/reddit_api_test`` do:
+        For example, to submit a poll to ``r/reddit_api_test`` do:
 
         .. code-block:: python
 
             title = "Do you like Async PRAW?"
-            options = ["Yes", "No"]
             subreddit = await reddit.subreddit("reddit_api_test")
-            await subreddit.submit_poll(title, selftext="", options=options, duration=3)
+            await subreddit.submit_poll(title, selftext="", options=["Yes", "No"], duration=3)
 
         """
         data = {
@@ -1360,8 +1364,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :returns: A :class:`.Submission` object for the newly created
             submission, unless ``without_websockets`` is ``True``.
 
-        If ``video_path`` refers to a file that is not a video, Async PRAW will
-        raise a :class:`.ClientException`.
+        :raises: :class:`.ClientException` if ``video_path`` refers to a file that is not a video.
 
         .. note::
 
@@ -1378,7 +1381,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
            program in a restricted network environment, or using a proxy
            that doesn't support WebSockets connections.
 
-        For example to submit a video to ``r/reddit_api_test`` do:
+        For example, to submit a video to ``r/reddit_api_test`` do:
 
         .. code-block:: python
 
@@ -1454,9 +1457,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def traffic(self):
         """Return a dictionary of the subreddit's traffic statistics.
 
-        Raises ``asyncprawcore.NotFound`` when the traffic stats aren't
-        available to the authenticated user, that is, they are not public and
-        the authenticated user is not a moderator of the subreddit.
+        :raises: ``asyncprawcore.NotFound`` when the traffic stats aren't
+            available to the authenticated user, that is, they are not public and
+            the authenticated user is not a moderator of the subreddit.
 
         The traffic method returns a dict with three keys. The keys are
         ``day``, ``hour`` and ``month``. Each key contains a list of lists with
@@ -1563,7 +1566,7 @@ class SubredditFilters:
 
             await reddit.subreddit("all-redditdev-learnpython")
 
-        Raises ``asyncprawcore.NotFound`` when calling on a non-special
+        :raises: ``asyncprawcore.NotFound`` when calling on a non-special
             subreddit.
 
         """
@@ -1582,7 +1585,7 @@ class SubredditFilters:
 
         :param subreddit: The subreddit to remove from the filter list.
 
-        Raises ``asyncprawcore.NotFound`` when calling on a non-special
+        :raises: ``asyncprawcore.NotFound`` when calling on a non-special
             subreddit.
 
         """
@@ -1603,7 +1606,7 @@ class SubredditFlair:
         """Provide an instance of :class:`.SubredditLinkFlairTemplates`.
 
         Use this attribute for interacting with a subreddit's link flair
-        templates. For example to list all the link flair templates for a
+        templates. For example, to list all the link flair templates for a
         subreddit which you have the ``flair`` moderator permission on try:
 
         .. code-block:: python
@@ -1620,7 +1623,7 @@ class SubredditFlair:
         """Provide an instance of :class:`.SubredditRedditorFlairTemplates`.
 
         Use this attribute for interacting with a subreddit's flair
-        templates. For example to list all the flair templates for a subreddit
+        templates. For example, to list all the flair templates for a subreddit
         which you have the ``flair`` moderator permission on try:
 
         .. code-block:: python
@@ -1750,8 +1753,8 @@ class SubredditFlair:
         """
         if css_class and flair_template_id is not None:
             raise TypeError(
-                "Parameter `css_class` cannot be used in "
-                "conjunction with `flair_template_id`."
+                "Parameter `css_class` cannot be used in conjunction with"
+                " `flair_template_id`."
             )
         data = {"name": str(redditor), "text": text}
         if flair_template_id is not None:
@@ -1781,7 +1784,7 @@ class SubredditFlair:
         :returns: List of dictionaries indicating the success or failure of
             each update.
 
-        For example to clear the flair text, and set the ``praw`` flair css
+        For example, to clear the flair text, and set the ``praw`` flair css
         class on a few users try:
 
         .. code-block:: python
@@ -1926,7 +1929,7 @@ class SubredditFlairTemplates:
         :param allowable_content: If specified, most be one of ``"all"``,
             ``"emoji"``, or ``"text"`` to restrict content to that type.
             If set to ``"emoji"`` then the ``"text"`` param must be a
-            valid emoji string, for example ``":snoo:"``.
+            valid emoji string, for example, ``":snoo:"``.
         :param max_emojis: (int) Maximum emojis in the flair
             (Reddit defaults this value to 10).
         :param fetch: Whether or not Async PRAW will fetch existing information on
@@ -1936,7 +1939,7 @@ class SubredditFlairTemplates:
              not provided will be reset to default (``None`` or ``False``)
              values.
 
-        For example to make a user flair template text_editable, try:
+        For example, to make a user flair template text_editable, try:
 
         .. code-block:: python
 
@@ -1962,7 +1965,6 @@ class SubredditFlairTemplates:
             "text_editable": text_editable,
         }
         if fetch:
-
             _existing_data = [
                 template async for template in self if template["id"] == template_id
             ]
@@ -2023,7 +2025,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
         :param allowable_content: If specified, most be one of ``"all"``,
             ``"emoji"``, or ``"text"`` to restrict content to that type.
             If set to ``"emoji"`` then the ``"text"`` param must be a
-            valid emoji string, for example ``":snoo:"``.
+            valid emoji string, for example, ``":snoo:"``.
         :param max_emojis: (int) Maximum emojis in the flair
             (Reddit defaults this value to 10).
 
@@ -2107,7 +2109,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         :param allowable_content: If specified, most be one of ``"all"``,
             ``"emoji"``, or ``"text"`` to restrict content to that type.
             If set to ``"emoji"`` then the ``"text"`` param must be a
-            valid emoji string, for example ``":snoo:"``.
+            valid emoji string, for example, ``":snoo:"``.
         :param max_emojis: (int) Maximum emojis in the flair
             (Reddit defaults this value to 10).
 
@@ -2303,7 +2305,7 @@ class SubredditModeration:
         """Provide an instance of :class:`.SubredditRemovalReasons`.
 
         Use this attribute for interacting with a subreddit's removal reasons.
-        For example to list all the removal reasons for a subreddit which you
+        For example, to list all the removal reasons for a subreddit which you
         have the ``posts`` moderator permission on, try:
 
         .. code-block:: python
@@ -3251,6 +3253,7 @@ class Modmail:
             sub = await reddit.subreddit("all")
             async for conversation in sub.modmail.conversations(state="mod"):
                 # do stuff with conversations
+                ...
 
         """
         params = {}
@@ -3318,6 +3321,7 @@ class Modmail:
             sub = await reddit.subreddit("all")
             async for subreddit in sub.modmail.subreddits():
                 # do stuff with subreddit
+                ...
 
         """
         response = await self.subreddit._reddit.get(API_PATH["modmail_subreddits"])
@@ -3403,7 +3407,7 @@ class SubredditStream:
             high-volume streams, especially the r/all stream, may drop some
             submissions.
 
-        For example to retrieve all new submissions made to all of Reddit, try:
+        For example, to retrieve all new submissions made to all of Reddit, try:
 
         .. code-block:: python
 
@@ -3533,10 +3537,7 @@ class SubredditStylesheet:
             await subreddit.stylesheet.delete_banner_additional_image()
 
         """
-        data = {
-            "bannerPositionedImage": "",
-            "secondaryBannerPositionedImage": "",
-        }
+        data = {"bannerPositionedImage": "", "secondaryBannerPositionedImage": ""}
         await self._update_structured_styles(data)
 
     async def delete_banner_hover_image(self):
@@ -3650,13 +3651,13 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too
             large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3675,12 +3676,12 @@ class SubredditStylesheet:
 
         :param image_path: A path to a jpeg or png image.
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3701,12 +3702,12 @@ class SubredditStylesheet:
         :param align: Either ``left``, ``centered``, or ``right``. (default:
             ``left``).
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3738,12 +3739,12 @@ class SubredditStylesheet:
 
         Fails if the Subreddit does not have an additional image defined
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3764,12 +3765,12 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3788,12 +3789,12 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3812,12 +3813,12 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under
             the key ``img_src``.
 
-        Raises ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
-        Raises :class:`.RedditAPIException` if there are other issues with the
-        uploaded image. Unfortunately the exception info might not be very
-        specific, so try through the website with the same image to see what
-        the problem actually might be.
+        :raises: :class:`.RedditAPIException` if there are other issues with the
+            uploaded image. Unfortunately the exception info might not be very
+            specific, so try through the website with the same image to see what
+            the problem actually might be.
 
         For example:
 
@@ -3870,7 +3871,7 @@ class SubredditWiki:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("iama")
-            async for wikipage in sureddit.wiki:
+            async for wikipage in subreddit.wiki:
                 print(wikipage)
 
         """
@@ -3895,8 +3896,7 @@ class SubredditWiki:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.wiki.create("praw_test", "wiki body text", reason="PRAW
-            Test Creation")
+            await subreddit.wiki.create("praw_test", "wiki body text", reason="PRAW Test Creation")
 
         """
         name = name.replace(" ", "_").lower()
@@ -3916,7 +3916,7 @@ class SubredditWiki:
 
             subreddit = await reddit.subreddit("test")
             page = await subreddit.wiki.get_page("praw_test")
-            async for item in.page.revisions():
+            async for item in page.revisions():
                 print(item)
 
         """

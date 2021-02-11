@@ -61,6 +61,7 @@ class InboxableMixin:
 
             async for message in inbox:
                 # process unread messages
+                ...
 
         .. seealso:: :meth:`~.mark_unread`
 
@@ -84,6 +85,7 @@ class InboxableMixin:
 
             async for message in inbox:
                 # process messages
+                ...
 
         .. seealso:: :meth:`~.mark_read`
 

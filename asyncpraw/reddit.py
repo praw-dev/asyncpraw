@@ -82,15 +82,14 @@ class Reddit:
         """Set or unset the use of the ReadOnlyAuthorizer.
 
         :raises: :class:`ClientException` when attempting to unset ``read_only``
-        and only the ReadOnlyAuthorizer is available.
+            and only the ReadOnlyAuthorizer is available.
 
         """
         if value:
             self._core = self._read_only_core
         elif self._authorized_core is None:
             raise ClientException(
-                "read_only cannot be unset as only the "
-                "ReadOnlyAuthorizer is available."
+                "read_only cannot be unset as only the ReadOnlyAuthorizer is available."
             )
         else:
             self._core = self._authorized_core
@@ -100,6 +99,7 @@ class Reddit:
         """Get validate_on_submit.
 
         .. deprecated:: 7.0
+
             If property :attr:`.validate_on_submit` is set to False, the
             behavior is deprecated by Reddit. This attribute will be removed
             around May-June 2020.
@@ -108,9 +108,9 @@ class Reddit:
         value = self._validate_on_submit
         if value is False:
             warn(
-                "Reddit will check for validation on all posts around "
-                "May-June 2020. It is recommended to check for validation"
-                " by setting reddit.validate_on_submit to True.",
+                "Reddit will check for validation on all posts around May-June 2020. It"
+                " is recommended to check for validation by setting"
+                " reddit.validate_on_submit to True.",
                 category=DeprecationWarning,
                 stacklevel=3,
             )
@@ -139,9 +139,9 @@ class Reddit:
 
         """
         warn(
-            "Using this class as a synchronous context manager is deprecated and will "
-            "be removed in the next release. Use this class as an asynchronous context "
-            "manager instead.",
+            "Using this class as a synchronous context manager is deprecated and will"
+            " be removed in the next release. Use this class as an asynchronous context"
+            " manager instead.",
             category=DeprecationWarning,
             stacklevel=3,
         )
@@ -198,7 +198,13 @@ class Reddit:
 
         .. code-block:: python
 
-            import json, aiohttp
+            import json
+
+            import aiohttp
+            from asyncprawcore import Requestor
+
+            from asyncpraw import Reddit
+
 
             class JSONDebugRequestor(Requestor):
                 async def request(self, *args, **kwargs):
@@ -216,7 +222,7 @@ class Reddit:
         .. code-block:: python
 
             async with Reddit(...) as reddit:
-                print(await reddit.user.me()
+                print(await reddit.user.me())
 
         You can also call :meth:`.Reddit.close`:
 
@@ -225,7 +231,7 @@ class Reddit:
             reddit = Reddit(...)
             # do stuff with reddit
             ...
-            # then close the reqestor when done
+            # then close the requestor when done
             await reddit.close()
 
         """
@@ -241,24 +247,20 @@ class Reddit:
             )
         except configparser.NoSectionError as exc:
             help_message = (
-                "You provided the name of a praw.ini "
-                "configuration which does not exist.\n\nFor help "
-                "with creating a Reddit instance, visit\n"
-                "https://asyncpraw.readthedocs.io/en/latest/code_overvi"
-                "ew/reddit_instance.html\n\n"
-                "For help on configuring Async PRAW, visit\n"
-                "https://asyncpraw.readthedocs.io/en/latest/getting_sta"
-                "rted/configuration.html"
+                "You provided the name of a praw.ini configuration which does not"
+                " exist.\n\nFor help with creating a Reddit instance,"
+                " visit\nhttps://asyncpraw.readthedocs.io/en/latest/code_overview/reddit_instance.html\n\nFor"
+                " help on configuring Async PRAW,"
+                " visit\nhttps://asyncpraw.readthedocs.io/en/latest/getting_started/configuration.html"
             )
             if site_name is not None:
                 exc.message += f"\n{help_message}"
             raise
 
         required_message = (
-            "Required configuration setting {!r} missing. \n"
-            "This setting can be provided in a praw.ini file, "
-            "as a keyword argument to the `Reddit` class "
-            "constructor, or as an environment variable."
+            "Required configuration setting {!r} missing. \nThis setting can be"
+            " provided in a praw.ini file, as a keyword argument to the `Reddit` class"
+            " constructor, or as an environment variable."
         )
         for attribute in ("client_id", "user_agent"):
             if getattr(self.config, attribute) in (self.config.CONFIG_NOT_SET, None):
@@ -267,7 +269,9 @@ class Reddit:
                 )
         if self.config.client_secret is self.config.CONFIG_NOT_SET:
             raise MissingRequiredAttributeException(
-                f"{required_message.format('client_secret')}\nFor installed applications this value must be set to None via a keyword argument to the `Reddit` class constructor."
+                f"{required_message.format('client_secret')}\nFor installed"
+                " applications this value must be set to None via a keyword argument"
+                " to the `Reddit` class constructor."
             )
         self._check_for_update()
         self._prepare_objector()
@@ -277,7 +281,11 @@ class Reddit:
         """An instance of :class:`.Auth`.
 
         Provides the interface for interacting with installed and web
-        applications. See :ref:`auth_url`
+        applications.
+
+        .. seealso::
+
+            :ref:`auth_url`
 
         """
 
@@ -299,7 +307,7 @@ class Reddit:
 
         Provides the interface to a user's inbox which produces
         :class:`.Message`, :class:`.Comment`, and :class:`.Submission`
-        instances. For example to iterate through comments which mention the
+        instances. For example, to iterate through comments which mention the
         authorized user run:
 
         .. code-block:: python
@@ -325,25 +333,25 @@ class Reddit:
         """An instance of :class:`.MultiredditHelper`.
 
         Provides the interface to working with :class:`.Multireddit`
-        instances. For example you can obtain a :class:`.Multireddit` instance
+        instances. For example, you can obtain a :class:`.Multireddit` instance
         via:
 
         .. code-block:: python
 
             multireddit = await reddit.multireddit("samuraisam", "programming")
 
-        If you want to obtain a :class:`.Multireddit` instance you can do:
+        If you want to obtain a fetched :class:`.Multireddit` instance you can do:
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit("samuraisam", "programming", fetch=True)
 
         """
 
         self.redditors = models.Redditors(self, None)
         """An instance of :class:`.Redditors`.
 
-        Provides the interface for Redditor discovery. For example
+        Provides the interface for Redditor discovery. For example,
         to iterate over the newest Redditors, run:
 
         .. code-block:: python
@@ -357,7 +365,7 @@ class Reddit:
         """An instance of :class:`.SubredditHelper`.
 
         Provides the interface to working with :class:`.Subreddit`
-        instances. For example to create a Subreddit run:
+        instances. For example, to create a Subreddit run:
 
         .. code-block:: python
 
@@ -375,7 +383,7 @@ class Reddit:
 
             await reddit.subreddit("redditdev", fetch=True)
 
-        Note that multiple subreddits can be combined and filtered views of
+        Multiple subreddits can be combined and filtered views of
         r/all can also be used just like a subreddit:
 
         .. code-block:: python
@@ -388,7 +396,7 @@ class Reddit:
         self.subreddits = models.Subreddits(self, None)
         """An instance of :class:`.Subreddits`.
 
-        Provides the interface for :class:`.Subreddit` discovery. For example
+        Provides the interface for :class:`.Subreddit` discovery. For example,
         to iterate over the set of default subreddits run:
 
         .. code-block:: python
@@ -402,7 +410,7 @@ class Reddit:
         """An instance of :class:`.User`.
 
         Provides the interface to the currently authorized
-        :class:`.Redditor`. For example to get the name of the current user
+        :class:`.Redditor`. For example, to get the name of the current user
         run:
 
         .. code-block:: python
@@ -868,8 +876,8 @@ class Reddit:
                 # TODO: Remove this exception after 2020-12-31 if no one has
                 # filed a bug against it.
                 raise Exception(
-                    "Unexpected BadRequest without json body. Please file a "
-                    "bug at https://github.com/praw-dev/asyncpraw/issues"
+                    "Unexpected BadRequest without json body. Please file a bug at"
+                    " https://github.com/praw-dev/asyncpraw/issues"
                 ) from exception
             if set(data) == {"error", "message"}:
                 raise

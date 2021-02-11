@@ -142,7 +142,7 @@ class ModmailConversation(RedditBase):
 
         super().__init__(reddit, _data=_data)
 
-        self._info_params = {"markRead": "true"} if mark_read else None
+        self._info_params = {"markRead": True} if mark_read else None
 
     def _build_conversation_list(self, other_conversations):
         """Return a comma-separated list of conversation IDs."""

@@ -135,8 +135,9 @@ class TestSubmission(IntegrationTest):
             with pytest.raises(AttributeError) as excinfo:
                 submission = await self.reddit.submission("2gmzqe")
                 submission.invalid_attribute
-        assert excinfo.value.args[0] == (
-            "'Submission' object has no attribute 'invalid_attribute'"
+        assert (
+            excinfo.value.args[0]
+            == "'Submission' object has no attribute 'invalid_attribute'"
         )
 
     async def test_reply(self):

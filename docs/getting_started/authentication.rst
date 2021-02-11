@@ -67,14 +67,14 @@ is as simple as:
    reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         password="1guiwevlfo00esyy",
-                        user_agent="testscript by /u/fakebot3",
+                        user_agent="testscript by u/fakebot3",
                         username="fakebot3")
 
 To verify that you are authenticated as the correct user run:
 
 .. code-block:: python
 
-   print(reddit.user.me())
+   print(await reddit.user.me())
 
 The output should contain the same name as you entered for ``username``.
 
@@ -82,7 +82,7 @@ The output should contain the same name as you entered for ``username``.
           and ensure that that the username and password you are using are for
           the same user with which the application is associated:
 
-          .. code::
+          .. code-block:: text
 
              OAuthException: invalid_grant error processing request
 
@@ -98,7 +98,7 @@ A 2FA token can be used by joining it to the password with a colon:
    reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         password='1guiwevlfo00esyy:955413',
-                        user_agent="testscript by /u/fakebot3",
+                        user_agent="testscript by u/fakebot3",
                         username="fakebot3")
 
 However, for such an app there is little benefit to using 2FA. The token
@@ -121,9 +121,9 @@ A **code flow** application is useful for two primary purposes:
   accounts.
 * You have a personal-use script application and you either want to
 
-   * limit the access one of your Async PRAW-based programs has to Reddit
-   * avoid the hassle of 2FA (described above)
-   * not pass your username and password to Async PRAW (and thus not keep it in memory)
+  * limit the access one of your Async PRAW-based programs has to Reddit
+  * avoid the hassle of 2FA (described above)
+  * not pass your username and password to Async PRAW (and thus not keep it in memory)
 
 When registering your application you must provide a valid redirect URI. If you
 are running a website you will want to enter the appropriate callback URL and
@@ -149,7 +149,7 @@ URL. You can do that as follows:
    reddit = asyncpraw.Reddit(client_id="SI8pN3DSbt0zor",
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         redirect_uri="http://localhost:8080",
-                        user_agent="testscript by /u/fakebot3")
+                        user_agent="testscript by u/fakebot3")
    print(reddit.auth.url(["identity"], "...", "permanent"))
 
 The above will output an authorization URL for a permanent token that has only
@@ -164,8 +164,8 @@ token via:
 
 .. code-block:: python
 
-    print(reddit.auth.authorize(code))
-    print(reddit.user.me())
+    print(await reddit.auth.authorize(code))
+    print(await reddit.user.me())
 
 The first line of output is the ``refresh_token``. You can save this for later
 use (see :ref:`using_refresh_token`).
@@ -189,7 +189,7 @@ part of the redirect. For the implicit flow call :meth:`.url` like so:
 
 .. code-block:: python
 
-   print(reddit.auth.url(["identity"], "...", implicit=True)
+   print(reddit.auth.url(["identity"], "...", implicit=True))
 
 Then use :meth:`.implicit` to provide the authorization to the :class:`.Reddit`
 instance.
@@ -271,7 +271,7 @@ of :class:`.Reddit` like so:
                         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
                         refresh_token="WeheY7PwgeCZj4S3QgUcLhKE5S2s4eAYdxM",
                         user_agent="testscript by u/fakebot3")
-   print(reddit.auth.scopes())
+   print(await reddit.auth.scopes())
 
 The output from the above code displays which scopes are available on the
 :class:`.Reddit` instance.

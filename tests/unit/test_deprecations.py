@@ -52,12 +52,7 @@ class TestDeprecation(UnitTest):
             await subreddit.rules()
         assert (
             excinfo.value.args[0]
-            == "Calling SubredditRules to get a list of rules is deprecated. "
-            "Remove the parentheses to use the iterator. View the "
-            "Async PRAW documentation on how to change the code in order to use the"
-            "iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview"
-            "/other/subredditrules.html#asyncpraw.models.reddit.rules."
-            "SubredditRules.__call__)."
+            == "Calling SubredditRules to get a list of rules is deprecated. Remove the parentheses to use the iterator. View the Async PRAW documentation on how to change the code in order to use the iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__)."
         )
 
     def test_web_socket_exception_attribute(self):
@@ -66,9 +61,7 @@ class TestDeprecation(UnitTest):
             _ = exc.original_exception
         assert (
             excinfo.value.args[0]
-            == "Accessing the attribute original_exception is deprecated."
-            " Please rewrite your code in such a way that this attribute does "
-            "not need to be used. It will be removed in Async PRAW 8.0."
+            == "Accessing the attribute original_exception is deprecated. Please rewrite your code in such a way that this attribute does not need to be used. It will be removed in Async PRAW 8.0."
         )
 
     def test_gold_method(self):
@@ -91,7 +84,5 @@ class TestDeprecation(UnitTest):
                 pass
             assert (
                 excinfo.value.args[0]
-                == "Using this class as a synchronous context manager is deprecated"
-                " and will be removed in the next release. Use this class as an "
-                "asynchronous context manager instead."
+                == "Using this class as a synchronous context manager is deprecated and will be removed in the next release. Use this class as an asynchronous context manager instead."
             )

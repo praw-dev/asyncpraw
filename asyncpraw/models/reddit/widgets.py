@@ -231,13 +231,14 @@ class SubredditWidgets(AsyncPRAWBase):
         widgets.progressive_images = True
         async for widget in widgets.sidebar():
            # do something
+           ...
 
     Access a subreddit's widgets with the following attributes:
 
     .. code-block:: python
 
-        print(await widgets.id_card()
-        print(await widgets.moderators_widget()
+        print(await widgets.id_card())
+        print(await widgets.moderators_widget())
         print([widget async for widget in widgets.sidebar()])
         print([widget async for widget in widgets.topbar()])
 
@@ -356,10 +357,12 @@ class SubredditWidgets(AsyncPRAWBase):
         """Return the value of `attr`."""
         if not attr.startswith("_") and not self._fetched:
             raise AttributeError(
-                f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"
+                f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you"
+                " forget to run '.refresh()'?"
             )
         raise AttributeError(  # pragma: no cover; I have no idea how to cover this
-            f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"
+            f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you"
+            " forget to run '.refresh()'?"
         )
 
     def __init__(self, subreddit):
@@ -438,57 +441,57 @@ class SubredditWidgetsModeration:
             Each button is either a text button or an image button. A text
             button looks like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "text",
-                 "text": a string no longer than 30 characters,
-                 "url": a valid URL,
-                 "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "hoverState": {...}
-               }
+                {
+                    "kind": "text",
+                    "text": a string no longer than 30 characters,
+                    "url": a valid URL,
+                    "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "hoverState": {...}
+                }
 
             An image button looks like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "image",
-                 "text": a string no longer than 30 characters,
-                 "linkUrl": a valid URL,
-                 "url": a valid URL of a reddit-hosted image,
-                 "height": an integer,
-                 "width": an integer,
-                 "hoverState": {...}
-               }
+                {
+                    "kind": "image",
+                    "text": a string no longer than 30 characters,
+                    "linkUrl": a valid URL,
+                    "url": a valid URL of a reddit-hosted image,
+                    "height": an integer,
+                    "width": an integer,
+                    "hoverState": {...}
+                }
 
             Both types of buttons have the field ``hoverState``. The field does
             not have to be included (it is optional). If it is included, it can
             be one of two types: text or image. A text ``hoverState`` looks
             like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "text",
-                 "text": a string no longer than 30 characters,
-                 "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
-                 "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`
-               }
+                {
+                    "kind": "text",
+                    "text": a string no longer than 30 characters,
+                    "color": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "textColor": a 6-digit rgb hex color, e.g. `#AABBCC`,
+                    "fillColor": a 6-digit rgb hex color, e.g. `#AABBCC`
+                }
 
             An image ``hoverState`` looks like this:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               {
-                 "kind": "image",
-                 "url": a valid URL of a reddit-hosted image,
-                 "height": an integer,
-                 "width": an integer
-               }
+                {
+                    "kind": "image",
+                    "url": a valid URL of a reddit-hosted image,
+                    "height": an integer,
+                    "width": an integer
+                }
 
 
             .. note::
@@ -545,7 +548,7 @@ class SubredditWidgetsModeration:
                        "width": 200
                    }
                }
-           ]
+            ]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             new_widget = await widget_moderation.add_button_widget(
                "Things to click", "Click some of these *cool* links!",
@@ -794,28 +797,28 @@ class SubredditWidgetsModeration:
         :param data: A ``list`` of ``dict``\ s describing menu contents, as
             specified in `Reddit docs`_. As of this writing, the format is:
 
-            .. code-block:: none
+            .. code-block:: text
 
-               [
-                 {
-                   "text": a string no longer than 20 characters,
-                   "url": a valid URL
-                 },
-
-                 OR
-
-                 {
-                   "children": [
-                     {
+                [
+                    {
                         "text": a string no longer than 20 characters,
-                        "url": a valid URL,
-                     },
-                     ...
-                    ],
-                   "text": a string no longer than 20 characters,
-                 },
-                 ...
-               ]
+                        "url": a valid URL
+                    },
+
+                    OR
+
+                    {
+                        "children": [
+                            {
+                                "text": a string no longer than 20 characters,
+                                "url": a valid URL,
+                            },
+                            ...
+                        ],
+                        "text": a string no longer than 20 characters,
+                    },
+                    ...
+                ]
 
         .. _Reddit docs: https://www.reddit.com/dev/api#POST_api_widget
 
@@ -833,7 +836,7 @@ class SubredditWidgetsModeration:
                     {"text": "requests", "url": "http://python-requests.org"}
                 ]},
                {"text": "Reddit homepage", "url": "https://reddit.com"}
-           ]
+            ]
             new_widget = await widget_moderation.add_menu(menu_contents)
 
         """
@@ -927,7 +930,7 @@ class SubredditWidgetsModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("mysub")
-            widgets = [async for widget in subreddit.widgets]
+            widgets = [widget async for widget in subreddit.widgets]
             order = list(widgets.sidebar)
             order.reverse()
             await widgets.mod.reorder(order)
@@ -1062,7 +1065,7 @@ class ButtonWidget(Widget, BaseList):
                "textColor": "#FFFF00",
                "fillColor": "#0000FF"
            },
-       ]
+        ]
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         button_widget = await widgets.mod.add_button_widget(
            "Things to click", "Click some of these *cool* links!",
@@ -1497,7 +1500,7 @@ class Menu(Widget, BaseList):
                 {"text": "requests", "url": "http://python-requests.org"}
             ]},
            {"text": "Reddit homepage", "url": "https://reddit.com"}
-       ]
+        ]
         menu = await widgets.mod.add_menu(menu_contents)
 
     For more information on creation, see :meth:`.add_menu`.
@@ -1850,6 +1853,7 @@ class WidgetModeration:
         `Reddit documentation
         <https://www.reddit.com/dev/api#PUT_api_widget_{widget_id}>`_ or the
         document of the particular type of widget.
+
         For example, update a text widget like so:
 
         .. code-block:: python

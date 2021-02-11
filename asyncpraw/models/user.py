@@ -1,5 +1,5 @@
 """Provides the User class."""
-from typing import TYPE_CHECKING, AsyncGenerator, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, AsyncIterator, Dict, List, Optional, Union
 
 from ..const import API_PATH
 from ..models import Preferences
@@ -63,8 +63,10 @@ class User(AsyncPRAWBase):
 
     def contributor_subreddits(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Subreddit, None]:
-        """Return a :class:`.ListingGenerator` of subreddits user is a contributor of.
+    ) -> AsyncIterator[Subreddit]:
+        """Return a :class:`.ListingGenerator` of contributor subreddits.
+
+        These are subreddits that the user is a contributor of.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -117,8 +119,7 @@ class User(AsyncPRAWBase):
     ) -> Optional[Redditor]:  # pylint: disable=invalid-name
         """Return a :class:`.Redditor` instance for the authenticated user.
 
-        In :attr:`~asyncpraw.Reddit.read_only` mode, this method returns
-            ``None``.
+        In :attr:`~asyncpraw.Reddit.read_only` mode, this method returns ``None``.
 
         :param use_cache: When true, and if this function has been previously
             called, returned the cached version (default: True).
@@ -141,7 +142,7 @@ class User(AsyncPRAWBase):
 
     def subreddits(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator[Subreddit, None]:
+    ) -> AsyncIterator[Subreddit]:
         """Return a :class:`.ListingGenerator` of subreddits the user is subscribed to.
 
         Additional keyword arguments are passed in the initialization of

@@ -15,7 +15,7 @@ class ReplyableMixin:
         A ``None`` value can be returned if the target is a comment or
         submission in a quarantined subreddit and the authenticated user
         has not opt-ed in to viewing the content. When this happens the
-        comment will be sucessfully created on Reddit and can be retried
+        comment will be successfully created on Reddit and can be retried
         by drawing the comment from the user's comment history.
 
         .. note:: Some items, such as locked submissions/comments or

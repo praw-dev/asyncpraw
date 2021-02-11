@@ -223,8 +223,8 @@ class TestCalendar(IntegrationTest):
             assert isinstance(widget, Calendar)
             assert widget.shortName == "Upcoming Events"
             assert (
-                widget.googleCalendarId == "ccahu0rstno2jrvioq4ccffn78@"
-                "group.calendar.google.com"
+                widget.googleCalendarId
+                == "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
             )
             assert widget.configuration == config
             assert widget.styles == styles
@@ -234,8 +234,8 @@ class TestCalendar(IntegrationTest):
             assert isinstance(widget, Calendar)
             assert widget.shortName == "Past Events :("
             assert (
-                widget.googleCalendarId == "ccahu0rstno2jrvioq4ccffn78@"
-                "group.calendar.google.com"
+                widget.googleCalendarId
+                == "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
             )
             assert widget.configuration == config
             assert widget.styles == styles
@@ -794,8 +794,8 @@ class TestSubredditWidgets(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         assert (
-            f"SubredditWidgets(subreddit=Subreddit(display_name='"
-            f"{pytest.placeholders.test_subreddit}'))" == repr(widgets)
+            f"SubredditWidgets(subreddit=Subreddit(display_name='{pytest.placeholders.test_subreddit}'))"
+            == repr(widgets)
         )
 
     async def test_sidebar(self):
