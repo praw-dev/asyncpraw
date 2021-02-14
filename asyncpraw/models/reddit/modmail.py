@@ -6,7 +6,7 @@ from ...util import snake_case_keys
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
+    from .... import asyncpraw
 
 
 class ModmailConversation(RedditBase):
@@ -92,7 +92,7 @@ class ModmailConversation(RedditBase):
     def parse(  # pylint: disable=arguments-differ
         cls,
         data: Dict[str, Any],
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         convert_objects: bool = True,
     ):
         """Return an instance of ModmailConversation from ``data``.
@@ -123,7 +123,7 @@ class ModmailConversation(RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         mark_read: bool = False,
         _data: Optional[Dict[str, Any]] = None,

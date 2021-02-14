@@ -7,8 +7,7 @@ from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .reddit.comment import Comment  # noqa: F401
-    from .reddit.message import Message
+    from ... import asyncpraw
 
 
 class Inbox(AsyncPRAWBase):
@@ -16,7 +15,7 @@ class Inbox(AsyncPRAWBase):
 
     def all(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Union["Message", "Comment"]]:
+    ) -> AsyncIterator[Union["asyncpraw.models.Message", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for all inbox comments and messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -32,7 +31,7 @@ class Inbox(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["inbox"], **generator_kwargs)
 
-    async def collapse(self, items: List["Message"]):
+    async def collapse(self, items: List["asyncpraw.models.Message"]):
         """Mark an inbox message as collapsed.
 
         :param items: A list containing instances of :class:`.Message`.
@@ -62,7 +61,7 @@ class Inbox(AsyncPRAWBase):
 
     def comment_replies(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Comment"]:
+    ) -> AsyncIterator["asyncpraw.models.Comment"]:
         """Return a :class:`.ListingGenerator` for comment replies.
 
         Additional keyword arguments are passed in the initialization of
@@ -80,7 +79,9 @@ class Inbox(AsyncPRAWBase):
             self._reddit, API_PATH["comment_replies"], **generator_kwargs
         )
 
-    async def mark_read(self, items: List[Union["Comment", "Message"]]):
+    async def mark_read(
+        self, items: List[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]
+    ):
         """Mark Comments or Messages as read.
 
         :param items: A list containing instances of :class:`.Comment` and/or
@@ -110,7 +111,9 @@ class Inbox(AsyncPRAWBase):
             await self._reddit.post(API_PATH["read_message"], data=data)
             items = items[25:]
 
-    async def mark_unread(self, items: List[Union["Comment", "Message"]]):
+    async def mark_unread(
+        self, items: List[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]
+    ):
         """Unmark Comments or Messages as read.
 
         :param items: A list containing instances of :class:`.Comment` and/or
@@ -138,7 +141,7 @@ class Inbox(AsyncPRAWBase):
 
     def mentions(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Comment"]:
+    ) -> AsyncIterator["asyncpraw.models.Comment"]:
         r"""Return a :class:`.ListingGenerator` for mentions.
 
         A mention is :class:`.Comment` in which the authorized redditor is
@@ -158,7 +161,7 @@ class Inbox(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["mentions"], **generator_kwargs)
 
-    async def message(self, message_id: str) -> "Message":
+    async def message(self, message_id: str) -> "asyncpraw.models.Message":
         """Return a Message corresponding to ``message_id``.
 
         :param message_id: The base36 id of a message.
@@ -179,7 +182,7 @@ class Inbox(AsyncPRAWBase):
 
     def messages(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Message"]:
+    ) -> AsyncIterator["asyncpraw.models.Message"]:
         """Return a :class:`.ListingGenerator` for inbox messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -197,7 +200,7 @@ class Inbox(AsyncPRAWBase):
 
     def sent(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Message"]:
+    ) -> AsyncIterator["asyncpraw.models.Message"]:
         """Return a :class:`.ListingGenerator` for sent messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -216,7 +219,7 @@ class Inbox(AsyncPRAWBase):
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Union["Comment", "Message"]]:
+    ) -> AsyncIterator[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]:
         """Yield new inbox items as they become available.
 
         Items are yielded oldest first. Up to 100 historical items will
@@ -236,7 +239,7 @@ class Inbox(AsyncPRAWBase):
 
     def submission_replies(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Comment"]:
+    ) -> AsyncIterator["asyncpraw.models.Comment"]:
         """Return a :class:`.ListingGenerator` for submission replies.
 
         Additional keyword arguments are passed in the initialization of
@@ -254,7 +257,7 @@ class Inbox(AsyncPRAWBase):
             self._reddit, API_PATH["submission_replies"], **generator_kwargs
         )
 
-    async def uncollapse(self, items: List["Message"]):
+    async def uncollapse(self, items: List["asyncpraw.models.Message"]):
         """Mark an inbox message as uncollapsed.
 
         :param items: A list containing instances of :class:`.Message`.
@@ -286,7 +289,7 @@ class Inbox(AsyncPRAWBase):
         self,
         mark_read: bool = False,
         **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Union["Comment", "Message"]]:
+    ) -> AsyncIterator[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]:
         """Return a :class:`.ListingGenerator` for unread comments and messages.
 
         :param mark_read: Marks the inbox as read (default: False).

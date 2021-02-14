@@ -9,8 +9,7 @@ from ...util.cache import cachedproperty
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from .subreddit import Subreddit
+    from .... import asyncpraw
 
 
 class Rule(RedditBase):
@@ -49,7 +48,7 @@ class Rule(RedditBase):
     STR_FIELD = "short_name"
 
     @cachedproperty
-    def mod(self) -> "RuleModeration":
+    def mod(self) -> "asyncpraw.models.reddit.rules.RuleModeration":
         """Contain methods used to moderate rules.
 
         To delete ``"No spam"`` from the subreddit ``"NAME"`` try:
@@ -73,8 +72,8 @@ class Rule(RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
-        subreddit: Optional["Subreddit"] = None,
+        reddit: "asyncpraw.Reddit",
+        subreddit: Optional["asyncpraw.models.Subreddit"] = None,
         short_name: Optional[str] = None,
         _data: Optional[Dict[str, str]] = None,
     ):
@@ -163,7 +162,7 @@ class SubredditRules:
         """
         return SubredditRulesModeration(self)
 
-    async def __call__(self) -> List[Rule]:
+    async def __call__(self) -> List["asyncpraw.models.Rule"]:
         r"""Return a list of :class:`.Rule`\ s (Deprecated).
 
         :returns: A list of instances of :class:`.Rule`.
@@ -191,7 +190,9 @@ class SubredditRules:
             "GET", API_PATH["rules"].format(subreddit=self.subreddit)
         )
 
-    async def get_rule(self, short_name: Union[str, int, slice]) -> Rule:
+    async def get_rule(
+        self, short_name: Union[str, int, slice]
+    ) -> "asyncpraw.models.Rule":
         """Return the Rule for the subreddit with short_name ``short_name``.
 
         :param short_name: The short_name of the rule, or the rule number.
@@ -232,7 +233,7 @@ class SubredditRules:
         await rule._fetch()
         return rule
 
-    def __init__(self, subreddit: "Subreddit"):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditRules instance.
 
         :param subreddit: The subreddit whose rules to work with.
@@ -241,7 +242,7 @@ class SubredditRules:
         self.subreddit = subreddit
         self._reddit = subreddit._reddit
 
-    async def __aiter__(self) -> AsyncIterator[Rule]:
+    async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Rule"]:
         """Iterate through the rules of the subreddit.
 
         :returns: An asynchronous iterator containing all of the rules of a subreddit.
@@ -295,7 +296,7 @@ class RuleModeration:
 
     """
 
-    def __init__(self, rule: Rule):
+    def __init__(self, rule: "asyncpraw.models.Rule"):
         """Initialize the RuleModeration class."""
         self.rule = rule
 
@@ -323,7 +324,7 @@ class RuleModeration:
         kind: Optional[str] = None,
         short_name: Optional[str] = None,
         violation_reason: Optional[str] = None,
-    ) -> Rule:
+    ) -> "asyncpraw.models.Rule":
         """Update the rule from this subreddit.
 
         .. note:: Existing values will be used for any unspecified arguments.
@@ -401,7 +402,7 @@ class SubredditRulesModeration:
         kind: str,
         description: str = "",
         violation_reason: Optional[str] = None,
-    ) -> Rule:
+    ) -> "asyncpraw.models.Rule":
         """Add a removal reason to this subreddit.
 
         :param short_name: The name of the rule.
@@ -441,7 +442,9 @@ class SubredditRulesModeration:
         new_rule.subreddit = self.subreddit_rules.subreddit
         return new_rule
 
-    async def reorder(self, rule_list: List[Rule]) -> List[Rule]:
+    async def reorder(
+        self, rule_list: List["asyncpraw.models.Rule"]
+    ) -> List["asyncpraw.models.Rule"]:
         """Reorder the rules of a subreddit.
 
         :param rule_list: The list of rules, in the wanted order. Each index of

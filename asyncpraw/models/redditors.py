@@ -11,7 +11,7 @@ from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .reddit.subreddit import Subreddit  # noqa: F401
+    from ... import asyncpraw
 
 
 class PartialRedditor(SimpleNamespace):
@@ -23,7 +23,7 @@ class Redditors(AsyncPRAWBase):
 
     def new(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Subreddit"]:
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Return a :class:`.ListingGenerator` for new Redditors.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
@@ -35,7 +35,7 @@ class Redditors(AsyncPRAWBase):
 
     def popular(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Subreddit"]:
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Return a :class:`.ListingGenerator` for popular Redditors.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
@@ -49,7 +49,7 @@ class Redditors(AsyncPRAWBase):
 
     def search(
         self, query: str, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Subreddit"]:
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         r"""Return a :class:`.ListingGenerator` of Redditors for ``query``.
 
         :param query: The query string to filter Redditors by.
@@ -66,7 +66,7 @@ class Redditors(AsyncPRAWBase):
 
     def stream(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Subreddit"]:
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Yield new Redditors as they are created.
 
         Redditors are yielded oldest first. Up to 100 historical Redditors

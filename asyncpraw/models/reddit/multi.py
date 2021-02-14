@@ -11,7 +11,7 @@ from .redditor import Redditor
 from .subreddit import Subreddit, SubredditStream
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
+    from .... import asyncpraw
 
 
 class Multireddit(SubredditListingMixin, RedditBase):
@@ -95,7 +95,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         """
         return SubredditStream(self)
 
-    def __init__(self, reddit: "Reddit", _data: Dict[str, Any]):
+    def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
         """Construct an instance of the Multireddit object."""
         self.path = None
         super().__init__(reddit, _data=_data)
@@ -129,7 +129,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    async def add(self, subreddit: "Subreddit"):
+    async def add(self, subreddit: "asyncpraw.models.Subreddit"):
         """Add a subreddit to this multireddit.
 
         :param subreddit: The subreddit to add to this multi.
@@ -150,7 +150,9 @@ class Multireddit(SubredditListingMixin, RedditBase):
         await self._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
-    async def copy(self, display_name: Optional[str] = None) -> "Multireddit":
+    async def copy(
+        self, display_name: Optional[str] = None
+    ) -> "asyncpraw.models.Multireddit":
         """Copy this multireddit and return the new multireddit.
 
         :param display_name: (optional) The display name for the copied
@@ -198,7 +200,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         )
         await self._reddit.delete(path)
 
-    async def remove(self, subreddit: Subreddit):
+    async def remove(self, subreddit: "asyncpraw.models.Subreddit"):
         """Remove a subreddit from this multireddit.
 
         :param subreddit: The subreddit to remove from this multi.
@@ -223,7 +225,9 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
     async def update(
         self,
-        **updated_settings: Union[str, List[Union[str, Subreddit, Dict[str, str]]]],
+        **updated_settings: Union[
+            str, List[Union[str, "asyncpraw.models.Subreddit", Dict[str, str]]]
+        ],
     ):
         """Update this multireddit.
 
