@@ -6,7 +6,7 @@ from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ...reddit.submission import Submission  # noqa: F401
+    from ..... import asyncpraw
 
 
 class SubmissionListingMixin(AsyncPRAWBase):
@@ -14,7 +14,7 @@ class SubmissionListingMixin(AsyncPRAWBase):
 
     def duplicates(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Submission"]:
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for the submission's duplicates.
 
         Additional keyword arguments are passed in the initialization of

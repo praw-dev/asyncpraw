@@ -11,8 +11,7 @@ from .mixins import FullnameMixin
 from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from .submission import Submission  # noqa: F401
+    from .... import asyncpraw
 
 
 class LiveContributorRelationship:
@@ -26,7 +25,7 @@ class LiveContributorRelationship:
             permissions = set(permissions)
         return ",".join(f"+{x}" for x in permissions)
 
-    def __call__(self) -> AsyncIterator[Redditor]:
+    def __call__(self) -> AsyncIterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.RedditorList` for live threads' contributors.
 
         Usage:
@@ -47,7 +46,7 @@ class LiveContributorRelationship:
 
         return generator()
 
-    def __init__(self, thread: "LiveThread"):
+    def __init__(self, thread: "asyncpraw.models.LiveThread"):
         """Create a :class:`.LiveContributorRelationship` instance.
 
         :param thread: An instance of :class:`.LiveThread`.
@@ -74,7 +73,9 @@ class LiveContributorRelationship:
         await self.thread._reddit.post(url)
 
     async def invite(
-        self, redditor: Union[str, Redditor], permissions: Optional[List[str]] = None
+        self,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
+        permissions: Optional[List[str]] = None,
     ):
         """Invite a redditor to be a contributor of the live thread.
 
@@ -124,7 +125,7 @@ class LiveContributorRelationship:
         url = API_PATH["live_leave"].format(id=self.thread.id)
         await self.thread._reddit.post(url)
 
-    async def remove(self, redditor: Union[str, Redditor]):
+    async def remove(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove the redditor from the live thread contributors.
 
         :param redditor: A redditor fullname (e.g., ``"t2_1w72"``) or
@@ -148,7 +149,7 @@ class LiveContributorRelationship:
         url = API_PATH["live_remove_contrib"].format(id=self.thread.id)
         await self.thread._reddit.post(url, data=data)
 
-    async def remove_invite(self, redditor: Union[str, Redditor]):
+    async def remove_invite(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove the invite for redditor.
 
         :param redditor: A redditor fullname (e.g., ``"t2_1w72"``) or
@@ -177,7 +178,9 @@ class LiveContributorRelationship:
         await self.thread._reddit.post(url, data=data)
 
     async def update(
-        self, redditor: Union[str, Redditor], permissions: Optional[List[str]] = None
+        self,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
+        permissions: Optional[List[str]] = None,
     ):
         """Update the contributor permissions for ``redditor``.
 
@@ -219,7 +222,9 @@ class LiveContributorRelationship:
         await self.thread._reddit.post(url, data=data)
 
     async def update_invite(
-        self, redditor: Union[str, Redditor], permissions: Optional[List[str]] = None
+        self,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
+        permissions: Optional[List[str]] = None,
     ):
         """Update the contributor invite permissions for ``redditor``.
 
@@ -290,7 +295,7 @@ class LiveThread(RedditBase):
     STR_FIELD = "id"
 
     @cachedproperty
-    def contrib(self) -> "LiveThreadContribution":
+    def contrib(self) -> "asyncpraw.models.reddit.live.LiveThreadContribution":
         """Provide an instance of :class:`.LiveThreadContribution`.
 
         Usage:
@@ -304,7 +309,7 @@ class LiveThread(RedditBase):
         return LiveThreadContribution(self)
 
     @cachedproperty
-    def contributor(self) -> LiveContributorRelationship:
+    def contributor(self) -> "asyncpraw.models.reddit.live.LiveContributorRelationship":
         """Provide an instance of :class:`.LiveContributorRelationship`.
 
         You can call the instance to get a list of contributors which is
@@ -323,7 +328,7 @@ class LiveThread(RedditBase):
         return LiveContributorRelationship(self)
 
     @cachedproperty
-    def stream(self) -> "LiveThreadStream":
+    def stream(self) -> "asyncpraw.models.reddit.live.LiveThreadStream":
         """Provide an instance of :class:`.LiveThreadStream`.
 
         Streams are used to indefinitely retrieve new updates made to a
@@ -348,7 +353,7 @@ class LiveThread(RedditBase):
         """
         return LiveThreadStream(self)
 
-    def __eq__(self, other: Union[str, "LiveThread"]) -> bool:
+    def __eq__(self, other: Union[str, "asyncpraw.models.LiveThread"]) -> bool:
         """Return whether the other instance equals the current.
 
         .. note:: This comparison is case sensitive.
@@ -357,7 +362,9 @@ class LiveThread(RedditBase):
             return other == str(self)
         return isinstance(other, self.__class__) and str(self) == str(other)
 
-    async def get_update(self, update_id: str, lazy: bool = False) -> "LiveUpdate":
+    async def get_update(
+        self, update_id: str, lazy: bool = False
+    ) -> "asyncpraw.models.LiveUpdate":
         """Return a :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
@@ -393,7 +400,7 @@ class LiveThread(RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         id: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,  # pylint: disable=redefined-builtin
     ):
@@ -425,7 +432,7 @@ class LiveThread(RedditBase):
 
     def discussions(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Submission"]:
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
         """Get submissions linking to the thread.
 
         :param generator_kwargs: keyword arguments passed to
@@ -468,7 +475,7 @@ class LiveThread(RedditBase):
 
     async def updates(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["LiveUpdate"]:
+    ) -> AsyncIterator["asyncpraw.models.LiveUpdate"]:
         """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
 
         :param generator_kwargs: keyword arguments passed to
@@ -498,7 +505,7 @@ class LiveThread(RedditBase):
 class LiveThreadContribution:
     """Provides a set of contribution functions to a LiveThread."""
 
-    def __init__(self, thread: LiveThread):
+    def __init__(self, thread: "asyncpraw.models.LiveThread"):
         """Create an instance of :class:`.LiveThreadContribution`.
 
         :param thread: An instance of :class:`.LiveThread`.
@@ -621,14 +628,16 @@ class LiveThreadStream:
 
     """
 
-    def __init__(self, live_thread: LiveThread):
+    def __init__(self, live_thread: "asyncpraw.models.LiveThread"):
         """Create a LiveThreadStream instance.
 
         :param live_thread: The live thread associated with the stream.
         """
         self.live_thread = live_thread
 
-    def updates(self, **stream_options: Dict[str, Any]) -> AsyncIterator["LiveUpdate"]:
+    def updates(
+        self, **stream_options: Dict[str, Any]
+    ) -> AsyncIterator["asyncpraw.models.LiveUpdate"]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created
@@ -693,7 +702,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
     _kind = "LiveUpdate"
 
     @cachedproperty
-    def contrib(self) -> "LiveUpdateContribution":
+    def contrib(self) -> "asyncpraw.models.reddit.live.LiveUpdateContribution":
         """Provide an instance of :class:`.LiveUpdateContribution`.
 
         Usage:
@@ -714,7 +723,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         thread_id: Optional[str] = None,
         update_id: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
@@ -768,7 +777,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
 class LiveUpdateContribution:
     """Provides a set of contribution functions to LiveUpdate."""
 
-    def __init__(self, update: LiveUpdate):
+    def __init__(self, update: "asyncpraw.models.LiveUpdate"):
         """Create an instance of :class:`.LiveUpdateContribution`.
 
         :param update: An instance of :class:`.LiveUpdate`.

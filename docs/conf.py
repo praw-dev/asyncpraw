@@ -16,6 +16,11 @@ html_theme_options = {"collapse_navigation": True}
 htmlhelp_basename = "Async PRAW"
 intersphinx_mapping = {"python": ("https://docs.python.org/3.9", None)}
 master_doc = "index"
+nitpick_ignore = [
+    ("py:class", "IO"),
+    ("py:class", "asyncprawcore.requestor.Requestor"),
+    ("py:class", "asyncpraw.models.redditors.PartialRedditor"),
+]
 nitpicky = True
 project = "Async PRAW"
 pygments_style = "sphinx"
@@ -47,4 +52,4 @@ def skip(app, what, name, obj, skip, options):
 
 def setup(app):
     app.connect("autodoc-skip-member", skip)
-    app.add_stylesheet("theme_override.css")
+    app.add_css_file("theme_override.css")

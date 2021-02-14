@@ -6,7 +6,7 @@ from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ...reddit.submission import Submission  # noqa: F401
+    from ..... import asyncpraw
 
 
 class RisingListingMixin(AsyncPRAWBase):
@@ -14,7 +14,7 @@ class RisingListingMixin(AsyncPRAWBase):
 
     def random_rising(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Submission"]:
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for random rising submissions.
 
         Additional keyword arguments are passed in the initialization of
@@ -35,7 +35,7 @@ class RisingListingMixin(AsyncPRAWBase):
 
     def rising(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["Submission"]:
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for rising submissions.
 
         Additional keyword arguments are passed in the initialization of

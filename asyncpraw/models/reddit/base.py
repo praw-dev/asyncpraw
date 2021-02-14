@@ -7,7 +7,7 @@ from ...exceptions import InvalidURL
 from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
+    from .... import asyncpraw
 
 
 class RedditBase(AsyncPRAWBase):
@@ -55,7 +55,7 @@ class RedditBase(AsyncPRAWBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         _data: Optional[Dict[str, Any]],
         _extra_attribute_to_check: Optional[str] = None,
         _fetched: bool = False,

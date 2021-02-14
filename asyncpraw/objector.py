@@ -8,7 +8,7 @@ from .models.reddit.base import RedditBase
 from .util import snake_case_keys
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .. import Reddit
+    from ... import asyncpraw
 
 
 class Objector:
@@ -46,7 +46,9 @@ class Objector:
         if error:
             raise error
 
-    def __init__(self, reddit: "Reddit", parsers: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, reddit: "asyncpraw.Reddit", parsers: Optional[Dict[str, Any]] = None
+    ):
         """Initialize an Objector instance.
 
         :param reddit: An instance of :class:`~.Reddit`.

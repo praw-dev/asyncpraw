@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, Union
 from .base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .. import Reddit
+    from ... import asyncpraw
 
 
 class Trophy(AsyncPRAWBase):
@@ -35,7 +35,7 @@ class Trophy(AsyncPRAWBase):
     ======================= ===================================================
     """
 
-    def __init__(self, reddit: "Reddit", _data: Dict[str, Any]):
+    def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
         """Initialize a Trophy instance.
 
         :param reddit: An instance of :class:`.Reddit`.

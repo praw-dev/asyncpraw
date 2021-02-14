@@ -7,8 +7,7 @@ from ...exceptions import ClientException
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from .subreddit import Subreddit
+    from .... import asyncpraw
 
 
 class RemovalReason(RedditBase):
@@ -65,8 +64,8 @@ class RemovalReason(RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
-        subreddit: "Subreddit",
+        reddit: "asyncpraw.Reddit",
+        subreddit: "asyncpraw.models.Subreddit",
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         reason_id: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
@@ -204,7 +203,7 @@ class SubredditRemovalReasons:
             await reason._fetch()
         return reason
 
-    def __init__(self, subreddit: "Subreddit"):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditRemovalReasons instance.
 
         :param subreddit: The subreddit whose removal reasons to work with.
