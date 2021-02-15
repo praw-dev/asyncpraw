@@ -242,8 +242,8 @@ class LiveContributorRelationship:
             thread = await reddit.live("ukaeu1ik4sw5")
             await thread.contributor.update_invite("spez")
 
-        To set "access" and "edit" permissions (and to remove other permissions) to the
-        invitation, try:
+        To set ``"access"`` and ``"edit"`` permissions (and to remove other permissions)
+        to the invitation, try:
 
         .. code-block:: python
 
@@ -364,7 +364,8 @@ class LiveThread(RedditBase):
 
         :param update_id: A live update ID, e.g.,
             ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
-        :param fetch: Determines if Async PRAW will fetch the object (default: True).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
 
         Usage:
 
@@ -561,11 +562,12 @@ class LiveThreadContribution:
     ):
         """Update settings of the live thread.
 
-        :param title: The title of the live thread (default: None).
-        :param description: The live thread's description (default: None).
-        :param nsfw: Indicate whether this thread is not safe for work (default: None).
+        :param title: The title of the live thread (default: ``None``).
+        :param description: The live thread's description (default: ``None``).
+        :param nsfw: Indicate whether this thread is not safe for work (default:
+            ``None``).
         :param resources: Markdown formatted information that is useful for the live
-            thread (default: None).
+            thread (default: ``None``).
 
         Does nothing if no arguments are provided.
 

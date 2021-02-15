@@ -122,8 +122,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. note::
 
-            The appropriate values for ``reply_sort`` include ``confidence``,
-            ``controversial``, ``new``, ``old``, ``q&a``, and ``top``.
+            The appropriate values for ``reply_sort`` include ``"confidence"``,
+            ``"controversial"``, ``"new"``, ``"old"``, ``"q&a"``, and ``"top"``.
 
         """
         if isinstance(self._replies, list):

@@ -537,9 +537,10 @@ class SubredditCollections(AsyncPRAWBase):
     ):
         """Return the :class:`.Collection` with the specified ID.
 
-        :param collection_id: The ID of a :class:`.Collection` (default: None).
-        :param permalink: The permalink of a collection (default: None).
-        :param fetch: Determines if Async PRAW will fetch the object (default: True).
+        :param collection_id: The ID of a :class:`.Collection` (default: ``None``).
+        :param permalink: The permalink of a collection (default: ``None``).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
 
         :returns: The specified :class:`.Collection`.
 

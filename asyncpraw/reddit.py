@@ -93,7 +93,7 @@ class Reddit:
 
     @property
     def read_only(self) -> bool:
-        """Return True when using the ReadOnlyAuthorizer."""
+        """Return ``True`` when using the ReadOnlyAuthorizer."""
         return self._core == self._read_only_core
 
     @read_only.setter
@@ -119,7 +119,7 @@ class Reddit:
 
         .. deprecated:: 7.0
 
-            If property :attr:`.validate_on_submit` is set to False, the behavior is
+            If property :attr:`.validate_on_submit` is set to ``False``, the behavior is
             deprecated by Reddit. This attribute will be removed around May-June 2020.
 
         """
@@ -198,16 +198,16 @@ class Reddit:
             configured ``praw.ini``, file is useful if you wish to easily save
             credentials for different applications, or communicate with other servers
             running Reddit. If ``site_name`` is ``None``, then the site name will be
-            looked for in the environment variable praw_site. If it is not found there,
-            the DEFAULT site will be used.
+            looked for in the environment variable ``praw_site``. If it is not found
+            there, the ``DEFAULT`` site will be used.
         :param requestor_class: A class that will be used to create a requestor. If not
-            set, use ``asyncprawcore.Requestor`` (default: None).
+            set, use ``asyncprawcore.Requestor`` (default: ``None``).
         :param requestor_kwargs: Dictionary with additional keyword arguments used to
-            initialize the requestor (default: None).
+            initialize the requestor (default: ``None``).
         :param token_manager: When provided, the passed instance, a subclass of
             :class:`.BaseTokenManager`, will manage tokens via two callback functions.
             This parameter must be provided in order to work with refresh tokens
-            (default: None).
+            (default: ``None``).
 
         Additional keyword arguments will be used to initialize the :class:`.Config`
         object. This can be used to specify configuration settings during instantiation
@@ -618,7 +618,8 @@ class Reddit:
 
         :param id: The ID of the comment.
         :param url: A permalink pointing to the comment.
-        :param fetch: Determines if Async PRAW will fetch the object (default: True).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
 
         If you don't need the object fetched right away (e.g., to utilize a class
         method) then you can do:
@@ -656,7 +657,7 @@ class Reddit:
         """Return parsed objects returned from a GET request to ``path``.
 
         :param path: The path to fetch.
-        :param params: The query parameters to add to the request (default: None).
+        :param params: The query parameters to add to the request (default: ``None``).
 
         """
         return await self._objectify_request(method="GET", params=params, path=path)
@@ -696,8 +697,8 @@ class Reddit:
         .. note::
 
             When using the URL option, it is important to be aware that URLs are treated
-            literally by Reddit's API. As such, the URLs "youtube.com" and
-            "https://www.youtube.com" will provide a different set of submissions.
+            literally by Reddit's API. As such, the URLs ``"youtube.com"`` and
+            ``"https://www.youtube.com"`` will provide a different set of submissions.
 
         """
         none_count = (fullnames, url, subreddits).count(None)
@@ -751,14 +752,14 @@ class Reddit:
         """Run a request through the ``Objector``.
 
         :param data: Dictionary, bytes, or file-like object to send in the body of the
-            request (default: None).
+            request (default: ``None``).
         :param files: Dictionary, filename to file (like) object mapping (default:
-            None).
+            ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
-            Content-Type header of application/json (default: None). If ``json`` is
+            Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
         :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
-        :param params: The query parameters to add to the request (default: None).
+        :param params: The query parameters to add to the request (default: ``None``).
         :param path: The path to fetch.
 
         """
@@ -802,11 +803,11 @@ class Reddit:
 
         :param path: The path to fetch.
         :param data: Dictionary, bytes, or file-like object to send in the body of the
-            request (default: None).
+            request (default: ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
-            Content-Type header of application/json (default: None). If ``json`` is
+            Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
-        :param params: The query parameters to add to the request (default: None).
+        :param params: The query parameters to add to the request (default: ``None``).
 
         """
         return await self._objectify_request(
@@ -823,9 +824,9 @@ class Reddit:
 
         :param path: The path to fetch.
         :param data: Dictionary, bytes, or file-like object to send in the body of the
-            request (default: None).
+            request (default: ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
-            Content-Type header of application/json (default: None). If ``json`` is
+            Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
 
         """
@@ -845,12 +846,12 @@ class Reddit:
 
         :param path: The path to fetch.
         :param data: Dictionary, bytes, or file-like object to send in the body of the
-            request (default: None).
+            request (default: ``None``).
         :param files: Dictionary, filename to file (like) object mapping (default:
-            None).
-        :param params: The query parameters to add to the request (default: None).
+            ``None``).
+        :param params: The query parameters to add to the request (default: ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
-            Content-Type header of application/json (default: None). If ``json`` is
+            Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
 
         """
@@ -890,9 +891,9 @@ class Reddit:
 
         :param path: The path to fetch.
         :param data: Dictionary, bytes, or file-like object to send in the body of the
-            request (default: None).
+            request (default: ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
-            Content-Type header of application/json (default: None). If ``json`` is
+            Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
 
         """
@@ -906,7 +907,7 @@ class Reddit:
         """Return a random instance of :class:`.Subreddit`.
 
         :param nsfw: Return a random NSFW (not safe for work) subreddit (default:
-            False).
+            ``False``).
 
         """
         url = API_PATH["subreddit"].format(subreddit="randnsfw" if nsfw else "random")
@@ -929,7 +930,8 @@ class Reddit:
 
         :param name: The name of the redditor.
         :param fullname: The fullname of the redditor, starting with ``t2_``.
-        :param fetch: Determines if Async PRAW will fetch the object (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``False``).
 
         Either ``name`` or ``fullname`` can be provided, but not both.
 
@@ -952,13 +954,13 @@ class Reddit:
 
         :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
         :param path: The path to fetch.
-        :param params: The query parameters to add to the request (default: None).
+        :param params: The query parameters to add to the request (default: ``None``).
         :param data: Dictionary, bytes, or file-like object to send in the body of the
-            request (default: None).
+            request (default: ``None``).
         :param files: Dictionary, filename to file (like) object mapping (default:
-            None).
+            ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
-            Content-Type header of application/json (default: None). If ``json`` is
+            Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
 
         """
@@ -1007,7 +1009,8 @@ class Reddit:
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
         :param url: A URL supported by :meth:`.Submission.id_from_url`.
-        :param fetch: Determines if Async PRAW will fetch the object (default: True).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
 
         Either ``id`` or ``url`` can be provided, but not both.
 

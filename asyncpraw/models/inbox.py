@@ -312,7 +312,7 @@ class Inbox(AsyncPRAWBase):
     ) -> AsyncIterator[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]:
         """Return a :class:`.ListingGenerator` for unread comments and messages.
 
-        :param mark_read: Marks the inbox as read (default: False).
+        :param mark_read: Marks the inbox as read (default: ``False``).
 
         .. note::
 

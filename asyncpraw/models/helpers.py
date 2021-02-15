@@ -170,7 +170,8 @@ class LiveHelper(AsyncPRAWBase):
             await livethread.close()
 
         :param id: A live thread ID, e.g., ``ukaeu1ik4sw5``.
-        :param fetch: Determines if Async PRAW will fetch the object (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``False``).
 
         """
         live_thread = LiveThread(self._reddit, id=id)
@@ -290,7 +291,8 @@ class MultiredditHelper(AsyncPRAWBase):
         :param redditor: A redditor name or :class:`.Redditor` instance who owns the
             multireddit.
         :param name: The name of the multireddit.
-        :param fetch: Determines if Async PRAW will fetch the object (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``False``).
 
         """
         path = f"/user/{redditor}/m/{name}"
@@ -316,18 +318,18 @@ class MultiredditHelper(AsyncPRAWBase):
             either :class:`.Subreddit` instances or subreddit display names.
         :param description_md: Description for the new multireddit, formatted in
             markdown.
-        :param icon_name: Can be one of: ``art and design``, ``ask``, ``books``,
-            ``business``, ``cars``, ``comics``, ``cute animals``, ``diy``,
-            ``entertainment``, ``food and drink``, ``funny``, ``games``, ``grooming``,
-            ``health``, ``life advice``, ``military``, ``models pinup``, ``music``,
-            ``news``, ``philosophy``, ``pictures and gifs``, ``science``, ``shopping``,
-            ``sports``, ``style``, ``tech``, ``travel``, ``unusual stories``, ``video``,
-            or ``None`` (default ``None``).
+        :param icon_name: Can be one of: ``"art and design"``, ``"ask"``, ``"books"``,
+            ``"business"``, ``"cars"``, ``"comics"``, ``"cute animals"``, ``"diy"``,
+            ``"entertainment"``, ``"food and drink"``, ``"funny"``, ``"games"``,
+            ``"grooming"``, ``"health"``, ``"life advice"``, ``"military"``, ``"models
+            pinup"``, ``"music"``, ``"news"``, ``"philosophy"``, ``"pictures and
+            gifs"``, ``"science"``, ``"shopping"``, ``"sports"``, ``"style"``,
+            ``"tech"``, ``"travel"``, ``"unusual stories"``, ``"video"``, or ``None``.
         :param key_color: RGB hex color code of the form ``"#FFFFFF"``.
-        :param visibility: Can be one of: ``hidden``, ``private``, or ``public``
-            (default: private).
-        :param weighting_scheme: Can be one of: ``classic`` or ``fresh`` (default:
-            classic).
+        :param visibility: Can be one of: ``"hidden"``, ``"private"``, or ``"public"``
+            (default: ``"private"``).
+        :param weighting_scheme: Can be one of: ``"classic"`` or ``"fresh"`` (default:
+            ``"classic"``).
 
         :returns: The new :class:`.Multireddit` object.
 
@@ -355,7 +357,8 @@ class SubredditHelper(AsyncPRAWBase):
         """Return an instance of :class:`.Subreddit`.
 
         :param display_name: The name of the subreddit.
-        :param fetch: Determines if Async PRAW will fetch the object (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``False``).
 
         If you need the object fetched right away (e.g., to access an attribute) you can
         do:
@@ -390,17 +393,17 @@ class SubredditHelper(AsyncPRAWBase):
 
         :param name: The name for the new subreddit.
         :param title: The title of the subreddit. When ``None`` or ``""`` use the value
-            of ``name``.
-        :param link_type: The types of submissions users can make. One of ``any``,
-            ``link``, or ``self`` (default: any).
-        :param subreddit_type: One of ``archived``, ``employees_only``, ``gold_only``,
-            ``gold_restricted``, ``private``, ``public``, or ``restricted`` (default:
-            public).
-        :param wikimode: One of ``anyone``, ``disabled``, or ``modonly`` (default:
-            ``disabled``).
+            of ``"name"``.
+        :param link_type: The types of submissions users can make. One of ``"any"``,
+            ``"link"``, or ``"self"`` (default: ``"any"``).
+        :param subreddit_type: One of ``"archived"``, ``"employees_only"``,
+            ``"gold_only"``, ``"gold_restricted"``, ``"private"``, ``"public"``, or
+            ``"restricted"`` (default: ``"public"``).
+        :param wikimode: One of ``"anyone"``, ``"disabled"``, or ``"modonly"`` (default:
+            ``"disabled"``).
 
-        Any keyword parameters not provided, or set explicitly to None, will take on a
-        default value assigned by the Reddit server.
+        Any keyword parameters not provided, or set explicitly to ``None``, will take on
+        a default value assigned by the Reddit server.
 
         .. seealso::
 
