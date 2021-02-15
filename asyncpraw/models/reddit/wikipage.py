@@ -43,8 +43,7 @@ class WikiPageModeration:
     async def add(self, redditor: "asyncpraw.models.Redditor"):
         """Add an editor to this :class:`.WikiPage`.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
 
         To add ``"spez"`` as an editor on the wikipage ``"praw_test"`` try:
 
@@ -64,8 +63,7 @@ class WikiPageModeration:
     async def remove(self, redditor: "asyncpraw.models.Redditor"):
         """Remove an editor from this :class:`.WikiPage`.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
 
         To remove ``"spez"`` as an editor on the wikipage ``"praw_test"`` try:
 
@@ -85,13 +83,13 @@ class WikiPageModeration:
     async def revert(self):
         """Revert a wikipage back to a specific revision.
 
-        To revert the page ``"praw_test"`` in ``r/test`` to revision ``[ID]``, try
+        To revert the page ``"praw_test"`` in ``r/test`` to revision ``1234abc``, try
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
             wikipage = await subreddit.wiki.get_page("praw_test")
-            revision = await wikipage.revision("[ID]")
+            revision = await wikipage.revision("1234abc")
             await revision.mod.revert()
 
         .. note::
@@ -112,7 +110,7 @@ class WikiPageModeration:
                 try:
                     subreddit = await reddit.subreddit("test")
                     wikipage = await subreddit.wiki.get_page("config/stylesheet")
-                    revision = await wikipage.revision("[ID]")
+                    revision = await wikipage.revision("1234abc")
                     await revision.mod.revert()
                 except Forbidden as exception:
                     try:
@@ -148,10 +146,10 @@ class WikiPageModeration:
     ) -> Dict[str, Any]:
         """Update the settings for this :class:`.WikiPage`.
 
-        :param listed: (boolean) Show this page on page list.
-        :param permlevel: (int) Who can edit this page? (0) use subreddit wiki
-            permissions, (1) only approved wiki contributors for this page may edit (see
-            :meth:`.WikiPageModeration.add`), (2) only mods may edit and view
+        :param listed: Show this page on page list.
+        :param permlevel: Who can edit this page? ``0`` use subreddit wiki permissions,
+            ``1`` only approved wiki contributors for this page may edit (see
+            :meth:`.WikiPageModeration.add`), ``2`` only mods may edit and view.
         :param other_settings: Additional keyword arguments to pass.
 
         :returns: The updated WikiPage settings.
@@ -292,7 +290,7 @@ class WikiPage(RedditBase):
         """Edit this WikiPage's contents.
 
         :param content: The updated Markdown content of the page.
-        :param reason: (Optional) The reason for the revision.
+        :param reason: The reason for the revision.
         :param other_settings: Additional keyword arguments to pass.
 
         For example, to replace the first wiki page of ``r/test`` with the phrase ``test
@@ -343,13 +341,13 @@ class WikiPage(RedditBase):
     async def revision(self, revision: str):
         """Return a specific version of this page by revision ID.
 
-        To view revision ``[ID]`` of ``"praw_test"`` in ``r/test``:
+        To view revision ``1234abc`` of ``"praw_test"`` in ``r/test``:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
             page = await subreddit.wiki.get_page("praw_test", fetch=False)
-            revision = await page.revision("[ID]")
+            revision = await page.revision("1234abc")
 
         """
         page = WikiPage(self.subreddit._reddit, self.subreddit, self.name, revision)

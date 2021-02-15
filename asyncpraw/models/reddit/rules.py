@@ -42,19 +42,19 @@ class Rule(RedditBase):
     def mod(self) -> "asyncpraw.models.reddit.rules.RuleModeration":
         """Contain methods used to moderate rules.
 
-        To delete ``"No spam"`` from the subreddit ``"NAME"`` try:
+        To delete ``"No spam"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             rule = await subreddit.rules.get_rule("No Spam")
             await rule.mod.delete()
 
-        To update ``"No spam"`` from the subreddit ``"NAME"`` try:
+        To update ``"No spam"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.rules.get_rule("No spam")
             await rule.mod.update(description="Don't do this!", violation_reason="Spam post")
 
@@ -106,16 +106,16 @@ class SubredditRules:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("AskReddit")
+        subreddit = await reddit.subreddit("test")
         async for rule in subreddit.rules:
             print(rule)
 
     Moderators can also add rules to the subreddit. For example, to make a rule called
-    ``"No spam"`` in the subreddit ``"NAME"``:
+    ``"No spam"`` in r/test:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("NAME")
+        subreddit = await reddit.subreddit("test")
         await subreddit.rules.mod.add(
             short_name="No spam", kind="all", description="Do not spam. Spam bad"
         )
@@ -126,21 +126,21 @@ class SubredditRules:
     def mod(self) -> "SubredditRulesModeration":
         """Contain methods to moderate subreddit rules as a whole.
 
-        To add rule ``"No spam"`` to the subreddit ``"NAME"`` try:
+        To add rule ``"No spam"`` to r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.rules.mod.add(
                 short_name="No spam", kind="all", description="Do not spam. Spam bad"
             )
 
         To move the fourth rule to the first position, and then to move the prior first
-        rule to where the third rule originally was in the subreddit ``"NAME"``:
+        rule to where the third rule originally was in r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             rules = [rule async for rule in subreddit.rules]
             new_rules = rules[3:4] + rules[1:3] + rules[0:1] + rules[4:]
             # Alternate: [rules[3]] + rules[1:3] + [rules[0]] + rules[4:]
@@ -190,7 +190,7 @@ class SubredditRules:
         .. code-block:: python
 
             rule_name = "No spam"
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             rule = await subreddit.rules.get_rule(rule_name)
             print(rule)
 
@@ -207,11 +207,11 @@ class SubredditRules:
             also use slices, to get a subset of rules, such as the last three rules with
             ``get_rule(slice(-3, None))``.
 
-        For example, to fetch the second rule of ``AskReddit``:
+        For example, to fetch the second rule of r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             rule = await subreddit.rules.get_rule(1)
 
         """
@@ -234,15 +234,15 @@ class SubredditRules:
     async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Rule"]:
         """Iterate through the rules of the subreddit.
 
-        :returns: An asynchronous iterator containing all of the rules of a subreddit.
+        :returns: An asynchronous iterator containing all the rules of a subreddit.
 
         This method is used to discover all rules for a subreddit.
 
-        For example, to get the rules for the subreddit ``"NAME"``:
+        For example, to get the rules for r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for rule in subreddit.rules:
                 print(rule)
 
@@ -268,19 +268,19 @@ class SubredditRules:
 class RuleModeration:
     """Contain methods used to moderate rules.
 
-    To delete ``"No spam"`` from the subreddit ``"NAME"`` try:
+    To delete ``"No spam"`` from r/test try:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("NAME")
+        subreddit = await reddit.subreddit("test")
         rule = await subreddit.rules.get_rule("No Spam")
         await rule.mod.delete()
 
-    To update ``"No spam"`` from the subreddit ``"NAME"`` try:
+    To update ``"No spam"`` from r/test try:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("NAME")
+        subreddit = await reddit.subreddit("test")
         rule = await subreddit.rules.get_rule("No Spam")
         await rule.mod.update(description="Don't do this!", violation_reason="Spam post")
 
@@ -293,11 +293,11 @@ class RuleModeration:
     async def delete(self):
         """Delete a rule from this subreddit.
 
-        To delete ``"No spam"`` from the subreddit ``"NAME"`` try:
+        To delete ``"No spam"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             rule = await subreddit.rules.get_rule("No Spam")
             await rule.mod.delete()
 
@@ -329,11 +329,11 @@ class RuleModeration:
 
         :returns: A Rule object containing the updated values.
 
-        To update ``"No spam"`` from the subreddit ``"NAME"`` try:
+        To update ``"No spam"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = reddit.subreddit("NAME")
+            subreddit = reddit.subreddit("test")
             rule = await subreddit.rules.get_rule("No Spam")
             await rule.mod.update(description="Don't do this!", violation_reason="Spam post")
 
@@ -360,21 +360,21 @@ class RuleModeration:
 class SubredditRulesModeration:
     """Contain methods to moderate subreddit rules as a whole.
 
-    To add rule ``"No spam"`` to the subreddit ``"NAME"`` try:
+    To add rule ``"No spam"`` to r/test try:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("NAME")
+        subreddit = await reddit.subreddit("test")
         await subreddit.rules.mod.add(
             short_name="No spam", kind="all", description="Do not spam. Spam bad"
         )
 
     To move the fourth rule to the first position, and then to move the prior first rule
-    to where the third rule originally was in the subreddit ``"NAME"``:
+    to where the third rule originally was in r/test:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("NAME")
+        subreddit = await reddit.subreddit("test")
         rules = [rule async for rule in subreddit.rules]
         new_rules = rules[3:4] + rules[1:3] + rules[0:1] + rules[4:]
         # Alternate: [rules[3]] + rules[1:3] + [rules[0]] + rules[4:]
@@ -398,18 +398,18 @@ class SubredditRulesModeration:
         :param short_name: The name of the rule.
         :param kind: The kind of item that the rule applies to. One of ``"link"``,
             ``"comment"``, or ``"all"``.
-        :param description: The description for the rule. Optional.
+        :param description: The description for the rule.
         :param violation_reason: The reason that is shown on the report menu. If a
             violation reason is not specified, the short name will be used as the
             violation reason.
 
         :returns: The Rule added.
 
-        To add rule ``"No spam"`` to the subreddit ``"NAME"`` try:
+        To add rule ``"No spam"`` to r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.rules.mod.add(
                 short_name="No spam", kind="all", description="Do not spam. Spam bad"
             )
@@ -442,12 +442,11 @@ class SubredditRulesModeration:
         :returns: A list containing the rules in the specified order.
 
         For example, to move the fourth rule to the first position, and then to move the
-        prior first rule to where the third rule originally was in the subreddit
-        ``"NAME"``:
+        prior first rule to where the third rule originally was in r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             rules = [rule async for rule in subreddit.rules]
             new_rules = rules[3:4] + rules[1:3] + rules[0:1] + rules[4:]
             # Alternate: [rules[3]] + rules[1:3] + [rules[0]] + rules[4:]

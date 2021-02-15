@@ -19,7 +19,7 @@ class RemovalReason(RedditBase):
     =========== ==================================
     Attribute   Description
     =========== ==================================
-    ``id``      The id of the removal reason.
+    ``id``      The ID of the removal reason.
     ``message`` The message of the removal reason.
     ``title``   The title of the removal reason.
     =========== ==================================
@@ -30,7 +30,7 @@ class RemovalReason(RedditBase):
 
     @staticmethod
     def _warn_reason_id(reason_id_value: Optional[str], id_value: Optional[str]):
-        """Reason id param is deprecated. Warns if it's used.
+        """Reason ID param is deprecated. Warns if it's used.
 
         :param reason_id_value: The value passed as parameter ``reason_id``.
         :param id_value: Returns the actual value of parameter ``id`` is parameter
@@ -71,9 +71,9 @@ class RemovalReason(RedditBase):
 
         :param reddit: An instance of :class:`.Reddit`.
         :param subreddit: An instance of :class:`.Subreddit`.
-        :param id: The id of the removal reason.
-        :param reason_id: (Deprecated) The original name of the ``id`` parameter. Used
-            for backwards compatibility. This parameter should not be used.
+        :param id: The ID of the removal reason.
+        :param reason_id: The original name of the ``id`` parameter. Used for backwards
+            compatibility. This parameter should not be used.
 
         """
         id = self._warn_reason_id(reason_id, id)
@@ -98,11 +98,11 @@ class RemovalReason(RedditBase):
     async def delete(self):
         """Delete a removal reason from this subreddit.
 
-        To delete ``"141vv5c16py7d"`` from the subreddit ``"NAME"`` try:
+        To delete ``"141vv5c16py7d"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason("141vv5c16py7d")
             await reason.delete()
 
@@ -120,11 +120,11 @@ class RemovalReason(RedditBase):
         :param message: The removal reason's new message.
         :param title: The removal reason's new title.
 
-        To update ``"141vv5c16py7d"`` from the subreddit ``"NAME"`` try:
+        To update ``"141vv5c16py7d"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason("141vv5c16py7d")
             await reason.update(message="New message", title="New title")
 
@@ -154,7 +154,7 @@ class SubredditRemovalReasons:
         .. code-block:: python
 
             reason_id = "141vv5c16py7d"
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
             print(reason)
 
@@ -169,18 +169,18 @@ class SubredditRemovalReasons:
         :raises: :py:class:`IndexError` if a removal reason of a specific number does
             not exist.
 
-        For example, to get the second removal reason of the subreddit ``"NAME"``:
+        For example, to get the second removal reason of r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.mod.removal_reasons.get_reason(1)
 
         To get the last three removal reasons in a subreddit:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reasons = await subreddit.mod.removal_reasons.get_reason(slice(-3, None))
             for reason in reasons:
                 print(reason)
@@ -191,7 +191,7 @@ class SubredditRemovalReasons:
         .. code-block:: python
 
             reason_id = "141vv5c16py7d"
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id, fetch=False)
             await reason.delete()
 
@@ -221,7 +221,7 @@ class SubredditRemovalReasons:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for removal_reason in subreddit.mod.removal_reasons:
                 print(removal_reason)
 
@@ -253,11 +253,11 @@ class SubredditRemovalReasons:
 
         The message will be prepended with `Hi u/username,` automatically.
 
-        To add ``"Test"`` to the subreddit ``"NAME"`` try:
+        To add ``"Test"`` to r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.mod.removal_reasons.add(message="Foobar", title="Test")
 
         """

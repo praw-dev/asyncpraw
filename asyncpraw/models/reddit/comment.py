@@ -81,7 +81,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
     @property
     def is_root(self) -> bool:
-        """Return True when the comment is a top level comment.
+        """Return ``True`` when the comment is a top-level comment.
 
         :raises: :py:class:`AttributeError` if the comment is not fetched.
 

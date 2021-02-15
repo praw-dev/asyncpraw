@@ -91,7 +91,7 @@ class StaticChecker:
 
           - :meth:`.check_for_double_syntax`
 
-        - Line checks
+        - Line checks:
 
           - :meth:`.check_for_noreturn`
 

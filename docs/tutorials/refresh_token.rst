@@ -80,12 +80,13 @@ This script assumes you have configured your application's ``redirect uri`` to
 
 When you execute this script interactively:
 
-- You will be prompted for a comma-separated list of scopes
-- You will be given a URL that will take you through the auth follow
-- Reddit will ask you for user authentication and ask you to grant the application
-  permissions
-- On completion, the user will have a new authorized application configured
-- A refresh token is displayed in the browser and on the command line
+1. You will be prompted to provide a comma-separated list of scopes.
+2. You will be given a URL that will take you through the auth flow on Reddit.
+3. When you open the provided link in your browser, Reddit will ask you for permission
+   to grant the application permissions to the scopes requested.
+4. After clicking allow, you will have a new authorized application configured.
+5. You will be redirected to another page (the application's ``redirect uri``) where
+   your refresh token will be displayed and will be printed to the command line.
 
 You only have to run this script once for each refresh token. The refresh token (along
 with the application's client_id, client_secret) are valid credentials until manually

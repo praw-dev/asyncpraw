@@ -22,7 +22,7 @@ class CollectionModeration(AsyncPRAWBase):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("test")
         collection = await subreddit.collections("some_uuid")
         collection.mod
 
@@ -66,7 +66,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.mod.add_post("bgibu9")
 
@@ -89,7 +89,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.mod.delete()
 
@@ -113,7 +113,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.mod.remove_post("bgibu9")
 
@@ -139,7 +139,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             current_order = collection.link_ids
             new_order = reversed(current_order)
@@ -161,7 +161,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.mod.update_description("Please enjoy these links")
 
@@ -210,7 +210,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.mod.update_title("Titley McTitleface")
 
@@ -232,16 +232,16 @@ class Collection(RedditBase):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("test")
         collection = await subreddit.collections("some_uuid")
 
     or
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("test")
         collection = await subreddit.collections(
-            permalink="https://reddit.com/r/SUBREDDIT/collection/some_uuid"
+            permalink="https://reddit.com/r/test/collection/some_uuid"
         )
 
     .. include:: ../../typical_attributes.rst
@@ -256,7 +256,7 @@ class Collection(RedditBase):
     ``display_layout``  The collection display layout.
     ``last_update_utc`` Time the collection was last updated, represented in `Unix
                         Time`_.
-    ``link_ids``        A ``list`` of :class:`.Submission` fullnames.
+    ``link_ids``        A list of :class:`.Submission` fullnames.
     ``permalink``       The collection's permalink (to view on the web).
     ``sorted_links``    An iterable listing of the posts in this collection.
     ``title``           The title of the collection.
@@ -282,7 +282,7 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.mod.update_title("My new title!")
 
@@ -296,7 +296,7 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             print(await collection.subreddit())
 
@@ -314,9 +314,9 @@ class Collection(RedditBase):
         """Initialize a :class:`.Collection` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
-        :param _data: Any data associated with the :class:`.Collection` (optional).
-        :param collection_id: The ID of the :class:`.Collection` (optional).
-        :param permalink: The permalink of the :class:`.Collection` (optional).
+        :param _data: Any data associated with the :class:`.Collection`.
+        :param collection_id: The ID of the :class:`.Collection`.
+        :param permalink: The permalink of the :class:`.Collection`.
 
         """
         if (_data, collection_id, permalink).count(None) != 2:
@@ -344,7 +344,7 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             for submission in collection:
                 print(submission.title, submission.permalink)
@@ -360,7 +360,7 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             print(len(collection))
 
@@ -407,7 +407,7 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.follow()
 
@@ -428,7 +428,7 @@ class Collection(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             collection = await subreddit.collections("some_uuid")
             await collection.unfollow()
 
@@ -450,7 +450,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("test")
         subreddit.collections.mod
 
     """
@@ -480,7 +480,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
         .. code-block:: python
 
-            sub = await reddit.subreddit("SUBREDDIT")
+            sub = await reddit.subreddit("test")
             new_collection = await sub.collections.mod.create("Title", "desc")
             await new_collection.mod.add_post("bgibu9")
 
@@ -508,7 +508,7 @@ class SubredditCollections(AsyncPRAWBase):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("test")
         subreddit.collections
 
     """
@@ -521,7 +521,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            my_sub = await reddit.subreddit("SUBREDDIT", fetch=True)
+            my_sub = await reddit.subreddit("test", fetch=True)
             new_collection = await my_sub.collections.mod.create("Title", "desc")
 
         """
@@ -538,25 +538,25 @@ class SubredditCollections(AsyncPRAWBase):
         """Return the :class:`.Collection` with the specified ID.
 
         :param collection_id: The ID of a :class:`.Collection` (default: None).
-        :param permalink: The permalink of a Collection (default: None).
+        :param permalink: The permalink of a collection (default: None).
         :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         :returns: The specified :class:`.Collection`.
 
-        Exactly one of ``collection_id`` and ``permalink`` is required.
+        Exactly one of ``collection_id`` or ``permalink`` is required.
 
         Example usage:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
 
             uuid = "847e4548-a3b5-4ad7-afb4-edbfc2ed0a6b"
             collection = await subreddit.collections(uuid)
             print(collection.title)
             print(collection.description)
 
-            permalink = "https://www.reddit.com/r/SUBREDDIT/collection/" + uuid
+            permalink = "https://www.reddit.com/r/test/collection/" + uuid
             collection = await subreddit.collections(permalink=permalink)
             print(collection.title)
             print(collection.description)
@@ -566,7 +566,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
+            subreddit = await reddit.subreddit("test", fetch=True)
             collection = await subreddit.collections(uuid, fetch=False)
             await collection.mod.add("submission_id")
 
@@ -599,7 +599,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             async for collection in subreddit.collections:
                 print(collection.permalink)
 

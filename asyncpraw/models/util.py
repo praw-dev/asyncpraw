@@ -117,7 +117,7 @@ async def stream_generator(
 ) -> AsyncGenerator[Any, None]:
     """Yield new items from ListingGenerators and ``None`` when paused.
 
-    :param function: A callable that returns a :class:`.ListingGenerator`, e.g.
+    :param function: A callable that returns a :class:`.ListingGenerator`, e.g.,
         :meth:`.Subreddit.comments` or :meth:`.Subreddit.new`.
     :param pause_after: An integer representing the number of requests that result in no
         new items before this function yields ``None``, effectively introducing a pause
@@ -128,7 +128,7 @@ async def stream_generator(
     :param skip_existing: When True does not yield any results from the first request
         thereby skipping any items that existed in the stream prior to starting the
         stream (default: False).
-    :param attribute_name: The field to use as an id (default: "fullname").
+    :param attribute_name: The field to use as an ID (default: "fullname").
     :param exclude_before: When True does not pass ``params`` to ``functions`` (default:
         False).
 
@@ -138,7 +138,7 @@ async def stream_generator(
 
         This function internally uses an exponential delay with jitter between
         subsequent responses that contain no new results, up to a maximum delay of just
-        over a 16 seconds. In practice that means that the time before pause for
+        over 16 seconds. In practice, that means that the time before pause for
         ``pause_after=N+1`` is approximately twice the time before pause for
         ``pause_after=N``.
 
@@ -154,7 +154,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("test")
         async for comment in subreddit.stream.comments(pause_after=6):
             if comment is None:
                 break
@@ -164,7 +164,7 @@ async def stream_generator(
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("help")
+        subreddit = await reddit.subreddit("test")
         comment_stream = subreddit.stream.comments(pause_after=5)
 
         async for comment in comment_stream:
@@ -178,13 +178,13 @@ async def stream_generator(
             print(comment)
 
     To bypass the internal exponential backoff, try the following. This approach is
-    useful if you are monitoring a subreddit with infrequent activity, and you want the
-    to consistently learn about new items from the stream as soon as possible, rather
-    than up to a delay of just over sixteen seconds.
+    useful if you are monitoring a subreddit with infrequent activity, and you want to
+    consistently learn about new items from the stream as soon as possible, rather than
+    up to a delay of just over sixteen seconds.
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("help")
+        subreddit = await reddit.subreddit("test")
         async for comment in subreddit.stream.comments(pause_after=0):
             if comment is None:
                 continue

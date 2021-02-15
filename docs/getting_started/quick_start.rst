@@ -2,8 +2,8 @@ Quick Start
 ===========
 
 In this section, we go over everything you need to know to start building scripts or
-bots using Async PRAW, the Python Reddit API Wrapper. It's fun and easy. Let's get
-started.
+bots using Async PRAW, the Asynchronous Python Reddit API Wrapper. It's fun and easy.
+Let's get started.
 
 Prerequisites
 -------------
@@ -98,7 +98,7 @@ With a read-only instance, you can do something like obtaining 10 "hot" submissi
 
     # continued from code above
 
-    subreddit = await reddit.subreddit("learnpython")
+    subreddit = await reddit.subreddit("test")
     async for submission in subreddit.hot(limit=10):
         print(submission.title)
 

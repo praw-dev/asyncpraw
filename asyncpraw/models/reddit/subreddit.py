@@ -56,17 +56,17 @@ if TYPE_CHECKING:  # pragma: no cover
 class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBase):
     """A class for Subreddits.
 
-    To obtain an instance of this class for subreddit ``r/redditdev`` execute:
+    To obtain an instance of this class for r/test execute:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("test")
 
-    To obtain a lazy instance of this class for subreddit ``r/redditdev`` execute:
+    To obtain a lazy instance of this class for subreddit ``r/test`` execute:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("test")
 
     While ``r/all`` is not a real subreddit, it can still be treated like one. The
     following outputs the titles of the 25 hottest submissions in ``r/all``:
@@ -253,14 +253,14 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
-            await subreddit.banned.add("NAME", ban_reason="...")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.banned.add("spez", ban_reason="...")
 
         To list the banned users along with any notes, try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             async for ban in subreddit.banned():
                 print(f"{ban}: {ban.note}")
 
@@ -276,7 +276,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             async for collection in subreddit.collections:
                 print(collection.permalink)
 
@@ -285,11 +285,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
 
             collection = subreddit.collections("some_uuid")
             collection = subreddit.collections(
-                permalink="https://reddit.com/r/SUBREDDIT/collection/some_uuid"
+                permalink="https://reddit.com/r/test/collection/some_uuid"
             )
 
         """
@@ -307,8 +307,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
-            await subreddit.contributor.add("NAME")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.contributor.add("spez")
 
         """
         return ContributorRelationship(self, "contributor")
@@ -321,7 +321,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             async for emoji in subreddit.emoji:
                 print(emoji)
 
@@ -329,12 +329,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("blah")
+            subreddit = await reddit.subreddit("test")
             emoji = await subreddit.emoji.get_emoji("emoji_name")
 
         .. note::
 
-            Attempting to access attributes of an nonexistent emoji will result in a
+            Attempting to access attributes of a nonexistent emoji will result in a
             :class:`.ClientException`.
 
         """
@@ -349,7 +349,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         .. code-block:: python
 
             subreddit = await reddit.subreddit("all")
-            await subreddit.filters.add("subreddit_name")
+            await subreddit.filters.add("test")
 
         """
         return SubredditFilters(self)
@@ -364,7 +364,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for flair in subreddit.flair():
                 print(flair)
 
@@ -372,7 +372,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for template in subreddit.flair.templates:
                 print(template)
 
@@ -401,14 +401,14 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
-            await subreddit.moderator.add("NAME")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.moderator.add("spez")
 
         To list the moderators along with their permissions try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             async for moderator in subreddit.moderator:
                 print(f"{moderator}: {moderator.mod_permissions}")
 
@@ -438,7 +438,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             async for mute in subreddit.muted():
                 print("{mute}: {mute.note}")
 
@@ -473,16 +473,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("AskReddit")
+            subreddit = await reddit.subreddit("test")
             async for rule in subreddit.rules:
                 print(rule)
 
         Moderators can also add rules to the subreddit. For example, to make a rule
-        called ``"No spam"`` in the subreddit ``"NAME"``:
+        called ``"No spam"`` in r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.rules.mod.add(
                 short_name="No spam", kind="all", description="Do not spam. Spam bad"
             )
@@ -499,7 +499,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             async for comment in subreddit.stream.comments():
                 print(comment)
 
@@ -524,7 +524,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             stylesheet = await subreddit.stylesheet()
             stylesheet.stylesheet += ".test{color:blue}"
             await subreddit.stylesheet.update(stylesheet.stylesheet)
@@ -542,7 +542,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             async for widget in subreddit.widgets.sidebar:
                 print(widget)
 
@@ -550,7 +550,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             widget = await subreddit.widgets.id_card()
             print(widget)
 
@@ -565,7 +565,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             async for wikipage in subreddit.wiki:
                 print(wikipage)
 
@@ -573,7 +573,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             wikipage = await subreddit.wiki.get_page("proof")
             print(wikipage.content_md)
 
@@ -593,16 +593,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         .. note::
 
-            This class should not be initialized directly. Instead obtain an instance
+            This class should not be initialized directly. Instead, obtain an instance
             via:
 
             .. code-block:: python
 
                 # to lazily load a subreddit instance
-                await reddit.subreddit("subreddit_name")
+                await reddit.subreddit("test")
 
                 # to fully load a subreddit instance
-                await reddit.subreddit("subreddit_name", fetch=True)
+                await reddit.subreddit("test", fetch=True)
 
         """
         if (display_name, _data).count(None) != 1:
@@ -702,8 +702,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         :param expected_mime_prefix: If provided, enforce that the media has a mime type
             that starts with the provided prefix.
-        :param upload_type: One of ``link``, ``gallery'', or ``selfpost``. (default:
-            ``link``)
+        :param upload_type: One of ``link``, ``gallery'', or ``selfpost`` (default:
+            ``link``).
 
         :returns: A tuple containing ``(media_url, websocket_url)`` for the piece of
             media. The websocket URL can be used to determine when media processing is
@@ -851,11 +851,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """Return a :class:`.ListingGenerator` for items that match ``query``.
 
         :param query: The query string to search for.
-        :param sort: Can be one of: relevance, hot, top, new, comments. (default:
+        :param sort: Can be one of: relevance, hot, top, new, or comments (default:
             relevance).
-        :param syntax: Can be one of: cloudsearch, lucene, plain (default: lucene).
-        :param time_filter: Can be one of: all, day, hour, month, week, year (default:
-            all).
+        :param syntax: Can be one of: cloudsearch, lucene, or plain (default: lucene).
+        :param time_filter: Can be one of: all, day, hour, month, week, or year
+            (default: all).
 
         For more information on building a search query see:
         https://www.reddit.com/wiki/search
@@ -956,13 +956,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         Either ``selftext`` or ``url`` can be provided, but not both.
 
-        For example, to submit a URL to ``r/reddit_api_test`` do:
+        For example, to submit a URL to r/test do:
 
         .. code-block:: python
 
             title = "Async PRAW documentation"
             url = "https://asyncpraw.readthedocs.io"
-            subreddit = await reddit.subreddit("reddit_api_test")
+            subreddit = await reddit.subreddit("test")
             await subreddit.submit(title, url=url)
 
         For example, to submit a self post with inline media do:
@@ -976,7 +976,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             video = InlineVideo("path/to/video.mp4", "optional caption")
             selftext = "Text with a gif {gif1} an image {image1} and a video {video1} inline"
             media = {"gif1": gif, "image1": image, "video1": video}
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             await subreddit.submit("title", selftext=selftext, inline_media=media)
 
         .. note::
@@ -1099,7 +1099,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :raises: :class:`.ClientException` if ``image_path`` in ``images`` refers to a
             file that is not an image.
 
-        For example, to submit an image gallery to ``r/reddit_api_test`` do:
+        For example, to submit an image gallery to r/test do:
 
         .. code-block:: python
 
@@ -1119,7 +1119,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                     "outbound_url": "https://example.com/link3",
                 },
             ]
-            subreddit = await reddit.subreddit("reddit_api_test")
+            subreddit = await reddit.subreddit("test")
             await subreddit.submit_gallery(title, images)
 
         .. seealso::
@@ -1210,7 +1210,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "Websocket error" exceptions (default: 10).
         :param without_websockets: Set to ``True`` to disable use of WebSockets (see
             note below for an explanation). If ``True``, this method doesn't return
-            anything. (default: ``False``).
+            anything (default: ``False``).
         :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
             traditional comments (default: None).
 
@@ -1233,13 +1233,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             may wish to do this if you are running your program in a restricted network
             environment, or using a proxy that doesn't support WebSockets connections.
 
-        For example, to submit an image to ``r/reddit_api_test`` do:
+        For example, to submit an image to r/test do:
 
         .. code-block:: python
 
             title = "My favorite picture"
             image = "/path/to/image.png"
-            subreddit = await reddit.subreddit("reddit_api_test")
+            subreddit = await reddit.subreddit("test")
             await subreddit.submit_image(title, image)
 
         .. seealso::
@@ -1322,12 +1322,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         :returns: A :class:`.Submission` object for the newly created submission.
 
-        For example, to submit a poll to ``r/reddit_api_test`` do:
+        For example, to submit a poll to r/test do:
 
         .. code-block:: python
 
             title = "Do you like Async PRAW?"
-            subreddit = await reddit.subreddit("reddit_api_test")
+            subreddit = await reddit.subreddit("test")
             await subreddit.submit_poll(title, selftext="", options=["Yes", "No"], duration=3)
 
         """
@@ -1375,11 +1375,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         :param title: The title of the submission.
         :param video_path: The path to a video, to upload and post.
-        :param videogif: A ``bool`` value. If ``True``, the video is uploaded as a
-            videogif, which is essentially a silent video (default: ``False``).
-        :param thumbnail_path: (Optional) The path to an image, to be uploaded and used
-            as the thumbnail for this video. If not provided, the PRAW logo will be used
-            as the thumbnail.
+        :param videogif: If ``True``, the video is uploaded as a videogif, which is
+            essentially a silent video (default: ``False``).
+        :param thumbnail_path: The path to an image, to be uploaded and used as the
+            thumbnail for this video. If not provided, the PRAW logo will be used as the
+            thumbnail.
         :param collection_id: The UUID of a :class:`.Collection` to add the
             newly-submitted post to.
         :param flair_id: The flair template to select (default: ``None``).
@@ -1398,7 +1398,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "Websocket error" exceptions (default: 10).
         :param without_websockets: Set to ``True`` to disable use of WebSockets (see
             note below for an explanation). If ``True``, this method doesn't return
-            anything. (default: ``False``).
+            anything (default: ``False``).
         :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
             traditional comments (default: None).
 
@@ -1421,13 +1421,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             may wish to do this if you are running your program in a restricted network
             environment, or using a proxy that doesn't support WebSockets connections.
 
-        For example, to submit a video to ``r/reddit_api_test`` do:
+        For example, to submit a video to r/test do:
 
         .. code-block:: python
 
             title = "My favorite movie"
             video = "/path/to/video.mp4"
-            subreddit = await reddit.subreddit("reddit_api_test")
+            subreddit = await reddit.subreddit("test")
             await subreddit.submit_video(title, video)
 
         .. seealso::
@@ -1561,7 +1561,7 @@ class SubredditFilters:
     .. code-block:: python
 
         subreddit = await reddit.subreddit("all")
-        await subreddit.filters.add("subreddit_name")
+        await subreddit.filters.add("test")
 
     """
 
@@ -1585,7 +1585,7 @@ class SubredditFilters:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for subreddit in subreddit.filters:
                 ...
 
@@ -1659,7 +1659,7 @@ class SubredditFlair:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for template in subreddit.flair.link_templates:
                 print(template)
 
@@ -1678,7 +1678,7 @@ class SubredditFlair:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for template in subreddit.flair.templates:
                 print(template)
 
@@ -1702,7 +1702,7 @@ class SubredditFlair:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for flair in subreddit.flair(limit=None):
                 print(flair)
 
@@ -1731,11 +1731,9 @@ class SubredditFlair:
         """Update the :class:`.Subreddit`'s flair configuration.
 
         :param position: One of left, right, or False to disable (default: right).
-        :param self_assign: (boolean) Permit self assignment of user flair (default:
-            False).
+        :param self_assign: Permit self assignment of user flair (default: False).
         :param link_position: One of left, right, or False to disable (default: left).
-        :param link_self_assign: (boolean) Permit self assignment of link flair
-            (default: False).
+        :param link_self_assign: Permit self assignment of link flair (default: False).
 
         Additional keyword arguments can be provided to handle new settings as Reddit
         introduces them.
@@ -1755,8 +1753,7 @@ class SubredditFlair:
     async def delete(self, redditor: Union["asyncpraw.models.Redditor", str]):
         """Delete flair for a :class:`.Redditor`.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
 
         .. seealso::
 
@@ -1785,8 +1782,7 @@ class SubredditFlair:
     ):
         """Set flair for a :class:`.Redditor`.
 
-        :param redditor: (Required) A redditor name (e.g., ``"spez"``) or
-            :class:`.Redditor` instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
         :param text: The flair text to associate with the :class:`.Redditor` or
             :class:`.Submission` (default: "").
         :param css_class: The css class to associate with the flair html (default: "").
@@ -1801,10 +1797,10 @@ class SubredditFlair:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             await subreddit.flair.set("bboe", "PRAW author", css_class="mods")
             template = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             await subreddit.flair.set("spez", "Reddit CEO", flair_template_id=template)
 
         """
@@ -1897,19 +1893,19 @@ class SubredditFlairTemplates:
 
         .. note::
 
-            This class should not be initialized directly. Instead obtain an instance
+            This class should not be initialized directly. Instead, obtain an instance
             via:
 
             .. code-block:: python
 
-                subreddit = await reddit.subreddit("subreddit_name")
+                subreddit = await reddit.subreddit("test")
                 subreddit.flair.templates
 
             or via
 
             .. code-block:: python
 
-                subreddit = await reddit.subreddit("subreddit_name")
+                subreddit = await reddit.subreddit("test")
                 subreddit.flair.link_templates
 
         """
@@ -1983,23 +1979,23 @@ class SubredditFlairTemplates:
 
         :param template_id: The flair template to update. If not valid then an exception
             will be thrown.
-        :param text: The flair template's new text (required).
+        :param text: The flair template's new text.
         :param css_class: The flair template's new css_class (default: "").
-        :param text_editable: (boolean) Indicate if the flair text can be modified for
-            each :class:`.Redditor` that sets it (default: False).
+        :param text_editable: Indicate if the flair text can be modified for each
+            :class:`.Redditor` that sets it (default: False).
         :param background_color: The flair template's new background color, as a hex
             color.
         :param text_color: The flair template's new text color, either ``"light"`` or
             ``"dark"``.
-        :param mod_only: (boolean) Indicate if the flair can only be used by moderators.
+        :param mod_only: Indicate if the flair can only be used by moderators.
         :param allowable_content: If specified, most be one of ``"all"``, ``"emoji"``,
             or ``"text"`` to restrict content to that type. If set to ``"emoji"`` then
             the ``"text"`` param must be a valid emoji string, for example,
             ``":snoo:"``.
-        :param max_emojis: (int) Maximum emojis in the flair (Reddit defaults this value
-            to 10).
+        :param max_emojis: Maximum emojis in the flair (Reddit defaults this value to
+            10).
         :param fetch: Whether or not Async PRAW will fetch existing information on the
-            existing flair before updating (Default: True).
+            existing flair before updating (default: True).
 
         .. warning::
 
@@ -2055,7 +2051,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for template in subreddit.flair.templates:
                 print(template)
 
@@ -2079,27 +2075,27 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
     ):
         """Add a :class:`.Redditor` flair template to the associated subreddit.
 
-        :param text: The flair template's text (required).
+        :param text: The flair template's text.
         :param css_class: The flair template's css_class (default: "").
-        :param text_editable: (boolean) Indicate if the flair text can be modified for
-            each :class:`.Redditor` that sets it (default: False).
+        :param text_editable: Indicate if the flair text can be modified for each
+            :class:`.Redditor` that sets it (default: False).
         :param background_color: The flair template's new background color, as a hex
             color.
         :param text_color: The flair template's new text color, either ``"light"`` or
             ``"dark"``.
-        :param mod_only: (boolean) Indicate if the flair can only be used by moderators.
+        :param mod_only: Indicate if the flair can only be used by moderators.
         :param allowable_content: If specified, most be one of ``"all"``, ``"emoji"``,
             or ``"text"`` to restrict content to that type. If set to ``"emoji"`` then
             the ``"text"`` param must be a valid emoji string, for example,
             ``":snoo:"``.
-        :param max_emojis: (int) Maximum emojis in the flair (Reddit defaults this value
-            to 10).
+        :param max_emojis: Maximum emojis in the flair (Reddit defaults this value to
+            10).
 
         For example, to add an editable :class:`.Redditor` flair try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.flair.templates.add(css_class="praw", text_editable=True)
 
         """
@@ -2122,7 +2118,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.flair.templates.clear()
 
         """
@@ -2141,7 +2137,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for template in subreddit.flair.link_templates:
                 print(template)
 
@@ -2164,27 +2160,27 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
     ):
         """Add a link flair template to the associated subreddit.
 
-        :param text: The flair template's text (required).
+        :param text: The flair template's text.
         :param css_class: The flair template's css_class (default: "").
-        :param text_editable: (boolean) Indicate if the flair text can be modified for
-            each :class:`.Redditor` that sets it (default: False).
+        :param text_editable: Indicate if the flair text can be modified for each
+            :class:`.Redditor` that sets it (default: False).
         :param background_color: The flair template's new background color, as a hex
             color.
         :param text_color: The flair template's new text color, either ``"light"`` or
             ``"dark"``.
-        :param mod_only: (boolean) Indicate if the flair can only be used by moderators.
+        :param mod_only: Indicate if the flair can only be used by moderators.
         :param allowable_content: If specified, most be one of ``"all"``, ``"emoji"``,
             or ``"text"`` to restrict content to that type. If set to ``"emoji"`` then
             the ``"text"`` param must be a valid emoji string, for example,
             ``":snoo:"``.
-        :param max_emojis: (int) Maximum emojis in the flair (Reddit defaults this value
-            to 10).
+        :param max_emojis: Maximum emojis in the flair (Reddit defaults this value to
+            ``10``).
 
         For example, to add an editable link flair try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.flair.link_templates.add(css_class="praw", text_editable=True)
 
         """
@@ -2207,7 +2203,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.flair.link_templates.clear()
 
         """
@@ -2222,7 +2218,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for template in subreddit.flair.link_templates.user_selectable():
                 print(template)
 
@@ -2274,7 +2270,7 @@ class SubredditModeration:
     ]:
         """Return a :class:`.ListingGenerator` for edited comments and submissions.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Additional keyword arguments are passed in the initialization of
@@ -2377,7 +2373,7 @@ class SubredditModeration:
     ]:
         """Return a :class:`.ListingGenerator` for modqueue items.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Additional keyword arguments are passed in the initialization of
@@ -2425,7 +2421,7 @@ class SubredditModeration:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for removal_reason in subreddit.mod.removal_reasons:
                 print(removal_reason)
 
@@ -2433,12 +2429,12 @@ class SubredditModeration:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.mod.removal_reasons.get_reason("reason_id")
 
         .. note::
 
-            Attempting to access attributes of an nonexistent removal reason will result
+            Attempting to access attributes of a nonexistent removal reason will result
             in a :class:`.ClientException`.
 
         """
@@ -2451,7 +2447,7 @@ class SubredditModeration:
     ]:
         """Return a :class:`.ListingGenerator` for reported comments and submissions.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Additional keyword arguments are passed in the initialization of
@@ -2487,7 +2483,7 @@ class SubredditModeration:
     ]:
         """Return a :class:`.ListingGenerator` for spam comments and submissions.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Additional keyword arguments are passed in the initialization of
@@ -2593,7 +2589,7 @@ class SubredditModeration:
             comments pages by default.
         :param comment_score_hide_mins: The number of minutes to hide comment scores.
         :param content_options: The types of submissions users can make. One of ``any``,
-            ``link``, ``self``.
+            ``link``, or ``self``.
         :param crowd_control_chat_level: Controls the crowd control level for chat
             rooms. Goes from 0-3.
         :param crowd_control_level: Controls the crowd control level for submissions.
@@ -2610,12 +2606,12 @@ class SubredditModeration:
         :param header_hover_text: The text seen when hovering over the snoo.
         :param hide_ads: Don't show ads within this subreddit. Only applies to
             Premium-user only subreddits.
-        :param key_color: A 6-digit rgb hex color (e.g. ``"#AABBCC"``), used as a
+        :param key_color: A 6-digit rgb hex color (e.g., ``"#AABBCC"``), used as a
             thematic color for your subreddit on mobile.
         :param language: A valid IETF language tag (underscore separated).
         :param original_content_tag_enabled: Enables the use of the ``original content``
             label for submissions.
-        :param over_18: Viewers must be over 18 years old (i.e. NSFW).
+        :param over_18: Viewers must be over 18 years old (i.e., NSFW).
         :param public_description: Public description blurb. Appears in search results
             and on the landing page for private subreddits.
         :param restrict_commenting: Specifies whether approved users have the ability to
@@ -2625,11 +2621,11 @@ class SubredditModeration:
         :param show_media: Show thumbnails on submissions.
         :param show_media_preview: Expand media previews on comments pages.
         :param spam_comments: Spam filter strength for comments. One of ``all``,
-            ``low``, ``high``.
-        :param spam_links: Spam filter strength for links. One of ``all``, ``low``,
+            ``low``, or ``high``.
+        :param spam_links: Spam filter strength for links. One of ``all``, ``low``, or
             ``high``.
         :param spam_selfposts: Spam filter strength for selfposts. One of ``all``,
-            ``low``, ``high``.
+            ``low``, or ``high``.
         :param spoilers_enabled: Enable marking posts as containing spoilers.
         :param submit_link_label: Custom label for submit link button (None for
             default).
@@ -2637,10 +2633,10 @@ class SubredditModeration:
         :param submit_text_label: Custom label for submit text post button (None for
             default).
         :param  subreddit_type: One of ``archived``, ``employees_only``, ``gold_only``,
-            ``gold_restricted``, ``private``, ``public``, ``restricted``.
+            ``gold_restricted``, ``private``, ``public``, or ``restricted``.
         :param suggested_comment_sort: All comment threads will use this sorting method
             by default. Leave None, or choose one of ``confidence``, ``controversial``,
-            ``live``, ``new``, ``old``, ``qa``, ``random``, ``top``.
+            ``live``, ``new``, ``old``, ``qa``, ``random``, or ``top``.
         :param title: The title of the subreddit.
         :param welcome_message_enabled: Enables the subreddit welcome message.
         :param welcome_message_text: The text to be used as a welcome message. A welcome
@@ -2649,7 +2645,7 @@ class SubredditModeration:
             pages.
         :param wiki_edit_karma: "asyncpraw.models.Subreddit" karma required to edit and
             create wiki pages.
-        :param wikimode: One of ``anyone``, ``disabled``, ``modonly``.
+        :param wikimode: One of ``anyone``, ``disabled``, or ``modonly``.
 
         .. note::
 
@@ -2706,7 +2702,7 @@ class SubredditModerationStream:
     ]:
         """Yield edited comments and submissions as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2764,9 +2760,9 @@ class SubredditModerationStream:
 
         :param other_subreddits: A list of :class:`.Subreddit` instances for which to
             fetch conversations (default: None).
-        :param sort: Can be one of: mod, recent, unread, user (default: recent).
+        :param sort: Can be one of: mod, recent, unread, or user (default: recent).
         :param state: Can be one of: all, appeals, archived, default, highlighted,
-            inbox, inprogress, join_requests, mod, new, notifications (default: all).
+            inbox, inprogress, join_requests, mod, new, or notifications (default: all).
             "all" does not include mod or archived conversations. "inbox" does not
             include appeals conversations.
 
@@ -2800,7 +2796,7 @@ class SubredditModerationStream:
     ]:
         r"""Yield :class:`.Comment`\ s and :class:`.Submission`\ s in the modqueue as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2825,7 +2821,7 @@ class SubredditModerationStream:
     ]:
         r"""Yield reported :class:`.Comment`\ s and :class:`.Submission`\ s as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2848,7 +2844,7 @@ class SubredditModerationStream:
     ]:
         r"""Yield spam :class:`.Comment`\ s and :class:`.Submission`\ s as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+        :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
             only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2980,7 +2976,7 @@ class SubredditRelationship:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("test")
         async for ban in subreddit.banned():
             print("{ban}: {ban.note}")
 
@@ -3020,8 +3016,7 @@ class SubredditRelationship:
     ):
         """Add ``redditor`` to this relationship.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
 
         """
         data = {"name": str(redditor), "type": self.relationship}
@@ -3032,8 +3027,7 @@ class SubredditRelationship:
     async def remove(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove ``redditor`` from this relationship.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
 
         """
         data = {"name": str(redditor), "type": self.relationship}
@@ -3050,7 +3044,7 @@ class ContributorRelationship(SubredditRelationship):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("test")
         async for contributor in subreddit.contributor():
             print(contributor)
 
@@ -3072,7 +3066,7 @@ class ModeratorRelationship(SubredditRelationship):
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("redditdev")
+        subreddit = await reddit.subreddit("test")
         async for moderator in subreddit.moderator:
             print(moderator)
 
@@ -3095,7 +3089,7 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             async for moderator in subreddit.moderator:
                 print(f"{moderator}: {moderator.mod_permissions}")
 
@@ -3125,8 +3119,17 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("nameofsub")
+            subreddit = await reddit.subreddit("test")
             moderators = await subreddit.moderator()
+
+        For example, to list the moderators along with their permissions try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            moderators = await subreddit.moderator()
+            for moderator in moderators:
+                print(f"{moderator}: {moderator.mod_permissions}")
 
         """
         params = {} if redditor is None else {"user": redditor}
@@ -3142,8 +3145,7 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Add or invite ``redditor`` to be a moderator of the :class:`.Subreddit`.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided ``None``, indicates
@@ -3173,8 +3175,7 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Invite ``redditor`` to be a moderator of the subreddit.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided ``None``, indicates
@@ -3219,7 +3220,7 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for invited_mod in subreddit.moderator.invited():
                 print(invited_mod)
 
@@ -3235,7 +3236,7 @@ class ModeratorRelationship(SubredditRelationship):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("subredditname")
+            subreddit = await reddit.subreddit("test")
             await subreddit.moderator.leave()
 
         """
@@ -3246,14 +3247,13 @@ class ModeratorRelationship(SubredditRelationship):
     async def remove_invite(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove the moderator invite for ``redditor``.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
 
         For example:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("subredditname")
+            subreddit = await reddit.subreddit("test")
             await subreddit.moderator.remove_invite("spez")
 
         """
@@ -3268,8 +3268,7 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Update the moderator permissions for ``redditor``.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided, ``None``, indicates
@@ -3301,8 +3300,7 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Update the moderator invite permissions for ``redditor``.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
-            instance.
+        :param redditor: A redditor name or :class:`.Redditor` instance.
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided, ``None``, indicates
@@ -3349,7 +3347,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             await subreddit.modmail("2gmz", mark_read=True)
 
         If you don't need the object fetched right away (e.g., to utilize a class
@@ -3357,7 +3355,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             message = await subreddit.modmail("2gmz", fetch=False)
             await message.archive()
 
@@ -3365,7 +3363,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz", mark_read=True)
             for message in conversation.messages:
                 print(message.body_markdown)
@@ -3379,7 +3377,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz", mark_read=True)
             print(conversation.user.ban_status)
 
@@ -3387,7 +3385,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz", mark_read=True)
             print(conversation.user.recent_posts)
 
@@ -3427,7 +3425,7 @@ class Modmail:
         :param other_subreddits: A list of :class:`.Subreddit` instances for which to
             mark conversations (default: None).
         :param state: Can be one of: all, archived, highlighted, inprogress,
-            join_requests, mod, new, notifications, or appeals, (default: all). "all"
+            join_requests, mod, new, notifications, or appeals (default: all). "all"
             does not include internal, archived, or appeals conversations.
 
         :returns: A list of lazy :class:`.ModmailConversation` instances that were
@@ -3437,7 +3435,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             await subreddit.modmail.bulk_read(state="notifications")
 
         """
@@ -3479,9 +3477,9 @@ class Modmail:
 
         :param other_subreddits: A list of :class:`.Subreddit` instances for which to
             fetch conversations (default: None).
-        :param sort: Can be one of: mod, recent, unread, user (default: recent).
+        :param sort: Can be one of: mod, recent, unread, or user (default: recent).
         :param state: Can be one of: all, archived, highlighted, inprogress,
-            join_requests, mod, new, notifications, or appeals, (default: all). "all"
+            join_requests, mod, new, notifications, or appeals (default: all). "all"
             does not include internal, archived, or appeals conversations.
 
         Additional keyword arguments are passed in the initialization of
@@ -3542,7 +3540,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             redditor = await reddit.redditor("bboe")
             await subreddit.modmail.create("Subject", "Body", redditor)
 
@@ -3593,7 +3591,7 @@ class Modmail:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             unread_counts = await subreddit.modmail.unread_count()
             print(unread_counts["mod"])
 
@@ -3627,11 +3625,11 @@ class SubredditStream:
             While Async PRAW tries to catch all new comments, some high-volume streams,
             especially the r/all stream, may drop some comments.
 
-        For example, to retrieve all new comments made to the ``iama`` subreddit, try:
+        For example, to retrieve all new comments made to r/test, try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             async for comment in subreddit.stream.comments():
                 print(comment)
 
@@ -3640,7 +3638,7 @@ class SubredditStream:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             async for comment in subreddit.stream.comments(skip_existing=True):
                 print(comment)
 
@@ -3681,7 +3679,7 @@ class SubredditStylesheet:
 
     .. code-block:: python
 
-        subreddit = await reddit.subreddit("SUBREDDIT")
+        subreddit = await reddit.subreddit("test")
         stylesheet = await subreddit.stylesheet()
         stylesheet.stylesheet.stylesheet += ".test{color:blue}"
         await subreddit.stylesheet.update(stylesheet.stylesheet)
@@ -3695,7 +3693,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             stylesheet = await subreddit.stylesheet()
 
         """
@@ -3711,7 +3709,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             subreddit.stylesheet
 
         """
@@ -3772,7 +3770,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_banner()
 
         """
@@ -3789,7 +3787,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_banner_additional_image()
 
         """
@@ -3805,7 +3803,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_banner_hover_image()
 
         """
@@ -3821,7 +3819,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_header()
 
         """
@@ -3837,7 +3835,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_image("smile")
 
         """
@@ -3853,7 +3851,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_mobile_header()
 
         """
@@ -3869,7 +3867,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.delete_mobile_icon()
 
         """
@@ -3886,7 +3884,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.update("p { color: green; }", "color text green")
 
         """
@@ -3919,7 +3917,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload("smile", "img.png")
 
         """
@@ -3943,7 +3941,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload_banner("banner.png")
 
         """
@@ -3970,7 +3968,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload_banner_additional_image("banner.png")
 
         """
@@ -3994,7 +3992,7 @@ class SubredditStylesheet:
 
         :param image_path: A path to a jpeg or png image.
 
-        Fails if the :class:`.Subreddit` does not have an additional image defined
+        Fails if the :class:`.Subreddit` does not have an additional image defined.
 
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
@@ -4007,7 +4005,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload_banner_hover_image("banner.png")
 
         """
@@ -4034,7 +4032,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload_header("header.png")
 
         """
@@ -4059,7 +4057,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload_mobile_header("header.png")
 
         """
@@ -4084,7 +4082,7 @@ class SubredditStylesheet:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("SUBREDDIT")
+            subreddit = await reddit.subreddit("test")
             await subreddit.stylesheet.upload_mobile_icon("icon.png")
 
         """
@@ -4105,7 +4103,7 @@ class SubredditWiki:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             wikipage = await subreddit.wiki.get_page("proof")
             print(wikipage.content_md)
 
@@ -4132,7 +4130,7 @@ class SubredditWiki:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("iama")
+            subreddit = await reddit.subreddit("test")
             async for wikipage in subreddit.wiki:
                 print(wikipage)
 
@@ -4156,7 +4154,7 @@ class SubredditWiki:
         :param name: The name of the new :class:`.WikiPage`. This name will be
             normalized.
         :param content: The content of the new :class:`.WikiPage`.
-        :param reason: (Optional) The reason for the creation.
+        :param reason: The reason for the creation.
         :param other_settings: Additional keyword arguments to pass.
 
         To create the wiki page ``praw_test`` in ``r/test`` try:
@@ -4164,7 +4162,9 @@ class SubredditWiki:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.wiki.create("praw_test", "wiki body text", reason="PRAW Test Creation")
+            await subreddit.wiki.create(
+                "praw_test", "wiki body text", reason="Async PRAW Test Creation"
+            )
 
         """
         name = name.replace(" ", "_").lower()

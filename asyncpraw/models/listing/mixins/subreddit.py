@@ -37,7 +37,7 @@ class CommentHelper(AsyncPRAWBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             async for comment in subreddit.comments(limit=25):
                 print(comment.author)
 
@@ -46,18 +46,18 @@ class CommentHelper(AsyncPRAWBase):
 
 
 class SubredditListingMixin(BaseListingMixin, GildedListingMixin, RisingListingMixin):
-    """Adds additional methods pertaining to Subreddit-like instances."""
+    """Adds additional methods pertaining to subreddit-like instances."""
 
     @cachedproperty
     def comments(self) -> CommentHelper:
         """Provide an instance of :class:`.CommentHelper`.
 
-        For example, to output the author of the 25 most recent comments of
-        ``r/redditdev`` execute:
+        For example, to output the author of the 25 most recent comments of r/test
+        execute:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             async for comment in subreddit.comments(limit=25):
                 print(comment.author)
 

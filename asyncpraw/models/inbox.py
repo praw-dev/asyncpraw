@@ -166,7 +166,7 @@ class Inbox(AsyncPRAWBase):
         r"""Return a :class:`.ListingGenerator` for mentions.
 
         A mention is :class:`.Comment` in which the authorized redditor is named in its
-        body like ``u/redditor_name``.
+        body like u/spez.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -184,7 +184,7 @@ class Inbox(AsyncPRAWBase):
     async def message(self, message_id: str) -> "asyncpraw.models.Message":
         """Return a :class:`.Message` corresponding to ``message_id``.
 
-        :param message_id: The base36 id of a message.
+        :param message_id: The base36 ID of a message.
 
         For example:
 

@@ -1,4 +1,4 @@
-"""Provide CommentForest for Submission comments."""
+"""Provide CommentForest for submission comments."""
 import inspect
 from heapq import heappop, heappush
 from typing import TYPE_CHECKING, Any, AsyncIterator, Coroutine, List, Optional, Union
@@ -189,7 +189,7 @@ class CommentForest:
         :param threshold: The minimum number of children comments a
             :class:`.MoreComments` instance must have in order to be replaced.
             :class:`.MoreComments` instances that represent "continue this thread" links
-            unfortunately appear to have 0 children. (default: 0).
+            unfortunately appear to have 0 children (default: 0).
 
         :returns: A list of :class:`.MoreComments` instances that were not replaced.
 

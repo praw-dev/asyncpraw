@@ -107,7 +107,7 @@ Unreleased
 - :meth:`.trusted` to retrieve a :class:`.RedditorList` of trusted users.
 - :meth:`.trust` to add a user to the trusted list.
 - :meth:`.distrust` to remove a user from the trusted list.
-- :class:`.SQLiteTokenManager` (may not work on Windows)
+- :class:`.SQLiteTokenManager` (may not work on Windows).
 
 **Changed**
 
@@ -211,7 +211,7 @@ Unreleased
 7.1.0.pre1 (2020/07/16)
 -----------------------
 
-- Initial Async PRAW pre release.
+- Initial Async PRAW pre-release.
 
 For changes in PRAW please see: `PRAW Changelog
 <https://praw.readthedocs.io/en/latest/pages/changelog.html>`_

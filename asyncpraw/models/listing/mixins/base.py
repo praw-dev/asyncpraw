@@ -35,10 +35,10 @@ class BaseListingMixin(AsyncPRAWBase):
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
     ) -> AsyncIterator[Any]:
-        """Return a :class:`.ListingGenerator` for controversial submissions.
+        """Return a :class:`.ListingGenerator` for controversial items.
 
-        :param time_filter: Can be one of: all, day, hour, month, week, year (default:
-            all).
+        :param time_filter: Can be one of: all, day, hour, month, week, or year
+            (default: all).
 
         :raises: :py:class:`ValueError` if ``time_filter`` is invalid.
 
@@ -145,10 +145,10 @@ class BaseListingMixin(AsyncPRAWBase):
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
     ) -> AsyncIterator[Any]:
-        """Return a :class:`.ListingGenerator` for top submissions.
+        """Return a :class:`.ListingGenerator` for top items.
 
-        :param time_filter: Can be one of: all, day, hour, month, week, year (default:
-            all).
+        :param time_filter: Can be one of: all, day, hour, month, week, or year
+            (default: all).
 
         :raises: :py:class:`ValueError` if ``time_filter`` is invalid.
 

@@ -287,7 +287,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         :returns: A ``list`` of :class:`.Subreddit` objects. Return ``[]`` if the
             redditor has no moderated subreddits.
 
-        :raises: ``asyncprawcore.ServerError`` in certain cicumstances. See the note
+        :raises: ``asyncprawcore.ServerError`` in certain circumstances. See the note
             below.
 
         .. note::

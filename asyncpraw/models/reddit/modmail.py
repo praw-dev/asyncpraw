@@ -156,7 +156,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.archive()
 
@@ -170,7 +170,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.highlight()
 
@@ -180,14 +180,14 @@ class ModmailConversation(RedditBase):
     async def mute(self, num_days=3):
         """Mute the non-mod user associated with the conversation.
 
-        :param num_days: Duration of mute in days. Valid options are 3, 7, or 28.
-            (default: 3)
+        :param num_days: Duration of mute in days. Valid options are 3, 7, or 28
+            (default: 3).
 
         For example:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.mute()
 
@@ -195,7 +195,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.mute(7)
 
@@ -221,7 +221,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail.conversation("2gmz")
             await conversation.read(other_conversations=conversation.user.recent_convos)
 
@@ -246,7 +246,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.reply("Message body", author_hidden=True)
 
@@ -276,7 +276,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.unarchive()
 
@@ -290,7 +290,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.unhighlight()
 
@@ -304,7 +304,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
             await conversation.unmute()
 
@@ -326,7 +326,7 @@ class ModmailConversation(RedditBase):
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("redditdev")
+            subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail.conversation("2gmz")
             await conversation.unread(other_conversations=conversation.user.recent_convos)
 

@@ -14,10 +14,10 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
     .. warning::
 
-        This class should not be directly utilized. Instead you will find a number of
-        methods that return instances of the class:
+        This class should not be directly utilized. Instead, you will find a number of
+        methods that return instances of the class here_.
 
-        http://asyncpraw.readthedocs.io/en/latest/search.html?q=ListingGenerator
+    .. _here: https://asyncpraw.readthedocs.io/en/latest/search.html?q=ListingGenerator
 
     """
 

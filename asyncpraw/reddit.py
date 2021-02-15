@@ -344,11 +344,11 @@ class Reddit:
                 # do stuff with draft
                 ...
 
-        To create a draft on r/redditdev run:
+        To create a draft on r/test run:
 
         .. code-block:: python
 
-            await reddit.drafts.create(title="title", selftext="selftext", subreddit="redditdev")
+            await reddit.drafts.create(title="title", selftext="selftext", subreddit="test")
 
         """
 
@@ -435,13 +435,13 @@ class Reddit:
 
         .. code-block:: python
 
-            await reddit.subreddit("redditdev")
+            await reddit.subreddit("test")
 
         To obtain a fetched :class:`.Subreddit` instance run:
 
         .. code-block:: python
 
-            await reddit.subreddit("redditdev", fetch=True)
+            await reddit.subreddit("test", fetch=True)
 
         Multiple subreddits can be combined and filtered views of r/all can also be used
         just like a subreddit:
@@ -488,7 +488,7 @@ class Reddit:
     def _prepare_common_authorizer(self, authenticator):
         if self._token_manager is not None:
             warn(
-                "Token managers have been depreciated and will be removed in the near"
+                "Token managers have been deprecated and will be removed in the near"
                 " future. See https://www.reddit.com/r/redditdev/comments/olk5e6/"
                 "followup_oauth2_api_changes_regarding_refresh/ for more details.",
                 category=DeprecationWarning,
@@ -963,7 +963,7 @@ class Reddit:
 
         """
         if data and json:
-            raise ClientException("At most one of `data` and `json` is supported.")
+            raise ClientException("At most one of `data` or `json` is supported.")
         try:
             return await self._core.request(
                 method,

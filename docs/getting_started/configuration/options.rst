@@ -32,7 +32,7 @@ Basic Configuration Options
 OAuth Configuration Options
 ---------------------------
 
-:client_id: (Required) The OAuth client id associated with your registered Reddit
+:client_id: (Required) The OAuth client ID associated with your registered Reddit
     application. See :ref:`oauth` for instructions on registering a Reddit application.
 :client_secret: The OAuth client secret associated with your registered Reddit
     application. This option is required for all application types, however, the value
