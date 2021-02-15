@@ -103,7 +103,7 @@ Unreleased
 **Added**
 
 - :class:`.UserSubreddit` for the ``subreddit`` attribute of :class:`.Redditor`.
-- :meth:`.Reddit.username_available` checks if a username is available.
+- :meth:`.username_available` checks if a username is available.
 - :meth:`.trusted` to retrieve a :class:`.RedditorList` of trusted users.
 - :meth:`.trust` to add a user to the trusted list.
 - :meth:`.distrust` to remove a user from the trusted list.
@@ -111,7 +111,7 @@ Unreleased
 
 **Changed**
 
-- :meth:`.Redditor.moderated` will now objectify all data returned from the API.
+- :meth:`.moderated` will now objectify all data returned from the API.
 - The ``wiki_edit`` endpoint has been changed from ``r/{subreddit}/api/wiki/edit/`` to
   ``r/{subreddit}/api/wiki/edit``.
 - :meth:`.Redditor.block` no longer needs to retrieve a user's fullname.
@@ -129,11 +129,12 @@ Unreleased
   passed ``content`` and ``reason`` parameters that produced a request with a body
   greater than 500 KiB, even when the parameters did not exceed their respective
   permitted maximum lengths.
-- Fixed bug where :meth:`.Reddit.request` could not handle instances of ``BadRequest``\s
-  when the JSON data contained only the keys "reason" and "message".
-- Fixed bug where :meth:`.Reddit.request` could not handle instances of ``BadRequest``\s
-  when the response did not contain valid JSON data.
-- Fixed bug where :meth:`.FullnameMixin.fullname` sometimes returned the wrong fullname.
+- Fixed bug where :meth:`.request` could not handle instances of ``BadRequest``\ s when
+  the JSON data contained only the keys "reason" and "message".
+- Fixed bug where :meth:`.request` could not handle instances of ``BadRequest``\ s when
+  the response did not contain valid JSON data.
+- Fixed bug where :meth:`~.FullnameMixin.fullname` sometimes returned the wrong
+  fullname.
 
 7.2.0 (2021/02/25)
 ------------------
@@ -162,13 +163,13 @@ Unreleased
 
 **Added**
 
-- Add method :meth:`~.Subreddits.premium` to reflect the naming change in Reddit's API.
+- Add method :meth:`.Subreddits.premium` to reflect the naming change in Reddit's API.
 - Ability to submit image galleries with :meth:`~.Subreddit.submit_gallery`.
 - Ability to pass a gallery url to :meth:`.Reddit.submission`.
 - Ability to specify modmail mute duration.
 - Add method :meth:`.invited` to get invited moderators of a subreddit.
 - Ability to submit text/self posts with inline media.
-- Add method :meth:`~.Submission.award` and :meth:`~.Comment.award` with the ability to
+- Add method :meth:`.Submission.award` and :meth:`.Comment.award` with the ability to
   specify type of award, anonymity, and message when awarding a submission or comment.
 - Ability to specify subreddits by name using the `subreddits` parameter in
   :meth:`.Reddit.info`.
@@ -178,7 +179,7 @@ Unreleased
 
 **Changed**
 
-- :class:`~.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
+- :class:`.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
   which will change the order in which elements are removed from the set.
 - Improved :meth:`~.Subreddit.submit_image` and :meth:`~.Subreddit.submit_video`
   performance in slow network environments by removing a race condition when
@@ -186,9 +187,9 @@ Unreleased
 
 **Deprecated**
 
-- :meth:`~.Subreddits.gold` is superseded by :meth:`~.Subreddits.premium`.
-- :meth:`~.Submission.gild` is superseded by :meth:`~.Submission.award`.
-- :meth:`~.Comment.gild` is superseded by :meth:`~.Comment.award`.
+- :meth:`.Subreddits.gold` is superseded by :meth:`.Subreddits.premium`.
+- :meth:`.Submission.gild` is superseded by :meth:`.Submission.award`.
+- :meth:`.Comment.gild` is superseded by :meth:`.Comment.award`.
 - ``PRAWException`` is superseded by :class:`.AsyncPRAWException`.
 
 **Fixed**

@@ -7,7 +7,7 @@ from ..generator import ListingGenerator
 
 
 def _prepare(asyncpraw_object, arguments_dict, target):
-    """Fix for Redditor methods that use a query param rather than subpath."""
+    """Fix for :class:`.Redditor` methods that use a query param rather than subpath."""
     if asyncpraw_object.__dict__.get("_listing_use_sort"):
         AsyncPRAWBase._safely_add_arguments(arguments_dict, "params", sort=target)
         return asyncpraw_object._path
@@ -40,7 +40,7 @@ class BaseListingMixin(AsyncPRAWBase):
         :param time_filter: Can be one of: all, day, hour, month, week, year (default:
             all).
 
-        :raises: :py:class:`.ValueError` if ``time_filter`` is invalid.
+        :raises: :py:class:`ValueError` if ``time_filter`` is invalid.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -150,7 +150,7 @@ class BaseListingMixin(AsyncPRAWBase):
         :param time_filter: Can be one of: all, day, hour, month, week, year (default:
             all).
 
-        :raises: :py:class:`.ValueError` if ``time_filter`` is invalid.
+        :raises: :py:class:`ValueError` if ``time_filter`` is invalid.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.

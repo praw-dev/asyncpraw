@@ -5,7 +5,7 @@ from ..base import AsyncPRAWBase
 
 
 class Listing(AsyncPRAWBase):
-    """A listing is a collection of RedditBase instances."""
+    """A listing is a collection of :class:`.RedditBase` instances."""
 
     CHILD_ATTRIBUTE = "children"
 

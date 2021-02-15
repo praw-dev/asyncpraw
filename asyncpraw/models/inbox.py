@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class Inbox(AsyncPRAWBase):
-    """Inbox is a Listing class that represents the Inbox."""
+    """Inbox is a Listing class that represents the inbox."""
 
     def all(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
@@ -122,7 +122,8 @@ class Inbox(AsyncPRAWBase):
 
         .. seealso::
 
-            :meth:`.Comment.mark_read` and :meth:`.Message.mark_read`
+            - :meth:`.Comment.mark_read`
+            - :meth:`.Message.mark_read`
 
         """
         while items:
@@ -150,7 +151,8 @@ class Inbox(AsyncPRAWBase):
 
         .. seealso::
 
-            :meth:`.Comment.mark_unread` and :meth:`.Message.mark_unread`
+            - :meth:`.Comment.mark_unread`
+            - :meth:`.Message.mark_unread`
 
         """
         while items:
@@ -180,7 +182,7 @@ class Inbox(AsyncPRAWBase):
         return ListingGenerator(self._reddit, API_PATH["mentions"], **generator_kwargs)
 
     async def message(self, message_id: str) -> "asyncpraw.models.Message":
-        """Return a Message corresponding to ``message_id``.
+        """Return a :class:`.Message` corresponding to ``message_id``.
 
         :param message_id: The base36 id of a message.
 

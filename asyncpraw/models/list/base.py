@@ -8,14 +8,14 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class BaseList(AsyncPRAWBase):
-    """An abstract class to coerce a list into a AsyncPRAWBase."""
+    """An abstract class to coerce a list into an :class:`.AsyncPRAWBase`."""
 
     CHILD_ATTRIBUTE = None
 
     def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
-        """Initialize a BaseList instance.
+        """Initialize a :class:`.BaseList` instance.
 
-        :param reddit: An instance of :class:`~.Reddit`.
+        :param reddit: An instance of :class:`.Reddit`.
 
         """
         super().__init__(reddit, _data=_data)

@@ -28,7 +28,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         limit: int = 100,
         params: Optional[Dict[str, Union[str, int]]] = None,
     ):
-        """Initialize a ListingGenerator instance.
+        """Initialize a :class:`.ListingGenerator` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
         :param url: A URL returning a Reddit listing.
@@ -51,11 +51,11 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         self.yielded = 0
 
     def __aiter__(self) -> AsyncIterator[Any]:
-        """Permit ListingGenerator to operate as an async iterator."""
+        """Permit :class:`.ListingGenerator` to operate as an async iterator."""
         return self
 
     async def __anext__(self) -> Any:
-        """Permit ListingGenerator to operate as a async generator."""
+        """Permit :class:`.ListingGenerator` to operate as a async generator."""
         if self.limit is not None and self.yielded >= self.limit:
             raise StopAsyncIteration()
 

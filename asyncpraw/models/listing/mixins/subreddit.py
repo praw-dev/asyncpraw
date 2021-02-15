@@ -14,21 +14,21 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class CommentHelper(AsyncPRAWBase):
-    """Provide a set of functions to interact with a subreddit's comments."""
+    """Provide a set of functions to interact with a :class:`.Subreddit`'s comments."""
 
     @property
     def _path(self) -> str:
         return urljoin(self.subreddit._path, "comments/")
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Initialize a CommentHelper instance."""
+        """Initialize a :class:`.CommentHelper` instance."""
         super().__init__(subreddit._reddit, _data=None)
         self.subreddit = subreddit
 
     def __call__(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
     ) -> AsyncIterator["asyncpraw.models.Comment"]:
-        """Return a :class:`.ListingGenerator` for the Subreddit's comments.
+        """Return a :class:`.ListingGenerator` for the :class:`.Subreddit`'s comments.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -65,7 +65,7 @@ class SubredditListingMixin(BaseListingMixin, GildedListingMixin, RisingListingM
         return CommentHelper(self)
 
     def __init__(self, reddit: "asyncpraw.Reddit", _data: Optional[Dict[str, Any]]):
-        """Initialize a SubredditListingMixin instance.
+        """Initialize a :class:`.SubredditListingMixin` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
 

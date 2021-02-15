@@ -22,12 +22,12 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class SubmissionFlair:
-    """Provide a set of functions pertaining to Submission flair."""
+    """Provide a set of functions pertaining to :class:`.Submission` flair."""
 
     def __init__(self, submission: "asyncpraw.models.Submission"):
-        """Initialize a SubmissionFlair instance.
+        """Initialize a :class:`.SubmissionFlair` instance.
 
-        :param submission: The submission associated with the flair functions.
+        :param submission: The :class:`.Submission` associated with the flair functions.
 
         """
         self.submission = submission
@@ -82,7 +82,7 @@ class SubmissionFlair:
 
 
 class SubmissionModeration(ThingModerationMixin):
-    """Provide a set of functions pertaining to Submission moderation.
+    """Provide a set of functions pertaining to :class:`.Submission` moderation.
 
     Example usage:
 
@@ -96,7 +96,7 @@ class SubmissionModeration(ThingModerationMixin):
     REMOVAL_MESSAGE_API = "removal_link_message"
 
     def __init__(self, submission: "asyncpraw.models.Submission"):
-        """Initialize a SubmissionModeration instance.
+        """Initialize a :class:`.SubmissionModeration` instance.
 
         :param submission: The submission to moderate.
 
@@ -138,12 +138,13 @@ class SubmissionModeration(ThingModerationMixin):
     ):
         """Set flair for the submission.
 
-        :param text: The flair text to associate with the Submission (default: "").
+        :param text: The flair text to associate with the :class:`.Submission` (default:
+            "").
         :param css_class: The css class to associate with the flair html (default: "").
         :param flair_template_id: The flair template id to use when flairing (Optional).
 
         This method can only be used by an authenticated user who is a moderator of the
-        Submission's Subreddit.
+        submission's :class:`.Subreddit`.
 
         Example usage:
 
@@ -182,7 +183,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. seealso::
 
-            :meth:`~.sfw`
+            :meth:`.sfw`
 
         """
         await self.thing._reddit.post(
@@ -233,7 +234,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. seealso::
 
-            :meth:`~.nsfw`
+            :meth:`.nsfw`
 
         """
         await self.thing._reddit.post(
@@ -255,7 +256,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. seealso::
 
-            :meth:`~.unspoiler`
+            :meth:`.unspoiler`
 
         """
         await self.thing._reddit.post(
@@ -354,7 +355,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. seealso::
 
-            :meth:`~.spoiler`
+            :meth:`.spoiler`
 
         """
         await self.thing._reddit.post(
@@ -545,7 +546,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         url: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Initialize a Submission instance.
+        """Initialize a :class:`.Submission` instance.
 
         :param reddit: An instance of :class:`~.Reddit`.
         :param id: A reddit base36 submission ID, e.g., ``2gmzqe``.
@@ -679,7 +680,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     async def hide(
         self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
     ):
-        """Hide Submission.
+        """Hide :class:`.Submission`.
 
         :param other_submissions: When provided, additionally hide this list of
             :class:`.Submission` instances as part of a single request (default: None).
@@ -693,7 +694,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. seealso::
 
-            :meth:`~.unhide`
+            :meth:`.unhide`
 
         """
         for submissions in self._chunk(other_submissions, 50):
@@ -702,7 +703,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     async def unhide(
         self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
     ):
-        """Unhide Submission.
+        """Unhide :class:`.Submission`.
 
         :param other_submissions: When provided, additionally unhide this list of
             :class:`.Submission` instances as part of a single request (default: None).
@@ -716,7 +717,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. seealso::
 
-            :meth:`~.hide`
+            :meth:`.hide`
 
         """
         for submissions in self._chunk(other_submissions, 50):
@@ -738,7 +739,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
             Be aware you have to be subscribed to the target subreddit.
 
-        :param subreddit: Name of the subreddit or :class:`~.Subreddit` object to
+        :param subreddit: Name of the subreddit or :class:`.Subreddit` object to
             crosspost into.
         :param title: Title of the submission. Will use this submission's title if
             `None` (default: None).
@@ -752,7 +753,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         :param spoiler: Whether or not the submission should be marked as a spoiler
             (default: False).
 
-        :returns: A :class:`~.Submission` object for the newly created submission.
+        :returns: A :class:`.Submission` object for the newly created submission.
 
         Example usage:
 
@@ -765,7 +766,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. seealso::
 
-            :meth:`~.hide`
+            :meth:`.hide`
 
         """
         if title is None:

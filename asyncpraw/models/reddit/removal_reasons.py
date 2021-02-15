@@ -143,7 +143,7 @@ class RemovalReason(RedditBase):
 
 
 class SubredditRemovalReasons:
-    """Provide a set of functions to a Subreddit's removal reasons."""
+    """Provide a set of functions to a :class:`.Subreddit`'s removal reasons."""
 
     @deprecate_lazy
     async def get_reason(
@@ -211,7 +211,7 @@ class SubredditRemovalReasons:
         return reason
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Initialize a SubredditRemovalReasons instance.
+        """Initialize a :class:`.SubredditRemovalReasons` instance.
 
         :param subreddit: The subreddit whose removal reasons to work with.
 
@@ -254,7 +254,7 @@ class SubredditRemovalReasons:
         :param message: The message associated with the removal reason.
         :param title: The title of the removal reason
 
-        :returns: The RemovalReason added.
+        :returns: The :class:`.RemovalReason` added.
 
         The message will be prepended with `Hi u/username,` automatically.
 

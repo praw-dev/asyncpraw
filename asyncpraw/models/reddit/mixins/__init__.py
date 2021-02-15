@@ -15,18 +15,18 @@ from .votable import VotableMixin
 
 
 class ThingModerationMixin:
-    """Provides moderation methods for Comments and Submissions."""
+    r"""Provides moderation methods for :class:`.Comment`\ s and :class:`.Submission`\ s."""
 
     REMOVAL_MESSAGE_API = None
 
     async def _add_removal_reason(self, mod_note="", reason_id=None):
-        """Add a removal reason for a Comment or Submission.
+        """Add a removal reason for a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
         :param reason_id: The removal reason ID.
 
-        It is necessary to first call :meth:`~.remove` on the :class:`~.Comment` or
-        :class:`~.Submission`.
+        It is necessary to first call :meth:`.remove` on the :class:`.Comment` or
+        :class:`.Submission`.
 
         If ``reason_id`` is not specified, ``mod_note`` cannot be blank.
 
@@ -44,7 +44,7 @@ class ThingModerationMixin:
         )
 
     async def approve(self):
-        """Approve a :class:`~.Comment` or :class:`~.Submission`.
+        """Approve a :class:`.Comment` or :class:`.Submission`.
 
         Approving a comment or submission reverts a removal, resets the report counter,
         adds a green check mark indicator (only visible to other moderators) on the
@@ -67,14 +67,14 @@ class ThingModerationMixin:
         )
 
     async def distinguish(self, how="yes", sticky=False):
-        """Distinguish a :class:`~.Comment` or :class:`~.Submission`.
+        """Distinguish a :class:`.Comment` or :class:`.Submission`.
 
         :param how: One of "yes", "no", "admin", "special". "yes" adds a moderator level
             distinguish. "no" removes any distinction. "admin" and "special" require
             special user privileges to use.
-        :param sticky: Comment is stickied if ``True``, placing it at the top of the
-            comment page regardless of score. If thing is not a top-level comment, this
-            parameter is silently ignored.
+        :param sticky: :class:`.Comment` is stickied if ``True``, placing it at the top
+            of the comment page regardless of score. If thing is not a top-level
+            comment, this parameter is silently ignored.
 
         Example usage:
 
@@ -89,7 +89,7 @@ class ThingModerationMixin:
 
         .. seealso::
 
-            :meth:`~.undistinguish`
+            :meth:`.undistinguish`
 
         """
         data = {"how": how, "id": self.thing.fullname}
@@ -99,11 +99,12 @@ class ThingModerationMixin:
         await self.thing._reddit.post(API_PATH["distinguish"], data=data)
 
     async def ignore_reports(self):
-        """Ignore future reports on a :class:`~.Comment` or :class:`~.Submission`.
+        """Ignore future reports on a :class:`.Comment` or :class:`.Submission`.
 
-        Calling this method will prevent future reports on this Comment or Submission
-        from both triggering notifications and appearing in the various moderation
-        listings. The report count will still increment on the Comment or Submission.
+        Calling this method will prevent future reports on this :class:`.Comment` or
+        :class:`.Submission` from both triggering notifications and appearing in the
+        various moderation listings. The report count will still increment on the
+        :class:`.Comment` or :class:`.Submission`.
 
         Example usage:
 
@@ -118,7 +119,7 @@ class ThingModerationMixin:
 
         .. seealso::
 
-            :meth:`~.unignore_reports`
+            :meth:`.unignore_reports`
 
         """
         await self.thing._reddit.post(
@@ -126,7 +127,7 @@ class ThingModerationMixin:
         )
 
     async def lock(self):
-        """Lock a :class:`~.Comment` or :class:`~.Submission`.
+        """Lock a :class:`.Comment` or :class:`.Submission`.
 
         Example usage:
 
@@ -141,7 +142,7 @@ class ThingModerationMixin:
 
         .. seealso::
 
-            :meth:`~.unlock`
+            :meth:`.unlock`
 
         """
         await self.thing._reddit.post(
@@ -149,7 +150,7 @@ class ThingModerationMixin:
         )
 
     async def remove(self, spam=False, mod_note="", reason_id=None):
-        """Remove a :class:`~.Comment` or :class:`~.Submission`.
+        """Remove a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
         :param spam: When True, use the removal to help train the Subreddit's spam
@@ -187,7 +188,7 @@ class ThingModerationMixin:
         title="ignored",
         type="public",  # pylint: disable=redefined-builtin
     ):
-        """Send a removal message for a :class:`~.Comment` or :class:`~.Submission`.
+        """Send a removal message for a :class:`.Comment` or :class:`.Submission`.
 
         .. warning::
 
@@ -199,13 +200,13 @@ class ThingModerationMixin:
         Reddit adds human-readable information about the object to the message.
 
         :param type: One of "public", "private", "private_exposed". "public" leaves a
-            stickied comment on the post. "private" sends a Modmail message with hidden
-            username. "private_exposed" sends a Modmail message without hidden username.
+            stickied comment on the post. "private" sends a modmail message with hidden
+            username. "private_exposed" sends a modmail message without hidden username.
         :param title: The short reason given in the message. (Ignored if type is
             "public".)
         :param message: The body of the message.
 
-        If ``type`` is "public", the new :class:`~.Comment` is returned.
+        If ``type`` is "public", the new :class:`.Comment` is returned.
 
         """
         # The API endpoint used to send removal messages is different for posts and
@@ -242,15 +243,15 @@ class ThingModerationMixin:
 
         .. seealso::
 
-            :meth:`~.distinguish`
+            :meth:`.distinguish`
 
         """
         await self.distinguish(how="no")
 
     async def unignore_reports(self):
-        """Resume receiving future reports on a Comment or Submission.
+        """Resume receiving future reports on a :class:`.Comment` or :class:`.Submission`.
 
-        Future reports on this :class:`~.Comment` or :class:`~.Submission` will cause
+        Future reports on this :class:`.Comment` or :class:`.Submission` will cause
         notifications, and appear in the various moderation listings.
 
         Example usage:
@@ -266,7 +267,7 @@ class ThingModerationMixin:
 
         .. seealso::
 
-            :meth:`~.ignore_reports`
+            :meth:`.ignore_reports`
 
         """
         await self.thing._reddit.post(
@@ -274,7 +275,7 @@ class ThingModerationMixin:
         )
 
     async def unlock(self):
-        """Unlock a :class:`~.Comment` or :class:`~.Submission`.
+        """Unlock a :class:`.Comment` or :class:`.Submission`.
 
         Example usage:
 
@@ -289,7 +290,7 @@ class ThingModerationMixin:
 
         .. seealso::
 
-            :meth:`~.lock`
+            :meth:`.lock`
 
         """
         await self.thing._reddit.post(

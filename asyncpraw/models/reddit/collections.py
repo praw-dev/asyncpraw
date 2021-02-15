@@ -31,7 +31,7 @@ class CollectionModeration(AsyncPRAWBase):
     def _post_fullname(self, post):
         """Get a post's fullname.
 
-        :param post: A fullname, a Submission, a permalink, or an ID.
+        :param post: A fullname, a :class:`.Submission`, a permalink, or an ID.
 
         :returns: The fullname of the post.
 
@@ -48,9 +48,9 @@ class CollectionModeration(AsyncPRAWBase):
             return Submission(self._reddit, id=post).fullname
 
     def __init__(self, reddit: "asyncpraw.Reddit", collection_id: str):
-        """Initialize a CollectionModeration instance.
+        """Initialize a :class:`.CollectionModeration` instance.
 
-        :param collection_id: The ID of a collection.
+        :param collection_id: The ID of a :class:`.Collection`.
 
         """
         super().__init__(reddit, _data=None)
@@ -130,10 +130,10 @@ class CollectionModeration(AsyncPRAWBase):
         )
 
     async def reorder(self, links: List[Union[str, "asyncpraw.models.Submission"]]):
-        """Reorder posts in the collection.
+        r"""Reorder posts in the collection.
 
-        :param links: A ``list`` of submissions, as :class:`.Submission`, permalink as a
-            ``str``, fullname as a ``str``, or ID as a ``str``.
+        :param links: A list of :class:`.Submission`\ s or a ``str`` that is either a
+            fullname or an ID.
 
         Example usage:
 
@@ -226,7 +226,7 @@ class CollectionModeration(AsyncPRAWBase):
 
 
 class Collection(RedditBase):
-    """Class to represent a Collection.
+    """Class to represent a :class:`.Collection`.
 
     Obtain an instance via:
 
@@ -317,12 +317,12 @@ class Collection(RedditBase):
         collection_id: Optional[str] = None,
         permalink: Optional[str] = None,
     ):
-        """Initialize this collection.
+        """Initialize a :class:`.Collection` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
-        :param _data: Any data associated with the Collection (optional).
-        :param collection_id: The ID of the Collection (optional).
-        :param permalink: The permalink of the Collection (optional).
+        :param _data: Any data associated with the :class:`.Collection` (optional).
+        :param collection_id: The ID of the :class:`.Collection` (optional).
+        :param permalink: The permalink of the :class:`.Collection` (optional).
 
         """
         if (_data, collection_id, permalink).count(None) != 2:
@@ -344,7 +344,7 @@ class Collection(RedditBase):
         }
 
     def __iter__(self) -> Generator[Any, None, None]:
-        """Provide a way to iterate over the posts in this Collection.
+        """Provide a way to iterate over the posts in this :class:`.Collection`.
 
         Example usage:
 
@@ -360,7 +360,7 @@ class Collection(RedditBase):
             yield item
 
     def __len__(self) -> int:
-        """Get the number of posts in this Collection.
+        """Get the number of posts in this :class:`.Collection`.
 
         Example usage:
 
@@ -407,7 +407,7 @@ class Collection(RedditBase):
         self._fetched = True
 
     async def follow(self):
-        """Follow this Collection.
+        """Follow this :class:`.Collection`.
 
         Example usage:
 
@@ -419,7 +419,7 @@ class Collection(RedditBase):
 
         .. seealso::
 
-            :meth:`~.unfollow`
+            :meth:`.unfollow`
 
         """
         await self._reddit.post(
@@ -428,7 +428,7 @@ class Collection(RedditBase):
         )
 
     async def unfollow(self):
-        """Unfollow this Collection.
+        """Unfollow this :class:`.Collection`.
 
         Example usage:
 
@@ -440,7 +440,7 @@ class Collection(RedditBase):
 
         .. seealso::
 
-            :meth:`~.follow`
+            :meth:`.follow`
 
         """
         await self._reddit.post(
@@ -450,7 +450,7 @@ class Collection(RedditBase):
 
 
 class SubredditCollectionsModeration(AsyncPRAWBase):
-    """Class to represent moderator actions on a Subreddit's Collections.
+    r"""Class to represent moderator actions on a :class:`.Subreddit`'s :class:`.Collection`\ s.
 
     Obtain an instance via:
 
@@ -467,7 +467,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         subreddit: "asyncpraw.models.Subreddit",
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Initialize a SubredditCollectionsModeration instance."""
+        """Initialize a :class:`.SubredditCollectionsModeration` instance."""
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
@@ -492,7 +492,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
         .. seealso::
 
-            :meth:`~CollectionModeration.delete`
+            :meth:`~.CollectionModeration.delete`
 
         """
         if not self.subreddit._fetched:
@@ -508,7 +508,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
 
 class SubredditCollections(AsyncPRAWBase):
-    r"""Class to represent a Subreddit's :class:`.Collection`\ s.
+    r"""Class to represent a :class:`.Subreddit`'s :class:`.Collection`\ s.
 
     Obtain an instance via:
 
@@ -543,11 +543,11 @@ class SubredditCollections(AsyncPRAWBase):
     ):
         """Return the :class:`.Collection` with the specified ID.
 
-        :param collection_id: The ID of a Collection (default: None).
+        :param collection_id: The ID of a :class:`.Collection` (default: None).
         :param permalink: The permalink of a Collection (default: None).
         :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
-        :returns: The specified Collection.
+        :returns: The specified :class:`.Collection`.
 
         Exactly one of ``collection_id`` and ``permalink`` is required.
 
@@ -594,12 +594,12 @@ class SubredditCollections(AsyncPRAWBase):
         subreddit: "asyncpraw.models.Subreddit",
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Initialize a SubredditCollections instance."""
+        """Initialize a :class:`.SubredditCollections` instance."""
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
     async def __aiter__(self):
-        r"""Iterate over the Subreddit's :class:`.Collection`\ s.
+        r"""Iterate over the :class:`.Subreddit`'s :class:`.Collection`\ s.
 
         Example usage:
 

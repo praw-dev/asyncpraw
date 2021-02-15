@@ -13,12 +13,12 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class DraftHelper(AsyncPRAWBase):
-    r"""Provide a set of functions to interact with :class:`Draft` instances.
+    r"""Provide a set of functions to interact with :class:`.Draft` instances.
 
     .. note::
 
         The methods provided by this class will only work on the currently authenticated
-        user's :class:`Draft`\ s.
+        user's :class:`.Draft`\ s.
 
     """
 
@@ -148,12 +148,12 @@ class DraftHelper(AsyncPRAWBase):
 
 
 class LiveHelper(AsyncPRAWBase):
-    """Provide a set of functions to interact with LiveThreads."""
+    r"""Provide a set of functions to interact with :class:`.LiveThread`\ s."""
 
     async def __call__(
         self, id: str, fetch: bool = False
     ) -> "asyncpraw.models.LiveThread":  # pylint: disable=invalid-name,redefined-builtin
-        """Return a new instance of :class:`~.LiveThread`.
+        """Return a new instance of :class:`.LiveThread`.
 
         This method is intended to be used as:
 
@@ -229,16 +229,16 @@ class LiveHelper(AsyncPRAWBase):
         nsfw: bool = False,
         resources: str = None,
     ) -> "asyncpraw.models.LiveThread":
-        """Create a new LiveThread.
+        r"""Create a new :class:`.LiveThread`.
 
-        :param title: The title of the new LiveThread.
-        :param description: (Optional) The new LiveThread's description.
+        :param title: The title of the new :class:`.LiveThread`.
+        :param description: (Optional) The new :class:`.LiveThread`'s description.
         :param nsfw: (boolean) Indicate whether this thread is not safe for work
-            (default: False).
+            (default: ``False``).
         :param resources: (Optional) Markdown formatted information that is useful for
-            the LiveThread.
+            the :class:`.LiveThread`.
 
-        :returns: The new LiveThread object.
+        :returns: The new :class`.LiveThread` object.
 
         """
         return await self._reddit.post(
@@ -276,7 +276,7 @@ class MultiredditHelper(AsyncPRAWBase):
         name: str,
         fetch: bool = False,
     ) -> "asyncpraw.models.Multireddit":
-        """Return an instance of :class:`~.Multireddit`.
+        """Return an instance of :class:`.Multireddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can
         do:
@@ -287,7 +287,7 @@ class MultiredditHelper(AsyncPRAWBase):
             async for comment in multireddit.comments(limit=25):
                 print(comment.author)
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`.Redditor`
             instance who owns the multireddit.
         :param name: The name of the multireddit.
         :param fetch: Determines if Async PRAW will fetch the object (default: False).
@@ -309,7 +309,7 @@ class MultiredditHelper(AsyncPRAWBase):
         visibility: str = "private",
         weighting_scheme: str = "classic",
     ) -> "asyncpraw.models.Multireddit":
-        """Create a new multireddit.
+        """Create a new :class:`.Multireddit`.
 
         :param display_name: The display name for the new multireddit.
         :param subreddits: Subreddits to add to the new multireddit.
@@ -328,7 +328,7 @@ class MultiredditHelper(AsyncPRAWBase):
         :param weighting_scheme: (Optional) Can be one of: ``classic``, ``fresh``
             (default: classic).
 
-        :returns: The new Multireddit object.
+        :returns: The new :class:`.Multireddit` object.
 
         """
         model = {
@@ -351,7 +351,7 @@ class SubredditHelper(AsyncPRAWBase):
     async def __call__(
         self, display_name: str, fetch: bool = False
     ) -> "asyncpraw.models.Subreddit":
-        """Return an instance of :class:`~.Subreddit`.
+        """Return an instance of :class:`.Subreddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can
         do:
@@ -386,7 +386,7 @@ class SubredditHelper(AsyncPRAWBase):
         wikimode: str = "disabled",
         **other_settings: Optional[str],
     ) -> "asyncpraw.models.Subreddit":
-        """Create a new subreddit.
+        """Create a new :class:`.Subreddit`.
 
         :param name: The name for the new subreddit.
         :param title: The title of the subreddit. When ``None`` or ``""`` use the value

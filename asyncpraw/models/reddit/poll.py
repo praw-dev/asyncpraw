@@ -38,7 +38,7 @@ class PollOption(AsyncPRAWBase):
     """
 
     def __repr__(self):
-        """Make a string representation of the PollData."""
+        """Make a string representation of the :class:`.PollData`."""
         return f"PollOption(id={self.id!r})"
 
     def __str__(self):

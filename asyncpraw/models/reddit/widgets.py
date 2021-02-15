@@ -141,7 +141,7 @@ class ImageData(AsyncPRAWBase):
 
 
 class MenuLink(AsyncPRAWBase):
-    """Class to represent a single link inside a menu or submenu.
+    """Class to represent a single link inside a :class:`.Menu` or :class:`.Submenu`.
 
     **Typical Attributes**
 
@@ -183,7 +183,7 @@ class Styles(AsyncPRAWBase):
 
 
 class Submenu(BaseList):
-    r"""Class to represent a submenu of links inside a menu.
+    r"""Class to represent a submenu of links inside a :class:`.Menu`.
 
     **Typical Attributes**
 
@@ -207,7 +207,7 @@ class Submenu(BaseList):
 
 
 class SubredditWidgets(AsyncPRAWBase):
-    """Class to represent a subreddit's widgets.
+    """Class to represent a :class:`.Subreddit`'s widgets.
 
     Create an instance like so:
 
@@ -217,9 +217,10 @@ class SubredditWidgets(AsyncPRAWBase):
         widgets = subreddit.widgets
 
     Data will be lazy-loaded. By default, Async PRAW will not request progressively
-    loading images from Reddit. To enable this, instantiate a SubredditWidgets object,
-    then set the attribute ``progressive_images`` to ``True`` before performing any
-    action that would result in a network request.
+    loading images from Reddit. To enable this, instantiate a :class:`.SubredditWidgets`
+    object via :meth:`~.Subreddit.widgets`, then set the attribute
+    ``progressive_images`` to ``True`` before performing any action that would result in
+    a network request.
 
     .. code-block:: python
 
@@ -230,7 +231,7 @@ class SubredditWidgets(AsyncPRAWBase):
             # do something
             ...
 
-    Access a subreddit's widgets with the following attributes:
+    Access a :class:`.Subreddit`'s widgets with the following attributes:
 
     .. code-block:: python
 
@@ -239,11 +240,11 @@ class SubredditWidgets(AsyncPRAWBase):
         print([widget async for widget in widgets.sidebar()])
         print([widget async for widget in widgets.topbar()])
 
-    The attribute :attr:`.id_card` contains the subreddit's ID card, which displays
-    information like the number of subscribers.
+    The attribute :attr:`.id_card` contains the :class:`.Subreddit`'s ID card, which
+    displays information like the number of subscribers.
 
-    The attribute :attr:`.moderators_widget` contains the subreddit's moderators widget,
-    which lists the moderators of the subreddit.
+    The attribute :attr:`.moderators_widget` contains the :class:`.Subreddit`'s
+    moderators widget, which lists the moderators of the subreddit.
 
     The attribute :attr:`.sidebar` contains a list of widgets which make up the sidebar
     of the subreddit.
@@ -251,7 +252,8 @@ class SubredditWidgets(AsyncPRAWBase):
     The attribute :attr:`.topbar` contains a list of widgets which make up the top bar
     of the subreddit.
 
-    To edit a subreddit's widgets, use :attr:`~.SubredditWidgets.mod`. For example:
+    To edit a :class:`.Subreddit`'s widgets, use :attr:`~.SubredditWidgets.mod`. For
+    example:
 
     .. code-block:: python
 
@@ -289,12 +291,12 @@ class SubredditWidgets(AsyncPRAWBase):
     """
 
     async def id_card(self):
-        """Get this subreddit's :class:`.IDCard` widget."""
+        """Get this :class:`.Subreddit`'s :class:`.IDCard` widget."""
         items = await self.items()
         return items[self.layout["idCardWidget"]]
 
     async def items(self):
-        """Get this subreddit's widgets as a dict from ID to widget."""
+        """Get this :class:`.Subreddit`'s widgets as a dict from ID to widget."""
         if self._items is None:
             if not self._raw_items:
                 await self._fetch()
@@ -318,7 +320,7 @@ class SubredditWidgets(AsyncPRAWBase):
         return SubredditWidgetsModeration(self.subreddit, self._reddit)
 
     async def moderators_widget(self):
-        """Get this subreddit's :class:`.ModeratorsWidget`."""
+        """Get this :class:`.Subreddit`'s :class:`.ModeratorsWidget`."""
         items = await self.items()
         return items[self.layout["moderatorWidget"]]
 
@@ -335,7 +337,7 @@ class SubredditWidgets(AsyncPRAWBase):
             yield items[widget]
 
     async def refresh(self):
-        """Refresh the subreddit's widgets.
+        """Refresh the :class:`.Subreddit`'s widgets.
 
         By default, Async PRAW will not request progressively loading images from
         Reddit. To enable this, set the attribute ``progressive_images`` to ``True``
@@ -395,7 +397,7 @@ class SubredditWidgets(AsyncPRAWBase):
 
 
 class SubredditWidgetsModeration:
-    """Class for moderating a subreddit's widgets.
+    """Class for moderating a :class:`.Subreddit`'s widgets.
 
     Get an instance of this class from :attr:`.SubredditWidgets.mod`.
 
@@ -1003,7 +1005,7 @@ class SubredditWidgetsModeration:
 
 
 class Widget(AsyncPRAWBase):
-    """Base class to represent a Widget."""
+    """Base class to represent a :class:`.Widget`."""
 
     @cachedproperty
     def mod(self):
@@ -1385,7 +1387,7 @@ class IDCard(Widget):
     ========================= =======================================================
     Attribute                 Description
     ========================= =======================================================
-    ``currentlyViewingCount`` The number of Redditors viewing the subreddit.
+    ``currentlyViewingCount`` The number of redditors viewing the subreddit.
     ``currentlyViewingText``  The text displayed next to the view count. For example,
                               "users online".
     ``description``           The subreddit description.
@@ -1485,9 +1487,9 @@ class ImageWidget(Widget, BaseList):
 
 
 class Menu(Widget, BaseList):
-    r"""Class to represent the top menu widget of a subreddit.
+    r"""Class to represent the top menu widget of a :class:`.Subreddit`.
 
-    Menus can generally be found as the first item in a subreddit's top bar.
+    Menus can generally be found as the first item in a :class:`.Subreddit`'s top bar.
 
     .. code-block:: python
 

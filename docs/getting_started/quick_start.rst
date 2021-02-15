@@ -49,8 +49,8 @@ Obtain a :class:`.Reddit` Instance
 .. warning::
 
     For the sake of brevity, the following examples pass authentication information via
-    arguments to :py:func:`asyncpraw.Reddit`. If you do this, you need to be careful not
-    to reveal this information to the outside world if you share your code. It is
+    arguments to :meth:`asyncpraw.Reddit`. If you do this, you need to be careful not to
+    reveal this information to the outside world if you share your code. It is
     recommended to use a :ref:`praw.ini file <praw.ini>` in order to keep your
     authentication information separate from your code.
 
@@ -165,7 +165,7 @@ To obtain a :class:`.Subreddit` instance, pass the subreddit's name when calling
 
 .. code-block:: python
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     subreddit = await reddit.subreddit("redditdev", fetch=True)
 
     print(subreddit.display_name)
@@ -218,7 +218,7 @@ You can create :class:`.Submission` instances in other ways too:
 
 .. code-block:: python
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     submission = await reddit.submission(id="39zje0")
     print(submission.title)
     # Output: reddit will soon only be available ...
@@ -244,7 +244,7 @@ For example:
     print(redditor1.name)
     # Output: name of the redditor
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     redditor2 = await reddit.redditor("bboe", fetch=True)
     print(redditor2.link_karma)
     # Output: u/bboe's karma
@@ -260,7 +260,7 @@ comments as a flattened list you can call the :meth:`.list` method on a
 
 .. code-block:: python
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     top_level_comments = await submission.comments()
     all_comments = await submission.comments.list()
 
@@ -274,7 +274,7 @@ comments as a flattened list you can call the :meth:`.list` method on a
 
     .. code-block:: python
 
-        # assume you have a Reddit instance bound to variable `reddit`
+        # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
         submission = await reddit.submission(id="39zje0")
         submission.comment_sort = "new"
         top_level_comments = await submission.comments()
@@ -299,6 +299,6 @@ For example:
 
     import pprint
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     submission = await reddit.submission(id="39zje0")
     pprint.pprint(vars(submission))
