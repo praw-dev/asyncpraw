@@ -49,6 +49,42 @@ def filter_access_token(response):
     return response
 
 
+def serialize_dict(data: dict):
+    """This is to filter out buffered readers."""
+    new_dict = {}
+    for key, value in data.items():
+        if key == "file":
+            new_dict[key] = serialize_file(value.name)
+        elif isinstance(value, dict):
+            new_dict[key] = serialize_dict(value)
+        elif isinstance(value, list):
+            new_dict[key] = serialize_list(value)
+        else:
+            new_dict[key] = value
+    return new_dict
+
+
+def serialize_file(file_name):
+    with open(file_name, "rb") as f:
+        return f.read().decode("utf-8", "replace")
+
+
+def serialize_list(data: list):
+    new_list = []
+    for item in data:
+        if isinstance(item, dict):
+            new_list.append(serialize_dict(item))
+        elif isinstance(item, list):
+            new_list.append(serialize_list(item))
+        elif isinstance(item, tuple):
+            if item[0] == "file":
+                item = (item[0], serialize_file(item[1].name))
+            new_list.append(item)
+        else:
+            new_list.append(item)
+    return new_list
+
+
 placeholders = {
     x: env_default(x)
     for x in (
@@ -60,55 +96,6 @@ placeholders = {
 placeholders["basic_auth"] = b64_string(
     f"{placeholders['client_id']}:{placeholders['client_secret']}"
 )
-
-
-class CustomVCR(VCR):
-    """Derived from VCR to make setting paths easier."""
-
-    def use_cassette(self, path="", **kwargs):
-        """Use a cassette."""
-        path += ".json"
-        return super().use_cassette(path, **kwargs)
-
-
-def serialize_list(data: list):
-    new_list = []
-    for item in data:
-        if isinstance(item, dict):
-            new_list.append(serialize_dict(item))
-        elif isinstance(item, list):
-            new_list.append(serialize_list(item))
-        else:
-            new_list.append(item)
-    return new_list
-
-
-def serialize_dict(data: dict):
-    """this is to filter out buffered readers"""
-    new_dict = {}
-    for key, value in data.items():
-        if key == "file":
-            continue  # skip files
-        elif isinstance(value, dict):
-            new_dict[key] = serialize_dict(value)
-        elif isinstance(value, list):
-            new_dict[key] = serialize_list(value)
-        else:
-            new_dict[key] = value
-    return new_dict
-
-
-class CustomSerializer(object):
-    @staticmethod
-    def serialize(cassette_dict):
-        cassette_dict["recorded_at"] = datetime.now().isoformat()[:-7]
-        return (
-            f"{json.dumps(serialize_dict(cassette_dict), sort_keys=True, indent=2)}\n"
-        )
-
-    @staticmethod
-    def deserialize(cassette_string):
-        return json.loads(cassette_string)
 
 
 class CustomPersister(FilesystemPersister):
@@ -138,6 +125,28 @@ class CustomPersister(FilesystemPersister):
             os.makedirs(dirname)
         with open(cassette_path, "w") as f:
             f.write(data)
+
+
+class CustomSerializer(object):
+    @staticmethod
+    def serialize(cassette_dict):
+        cassette_dict["recorded_at"] = datetime.now().isoformat()[:-7]
+        return (
+            f"{json.dumps(serialize_dict(cassette_dict), sort_keys=True, indent=2)}\n"
+        )
+
+    @staticmethod
+    def deserialize(cassette_string):
+        return json.loads(cassette_string)
+
+
+class CustomVCR(VCR):
+    """Derived from VCR to make setting paths easier."""
+
+    def use_cassette(self, path="", **kwargs):
+        """Use a cassette."""
+        path += ".json"
+        return super().use_cassette(path, **kwargs)
 
 
 VCR = CustomVCR(
