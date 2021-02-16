@@ -104,6 +104,7 @@ instances of them bound to an attribute of one of the Async PRAW models.
    other/inlineimage
    other/inlinevideo
    other/menulink
+   other/mod_action
    other/modmail
    other/modmailmessage
    other/preferences
