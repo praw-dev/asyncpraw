@@ -9,14 +9,14 @@ from io import StringIO
 from json import dumps
 from os.path import basename, dirname, isfile, join
 from typing import (
-    List,
     TYPE_CHECKING,
-    Optional,
-    Dict,
     Any,
-    Union,
+    AsyncGenerator,
+    Dict,
     Iterator,
-    Generator,
+    List,
+    Optional,
+    Union,
 )
 from urllib.parse import urljoin
 from xml.etree.ElementTree import XML
@@ -297,7 +297,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return self._subreddit_collections_class(self._reddit, self)
 
     @cachedproperty
-    def contributor(self) -> "asyncpraw.models.reddit.subreddit.ContributorRelationship":
+    def contributor(
+        self,
+    ) -> "asyncpraw.models.reddit.subreddit.ContributorRelationship":
         """Provide an instance of :class:`.ContributorRelationship`.
 
         Contributors are also known as approved submitters.
@@ -689,10 +691,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             return await self._reddit.submission(url=url)
 
     async def _upload_media(
-        self, media_path: str,
+        self,
+        media_path: str,
         expected_mime_prefix: Optional[str] = None,
-        upload_type: str="link"
-    ,
+        upload_type: str = "link",
     ):
         """Upload media and return its URL and a websocket (Undocumented endpoint).
 
@@ -1554,7 +1556,9 @@ class SubredditFilters:
         """
         self.subreddit = subreddit
 
-    async def __aiter__(self) -> Generator["asyncpraw.models.Subreddit", None, None]:
+    async def __aiter__(
+        self,
+    ) -> AsyncGenerator["asyncpraw.models.Subreddit", None]:
         """Iterate through the special subreddit's filters.
 
         This method should be invoked as:
@@ -2032,7 +2036,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
     async def __aiter__(
         self,
-    ) -> Generator[Dict[str, Union[str, int, bool, List[Dict[str, str]]]], None, None]:
+    ) -> AsyncGenerator[Dict[str, Union[str, int, bool, List[Dict[str, str]]]], None]:
         """Iterate through the user flair templates.
 
         For example:
@@ -2119,7 +2123,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
     async def __aiter__(
         self,
-    ) -> Generator[Dict[str, Union[str, int, bool, List[Dict[str, str]]]], None, None]:
+    ) -> AsyncGenerator[Dict[str, Union[str, int, bool, List[Dict[str, str]]]], None]:
         """Iterate through the link flair templates.
 
         For example:
@@ -2613,7 +2617,9 @@ class SubredditModerationStream:
 
     def edited(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
+    ) -> AsyncGenerator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
+    ]:
         """Yield edited comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2638,7 +2644,7 @@ class SubredditModerationStream:
         action: Optional[str] = None,
         mod: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **stream_options: Any,
-    ) -> Generator["asyncpraw.models.ModAction", None, None]:
+    ) -> AsyncGenerator["asyncpraw.models.ModAction", None]:
         """Yield moderator log entries as they become available.
 
         :param action: If given, only return log entries for the specified
@@ -2670,7 +2676,7 @@ class SubredditModerationStream:
         sort: Optional[str] = None,
         state: Optional[str] = None,
         **stream_options: Any,
-    ) -> Generator[ModmailConversation, None, None]:
+    ) -> AsyncGenerator[ModmailConversation, None]:
         """Yield new-modmail conversations as they become available.
 
         :param other_subreddits: A list of :class:`.Subreddit` instances for
@@ -2707,7 +2713,9 @@ class SubredditModerationStream:
 
     def modqueue(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
+    ) -> AsyncGenerator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
+    ]:
         """Yield comments/submissions in the modqueue as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2730,7 +2738,9 @@ class SubredditModerationStream:
 
     def reports(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
+    ) -> AsyncGenerator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
+    ]:
         """Yield reported comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2751,7 +2761,9 @@ class SubredditModerationStream:
 
     def spam(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
+    ) -> AsyncGenerator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
+    ]:
         """Yield spam comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2772,7 +2784,7 @@ class SubredditModerationStream:
 
     def unmoderated(
         self, **stream_options: Any
-    ) -> Generator["asyncpraw.models.Submission", None, None]:
+    ) -> AsyncGenerator["asyncpraw.models.Submission", None]:
         """Yield unmoderated submissions as they become available.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2790,7 +2802,7 @@ class SubredditModerationStream:
 
     def unread(
         self, **stream_options: Any
-    ) -> Generator["asyncpraw.models.SubredditMessage", None, None]:
+    ) -> AsyncGenerator["asyncpraw.models.SubredditMessage", None]:
         """Yield unread old modmail messages as they become available.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2920,7 +2932,9 @@ class SubredditRelationship:
         self.relationship = relationship
         self.subreddit = subreddit
 
-    async def add(self, redditor: Union[str, "asyncpraw.models.Redditor"], **other_settings: Any):
+    async def add(
+        self, redditor: Union[str, "asyncpraw.models.Redditor"], **other_settings: Any
+    ):
         """Add ``redditor`` to this relationship.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -3239,8 +3253,9 @@ class Modmail:
 
     """
 
-    async def __call__(self, id: Optional[str] = None, mark_read: bool = False
-    , fetch=True):  # noqa: D207, D301
+    async def __call__(
+        self, id: Optional[str] = None, mark_read: bool = False, fetch=True
+    ):  # noqa: D207, D301
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
@@ -3316,7 +3331,9 @@ class Modmail:
 
     async def bulk_read(
         self,
-        other_subreddits: Optional[List[Union["asyncpraw.models.Subreddit", str]]] = None,
+        other_subreddits: Optional[
+            List[Union["asyncpraw.models.Subreddit", str]]
+        ] = None,
         state: Optional[str] = None,
     ) -> List[ModmailConversation]:
         """Mark conversations for subreddit(s) as read.
@@ -3359,7 +3376,7 @@ class Modmail:
         other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None,
         sort: Optional[str] = None,
         state: Optional[str] = None,
-    ) -> Generator[ModmailConversation, None, None]:  # noqa: D207, D301
+    ) -> AsyncGenerator[ModmailConversation, None]:  # noqa: D207, D301
         """Generate :class:`.ModmailConversation` objects for subreddit(s).
 
         :param after: A base36 modmail conversation id. When provided, the
@@ -3446,7 +3463,9 @@ class Modmail:
             API_PATH["modmail_conversations"], data=data
         )
 
-    async def subreddits(self) -> Generator["asyncpraw.models.Subreddit", None, None]:
+    async def subreddits(
+        self,
+    ) -> AsyncGenerator["asyncpraw.models.Subreddit", None]:
         """Yield subreddits using the new modmail that the user moderates.
 
         For example:
@@ -3500,7 +3519,7 @@ class SubredditStream:
 
     def comments(
         self, **stream_options: Any
-    ) -> Generator["asyncpraw.models.Comment", None, None]:
+    ) -> AsyncGenerator["asyncpraw.models.Comment", None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will
@@ -3534,7 +3553,7 @@ class SubredditStream:
 
     def submissions(
         self, **stream_options: Any
-    ) -> Generator["asyncpraw.models.Submission", None, None]:
+    ) -> AsyncGenerator["asyncpraw.models.Submission", None]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions
@@ -4006,7 +4025,7 @@ class SubredditWiki:
         self.contributor = SubredditRelationship(subreddit, "wikicontributor")
         self.subreddit = subreddit
 
-    async def __aiter__(self) -> Generator[WikiPage, None, None]:
+    async def __aiter__(self) -> AsyncGenerator[WikiPage, None]:
         """Iterate through the pages of the wiki.
 
         This method is to be used to discover all wikipages for a subreddit:
@@ -4055,9 +4074,10 @@ class SubredditWiki:
 
     def revisions(
         self, **generator_kwargs: Any
-    ) -> Generator[
-        Dict[str, Optional[Union["asyncpraw.models.Redditor", WikiPage, str, int, bool]]],
-        None,
+    ) -> AsyncGenerator[
+        Dict[
+            str, Optional[Union["asyncpraw.models.Redditor", WikiPage, str, int, bool]]
+        ],
         None,
     ]:
         """Return a :class:`.ListingGenerator` for recent wiki revisions.
