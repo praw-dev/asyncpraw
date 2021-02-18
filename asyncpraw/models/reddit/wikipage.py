@@ -145,7 +145,7 @@ class WikiPage(RedditBase):
 
     @staticmethod
     async def _revision_generator(
-        subreddit: "Subreddit", url: str, generator_kwargs: Dict[str, Any]
+        subreddit: "asyncpraw.models.Subreddit", url: str, generator_kwargs: Dict[str, Any]
     ) -> AsyncGenerator[
         Dict[str, Optional[Union[Redditor, "WikiPage", str, int, bool]]], None, None
     ]:

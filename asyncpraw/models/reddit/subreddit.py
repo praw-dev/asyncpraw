@@ -41,7 +41,6 @@ from ..listing.mixins import SubredditListingMixin
 from ..util import permissions_string, stream_generator
 from .base import RedditBase
 from .emoji import SubredditEmoji
-from .inline_media import InlineMedia
 from .mixins import FullnameMixin, MessageableMixin
 from .modmail import ModmailConversation
 from .removal_reasons import SubredditRemovalReasons
@@ -50,14 +49,8 @@ from .widgets import SubredditWidgets, WidgetEncoder
 from .wikipage import WikiPage
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from .collections import SubredditCollections
-    from .submission import Submission
-    from .redditor import Redditor
-    from .comment import Comment
-    from .message import SubredditMessage
-    from ..mod_action import ModAction
-    from ..stylesheet import Stylesheet
+    from .... import asyncpraw
+
 
 
 class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBase):
@@ -248,7 +241,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 raise TypeError("Caption must be 180 characters or less.")
 
     @staticmethod
-    def _validate_inline_media(inline_media: InlineMedia):
+    def _validate_inline_media(inline_media: "asyncpraw.models.InlineMedia"):
         if not isfile(inline_media.path):
             raise ValueError(f"{inline_media.path!r} is not a valid file path.")
 
@@ -258,7 +251,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return self._reddit.config.kinds["subreddit"]
 
     @cachedproperty
-    def banned(self) -> "SubredditRelationship":
+    def banned(self) -> "asyncpraw.models.reddit.subreddit.SubredditRelationship":
         """Provide an instance of :class:`.SubredditRelationship`.
 
         For example, to ban a user try:
@@ -280,7 +273,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditRelationship(self, "banned")
 
     @cachedproperty
-    def collections(self) -> "SubredditCollections":
+    def collections(self) -> "asyncpraw.models.reddit.collections.SubredditCollections":
         r"""Provide an instance of :class:`.SubredditCollections`.
 
         To see the permalinks of all :class:`.Collection`\ s that belong to
@@ -306,7 +299,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return self._subreddit_collections_class(self._reddit, self)
 
     @cachedproperty
-    def contributor(self) -> "ContributorRelationship":
+    def contributor(self) -> "asyncpraw.models.reddit.subreddit.ContributorRelationship":
         """Provide an instance of :class:`.ContributorRelationship`.
 
         Contributors are also known as approved submitters.
@@ -322,7 +315,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return ContributorRelationship(self, "contributor")
 
     @cachedproperty
-    def emoji(self) -> "SubredditEmoji":
+    def emoji(self) -> SubredditEmoji:
         """Provide an instance of :class:`.SubredditEmoji`.
 
         This attribute can be used to discover all emoji for a subreddit:
@@ -347,7 +340,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditEmoji(self)
 
     @cachedproperty
-    def filters(self) -> "SubredditFilters":
+    def filters(self) -> "asyncpraw.models.reddit.subreddit.SubredditFilters":
         """Provide an instance of :class:`.SubredditFilters`.
 
         For example, to add a filter, run:
@@ -361,7 +354,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditFilters(self)
 
     @cachedproperty
-    def flair(self) -> "SubredditFlair":
+    def flair(self) -> "asyncpraw.models.reddit.subreddit.SubredditFlair":
         """Provide an instance of :class:`.SubredditFlair`.
 
         Use this attribute for interacting with a subreddit's flair. For
@@ -386,7 +379,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditFlair(self)
 
     @cachedproperty
-    def mod(self) -> "SubredditModeration":
+    def mod(self) -> "asyncpraw.models.reddit.subreddit.SubredditModeration":
         """Provide an instance of :class:`.SubredditModeration`.
 
         For example, to accept a moderation invite from subreddit ``r/test``:
@@ -400,7 +393,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditModeration(self)
 
     @cachedproperty
-    def moderator(self) -> "ModeratorRelationship":
+    def moderator(self) -> "asyncpraw.models.reddit.subreddit.ModeratorRelationship":
         """Provide an instance of :class:`.ModeratorRelationship`.
 
         For example, to add a moderator try:
@@ -422,7 +415,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return ModeratorRelationship(self, "moderator")
 
     @cachedproperty
-    def modmail(self) -> "Modmail":
+    def modmail(self) -> "asyncpraw.models.reddit.subreddit.Modmail":
         """Provide an instance of :class:`.Modmail`.
 
         For example, to send a new modmail from the subreddit ``r/test`` to
@@ -438,7 +431,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return Modmail(self)
 
     @cachedproperty
-    def muted(self) -> "SubredditRelationship":
+    def muted(self) -> "asyncpraw.models.reddit.subreddit.SubredditRelationship":
         """Provide an instance of :class:`.SubredditRelationship`.
 
         For example, muted users can be iterated through like so:
@@ -453,7 +446,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditRelationship(self, "muted")
 
     @cachedproperty
-    def quaran(self) -> "SubredditQuarantine":
+    def quaran(self) -> "asyncpraw.models.reddit.subreddit.SubredditQuarantine":
         """Provide an instance of :class:`.SubredditQuarantine`.
 
         This property is named ``quaran`` because ``quarantine`` is a
@@ -471,7 +464,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditQuarantine(self)
 
     @cachedproperty
-    def rules(self) -> "SubredditRules":
+    def rules(self) -> SubredditRules:
         """Provide an instance of :class:`.SubredditRules`.
 
         Use this attribute for interacting with a subreddit's rules.
@@ -499,7 +492,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditRules(self)
 
     @cachedproperty
-    def stream(self) -> "SubredditStream":
+    def stream(self) -> "asyncpraw.models.reddit.subreddit.SubredditStream":
         """Provide an instance of :class:`.SubredditStream`.
 
         Streams can be used to indefinitely retrieve new comments made to a
@@ -525,7 +518,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditStream(self)
 
     @cachedproperty
-    def stylesheet(self) -> "SubredditStylesheet":
+    def stylesheet(self) -> "asyncpraw.models.reddit.subreddit.SubredditStylesheet":
         """Provide an instance of :class:`.SubredditStylesheet`.
 
         For example, to add the css data ``.test{color:blue}`` to the existing
@@ -542,7 +535,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditStylesheet(self)
 
     @cachedproperty
-    def widgets(self) -> "SubredditWidgets":
+    def widgets(self) -> "asyncpraw.models.SubredditWidgets":
         """Provide an instance of :class:`.SubredditWidgets`.
 
         **Example usage**
@@ -567,7 +560,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditWidgets(self)
 
     @cachedproperty
-    def wiki(self) -> "SubredditWiki":
+    def wiki(self) -> "asyncpraw.models.reddit.subreddit.SubredditWiki":
         """Provide an instance of :class:`.SubredditWiki`.
 
         This attribute can be used to discover all wikipages for a subreddit:
@@ -591,7 +584,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         display_name: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
     ):
@@ -765,7 +758,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         else:
             return upload_response["asset"]["asset_id"], websocket_url
 
-    async def _upload_inline_media(self, inline_media: InlineMedia):
+    async def _upload_inline_media(self, inline_media: "asyncpraw.models.InlineMedia"):
         """Upload media for use in self posts and return ``inline_media``.
 
         :param inline_media: An :class:`.InlineMedia` object to validate and upload.
@@ -816,7 +809,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             API_PATH["post_requirements"].format(subreddit=str(self))
         )
 
-    async def random(self) -> "Submission":
+    async def random(self) -> "asyncpraw.models.Submission":
         """Return a random Submission.
 
         Returns ``None`` on subreddits that do not support the random feature.
@@ -852,7 +845,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         syntax: str = "lucene",
         time_filter: str = "all",
         **generator_kwargs: Any,
-    ) -> Iterator["Submission"]:
+    ) -> Iterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for items that match ``query``.
 
         :param query: The query string to search for.
@@ -889,7 +882,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         url = API_PATH["search"].format(subreddit=self)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    async def sticky(self, number: int = 1) -> "Submission":
+    async def sticky(self, number: int = 1) -> "asyncpraw.models.Submission":
         """Return a Submission object for a sticky of the subreddit.
 
         :param number: Specify which sticky to return. 1 appears at the top
@@ -929,8 +922,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         spoiler: bool = False,
         collection_id: Optional[str] = None,
         discussion_type: Optional[str] = None,
-        inline_media: Optional[Dict[str, InlineMedia]] = None,
-    ) -> "Submission":  # noqa: D301
+        inline_media: Optional[Dict[str, "asyncpraw.models.InlineMedia"]] = None,
+    ) -> "asyncpraw.models.Submission":  # noqa: D301
         r"""Add a submission to the subreddit.
 
         :param title: The title of the submission.
@@ -1054,7 +1047,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def submit_gallery(
         self,
         title: str,
-        images: str,
+        images: List[Dict[str, str]],
         *,
         collection_id: Optional[str] = None,
         discussion_type: Optional[str] = None,
@@ -1462,7 +1455,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             websocket_url=websocket_url,
         )
 
-    async def subscribe(self, other_subreddits: Optional[List["Subreddit"]] = None):
+    async def subscribe(
+        self, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None
+    ):
         """Subscribe to the subreddit.
 
         :param other_subreddits: When provided, also subscribe to the provided
@@ -1511,7 +1506,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """
         return await self._reddit.get(API_PATH["about_traffic"].format(subreddit=self))
 
-    async def unsubscribe(self, other_subreddits: Optional[List["Subreddit"]] = None):
+    async def unsubscribe(
+        self, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None
+    ):
         """Unsubscribe from the subreddit.
 
         :param other_subreddits: When provided, also unsubscribe from
@@ -1548,7 +1545,7 @@ class SubredditFilters:
 
     """
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditFilters instance.
 
         :param subreddit: The special subreddit whose filters to work with.
@@ -1559,7 +1556,7 @@ class SubredditFilters:
         """
         self.subreddit = subreddit
 
-    async def __aiter__(self) -> Generator[Subreddit, None, None]:
+    async def __aiter__(self) -> Generator["asyncpraw.models.Subreddit", None, None]:
         """Iterate through the special subreddit's filters.
 
         This method should be invoked as:
@@ -1580,7 +1577,7 @@ class SubredditFilters:
         for subreddit in response_data.subreddits:
             yield subreddit
 
-    async def add(self, subreddit: Union[Subreddit, str]):
+    async def add(self, subreddit: Union["asyncpraw.models.Subreddit", str]):
         """Add ``subreddit`` to the list of filtered subreddits.
 
         :param subreddit: The subreddit to add to the filter list.
@@ -1609,7 +1606,7 @@ class SubredditFilters:
             url, data={"model": dumps({"name": str(subreddit)})}
         )
 
-    async def remove(self, subreddit: Union[Subreddit, str]):
+    async def remove(self, subreddit: Union["asyncpraw.models.Subreddit", str]):
         """Remove ``subreddit`` from the list of filtered subreddits.
 
         :param subreddit: The subreddit to remove from the filter list.
@@ -1631,7 +1628,9 @@ class SubredditFlair:
     """Provide a set of functions to interact with a Subreddit's flair."""
 
     @cachedproperty
-    def link_templates(self) -> "SubredditLinkFlairTemplates":
+    def link_templates(
+        self,
+    ) -> "asyncpraw.models.reddit.subreddit.SubredditLinkFlairTemplates":
         """Provide an instance of :class:`.SubredditLinkFlairTemplates`.
 
         Use this attribute for interacting with a subreddit's link flair
@@ -1648,7 +1647,9 @@ class SubredditFlair:
         return SubredditLinkFlairTemplates(self.subreddit)
 
     @cachedproperty
-    def templates(self) -> "SubredditRedditorFlairTemplates":
+    def templates(
+        self,
+    ) -> "asyncpraw.models.reddit.subreddit.SubredditRedditorFlairTemplates":
         """Provide an instance of :class:`.SubredditRedditorFlairTemplates`.
 
         Use this attribute for interacting with a subreddit's flair
@@ -1665,8 +1666,10 @@ class SubredditFlair:
         return SubredditRedditorFlairTemplates(self.subreddit)
 
     def __call__(
-        self, redditor: Optional[Union["Redditor", str]] = None, **generator_kwargs: Any
-    ) -> Iterator["Redditor"]:
+        self,
+        redditor: Optional[Union["asyncpraw.models.Redditor", str]] = None,
+        **generator_kwargs: Any,
+    ) -> Iterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors and their flairs.
 
         :param redditor: When provided, yield at most a single
@@ -1689,7 +1692,7 @@ class SubredditFlair:
         url = API_PATH["flairlist"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditFlair instance.
 
         :param subreddit: The subreddit whose flair to work with.
@@ -1731,7 +1734,7 @@ class SubredditFlair:
         url = API_PATH["flairconfig"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    async def delete(self, redditor: Union["Redditor", str]):
+    async def delete(self, redditor: Union["asyncpraw.models.Redditor", str]):
         """Delete flair for a Redditor.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -1758,7 +1761,7 @@ class SubredditFlair:
 
     async def set(
         self,
-        redditor: Union["Redditor", str],
+        redditor: Union["asyncpraw.models.Redditor", str],
         text: str = "",
         css_class: str = "",
         flair_template_id: Optional[str] = None,
@@ -1804,7 +1807,13 @@ class SubredditFlair:
 
     async def update(
         self,
-        flair_list: Iterator[Union[str, "Redditor", Dict[str, Union[str, "Redditor"]]]],
+        flair_list: Iterator[
+            Union[
+                str,
+                "asyncpraw.models.Redditor",
+                Dict[str, Union[str, "asyncpraw.models.Redditor"]],
+            ]
+        ],
         text: str = "",
         css_class: str = "",
     ) -> List[Dict[str, Union[str, bool, Dict[str, str]]]]:
@@ -1866,7 +1875,7 @@ class SubredditFlairTemplates:
         """Return LINK_FLAIR or USER_FLAIR depending on ``is_link`` value."""
         return "LINK_FLAIR" if is_link else "USER_FLAIR"
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditFlairTemplate instance.
 
         :param subreddit: The subreddit whose flair templates to work with.
@@ -2213,7 +2222,7 @@ class SubredditModeration:
                 only = "links"
             RedditBase._safely_add_arguments(generator_kwargs, "params", only=only)
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditModeration instance.
 
         :param subreddit: The subreddit to moderate.
@@ -2229,7 +2238,7 @@ class SubredditModeration:
 
     def edited(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["Comment", "Submission"]]:
+    ) -> Iterator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]]:
         """Return a :class:`.ListingGenerator` for edited comments and submissions.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2254,7 +2263,9 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    def inbox(self, **generator_kwargs: Any) -> Iterator["SubredditMessage"]:
+    def inbox(
+        self, **generator_kwargs: Any
+    ) -> Iterator["asyncpraw.models.SubredditMessage"]:
         """Return a :class:`.ListingGenerator` for moderator messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -2282,9 +2293,9 @@ class SubredditModeration:
     def log(
         self,
         action: Optional[str] = None,
-        mod: Optional[Union["Redditor", str]] = None,
+        mod: Optional[Union["asyncpraw.models.Redditor", str]] = None,
         **generator_kwargs: Any,
-    ) -> Iterator["ModAction"]:
+    ) -> Iterator["asyncpraw.models.ModAction"]:
         """Return a :class:`.ListingGenerator` for moderator log entries.
 
         :param action: If given, only return log entries for the specified
@@ -2314,7 +2325,7 @@ class SubredditModeration:
 
     def modqueue(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["Submission", "Comment"]]:
+    ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for modqueue items.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2340,7 +2351,7 @@ class SubredditModeration:
         )
 
     @cachedproperty
-    def stream(self) -> "SubredditModerationStream":
+    def stream(self) -> "asyncpraw.models.reddit.subreddit.SubredditModerationStream":
         """Provide an instance of :class:`.SubredditModerationStream`.
 
         Streams can be used to indefinitely retrieve Moderator only items from
@@ -2356,7 +2367,7 @@ class SubredditModeration:
         return SubredditModerationStream(self.subreddit)
 
     @cachedproperty
-    def removal_reasons(self) -> "SubredditRemovalReasons":
+    def removal_reasons(self) -> SubredditRemovalReasons:
         """Provide an instance of :class:`.SubredditRemovalReasons`.
 
         Use this attribute for interacting with a subreddit's removal reasons.
@@ -2384,7 +2395,7 @@ class SubredditModeration:
 
     def reports(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["Submission", "Comment"]]:
+    ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for reported comments and submissions.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2418,7 +2429,7 @@ class SubredditModeration:
 
     def spam(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["Submission", "Comment"]]:
+    ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for spam comments and submissions.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2443,7 +2454,9 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    def unmoderated(self, **generator_kwargs: Any) -> Iterator["Submission"]:
+    def unmoderated(
+        self, **generator_kwargs: Any
+    ) -> Iterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for unmoderated submissions.
 
         Additional keyword arguments are passed in the initialization of
@@ -2464,7 +2477,9 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    def unread(self, **generator_kwargs: Any) -> Iterator["SubredditMessage"]:
+    def unread(
+        self, **generator_kwargs: Any
+    ) -> Iterator["asyncpraw.models.SubredditMessage"]:
         """Return a :class:`.ListingGenerator` for unread moderator messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -2567,7 +2582,7 @@ class SubredditModeration:
             A welcome message is sent to all new subscribers by a Reddit bot.
         :param wiki_edit_age: Account age, in days, required to edit and create
             wiki pages.
-        :param wiki_edit_karma: Subreddit karma required to edit and create
+        :param wiki_edit_karma: "asyncpraw.models.Subreddit" karma required to edit and create
             wiki pages.
         :param wikimode: One of  ``anyone``, ``disabled``, ``modonly``.
 
@@ -2590,7 +2605,7 @@ class SubredditModeration:
 class SubredditModerationStream:
     """Provides moderator streams."""
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditModerationStream instance.
 
         :param subreddit: The moderated subreddit associated with the streams.
@@ -2600,7 +2615,7 @@ class SubredditModerationStream:
 
     def edited(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["Comment", "Submission"], None, None]:
+    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
         """Yield edited comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2623,9 +2638,9 @@ class SubredditModerationStream:
     def log(
         self,
         action: Optional[str] = None,
-        mod: Optional[Union[str, "Redditor"]] = None,
+        mod: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **stream_options: Any,
-    ) -> Generator["ModAction", None, None]:
+    ) -> Generator["asyncpraw.models.ModAction", None, None]:
         """Yield moderator log entries as they become available.
 
         :param action: If given, only return log entries for the specified
@@ -2653,7 +2668,7 @@ class SubredditModerationStream:
 
     def modmail_conversations(
         self,
-        other_subreddits: Optional[List[Subreddit]] = None,
+        other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None,
         sort: Optional[str] = None,
         state: Optional[str] = None,
         **stream_options: Any,
@@ -2694,7 +2709,7 @@ class SubredditModerationStream:
 
     def modqueue(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["Comment", "Submission"], None, None]:
+    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
         """Yield comments/submissions in the modqueue as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2717,7 +2732,7 @@ class SubredditModerationStream:
 
     def reports(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["Comment", "Submission"], None, None]:
+    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
         """Yield reported comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2738,7 +2753,7 @@ class SubredditModerationStream:
 
     def spam(
         self, only: Optional[str] = None, **stream_options: Any
-    ) -> Generator[Union["Comment", "Submission"], None, None]:
+    ) -> Generator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None, None]:
         """Yield spam comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"``
@@ -2757,7 +2772,9 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.spam, only=only, **stream_options)
 
-    def unmoderated(self, **stream_options: Any) -> Generator["Submission", None, None]:
+    def unmoderated(
+        self, **stream_options: Any
+    ) -> Generator["asyncpraw.models.Submission", None, None]:
         """Yield unmoderated submissions as they become available.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2775,7 +2792,7 @@ class SubredditModerationStream:
 
     def unread(
         self, **stream_options: Any
-    ) -> Generator["SubredditMessage", None, None]:
+    ) -> Generator["asyncpraw.models.SubredditMessage", None, None]:
         """Yield unread old modmail messages as they become available.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -2806,7 +2823,7 @@ class SubredditQuarantine:
 
     """
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditQuarantine instance.
 
         :param subreddit: The subreddit associated with the quarantine.
@@ -2876,8 +2893,10 @@ class SubredditRelationship:
     """
 
     def __call__(
-        self, redditor: Optional[Union[str, "Redditor"]] = None, **generator_kwargs
-    ) -> Iterator["Redditor"]:
+        self,
+        redditor: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
+        **generator_kwargs,
+    ) -> Iterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors in the relationship.
 
         :param redditor: When provided, yield at most a single
@@ -2893,7 +2912,7 @@ class SubredditRelationship:
         url = API_PATH[f"list_{self.relationship}"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
-    def __init__(self, subreddit: Subreddit, relationship: str):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit", relationship: str):
         """Create a SubredditRelationship instance.
 
         :param subreddit: The subreddit for the relationship.
@@ -2903,7 +2922,7 @@ class SubredditRelationship:
         self.relationship = relationship
         self.subreddit = subreddit
 
-    async def add(self, redditor: Union[str, "Redditor"], **other_settings: Any):
+    async def add(self, redditor: Union[str, "asyncpraw.models.Redditor"], **other_settings: Any):
         """Add ``redditor`` to this relationship.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2915,7 +2934,7 @@ class SubredditRelationship:
         url = API_PATH["friend"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    async def remove(self, redditor: Union[str, "Redditor"]):
+    async def remove(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove ``redditor`` from this relationship.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -2992,8 +3011,8 @@ class ModeratorRelationship(SubredditRelationship):
             yield result
 
     async def __call__(
-        self, redditor: Optional[Union[str, "Redditor"]] = None
-    ) -> List["Redditor"]:  # pylint: disable=arguments-differ
+        self, redditor: Optional[Union[str, "asyncpraw.models.Redditor"]] = None
+    ) -> List["asyncpraw.models.Redditor"]:  # pylint: disable=arguments-differ
         """Return a list of Redditors who are moderators.
 
         :param redditor: When provided, return a list containing at most one
@@ -3020,7 +3039,7 @@ class ModeratorRelationship(SubredditRelationship):
     # pylint: disable=arguments-differ
     async def add(
         self,
-        redditor: Union[str, "Redditor"],
+        redditor: Union[str, "asyncpraw.models.Redditor"],
         permissions: Optional[List[str]] = None,
         **other_settings: Any,
     ):
@@ -3052,7 +3071,7 @@ class ModeratorRelationship(SubredditRelationship):
 
     async def invite(
         self,
-        redditor: Union[str, "Redditor"],
+        redditor: Union[str, "asyncpraw.models.Redditor"],
         permissions: Optional[List[str]] = None,
         **other_settings: Any,
     ):
@@ -3081,9 +3100,9 @@ class ModeratorRelationship(SubredditRelationship):
 
     def invited(
         self,
-        redditor: Optional[Union[str, "Redditor"]] = None,
+        redditor: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **generator_kwargs: Any,
-    ) -> Iterator["Redditor"]:
+    ) -> Iterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors invited to be moderators.
 
         :param redditor: When provided, return a list containing at most one
@@ -3128,7 +3147,7 @@ class ModeratorRelationship(SubredditRelationship):
             self.subreddit._reddit.config.username or self.subreddit._reddit.user.me()
         )
 
-    async def remove_invite(self, redditor: Union[str, "Redditor"]):
+    async def remove_invite(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove the moderator invite for ``redditor``.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -3147,7 +3166,9 @@ class ModeratorRelationship(SubredditRelationship):
         await self.subreddit._reddit.post(url, data=data)
 
     async def update(
-        self, redditor: Union[str, "Redditor"], permissions: Optional[List[str]] = None
+        self,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
+        permissions: Optional[List[str]] = None,
     ):
         """Update the moderator permissions for ``redditor``.
 
@@ -3178,7 +3199,9 @@ class ModeratorRelationship(SubredditRelationship):
         await self.subreddit._reddit.post(url, data=data)
 
     async def update_invite(
-        self, redditor: Union[str, "Redditor"], permissions: Optional[List[str]] = None
+        self,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
+        permissions: Optional[List[str]] = None,
     ):
         """Update the moderator invite permissions for ``redditor``.
 
@@ -3282,18 +3305,20 @@ class Modmail:
             await modmail_conversation._fetch()
         return modmail_conversation
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Construct an instance of the Modmail object."""
         self.subreddit = subreddit
 
-    def _build_subreddit_list(self, other_subreddits: Optional[List[Subreddit]]):
+    def _build_subreddit_list(
+        self, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]]
+    ):
         """Return a comma-separated list of subreddit display names."""
         subreddits = [self.subreddit] + (other_subreddits or [])
         return ",".join(str(subreddit) for subreddit in subreddits)
 
     async def bulk_read(
         self,
-        other_subreddits: Optional[List[Union[Subreddit, str]]] = None,
+        other_subreddits: Optional[List[Union["asyncpraw.models.Subreddit", str]]] = None,
         state: Optional[str] = None,
     ) -> List[ModmailConversation]:
         """Mark conversations for subreddit(s) as read.
@@ -3333,7 +3358,7 @@ class Modmail:
         self,
         after: Optional[str] = None,
         limit: Optional[int] = None,
-        other_subreddits: Optional[List[Subreddit]] = None,
+        other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None,
         sort: Optional[str] = None,
         state: Optional[str] = None,
     ) -> Generator[ModmailConversation, None, None]:  # noqa: D207, D301
@@ -3391,7 +3416,7 @@ class Modmail:
         self,
         subject: str,
         body: str,
-        recipient: Union[str, "Redditor"],
+        recipient: Union[str, "asyncpraw.models.Redditor"],
         author_hidden: bool = False,
     ) -> ModmailConversation:
         """Create a new modmail conversation.
@@ -3423,7 +3448,7 @@ class Modmail:
             API_PATH["modmail_conversations"], data=data
         )
 
-    async def subreddits(self) -> Generator[Subreddit, None, None]:
+    async def subreddits(self) -> Generator["asyncpraw.models.Subreddit", None, None]:
         """Yield subreddits using the new modmail that the user moderates.
 
         For example:
@@ -3467,7 +3492,7 @@ class Modmail:
 class SubredditStream:
     """Provides submission and comment streams."""
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditStream instance.
 
         :param subreddit: The subreddit associated with the streams.
@@ -3475,7 +3500,9 @@ class SubredditStream:
         """
         self.subreddit = subreddit
 
-    def comments(self, **stream_options: Any) -> Generator["Comment", None, None]:
+    def comments(
+        self, **stream_options: Any
+    ) -> Generator["asyncpraw.models.Comment", None, None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will
@@ -3507,7 +3534,9 @@ class SubredditStream:
         """
         return stream_generator(self.subreddit.comments, **stream_options)
 
-    def submissions(self, **stream_options: Any) -> Generator["Submission", None, None]:
+    def submissions(
+        self, **stream_options: Any
+    ) -> Generator["asyncpraw.models.Submission", None, None]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions
@@ -3546,7 +3575,7 @@ class SubredditStylesheet:
 
     """
 
-    async def __call__(self) -> "Stylesheet":
+    async def __call__(self) -> "asyncpraw.models.Stylesheet":
         """Return the subreddit's stylesheet.
 
         To be used as:
@@ -3560,7 +3589,7 @@ class SubredditStylesheet:
         url = API_PATH["about_stylesheet"].format(subreddit=self.subreddit)
         return await self.subreddit._reddit.get(url)
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditStylesheet instance.
 
         :param subreddit: The subreddit associated with the stylesheet.
@@ -3969,7 +3998,7 @@ class SubredditWiki:
             await wikipage._fetch()
         return wikipage
 
-    def __init__(self, subreddit: Subreddit):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditWiki instance.
 
         :param subreddit: The subreddit whose wiki to work with.
@@ -4029,7 +4058,9 @@ class SubredditWiki:
     def revisions(
         self, **generator_kwargs: Any
     ) -> Generator[
-        Dict[str, Optional[Union["Redditor", WikiPage, str, int, bool]]], None, None
+        Dict[str, Optional[Union["asyncpraw.models.Redditor", WikiPage, str, int, bool]]],
+        None,
+        None,
     ]:
         """Return a :class:`.ListingGenerator` for recent wiki revisions.
 
