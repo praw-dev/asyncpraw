@@ -2590,6 +2590,18 @@ class SubredditModeration:
             wiki pages.
         :param wikimode: One of  ``anyone``, ``disabled``, ``modonly``.
 
+        .. note::
+
+            Updating the subreddit sidebar on old reddit (``description``) is no longer
+            supported using this method. You can update the sidebar by editing the
+            ``"config/sidebar"`` wiki page. For example:
+
+            .. code-block:: python
+
+                subreddit = await reddit.subreddit("test")
+                sidebar = await subreddit.wiki.get_page("config/sidebar")
+                await sidebar.edit(content="new sidebar content")
+
         Additional keyword arguments can be provided to handle new settings as
         Reddit introduces them.
 
