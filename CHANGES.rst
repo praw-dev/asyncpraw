@@ -6,9 +6,9 @@ Unreleased
 
 **Deprecated**
 
-* :meth:`.me` will no longer return ``None`` when called in read-only mode starting in
-  Async PRAW 8. A ``DeprecationWarning`` will be issued. To switch forward to the Async
-  PRAW 8 behavior set ``praw8_raise_exception_on_me=True`` in your
+* :meth:`.me` will no longer return ``None`` when called in :attr:`.read_only` mode
+  starting in Async PRAW 8. A :py:class:`DeprecationWarning` will be issued. To switch
+  forward to the Async PRAW 8 behavior set ``praw8_raise_exception_on_me=True`` in your
   ``asyncpraw.Reddit(...)`` call.
 
 7.1.1 (2021/02/11)
