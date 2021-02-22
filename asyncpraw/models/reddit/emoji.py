@@ -7,8 +7,7 @@ from ...exceptions import ClientException
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from .subreddit import Subreddit
+    from .... import asyncpraw
 
 
 class Emoji(RedditBase):
@@ -50,8 +49,8 @@ class Emoji(RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
-        subreddit: "Subreddit",
+        reddit: "asyncpraw.Reddit",
+        subreddit: "asyncpraw.models.Subreddit",
         name: str,
         _data: Optional[Dict[str, Any]] = None,
     ):
@@ -173,7 +172,7 @@ class SubredditEmoji:
             await emoji._fetch()
         return emoji
 
-    def __init__(self, subreddit: "Subreddit"):
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Create a SubredditEmoji instance.
 
         :param subreddit: The subreddit whose emoji are affected.

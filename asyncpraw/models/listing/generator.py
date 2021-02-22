@@ -6,7 +6,7 @@ from ..base import AsyncPRAWBase
 from .listing import FlairListing
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
+    from .... import asyncpraw
 
 
 class ListingGenerator(AsyncPRAWBase, AsyncIterator):
@@ -21,7 +21,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         url: str,
         limit: int = 100,
         params: Optional[Dict[str, Union[str, int]]] = None,

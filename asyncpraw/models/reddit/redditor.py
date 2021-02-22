@@ -10,12 +10,7 @@ from .base import RedditBase
 from .mixins import FullnameMixin, MessageableMixin
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from ..trophy import Trophy  # noqa: F401
-    from .comment import Comment  # noqa: F401
-    from .multi import Multireddit  # noqa: F401
-    from .submission import Submission  # noqa: F401
-    from .subreddit import Subreddit  # noqa: F401
+    from .... import asyncpraw
 
 
 class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase):
@@ -89,7 +84,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         return cls(reddit, data)
 
     @cachedproperty
-    def stream(self) -> "RedditorStream":
+    def stream(self) -> "asyncpraw.models.reddit.redditor.RedditorStream":
         """Provide an instance of :class:`.RedditorStream`.
 
         Streams can be used to indefinitely retrieve new comments made by a
@@ -125,7 +120,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         name: Optional[str] = None,
         fullname: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
@@ -221,7 +216,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         """
         await self._friend("PUT", data={"note": note} if note else {})
 
-    async def friend_info(self) -> "Redditor":
+    async def friend_info(self) -> "asyncpraw.models.Redditor":
         """Return a Redditor instance with specific friend-related attributes.
 
         :returns: A :class:`.Redditor` instance with fields ``date``, ``id``,
@@ -259,7 +254,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             data={"months": months},
         )
 
-    async def moderated(self) -> List["Subreddit"]:
+    async def moderated(self) -> List["asyncpraw.models.Subreddit"]:
         """Return a list of the redditor's moderated subreddits.
 
         :returns: A ``list`` of :class:`~asyncpraw.models.Subreddit` objects.
@@ -288,7 +283,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             ]
             return subreddits
 
-    async def multireddits(self) -> List["Multireddit"]:
+    async def multireddits(self) -> List["asyncpraw.models.Multireddit"]:
         """Return a list of the redditor's public multireddits.
 
         For example, to to get Redditor ``spez``'s multireddits:
@@ -302,7 +297,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         """
         return await self._reddit.get(API_PATH["multireddit_user"].format(user=self))
 
-    async def trophies(self) -> List["Trophy"]:
+    async def trophies(self) -> List["asyncpraw.models.Trophy"]:
         """Return a list of the redditor's trophies.
 
         :returns: A ``list`` of :class:`~asyncpraw.models.Trophy` objects.
@@ -359,7 +354,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 class RedditorStream:
     """Provides submission and comment streams."""
 
-    def __init__(self, redditor: Redditor):
+    def __init__(self, redditor: "asyncpraw.models.Redditor"):
         """Create a RedditorStream instance.
 
         :param redditor: The redditor associated with the streams.
@@ -369,7 +364,7 @@ class RedditorStream:
 
     def comments(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Comment", None]:
+    ) -> AsyncGenerator["asyncpraw.models.Comment", None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will
@@ -391,7 +386,7 @@ class RedditorStream:
 
     def submissions(
         self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["Submission", None]:
+    ) -> AsyncGenerator["asyncpraw.models.Submission", None]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions

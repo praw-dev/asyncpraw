@@ -5,7 +5,17 @@ import os
 import re
 from itertools import islice
 from logging import getLogger
-from typing import IO, Any, AsyncGenerator, Dict, Iterable, Optional, Type, Union
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    Dict,
+    Iterable,
+    Optional,
+    Type,
+    Union,
+)
 from warnings import warn
 
 from asyncprawcore import (
@@ -38,6 +48,8 @@ try:
 except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
+if TYPE_CHECKING:  # pragma: no cover
+    from .. import asyncpraw
 
 Comment = models.Comment
 Redditor = models.Redditor
@@ -575,8 +587,15 @@ class Reddit:
         self,
         fullnames: Optional[Iterable[str]] = None,
         url: Optional[str] = None,
-        subreddits: Optional[Iterable[Union[Subreddit, str]]] = None,
-    ) -> AsyncGenerator[Union[Subreddit, Comment, Submission], None]:
+        subreddits: Optional[Iterable[Union["asyncpraw.models.Subreddit", str]]] = None,
+    ) -> AsyncGenerator[
+        Union[
+            "asyncpraw.models.Subreddit",
+            "asyncpraw.models.Comment",
+            "asyncpraw.models.Submission",
+        ],
+        None,
+    ]:
         """Fetch information about each item in ``fullnames``, ``url``, or ``subreddits``.
 
         :param fullnames: A list of fullnames for comments, submissions, and/or
@@ -797,7 +816,9 @@ class Reddit:
             data=data, json=json, method="PUT", path=path
         )
 
-    async def random_subreddit(self, nsfw: bool = False) -> Subreddit:
+    async def random_subreddit(
+        self, nsfw: bool = False
+    ) -> "asyncpraw.models.Subreddit":
         """Return a random instance of :class:`~.Subreddit`.
 
         :param nsfw: Return a random NSFW (not safe for work) subreddit
@@ -819,8 +840,8 @@ class Reddit:
         name: Optional[str] = None,
         fullname: Optional[str] = None,
         fetch: bool = False,
-    ) -> Redditor:
-        """Return an instance of :class:`~.Redditor`.
+    ) -> "asyncpraw.models.Redditor":
+        """Return an instance of :class:`.Redditor`.
 
         :param name: The name of the redditor.
         :param fullname: The fullname of the redditor, starting with ``t2_``.
@@ -892,7 +913,7 @@ class Reddit:
 
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
         self, id: Optional[str] = None, url: Optional[str] = None, lazy=False
-    ) -> Submission:
+    ) -> "asyncpraw.models.Submission":
         """Return an instance of :class:`~.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.

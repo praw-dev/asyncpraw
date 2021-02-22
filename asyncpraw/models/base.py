@@ -3,7 +3,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .. import Reddit
+    from ... import asyncpraw
 
 
 class AsyncPRAWBase:
@@ -24,7 +24,7 @@ class AsyncPRAWBase:
         argument_dict[key] = value
 
     @classmethod
-    def parse(cls, data: Dict[str, Any], reddit: "Reddit") -> Any:
+    def parse(cls, data: Dict[str, Any], reddit: "asyncpraw.Reddit") -> Any:
         """Return an instance of ``cls`` from ``data``.
 
         :param data: The structured data.
@@ -33,7 +33,7 @@ class AsyncPRAWBase:
         """
         return cls(reddit, _data=data)
 
-    def __init__(self, reddit: "Reddit", _data: Optional[Dict[str, Any]]):
+    def __init__(self, reddit: "asyncpraw.Reddit", _data: Optional[Dict[str, Any]]):
         """Initialize a PRAWModel instance.
 
         :param reddit: An instance of :class:`.Reddit`.

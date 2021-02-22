@@ -1,12 +1,14 @@
 """Provide the helper classes."""
 from json import dumps
-from typing import AsyncGenerator, List, Optional, Union
+from typing import TYPE_CHECKING, AsyncGenerator, List, Optional, Union
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase
 from .reddit.live import LiveThread
 from .reddit.multi import Multireddit, Subreddit
-from .reddit.redditor import Redditor
+
+if TYPE_CHECKING:  # pragma: no cover
+    from ... import asyncpraw
 
 
 class LiveHelper(AsyncPRAWBase):
@@ -14,7 +16,7 @@ class LiveHelper(AsyncPRAWBase):
 
     async def __call__(
         self, id: str, fetch: bool = False
-    ) -> LiveThread:  # pylint: disable=invalid-name,redefined-builtin
+    ) -> "asyncpraw.models.LiveThread":  # pylint: disable=invalid-name,redefined-builtin
         """Return a new instance of :class:`~.LiveThread`.
 
         This method is intended to be used as:
@@ -38,7 +40,9 @@ class LiveHelper(AsyncPRAWBase):
             await live_thread._fetch()
         return live_thread
 
-    def info(self, ids: List[str]) -> AsyncGenerator[LiveThread, None]:
+    def info(
+        self, ids: List[str]
+    ) -> AsyncGenerator["asyncpraw.models.LiveThread", None]:
         """Fetch information about each live thread in ``ids``.
 
         :param ids: A list of IDs for a live thread.
@@ -85,7 +89,7 @@ class LiveHelper(AsyncPRAWBase):
         description: Optional[str] = None,
         nsfw: bool = False,
         resources: str = None,
-    ) -> LiveThread:
+    ) -> "asyncpraw.models.LiveThread":
         """Create a new LiveThread.
 
         :param title: The title of the new LiveThread.
@@ -107,7 +111,7 @@ class LiveHelper(AsyncPRAWBase):
             },
         )
 
-    async def now(self) -> Optional[LiveThread]:
+    async def now(self) -> Optional["asyncpraw.models.LiveThread"]:
         """Get the currently featured live thread.
 
         :returns: The :class:`.LiveThread` object, or ``None`` if there is
@@ -127,8 +131,11 @@ class MultiredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Multireddits."""
 
     async def __call__(
-        self, redditor: Union[str, Redditor], name: str, fetch: bool = False
-    ) -> Multireddit:
+        self,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
+        name: str,
+        fetch: bool = False,
+    ) -> "asyncpraw.models.Multireddit":
         """Return an instance of :class:`~.Multireddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can do:
@@ -153,13 +160,13 @@ class MultiredditHelper(AsyncPRAWBase):
     async def create(
         self,
         display_name: str,
-        subreddits: Union[str, Subreddit],
+        subreddits: Union[str, "asyncpraw.models.Subreddit"],
         description_md: Optional[str] = None,
         icon_name: Optional[str] = None,
         key_color: Optional[str] = None,
         visibility: str = "private",
         weighting_scheme: str = "classic",
-    ) -> Multireddit:
+    ) -> "asyncpraw.models.Multireddit":
         """Create a new multireddit.
 
         :param display_name: The display name for the new multireddit.
@@ -200,7 +207,9 @@ class MultiredditHelper(AsyncPRAWBase):
 class SubredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    async def __call__(self, display_name: str, fetch: bool = False) -> Subreddit:
+    async def __call__(
+        self, display_name: str, fetch: bool = False
+    ) -> "asyncpraw.models.Subreddit":
         """Return an instance of :class:`~.Subreddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can do:
@@ -233,7 +242,7 @@ class SubredditHelper(AsyncPRAWBase):
         subreddit_type: str = "public",
         wikimode: str = "disabled",
         **other_settings: Optional[str],
-    ) -> Subreddit:
+    ) -> "asyncpraw.models.Subreddit":
         """Create a new subreddit.
 
         :param name: The name for the new subreddit.

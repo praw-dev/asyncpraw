@@ -17,13 +17,13 @@ from .redditor import Redditor
 from .subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
+    from .... import asyncpraw
 
 
 class SubmissionFlair:
     """Provide a set of functions pertaining to Submission flair."""
 
-    def __init__(self, submission: "Submission"):
+    def __init__(self, submission: "asyncpraw.models.Submission"):
         """Create a SubmissionFlair instance.
 
         :param submission: The submission associated with the flair functions.
@@ -96,7 +96,7 @@ class SubmissionModeration(ThingModerationMixin):
 
     REMOVAL_MESSAGE_API = "removal_link_message"
 
-    def __init__(self, submission: "Submission"):
+    def __init__(self, submission: "asyncpraw.models.Submission"):
         """Create a SubmissionModeration instance.
 
         :param submission: The submission to moderate.
@@ -555,7 +555,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
     def __init__(
         self,
-        reddit: "Reddit",
+        reddit: "asyncpraw.Reddit",
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         url: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
@@ -648,7 +648,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         data = {"links": self.fullname}
         await self._reddit.post(API_PATH["store_visits"], data=data)
 
-    async def hide(self, other_submissions: Optional[List["Submission"]] = None):
+    async def hide(
+        self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+    ):
         """Hide Submission.
 
         :param other_submissions: When provided, additionally
@@ -670,7 +672,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         for submissions in self._chunk(other_submissions, 50):
             await self._reddit.post(API_PATH["hide"], data={"id": submissions})
 
-    async def unhide(self, other_submissions: Optional[List["Submission"]] = None):
+    async def unhide(
+        self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+    ):
         """Unhide Submission.
 
         :param other_submissions: When provided, additionally
@@ -694,14 +698,14 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
     async def crosspost(
         self,
-        subreddit: "Subreddit",
+        subreddit: "asyncpraw.models.Subreddit",
         title: Optional[str] = None,
         send_replies: bool = True,
         flair_id: Optional[str] = None,
         flair_text: Optional[str] = None,
         nsfw: bool = False,
         spoiler: bool = False,
-    ) -> "Submission":
+    ) -> "asyncpraw.models.Submission":
         """Crosspost the submission to a subreddit.
 
         .. note::

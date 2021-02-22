@@ -10,16 +10,15 @@ from .reddit.redditor import Redditor
 from .reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .. import Reddit
-    from .reddit.multi import Multireddit  # noqa: F401
+    from ... import asyncpraw
 
 
 class User(AsyncPRAWBase):
     """The user class provides methods for the currently authenticated user."""
 
     @cachedproperty
-    def preferences(self) -> Preferences:
-        """Get an instance of :class:`.Preferences`.
+    def preferences(self) -> "asyncpraw.models.Preferences":
+        """Get an instance of :class:`~.Preferences`.
 
         The preferences can be accessed as a ``dict`` like so:
 
@@ -49,7 +48,7 @@ class User(AsyncPRAWBase):
         """
         return Preferences(self._reddit)
 
-    def __init__(self, reddit: "Reddit"):
+    def __init__(self, reddit: "asyncpraw.Reddit"):
         """Initialize a User instance.
 
         This class is intended to be interfaced with through ``reddit.user``.
@@ -57,13 +56,13 @@ class User(AsyncPRAWBase):
         """
         super().__init__(reddit, _data=None)
 
-    async def blocked(self) -> List[Redditor]:
+    async def blocked(self) -> List["asyncpraw.models.Redditor"]:
         """Return a RedditorList of blocked Redditors."""
         return await self._reddit.get(API_PATH["blocked"])
 
     def contributor_subreddits(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Subreddit]:
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Return a :class:`.ListingGenerator` of contributor subreddits.
 
         These are subreddits that the user is a contributor of.
@@ -77,8 +76,8 @@ class User(AsyncPRAWBase):
         )
 
     async def friends(
-        self, user: Optional[Union[str, Redditor]] = None
-    ) -> Union[List[Redditor], Redditor]:
+        self, user: Optional[Union[str, "asyncpraw.models.Redditor"]] = None
+    ) -> Union[List["asyncpraw.models.Redditor"], "asyncpraw.models.Redditor"]:
         """Return a RedditorList of friends or a Redditor in the friends list.
 
         :param user: Checks to see if you are friends with the Redditor. Either
@@ -95,7 +94,7 @@ class User(AsyncPRAWBase):
         )
         return await self._reddit.get(endpoint)
 
-    async def karma(self) -> Dict[Subreddit, Dict[str, int]]:
+    async def karma(self) -> Dict["asyncpraw.models.Subreddit", Dict[str, int]]:
         """Return a dictionary mapping subreddits to their karma.
 
         The returned dict contains subreddits as keys. Each subreddit key
@@ -116,7 +115,7 @@ class User(AsyncPRAWBase):
 
     async def me(
         self, use_cache: bool = True
-    ) -> Optional[Redditor]:  # pylint: disable=invalid-name
+    ) -> Optional["asyncpraw.models.Redditor"]:  # pylint: disable=invalid-name
         """Return a :class:`.Redditor` instance for the authenticated user.
 
         In :attr:`~asyncpraw.Reddit.read_only` mode, this method returns ``None``.
@@ -136,13 +135,13 @@ class User(AsyncPRAWBase):
             self._me = Redditor(self._reddit, _data=user_data)
         return self._me
 
-    async def multireddits(self) -> List["Multireddit"]:
+    async def multireddits(self) -> List["asyncpraw.models.Multireddit"]:
         """Return a list of multireddits belonging to the user."""
         return await self._reddit.get(API_PATH["my_multireddits"])
 
     def subreddits(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Subreddit]:
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Return a :class:`.ListingGenerator` of subreddits the user is subscribed to.
 
         Additional keyword arguments are passed in the initialization of

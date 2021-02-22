@@ -8,8 +8,7 @@ from .base import RedditBase
 from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import Reddit
-    from .subreddit import Subreddit
+    from .... import asyncpraw
 
 
 class WikiPageModeration:
@@ -33,7 +32,7 @@ class WikiPageModeration:
         """
         self.wikipage = wikipage
 
-    async def add(self, redditor: Redditor):
+    async def add(self, redditor: "asyncpraw.models.Redditor"):
         """Add an editor to this WikiPage.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -54,7 +53,7 @@ class WikiPageModeration:
         )
         await self.wikipage._reddit.post(url, data=data)
 
-    async def remove(self, redditor: Redditor):
+    async def remove(self, redditor: "asyncpraw.models.Redditor"):
         """Remove an editor from this WikiPage.
 
         :param redditor: A redditor name (e.g., ``"spez"``) or
@@ -133,10 +132,10 @@ class WikiPage(RedditBase):
     ``may_revise``          A ``bool`` representing whether or not the
                             authenticated user may edit the wiki page.
     ``name``                The name of the wiki page.
-    ``revision_by``         The :class:`.Redditor` who authored this
+    ``revision_by``         The :class:`~.Redditor` who authored this
                             revision of the wiki page.
     ``revision_date``       The time of this revision, in `Unix Time`_.
-    ``subreddit``           The :class:`.Subreddit` this wiki page belongs to.
+    ``subreddit``           The :class:`~.Subreddit` this wiki page belongs to.
     ======================= ===================================================
 
     .. _Unix Time: https://en.wikipedia.org/wiki/Unix_time
@@ -176,8 +175,8 @@ class WikiPage(RedditBase):
 
     def __init__(
         self,
-        reddit: "Reddit",
-        subreddit: "Subreddit",
+        reddit: "asyncpraw.Reddit",
+        subreddit: "asyncpraw.models.Subreddit",
         name: str,
         revision: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,

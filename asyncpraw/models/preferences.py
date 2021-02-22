@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Dict, Union
 from ..const import API_PATH
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .. import Reddit
+    from ... import asyncpraw
 
 
 class Preferences:
@@ -31,7 +31,7 @@ class Preferences:
         """
         return await self._reddit.get(API_PATH["preferences"])
 
-    def __init__(self, reddit: "Reddit"):
+    def __init__(self, reddit: "asyncpraw.Reddit"):
         """Create a Preferences instance.
 
         :param reddit: The Reddit instance.
