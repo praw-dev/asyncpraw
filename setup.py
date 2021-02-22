@@ -73,6 +73,11 @@ setup(
         PACKAGE_NAME: ["*.ini", "images/*.jpg"],
     },
     packages=find_packages(exclude=["tests", "tests.*", "tools", "tools.*"]),
-    url="https://asyncpraw.readthedocs.org/",
+    project_urls={
+        "Change Log": "https://asyncpraw.readthedocs.io/en/latest/package_info/change_log.html",
+        "Documentation": "https://asyncpraw.readthedocs.io/",
+        "Issue Tracker": "https://github.com/praw-dev/asyncpraw/issues",
+        "Source Code": "https://github.com/praw-dev/asyncpraw",
+    },
     version=VERSION,
 )
