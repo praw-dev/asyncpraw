@@ -617,11 +617,11 @@ class Reddit:
 
             api_parameter_name = "id" if is_using_fullnames else "sr_name"
 
-            async def generator(fullnames):
+            async def generator(names):
                 if is_using_fullnames:
-                    iterable = iter(ids_or_names)
+                    iterable = iter(names)
                 else:
-                    iterable = iter([str(item) for item in ids_or_names])
+                    iterable = iter([str(item) for item in names])
                 while True:
                     chunk = list(islice(iterable, 100))
                     if not chunk:
@@ -630,7 +630,7 @@ class Reddit:
                     for result in await self.get(API_PATH["info"], params=params):
                         yield result
 
-            return generator(fullnames)
+            return generator(ids_or_names)
 
         async def generator(url):
             params = {"url": url}
