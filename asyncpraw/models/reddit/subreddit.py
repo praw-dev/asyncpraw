@@ -2515,7 +2515,7 @@ class SubredditModeration:
 
         Settings that are documented here and aren't explicitly set by you in a
         call to :meth:`.SubredditModeration.update` should retain their current
-        value. If they do not please file a bug.
+        value. If they do not, please file a bug.
 
         """
         if not self.subreddit._fetched:
@@ -3245,7 +3245,6 @@ class Modmail:
             mod, new, notifications, or appeals, (default: all). "all" does not
             include internal, archived, or appeals conversations.
 
-
         For example:
 
         .. code-block:: python
@@ -3429,7 +3428,7 @@ class SubredditStylesheet:
 
         subreddit = await reddit.subreddit("SUBREDDIT")
         stylesheet = await subreddit.stylesheet()
-        stylesheet.stylesheet += ".test{color:blue}"
+        stylesheet.stylesheet.stylesheet += ".test{color:blue}"
         await subreddit.stylesheet.update(stylesheet.stylesheet)
 
     """
@@ -3482,7 +3481,7 @@ class SubredditStylesheet:
                 assert error_type in [
                     "BAD_CSS_NAME",
                     "IMAGE_ERROR",
-                ], "Please file a bug with Async PRAW"
+                ], "Please file a bug with Async PRAW."
                 raise RedditAPIException([[error_type, error_value, None]])
             return response
 

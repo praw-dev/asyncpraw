@@ -192,7 +192,7 @@ class Reddit:
         Additional keyword arguments will be used to initialize the
         :class:`.Config` object. This can be used to specify configuration
         settings during instantiation of the :class:`.Reddit` instance. For
-        more details please see :ref:`configuration`.
+        more details, please see :ref:`configuration`.
 
         Required settings are:
 
@@ -537,7 +537,7 @@ class Reddit:
         url: Optional[str] = None,
         lazy: bool = False,
     ):
-        """Return an instance of :class:`~.Comment` for ``id``.
+        """Return an instance of :class:`~.Comment`.
 
         :param id: The ID of the comment.
         :param url: A permalink pointing to the comment.
@@ -898,7 +898,7 @@ class Reddit:
                 # filed a bug against it.
                 raise Exception(
                     "Unexpected BadRequest without json body. Please file a bug at"
-                    " https://github.com/praw-dev/asyncpraw/issues"
+                    " https://github.com/praw-dev/asyncpraw/issues."
                 ) from exception
             if set(data) == {"error", "message"}:
                 raise
