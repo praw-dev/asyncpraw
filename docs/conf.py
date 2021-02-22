@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 
 # Do not touch these. They use the local Async PRAW over the global Async PRAW.
 sys.path.insert(0, ".")
@@ -7,14 +8,14 @@ sys.path.insert(1, "..")
 
 from asyncpraw import __version__
 
-copyright = "2021, Joel Payne"
+copyright = datetime.today().strftime("%Y, Joel Payne")
 exclude_patterns = ["_build"]
 extensions = ["sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinxcontrib_trio"]
 html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {"collapse_navigation": True}
 htmlhelp_basename = "Async PRAW"
-intersphinx_mapping = {"python": ("https://docs.python.org/3.9", None)}
+intersphinx_mapping = {"python": ("https://docs.python.org", None)}
 master_doc = "index"
 nitpick_ignore = [
     ("py:class", "IO"),
