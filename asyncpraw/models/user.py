@@ -1,7 +1,9 @@
 """Provides the User class."""
 from typing import TYPE_CHECKING, AsyncIterator, Dict, List, Optional, Union
+from warnings import warn
 
 from ..const import API_PATH
+from ..exceptions import ReadOnlyException
 from ..models import Preferences
 from ..util.cache import cachedproperty
 from .base import AsyncPRAWBase
@@ -118,18 +120,32 @@ class User(AsyncPRAWBase):
     ) -> Optional["asyncpraw.models.Redditor"]:  # pylint: disable=invalid-name
         """Return a :class:`.Redditor` instance for the authenticated user.
 
-        In :attr:`~asyncpraw.Reddit.read_only` mode, this method returns ``None``.
-
-        :param use_cache: When true, and if this function has been previously
-            called, returned the cached version (default: True).
+        :param use_cache: When true, and if this function has been previously called,
+            returned the cached version (default: True).
 
         .. note:: If you change the Reddit instance's authorization, you might
            want to refresh the cached value. Prefer using separate Reddit
            instances, however, for distinct authorizations.
 
+        .. deprecated:: 7.2
+
+            In read-only mode this method returns ``None``. In Async PRAW 8 this method
+            will raise :class:`.ReadOnlyException` when called in read-only mode. To
+            operate in Async PRAW 8 mode, set the config variable
+            ``praw8_raise_exception_on_me`` to True.
+
         """
         if self._reddit.read_only:
-            return None
+            if not self._reddit.config.custom.get("praw8_raise_exception_on_me"):
+                warn(
+                    "The `None` return value is deprecated, and will raise a "
+                    "`ReadOnlyException` beginning with Async PRAW 8. See "
+                    "documentation for forward compatibility options.",
+                    category=DeprecationWarning,
+                    stacklevel=2,
+                )
+                return None
+            raise ReadOnlyException("`user.me()` does not work in read_only mode")
         if "_me" not in self.__dict__ or not use_cache:
             user_data = await self._reddit.get(API_PATH["me"])
             self._me = Redditor(self._reddit, _data=user_data)
