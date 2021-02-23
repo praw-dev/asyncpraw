@@ -376,7 +376,7 @@ class CommentModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-           # lock a comment:
+           # Uncollapse a comment:
            comment = await reddit.comment("dkk4qjd", lazy=True)
            await comment.mod.show()
         """
