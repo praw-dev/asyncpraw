@@ -2525,40 +2525,36 @@ class SubredditModeration:
         :param allow_polls: Allow users to post polls to the subreddit.
         :param allow_post_crossposts: Allow users to crosspost submissions from
             other subreddits.
-        :param allow_top: Allow the subreddit to appear on ``r/all`` as well
-            as the default and trending lists.
-        :param allow_videos: Allow users to upload videos using the native
+        :param  allow_videos: Allow users to upload videos using the native
             image hosting.
         :param collapse_deleted_comments: Collapse deleted and removed comments
-            on comments pages by default.
+            on comments pages by default.:param comment_score_hide_mins: The number of minutes to hide comment scores.
+        :param content_options: The types of submissions users can make. One of ``any``,
+            ``link``, ``self``.
         :param crowd_control_chat_level: Controls the crowd control level for
             chat rooms. Goes from 0-3.
         :param crowd_control_level: Controls the crowd control level for
             submissions. Goes from 0-3.
         :param crowd_control_mode: Enables/disables crowd control.
-        :param comment_score_hide_mins: The number of minutes to hide comment
-            scores.
-        :param description: Shown in the sidebar of your subreddit.
+        :param default_set: Allow the subreddit to appear on ``r/all`` as well as the
+            default and trending lists.
         :param disable_contributor_requests: Specifies whether redditors may
             send automated modmail messages requesting approval as a submitter.
         :param exclude_banned_modqueue: Exclude posts by site-wide banned users
             from modqueue/unmoderated.
         :param free_form_reports: Allow users to specify custom reasons in the
             report menu.
-        :param header-title: The text seen when hovering over the snoo.
+        :param header_hover_text: The text seen when hovering over the snoo.
         :param hide_ads: Don't show ads within this subreddit. Only applies to
             Premium-user only subreddits.
         :param key_color: A 6-digit rgb hex color (e.g. ``"#AABBCC"``), used as
             a thematic color for your subreddit on mobile.
-        :param lang: A valid IETF language tag (underscore separated).
-        :param link_type: The types of submissions users can make.
-            One of ``any``, ``link``, ``self``.
+        :param language: A valid IETF language tag (underscore separated).
         :param original_content_tag_enabled: Enables the use of the
             ``original content`` label for submissions.
         :param over_18: Viewers must be over 18 years old (i.e. NSFW).
         :param public_description: Public description blurb. Appears in search
             results and on the landing page for private subreddits.
-        :param public_traffic: Make the traffic stats page public.
         :param restrict_commenting: Specifies whether approved users have the
             ability to comment.
         :param restrict_posting: Specifies whether approved users have the
@@ -2577,21 +2573,34 @@ class SubredditModeration:
         :param submit_text: Text to show on submission page.
         :param submit_text_label: Custom label for submit text post button
             (None for default).
-        :param  suggested_comment_sort: All comment threads will use this
+        :param  subreddit_type: One of ``archived``, ``employees_only``, ``gold_only``,
+            ``gold_restricted``, ``private``, ``public``, ``restricted``.
+        :paramsuggested_comment_sort: All comment threads will use this
             sorting method by default. Leave None, or choose one of
             ``confidence``, ``controversial``, ``live``, ``new``, ``old``,
             ``qa``, ``random``, ``top``.
         :param title: The title of the subreddit.
-        :param type: One of ``archived``, ``employees_only``, ``gold_only``,
-            ``gold_restricted``, ``private``, ``public``, ``restricted``.
         :param welcome_message_enabled: Enables the subreddit welcome message.
         :param welcome_message_text: The text to be used as a welcome message.
             A welcome message is sent to all new subscribers by a Reddit bot.
         :param wiki_edit_age: Account age, in days, required to edit and create
             wiki pages.
-        :param wiki_edit_karma: "asyncpraw.models.Subreddit" karma required to edit and create
+        :param wiki_edit_karma: "asyncpraw.models.Subreddit" karma required to edit and
+            create
             wiki pages.
         :param wikimode: One of  ``anyone``, ``disabled``, ``modonly``.
+
+        .. note::
+
+            Updating the subreddit sidebar on old reddit (``description``) is no longer
+            supported using this method. You can update the sidebar by editing the
+            ``"config/sidebar"`` wiki page. For example:
+
+            .. code-block:: python
+
+                subreddit = await reddit.subreddit("test")
+                sidebar = await subreddit.wiki.get_page("config/sidebar")
+                await sidebar.edit(content="new sidebar content")
 
         Additional keyword arguments can be provided to handle new settings as
         Reddit introduces them.
@@ -2603,6 +2612,15 @@ class SubredditModeration:
         """
         if not self.subreddit._fetched:
             await self.subreddit._fetch()
+        # These attributes come out using different names than they go in.
+        remap = {
+            "content_options": "link_type",
+            "default_set": "allow_top",
+            "header_hover_text": "header_title",
+            "language": "lang",
+            "subreddit_type": "type",
+        }
+        settings = {remap.get(key, key): value for key, value in settings.items()}
         settings["sr"] = self.subreddit.fullname
         return await self.subreddit._reddit.patch(
             API_PATH["update_settings"], json=settings
