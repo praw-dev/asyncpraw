@@ -122,5 +122,6 @@ instances of them bound to an attribute of one of the Async PRAW models.
    other/subredditremovalreasons
    other/subredditrules
    other/redditorstream
+   other/token_manager
    other/trophy
    other/util

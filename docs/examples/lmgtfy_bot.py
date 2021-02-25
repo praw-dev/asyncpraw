@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import asyncio
 from urllib.parse import quote_plus
 

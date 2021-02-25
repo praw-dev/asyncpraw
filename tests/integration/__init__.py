@@ -17,7 +17,6 @@ class IntegrationTest(asynctest.TestCase):
 
     def setUp(self):
         """Setup runs before all test cases."""
-        self._overrode_reddit_setup = True
         self.setup_reddit()
         self.setup_vcr()
 
@@ -37,40 +36,16 @@ class IntegrationTest(asynctest.TestCase):
         # Require tests to explicitly disable read_only mode.
         self.reddit.read_only = True
 
-        pytest.set_up_record = self.set_up_record  # used in conftest.py
-
     def setup_reddit(self):
-        self._overrode_reddit_setup = False
-
         self._session = aiohttp.ClientSession()
-        if pytest.placeholders.refresh_token != "placeholder_refresh_token":
-            self.reddit = Reddit(
-                requestor_kwargs={"session": self._session},
-                client_id=pytest.placeholders.client_id,
-                client_secret=pytest.placeholders.client_secret,
-                user_agent=pytest.placeholders.user_agent,
-                refresh_token=pytest.placeholders.refresh_token,
-            )
-        else:
-            self.reddit = Reddit(
-                requestor_kwargs={"session": self._session},
-                client_id=pytest.placeholders.client_id,
-                client_secret=pytest.placeholders.client_secret,
-                password=pytest.placeholders.password,
-                user_agent=pytest.placeholders.user_agent,
-                username=pytest.placeholders.username,
-            )
-
-    def set_up_record(self):
-        if not self._overrode_reddit_setup:
-            if pytest.placeholders.refresh_token != "placeholder_refresh_token":
-                self.reddit = Reddit(
-                    requestor_kwargs={"session": self._session},
-                    client_id=pytest.placeholders.client_id,
-                    client_secret=pytest.placeholders.client_secret,
-                    user_agent=pytest.placeholders.user_agent,
-                    refresh_token=pytest.placeholders.refresh_token,
-                )
+        self.reddit = Reddit(
+            requestor_kwargs={"session": self._session},
+            client_id=pytest.placeholders.client_id,
+            client_secret=pytest.placeholders.client_secret,
+            password=pytest.placeholders.password,
+            user_agent=pytest.placeholders.user_agent,
+            username=pytest.placeholders.username,
+        )
 
     @staticmethod
     async def async_list(async_generator):

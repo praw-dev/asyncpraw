@@ -90,3 +90,13 @@ class TestDeprecation(UnitTest):
                 excinfo.value.args[0]
                 == "Using this class as a synchronous context manager is deprecated and will be removed in the next release. Use this class as an asynchronous context manager instead."
             )
+
+    def test_reddit_refresh_token(self):
+        with pytest.raises(DeprecationWarning):
+            Reddit(
+                client_id="dummy",
+                client_secret=None,
+                redirect_uri="dummy",
+                refresh_token="dummy",
+                user_agent="dummy",
+            )
