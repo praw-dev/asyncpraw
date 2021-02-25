@@ -37,8 +37,8 @@ class BaseListingMixin(AsyncPRAWBase):
     ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for controversial submissions.
 
-        :param time_filter: Can be one of: all, day, hour, month, week, year
-            (default: all).
+        :param time_filter: Can be one of: all, day, hour, month, week, year (default:
+            all).
 
         :raises: :py:class:`.ValueError` if ``time_filter`` is invalid.
 
@@ -49,22 +49,22 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-           reddit.domain("imgur.com").controversial("week")
+            reddit.domain("imgur.com").controversial("week")
 
-           multireddit = await reddit.multireddit("samuraisam", "programming")
-           multireddit.controversial("day")
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit.controversial("day")
 
-           redditor = await reddit.redditor("spez")
-           redditor.controversial("month")
+            redditor = await reddit.redditor("spez")
+            redditor.controversial("month")
 
-           redditor = await reddit.redditor("spez")
-           redditor.comments.controversial("year")
+            redditor = await reddit.redditor("spez")
+            redditor.comments.controversial("year")
 
-           redditor = await reddit.redditor("spez")
-           redditor.submissions.controversial("all")
+            redditor = await reddit.redditor("spez")
+            redditor.submissions.controversial("all")
 
-           subreddit = await reddit.subreddit("all")
-           subreddit.controversial("hour")
+            subreddit = await reddit.subreddit("all")
+            subreddit.controversial("hour")
 
         """
         self._validate_time_filter(time_filter)
@@ -84,22 +84,22 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-           reddit.domain("imgur.com").hot()
+            reddit.domain("imgur.com").hot()
 
-           multireddit = await reddit.multireddit("samuraisam", "programming")
-           multireddit.hot()
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit.hot()
 
-           redditor = await reddit.redditor("spez")
-           redditor.hot()
+            redditor = await reddit.redditor("spez")
+            redditor.hot()
 
-           redditor = await reddit.redditor("spez")
-           redditor.comments.hot()
+            redditor = await reddit.redditor("spez")
+            redditor.comments.hot()
 
-           redditor = await reddit.redditor("spez")
-           redditor.submissions.hot()
+            redditor = await reddit.redditor("spez")
+            redditor.submissions.hot()
 
-           subreddit = await reddit.subreddit("all")
-           subreddit.hot()
+            subreddit = await reddit.subreddit("all")
+            subreddit.hot()
 
         """
         generator_kwargs.setdefault("params", {})
@@ -118,22 +118,22 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-           reddit.domain("imgur.com").new()
+            reddit.domain("imgur.com").new()
 
-           multireddit = await reddit.multireddit("samuraisam", "programming")
-           multireddit.new()
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit.new()
 
-           redditor = await reddit.redditor("spez")
-           redditor.new()
+            redditor = await reddit.redditor("spez")
+            redditor.new()
 
-           redditor = await reddit.redditor("spez")
-           redditor.comments.new()
+            redditor = await reddit.redditor("spez")
+            redditor.comments.new()
 
-           redditor = await reddit.redditor("spez")
-           redditor.submissions.new()
+            redditor = await reddit.redditor("spez")
+            redditor.submissions.new()
 
-           subreddit = await reddit.subreddit("all")
-           subreddit.new()
+            subreddit = await reddit.subreddit("all")
+            subreddit.new()
 
         """
         generator_kwargs.setdefault("params", {})
@@ -147,8 +147,8 @@ class BaseListingMixin(AsyncPRAWBase):
     ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for top submissions.
 
-        :param time_filter: Can be one of: all, day, hour, month, week, year
-            (default: all).
+        :param time_filter: Can be one of: all, day, hour, month, week, year (default:
+            all).
 
         :raises: :py:class:`.ValueError` if ``time_filter`` is invalid.
 
@@ -159,22 +159,22 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-           reddit.domain("imgur.com").top("week")
+            reddit.domain("imgur.com").top("week")
 
-           multireddit = await reddit.multireddit("samuraisam", "programming")
-           multireddit.top("day")
+            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit.top("day")
 
-           redditor = await reddit.redditor("spez")
-           redditor.top("month")
+            redditor = await reddit.redditor("spez")
+            redditor.top("month")
 
-           redditor = await reddit.redditor("spez")
-           redditor.comments.top("year")
+            redditor = await reddit.redditor("spez")
+            redditor.comments.top("year")
 
-           redditor = await reddit.redditor("spez")
-           redditor.submissions.top("all")
+            redditor = await reddit.redditor("spez")
+            redditor.submissions.top("all")
 
-           subreddit = await reddit.subreddit("all")
-           subreddit.top("hour")
+            subreddit = await reddit.subreddit("all")
+            subreddit.top("hour")
 
         """
         self._validate_time_filter(time_filter)

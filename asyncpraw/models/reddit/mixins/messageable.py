@@ -29,6 +29,7 @@ class MessageableMixin:
                 The authenticated user must be a moderator of the subreddit and have the
                 ``mail`` moderator permission.
 
+
         For example, to send a private message to ``u/spez``, try:
 
         .. code-block:: python
@@ -47,8 +48,8 @@ class MessageableMixin:
 
         .. code-block:: python
 
-           subreddit = await reddit.subreddit("test")
-           await subreddit.message("TEST", "test PM from Async PRAW")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.message("TEST", "test PM from Async PRAW")
 
         """
         data = {

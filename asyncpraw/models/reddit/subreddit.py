@@ -66,9 +66,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         subreddit = await reddit.subreddit("redditdev")
 
-    While ``r/all`` is not a real subreddit, it can still be treated like
-    one. The following outputs the titles of the 25 hottest submissions in
-    ``r/all``:
+    While ``r/all`` is not a real subreddit, it can still be treated like one. The
+    following outputs the titles of the 25 hottest submissions in ``r/all``:
 
     .. code-block:: python
 
@@ -88,8 +87,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     .. note::
 
-        These filters are ignored by certain methods, including :attr:`.comments`, :meth:`.gilded`,
-        and :meth:`.SubredditStream.comments`.
+        These filters are ignored by certain methods, including :attr:`.comments`,
+        :meth:`.gilded`, and :meth:`.SubredditStream.comments`.
 
     .. code-block:: python
 
@@ -99,40 +98,41 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     **Typical Attributes**
 
-    This table describes attributes that typically belong to objects of this
-    class. Since attributes are dynamically provided (see
-    :ref:`determine-available-attributes-of-an-object`), there is not a
-    guarantee that these attributes will always be present, nor is this list
-    necessarily complete.
+    This table describes attributes that typically belong to objects of this class.
+    Since attributes are dynamically provided (see
+    :ref:`determine-available-attributes-of-an-object`), there is not a guarantee that
+    these attributes will always be present, nor is this list necessarily complete.
 
-    ========================== ===============================================
-    Attribute                  Description
-    ========================== ===============================================
-    ``can_assign_link_flair``  Whether users can assign their own link flair.
-    ``can_assign_user_flair``  Whether users can assign their own user flair.
-    ``created_utc``            Time the subreddit was created, represented in
-                               `Unix Time`_.
-    ``description``            Subreddit description, in Markdown.
-    ``description_html``       Subreddit description, in HTML.
-    ``display_name``           Name of the subreddit.
-    ``id``                     ID of the subreddit.
-    ``name``                   Fullname of the subreddit.
-    ``over18``                 Whether the subreddit is NSFW.
-    ``public_description``     Description of the subreddit, shown in searches
-                               and on the "You must be invited to visit this
-                               community" page (if applicable).
-    ``spoilers_enabled``       Whether the spoiler tag feature is enabled.
-    ``subscribers``            Count of subscribers.
-    ``user_is_banned``         Whether the authenticated user is banned.
-    ``user_is_moderator``      Whether the authenticated user is a moderator.
-    ``user_is_subscriber``     Whether the authenticated user is subscribed.
-    ========================== ===============================================
+    ========================= ==========================================================
+    Attribute                 Description
+    ========================= ==========================================================
+    ``can_assign_link_flair`` Whether users can assign their own link flair.
+    ``can_assign_user_flair`` Whether users can assign their own user flair.
+    ``created_utc``           Time the subreddit was created, represented in `Unix
+                              Time`_.
+    ``description``           Subreddit description, in Markdown.
+    ``description_html``      Subreddit description, in HTML.
+    ``display_name``          Name of the subreddit.
+    ``id``                    ID of the subreddit.
+    ``name``                  Fullname of the subreddit.
+    ``over18``                Whether the subreddit is NSFW.
+    ``public_description``    Description of the subreddit, shown in searches and on the
+                              "You must be invited to visit this community" page (if
+                              applicable).
+    ``spoilers_enabled``      Whether the spoiler tag feature is enabled.
+    ``subscribers``           Count of subscribers.
+    ``user_is_banned``        Whether the authenticated user is banned.
+    ``user_is_moderator``     Whether the authenticated user is a moderator.
+    ``user_is_subscriber``    Whether the authenticated user is subscribed.
+    ========================= ==========================================================
 
-    .. note:: Trying to retrieve attributes of quarantined or private
-        subreddits will result in a 403 error. Trying to retrieve attributes of
-        a banned subreddit will result in a 404 error.
+    .. note::
 
-    .. _Unix Time: https://en.wikipedia.org/wiki/Unix_time
+        Trying to retrieve attributes of quarantined or private subreddits will result
+        in a 403 error. Trying to retrieve attributes of a banned subreddit will result
+        in a 404 error.
+
+    .. _unix time: https://en.wikipedia.org/wiki/Unix_time
 
     """
 
@@ -274,8 +274,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def collections(self) -> "asyncpraw.models.reddit.collections.SubredditCollections":
         r"""Provide an instance of :class:`.SubredditCollections`.
 
-        To see the permalinks of all :class:`.Collection`\ s that belong to
-        a subreddit, try:
+        To see the permalinks of all :class:`.Collection`\ s that belong to a subreddit,
+        try:
 
         .. code-block:: python
 
@@ -283,15 +283,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             async for collection in subreddit.collections:
                 print(collection.permalink)
 
-        To get a specific :class:`.Collection` by its UUID or permalink,
-        use one of the following:
+        To get a specific :class:`.Collection` by its UUID or permalink, use one of the
+        following:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT")
 
             collection = subreddit.collections("some_uuid")
-            collection = subreddit.collections(permalink="https://reddit.com/r/SUBREDDIT/collection/some_uuid")
+            collection = subreddit.collections(
+                permalink="https://reddit.com/r/SUBREDDIT/collection/some_uuid"
+            )
 
         """
         return self._subreddit_collections_class(self._reddit, self)
@@ -333,8 +335,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             subreddit = await reddit.subreddit("blah")
             emoji = await subreddit.emoji.get_emoji("emoji_name")
 
-        .. note:: Attempting to access attributes of an nonexistent emoji will
-           result in a :class:`.ClientException`.
+        .. note::
+
+            Attempting to access attributes of an nonexistent emoji will result in a
+            :class:`.ClientException`.
 
         """
         return SubredditEmoji(self)
@@ -357,9 +361,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def flair(self) -> "asyncpraw.models.reddit.subreddit.SubredditFlair":
         """Provide an instance of :class:`.SubredditFlair`.
 
-        Use this attribute for interacting with a subreddit's flair. For
-        example, to list all the flair for a subreddit which you have the
-        ``flair`` moderator permission on try:
+        Use this attribute for interacting with a subreddit's flair. For example, to
+        list all the flair for a subreddit which you have the ``flair`` moderator
+        permission on try:
 
         .. code-block:: python
 
@@ -418,9 +422,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def modmail(self) -> "asyncpraw.models.reddit.subreddit.Modmail":
         """Provide an instance of :class:`.Modmail`.
 
-        For example, to send a new modmail from the subreddit ``r/test`` to
-        user ``u/spez`` with the subject ``test`` along with a message body of
-        ``hello``:
+        For example, to send a new modmail from the subreddit ``r/test`` to user
+        ``u/spez`` with the subject ``test`` along with a message body of ``hello``:
 
         .. code-block:: python
 
@@ -449,9 +452,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def quaran(self) -> "asyncpraw.models.reddit.subreddit.SubredditQuarantine":
         """Provide an instance of :class:`.SubredditQuarantine`.
 
-        This property is named ``quaran`` because ``quarantine`` is a
-        Subreddit attribute returned by Reddit to indicate whether or not a
-        Subreddit is quarantined.
+        This property is named ``quaran`` because ``quarantine`` is a Subreddit
+        attribute returned by Reddit to indicate whether or not a Subreddit is
+        quarantined.
 
         To opt-in into a quarantined subreddit:
 
@@ -477,16 +480,15 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             async for rule in subreddit.rules:
                 print(rule)
 
-        Moderators can also add rules to the subreddit. For example, to make
-        a rule called ``"No spam"`` in the subreddit ``"NAME"``:
+        Moderators can also add rules to the subreddit. For example, to make a rule
+        called ``"No spam"`` in the subreddit ``"NAME"``:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("NAME")
             await subreddit.rules.mod.add(
-                short_name="No spam",
-                kind="all",
-                description="Do not spam. Spam bad")
+                short_name="No spam", kind="all", description="Do not spam. Spam bad"
+            )
 
         """
         return SubredditRules(self)
@@ -495,8 +497,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def stream(self) -> "asyncpraw.models.reddit.subreddit.SubredditStream":
         """Provide an instance of :class:`.SubredditStream`.
 
-        Streams can be used to indefinitely retrieve new comments made to a
-        subreddit, like:
+        Streams can be used to indefinitely retrieve new comments made to a subreddit,
+        like:
 
         .. code-block:: python
 
@@ -504,9 +506,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             async for comment in subreddit.stream.comments():
                 print(comment)
 
-        Additionally, new submissions can be retrieved via the stream. In the
-        following example all submissions are fetched via the special subreddit
-        ``r/all``:
+        Additionally, new submissions can be retrieved via the stream. In the following
+        example all submissions are fetched via the special subreddit ``r/all``:
 
         .. code-block:: python
 
@@ -593,8 +594,10 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param reddit: An instance of :class:`~.Reddit`.
         :param display_name: The name of the subreddit.
 
-        .. note:: This class should not be initialized directly. Instead obtain
-            an instance via:
+        .. note::
+
+            This class should not be initialized directly. Instead obtain an instance
+            via:
 
             .. code-block:: python
 
@@ -616,6 +619,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """Convert a Markdown string to a dict for use with the ``richtext_json`` param.
 
         :param markdown_text: A Markdown string to convert.
+
         :returns: A dict in ``richtext_json`` format.
 
         """
@@ -651,8 +655,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def _submit_media(self, data: dict, timeout: int, websocket_url: str = None):
         """Submit and return an `image`, `video`, or `videogif`.
 
-        This is a helper method for submitting posts that are not link posts or
-        self posts.
+        This is a helper method for submitting posts that are not link posts or self
+        posts.
+
         """
         if websocket_url is None:
             await self._reddit.post(API_PATH["submit"], data=data)
@@ -698,14 +703,14 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     ):
         """Upload media and return its URL and a websocket (Undocumented endpoint).
 
-        :param expected_mime_prefix: If provided, enforce that the media has a
-            mime type that starts with the provided prefix.
+        :param expected_mime_prefix: If provided, enforce that the media has a mime type
+            that starts with the provided prefix.
         :param upload_type: One of ``link``, ``gallery'', or ``selfpost``. (default:
             ``link``)
 
-        :returns: A tuple containing ``(media_url, websocket_url)`` for the
-            piece of media. The websocket URL can be used to determine when
-            media processing is finished, or it can be ignored.
+        :returns: A tuple containing ``(media_url, websocket_url)`` for the piece of
+            media. The websocket URL can be used to determine when media processing is
+            finished, or it can be ignored.
 
         """
         if media_path is None:
@@ -777,24 +782,24 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         The returned dict contains the following keys:
 
-        * ``domain_blacklist``
-        * ``body_restriction_policy``
-        * ``domain_whitelist``
-        * ``title_regexes``
-        * ``body_blacklisted_strings``
-        * ``body_required_strings``
-        * ``title_text_min_length``
-        * ``is_flair_required``
-        * ``title_text_max_length``
-        * ``body_regexes``
-        * ``link_repost_age``
-        * ``body_text_min_length``
-        * ``link_restriction_policy``
-        * ``body_text_max_length``
-        * ``title_required_strings``
-        * ``title_blacklisted_strings``
-        * ``guidelines_text``
-        * ``guidelines_display_policy``
+        - ``domain_blacklist``
+        - ``body_restriction_policy``
+        - ``domain_whitelist``
+        - ``title_regexes``
+        - ``body_blacklisted_strings``
+        - ``body_required_strings``
+        - ``title_text_min_length``
+        - ``is_flair_required``
+        - ``title_text_max_length``
+        - ``body_regexes``
+        - ``link_repost_age``
+        - ``body_text_min_length``
+        - ``link_restriction_policy``
+        - ``body_text_max_length``
+        - ``title_required_strings``
+        - ``title_blacklisted_strings``
+        - ``guidelines_text``
+        - ``guidelines_display_policy``
 
         For example, to fetch the post requirements for ``r/test``:
 
@@ -812,8 +817,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def random(self) -> Union["asyncpraw.models.Submission", None]:
         """Return a random Submission.
 
-        Returns ``None`` on subreddits that do not support the random feature.
-        One example, at the time of writing, is ``r/wallpapers``.
+        Returns ``None`` on subreddits that do not support the random feature. One
+        example, at the time of writing, is ``r/wallpapers``.
 
         For example, to get a random submission off of ``r/AskReddit``:
 
@@ -849,12 +854,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """Return a :class:`.ListingGenerator` for items that match ``query``.
 
         :param query: The query string to search for.
-        :param sort: Can be one of: relevance, hot, top, new,
-            comments. (default: relevance).
-        :param syntax: Can be one of: cloudsearch, lucene, plain
-            (default: lucene).
-        :param time_filter: Can be one of: all, day, hour, month, week, year
-            (default: all).
+        :param sort: Can be one of: relevance, hot, top, new, comments. (default:
+            relevance).
+        :param syntax: Can be one of: cloudsearch, lucene, plain (default: lucene).
+        :param time_filter: Can be one of: all, day, hour, month, week, year (default:
+            all).
 
         For more information on building a search query see:
         https://www.reddit.com/wiki/search
@@ -885,8 +889,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def sticky(self, number: int = 1) -> "asyncpraw.models.Submission":
         """Return a Submission object for a sticky of the subreddit.
 
-        :param number: Specify which sticky to return. 1 appears at the top
-            (default: 1).
+        :param number: Specify which sticky to return. 1 appears at the top (default:
+            1).
 
         :raises: ``asyncprawcore.NotFound`` if the sticky does not exist.
 
@@ -927,30 +931,29 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         r"""Add a submission to the subreddit.
 
         :param title: The title of the submission.
-        :param selftext: The Markdown formatted content for a ``text``
-            submission. Use an empty string, ``""``, to make a title-only
-            submission.
+        :param selftext: The Markdown formatted content for a ``text`` submission. Use
+            an empty string, ``""``, to make a title-only submission.
         :param url: The URL for a ``link`` submission.
         :param collection_id: The UUID of a :class:`.Collection` to add the
             newly-submitted post to.
         :param flair_id: The flair template to select (default: None).
-        :param flair_text: If the template's ``flair_text_editable`` value is
-            True, this value will set a custom text (default: None). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param resubmit: When False, an error will occur if the URL has already
-            been submitted (default: True).
-        :param send_replies: When True, messages will be sent to the submission
-            author when comments are made to the submission (default: True).
-        :param nsfw: Whether or not the submission should be marked NSFW
+        :param flair_text: If the template's ``flair_text_editable`` value is True, this
+            value will set a custom text (default: None). ``flair_id`` is required when
+            ``flair_text`` is provided.
+        :param resubmit: When False, an error will occur if the URL has already been
+            submitted (default: True).
+        :param send_replies: When True, messages will be sent to the submission author
+            when comments are made to the submission (default: True).
+        :param nsfw: Whether or not the submission should be marked NSFW (default:
+            False).
+        :param spoiler: Whether or not the submission should be marked as a spoiler
             (default: False).
-        :param spoiler: Whether or not the submission should be marked as
-            a spoiler (default: False).
-        :param discussion_type: Set to ``CHAT`` to enable live discussion
-            instead of traditional comments (default: None).
+        :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
+            traditional comments (default: None).
         :param inline_media: A dict of :class:`.InlineMedia` objects where the key is
             the placeholder name in ``selftext``.
-        :returns: A :class:`~.Submission` object for the newly created
-            submission.
+
+        :returns: A :class:`~.Submission` object for the newly created submission.
 
         Either ``selftext`` or ``url`` can be provided, but not both.
 
@@ -973,9 +976,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             image = InlineImage("path/to/image.jpg", "optional caption")
             video = InlineVideo("path/to/video.mp4", "optional caption")
             selftext = "Text with a gif {gif1} an image {image1} and a video {video1} inline"
-            media = {'gif1': gif, 'image1': image, 'video1': video}
-            subreddit = await reddit.subreddit('redditdev')
-            await subreddit.submit('title', selftext=selftext, inline_media=media)
+            media = {"gif1": gif, "image1": image, "video1": video}
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.submit("title", selftext=selftext, inline_media=media)
 
         .. note::
 
@@ -999,12 +1002,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
                 inline
 
-        .. seealso ::
+        .. seealso::
 
-           * :meth:`.submit_image` to submit images
-           * :meth:`.submit_video` to submit videos and videogifs
-           * :meth:`.submit_poll` to submit polls
-           * :meth:`.submit_gallery`. to submit more than one image in the same post
+            - :meth:`.submit_image` to submit images
+            - :meth:`.submit_video` to submit videos and videogifs
+            - :meth:`.submit_poll` to submit polls
+            - :meth:`.submit_gallery`. to submit more than one image in the same post
 
         """
         if (bool(selftext) or selftext == "") == bool(url):
@@ -1069,18 +1072,20 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
             traditional comments (default: None).
         :param flair_id: The flair template to select (default: None).
-        :param flair_text: If the template's ``flair_text_editable`` value is
-            True, this value will set a custom text (default: None). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param nsfw: Whether or not the submission should be marked NSFW
-            (default: False).
+        :param flair_text: If the template's ``flair_text_editable`` value is True, this
+            value will set a custom text (default: None). ``flair_id`` is required when
+            ``flair_text`` is provided.
+        :param nsfw: Whether or not the submission should be marked NSFW (default:
+            False).
         :param send_replies: When True, messages will be sent to the submission author
             when comments are made to the submission (default: True).
         :param spoiler: Whether or not the submission should be marked asa spoiler
             (default: False).
+
         :returns: A :class:`.Submission` object for the newly created submission.
 
-        :raises: :class:`.ClientException` if ``image_path`` in ``images`` refers to a file that is not an image.
+        :raises: :class:`.ClientException` if ``image_path`` in ``images`` refers to a
+            file that is not an image.
 
         For example, to submit an image gallery to ``r/reddit_api_test`` do:
 
@@ -1091,28 +1096,26 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             image2 = "/path/to/image2.png"
             image3 = "/path/to/image3.png"
             images = [
-               {
-                   "image_path": image
-               },
-               {
-                   "image_path": image2,
-                   "caption": "Image caption 2",
-               },
-               {
-                   "image_path": image3,
-                   "caption": "Image caption 3",
-                   "outbound_url": "https://example.com/link3"
-               }
+                {"image_path": image},
+                {
+                    "image_path": image2,
+                    "caption": "Image caption 2",
+                },
+                {
+                    "image_path": image3,
+                    "caption": "Image caption 3",
+                    "outbound_url": "https://example.com/link3",
+                },
             ]
             subreddit = await reddit.subreddit("reddit_api_test")
             await subreddit.submit_gallery(title, images)
 
-        .. seealso ::
+        .. seealso::
 
-           * :meth:`.submit` to submit url posts and selftexts
-           * :meth:`.submit_image`. to submit single images
-           * :meth:`.submit_poll` to submit polls
-           * :meth:`.submit_video`. to submit videos and videogifs
+            - :meth:`.submit` to submit url posts and selftexts
+            - :meth:`.submit_image`. to submit single images
+            - :meth:`.submit_poll` to submit polls
+            - :meth:`.submit_video`. to submit videos and videogifs
 
         """
         self._validate_gallery(images)
@@ -1180,43 +1183,43 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param collection_id: The UUID of a :class:`.Collection` to add the
             newly-submitted post to.
         :param flair_id: The flair template to select (default: None).
-        :param flair_text: If the template's ``flair_text_editable`` value is
-            True, this value will set a custom text (default: None). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param resubmit: When False, an error will occur if the URL has already
-            been submitted (default: True).
-        :param send_replies: When True, messages will be sent to the submission
-            author when comments are made to the submission (default: True).
-        :param nsfw: Whether or not the submission should be marked NSFW
+        :param flair_text: If the template's ``flair_text_editable`` value is True, this
+            value will set a custom text (default: None). ``flair_id`` is required when
+            ``flair_text`` is provided.
+        :param resubmit: When False, an error will occur if the URL has already been
+            submitted (default: True).
+        :param send_replies: When True, messages will be sent to the submission author
+            when comments are made to the submission (default: True).
+        :param nsfw: Whether or not the submission should be marked NSFW (default:
+            False).
+        :param spoiler: Whether or not the submission should be marked as a spoiler
             (default: False).
-        :param spoiler: Whether or not the submission should be marked as
-            a spoiler (default: False).
-        :param timeout: Specifies a particular timeout, in seconds. Use to
-            avoid "Websocket error" exceptions (default: 10).
-        :param without_websockets: Set to ``True`` to disable use of WebSockets
-            (see note below for an explanation). If ``True``, this method
-            doesn't return anything. (default: ``False``).
-        :param discussion_type: Set to ``CHAT`` to enable live discussion
-            instead of traditional comments (default: None).
-        :returns: A :class:`.Submission` object for the newly created
-            submission, unless ``without_websockets`` is ``True``.
+        :param timeout: Specifies a particular timeout, in seconds. Use to avoid
+            "Websocket error" exceptions (default: 10).
+        :param without_websockets: Set to ``True`` to disable use of WebSockets (see
+            note below for an explanation). If ``True``, this method doesn't return
+            anything. (default: ``False``).
+        :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
+            traditional comments (default: None).
 
-        :raises: :class:`.ClientException` if ``image_path`` refers to a file that is not an image.
+        :returns: A :class:`.Submission` object for the newly created submission, unless
+            ``without_websockets`` is ``True``.
+
+        :raises: :class:`.ClientException` if ``image_path`` refers to a file that is
+            not an image.
 
         .. note::
 
-           Reddit's API uses WebSockets to respond with the link of the
-           newly created post. If this fails, the method will raise
-           :class:`.WebSocketException`. Occasionally, the Reddit post will
-           still be created. More often, there is an error with the image
-           file. If you frequently get exceptions but successfully created
-           posts, try setting the ``timeout`` parameter to a value above 10.
+            Reddit's API uses WebSockets to respond with the link of the newly created
+            post. If this fails, the method will raise :class:`.WebSocketException`.
+            Occasionally, the Reddit post will still be created. More often, there is an
+            error with the image file. If you frequently get exceptions but successfully
+            created posts, try setting the ``timeout`` parameter to a value above 10.
 
-           To disable the use of WebSockets, set ``without_websockets=True``.
-           This will make the method return ``None``, though the post will
-           still be created. You may wish to do this if you are running your
-           program in a restricted network environment, or using a proxy
-           that doesn't support WebSockets connections.
+            To disable the use of WebSockets, set ``without_websockets=True``. This will
+            make the method return ``None``, though the post will still be created. You
+            may wish to do this if you are running your program in a restricted network
+            environment, or using a proxy that doesn't support WebSockets connections.
 
         For example, to submit an image to ``r/reddit_api_test`` do:
 
@@ -1227,11 +1230,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             subreddit = await reddit.subreddit("reddit_api_test")
             await subreddit.submit_image(title, image)
 
-        .. seealso ::
+        .. seealso::
 
-           * :meth:`.submit` to submit url posts and selftexts
-           * :meth:`.submit_video`. to submit videos and videogifs
-           * :meth:`.submit_gallery`. to submit more than one image in the same post
+            - :meth:`.submit` to submit url posts and selftexts
+            - :meth:`.submit_video`. to submit videos and videogifs
+            - :meth:`.submit_gallery`. to submit more than one image in the same post
 
         """
         data = {
@@ -1282,30 +1285,29 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """Add a poll submission to the subreddit.
 
         :param title: The title of the submission.
-        :param selftext: The Markdown formatted content for the
-            submission. Use an empty string, ``""``, to make a submission
-            with no text contents.
+        :param selftext: The Markdown formatted content for the submission. Use an empty
+            string, ``""``, to make a submission with no text contents.
         :param options: A ``list`` of two to six poll options as ``str``.
-        :param duration: The number of days the poll should accept votes,
-            as an ``int``. Valid values are between ``1`` and ``7``, inclusive.
+        :param duration: The number of days the poll should accept votes, as an ``int``.
+            Valid values are between ``1`` and ``7``, inclusive.
         :param collection_id: The UUID of a :class:`.Collection` to add the
             newly-submitted post to.
         :param flair_id: The flair template to select (default: None).
-        :param flair_text: If the template's ``flair_text_editable`` value is
-            True, this value will set a custom text (default: None). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param resubmit: When False, an error will occur if the URL has already
-            been submitted (default: True).
-        :param send_replies: When True, messages will be sent to the submission
-            author when comments are made to the submission (default: True).
-        :param nsfw: Whether or not the submission should be marked NSFW
+        :param flair_text: If the template's ``flair_text_editable`` value is True, this
+            value will set a custom text (default: None). ``flair_id`` is required when
+            ``flair_text`` is provided.
+        :param resubmit: When False, an error will occur if the URL has already been
+            submitted (default: True).
+        :param send_replies: When True, messages will be sent to the submission author
+            when comments are made to the submission (default: True).
+        :param nsfw: Whether or not the submission should be marked NSFW (default:
+            False).
+        :param spoiler: Whether or not the submission should be marked as a spoiler
             (default: False).
-        :param spoiler: Whether or not the submission should be marked as
-            a spoiler (default: False).
-        :param discussion_type: Set to ``CHAT`` to enable live discussion
-            instead of traditional comments (default: None).
-        :returns: A :class:`~.Submission` object for the newly created
-            submission.
+        :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
+            traditional comments (default: None).
+
+        :returns: A :class:`~.Submission` object for the newly created submission.
 
         For example, to submit a poll to ``r/reddit_api_test`` do:
 
@@ -1360,53 +1362,51 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         :param title: The title of the submission.
         :param video_path: The path to a video, to upload and post.
-        :param videogif: A ``bool`` value. If ``True``, the video is
-            uploaded as a videogif, which is essentially a silent video
-            (default: ``False``).
-        :param thumbnail_path: (Optional) The path to an image, to be uploaded
-            and used as the thumbnail for this video. If not provided, the
-            PRAW logo will be used as the thumbnail.
+        :param videogif: A ``bool`` value. If ``True``, the video is uploaded as a
+            videogif, which is essentially a silent video (default: ``False``).
+        :param thumbnail_path: (Optional) The path to an image, to be uploaded and used
+            as the thumbnail for this video. If not provided, the PRAW logo will be used
+            as the thumbnail.
         :param collection_id: The UUID of a :class:`.Collection` to add the
             newly-submitted post to.
         :param flair_id: The flair template to select (default: ``None``).
-        :param flair_text: If the template's ``flair_text_editable`` value is
-            True, this value will set a custom text (default: ``None``). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param resubmit: When False, an error will occur if the URL has already
-            been submitted (default: ``True``).
-        :param send_replies: When True, messages will be sent to the submission
-            author when comments are made to the submission
-            (default: ``True``).
-        :param nsfw: Whether or not the submission should be marked NSFW
+        :param flair_text: If the template's ``flair_text_editable`` value is True, this
+            value will set a custom text (default: ``None``). ``flair_id`` is required
+            when ``flair_text`` is provided.
+        :param resubmit: When False, an error will occur if the URL has already been
+            submitted (default: ``True``).
+        :param send_replies: When True, messages will be sent to the submission author
+            when comments are made to the submission (default: ``True``).
+        :param nsfw: Whether or not the submission should be marked NSFW (default:
+            False).
+        :param spoiler: Whether or not the submission should be marked as a spoiler
             (default: False).
-        :param spoiler: Whether or not the submission should be marked as
-            a spoiler (default: False).
-        :param timeout: Specifies a particular timeout, in seconds. Use to
-            avoid "Websocket error" exceptions (default: 10).
-        :param without_websockets: Set to ``True`` to disable use of WebSockets
-            (see note below for an explanation). If ``True``, this method
-            doesn't return anything. (default: ``False``).
-        :param discussion_type: Set to ``CHAT`` to enable live discussion
-            instead of traditional comments (default: None).
-        :returns: A :class:`.Submission` object for the newly created
-            submission, unless ``without_websockets`` is ``True``.
+        :param timeout: Specifies a particular timeout, in seconds. Use to avoid
+            "Websocket error" exceptions (default: 10).
+        :param without_websockets: Set to ``True`` to disable use of WebSockets (see
+            note below for an explanation). If ``True``, this method doesn't return
+            anything. (default: ``False``).
+        :param discussion_type: Set to ``CHAT`` to enable live discussion instead of
+            traditional comments (default: None).
 
-        :raises: :class:`.ClientException` if ``video_path`` refers to a file that is not a video.
+        :returns: A :class:`.Submission` object for the newly created submission, unless
+            ``without_websockets`` is ``True``.
+
+        :raises: :class:`.ClientException` if ``video_path`` refers to a file that is
+            not a video.
 
         .. note::
 
-           Reddit's API uses WebSockets to respond with the link of the
-           newly created post. If this fails, the method will raise
-           :class:`.WebSocketException`. Occasionally, the Reddit post will
-           still be created. More often, there is an error with the image
-           file. If you frequently get exceptions but successfully created
-           posts, try setting the ``timeout`` parameter to a value above 10.
+            Reddit's API uses WebSockets to respond with the link of the newly created
+            post. If this fails, the method will raise :class:`.WebSocketException`.
+            Occasionally, the Reddit post will still be created. More often, there is an
+            error with the image file. If you frequently get exceptions but successfully
+            created posts, try setting the ``timeout`` parameter to a value above 10.
 
-           To disable the use of WebSockets, set ``without_websockets=True``.
-           This will make the method return ``None``, though the post will
-           still be created. You may wish to do this if you are running your
-           program in a restricted network environment, or using a proxy
-           that doesn't support WebSockets connections.
+            To disable the use of WebSockets, set ``without_websockets=True``. This will
+            make the method return ``None``, though the post will still be created. You
+            may wish to do this if you are running your program in a restricted network
+            environment, or using a proxy that doesn't support WebSockets connections.
 
         For example, to submit a video to ``r/reddit_api_test`` do:
 
@@ -1417,11 +1417,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             subreddit = await reddit.subreddit("reddit_api_test")
             await subreddit.submit_video(title, video)
 
-        .. seealso ::
+        .. seealso::
 
-           * :meth:`.submit` to submit url posts and selftexts
-           * :meth:`.submit_image` to submit images
-           * :meth:`.submit_gallery`. to submit more than one image in the same post
+            - :meth:`.submit` to submit url posts and selftexts
+            - :meth:`.submit_image` to submit images
+            - :meth:`.submit_gallery`. to submit more than one image in the same post
 
         """
         data = {
@@ -1465,8 +1465,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     ):
         """Subscribe to the subreddit.
 
-        :param other_subreddits: When provided, also subscribe to the provided
-            list of subreddits.
+        :param other_subreddits: When provided, also subscribe to the provided list of
+            subreddits.
 
         For example, to subscribe to ``r/test``:
 
@@ -1486,20 +1486,21 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def traffic(self) -> Dict[str, List[List[int]]]:
         """Return a dictionary of the subreddit's traffic statistics.
 
-        :raises: ``asyncprawcore.NotFound`` when the traffic stats aren't
-            available to the authenticated user, that is, they are not public and
-            the authenticated user is not a moderator of the subreddit.
+        :raises: ``asyncprawcore.NotFound`` when the traffic stats aren't available to
+            the authenticated user, that is, they are not public and the authenticated
+            user is not a moderator of the subreddit.
 
-        The traffic method returns a dict with three keys. The keys are
-        ``day``, ``hour`` and ``month``. Each key contains a list of lists with
-        3 or 4 values. The first value is a timestamp indicating the start of
-        the category (start of the day for the ``day`` key, start of the hour
-        for the ``hour`` key, etc.). The second, third, and fourth values
-        indicate the unique pageviews, total pageviews, and subscribers,
-        respectively.
+        The traffic method returns a dict with three keys. The keys are ``day``,
+        ``hour`` and ``month``. Each key contains a list of lists with 3 or 4 values.
+        The first value is a timestamp indicating the start of the category (start of
+        the day for the ``day`` key, start of the hour for the ``hour`` key, etc.). The
+        second, third, and fourth values indicate the unique pageviews, total pageviews,
+        and subscribers, respectively.
 
-        .. note:: The ``hour`` key does not contain subscribers, and therefore
-            each sub-list contains three values.
+        .. note::
+
+            The ``hour`` key does not contain subscribers, and therefore each sub-list
+            contains three values.
 
         For example, to get the traffic stats for ``r/test``:
 
@@ -1516,8 +1517,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     ):
         """Unsubscribe from the subreddit.
 
-        :param other_subreddits: When provided, also unsubscribe from
-            the provided list of subreddits.
+        :param other_subreddits: When provided, also unsubscribe from the provided list
+            of subreddits.
 
         To unsubscribe from ``r/test``:
 
@@ -1540,8 +1541,8 @@ WidgetEncoder._subreddit_class = Subreddit
 class SubredditFilters:
     """Provide functions to interact with the special Subreddit's filters.
 
-    Members of this class should be utilized via ``Subreddit.filters``. For
-    example, to add a filter, run:
+    Members of this class should be utilized via ``Subreddit.filters``. For example, to
+    add a filter, run:
 
     .. code-block:: python
 
@@ -1555,8 +1556,8 @@ class SubredditFilters:
 
         :param subreddit: The special subreddit whose filters to work with.
 
-        As of this writing filters can only be used with the special subreddits
-        ``all`` and ``mod``.
+        As of this writing filters can only be used with the special subreddits ``all``
+        and ``mod``.
 
         """
         self.subreddit = subreddit
@@ -1572,7 +1573,7 @@ class SubredditFilters:
 
             subreddit = await reddit.subreddit("NAME")
             async for subreddit in subreddit.filters:
-               ...
+                ...
 
         """
         user = await self.subreddit._reddit.user.me()
@@ -1589,18 +1590,17 @@ class SubredditFilters:
 
         :param subreddit: The subreddit to add to the filter list.
 
-        Items from subreddits added to the filtered list will no longer be
-        included when obtaining listings for ``r/all``.
+        Items from subreddits added to the filtered list will no longer be included when
+        obtaining listings for ``r/all``.
 
-        Alternatively, you can filter a subreddit temporarily from a special
-        listing in a manner like so:
+        Alternatively, you can filter a subreddit temporarily from a special listing in
+        a manner like so:
 
         .. code-block:: python
 
             await reddit.subreddit("all-redditdev-learnpython")
 
-        :raises: ``asyncprawcore.NotFound`` when calling on a non-special
-            subreddit.
+        :raises: ``asyncprawcore.NotFound`` when calling on a non-special subreddit.
 
         """
         user = await self.subreddit._reddit.user.me()
@@ -1618,8 +1618,7 @@ class SubredditFilters:
 
         :param subreddit: The subreddit to remove from the filter list.
 
-        :raises: ``asyncprawcore.NotFound`` when calling on a non-special
-            subreddit.
+        :raises: ``asyncprawcore.NotFound`` when calling on a non-special subreddit.
 
         """
         user = await self.subreddit._reddit.user.me()
@@ -1640,9 +1639,9 @@ class SubredditFlair:
     ) -> "asyncpraw.models.reddit.subreddit.SubredditLinkFlairTemplates":
         """Provide an instance of :class:`.SubredditLinkFlairTemplates`.
 
-        Use this attribute for interacting with a subreddit's link flair
-        templates. For example, to list all the link flair templates for a
-        subreddit which you have the ``flair`` moderator permission on try:
+        Use this attribute for interacting with a subreddit's link flair templates. For
+        example, to list all the link flair templates for a subreddit which you have the
+        ``flair`` moderator permission on try:
 
         .. code-block:: python
 
@@ -1659,9 +1658,9 @@ class SubredditFlair:
     ) -> "asyncpraw.models.reddit.subreddit.SubredditRedditorFlairTemplates":
         """Provide an instance of :class:`.SubredditRedditorFlairTemplates`.
 
-        Use this attribute for interacting with a subreddit's flair
-        templates. For example, to list all the flair templates for a subreddit
-        which you have the ``flair`` moderator permission on try:
+        Use this attribute for interacting with a subreddit's flair templates. For
+        example, to list all the flair templates for a subreddit which you have the
+        ``flair`` moderator permission on try:
 
         .. code-block:: python
 
@@ -1679,8 +1678,8 @@ class SubredditFlair:
     ) -> Iterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors and their flairs.
 
-        :param redditor: When provided, yield at most a single
-            :class:`~.Redditor` instance (default: None).
+        :param redditor: When provided, yield at most a single :class:`~.Redditor`
+            instance (default: None).
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -1717,17 +1716,15 @@ class SubredditFlair:
     ):
         """Update the subreddit's flair configuration.
 
-        :param position: One of left, right, or False to disable (default:
-            right).
-        :param self_assign: (boolean) Permit self assignment of user flair
-            (default: False).
-        :param link_position: One of left, right, or False to disable
-            (default: left).
+        :param position: One of left, right, or False to disable (default: right).
+        :param self_assign: (boolean) Permit self assignment of user flair (default:
+            False).
+        :param link_position: One of left, right, or False to disable (default: left).
         :param link_self_assign: (boolean) Permit self assignment of link flair
             (default: False).
 
-        Additional keyword arguments can be provided to handle new settings as
-        Reddit introduces them.
+        Additional keyword arguments can be provided to handle new settings as Reddit
+        introduces them.
 
         """
         data = {
@@ -1744,13 +1741,13 @@ class SubredditFlair:
     async def delete(self, redditor: Union["asyncpraw.models.Redditor", str]):
         """Delete flair for a Redditor.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
 
         .. seealso::
 
-            :meth:`~asyncpraw.models.reddit.subreddit.SubredditFlair.update` to
-            delete the flair of many Redditors at once.
+            :meth:`~asyncpraw.models.reddit.subreddit.SubredditFlair.update` to delete
+            the flair of many Redditors at once.
 
         """
         url = API_PATH["deleteflair"].format(subreddit=self.subreddit)
@@ -1759,8 +1756,7 @@ class SubredditFlair:
     async def delete_all(self) -> List[Dict[str, Union[str, bool, Dict[str, str]]]]:
         """Delete all Redditor flair in the Subreddit.
 
-        :returns: List of dictionaries indicating the success or failure of
-            each delete.
+        :returns: List of dictionaries indicating the success or failure of each delete.
 
         """
         all_flairs = [x["user"] async for x in self()]
@@ -1777,15 +1773,15 @@ class SubredditFlair:
 
         :param redditor: (Required) A redditor name (e.g., ``"spez"``) or
             :class:`~.Redditor` instance.
-        :param text: The flair text to associate with the Redditor or
-            Submission (default: "").
-        :param css_class: The css class to associate with the flair html
-            (default: ""). Use either this or ``flair_template_id``.
-        :param flair_template_id: The ID of the flair template to be used
-            (default: ``None``). Use either this or ``css_class``.
+        :param text: The flair text to associate with the Redditor or Submission
+            (default: "").
+        :param css_class: The css class to associate with the flair html (default: "").
+            Use either this or ``flair_template_id``.
+        :param flair_template_id: The ID of the flair template to be used (default:
+            ``None``). Use either this or ``css_class``.
 
-        This method can only be used by an authenticated user who is a
-        moderator of the associated Subreddit.
+        This method can only be used by an authenticated user who is a moderator of the
+        associated Subreddit.
 
         For example:
 
@@ -1826,24 +1822,22 @@ class SubredditFlair:
     ) -> List[Dict[str, Union[str, bool, Dict[str, str]]]]:
         """Set or clear the flair for many Redditors at once.
 
-        :param flair_list: Each item in this list should be either: the name of
-            a Redditor, an instance of :class:`.Redditor`, or a dictionary
-            mapping keys ``user``, ``flair_text``, and ``flair_css_class`` to
-            their respective values. The ``user`` key should map to a Redditor,
-            as described above. When a dictionary isn't provided, or the
-            dictionary is missing one of ``flair_text``, or ``flair_css_class``
-            attributes the default values will come from the the following
-            arguments.
-
+        :param flair_list: Each item in this list should be either: the name of a
+            Redditor, an instance of :class:`.Redditor`, or a dictionary mapping keys
+            ``user``, ``flair_text``, and ``flair_css_class`` to their respective
+            values. The ``user`` key should map to a Redditor, as described above. When
+            a dictionary isn't provided, or the dictionary is missing one of
+            ``flair_text``, or ``flair_css_class`` attributes the default values will
+            come from the the following arguments.
         :param text: The flair text to use when not explicitly provided in
             ``flair_list`` (default: "").
         :param css_class: The css class to use when not explicitly provided in
             ``flair_list`` (default: "").
-        :returns: List of dictionaries indicating the success or failure of
-            each update.
 
-        For example, to clear the flair text, and set the ``praw`` flair css
-        class on a few users try:
+        :returns: List of dictionaries indicating the success or failure of each update.
+
+        For example, to clear the flair text, and set the ``praw`` flair css class on a
+        few users try:
 
         .. code-block:: python
 
@@ -1887,21 +1881,22 @@ class SubredditFlairTemplates:
 
         :param subreddit: The subreddit whose flair templates to work with.
 
-        .. note:: This class should not be initialized directly. Instead obtain
-            an instance via:
+        .. note::
+
+            This class should not be initialized directly. Instead obtain an instance
+            via:
 
             .. code-block:: python
 
-               subreddit = await reddit.subreddit("subreddit_name")
-               subreddit.flair.templates
+                subreddit = await reddit.subreddit("subreddit_name")
+                subreddit.flair.templates
 
             or via
 
             .. code-block:: python
 
-               subreddit = await reddit.subreddit("subreddit_name")
-               subreddit.flair.link_templates
-
+                subreddit = await reddit.subreddit("subreddit_name")
+                subreddit.flair.link_templates
 
         """
         self.subreddit = subreddit
@@ -1972,30 +1967,30 @@ class SubredditFlairTemplates:
     ):
         """Update the flair template provided by ``template_id``.
 
-        :param template_id: The flair template to update. If not valid then
-            an exception will be thrown.
+        :param template_id: The flair template to update. If not valid then an exception
+            will be thrown.
         :param text: The flair template's new text (required).
         :param css_class: The flair template's new css_class (default: "").
-        :param text_editable: (boolean) Indicate if the flair text can be
-            modified for each Redditor that sets it (default: False).
-        :param background_color: The flair template's new background color,
-            as a hex color.
-        :param text_color: The flair template's new text color, either
-            ``"light"`` or ``"dark"``.
-        :param mod_only: (boolean) Indicate if the flair can only be used by
-            moderators.
-        :param allowable_content: If specified, most be one of ``"all"``,
-            ``"emoji"``, or ``"text"`` to restrict content to that type.
-            If set to ``"emoji"`` then the ``"text"`` param must be a
-            valid emoji string, for example, ``":snoo:"``.
-        :param max_emojis: (int) Maximum emojis in the flair
-            (Reddit defaults this value to 10).
-        :param fetch: Whether or not Async PRAW will fetch existing information on
-            the existing flair before updating (Default: True).
+        :param text_editable: (boolean) Indicate if the flair text can be modified for
+            each Redditor that sets it (default: False).
+        :param background_color: The flair template's new background color, as a hex
+            color.
+        :param text_color: The flair template's new text color, either ``"light"`` or
+            ``"dark"``.
+        :param mod_only: (boolean) Indicate if the flair can only be used by moderators.
+        :param allowable_content: If specified, most be one of ``"all"``, ``"emoji"``,
+            or ``"text"`` to restrict content to that type. If set to ``"emoji"`` then
+            the ``"text"`` param must be a valid emoji string, for example,
+            ``":snoo:"``.
+        :param max_emojis: (int) Maximum emojis in the flair (Reddit defaults this value
+            to 10).
+        :param fetch: Whether or not Async PRAW will fetch existing information on the
+            existing flair before updating (Default: True).
 
-        .. warning:: If parameter ``fetch`` is set to ``False``, all parameters
-             not provided will be reset to default (``None`` or ``False``)
-             values.
+        .. warning::
+
+            If parameter ``fetch`` is set to ``False``, all parameters not provided will
+            be reset to default (``None`` or ``False``) values.
 
         For example, to make a user flair template text_editable, try:
 
@@ -2003,9 +1998,7 @@ class SubredditFlairTemplates:
 
             async for template_info in subreddit.flair.templates:
                 await subreddit.flair.templates.update(
-                    template_info["id"],
-                    template_info["flair_text"],
-                    text_editable=True
+                    template_info["id"], template_info["flair_text"], text_editable=True
                 )
                 break
 
@@ -2074,20 +2067,19 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         :param text: The flair template's text (required).
         :param css_class: The flair template's css_class (default: "").
-        :param text_editable: (boolean) Indicate if the flair text can be
-            modified for each Redditor that sets it (default: False).
-        :param background_color: The flair template's new background color,
-            as a hex color.
-        :param text_color: The flair template's new text color, either
-            ``"light"`` or ``"dark"``.
-        :param mod_only: (boolean) Indicate if the flair can only be used by
-            moderators.
-        :param allowable_content: If specified, most be one of ``"all"``,
-            ``"emoji"``, or ``"text"`` to restrict content to that type.
-            If set to ``"emoji"`` then the ``"text"`` param must be a
-            valid emoji string, for example, ``":snoo:"``.
-        :param max_emojis: (int) Maximum emojis in the flair
-            (Reddit defaults this value to 10).
+        :param text_editable: (boolean) Indicate if the flair text can be modified for
+            each Redditor that sets it (default: False).
+        :param background_color: The flair template's new background color, as a hex
+            color.
+        :param text_color: The flair template's new text color, either ``"light"`` or
+            ``"dark"``.
+        :param mod_only: (boolean) Indicate if the flair can only be used by moderators.
+        :param allowable_content: If specified, most be one of ``"all"``, ``"emoji"``,
+            or ``"text"`` to restrict content to that type. If set to ``"emoji"`` then
+            the ``"text"`` param must be a valid emoji string, for example,
+            ``":snoo:"``.
+        :param max_emojis: (int) Maximum emojis in the flair (Reddit defaults this value
+            to 10).
 
         For example, to add an editable Redditor flair try:
 
@@ -2160,28 +2152,26 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         :param text: The flair template's text (required).
         :param css_class: The flair template's css_class (default: "").
-        :param text_editable: (boolean) Indicate if the flair text can be
-            modified for each Redditor that sets it (default: False).
-        :param background_color: The flair template's new background color,
-            as a hex color.
-        :param text_color: The flair template's new text color, either
-            ``"light"`` or ``"dark"``.
-        :param mod_only: (boolean) Indicate if the flair can only be used by
-            moderators.
-        :param allowable_content: If specified, most be one of ``"all"``,
-            ``"emoji"``, or ``"text"`` to restrict content to that type.
-            If set to ``"emoji"`` then the ``"text"`` param must be a
-            valid emoji string, for example, ``":snoo:"``.
-        :param max_emojis: (int) Maximum emojis in the flair
-            (Reddit defaults this value to 10).
+        :param text_editable: (boolean) Indicate if the flair text can be modified for
+            each Redditor that sets it (default: False).
+        :param background_color: The flair template's new background color, as a hex
+            color.
+        :param text_color: The flair template's new text color, either ``"light"`` or
+            ``"dark"``.
+        :param mod_only: (boolean) Indicate if the flair can only be used by moderators.
+        :param allowable_content: If specified, most be one of ``"all"``, ``"emoji"``,
+            or ``"text"`` to restrict content to that type. If set to ``"emoji"`` then
+            the ``"text"`` param must be a valid emoji string, for example,
+            ``":snoo:"``.
+        :param max_emojis: (int) Maximum emojis in the flair (Reddit defaults this value
+            to 10).
 
         For example, to add an editable link flair try:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("NAME")
-            await subreddit.flair.link_templates.add(css_class="praw",
-            text_editable=True)
+            await subreddit.flair.link_templates.add(css_class="praw", text_editable=True)
 
         """
         await self._add(
@@ -2217,8 +2207,8 @@ class SubredditModeration:
 
     .. code-block:: python
 
-         subreddit = await reddit.subreddit("test")
-         await subreddit.mod.accept_invite()
+        subreddit = await reddit.subreddit("test")
+        await subreddit.mod.accept_invite()
 
     """
 
@@ -2248,8 +2238,8 @@ class SubredditModeration:
     ) -> Iterator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]]:
         """Return a :class:`.ListingGenerator` for edited comments and submissions.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -2278,7 +2268,9 @@ class SubredditModeration:
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
 
-        .. seealso:: :meth:`~.unread` for unread moderator messages.
+        .. seealso::
+
+            :meth:`~.unread` for unread moderator messages.
 
         To print the last 5 moderator mail messages and their replies, try:
 
@@ -2305,10 +2297,9 @@ class SubredditModeration:
     ) -> Iterator["asyncpraw.models.ModAction"]:
         """Return a :class:`.ListingGenerator` for moderator log entries.
 
-        :param action: If given, only return log entries for the specified
-            action.
-        :param mod: If given, only return log entries for actions made by the
-            passed in Redditor.
+        :param action: If given, only return log entries for the specified action.
+        :param mod: If given, only return log entries for actions made by the passed in
+            Redditor.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -2335,8 +2326,8 @@ class SubredditModeration:
     ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for modqueue items.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -2377,9 +2368,9 @@ class SubredditModeration:
     def removal_reasons(self) -> SubredditRemovalReasons:
         """Provide an instance of :class:`.SubredditRemovalReasons`.
 
-        Use this attribute for interacting with a subreddit's removal reasons.
-        For example, to list all the removal reasons for a subreddit which you
-        have the ``posts`` moderator permission on, try:
+        Use this attribute for interacting with a subreddit's removal reasons. For
+        example, to list all the removal reasons for a subreddit which you have the
+        ``posts`` moderator permission on, try:
 
         .. code-block:: python
 
@@ -2394,8 +2385,10 @@ class SubredditModeration:
             subreddit = await reddit.subreddit("NAME")
             await subreddit.mod.removal_reasons.get_reason("reason_id")
 
-        .. note:: Attempting to access attributes of an nonexistent removal
-           reason will result in a :class:`.ClientException`.
+        .. note::
+
+            Attempting to access attributes of an nonexistent removal reason will result
+            in a :class:`.ClientException`.
 
         """
         return SubredditRemovalReasons(self.subreddit)
@@ -2405,8 +2398,8 @@ class SubredditModeration:
     ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for reported comments and submissions.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -2439,8 +2432,8 @@ class SubredditModeration:
     ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
         """Return a :class:`.ListingGenerator` for spam comments and submissions.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -2492,7 +2485,9 @@ class SubredditModeration:
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
 
-        .. seealso:: :meth:`inbox` for all messages.
+        .. seealso::
+
+            :meth:`inbox` for all messages.
 
         To print the mail in the unread modmail queue try:
 
@@ -2516,79 +2511,77 @@ class SubredditModeration:
 
         See https://www.reddit.com/dev/api#POST_api_site_admin for the full list.
 
-        :param all_original_content: Mandate all submissions to be original
-            content only.
-        :param allow_chat_post_creation: Allow users to create chat
-            submissions.
-        :param allow_images: Allow users to upload images using the native
-            image hosting.
+        :param all_original_content: Mandate all submissions to be original content
+            only.
+        :param allow_chat_post_creation: Allow users to create chat submissions.
+        :param allow_images: Allow users to upload images using the native image
+            hosting.
         :param allow_polls: Allow users to post polls to the subreddit.
-        :param allow_post_crossposts: Allow users to crosspost submissions from
-            other subreddits.
-        :param  allow_videos: Allow users to upload videos using the native
-            image hosting.
-        :param collapse_deleted_comments: Collapse deleted and removed comments
-            on comments pages by default.:param comment_score_hide_mins: The number of minutes to hide comment scores.
+        :param allow_post_crossposts: Allow users to crosspost submissions from other
+            subreddits.
+        :param  allow_videos: Allow users to upload videos using the native image
+            hosting.
+        :param collapse_deleted_comments: Collapse deleted and removed comments on
+            comments pages by default.
+        :param comment_score_hide_mins: The number of minutes to hide comment scores.
         :param content_options: The types of submissions users can make. One of ``any``,
             ``link``, ``self``.
-        :param crowd_control_chat_level: Controls the crowd control level for
-            chat rooms. Goes from 0-3.
-        :param crowd_control_level: Controls the crowd control level for
-            submissions. Goes from 0-3.
+        :param crowd_control_chat_level: Controls the crowd control level for chat
+            rooms. Goes from 0-3.
+        :param crowd_control_level: Controls the crowd control level for submissions.
+            Goes from 0-3.
         :param crowd_control_mode: Enables/disables crowd control.
         :param default_set: Allow the subreddit to appear on ``r/all`` as well as the
             default and trending lists.
-        :param disable_contributor_requests: Specifies whether redditors may
-            send automated modmail messages requesting approval as a submitter.
-        :param exclude_banned_modqueue: Exclude posts by site-wide banned users
-            from modqueue/unmoderated.
-        :param free_form_reports: Allow users to specify custom reasons in the
-            report menu.
+        :param disable_contributor_requests: Specifies whether redditors may send
+            automated modmail messages requesting approval as a submitter.
+        :param exclude_banned_modqueue: Exclude posts by site-wide banned users from
+            modqueue/unmoderated.
+        :param free_form_reports: Allow users to specify custom reasons in the report
+            menu.
         :param header_hover_text: The text seen when hovering over the snoo.
         :param hide_ads: Don't show ads within this subreddit. Only applies to
             Premium-user only subreddits.
-        :param key_color: A 6-digit rgb hex color (e.g. ``"#AABBCC"``), used as
-            a thematic color for your subreddit on mobile.
+        :param key_color: A 6-digit rgb hex color (e.g. ``"#AABBCC"``), used as a
+            thematic color for your subreddit on mobile.
         :param language: A valid IETF language tag (underscore separated).
-        :param original_content_tag_enabled: Enables the use of the
-            ``original content`` label for submissions.
+        :param original_content_tag_enabled: Enables the use of the ``original content``
+            label for submissions.
         :param over_18: Viewers must be over 18 years old (i.e. NSFW).
-        :param public_description: Public description blurb. Appears in search
-            results and on the landing page for private subreddits.
-        :param restrict_commenting: Specifies whether approved users have the
-            ability to comment.
-        :param restrict_posting: Specifies whether approved users have the
-            ability to submit posts.
+        :param public_description: Public description blurb. Appears in search results
+            and on the landing page for private subreddits.
+        :param restrict_commenting: Specifies whether approved users have the ability to
+            comment.
+        :param restrict_posting: Specifies whether approved users have the ability to
+            submit posts.
         :param show_media: Show thumbnails on submissions.
         :param show_media_preview: Expand media previews on comments pages.
-        :param spam_comments: Spam filter strength for comments.
-            One of ``all``, ``low``, ``high``.
-        :param spam_links: Spam filter strength for links.
-            One of ``all``, ``low``, ``high``.
-        :param spam_selfposts: Spam filter strength for selfposts.
-            One of ``all``, ``low``, ``high``.
+        :param spam_comments: Spam filter strength for comments. One of ``all``,
+            ``low``, ``high``.
+        :param spam_links: Spam filter strength for links. One of ``all``, ``low``,
+            ``high``.
+        :param spam_selfposts: Spam filter strength for selfposts. One of ``all``,
+            ``low``, ``high``.
         :param spoilers_enabled: Enable marking posts as containing spoilers.
-        :param submit_link_label: Custom label for submit link button
-            (None for default).
+        :param submit_link_label: Custom label for submit link button (None for
+            default).
         :param submit_text: Text to show on submission page.
-        :param submit_text_label: Custom label for submit text post button
-            (None for default).
+        :param submit_text_label: Custom label for submit text post button (None for
+            default).
         :param  subreddit_type: One of ``archived``, ``employees_only``, ``gold_only``,
             ``gold_restricted``, ``private``, ``public``, ``restricted``.
-        :paramsuggested_comment_sort: All comment threads will use this
-            sorting method by default. Leave None, or choose one of
-            ``confidence``, ``controversial``, ``live``, ``new``, ``old``,
-            ``qa``, ``random``, ``top``.
+        :param suggested_comment_sort: All comment threads will use this sorting method
+            by default. Leave None, or choose one of ``confidence``, ``controversial``,
+            ``live``, ``new``, ``old``, ``qa``, ``random``, ``top``.
         :param title: The title of the subreddit.
         :param welcome_message_enabled: Enables the subreddit welcome message.
-        :param welcome_message_text: The text to be used as a welcome message.
-            A welcome message is sent to all new subscribers by a Reddit bot.
-        :param wiki_edit_age: Account age, in days, required to edit and create
-            wiki pages.
+        :param welcome_message_text: The text to be used as a welcome message. A welcome
+            message is sent to all new subscribers by a Reddit bot.
+        :param wiki_edit_age: Account age, in days, required to edit and create wiki
+            pages.
         :param wiki_edit_karma: "asyncpraw.models.Subreddit" karma required to edit and
-            create
-            wiki pages.
-        :param wikimode: One of  ``anyone``, ``disabled``, ``modonly``.
+            create wiki pages.
+        :param wikimode: One of ``anyone``, ``disabled``, ``modonly``.
 
         .. note::
 
@@ -2602,12 +2595,12 @@ class SubredditModeration:
                 sidebar = await subreddit.wiki.get_page("config/sidebar")
                 await sidebar.edit(content="new sidebar content")
 
-        Additional keyword arguments can be provided to handle new settings as
-        Reddit introduces them.
+        Additional keyword arguments can be provided to handle new settings as Reddit
+        introduces them.
 
-        Settings that are documented here and aren't explicitly set by you in a
-        call to :meth:`.SubredditModeration.update` should retain their current
-        value. If they do not, please file a bug.
+        Settings that are documented here and aren't explicitly set by you in a call to
+        :meth:`.SubredditModeration.update` should retain their current value. If they
+        do not, please file a bug.
 
         """
         if not self.subreddit._fetched:
@@ -2645,13 +2638,13 @@ class SubredditModerationStream:
     ]:
         """Yield edited comments and submissions as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        For example, to retrieve all new edited submissions/comments made
-        to all moderated subreddits, try:
+        For example, to retrieve all new edited submissions/comments made to all
+        moderated subreddits, try:
 
         .. code-block:: python
 
@@ -2670,13 +2663,12 @@ class SubredditModerationStream:
     ) -> AsyncGenerator["asyncpraw.models.ModAction", None]:
         """Yield moderator log entries as they become available.
 
-        :param action: If given, only return log entries for the specified
-            action.
-        :param mod: If given, only return log entries for actions made by the
-            passed in Redditor.
+        :param action: If given, only return log entries for the specified action.
+        :param mod: If given, only return log entries for actions made by the passed in
+            Redditor.
 
-        For example, to retrieve all new mod actions made to all moderated
-        subreddits, try:
+        For example, to retrieve all new mod actions made to all moderated subreddits,
+        try:
 
         .. code-block:: python
 
@@ -2702,10 +2694,9 @@ class SubredditModerationStream:
     ) -> AsyncGenerator[ModmailConversation, None]:
         """Yield new-modmail conversations as they become available.
 
-        :param other_subreddits: A list of :class:`.Subreddit` instances for
-            which to fetch conversations (default: None).
-        :param sort: Can be one of: mod, recent, unread, user
-            (default: recent).
+        :param other_subreddits: A list of :class:`.Subreddit` instances for which to
+            fetch conversations (default: None).
+        :param sort: Can be one of: mod, recent, unread, user (default: recent).
         :param state: Can be one of: all, appeals, archived, default, highlighted,
             inbox, inprogress, mod, new, notifications (default: all). "all" does not
             include mod or archived conversations. "inbox" does not include appeals
@@ -2741,8 +2732,8 @@ class SubredditModerationStream:
     ]:
         """Yield comments/submissions in the modqueue as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
@@ -2766,8 +2757,8 @@ class SubredditModerationStream:
     ]:
         """Yield reported comments and submissions as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
@@ -2789,8 +2780,8 @@ class SubredditModerationStream:
     ]:
         """Yield spam comments and submissions as they become available.
 
-        :param only: If specified, one of ``"comments"``, or ``"submissions"``
-            to yield only results of that type.
+        :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
+            only results of that type.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
@@ -2830,7 +2821,9 @@ class SubredditModerationStream:
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. seealso:: :meth:`~.inbox` for all messages.
+        .. seealso::
+
+            :meth:`~.inbox` for all messages.
 
         To print new mail in the unread modmail queue try:
 
@@ -2912,8 +2905,8 @@ class SubredditQuarantine:
 class SubredditRelationship:
     """Represents a relationship between a redditor and subreddit.
 
-    Instances of this class can be iterated through in order to discover the
-    Redditors that make up the relationship.
+    Instances of this class can be iterated through in order to discover the Redditors
+    that make up the relationship.
 
     For example, banned users of a subreddit can be iterated through like so:
 
@@ -2932,10 +2925,9 @@ class SubredditRelationship:
     ) -> Iterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors in the relationship.
 
-        :param redditor: When provided, yield at most a single
-            :class:`~.Redditor` instance. This is useful to confirm if a
-            relationship exists, or to fetch the metadata associated with a
-            particular relationship (default: None).
+        :param redditor: When provided, yield at most a single :class:`~.Redditor`
+            instance. This is useful to confirm if a relationship exists, or to fetch
+            the metadata associated with a particular relationship (default: None).
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
@@ -2960,8 +2952,8 @@ class SubredditRelationship:
     ):
         """Add ``redditor`` to this relationship.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
 
         """
         data = {"name": str(redditor), "type": self.relationship}
@@ -2972,8 +2964,8 @@ class SubredditRelationship:
     async def remove(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove ``redditor`` from this relationship.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
 
         """
         data = {"name": str(redditor), "type": self.relationship}
@@ -3051,13 +3043,15 @@ class ModeratorRelationship(SubredditRelationship):
         """Return a list of Redditors who are moderators.
 
         :param redditor: When provided, return a list containing at most one
-            :class:`~.Redditor` instance. This is useful to confirm if a
-            relationship exists, or to fetch the metadata associated with a
-            particular relationship (default: None).
+            :class:`~.Redditor` instance. This is useful to confirm if a relationship
+            exists, or to fetch the metadata associated with a particular relationship
+            (default: None).
 
-        .. note:: Unlike other relationship callables, this relationship is not
-                  paginated. Thus it simply returns the full list, rather than
-                  an iterator for the results.
+        .. note::
+
+            Unlike other relationship callables, this relationship is not paginated.
+            Thus it simply returns the full list, rather than an iterator for the
+            results.
 
         To be used like:
 
@@ -3080,18 +3074,17 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Add or invite ``redditor`` to be a moderator of the subreddit.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
-        :param permissions: When provided (not ``None``), permissions should be
-            a list of strings specifying which subset of permissions to
-            grant. An empty list ``[]`` indicates no permissions, and when not
-            provided ``None``, indicates full permissions.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
+        :param permissions: When provided (not ``None``), permissions should be a list
+            of strings specifying which subset of permissions to grant. An empty list
+            ``[]`` indicates no permissions, and when not provided ``None``, indicates
+            full permissions.
 
-        An invite will be sent unless the user making this call is an admin
-        user.
+        An invite will be sent unless the user making this call is an admin user.
 
-        For example, to invite ``"spez"`` with ``"posts"`` and ``"mail"``
-        permissions to ``r/test``, try:
+        For example, to invite ``"spez"`` with ``"posts"`` and ``"mail"`` permissions to
+        ``r/test``, try:
 
         .. code-block:: python
 
@@ -3112,12 +3105,12 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Invite ``redditor`` to be a moderator of the subreddit.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
-        :param permissions: When provided (not ``None``), permissions should be
-            a list of strings specifying which subset of permissions to
-            grant. An empty list ``[]`` indicates no permissions, and when not
-            provided ``None``, indicates full permissions.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
+        :param permissions: When provided (not ``None``), permissions should be a list
+            of strings specifying which subset of permissions to grant. An empty list
+            ``[]`` indicates no permissions, and when not provided ``None``, indicates
+            full permissions.
 
         For example, to invite ``"spez"`` with ``posts`` and ``mail``
             permissions to ``r/test``, try:
@@ -3185,8 +3178,8 @@ class ModeratorRelationship(SubredditRelationship):
     async def remove_invite(self, redditor: Union[str, "asyncpraw.models.Redditor"]):
         """Remove the moderator invite for ``redditor``.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
 
         For example:
 
@@ -3207,12 +3200,12 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Update the moderator permissions for ``redditor``.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
-        :param permissions: When provided (not ``None``), permissions should be
-            a list of strings specifying which subset of permissions to
-            grant. An empty list ``[]`` indicates no permissions, and when not
-            provided, ``None``, indicates full permissions.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
+        :param permissions: When provided (not ``None``), permissions should be a list
+            of strings specifying which subset of permissions to grant. An empty list
+            ``[]`` indicates no permissions, and when not provided, ``None``, indicates
+            full permissions.
 
         For example, to add all permissions to the moderator, try:
 
@@ -3240,15 +3233,15 @@ class ModeratorRelationship(SubredditRelationship):
     ):
         """Update the moderator invite permissions for ``redditor``.
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance.
-        :param permissions: When provided (not ``None``), permissions should be
-            a list of strings specifying which subset of permissions to
-            grant. An empty list ``[]`` indicates no permissions, and when not
-            provided, ``None``, indicates full permissions.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance.
+        :param permissions: When provided (not ``None``), permissions should be a list
+            of strings specifying which subset of permissions to grant. An empty list
+            ``[]`` indicates no permissions, and when not provided, ``None``, indicates
+            full permissions.
 
-        For example, to grant the ``flair``` and ``mail``` permissions to
-        the moderator invite, try:
+        For example, to grant the ``flair``` and ``mail``` permissions to the moderator
+        invite, try:
 
         .. code-block:: python
 
@@ -3265,9 +3258,8 @@ class ModeratorRelationship(SubredditRelationship):
 class Modmail:
     """Provides modmail functions for a subreddit.
 
-    For example, to send a new modmail from the subreddit ``r/test`` to user
-    ``u/spez`` with the subject ``test`` along with a message body of
-    ``hello``:
+    For example, to send a new modmail from the subreddit ``r/test`` to user ``u/spez``
+    with the subject ``test`` along with a message body of ``hello``:
 
     .. code-block:: python
 
@@ -3292,8 +3284,8 @@ class Modmail:
             subreddit = await reddit.subreddit("redditdev")
             await subreddit.modmail("2gmz", mark_read=True)
 
-        If you don't need the object fetched right away (e.g., to utilize a
-        class method) you can do:
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) you can do:
 
         .. code-block:: python
 
@@ -3310,11 +3302,10 @@ class Modmail:
             for message in conversation.messages:
                 print(message.body_markdown)
 
-        ``ModmailConversation.user`` is a special instance of
-        :class:`.Redditor` with extra attributes describing the non-moderator
-        user's recent posts, comments, and modmail messages within the
-        subreddit, as well as information on active bans and mutes. This
-        attribute does not exist on internal moderator discussions.
+        ``ModmailConversation.user`` is a special instance of :class:`.Redditor` with
+        extra attributes describing the non-moderator user's recent posts, comments, and
+        modmail messages within the subreddit, as well as information on active bans and
+        mutes. This attribute does not exist on internal moderator discussions.
 
         For example, to print the user's ban status:
 
@@ -3361,15 +3352,16 @@ class Modmail:
     ) -> List[ModmailConversation]:
         """Mark conversations for subreddit(s) as read.
 
-        Due to server-side restrictions, "all" is not a valid subreddit for
-        this method. Instead, use :meth:`~.Modmail.subreddits` to get a list of
-        subreddits using the new modmail.
+        Due to server-side restrictions, "all" is not a valid subreddit for this method.
+        Instead, use :meth:`~.Modmail.subreddits` to get a list of subreddits using the
+        new modmail.
 
-        :param other_subreddits: A list of :class:`.Subreddit` instances for
-            which to mark conversations (default: None).
-        :param state: Can be one of: all, archived, highlighted, inprogress,
-            mod, new, notifications, or appeals, (default: all). "all" does not
-            include internal, archived, or appeals conversations.
+        :param other_subreddits: A list of :class:`.Subreddit` instances for which to
+            mark conversations (default: None).
+        :param state: Can be one of: all, archived, highlighted, inprogress, mod, new,
+            notifications, or appeals, (default: all). "all" does not include internal,
+            archived, or appeals conversations.
+
         :returns: A list of lazy :class:`.ModmailConversation` instances that were
             marked read.
 
@@ -3402,18 +3394,16 @@ class Modmail:
     ) -> AsyncGenerator[ModmailConversation, None]:  # noqa: D207, D301
         """Generate :class:`.ModmailConversation` objects for subreddit(s).
 
-        :param after: A base36 modmail conversation id. When provided, the
-            listing begins after this conversation (default: None).
-        :param limit: The maximum number of conversations to fetch. If None,
-            the server-side default is 25 at the time of writing
-            (default: None).
-        :param other_subreddits: A list of :class:`.Subreddit` instances for
-            which to fetch conversations (default: None).
-        :param sort: Can be one of: mod, recent, unread, user
-            (default: recent).
-        :param state: Can be one of: all, archived, highlighted, inprogress,
-            mod, new, notifications, or appeals, (default: all). "all" does not
-            include internal, archived, or appeals conversations.
+        :param after: A base36 modmail conversation id. When provided, the listing
+            begins after this conversation (default: None).
+        :param limit: The maximum number of conversations to fetch. If None, the
+            server-side default is 25 at the time of writing (default: None).
+        :param other_subreddits: A list of :class:`.Subreddit` instances for which to
+            fetch conversations (default: None).
+        :param sort: Can be one of: mod, recent, unread, user (default: recent).
+        :param state: Can be one of: all, archived, highlighted, inprogress, mod, new,
+            notifications, or appeals, (default: all). "all" does not include internal,
+            archived, or appeals conversations.
 
         For example:
 
@@ -3463,8 +3453,9 @@ class Modmail:
         :param body: The message body. Cannot be empty.
         :param recipient: The recipient; a username or an instance of
             :class:`.Redditor`.
-        :param author_hidden: When True, author is hidden from non-moderators
-            (default: False).
+        :param author_hidden: When True, author is hidden from non-moderators (default:
+            False).
+
         :returns: A :class:`.ModmailConversation` object for the newly created
             conversation.
 
@@ -3512,8 +3503,8 @@ class Modmail:
     async def unread_count(self) -> Dict[str, int]:
         """Return unread conversation count by conversation state.
 
-        At time of writing, possible states are: archived, highlighted,
-        inprogress, mod, new, notifications, or appeals.
+        At time of writing, possible states are: archived, highlighted, inprogress, mod,
+        new, notifications, or appeals.
 
         :returns: A dict mapping conversation states to unread counts.
 
@@ -3545,16 +3536,17 @@ class SubredditStream:
     ) -> AsyncGenerator["asyncpraw.models.Comment", None]:
         """Yield new comments as they become available.
 
-        Comments are yielded oldest first. Up to 100 historical comments will
-        initially be returned.
+        Comments are yielded oldest first. Up to 100 historical comments will initially
+        be returned.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. note:: While Async PRAW tries to catch all new comments, some high-volume
-            streams, especially the r/all stream, may drop some comments.
+        .. note::
 
-        For example, to retrieve all new comments made to the ``iama``
-        subreddit, try:
+            While Async PRAW tries to catch all new comments, some high-volume streams,
+            especially the r/all stream, may drop some comments.
+
+        For example, to retrieve all new comments made to the ``iama`` subreddit, try:
 
         .. code-block:: python
 
@@ -3562,8 +3554,8 @@ class SubredditStream:
             async for comment in subreddit.stream.comments():
                 print(comment)
 
-        To only retrieve new submissions starting when the stream is
-        created, pass ``skip_existing=True``:
+        To only retrieve new submissions starting when the stream is created, pass
+        ``skip_existing=True``:
 
         .. code-block:: python
 
@@ -3579,14 +3571,15 @@ class SubredditStream:
     ) -> AsyncGenerator["asyncpraw.models.Submission", None]:
         """Yield new submissions as they become available.
 
-        Submissions are yielded oldest first. Up to 100 historical submissions
-        will initially be returned.
+        Submissions are yielded oldest first. Up to 100 historical submissions will
+        initially be returned.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
-        .. note:: While Async PRAW tries to catch all new submissions, some
-            high-volume streams, especially the r/all stream, may drop some
-            submissions.
+        .. note::
+
+            While Async PRAW tries to catch all new submissions, some high-volume
+            streams, especially the r/all stream, may drop some submissions.
 
         For example, to retrieve all new submissions made to all of Reddit, try:
 
@@ -3603,8 +3596,7 @@ class SubredditStream:
 class SubredditStylesheet:
     """Provides a set of stylesheet functions to a Subreddit.
 
-    For example, to add the css data ``.test{color:blue}`` to the existing
-    stylesheet:
+    For example, to add the css data ``.test{color:blue}`` to the existing stylesheet:
 
     .. code-block:: python
 
@@ -3709,8 +3701,8 @@ class SubredditStylesheet:
     async def delete_banner_additional_image(self):
         """Remove the current subreddit (redesign) banner additional image.
 
-        Succeeds even if there is no additional image.  Will also delete any
-        configured hover image.
+        Succeeds even if there is no additional image. Will also delete any configured
+        hover image.
 
         For example:
 
@@ -3828,19 +3820,19 @@ class SubredditStylesheet:
     async def upload(self, name: str, image_path: str) -> Dict[str, str]:
         """Upload an image to the Subreddit.
 
-        :param name: The name to use for the image. If an image already exists
-            with the same name, it will be replaced.
+        :param name: The name to use for the image. If an image already exists with the
+            same name, it will be replaced.
         :param image_path: A path to a jpeg or png image.
-        :returns: A dictionary containing a link to the uploaded image under
-            the key ``img_src``.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too
-            large.
+        :returns: A dictionary containing a link to the uploaded image under the key
+            ``img_src``.
+
+        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -3862,9 +3854,9 @@ class SubredditStylesheet:
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -3884,15 +3876,14 @@ class SubredditStylesheet:
         """Upload an image for the subreddit's (redesign) additional image.
 
         :param image_path: A path to a jpeg or png image.
-        :param align: Either ``left``, ``centered``, or ``right``. (default:
-            ``left``).
+        :param align: Either ``left``, ``centered``, or ``right``. (default: ``left``).
 
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -3927,9 +3918,9 @@ class SubredditStylesheet:
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -3947,15 +3938,16 @@ class SubredditStylesheet:
         """Upload an image to be used as the Subreddit's header image.
 
         :param image_path: A path to a jpeg or png image.
-        :returns: A dictionary containing a link to the uploaded image under
-            the key ``img_src``.
+
+        :returns: A dictionary containing a link to the uploaded image under the key
+            ``img_src``.
 
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -3971,15 +3963,16 @@ class SubredditStylesheet:
         """Upload an image to be used as the Subreddit's mobile header.
 
         :param image_path: A path to a jpeg or png image.
-        :returns: A dictionary containing a link to the uploaded image under
-            the key ``img_src``.
+
+        :returns: A dictionary containing a link to the uploaded image under the key
+            ``img_src``.
 
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -3995,15 +3988,16 @@ class SubredditStylesheet:
         """Upload an image to be used as the Subreddit's mobile icon.
 
         :param image_path: A path to a jpeg or png image.
-        :returns: A dictionary containing a link to the uploaded image under
-            the key ``img_src``.
+
+        :returns: A dictionary containing a link to the uploaded image under the key
+            ``img_src``.
 
         :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
 
         :raises: :class:`.RedditAPIException` if there are other issues with the
-            uploaded image. Unfortunately the exception info might not be very
-            specific, so try through the website with the same image to see what
-            the problem actually might be.
+            uploaded image. Unfortunately the exception info might not be very specific,
+            so try through the website with the same image to see what the problem
+            actually might be.
 
         For example:
 
@@ -4076,8 +4070,7 @@ class SubredditWiki:
     ):
         """Create a new wiki page.
 
-        :param name: The name of the new WikiPage. This name will be
-            normalized.
+        :param name: The name of the new WikiPage. This name will be normalized.
         :param content: The content of the new WikiPage.
         :param reason: (Optional) The reason for the creation.
         :param other_settings: Additional keyword arguments to pass.

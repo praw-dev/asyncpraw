@@ -21,8 +21,9 @@ class Objector:
         """Convert JSON response into an error object.
 
         :param data: The dict to be converted.
-        :returns: An instance of :class:`~.RedditAPIException`, or ``None`` if
-            ``data`` doesn't fit this model.
+
+        :returns: An instance of :class:`~.RedditAPIException`, or ``None`` if ``data``
+            doesn't fit this model.
 
         """
         if isinstance(data, list):
@@ -61,6 +62,7 @@ class Objector:
         """Create RedditBase objects from dicts.
 
         :param data: The structured data, assumed to be a dict.
+
         :returns: An instance of :class:`~.RedditBase`.
 
         """
@@ -147,8 +149,9 @@ class Objector:
         """Create RedditBase objects from data.
 
         :param data: The structured data.
-        :returns: An instance of :class:`~.RedditBase`, or ``None`` if
-            given ``data`` is ``None``.
+
+        :returns: An instance of :class:`~.RedditBase`, or ``None`` if given ``data`` is
+            ``None``.
 
         """
         # pylint: disable=too-many-return-statements

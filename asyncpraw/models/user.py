@@ -26,26 +26,24 @@ class User(AsyncPRAWBase):
 
         .. code-block:: python
 
-           preferences = await reddit.user.preferences()
-           print(preferences["show_link_flair"])
+            preferences = await reddit.user.preferences()
+            print(preferences["show_link_flair"])
 
         Preferences can be updated via:
 
         .. code-block:: python
 
-           await reddit.user.preferences.update(show_link_flair=True)
+            await reddit.user.preferences.update(show_link_flair=True)
 
-        The :meth:`.Preferences.update` method returns the new state of the
-        preferences as a ``dict``, which can be used to check whether a
-        change went through. Changes with invalid types or parameter names
-        fail silently.
+        The :meth:`.Preferences.update` method returns the new state of the preferences
+        as a ``dict``, which can be used to check whether a change went through. Changes
+        with invalid types or parameter names fail silently.
 
         .. code-block:: python
 
-           original_preferences = await reddit.user.preferences()
-           new_prefs = await original_preferences.update(invalid_param=123)
-           print(original_preferences == new_prefs)  # True, no change
-
+            original_preferences = await reddit.user.preferences()
+            new_prefs = await original_preferences.update(invalid_param=123)
+            print(original_preferences == new_prefs)  # True, no change
 
         """
         return Preferences(self._reddit)
@@ -82,12 +80,15 @@ class User(AsyncPRAWBase):
     ) -> Union[List["asyncpraw.models.Redditor"], "asyncpraw.models.Redditor"]:
         """Return a RedditorList of friends or a Redditor in the friends list.
 
-        :param user: Checks to see if you are friends with the Redditor. Either
-            an instance of :class:`.Redditor` or a string can be given.
-        :returns: A list of Redditors, or a Redditor if you are friends with
-            the given Redditor. The Redditor also has friend attributes.
-        :raises: An instance of ``asyncprawcore.exceptions.BadRequest`` if you
-            are not friends with the specified Redditor.
+        :param user: Checks to see if you are friends with the Redditor. Either an
+            instance of :class:`.Redditor` or a string can be given.
+
+        :returns: A list of Redditors, or a Redditor if you are friends with the given
+            Redditor. The Redditor also has friend attributes.
+
+        :raises: An instance of ``asyncprawcore.exceptions.BadRequest`` if you are not
+            friends with the specified Redditor.
+
         """
         endpoint = (
             API_PATH["friends"]
@@ -99,13 +100,16 @@ class User(AsyncPRAWBase):
     async def karma(self) -> Dict["asyncpraw.models.Subreddit", Dict[str, int]]:
         """Return a dictionary mapping subreddits to their karma.
 
-        The returned dict contains subreddits as keys. Each subreddit key
-        contains a sub-dict that have keys for ``comment_karma`` and
-        ``link_karma``. The dict is sorted in descending karma order.
+        The returned dict contains subreddits as keys. Each subreddit key contains a
+        sub-dict that have keys for ``comment_karma`` and ``link_karma``. The dict is
+        sorted in descending karma order.
 
-        .. note:: Each key of the main dict is an instance of
-            :class:`~.Subreddit`. It is recommended to iterate over the dict in
-            order to retrieve the values, preferably through ``dict.items()``.
+        .. note::
+
+            Each key of the main dict is an instance of :class:`~.Subreddit`. It is
+            recommended to iterate over the dict in order to retrieve the values,
+            preferably through ``dict.items()``.
+
         """
         karma_map = {}
         response = await self._reddit.get(API_PATH["karma"])
@@ -123,9 +127,11 @@ class User(AsyncPRAWBase):
         :param use_cache: When true, and if this function has been previously called,
             returned the cached version (default: True).
 
-        .. note:: If you change the Reddit instance's authorization, you might
-           want to refresh the cached value. Prefer using separate Reddit
-           instances, however, for distinct authorizations.
+        .. note::
+
+            If you change the Reddit instance's authorization, you might want to refresh
+            the cached value. Prefer using separate Reddit instances, however, for
+            distinct authorizations.
 
         .. deprecated:: 7.2
 

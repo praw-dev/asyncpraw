@@ -2,10 +2,10 @@ Util
 ====
 
 .. autoclass:: asyncpraw.models.util.BoundedSet
-   :inherited-members:
+    :inherited-members:
 
 .. autoclass:: asyncpraw.models.util.ExponentialCounter
-   :inherited-members:
+    :inherited-members:
 
 .. autofunction:: asyncpraw.models.util.permissions_string
 

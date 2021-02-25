@@ -168,5 +168,6 @@ def pytest_configure():
 
 @pytest.fixture
 def tmp_path(request, tmp_path_factory):
-    """Manually create tmp_path fixture since asynctest does not play nicely with fixtures as args"""
+    # Manually create tmp_path fixture since asynctest does not play nicely with
+    # fixtures as args
     request.cls.tmp_path = _mk_tmp(request, tmp_path_factory)

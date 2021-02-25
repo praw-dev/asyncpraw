@@ -11,9 +11,9 @@ class StaticChecker:
         """Initializes the class.
 
         :param replace: Whether or not to make replacements.
+
         """
         self.full_file_checks = [
-            self.check_for_code_statement,
             self.check_for_double_syntax
             # add more checks to the list as they are added
         ]
@@ -23,33 +23,14 @@ class StaticChecker:
         ]
         self.replace = replace
 
-    def check_for_code_statement(self, filename: str, content: str) -> bool:
-        """Checks the code for ``.. code::`` statements.
-
-        :param filename: The name of the file to check & replace.
-        :param content: The content of the file
-        :returns: A boolean with the status of the check
-        """
-        if ".. code::" in content:
-            newcontent = content.replace(".. code::", ".. code-block::")
-            if self.replace:
-                with open(filename, "w") as fp:
-                    fp.write(newcontent)
-                print(f"{filename}: Replaced all ``code::`` to ``code-block::``")
-                return True
-            print(
-                f"{filename}; This file uses the `code::` syntax, please change the"
-                " syntax to ``code-block::``."
-            )
-            return False
-        return True
-
     def check_for_double_syntax(self, filename: str, content: str) -> bool:
         """Checks a file for double-slash statements (``/r/`` and ``/u/``).
 
         :param filename: The name of the file to check & replace.
         :param content: The content of the file
+
         :returns: A boolean with the status of the check
+
         """
         if (
             os.path.join("asyncpraw", "const.py") in filename
@@ -80,7 +61,9 @@ class StaticChecker:
         :param filename: The name of the file to check & replace.
         :param line_number: The line number
         :param content: The content of the line
+
         :returns: A boolean with the status of the check
+
         """
         if "noreturn" in content.lower():
             print(
@@ -95,22 +78,23 @@ class StaticChecker:
 
         The directory is assumed to be the asyncpraw directory located in the parent
         directory of the file, so if this file exists in
-        ``~/asyncpraw/tools/static_word_checks.py``, it will check ``~/asyncpraw/asyncpraw``.
+        ``~/asyncpraw/tools/static_word_checks.py``, it will check
+        ``~/asyncpraw/asyncpraw``.
 
         It runs the checks located in the ``self.full_file_checks`` and
         ``self.line_checks`` lists, with full file checks being run first.
 
-        Full-file checks are checks that can also fix the errors they find,
-        while the line checks can just warn about found errors.
+        Full-file checks are checks that can also fix the errors they find, while the
+        line checks can just warn about found errors.
 
-        * Full file checks:
+        - Full file checks:
 
-          * :meth:`.check_for_code_statement`
-          * :meth:`.check_for_double_syntax`
+          - :meth:`.check_for_double_syntax`
 
-        * Line checks
+        - Line checks
 
-          * :meth:`.check_for_noreturn`
+          - :meth:`.check_for_noreturn`
+
         """
         status = True
         directory = os.path.abspath(os.path.join(__file__, "..", "..", "asyncpraw"))

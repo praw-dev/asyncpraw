@@ -1,4 +1,5 @@
 Hover
 =====
+
 .. autoclass:: asyncpraw.models.Hover
-   :inherited-members:
+    :inherited-members:

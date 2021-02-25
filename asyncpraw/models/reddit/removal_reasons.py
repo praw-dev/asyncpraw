@@ -15,19 +15,19 @@ class RemovalReason(RedditBase):
 
     **Typical Attributes**
 
-    This table describes attributes that typically belong to objects of this
-    class. Since attributes are dynamically provided (see
-    :ref:`determine-available-attributes-of-an-object`), there is not a
-    guarantee that these attributes will always be present, nor is this list
-    necessarily complete.
+    This table describes attributes that typically belong to objects of this class.
+    Since attributes are dynamically provided (see
+    :ref:`determine-available-attributes-of-an-object`), there is not a guarantee that
+    these attributes will always be present, nor is this list necessarily complete.
 
-    ======================= ===================================================
-    Attribute               Description
-    ======================= ===================================================
-    ``id``                  The id of the removal reason.
-    ``message``             The message of the removal reason.
-    ``title``               The title of the removal reason.
-    ======================= ===================================================
+    =========== ==================================
+    Attribute   Description
+    =========== ==================================
+    ``id``      The id of the removal reason.
+    ``message`` The message of the removal reason.
+    ``title``   The title of the removal reason.
+    =========== ==================================
+
     """
 
     STR_FIELD = "id"
@@ -37,8 +37,9 @@ class RemovalReason(RedditBase):
         """Reason id param is deprecated. Warns if it's used.
 
         :param reason_id_value: The value passed as parameter ``reason_id``.
-        :param id_value: Returns the actual value of parameter ``id`` is
-            parameter ``reason_id`` is not used.
+        :param id_value: Returns the actual value of parameter ``id`` is parameter
+            ``reason_id`` is not used.
+
         """
         if reason_id_value is not None:
             warn(
@@ -75,9 +76,9 @@ class RemovalReason(RedditBase):
         :param reddit: An instance of :class:`.Reddit`.
         :param subreddit: An instance of :class:`.Subreddit`.
         :param id: The id of the removal reason.
-        :param reason_id: (Deprecated) The original name of the ``id``
-            parameter. Used for backwards compatibility. This parameter should
-            not be used.
+        :param reason_id: (Deprecated) The original name of the ``id`` parameter. Used
+            for backwards compatibility. This parameter should not be used.
+
         """
         id = self._warn_reason_id(reason_id, id)
         if (id, _data).count(None) != 1:
@@ -116,7 +117,9 @@ class RemovalReason(RedditBase):
     async def update(self, message: Optional[str] = None, title: Optional[str] = None):
         """Update the removal reason from this subreddit.
 
-        .. note:: Existing values will be used for any unspecified arguments.
+        .. note::
+
+            Existing values will be used for any unspecified arguments.
 
         :param message: The removal reason's new message.
         :param title: The removal reason's new title.
@@ -158,14 +161,16 @@ class SubredditRemovalReasons:
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
             print(reason)
 
-        You can also use indices to get a numbered removal reason. Since Python
-        uses 0-indexing, the first removal reason is index 0, and so on.
+        You can also use indices to get a numbered removal reason. Since Python uses
+        0-indexing, the first removal reason is index 0, and so on.
 
-        .. note:: Both negative indices and slices can be used to interact with
-            the removal reasons.
+        .. note::
 
-        :raises: :py:class:`IndexError` if a removal reason of a specific
-            number does not exist.
+            Both negative indices and slices can be used to interact with the removal
+            reasons.
+
+        :raises: :py:class:`IndexError` if a removal reason of a specific number does
+            not exist.
 
         For example, to get the second removal reason of the subreddit ``"NAME"``:
 
@@ -183,8 +188,8 @@ class SubredditRemovalReasons:
             for reason in reasons:
                 print(reason)
 
-        If you don't need the object fetched right away (e.g., to utilize a
-        class method) you can do:
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) you can do:
 
         .. code-block:: python
 
@@ -215,8 +220,7 @@ class SubredditRemovalReasons:
     async def __aiter__(self) -> AsyncIterator[RemovalReason]:
         """Return a list of Removal Reasons for the subreddit.
 
-        This method is used to discover all removal reasons for a
-        subreddit:
+        This method is used to discover all removal reasons for a subreddit:
 
         .. code-block:: python
 
@@ -232,6 +236,7 @@ class SubredditRemovalReasons:
         """Get a list of Removal Reason objects.
 
         :returns: A list of instances of :class:`.RemovalReason`.
+
         """
         response = await self._reddit.get(
             API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
@@ -246,6 +251,7 @@ class SubredditRemovalReasons:
 
         :param message: The message associated with the removal reason.
         :param title: The title of the removal reason
+
         :returns: The RemovalReason added.
 
         The message will be prepended with `Hi u/username,` automatically.

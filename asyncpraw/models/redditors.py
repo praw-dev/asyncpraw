@@ -30,6 +30,7 @@ class Redditors(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         return ListingGenerator(self._reddit, API_PATH["users_new"], **generator_kwargs)
 
@@ -42,6 +43,7 @@ class Redditors(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         return ListingGenerator(
             self._reddit, API_PATH["users_popular"], **generator_kwargs
@@ -58,6 +60,7 @@ class Redditors(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         self._safely_add_arguments(generator_kwargs, "params", q=query)
         return ListingGenerator(
@@ -69,12 +72,13 @@ class Redditors(AsyncPRAWBase):
     ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Yield new Redditors as they are created.
 
-        Redditors are yielded oldest first. Up to 100 historical Redditors
-        will initially be returned.
+        Redditors are yielded oldest first. Up to 100 historical Redditors will
+        initially be returned.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
         :returns: Redditor profiles, which are a type of :class:`.Subreddit`.
+
         """
         return stream_generator(self.new, **stream_options)
 
@@ -84,11 +88,13 @@ class Redditors(AsyncPRAWBase):
         """Get user summary data by redditor IDs.
 
         :param ids: An iterable of redditor fullname IDs.
+
         :returns: A iterator producing types.SimpleNamespace objects.
 
         Each ID must be prefixed with ``t2_``.
 
         Invalid IDs are ignored by the server.
+
         """
         iterable = iter(ids)
         while True:

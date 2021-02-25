@@ -2,4 +2,4 @@ InlineGif
 =========
 
 .. autoclass:: asyncpraw.models.InlineGif
-   :inherited-members:
+    :inherited-members:

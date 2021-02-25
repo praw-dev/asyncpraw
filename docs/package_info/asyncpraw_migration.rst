@@ -9,11 +9,12 @@ Network Requests
 
 .. _network_requests:
 
-Async PRAW utilizes `aiohttp <https://docs.aiohttp.org/>`_ to make network requests to Reddit's API. Since aiohttp can
-only be used in an asynchronous environment, all network requests need to be awaited. Due to this, most Async PRAW
-methods need to be awaited as well. You can tell if a method needs awaited by looking at the docs. For example,
-:meth:`.me` has the word ``await`` before ``me(use_cache: bool = True)`` in the header for that method
-since that method makes a network request.
+Async PRAW utilizes `aiohttp <https://docs.aiohttp.org/>`_ to make network requests to
+Reddit's API. Since aiohttp can only be used in an asynchronous environment, all network
+requests need to be awaited. Due to this, most Async PRAW methods need to be awaited as
+well. You can tell if a method needs awaited by looking at the docs. For example,
+:meth:`.me` has the word ``await`` before ``me(use_cache: bool = True)`` in the header
+for that method since that method makes a network request.
 
 Lazy Loading
 ------------
@@ -66,26 +67,27 @@ want to remove a post, you don't need the object fully fetched to do that.
 
 The following objects are still lazily loaded by default:
 
-* :class:`.Subreddit`
-* :class:`.Redditor`
-* :class:`.LiveThread`
-* :class:`.Multireddit`
+- :class:`.Subreddit`
+- :class:`.Redditor`
+- :class:`.LiveThread`
+- :class:`.Multireddit`
 
 You can pass ``fetch=True`` in their respective helper method to fully load it.
 
 Inversely, the following objects are now fully fetched when initialized:
 
-* :class:`.Submission`
-* :class:`.Comment`
-* :class:`.WikiPage`
-* :class:`.RemovalReason`
-* :class:`.Collection`
-* :class:`.Emoji`
-* :class:`.LiveUpdate`
-* :class:`.Rule`
-* :class:`.Preferences`
+- :class:`.Submission`
+- :class:`.Comment`
+- :class:`.WikiPage`
+- :class:`.RemovalReason`
+- :class:`.Collection`
+- :class:`.Emoji`
+- :class:`.LiveUpdate`
+- :class:`.Rule`
+- :class:`.Preferences`
 
-You can pass ``lazy=True`` in their respective helper method if you want to lazily load it.
+You can pass ``lazy=True`` in their respective helper method if you want to lazily load
+it.
 
 In addition, there will be a ``load()`` method provided for manually fetching/refreshing
 objects that subclass :class:`.RedditBase`. If you need to later on access an attribute
