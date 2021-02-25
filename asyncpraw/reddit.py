@@ -63,16 +63,20 @@ logger = getLogger("asyncpraw")
 class Reddit:
     """The Reddit class provides convenient access to Reddit's API.
 
-    Instances of this class are the gateway to interacting with Reddit's API
-    through Async PRAW. The canonical way to obtain an instance of this class is via:
-
+    Instances of this class are the gateway to interacting with Reddit's API through
+    Async PRAW. The canonical way to obtain an instance of this class is via:
 
     .. code-block:: python
 
-       import asyncpraw
-       reddit = asyncpraw.Reddit(client_id="CLIENT_ID",
-                            client_secret="CLIENT_SECRET", password="PASSWORD",
-                            user_agent="USERAGENT", username="USERNAME")
+        import asyncpraw
+
+        reddit = asyncpraw.Reddit(
+            client_id="CLIENT_ID",
+            client_secret="CLIENT_SECRET",
+            password="PASSWORD",
+            user_agent="USERAGENT",
+            username="USERNAME",
+        )
 
     """
 
@@ -94,8 +98,8 @@ class Reddit:
     def read_only(self, value: bool) -> None:
         """Set or unset the use of the ReadOnlyAuthorizer.
 
-        :raises: :class:`ClientException` when attempting to unset ``read_only``
-            and only the ReadOnlyAuthorizer is available.
+        :raises: :class:`ClientException` when attempting to unset ``read_only`` and
+            only the ReadOnlyAuthorizer is available.
 
         """
         if value:
@@ -113,9 +117,8 @@ class Reddit:
 
         .. deprecated:: 7.0
 
-            If property :attr:`.validate_on_submit` is set to False, the
-            behavior is deprecated by Reddit. This attribute will be removed
-            around May-June 2020.
+            If property :attr:`.validate_on_submit` is set to False, the behavior is
+            deprecated by Reddit. This attribute will be removed around May-June 2020.
 
         """
         value = self._validate_on_submit
@@ -146,8 +149,8 @@ class Reddit:
 
         .. deprecated:: 7.1.1
 
-            Using this class as a synchronous context manager is deprecated and will
-            be removed in the next release. Use this class as an asynchronous context
+            Using this class as a synchronous context manager is deprecated and will be
+            removed in the next release. Use this class as an asynchronous context
             manager instead.
 
         """
@@ -179,41 +182,41 @@ class Reddit:
     ):  # noqa: D207, D301
         """Initialize a Reddit instance.
 
-        :param site_name: The name of a section in your ``praw.ini`` file from
-            which to load settings from. This parameter, in tandem with an
-            appropriately configured ``praw.ini``, file is useful if you wish
-            to easily save credentials for different applications, or
-            communicate with other servers running Reddit. If ``site_name`` is
-            ``None``, then the site name will be looked for in the environment
-            variable praw_site. If it is not found there, the DEFAULT site will
-            be used.
-        :param requestor_class: A class that will be used to create a
-            requestor. If not set, use ``asyncprawcore.Requestor`` (default: None).
-        :param requestor_kwargs: Dictionary with additional keyword arguments
-            used to initialize the requestor (default: None).
+        :param site_name: The name of a section in your ``praw.ini`` file from which to
+            load settings from. This parameter, in tandem with an appropriately
+            configured ``praw.ini``, file is useful if you wish to easily save
+            credentials for different applications, or communicate with other servers
+            running Reddit. If ``site_name`` is ``None``, then the site name will be
+            looked for in the environment variable praw_site. If it is not found there,
+            the DEFAULT site will be used.
+        :param requestor_class: A class that will be used to create a requestor. If not
+            set, use ``asyncprawcore.Requestor`` (default: None).
+        :param requestor_kwargs: Dictionary with additional keyword arguments used to
+            initialize the requestor (default: None).
         :param token_manager: When provided, the passed instance, a subclass of
             :class:`.BaseTokenManager`, will manage tokens via two callback functions.
             This parameter must be provided in order to work with refresh tokens
             (default: None).
 
-        Additional keyword arguments will be used to initialize the
-        :class:`.Config` object. This can be used to specify configuration
-        settings during instantiation of the :class:`.Reddit` instance. For
-        more details, please see :ref:`configuration`.
+        Additional keyword arguments will be used to initialize the :class:`.Config`
+        object. This can be used to specify configuration settings during instantiation
+        of the :class:`.Reddit` instance. For more details, please see
+        :ref:`configuration`.
 
         Required settings are:
 
-        * client_id
-        * client_secret (for installed applications set this value to ``None``)
-        * user_agent
+        - client_id
+        - client_secret (for installed applications set this value to ``None``)
+        - user_agent
 
-        The ``requestor_class`` and ``requestor_kwargs`` allow for
-        customization of the requestor :class:`.Reddit` will use. This allows,
-        e.g., easily adding behavior to the requestor or wrapping its
-        |ClientSession|_ in a caching layer. Example usage:
+        The ``requestor_class`` and ``requestor_kwargs`` allow for customization of the
+        requestor :class:`.Reddit` will use. This allows, e.g., easily adding behavior
+        to the requestor or wrapping its |ClientSession|_ in a caching layer. Example
+        usage:
 
         .. |ClientSession| replace:: ``ClientSession``
-        .. _ClientSession: https://docs.aiohttp.org/en/stable/client_advanced.html
+
+        .. _clientsession: https://docs.aiohttp.org/en/stable/client_advanced.html
 
         .. code-block:: python
 
@@ -231,9 +234,11 @@ class Reddit:
                     print(json.dumps(await response.json(), indent=4))
                     return response
 
+
             my_session = aiohttp.ClientSession(trust_env=True)
-            reddit = Reddit(..., requestor_class=JSONDebugRequestor,
-                            requestor_kwargs={"session": my_session})
+            reddit = Reddit(
+                ..., requestor_class=JSONDebugRequestor, requestor_kwargs={"session": my_session}
+            )
 
         You can automatically close the requestor session by using this class as an
         context manager:
@@ -300,8 +305,7 @@ class Reddit:
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
 
-        Provides the interface for interacting with installed and web
-        applications.
+        Provides the interface for interacting with installed and web applications.
 
         .. seealso::
 
@@ -312,8 +316,7 @@ class Reddit:
         self.front = models.Front(self)
         """An instance of :class:`.Front`.
 
-        Provides the interface for interacting with front page listings. For
-        example:
+        Provides the interface for interacting with front page listings. For example:
 
         .. code-block:: python
 
@@ -325,10 +328,9 @@ class Reddit:
         self.inbox = models.Inbox(self, None)
         """An instance of :class:`.Inbox`.
 
-        Provides the interface to a user's inbox which produces
-        :class:`.Message`, :class:`.Comment`, and :class:`.Submission`
-        instances. For example, to iterate through comments which mention the
-        authorized user run:
+        Provides the interface to a user's inbox which produces :class:`.Message`,
+        :class:`.Comment`, and :class:`.Submission` instances. For example, to iterate
+        through comments which mention the authorized user run:
 
         .. code-block:: python
 
@@ -340,8 +342,8 @@ class Reddit:
         self.live = models.LiveHelper(self, None)
         """An instance of :class:`.LiveHelper`.
 
-        Provides the interface for working with :class:`.LiveThread`
-        instances. At present only new LiveThreads can be created.
+        Provides the interface for working with :class:`.LiveThread` instances. At
+        present only new LiveThreads can be created.
 
         .. code-block:: python
 
@@ -352,9 +354,8 @@ class Reddit:
         self.multireddit = models.MultiredditHelper(self, None)
         """An instance of :class:`.MultiredditHelper`.
 
-        Provides the interface to working with :class:`.Multireddit`
-        instances. For example, you can obtain a :class:`.Multireddit` instance
-        via:
+        Provides the interface to working with :class:`.Multireddit` instances. For
+        example, you can obtain a :class:`.Multireddit` instance via:
 
         .. code-block:: python
 
@@ -371,8 +372,8 @@ class Reddit:
         self.redditors = models.Redditors(self, None)
         """An instance of :class:`.Redditors`.
 
-        Provides the interface for Redditor discovery. For example,
-        to iterate over the newest Redditors, run:
+        Provides the interface for Redditor discovery. For example, to iterate over the
+        newest Redditors, run:
 
         .. code-block:: python
 
@@ -384,8 +385,8 @@ class Reddit:
         self.subreddit = models.SubredditHelper(self, None)
         """An instance of :class:`.SubredditHelper`.
 
-        Provides the interface to working with :class:`.Subreddit`
-        instances. For example, to create a Subreddit run:
+        Provides the interface to working with :class:`.Subreddit` instances. For
+        example, to create a Subreddit run:
 
         .. code-block:: python
 
@@ -403,8 +404,8 @@ class Reddit:
 
             await reddit.subreddit("redditdev", fetch=True)
 
-        Multiple subreddits can be combined and filtered views of
-        r/all can also be used just like a subreddit:
+        Multiple subreddits can be combined and filtered views of r/all can also be used
+        just like a subreddit:
 
         .. code-block:: python
 
@@ -416,8 +417,8 @@ class Reddit:
         self.subreddits = models.Subreddits(self, None)
         """An instance of :class:`.Subreddits`.
 
-        Provides the interface for :class:`.Subreddit` discovery. For example,
-        to iterate over the set of default subreddits run:
+        Provides the interface for :class:`.Subreddit` discovery. For example, to
+        iterate over the set of default subreddits run:
 
         .. code-block:: python
 
@@ -429,9 +430,8 @@ class Reddit:
         self.user = models.User(self)
         """An instance of :class:`.User`.
 
-        Provides the interface to the currently authorized
-        :class:`.Redditor`. For example, to get the name of the current user
-        run:
+        Provides the interface to the currently authorized :class:`.Redditor`. For
+        example, to get the name of the current user run:
 
         .. code-block:: python
 
@@ -567,17 +567,19 @@ class Reddit:
         :param url: A permalink pointing to the comment.
         :param lazy: If True, object is loaded lazily (default: False).
 
-        If you don't need the object fetched right away (e.g., to utilize a
-        class method) then you can do:
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) then you can do:
 
         .. code-block:: python
 
             comment = await reddit.comment("comment_id", lazy=True)
             await comment.reply("reply")
 
-        .. note:: If call this with ``lazy=True`` and you need to obtain the
-                   comment's replies, you will need to call this without ``lazy=True``
-                   or call :meth:`~.Comment.refresh` on the returned :class:`.Comment`.
+        .. note::
+
+            If call this with ``lazy=True`` and you need to obtain the comment's
+            replies, you will need to call this without ``lazy=True`` or call
+            :meth:`~.Comment.refresh` on the returned :class:`.Comment`.
 
         """
         comment = models.Comment(self, id=id, url=url)
@@ -601,8 +603,7 @@ class Reddit:
         """Return parsed objects returned from a GET request to ``path``.
 
         :param path: The path to fetch.
-        :param params: The query parameters to add to the request (default:
-            None).
+        :param params: The query parameters to add to the request (default: None).
 
         """
         return await self._objectify_request(method="GET", params=params, path=path)
@@ -624,23 +625,26 @@ class Reddit:
 
         :param fullnames: A list of fullnames for comments, submissions, and/or
             subreddits.
-        :param url: A url (as a string) to retrieve lists of link submissions
-            from.
+        :param url: A url (as a string) to retrieve lists of link submissions from.
         :param subreddits: A list of subreddit names or Subreddit objects to retrieve
             subreddits from.
+
         :returns: A generator that yields found items in their relative order.
 
-        Items that cannot be matched will not be generated. Requests will be
-        issued in batches for each 100 fullnames.
+        Items that cannot be matched will not be generated. Requests will be issued in
+        batches for each 100 fullnames.
 
-        .. note:: For comments that are retrieved via this method, if you want
-                  to obtain its replies, you will need to call
-                  :meth:`~.Comment.refresh` on the yielded :class:`.Comment`.
+        .. note::
 
-        .. note:: When using the URL option, it is important to be aware that
-                  URLs are treated literally by Reddit's API. As such, the URLs
-                  "youtube.com" and "https://www.youtube.com" will provide a
-                  different set of submissions.
+            For comments that are retrieved via this method, if you want to obtain its
+            replies, you will need to call :meth:`~.Comment.refresh` on the yielded
+            :class:`.Comment`.
+
+        .. note::
+
+            When using the URL option, it is important to be aware that URLs are treated
+            literally by Reddit's API. As such, the URLs "youtube.com" and
+            "https://www.youtube.com" will provide a different set of submissions.
 
         """
         none_count = (fullnames, url, subreddits).count(None)
@@ -693,16 +697,15 @@ class Reddit:
     ) -> Any:
         """Run a request through the ``Objector``.
 
-        :param data: Dictionary, bytes, or file-like object to send in the body
-            of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
-        :param json: JSON-serializable object to send in the body
-            of the request with a Content-Type header of application/json
-            (default: None). If ``json`` is provided, ``data`` should not be.
-        :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
-        :param params: The query parameters to add to the request (default:
+        :param data: Dictionary, bytes, or file-like object to send in the body of the
+            request (default: None).
+        :param files: Dictionary, filename to file (like) object mapping (default:
             None).
+        :param json: JSON-serializable object to send in the body of the request with a
+            Content-Type header of application/json (default: None). If ``json`` is
+            provided, ``data`` should not be.
+        :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
+        :param params: The query parameters to add to the request (default: None).
         :param path: The path to fetch.
 
         """
@@ -742,11 +745,11 @@ class Reddit:
         """Return parsed objects returned from a DELETE request to ``path``.
 
         :param path: The path to fetch.
-        :param data: Dictionary, bytes, or file-like object to send in the body
-            of the request (default: None).
-        :param json: JSON-serializable object to send in the body
-            of the request with a Content-Type header of application/json
-            (default: None). If ``json`` is provided, ``data`` should not be.
+        :param data: Dictionary, bytes, or file-like object to send in the body of the
+            request (default: None).
+        :param json: JSON-serializable object to send in the body of the request with a
+            Content-Type header of application/json (default: None). If ``json`` is
+            provided, ``data`` should not be.
 
         """
         return await self._objectify_request(
@@ -762,11 +765,11 @@ class Reddit:
         """Return parsed objects returned from a PATCH request to ``path``.
 
         :param path: The path to fetch.
-        :param data: Dictionary, bytes, or file-like object to send in the body
-            of the request (default: None).
-        :param json: JSON-serializable object to send in the body
-            of the request with a Content-Type header of application/json
-            (default: None). If ``json`` is provided, ``data`` should not be.
+        :param data: Dictionary, bytes, or file-like object to send in the body of the
+            request (default: None).
+        :param json: JSON-serializable object to send in the body of the request with a
+            Content-Type header of application/json (default: None). If ``json`` is
+            provided, ``data`` should not be.
 
         """
         return await self._objectify_request(
@@ -784,15 +787,14 @@ class Reddit:
         """Return parsed objects returned from a POST request to ``path``.
 
         :param path: The path to fetch.
-        :param data: Dictionary, bytes, or file-like object to send in the body
-            of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
-        :param params: The query parameters to add to the request (default:
+        :param data: Dictionary, bytes, or file-like object to send in the body of the
+            request (default: None).
+        :param files: Dictionary, filename to file (like) object mapping (default:
             None).
-        :param json: JSON-serializable object to send in the body
-            of the request with a Content-Type header of application/json
-            (default: None). If ``json`` is provided, ``data`` should not be.
+        :param params: The query parameters to add to the request (default: None).
+        :param json: JSON-serializable object to send in the body of the request with a
+            Content-Type header of application/json (default: None). If ``json`` is
+            provided, ``data`` should not be.
 
         """
         if json is None:
@@ -829,11 +831,11 @@ class Reddit:
         """Return parsed objects returned from a PUT request to ``path``.
 
         :param path: The path to fetch.
-        :param data: Dictionary, bytes, or file-like object to send in the body
-            of the request (default: None).
-        :param json: JSON-serializable object to send in the body
-            of the request with a Content-Type header of application/json
-            (default: None). If ``json`` is provided, ``data`` should not be.
+        :param data: Dictionary, bytes, or file-like object to send in the body of the
+            request (default: None).
+        :param json: JSON-serializable object to send in the body of the request with a
+            Content-Type header of application/json (default: None). If ``json`` is
+            provided, ``data`` should not be.
 
         """
         return await self._objectify_request(
@@ -845,8 +847,8 @@ class Reddit:
     ) -> "asyncpraw.models.Subreddit":
         """Return a random instance of :class:`~.Subreddit`.
 
-        :param nsfw: Return a random NSFW (not safe for work) subreddit
-            (default: False).
+        :param nsfw: Return a random NSFW (not safe for work) subreddit (default:
+            False).
 
         """
         url = API_PATH["subreddit"].format(subreddit="randnsfw" if nsfw else "random")
@@ -891,15 +893,14 @@ class Reddit:
 
         :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
         :param path: The path to fetch.
-        :param params: The query parameters to add to the request (default:
+        :param params: The query parameters to add to the request (default: None).
+        :param data: Dictionary, bytes, or file-like object to send in the body of the
+            request (default: None).
+        :param files: Dictionary, filename to file (like) object mapping (default:
             None).
-        :param data: Dictionary, bytes, or file-like object to send in the body
-            of the request (default: None).
-        :param files: Dictionary, filename to file (like) object mapping
-            (default: None).
-        :param json: JSON-serializable object to send in the body
-            of the request with a Content-Type header of application/json
-            (default: None). If ``json`` is provided, ``data`` should not be.
+        :param json: JSON-serializable object to send in the body of the request with a
+            Content-Type header of application/json (default: None). If ``json`` is
+            provided, ``data`` should not be.
 
         """
         if data and json:
@@ -941,13 +942,14 @@ class Reddit:
         """Return an instance of :class:`~.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param url: A URL supported by
+            :meth:`~asyncpraw.models.Submission.id_from_url`.`.
         :param lazy: If True, object is loaded lazily (default: False).
 
         Either ``id`` or ``url`` can be provided, but not both.
 
-        If you don't need the object fetched right away (e.g., to utilize a
-        class method) then you can do:
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) then you can do:
 
         .. code-block:: python
 

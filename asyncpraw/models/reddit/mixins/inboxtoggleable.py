@@ -18,7 +18,9 @@ class InboxToggleableMixin:
             submission = await reddit.submission("8dmv8z", lazy=True)
             await submission.disable_inbox_replies()
 
-        .. seealso:: :meth:`~.enable_inbox_replies`
+        .. seealso::
+
+            :meth:`~.enable_inbox_replies`
 
         """
         await self._reddit.post(
@@ -38,7 +40,9 @@ class InboxToggleableMixin:
             submission = await reddit.submission("8dmv8z", lazy=True)
             await submission.enable_inbox_replies()
 
-        .. seealso:: :meth:`~.disable_inbox_replies`
+        .. seealso::
+
+            :meth:`~.disable_inbox_replies`
 
         """
         await self._reddit.post(

@@ -11,23 +11,24 @@ if TYPE_CHECKING:  # pragma: no cover
 class Preferences:
     """A class for Reddit preferences.
 
-    The Preferences class provides access to the Reddit preferences of the
-    currently authenticated user.
+    The Preferences class provides access to the Reddit preferences of the currently
+    authenticated user.
+
     """
 
     async def __call__(self) -> Dict[str, Union[bool, int, str]]:
         """Return the preference settings of the authenticated user as a dict.
 
-        This method is intended to be accessed as ``reddit.user.preferences()``
-        like so:
+        This method is intended to be accessed as ``reddit.user.preferences()`` like so:
 
         .. code-block:: python
 
             preferences = await reddit.user.preferences()
             print(preferences["show_link_flair"])
 
-        See https://www.reddit.com/dev/api#GET_api_v1_me_prefs for the list
-        of possible values.
+        See https://www.reddit.com/dev/api#GET_api_v1_me_prefs for the list of possible
+        values.
+
         """
         return await self._reddit.get(API_PATH["preferences"])
 
@@ -35,6 +36,7 @@ class Preferences:
         """Create a Preferences instance.
 
         :param reddit: The Reddit instance.
+
         """
         self._reddit = reddit
 
@@ -164,11 +166,11 @@ class Preferences:
         :param video_autoplay: Autoplay Reddit videos on the desktop comments page
             (boolean).
 
-        Additional keyword arguments can be provided to handle new settings as
-        Reddit introduces them.
+        Additional keyword arguments can be provided to handle new settings as Reddit
+        introduces them.
 
-        See https://www.reddit.com/dev/api#PATCH_api_v1_me_prefs for the
-        most up-to-date list of possible parameters.
+        See https://www.reddit.com/dev/api#PATCH_api_v1_me_prefs for the most up-to-date
+        list of possible parameters.
 
         This is intended to be used like so:
 
@@ -176,9 +178,8 @@ class Preferences:
 
             await reddit.user.preferences.update(show_link_flair=True)
 
-        This method returns the new state of the
-        preferences as a ``dict``, which can be used to check whether a
-        change went through.
+        This method returns the new state of the preferences as a ``dict``, which can be
+        used to check whether a change went through.
 
         .. code-block:: python
 
@@ -186,17 +187,17 @@ class Preferences:
             new_preferences = await original_preferences.update(invalid_param=123)
             print(original_preferences == new_preferences)  # True, no change
 
-        .. warning:: Passing an unknown parameter name or an illegal value
-                     (such as an int when a boolean is expected) does not
-                     result in an error from the Reddit API. As a consequence,
-                     any invalid input will fail silently. To verify that
-                     changes have been made, use the return value of this
-                     method, which is a dict of the preferences after the
-                     update action has been performed.
+        .. warning::
 
-        Some preferences have names that are not valid keyword arguments in
-        Python. To update these, construct a ``dict`` and use ``**`` to unpack
-        it as keyword arguments:
+            Passing an unknown parameter name or an illegal value (such as an int when a
+            boolean is expected) does not result in an error from the Reddit API. As a
+            consequence, any invalid input will fail silently. To verify that changes
+            have been made, use the return value of this method, which is a dict of the
+            preferences after the update action has been performed.
+
+        Some preferences have names that are not valid keyword arguments in Python. To
+        update these, construct a ``dict`` and use ``**`` to unpack it as keyword
+        arguments:
 
         .. code-block:: python
 

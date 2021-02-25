@@ -2,6 +2,6 @@ Subreddit
 =========
 
 .. autoclass:: asyncpraw.models.Subreddit
-   :inherited-members:
+    :inherited-members:
 
 .. include:: note_dynamically_provided_attributes.txt

@@ -109,5 +109,6 @@ class RedditBase(AsyncPRAWBase):
         .. code-block:: python
 
             await reddit_base_object.load()
+
         """
         await self._fetch()

@@ -25,7 +25,8 @@ class LiveHelper(AsyncPRAWBase):
 
             livethread = await reddit.live("ukaeu1ik4sw5")
 
-        If you need the object fetched right away (e.g., to access attributes) you can do:
+        If you need the object fetched right away (e.g., to access attributes) you can
+        do:
 
         .. code-block:: python
 
@@ -34,6 +35,7 @@ class LiveHelper(AsyncPRAWBase):
 
         :param id: A live thread ID, e.g., ``ukaeu1ik4sw5``.
         :param fetch: Determines if the object is lazily loaded (default: False).
+
         """
         live_thread = LiveThread(self._reddit, id=id)
         if fetch:
@@ -46,6 +48,7 @@ class LiveHelper(AsyncPRAWBase):
         """Fetch information about each live thread in ``ids``.
 
         :param ids: A list of IDs for a live thread.
+
         :returns: A generator that yields :class:`.LiveThread` instances.
 
         :raises: ``asyncprawcore.ServerError`` if invalid live threads are requested.
@@ -53,19 +56,19 @@ class LiveHelper(AsyncPRAWBase):
         Requests will be issued in batches for each 100 IDs.
 
         .. note::
+
             This method doesn't support IDs for live updates.
 
         .. warning::
-            Unlike :meth:`.Reddit.info`, the output of this method
-            may not reflect the order of input.
+
+            Unlike :meth:`.Reddit.info`, the output of this method may not reflect the
+            order of input.
 
         Usage:
 
         .. code-block:: python
 
-            ids = ["3rgnbke2rai6hen7ciytwcxadi",
-                   "sw7bubeycai6hey4ciytwamw3a",
-                   "t8jnufucss07"]
+            ids = ["3rgnbke2rai6hen7ciytwcxadi", "sw7bubeycai6hey4ciytwamw3a", "t8jnufucss07"]
             async for thread in reddit.live.info(ids):
                 print(thread.title)
 
@@ -94,10 +97,11 @@ class LiveHelper(AsyncPRAWBase):
 
         :param title: The title of the new LiveThread.
         :param description: (Optional) The new LiveThread's description.
-        :param nsfw: (boolean) Indicate whether this thread is not safe for
-            work (default: False).
-        :param resources: (Optional) Markdown formatted information that is
-            useful for the LiveThread.
+        :param nsfw: (boolean) Indicate whether this thread is not safe for work
+            (default: False).
+        :param resources: (Optional) Markdown formatted information that is useful for
+            the LiveThread.
+
         :returns: The new LiveThread object.
 
         """
@@ -114,8 +118,8 @@ class LiveHelper(AsyncPRAWBase):
     async def now(self) -> Optional["asyncpraw.models.LiveThread"]:
         """Get the currently featured live thread.
 
-        :returns: The :class:`.LiveThread` object, or ``None`` if there is
-            no currently featured live thread.
+        :returns: The :class:`.LiveThread` object, or ``None`` if there is no currently
+            featured live thread.
 
         Usage:
 
@@ -138,7 +142,8 @@ class MultiredditHelper(AsyncPRAWBase):
     ) -> "asyncpraw.models.Multireddit":
         """Return an instance of :class:`~.Multireddit`.
 
-        If you need the object fetched right away (e.g., to access an attribute) you can do:
+        If you need the object fetched right away (e.g., to access an attribute) you can
+        do:
 
         .. code-block:: python
 
@@ -146,10 +151,11 @@ class MultiredditHelper(AsyncPRAWBase):
             async for comment in multireddit.comments(limit=25):
                 print(comment.author)
 
-        :param redditor: A redditor name (e.g., ``"spez"``) or
-            :class:`~.Redditor` instance who owns the multireddit.
+        :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
+            instance who owns the multireddit.
         :param name: The name of the multireddit.
         :param fetch: Determines if the object is lazily loaded (default: False).
+
         """
         path = f"/user/{redditor}/m/{name}"
         multireddit = Multireddit(self._reddit, _data={"name": name, "path": path})
@@ -171,22 +177,21 @@ class MultiredditHelper(AsyncPRAWBase):
 
         :param display_name: The display name for the new multireddit.
         :param subreddits: Subreddits to add to the new multireddit.
-        :param description_md: (Optional) Description for the new multireddit,
-            formatted in markdown.
-        :param icon_name: (Optional) Can be one of: ``art
-            and design``, ``ask``, ``books``, ``business``, ``cars``,
-            ``comics``, ``cute animals``, ``diy``, ``entertainment``, ``food
-            and drink``, ``funny``, ``games``, ``grooming``, ``health``, ``life
-            advice``, ``military``, ``models pinup``, ``music``, ``news``,
-            ``philosophy``, ``pictures and gifs``, ``science``, ``shopping``,
-            ``sports``, ``style``, ``tech``, ``travel``, ``unusual stories``,
-            ``video``, or ``None``.
-        :param key_color: (Optional) RGB hex color code of the form
-            ``"#FFFFFF"``.
-        :param visibility: (Optional) Can be one of: ``hidden``, ``private``,
-            ``public`` (default: private).
-        :param weighting_scheme: (Optional) Can be one of: ``classic``,
-            ``fresh`` (default: classic).
+        :param description_md: (Optional) Description for the new multireddit, formatted
+            in markdown.
+        :param icon_name: (Optional) Can be one of: ``art and design``, ``ask``,
+            ``books``, ``business``, ``cars``, ``comics``, ``cute animals``, ``diy``,
+            ``entertainment``, ``food and drink``, ``funny``, ``games``, ``grooming``,
+            ``health``, ``life advice``, ``military``, ``models pinup``, ``music``,
+            ``news``, ``philosophy``, ``pictures and gifs``, ``science``, ``shopping``,
+            ``sports``, ``style``, ``tech``, ``travel``, ``unusual stories``, ``video``,
+            or ``None``.
+        :param key_color: (Optional) RGB hex color code of the form ``"#FFFFFF"``.
+        :param visibility: (Optional) Can be one of: ``hidden``, ``private``, ``public``
+            (default: private).
+        :param weighting_scheme: (Optional) Can be one of: ``classic``, ``fresh``
+            (default: classic).
+
         :returns: The new Multireddit object.
 
         """
@@ -212,7 +217,8 @@ class SubredditHelper(AsyncPRAWBase):
     ) -> "asyncpraw.models.Subreddit":
         """Return an instance of :class:`~.Subreddit`.
 
-        If you need the object fetched right away (e.g., to access an attribute) you can do:
+        If you need the object fetched right away (e.g., to access an attribute) you can
+        do:
 
         .. code-block:: python
 
@@ -222,6 +228,7 @@ class SubredditHelper(AsyncPRAWBase):
 
         :param display_name: The name of the subreddit.
         :param fetch: Determines if the object is lazily loaded (default: False).
+
         """
         lower_name = display_name.lower()
 
@@ -246,24 +253,22 @@ class SubredditHelper(AsyncPRAWBase):
         """Create a new subreddit.
 
         :param name: The name for the new subreddit.
+        :param title: The title of the subreddit. When ``None`` or ``""`` use the value
+            of ``name``.
+        :param link_type: The types of submissions users can make. One of ``any``,
+            ``link``, ``self`` (default: any).
+        :param subreddit_type: One of ``archived``, ``employees_only``, ``gold_only``,
+            ``gold_restricted``, ``private``, ``public``, ``restricted`` (default:
+            public).
+        :param wikimode: One of ``anyone``, ``disabled``, ``modonly``.
 
-        :param title: The title of the subreddit. When ``None`` or ``""`` use
-            the value of ``name``.
-
-        :param link_type: The types of submissions users can make.
-            One of ``any``, ``link``, ``self`` (default: any).
-        :param subreddit_type: One of ``archived``, ``employees_only``,
-            ``gold_only``, ``gold_restricted``, ``private``, ``public``,
-            ``restricted`` (default: public).
-        :param wikimode: One of  ``anyone``, ``disabled``, ``modonly``.
-
-        Any keyword parameters not provided, or set explicitly to None, will
-        take on a default value assigned by the Reddit server.
+        Any keyword parameters not provided, or set explicitly to None, will take on a
+        default value assigned by the Reddit server.
 
         .. seealso::
 
-            :meth:`~.SubredditModeration.update` for documentation
-            of other available settings.
+            :meth:`~.SubredditModeration.update` for documentation of other available
+            settings.
 
         """
         await Subreddit._create_or_update(

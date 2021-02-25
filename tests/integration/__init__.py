@@ -65,6 +65,7 @@ class IntegrationTest(asynctest.TestCase):
             that are not equal to the dynamically generated name will be logged.
         :param kwargs: All keyword arguments for the main function
             (``VCR.use_cassette``).
+
         """
         dynamic_name = self.get_cassette_name()
         if cassette_name:

@@ -7,7 +7,7 @@ Q: How can I refresh a comment/subreddit/submission?
 
 A: There is two ways to do this:
 
-* Directly calling the constructors will refresh the value:
+- Directly calling the constructors will refresh the value:
 
   .. code-block:: python
 
@@ -15,7 +15,7 @@ A: There is two ways to do this:
       await reddit.subreddit(display_name=subreddit.display_name)
       await reddit.submission(id=submission.id)
 
-* Calling :meth:`~.RedditBase.load`:
+- Calling :meth:`~.RedditBase.load`:
 
   .. code-block:: python
 
@@ -25,23 +25,22 @@ A: There is two ways to do this:
 
 .. _faq2:
 
-Q: Whenever I try to do anything, I get an ``invalid_grant`` error. What is the
-cause?
+Q: Whenever I try to do anything, I get an ``invalid_grant`` error. What is the cause?
 
-A: This means that either you provided the wrong password and/or the account
-you are trying to sign in with has 2FA enabled, and as such, either needs a 2FA
-token or a refresh token to sign in. A refresh token is preferred, because then
-you will not need to enter a 2FA token in order to sign in, and the session
-will last for longer than an hour. Refer to :ref:`2FA` and :ref:`refresh_token`
-in order to use the respective auth methods.
+A: This means that either you provided the wrong password and/or the account you are
+trying to sign in with has 2FA enabled, and as such, either needs a 2FA token or a
+refresh token to sign in. A refresh token is preferred, because then you will not need
+to enter a 2FA token in order to sign in, and the session will last for longer than an
+hour. Refer to :ref:`2FA` and :ref:`refresh_token` in order to use the respective auth
+methods.
 
 .. _faq3:
 
-Q: Some options (like getting moderator logs from r/mod) keep on timing out.
-How can I extend the timeout?
+Q: Some options (like getting moderator logs from r/mod) keep on timing out. How can I
+extend the timeout?
 
-A: Set the timeout config option or initialize :class:`.Reddit` with a timeout
-of your choosing.
+A: Set the timeout config option or initialize :class:`.Reddit` with a timeout of your
+choosing.
 
 .. _faq4:
 
@@ -62,17 +61,18 @@ see the available authentication methods.
 
 Q: Help, searching for URLs keeps on redirecting me to ``/submit``!
 
-Q2: I keep on getting this exception: ``asyncprawcore.exceptions.Redirect: Redirect to /submit``
+Q2: I keep on getting this exception: ``asyncprawcore.exceptions.Redirect: Redirect to
+/submit``
 
-A: Reddit redirects URL searches to the submit page of the URL. To search for
-the URL, prefix ``url:`` to the url and surround the url in quotation marks.
+A: Reddit redirects URL searches to the submit page of the URL. To search for the URL,
+prefix ``url:`` to the url and surround the url in quotation marks.
 
 For example, the code block:
 
 .. code-block:: python
 
-    subreddit = await reddit.subreddit('all')
-    async for result in subreddit.search('https://google.com'):
+    subreddit = await reddit.subreddit("all")
+    async for result in subreddit.search("https://google.com"):
         # do things with results
         ...
 
@@ -80,7 +80,7 @@ Will become this code block:
 
 .. code-block:: python
 
-    subreddit = await reddit.subreddit('all')
+    subreddit = await reddit.subreddit("all")
     async for result in subreddit.search('url:"https://google.com"'):
         # do things with results
         ...

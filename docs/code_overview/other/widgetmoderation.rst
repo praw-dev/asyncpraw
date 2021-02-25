@@ -2,4 +2,4 @@ WidgetModeration
 ================
 
 .. autoclass:: asyncpraw.models.WidgetModeration
-   :inherited-members:
+    :inherited-members:

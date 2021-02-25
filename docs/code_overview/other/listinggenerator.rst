@@ -2,4 +2,4 @@ ListingGenerator
 ================
 
 .. autoclass:: asyncpraw.models.ListingGenerator
-   :inherited-members:
+    :inherited-members:

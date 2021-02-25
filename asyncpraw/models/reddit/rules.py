@@ -17,31 +17,27 @@ class Rule(RedditBase):
 
     **Typical Attributes**
 
-    This table describes attributes that typically belong to objects of this
-    class. Since attributes are dynamically provided (see
-    :ref:`determine-available-attributes-of-an-object`), there is not a
-    guarantee that these attributes will always be present, nor is this list
-    necessarily comprehensive.
+    This table describes attributes that typically belong to objects of this class.
+    Since attributes are dynamically provided (see
+    :ref:`determine-available-attributes-of-an-object`), there is not a guarantee that
+    these attributes will always be present, nor is this list necessarily comprehensive.
 
-    ======================= ===================================================
-    Attribute               Description
-    ======================= ===================================================
-    ``created_utc``         Time the rule was created, represented in
-                            `Unix Time`_.
-    ``description``         The description of the rule, if provided, otherwise
-                            a blank string.
-    ``kind``                The kind of rule. Can be ``"link"``, ``comment"``,
-                            or ``"all"``.
-    ``priority``            Represents where the rule is ranked. For example,
-                            the first rule is at priority ``0``. Serves as an
-                            index number on the list of rules.
-    ``short_name``          The name of the rule.
-    ``violation_reason``    The reason that is displayed on the report menu for
-                            the rule.
-    ======================= ===================================================
+    ==================== =============================================================
+    Attribute            Description
+    ==================== =============================================================
+    ``created_utc``      Time the rule was created, represented in `Unix Time`_.
+    ``description``      The description of the rule, if provided, otherwise a blank
+                         string.
+    ``kind``             The kind of rule. Can be ``"link"``, ``comment"``, or
+                         ``"all"``.
+    ``priority``         Represents where the rule is ranked. For example, the first
+                         rule is at priority ``0``. Serves as an index number on the
+                         list of rules.
+    ``short_name``       The name of the rule.
+    ``violation_reason`` The reason that is displayed on the report menu for the rule.
+    ==================== =============================================================
 
-
-    .. _Unix Time: https://en.wikipedia.org/wiki/Unix_time
+    .. _unix time: https://en.wikipedia.org/wiki/Unix_time
 
     """
 
@@ -119,17 +115,16 @@ class SubredditRules:
         async for rule in subreddit.rules:
             print(rule)
 
-    Moderators can also add rules to the subreddit. For example, to make
-    a rule called ``"No spam"`` in the subreddit ``"NAME"``:
+    Moderators can also add rules to the subreddit. For example, to make a rule called
+    ``"No spam"`` in the subreddit ``"NAME"``:
 
     .. code-block:: python
 
         subreddit = await reddit.subreddit("NAME")
         await subreddit.rules.mod.add(
-            short_name="No spam",
-            kind="all",
-            description="Do not spam. Spam bad"
+            short_name="No spam", kind="all", description="Do not spam. Spam bad"
         )
+
     """
 
     @cachedproperty
@@ -142,14 +137,11 @@ class SubredditRules:
 
             subreddit = await reddit.subreddit("NAME")
             await subreddit.rules.mod.add(
-                short_name="No spam",
-                kind="all",
-                description="Do not spam. Spam bad"
+                short_name="No spam", kind="all", description="Do not spam. Spam bad"
             )
 
-        To move the fourth rule to the first position, and then to move the
-        prior first rule to where the third rule originally was in the
-        subreddit ``"NAME"``:
+        To move the fourth rule to the first position, and then to move the prior first
+        rule to where the third rule originally was in the subreddit ``"NAME"``:
 
         .. code-block:: python
 
@@ -169,14 +161,15 @@ class SubredditRules:
 
         .. deprecated:: 7.1
 
-            Use the iterator by removing the call to :class:`.SubredditRules`.
-            For example, in order to use the iterator:
+            Use the iterator by removing the call to :class:`.SubredditRules`. For
+            example, in order to use the iterator:
 
             .. code-block:: python
 
                 subreddit = await reddit.subreddit("test")
                 async for rule in subreddit.rules:
                     print(rule)
+
         """
         warn(
             "Calling SubredditRules to get a list of rules is deprecated. Remove the"
@@ -208,15 +201,16 @@ class SubredditRules:
 
         You can also fetch a numbered rule of a subreddit.
 
-        Rule numbers start at ``0``, so the first rule is at index ``0``, and the
-        second rule is at index ``1``, and so on.
+        Rule numbers start at ``0``, so the first rule is at index ``0``, and the second
+        rule is at index ``1``, and so on.
 
-        :raises: :py:class:`IndexError` if a rule of a specific number does not
-            exist.
+        :raises: :py:class:`IndexError` if a rule of a specific number does not exist.
 
-        .. note:: You can use negative indexes, such as ``-1``, to get the last
-            rule. You can also use slices, to get a subset of rules, such as
-            the last three rules with ``get_rule(slice(-3, None))``.
+        .. note::
+
+            You can use negative indexes, such as ``-1``, to get the last rule. You can
+            also use slices, to get a subset of rules, such as the last three rules with
+            ``get_rule(slice(-3, None))``.
 
         For example, to fetch the second rule of ``AskReddit``:
 
@@ -266,6 +260,7 @@ class SubredditRules:
         """Get a list of Rule objects.
 
         :returns: A list of instances of :class:`.Rule`.
+
         """
         rule_list = await self._reddit.get(
             API_PATH["rules"].format(subreddit=self.subreddit)
@@ -327,13 +322,16 @@ class RuleModeration:
     ) -> "asyncpraw.models.Rule":
         """Update the rule from this subreddit.
 
-        .. note:: Existing values will be used for any unspecified arguments.
+        .. note::
+
+            Existing values will be used for any unspecified arguments.
 
         :param description: The new description for the rule. Can be empty.
-        :param kind: The kind of item that the rule applies to. One of
-            ``"link"``, ``"comment"``, or ``"all"``.
+        :param kind: The kind of item that the rule applies to. One of ``"link"``,
+            ``"comment"``, or ``"all"``.
         :param short_name: The name of the rule.
         :param violation_reason: The reason that is shown on the report menu.
+
         :returns: A Rule object containing the updated values.
 
         To update ``"No spam"`` from the subreddit ``"NAME"`` try:
@@ -373,14 +371,11 @@ class SubredditRulesModeration:
 
         subreddit = await reddit.subreddit("NAME")
         await subreddit.rules.mod.add(
-             short_name="No spam",
-             kind="all",
-             description="Do not spam. Spam bad"
+            short_name="No spam", kind="all", description="Do not spam. Spam bad"
         )
 
-    To move the fourth rule to the first position, and then to move the prior
-    first rule to where the third rule originally was in the subreddit
-    ``"NAME"``:
+    To move the fourth rule to the first position, and then to move the prior first rule
+    to where the third rule originally was in the subreddit ``"NAME"``:
 
     .. code-block:: python
 
@@ -406,12 +401,13 @@ class SubredditRulesModeration:
         """Add a removal reason to this subreddit.
 
         :param short_name: The name of the rule.
-        :param kind: The kind of item that the rule applies to. One of
-            ``"link"``, ``"comment"``, or ``"all"``.
+        :param kind: The kind of item that the rule applies to. One of ``"link"``,
+            ``"comment"``, or ``"all"``.
         :param description: The description for the rule. Optional.
-        :param violation_reason: The reason that is shown on the report menu.
-            If a violation reason is not specified, the short name will be used
-            as the violation reason.
+        :param violation_reason: The reason that is shown on the report menu. If a
+            violation reason is not specified, the short name will be used as the
+            violation reason.
+
         :returns: The Rule added.
 
         To add rule ``"No spam"`` to the subreddit ``"NAME"`` try:
@@ -420,9 +416,7 @@ class SubredditRulesModeration:
 
             subreddit = await reddit.subreddit("NAME")
             await subreddit.rules.mod.add(
-                short_name="No spam",
-                kind="all",
-                description="Do not spam. Spam bad"
+                short_name="No spam", kind="all", description="Do not spam. Spam bad"
             )
 
         """
@@ -447,13 +441,14 @@ class SubredditRulesModeration:
     ) -> List["asyncpraw.models.Rule"]:
         """Reorder the rules of a subreddit.
 
-        :param rule_list: The list of rules, in the wanted order. Each index of
-            the list indicates the position of the rule.
+        :param rule_list: The list of rules, in the wanted order. Each index of the list
+            indicates the position of the rule.
+
         :returns: A list containing the rules in the specified order.
 
-        For example, to move the fourth rule to the first position, and then to
-        move the prior first rule to where the third rule originally was in the
-        subreddit ``"NAME"``:
+        For example, to move the fourth rule to the first position, and then to move the
+        prior first rule to where the third rule originally was in the subreddit
+        ``"NAME"``:
 
         .. code-block:: python
 

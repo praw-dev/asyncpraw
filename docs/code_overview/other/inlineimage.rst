@@ -2,4 +2,4 @@ InlineImage
 ===========
 
 .. autoclass:: asyncpraw.models.InlineImage
-   :inherited-members:
+    :inherited-members:

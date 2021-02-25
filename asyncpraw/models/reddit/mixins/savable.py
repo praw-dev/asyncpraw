@@ -10,9 +10,8 @@ class SavableMixin:
     async def save(self, category: Optional[str] = None):
         """Save the object.
 
-        :param category: (Premium) The category to save to. If your user does
-            not have Reddit Premium this value is ignored by Reddit
-            (default: ``None``).
+        :param category: (Premium) The category to save to. If your user does not have
+            Reddit Premium this value is ignored by Reddit (default: ``None``).
 
         Example usage:
 
@@ -24,7 +23,9 @@ class SavableMixin:
             comment = await reddit.comment(id="dxolpyc", lazy=True, lazy=True)
             await comment.save()
 
-        .. seealso:: :meth:`~.unsave`
+        .. seealso::
+
+            :meth:`~.unsave`
 
         """
         await self._reddit.post(
@@ -44,7 +45,9 @@ class SavableMixin:
             comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.unsave()
 
-        .. seealso:: :meth:`~.save`
+        .. seealso::
+
+            :meth:`~.save`
 
         """
         await self._reddit.post(API_PATH["unsave"], data={"id": self.fullname})

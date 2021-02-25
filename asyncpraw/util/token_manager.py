@@ -38,9 +38,8 @@ class BaseTokenManager:
         :param authorizer: The ``asyncprawcore.Authorizer`` instance used containing
             ``access_token`` and ``refresh_token`` attributes.
 
-        This function will be called after refreshing the access and refresh
-        tokens. This callback can be used for saving the updated
-        ``refresh_token``.
+        This function will be called after refreshing the access and refresh tokens.
+        This callback can be used for saving the updated ``refresh_token``.
 
         """
         raise NotImplementedError("``post_refresh_callback`` must be extended.")
@@ -52,8 +51,7 @@ class BaseTokenManager:
             ``access_token`` and ``refresh_token`` attributes.
 
         This callback can be used to inspect and modify the attributes of the
-        ``asyncprawcore.Authorizer`` instance, such as setting the
-        ``refresh_token``.
+        ``asyncprawcore.Authorizer`` instance, such as setting the ``refresh_token``.
 
         """
         raise NotImplementedError("``pre_refresh_callback`` must be extended.")

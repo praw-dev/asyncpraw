@@ -2,4 +2,4 @@ Submenu
 =======
 
 .. autoclass:: asyncpraw.models.Submenu
-   :inherited-members:
+    :inherited-members:

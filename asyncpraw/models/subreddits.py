@@ -26,6 +26,7 @@ class Subreddits(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         return ListingGenerator(
             self._reddit, API_PATH["subreddits_default"], **generator_kwargs
@@ -47,6 +48,7 @@ class Subreddits(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         return ListingGenerator(
             self._reddit, API_PATH["subreddits_gold"], **generator_kwargs
@@ -59,6 +61,7 @@ class Subreddits(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         return ListingGenerator(
             self._reddit, API_PATH["subreddits_new"], **generator_kwargs
@@ -71,6 +74,7 @@ class Subreddits(AsyncPRAWBase):
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
+
         """
         return ListingGenerator(
             self._reddit, API_PATH["subreddits_popular"], **generator_kwargs
@@ -85,11 +89,9 @@ class Subreddits(AsyncPRAWBase):
     ) -> List["asyncpraw.models.Subreddit"]:
         """Return subreddits recommended for the given list of subreddits.
 
-        :param subreddits: A list of Subreddit instances and/or subreddit
-            names.
-        :param omit_subreddits: A list of Subreddit instances and/or subreddit
-            names to exclude from the results (Reddit's end may not work as
-            expected).
+        :param subreddits: A list of Subreddit instances and/or subreddit names.
+        :param omit_subreddits: A list of Subreddit instances and/or subreddit names to
+            exclude from the results (Reddit's end may not work as expected).
 
         """
         if not isinstance(subreddits, list):
@@ -116,7 +118,9 @@ class Subreddits(AsyncPRAWBase):
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
 
-        .. seealso:: :meth:`~.search_by_name` to search by subreddit names
+        .. seealso::
+
+            :meth:`~.search_by_name` to search by subreddit names
 
         """
         self._safely_add_arguments(generator_kwargs, "params", q=query)
@@ -167,8 +171,8 @@ class Subreddits(AsyncPRAWBase):
     ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Yield new subreddits as they are created.
 
-        Subreddits are yielded oldest first. Up to 100 historical subreddits
-        will initially be returned.
+        Subreddits are yielded oldest first. Up to 100 historical subreddits will
+        initially be returned.
 
         Keyword arguments are passed to :func:`.stream_generator`.
 
