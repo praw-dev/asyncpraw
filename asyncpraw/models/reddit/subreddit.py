@@ -21,9 +21,9 @@ from typing import (
 from urllib.parse import urljoin
 from xml.etree.ElementTree import XML
 
+from aiohttp import ClientResponse
 from aiohttp.web_ws import WebSocketError
 from asyncprawcore import Redirect
-from requests import Response
 
 from ...const import API_PATH, JPEG_HEADER
 from ...exceptions import (
@@ -642,7 +642,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def _parse_xml_response(self, response: Response):
+    def _parse_xml_response(self, response: ClientResponse):
         """Parse the XML from a response and raise any errors found."""
         xml = response.text
         root = XML(xml)
