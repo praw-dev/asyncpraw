@@ -9,10 +9,12 @@ PRAW users will create their own token manager classes suitable for their needs.
 See ref:`using_refresh_tokens` for examples on how to leverage these classes.
 
 """
+from abc import ABC, abstractmethod
+
 import aiofiles
 
 
-class BaseTokenManager:
+class BaseTokenManager(ABC):
     """An abstract class for all token managers."""
 
     def __init__(self):
@@ -32,6 +34,7 @@ class BaseTokenManager:
             )
         self._reddit = value
 
+    @abstractmethod
     def post_refresh_callback(self, authorizer):
         """Handle callback that is invoked after a refresh token is used.
 
@@ -42,8 +45,8 @@ class BaseTokenManager:
         This callback can be used for saving the updated ``refresh_token``.
 
         """
-        raise NotImplementedError("``post_refresh_callback`` must be extended.")
 
+    @abstractmethod
     def pre_refresh_callback(self, authorizer):
         """Handle callback that is invoked before refreshing PRAW's authorization.
 
@@ -54,7 +57,6 @@ class BaseTokenManager:
         ``asyncprawcore.Authorizer`` instance, such as setting the ``refresh_token``.
 
         """
-        raise NotImplementedError("``pre_refresh_callback`` must be extended.")
 
 
 class FileTokenManager(BaseTokenManager):
