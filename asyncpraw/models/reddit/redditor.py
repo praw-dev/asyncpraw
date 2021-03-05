@@ -271,14 +271,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
                 print(subreddit.title)
 
         """
-        modded_data = await self._reddit.get(API_PATH["moderated"].format(user=self))
-        if "data" not in modded_data:
-            return []
-        else:
-            subreddits = [
-                await self._reddit.subreddit(x["sr"]) for x in modded_data["data"]
-            ]
-            return subreddits
+        return await self._reddit.get(API_PATH["moderated"].format(user=self)) or []
 
     async def multireddits(self) -> List["asyncpraw.models.Multireddit"]:
         """Return a list of the redditor's public multireddits.
