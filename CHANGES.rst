@@ -44,7 +44,7 @@ Unreleased
 **Added**
 
 - Add method :meth:`~.Subreddits.premium` to reflect the naming change in Reddit's API.
-- Ability to submit image galleries with :meth:`.submit_gallery`.
+- Ability to submit image galleries with :meth:`~.Subreddit.submit_gallery`.
 - Ability to pass a gallery url to :meth:`.Reddit.submission`.
 - Ability to specify modmail mute duration.
 - Add method :meth:`.invited` to get invited moderators of a subreddit.
@@ -61,8 +61,9 @@ Unreleased
 
 - :class:`~.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
   which will change the order in which elements are removed from the set.
-- Improved :meth:`.submit_image` and :meth:`.submit_video` performance in slow network
-  environments by removing a race condition when establishing a websocket connection.
+- Improved :meth:`~.Subreddit.submit_image` and :meth:`~.Subreddit.submit_video`
+  performance in slow network environments by removing a race condition when
+  establishing a websocket connection.
 
 **Deprecated**
 
