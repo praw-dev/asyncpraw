@@ -1,3 +1,5 @@
+from base64 import urlsafe_b64encode
+
 import pytest
 from asyncprawcore import NotFound
 from asynctest import mock
@@ -22,6 +24,16 @@ class TestWikiPage(IntegrationTest):
         with self.use_cassette():
             page = await subreddit.wiki.get_page("test")
             await page.edit("PRAW updated")
+
+    async def test_edit__usernotes(self):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        page = WikiPage(self.reddit, subreddit, "usernotes")
+        with open("tests/integration/files/too_large.jpg", "rb") as fp:
+            large_content = urlsafe_b64encode(fp.read()).decode()
+
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await page.edit(large_content)
 
     async def test_edit__with_reason(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
