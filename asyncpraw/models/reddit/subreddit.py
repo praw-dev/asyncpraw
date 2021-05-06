@@ -19,6 +19,7 @@ from typing import (
     Union,
 )
 from urllib.parse import urljoin
+from warnings import warn
 from xml.etree.ElementTree import XML
 
 from aiohttp import ClientResponse
@@ -2268,6 +2269,12 @@ class SubredditModeration:
     ) -> Iterator["asyncpraw.models.SubredditMessage"]:
         """Return a :class:`.ListingGenerator` for moderator messages.
 
+        .. warning::
+
+            Legacy modmail is being deprecated in June 2021. Please see
+            https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/
+            for more info.
+
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
 
@@ -2286,6 +2293,13 @@ class SubredditModeration:
                     print("From: {}, Body: {}".format(reply.author, reply.body))
 
         """
+        warn(
+            "Legacy modmail is being deprecated in June 2021. Please see"
+            " https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/"
+            " for more info.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["moderator_messages"].format(subreddit=self.subreddit),
@@ -2485,6 +2499,12 @@ class SubredditModeration:
     ) -> Iterator["asyncpraw.models.SubredditMessage"]:
         """Return a :class:`.ListingGenerator` for unread moderator messages.
 
+        .. warning::
+
+            Legacy modmail is being deprecated in June 2021. Please see
+            https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/
+            for more info.
+
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
 
@@ -2501,6 +2521,13 @@ class SubredditModeration:
                 print("From: {}, To: {}".format(message.author, message.dest))
 
         """
+        warn(
+            "Legacy modmail is being deprecated in June 2021. Please see"
+            " https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/"
+            " for more info.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["moderator_unread"].format(subreddit=self.subreddit),
