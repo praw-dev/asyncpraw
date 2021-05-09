@@ -4,6 +4,7 @@ import pytest
 from asyncprawcore import NotFound
 from asynctest import mock
 
+from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import Redditor, WikiPage
 
 from ... import IntegrationTest
@@ -16,6 +17,15 @@ class TestWikiPage(IntegrationTest):
         with self.use_cassette():
             page = await subreddit.wiki.get_page("test")
             assert page.content_md
+
+    async def test_content_md__invalid_name(self):
+        subreddit = await self.reddit.subreddit("reddit.com")
+        page = WikiPage(self.reddit, subreddit, "\\A")
+
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as excinfo:
+                await page._fetch()
+            assert str(excinfo.value) == "INVALID_PAGE_NAME"
 
     async def test_edit(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)

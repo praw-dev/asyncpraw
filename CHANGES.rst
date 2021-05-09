@@ -27,6 +27,8 @@ Unreleased
   passed ``content`` and ``reason`` parameters that produced a request with a body
   greater than 500 KiB, even when the parameters did not exceed their respective
   permitted maximum lengths.
+- Fixed bug where :meth:`.Reddit.request` could not handle instances of ``BadRequest``\s
+  when the JSON data contained only the keys "reason" and "message".
 
 7.2.0 (2021/02/25)
 ------------------
