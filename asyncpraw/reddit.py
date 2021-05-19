@@ -918,14 +918,13 @@ class Reddit:
             )
         except BadRequest as exception:
             try:
-                data = await exception.response.json()
+                data = await exception.response.json(content_type=None)
             except ValueError:
-                # TODO: Remove this exception after 2020-12-31 if no one has
-                # filed a bug against it.
-                raise Exception(
-                    "Unexpected BadRequest without json body. Please file a bug at"
-                    " https://github.com/praw-dev/asyncpraw/issues."
-                ) from exception
+                text = await exception.response.text()
+                if text:
+                    data = {"reason": text}
+                else:
+                    raise exception
             if set(data) == {"error", "message"}:
                 raise
             explanation = data.get("explanation")
