@@ -173,6 +173,21 @@ class TestReddit(IntegrationTest):
             subreddit = await self.reddit.subreddit("random")
             assert subreddit.display_name != "random"
 
+    async def test_username_available__available(self):
+        fake_user = "prawtestuserabcd1234"
+        with self.use_cassette():
+            assert await self.reddit.username_available(fake_user)
+
+    async def test_username_available__unavailable(self):
+        with self.use_cassette():
+            assert not await self.reddit.username_available("bboe")
+
+    async def test_username_available_exception(self):
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as exc:
+                await self.reddit.username_available("a")
+            assert str(exc.value) == "BAD_USERNAME: 'invalid user name' on field 'user'"
+
 
 class TestDomainListing(IntegrationTest):
     async def test_controversial(self):

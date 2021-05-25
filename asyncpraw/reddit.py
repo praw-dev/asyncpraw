@@ -962,3 +962,17 @@ class Reddit:
         if not lazy:
             await submission._fetch()
         return submission
+
+    async def username_available(self, name: str) -> bool:
+        """Check to see if the username is available.
+
+        For example, to check if the username ``bboe`` is available, try:
+
+        .. code-block:: python
+
+            await reddit.username_available("bboe")
+
+        """
+        return await self._objectify_request(
+            path=API_PATH["username_available"], params={"user": name}, method="GET"
+        )
