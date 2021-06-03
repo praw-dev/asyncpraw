@@ -16,6 +16,13 @@ class TestUser(IntegrationTest):
         assert len(blocked) > 0
         assert all(isinstance(user, Redditor) for user in blocked)
 
+    async def test_blocked_fullname(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            blocked = next(iter(await self.reddit.user.blocked()))
+            assert blocked.fullname.startswith("t2_")
+            assert not blocked.fullname.startswith("t2_t2")
+
     async def test_contributor_subreddits(self):
         self.reddit.read_only = False
         with self.use_cassette():
