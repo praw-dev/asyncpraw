@@ -173,3 +173,18 @@ class User(AsyncPRAWBase):
         return ListingGenerator(
             self._reddit, API_PATH["my_subreddits"], **generator_kwargs
         )
+
+    async def trusted(self) -> List["asyncpraw.models.Redditor"]:
+        """Return a RedditorList of trusted Redditors.
+
+        To display the usernames of your trusted users and the times at which you
+        decided to trust them, try:
+
+        .. code-block:: python
+
+            trusted_users = reddit.user.trusted()
+            for user in trusted_users:
+                print(f"User: {user.name}, time: {user.date}")
+
+        """
+        return await self._reddit.get(API_PATH["trusted"])

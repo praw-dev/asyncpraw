@@ -1,0 +1,184 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "password"
+          ],
+          [
+            "password",
+            "<PASSWORD>"
+          ],
+          [
+            "username",
+            "<USERNAME>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.2.1.dev0 asyncprawcore/2.2.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "121",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 16 Jun 2021 23:11:06 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=bfpLCXgQxI5jwcbAYB; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Clacks-Overhead": "GNU Terry Pratchett",
+          "X-Moose": "majestic",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "275",
+          "x-ratelimit-reset": "535",
+          "x-ratelimit-used": "25",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.2.1.dev0 asyncprawcore/2.2.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/block_user/?name=kn0thing&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"date\": 1623885066.0, \"icon_img\": \"https://styles.redditmedia.com/t5_3jgyq/styles/profileIcon_snoo55cb4e85-6b74-4219-9663-715859823828-headshot.png?width=256&height=256&crop=256:256,smart&s=41cc600375da6e0558114b762082c882d6e84138\", \"id\": \"t2_1wh0\", \"name\": \"kn0thing\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "270",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 16 Jun 2021 23:11:06 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=mdnienprncokbqbfre.0.1623885066193.Z0FBQUFBQmd5b1VLc045VGZBSWJGLXVpZ1FZQzNfUlV1NElqSTM2Y3c5d2RTRmYzekZQeU1PbWdoYS1oRWxlV2tZZExIQ0hqQ2FKNVlyWlpGeFRXSFVGZXdFdXFhWmtzUEFQYnA5OEs0YXRLOEctYmlTOVZqYzJOd0tOQVVvWWExa1BwRU5EcC1LNkU; Domain=reddit.com; Max-Age=7199; Path=/; expires=Thu, 17-Jun-2021 01:11:06 GMT; secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Clacks-Overhead": "GNU Terry Pratchett",
+          "X-Moose": "majestic",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "595.0",
+          "x-ratelimit-reset": "534",
+          "x-ratelimit-used": "5",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/block_user/?name=kn0thing&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "name",
+            "kn0thing"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.2.1.dev0 asyncprawcore/2.2.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/add_whitelisted?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"json\": {\"errors\": [[\"CANT_WHITELIST_AN_ENEMY\", \"You can't add a blocked user as a trusted user.\", \"name\"]]}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "private, s-maxage=0, max-age=0, must-revalidate, no-store, max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "110",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 16 Jun 2021 23:11:06 GMT",
+          "Expires": "-1",
+          "Server": "snooserv",
+          "Set-Cookie": "session_tracker=mdnienprncokbqbfre.0.1623885066383.Z0FBQUFBQmd5b1VLS1FWaXVpWXZwYzhudWJMc1htWF9lb20yWXpqTWloWDRCbzFqVW5jcTFUbEdkT3FOUHRwR2JhWHE0ZFVBcjB0cENWR1VmS1VyRm9fQzc0LUw4RjduLXJFaUZ1Sm1hYkNqYVFyLVR5cnJ6M1Nub3MwUmZaaGxoQ2RndmRmNnNva0I; Domain=reddit.com; Max-Age=7199; Path=/; expires=Thu, 17-Jun-2021 01:11:06 GMT; secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Clacks-Overhead": "GNU Terry Pratchett",
+          "X-Moose": "majestic",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "594.0",
+          "x-ratelimit-reset": "534",
+          "x-ratelimit-used": "6",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/add_whitelisted?raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2021-06-16T18:11:06",
+  "version": 1
+}
