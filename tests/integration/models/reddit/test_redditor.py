@@ -13,8 +13,7 @@ class TestRedditor(IntegrationTest):
     FRIEND = "PyAPITestUser3"
     FRIEND_FULLNAME = "t2_6c1xj"
 
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_block(self, _):
+    async def test_block(self):
         self.reddit.read_only = False
         with self.use_cassette():
             redditor = await self.reddit.redditor(self.FRIEND, fetch=True)
