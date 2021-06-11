@@ -1,4 +1,5 @@
 """Test asyncpraw.util.refresh_token_manager."""
+import sys
 from tempfile import NamedTemporaryFile
 
 import aiofiles
@@ -105,6 +106,9 @@ class TestSQLiteTokenManager(UnitTest):
         assert not await self.manager.is_registered()
         await self.manager.close()
 
+    @pytest.mark.skipif(
+        sys.platform.startswith("win"), reason="this test fails on windows"
+    )
     async def test_multiple_instances(self):
         with NamedTemporaryFile() as fp:
             manager1 = SQLiteTokenManager(fp.name, "dummy_key1")
