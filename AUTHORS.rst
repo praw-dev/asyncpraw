@@ -21,8 +21,7 @@ Documentation Contributors
 - Tarak Oueriache <Igosad@protonmail.com> `@igosad <https://github.com/igosad>`_
 - xCROv `@xCROv <https://github.com/xCROv>`_
 - taq `@greentaquitos <https://github.com/greentaquitos>`_
-
-<!-- - Add "Name <email (optional)> and github profile link" above this line. -->
+- Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
 ===========
@@ -78,5 +77,4 @@ Source Contributors
 - Gerard Rodes <GerardRodesVidal@gmail.com> `@GerardRodes
   <https://github.com/GerardRodes>`_
 - cmays90 `@cmays90 <https://github.com/cmays90>`_
-
-<!-- - Add "Name <email (optional)> and github profile link" above this line. -->
+- Add "Name <email (optional)> and github profile link" above this line.
