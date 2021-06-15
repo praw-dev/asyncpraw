@@ -36,13 +36,13 @@ class TestBaseTokenManager(UnitTest):
 
 
 class TestFileTokenManager(UnitTest):
-    def setUp(self):
+    async def setUp(self):
         aiofiles.threadpool.wrap.register(mock.MagicMock)(
             lambda *args, **kwargs: aiofiles.threadpool.AsyncBufferedIOBase(
                 *args, **kwargs
             )
         )
-        super(TestFileTokenManager, self).setUp()
+        await super(TestFileTokenManager, self).setUp()
 
     async def test_post_refresh_token_callback__writes_to_file(self):
         authorizer = DummyAuthorizer("token_value")

@@ -63,7 +63,7 @@ class TestCollection(UnitTest):
 class TestSubredditCollections(UnitTest):
     async def test_call(self):
         collections = SubredditCollections(
-            self.reddit, self.reddit.subreddit("placeholder")
+            self.reddit, await self.reddit.subreddit("placeholder")
         )
         with pytest.raises(TypeError):
             await collections()
