@@ -31,6 +31,7 @@ Unreleased
   when the JSON data contained only the keys "reason" and "message".
 - Fixed bug where :meth:`.Reddit.request` could not handle instances of ``BadRequest``\s
   when the response did not contain valid JSON data.
+- Fixed bug where :meth:`.FullnameMixin.fullname` sometimes returned the wrong fullname.
 
 7.2.0 (2021/02/25)
 ------------------
