@@ -306,7 +306,7 @@ class TestReddit(UnitTest):
 
     @mock.patch("asyncprawcore.sessions.Session")
     async def test_request__badrequest_with_no_json_body(self, mock_session):
-        response = mock.Mock(status_code=400)
+        response = mock.Mock(status=400, text=mock.CoroutineMock(return_value=""))
         response.json.side_effect = ValueError
         mock_session.return_value.request = mock.Mock(
             side_effect=BadRequest(response=response)
@@ -315,7 +315,7 @@ class TestReddit(UnitTest):
         reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
         with pytest.raises(Exception) as excinfo:
             await reddit.request("POST", "/")
-        assert str(excinfo.value).startswith("Unexpected BadRequest without json body.")
+        assert str(excinfo.value) == "received 400 HTTP response"
 
     async def test_request__json_and_body(self):
         reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")

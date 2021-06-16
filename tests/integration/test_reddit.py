@@ -1,8 +1,11 @@
 """Test asyncpraw.reddit."""
+from base64 import urlsafe_b64encode
+
 import pytest
 from asyncprawcore.exceptions import BadRequest, ServerError
 from asynctest import mock
 
+from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import LiveThread
 from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.models.reddit.submission import Submission
@@ -12,6 +15,31 @@ from . import IntegrationTest
 
 
 class TestReddit(IntegrationTest):
+    async def test_bad_request_without_json_text_plain_response(self):
+        with open("tests/integration/files/too_large.jpg", "rb") as fp:
+            junk = urlsafe_b64encode(fp.read()).decode()
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as excinfo:
+                await self.reddit.request(
+                    "GET",
+                    f"/api/morechildren?link_id=t3_n7r3uz&children={junk}",
+                )
+            assert str(excinfo.value) == "Bad Request"
+
+    async def test_bad_request_without_json_text_html_response(self):
+        with open("tests/integration/files/comment_ids.txt") as fp:
+            ids = fp.read()[:8000]
+        with self.use_cassette():
+            with pytest.raises(RedditAPIException) as excinfo:
+                await self.reddit.request(
+                    "GET",
+                    f"/api/morechildren?link_id=t3_n7r3uz&children={ids}",
+                )
+            assert (
+                str(excinfo.value)
+                == "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n"
+            )
+
     async def test_bare_badrequest(self):
         data = {
             "sr": "AskReddit",
