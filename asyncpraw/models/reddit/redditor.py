@@ -192,9 +192,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             await redditor.block()
 
         """
-        await self._reddit.post(
-            API_PATH["block_user"], params={"account_id": self.fullname}
-        )
+        await self._reddit.post(API_PATH["block_user"], params={"name": self.name})
 
     async def friend(self, note: str = None):
         """Friend the Redditor.
