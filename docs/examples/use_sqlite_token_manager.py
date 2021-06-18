@@ -17,21 +17,22 @@ the FileTokenManager.
 
 Usage:
 
-    EXPORT praw_client_id=<REDDIT_CLIENT_ID>
-    EXPORT praw_client_secret=<REDDIT_CLIENT_SECRET>
-    python3 use_sqlite_token_manager.py TOKEN_KEY
+    export praw_client_id=hIkgfjAZpV9u4A
+    export praw_client_secret=jHXu3riMfnn2vEsUDTHMgSNjFWA
+    python use_sqlite_token_manager.py test
 
 """
+import asyncio
 import os
 import sys
 
-import praw
-from praw.util.token_manager import SQLiteTokenManager
+import asyncpraw
+from asyncpraw.util.token_manager import SQLiteTokenManager
 
 DATABASE_PATH = "tokens.sqlite3"
 
 
-def main():
+async def main():
     if "praw_client_id" not in os.environ:
         sys.stderr.write("Environment variable ``praw_client_id`` must be defined\n")
         return 1
@@ -47,25 +48,27 @@ def main():
         return 1
 
     refresh_token_manager = SQLiteTokenManager(DATABASE_PATH, key=sys.argv[1])
-    reddit = praw.Reddit(
+    reddit = asyncpraw.Reddit(
         token_manager=refresh_token_manager,
         user_agent="sqlite_token_manager/v0 by u/bboe",
     )
 
-    if not refresh_token_manager.is_registered():
+    if not await refresh_token_manager.is_registered():
         refresh_token = input("Enter initial refresh token: ").strip()
-        refresh_token_manager.register(refresh_token)
+        await refresh_token_manager.register(refresh_token)
 
-    scopes = reddit.auth.scopes()
+    scopes = await reddit.auth.scopes()
     if scopes == {"*"}:
-        print(f"{reddit.user.me()} is authenticated with all scopes")
+        print(f"{await reddit.user.me()} is authenticated with all scopes")
     elif "identity" in scopes:
         print(
-            f"{reddit.user.me()} is authenticated with the following scopes: {scopes}"
+            f"{await reddit.user.me()} is authenticated with the following scopes: {scopes}"
         )
     else:
         print(f"You are authenticated with the following scopes: {scopes}")
+    await refresh_token_manager.close()
+    await reddit.close()
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(asyncio.run(main()))
