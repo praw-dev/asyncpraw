@@ -1,6 +1,8 @@
 Change Log
 ==========
 
+Async PRAW follows `semantic versioning <http://semver.org/>`_.
+
 Unreleased
 ----------
 
