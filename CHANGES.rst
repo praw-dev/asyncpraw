@@ -6,6 +6,9 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+7.3.0 (2021/06/18)
+------------------
+
 **Added**
 
 - :class:`.UserSubreddit` for the ``subreddit`` attribute of :class:`.Redditor`.
