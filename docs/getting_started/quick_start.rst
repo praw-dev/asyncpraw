@@ -8,10 +8,9 @@ started.
 Prerequisites
 -------------
 
-:Python Knowledge: You need to know at least a little Python and some understanding
-    asynchronous usage in python to use Async PRAW; it's an asynchronous a Python
-    wrapper after all. Async PRAW supports `Python 3.6+`_. If you are stuck on a
-    problem, `r/learnpython`_ is a great place to ask for help.
+:Python Knowledge: You need to know at least a little Python and some understanding of
+    asynchronous usage in Python to use Async PRAW. Async PRAW supports `Python 3.6+`_.
+    If you are stuck on a problem, `r/learnpython`_ is a great place to ask for help.
 :Reddit Knowledge: A basic understanding of how Reddit works is a must. In the event you
     are not already familiar with Reddit start at `Reddit Help`_.
 :Reddit Account: A Reddit account is required to access Reddit's API. Create one at
