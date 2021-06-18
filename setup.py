@@ -65,7 +65,13 @@ setup(
         " python package that allows for simple access to reddit's API."
     ),
     extras_require=extras,
-    install_requires=["aiofiles", "asyncprawcore >=2.1, <3", "update_checker >=0.18"],
+    install_requires=[
+        "aiofiles <=0.6.0",
+        "aiosqlite <=0.17.0",
+        "asyncio_extras <=1.3.2",
+        "asyncprawcore >=2.1, <3",
+        "update_checker >=0.18",
+    ],
     keywords="reddit api wrapper asyncpraw praw async asynchronous",
     license="Simplified BSD License",
     long_description=README,
