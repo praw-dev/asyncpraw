@@ -6,6 +6,11 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+**Fixed**
+
+- Fixed an issue where some :class:`.RedditBase` objects would be sent in a request as
+  ``"None"``.
+
 7.3.0 (2021/06/18)
 ------------------
 

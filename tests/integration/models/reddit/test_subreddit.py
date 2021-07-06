@@ -994,7 +994,7 @@ class TestSubredditFlair(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             response = await subreddit.flair.delete_all()
-            assert len(response) == 1
+            assert len(response) == 5
             assert all("removed" in x["status"] for x in response)
 
     async def test_set__flair_id(self):
