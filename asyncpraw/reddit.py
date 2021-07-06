@@ -3,6 +3,7 @@ import asyncio
 import configparser
 import os
 import re
+from copy import copy
 from itertools import islice
 from logging import getLogger
 from typing import (
@@ -143,6 +144,15 @@ class Reddit:
     async def __aexit__(self, *_args):
         """Handle the context manager close."""
         await self.close()
+
+    def __deepcopy__(self, memodict={}):
+        """Shallow copy on deepcopy.
+
+        A shallow copied is performed on deepcopy as
+        :py:class:`asyncio.AbstractEventLoop` cannot be deepcopied.
+
+        """
+        return copy(self)
 
     def __enter__(self):
         """Handle the context manager open.
