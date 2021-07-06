@@ -6,6 +6,17 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+**Changed**
+
+- :class:`.Reddit` will now be shallow copied when a deepcopy is preformed on it as
+  ``asyncprawcore.Session`` (more specifically, :py:class:`asyncio.AbstractEventLoop`)
+  does not support being deepcopied.
+
+**Fixed**
+
+- Fixed an issue where some :class:`.RedditBase` objects would be sent in a request as
+  ``"None"``.
+
 7.3.0 (2021/06/18)
 ------------------
 

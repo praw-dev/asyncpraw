@@ -1697,7 +1697,7 @@ class SubredditFlair:
                 print(flair)
 
         """
-        Subreddit._safely_add_arguments(generator_kwargs, "params", name=str(redditor))
+        Subreddit._safely_add_arguments(generator_kwargs, "params", name=redditor)
         generator_kwargs.setdefault("limit", None)
         url = API_PATH["flairlist"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
@@ -2903,7 +2903,7 @@ class SubredditQuarantine:
                 print(submission)  # Returns Submission
 
         """
-        data = {"sr_name": str(self.subreddit)}
+        data = {"sr_name": self.subreddit}
         try:
             await self.subreddit._reddit.post(API_PATH["quarantine_opt_in"], data=data)
         except Redirect:
@@ -2925,7 +2925,7 @@ class SubredditQuarantine:
                 print(submission)
 
         """
-        data = {"sr_name": str(self.subreddit)}
+        data = {"sr_name": self.subreddit}
         try:
             await self.subreddit._reddit.post(API_PATH["quarantine_opt_out"], data=data)
         except Redirect:
@@ -3499,9 +3499,9 @@ class Modmail:
         data = {
             "body": body,
             "isAuthorHidden": author_hidden,
-            "srName": str(self.subreddit),
+            "srName": self.subreddit,
             "subject": subject,
-            "to": str(recipient),
+            "to": recipient,
         }
         return await self.subreddit._reddit.post(
             API_PATH["modmail_conversations"], data=data

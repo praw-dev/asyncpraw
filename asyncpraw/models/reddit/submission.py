@@ -213,7 +213,7 @@ class SubmissionModeration(ThingModerationMixin):
             "fullname": self.thing.fullname,
             "should_set_oc": True,
             "executed": False,
-            "r": str(self.thing.subreddit),
+            "r": self.thing.subreddit,
         }
         await self.thing._reddit.post(API_PATH["set_original_content"], data=data)
 
@@ -333,7 +333,7 @@ class SubmissionModeration(ThingModerationMixin):
             "fullname": self.thing.fullname,
             "should_set_oc": False,
             "executed": False,
-            "r": str(self.thing.subreddit),
+            "r": self.thing.subreddit,
         }
         await self.thing._reddit.post(API_PATH["set_original_content"], data=data)
 
