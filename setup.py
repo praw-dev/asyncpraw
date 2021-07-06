@@ -27,7 +27,7 @@ extras = {
         "sphinx_rtd_theme",
         "sphinxcontrib-trio",
     ],
-    "readthedocs": ["sphinx", "sphinxcontrib-trio"],
+    "readthedocs": ["sphinx", "sphinx_rtd_theme", "sphinxcontrib-trio"],
     "test": [
         "asynctest >=0.13.0",
         "mock >=0.8",

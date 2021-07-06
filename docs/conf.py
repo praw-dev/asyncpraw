@@ -10,7 +10,12 @@ from asyncpraw import __version__
 
 copyright = datetime.today().strftime("%Y, Joel Payne")
 exclude_patterns = ["_build"]
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinxcontrib_trio"]
+extensions = [
+    "sphinx_rtd_theme",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinxcontrib_trio",
+]
 html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {"collapse_navigation": True}
