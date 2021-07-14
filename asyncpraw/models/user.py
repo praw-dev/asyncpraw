@@ -157,6 +157,30 @@ class User(AsyncPRAWBase):
             self._me = Redditor(self._reddit, _data=user_data)
         return self._me
 
+    def moderator_subreddits(
+        self, **generator_kwargs: Union[str, int, Dict[str, str]]
+    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
+        """Return a :class:`.ListingGenerator` subreddits that the user moderates.
+
+        Additional keyword arguments are passed in the initialization of
+        :class:`.ListingGenerator`.
+
+        To print a list of the names of the subreddits you moderate, try:
+
+        .. code-block:: python
+
+            async for subreddit in reddit.user.moderator_subreddits(limit=None):
+                print(str(subreddit))
+
+        .. seealso::
+
+            :meth:`.Redditor.moderated`
+
+        """
+        return ListingGenerator(
+            self._reddit, API_PATH["my_moderator"], **generator_kwargs
+        )
+
     async def multireddits(self) -> List["asyncpraw.models.Multireddit"]:
         """Return a list of multireddits belonging to the user."""
         return await self._reddit.get(API_PATH["my_multireddits"])
