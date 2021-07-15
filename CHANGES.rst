@@ -43,6 +43,10 @@ Unreleased
   https://www.reddit.com/r/redditdev/comments/olk5e6/followup_oauth2_api_changes_regarding_refresh/
   for more info.
 
+**Changed**
+
+- :meth:`.Reddit.delete` now accepts the ``params`` parameter.
+
 **Deprecated**
 
 - :class:`.Reddit` keyword argument ``token_manager``.
