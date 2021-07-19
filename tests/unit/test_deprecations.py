@@ -6,6 +6,7 @@ from asyncpraw import Reddit
 from asyncpraw.exceptions import APIException, AsyncPRAWException, WebSocketException
 from asyncpraw.models import Subreddit
 from asyncpraw.models.reddit.user_subreddit import UserSubreddit
+from asyncpraw.util.token_manager import FileTokenManager
 
 from . import UnitTest
 
@@ -83,6 +84,17 @@ class TestDeprecation(UnitTest):
         with pytest.raises(DeprecationWarning):
             await self.reddit.user.me()
 
+    async def test_reddit_token_manager(self):
+        with pytest.raises(DeprecationWarning):
+            self.reddit = Reddit(
+                client_id="dummy",
+                client_secret=None,
+                redirect_uri="dummy",
+                user_agent="dummy",
+                token_manager=FileTokenManager("name"),
+            )
+            await self.reddit._core.close()
+
     def test_synchronous_context_manager(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             with self.reddit:
@@ -90,16 +102,6 @@ class TestDeprecation(UnitTest):
             assert (
                 excinfo.value.args[0]
                 == "Using this class as a synchronous context manager is deprecated and will be removed in the next release. Use this class as an asynchronous context manager instead."
-            )
-
-    def test_reddit_refresh_token(self):
-        with pytest.raises(DeprecationWarning):
-            Reddit(
-                client_id="dummy",
-                client_secret=None,
-                redirect_uri="dummy",
-                refresh_token="dummy",
-                user_agent="dummy",
             )
 
     def test_user_subreddit_as_dict(self):

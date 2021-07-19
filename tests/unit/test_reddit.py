@@ -64,7 +64,7 @@ class TestReddit(UnitTest):
             )
         assert (
             str(excinfo.value)
-            == "legacy ``refresh_token`` setting cannot be provided when providing ``token_manager``"
+            == "``refresh_token`` setting cannot be provided when providing ``token_manager``"
         )
 
     async def test_context_manager(self):

@@ -6,6 +6,14 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+- The configuration setting ``refresh_token`` has been added back. See
+  https://www.reddit.com/r/redditdev/comments/olk5e6/followup_oauth2_api_changes_regarding_refresh/
+  for more info.
+
+**Deprecated**
+
+- :class:`.Reddit` keyword argument ``token_manager``.
+
 7.3.1 (2021/07/06)
 ------------------
 
