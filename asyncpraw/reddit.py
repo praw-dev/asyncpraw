@@ -51,7 +51,7 @@ except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .. import asyncpraw
+    import asyncpraw
 
 Comment = models.Comment
 Redditor = models.Redditor

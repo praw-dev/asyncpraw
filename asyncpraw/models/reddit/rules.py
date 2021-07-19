@@ -9,7 +9,7 @@ from ...util.cache import cachedproperty
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .... import asyncpraw
+    import asyncpraw
 
 
 class Rule(RedditBase):

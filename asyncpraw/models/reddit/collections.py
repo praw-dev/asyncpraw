@@ -11,7 +11,7 @@ from .submission import Submission
 from .subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .... import asyncpraw
+    import asyncpraw
 
 
 class CollectionModeration(AsyncPRAWBase):

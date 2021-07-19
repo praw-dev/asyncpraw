@@ -6,7 +6,7 @@ from ..base import AsyncPRAWBase
 from .listing import FlairListing
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .... import asyncpraw
+    import asyncpraw
 
 
 class ListingGenerator(AsyncPRAWBase, AsyncIterator):

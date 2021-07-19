@@ -11,7 +11,7 @@ from .redditor import Redditor
 from .subreddit import Subreddit, SubredditStream
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .... import asyncpraw
+    import asyncpraw
 
 
 class Multireddit(SubredditListingMixin, RedditBase):
