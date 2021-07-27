@@ -4,10 +4,12 @@ import json
 import os
 from base64 import b64encode
 from datetime import datetime
+from functools import wraps
 
 import pytest
 from _pytest.tmpdir import _mk_tmp
 from vcr import VCR
+from vcr.cassette import Cassette
 from vcr.persisters.filesystem import FilesystemPersister
 from vcr.serialize import deserialize, serialize
 
@@ -87,7 +89,7 @@ placeholders = {
     x: env_default(x)
     for x in (
         "auth_code client_id client_secret password redirect_uri test_subreddit"
-        " user_agent username"
+        " user_agent username refresh_token"
     ).split()
 }
 
@@ -155,6 +157,29 @@ VCR = CustomVCR(
 )
 VCR.register_serializer("custom_serializer", CustomSerializer)
 VCR.register_persister(CustomPersister)
+
+
+def after_init(func, *args):
+    func(*args)
+
+
+def add_init_hook(original_init):
+    """Wrap an __init__ method to also call some hooks."""
+
+    @wraps(original_init)
+    def wrapper(self, *args, **kwargs):
+        original_init(self, *args, **kwargs)
+        after_init(init_hook, self)
+
+    return wrapper
+
+
+Cassette.__init__ = add_init_hook(Cassette.__init__)
+
+
+def init_hook(cassette):
+    if not cassette.requests:
+        pytest.set_up_record()  # dynamically defined in __init__.py
 
 
 class Placeholders:

@@ -6,8 +6,13 @@ from asyncpraw import Reddit
 from asyncpraw.exceptions import APIException, AsyncPRAWException, WebSocketException
 from asyncpraw.models import Subreddit
 from asyncpraw.models.reddit.user_subreddit import UserSubreddit
+from asyncpraw.util.token_manager import FileTokenManager
 
 from . import UnitTest
+
+pytestmark = pytest.mark.filterwarnings(
+    "ignore:Unclosed client session", category=ResourceWarning
+)
 
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
@@ -83,23 +88,24 @@ class TestDeprecation(UnitTest):
         with pytest.raises(DeprecationWarning):
             await self.reddit.user.me()
 
-    def test_synchronous_context_manager(self):
+    async def test_reddit_token_manager(self):
+        with pytest.raises(DeprecationWarning):
+            async with Reddit(
+                client_id="dummy",
+                client_secret=None,
+                redirect_uri="dummy",
+                user_agent="dummy",
+                token_manager=FileTokenManager("name"),
+            ) as reddit:
+                reddit._core._requestor._http = None
+
+    async def test_synchronous_context_manager(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             with self.reddit:
                 pass
             assert (
                 excinfo.value.args[0]
                 == "Using this class as a synchronous context manager is deprecated and will be removed in the next release. Use this class as an asynchronous context manager instead."
-            )
-
-    def test_reddit_refresh_token(self):
-        with pytest.raises(DeprecationWarning):
-            Reddit(
-                client_id="dummy",
-                client_secret=None,
-                redirect_uri="dummy",
-                refresh_token="dummy",
-                user_agent="dummy",
             )
 
     def test_user_subreddit_as_dict(self):
