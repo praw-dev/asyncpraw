@@ -10,6 +10,10 @@ from asyncpraw.util.token_manager import FileTokenManager
 
 from . import UnitTest
 
+pytestmark = pytest.mark.filterwarnings(
+    "ignore:Unclosed client session", category=ResourceWarning
+)
+
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
 class TestDeprecation(UnitTest):
@@ -86,16 +90,16 @@ class TestDeprecation(UnitTest):
 
     async def test_reddit_token_manager(self):
         with pytest.raises(DeprecationWarning):
-            self.reddit = Reddit(
+            async with Reddit(
                 client_id="dummy",
                 client_secret=None,
                 redirect_uri="dummy",
                 user_agent="dummy",
                 token_manager=FileTokenManager("name"),
-            )
-            await self.reddit._core.close()
+            ) as reddit:
+                reddit._core._requestor._http = None
 
-    def test_synchronous_context_manager(self):
+    async def test_synchronous_context_manager(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             with self.reddit:
                 pass
