@@ -27,13 +27,13 @@ repos:
   - repo: https://github.com/psf/black
     hooks:
       - id: black
-    rev: 21.12b0
+    rev: 22.1.0
 
   - repo: https://github.com/LilSpazJoekp/docstrfmt
     hooks:
       - id: docstrfmt
         require_serial: true
-    rev: v1.4.3
+    rev: v1.4.4
 
   - repo: https://github.com/pycqa/flake8
     hooks:
