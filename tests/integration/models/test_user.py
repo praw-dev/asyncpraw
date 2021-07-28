@@ -81,6 +81,16 @@ class TestUser(IntegrationTest):
             me = await self.reddit.user.me(use_cache=False)
             assert not hasattr(me, "praw_is_cached")
 
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_moderator_subreddits(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            mod_subs = await self.async_list(
+                self.reddit.user.moderator_subreddits(limit=None)
+            )
+            assert mod_subs
+            assert all(isinstance(x, Subreddit) for x in mod_subs)
+
     async def test_multireddits(self):
         self.reddit.read_only = False
         with self.use_cassette():
