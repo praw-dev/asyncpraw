@@ -5,7 +5,7 @@ from ...const import API_PATH
 from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .... import asyncpraw
+    import asyncpraw
 
 
 class MoreComments(AsyncPRAWBase):

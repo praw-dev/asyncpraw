@@ -12,7 +12,7 @@ from .reddit.redditor import Redditor
 from .reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import asyncpraw
+    import asyncpraw
 
 
 class User(AsyncPRAWBase):

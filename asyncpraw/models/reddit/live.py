@@ -11,7 +11,7 @@ from .mixins import FullnameMixin
 from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .... import asyncpraw
+    import asyncpraw
 
 
 class LiveContributorRelationship:

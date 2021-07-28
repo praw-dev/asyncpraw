@@ -6,7 +6,7 @@ from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ..... import asyncpraw
+    import asyncpraw
 
 
 class SubmissionListingMixin(AsyncPRAWBase):

@@ -7,7 +7,7 @@ from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ... import asyncpraw
+    import asyncpraw
 
 
 class Inbox(AsyncPRAWBase):
