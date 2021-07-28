@@ -1,0 +1,115 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "client_credentials"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.3.2.dev0 asyncprawcore/2.3.1.dev0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Length": "109",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 27 Jul 2021 23:45:23 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "edgebucket=wHGnPcuOCMhvZ8k3vr; Domain=reddit.com; Max-Age=63071999; Path=/;  secure",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Via": "1.1 varnish",
+          "X-Clacks-Overhead": "GNU Terry Pratchett",
+          "X-Moose": "majestic",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "299",
+          "x-ratelimit-reset": "277",
+          "x-ratelimit-used": "1",
+          "x-reddit-loid": "0000000000dkavt2s0.2.1627429523478.Z0FBQUFBQmhBSnFUREZoQXVlMGtCS2daVWdwMmpLNVB6X0Vvc2ZOM2VzSzJBUmsyXzFPOFdJN041djVsZnViTXZJY2NBblFmanIxNDBENFlvcG12YnZlVmYwX0xUZzQ2U1BtalhFTHFycjFUV0V1c2ktMVNVdUpUN01hcUpOMVIybkJNX0xUejlsanI",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.3.2.dev0 asyncprawcore/2.3.1.dev0"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/r/reddit.com/wiki/search?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"kind\": \"wikipage\", \"data\": {\"content_md\": \"#reddit search\\r\\nreddit search allows you to search for submissions and subreddits.\\r\\n\\r\\n##Submissions\\r\\nThe search page for submissions is at http://www.reddit.com/search. You can also search from the sidebar of most reddit pages.\\r\\n\\r\\nSearching from a specific section of reddit \\u2014 such as a subreddit, [personal multireddit](http://www.reddit.com/r/multibeta/wiki/index), or [temporary multireddit](http://www.reddit.com/r/aww+todayilearned/search?q=cats\\u0026restrict_sr=on) \\u2014 can limit your search results to that section.\\r\\n\\r\\n###Field search\\r\\nYou can search for these parts of a submission:\\r\\n\\r\\n* **author**: The user who submitted the post.  \\r\\n For example, [`author:PresidentObama`](/search?q=author:PresidentObama)\\r\\n* **flair**: The text of the link flair on the post.  \\r\\n For example, [`flair:cats`](/search?q=flair:cats)\\r\\n* **nsfw**: NSFW posts.  \\r\\n Set to `yes` for NSFW submissions, `no` otherwise.  `1` and `0` are also supported.  \\r\\n For example, [`nsfw:no`](/search?q=cats+nsfw:no) or [`nsfw:0`](/search?q=cats+nsfw:0)\\r\\n* **self**: Text post.  \\r\\n Set to `yes` for text submissions, `no` otherwise.  `1` and `0` are also supported.  \\r\\n For example, [`self:yes`](/search?q=cats+self:yes) or [`self:1`](/search?q=cats+self:1)\\r\\n* **selftext**: For self-posts, the body of the post.  \\r\\n For example, [`selftext:cats`](/search?q=selftext:cats)\\r\\n* **site**: The domain of the submitted URL.  \\r\\n For example, [`site:example.com`](/search?q=site:example.com)\\r\\n* **subreddit**: The submission's subreddit.  \\r\\n For example, [`subreddit:cats`](/search?q=subreddit:cats)\\r\\n* **title**: The submission title.  \\r\\n For example, [`title:cats`](/search?q=title:cats)\\r\\n* **url**: The submission's URL (the website's address)  \\r\\n For example, [`url:cats`](/search?q=url:cats)\\r\\n* You can also search multiple fields at once.  \\r\\n For example, [`cats subreddit:pics site:imgur.com`](/search?q=cats+subreddit:pics+site:imgur.com)\\r\\n\\r\\nField names are **case sensitive**. When making a multi-word field search, wrap the query in double-quotes. Single-quoted field searches are not supported. Example: `flair:\\\"Multi Word Text\\\"`\\r\\n\\r\\nComments are **not** included in the search index at this time.\\r\\n\\r\\n###Boolean operators\\r\\n\\r\\nreddit search supports the boolean operators `AND`, `OR`, and `NOT` (case sensitive) as well as parenthesis.\\r\\n\\r\\nWe will be deprecating non-standard single character operators `\\u0026`, `|`, and `-` in the near future. Please update your queries to us the documented operators above instead.\\r\\n\\r\\n* By default, search queries use the `AND` operator.  \\r\\n For example, `hedgehogs AND porcupines` and `hedgehogs porcupines` are equivalent\\r\\n* You can use the `OR` operator when you want to match submissions that contain either term.  \\r\\n For example, `hedgehogs OR porcupines`\\r\\n* You can exclude terms with `NOT`.  \\r\\n For example, `hedgehogs NOT porcupines`   \\r\\n* You can use parentheses `( )` to group parts of a search together.  \\r\\n For example, `(hedgehogs OR porcupines) NOT sonic`\\r\\n\\r\\n###Limitations and caveats\\r\\n\\r\\n* Search terms may be [stemmed](http://en.wikipedia.org/wiki/Stemming). A search for \\\"dogs\\\" may return results with the word \\\"dog\\\" in them.\\r\\n* Search results are limited to 1000 results.\\r\\n\\r\\n##Subreddits\\r\\nYou can search for subreddits from the subreddits page at https://www.reddit.com/subreddits/search.\\r\\n\\r\\nSubreddit results also appear at the top of the main search page at https://www.reddit.com/search.\\r\\n\\r\\n##Staying up to date (RSS)\\r\\nIf you want to stay up to date on a search result, you can subscribe to that search's RSS feed. All you need to do is add `.rss` to the search URL, and add it to your news reader. For example, this is the RSS feed for the \\\"cats\\\" [search results](https://www.reddit.com/search.rss?q=cats\\u0026sort=new\\u0026restrict_sr=\\u0026t=all):\\r\\n\\r\\n https://www.reddit.com/search.rss?q=cats\\u0026sort=new\\u0026restrict_sr=\\u0026t=all\\r\\n\\r\\n##Search API\\r\\nSee the [api documentation](https://www.reddit.com/dev/api#GET_search) for a list of supported url parameters.\\r\\n\\r\\nhttps://www.reddit.com/search.json?q=cats\\r\\n\\r\\n##Questions\\r\\nPlease direct any questions about search to the /r/help subreddit. If you've found a bug, you may report it to the /r/bugs subreddit.\\r\\n\\r\\nCheck /r/beta for search features currently under beta testing.\\r\\n\", \"may_revise\": false, \"reason\": null, \"revision_date\": 1502734852, \"revision_by\": null, \"revision_id\": \"4e3db956-811d-11e7-8e85-0ec045643bbe\", \"content_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md wiki\\\"\\u003E\\u003Cdiv class=\\\"toc\\\"\\u003E\\u003Cul\\u003E\\u003Cli class=\\\"wiki_reddit_search\\\"\\u003E\\u003Ca href=\\\"#wiki_reddit_search\\\"\\u003Ereddit search\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"toc_child\\\"\\u003E\\u003Cul\\u003E\\u003Cli class=\\\"wiki_submissions\\\"\\u003E\\u003Ca href=\\\"#wiki_submissions\\\"\\u003ESubmissions\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"toc_child\\\"\\u003E\\u003Cul\\u003E\\u003Cli class=\\\"wiki_field_search\\\"\\u003E\\u003Ca href=\\\"#wiki_field_search\\\"\\u003EField search\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"wiki_boolean_operators\\\"\\u003E\\u003Ca href=\\\"#wiki_boolean_operators\\\"\\u003EBoolean operators\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"wiki_limitations_and_caveats\\\"\\u003E\\u003Ca href=\\\"#wiki_limitations_and_caveats\\\"\\u003ELimitations and caveats\\u003C/a\\u003E\\u003C/li\\u003E\\u003C/ul\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"wiki_subreddits\\\"\\u003E\\u003Ca href=\\\"#wiki_subreddits\\\"\\u003ESubreddits\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"wiki_staying_up_to_date_.28rss.29\\\"\\u003E\\u003Ca href=\\\"#wiki_staying_up_to_date_.28rss.29\\\"\\u003EStaying up to date (RSS)\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"wiki_search_api\\\"\\u003E\\u003Ca href=\\\"#wiki_search_api\\\"\\u003ESearch API\\u003C/a\\u003E\\u003C/li\\u003E\\u003Cli class=\\\"wiki_questions\\\"\\u003E\\u003Ca href=\\\"#wiki_questions\\\"\\u003EQuestions\\u003C/a\\u003E\\u003C/li\\u003E\\u003C/ul\\u003E\\u003C/li\\u003E\\u003C/ul\\u003E\\u003C/div\\u003E\\u003Ch1 id=\\\"wiki_reddit_search\\\"\\u003Ereddit search\\u003C/h1\\u003E\\n\\u003Cp\\u003Ereddit search allows you to search for submissions and subreddits.\\u003C/p\\u003E\\n\\u003Ch2 id=\\\"wiki_submissions\\\"\\u003ESubmissions\\u003C/h2\\u003E\\n\\u003Cp\\u003EThe search page for submissions is at \\u003Ca href=\\\"http://www.reddit.com/search\\\" rel=\\\"nofollow\\\"\\u003Ehttp://www.reddit.com/search\\u003C/a\\u003E. You can also search from the sidebar of most reddit pages.\\u003C/p\\u003E\\n\\u003Cp\\u003ESearching from a specific section of reddit \\u2014 such as a subreddit, \\u003Ca href=\\\"http://www.reddit.com/r/multibeta/wiki/index\\\" rel=\\\"nofollow\\\"\\u003Epersonal multireddit\\u003C/a\\u003E, or \\u003Ca href=\\\"http://www.reddit.com/r/aww+todayilearned/search?q=cats\\u0026amp;restrict_sr=on\\\" rel=\\\"nofollow\\\"\\u003Etemporary multireddit\\u003C/a\\u003E \\u2014 can limit your search results to that section.\\u003C/p\\u003E\\n\\u003Ch3 id=\\\"wiki_field_search\\\"\\u003EField search\\u003C/h3\\u003E\\n\\u003Cp\\u003EYou can search for these parts of a submission:\\u003C/p\\u003E\\n\\u003Cul\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Eauthor\\u003C/strong\\u003E: The user who submitted the post.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=author:PresidentObama\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Eauthor:PresidentObama\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Eflair\\u003C/strong\\u003E: The text of the link flair on the post.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=flair:cats\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Eflair:cats\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Ensfw\\u003C/strong\\u003E: NSFW posts.\\u003Cbr /\\u003E\\nSet to \\u003Ccode\\u003Eyes\\u003C/code\\u003E for NSFW submissions, \\u003Ccode\\u003Eno\\u003C/code\\u003E otherwise.  \\u003Ccode\\u003E1\\u003C/code\\u003E and \\u003Ccode\\u003E0\\u003C/code\\u003E are also supported.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=cats+nsfw:no\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Ensfw:no\\u003C/code\\u003E\\u003C/a\\u003E or \\u003Ca href=\\\"/search?q=cats+nsfw:0\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Ensfw:0\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Eself\\u003C/strong\\u003E: Text post.\\u003Cbr /\\u003E\\nSet to \\u003Ccode\\u003Eyes\\u003C/code\\u003E for text submissions, \\u003Ccode\\u003Eno\\u003C/code\\u003E otherwise.  \\u003Ccode\\u003E1\\u003C/code\\u003E and \\u003Ccode\\u003E0\\u003C/code\\u003E are also supported.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=cats+self:yes\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Eself:yes\\u003C/code\\u003E\\u003C/a\\u003E or \\u003Ca href=\\\"/search?q=cats+self:1\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Eself:1\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Eselftext\\u003C/strong\\u003E: For self-posts, the body of the post.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=selftext:cats\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Eselftext:cats\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Esite\\u003C/strong\\u003E: The domain of the submitted URL.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=site:example.com\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Esite:example.com\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Esubreddit\\u003C/strong\\u003E: The submission\\u0026#39;s subreddit.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=subreddit:cats\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Esubreddit:cats\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Etitle\\u003C/strong\\u003E: The submission title.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=title:cats\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Etitle:cats\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003E\\u003Cstrong\\u003Eurl\\u003C/strong\\u003E: The submission\\u0026#39;s URL (the website\\u0026#39;s address)\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=url:cats\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Eurl:cats\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003EYou can also search multiple fields at once.\\u003Cbr /\\u003E\\nFor example, \\u003Ca href=\\\"/search?q=cats+subreddit:pics+site:imgur.com\\\" rel=\\\"nofollow\\\"\\u003E\\u003Ccode\\u003Ecats subreddit:pics site:imgur.com\\u003C/code\\u003E\\u003C/a\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\u003Cp\\u003EField names are \\u003Cstrong\\u003Ecase sensitive\\u003C/strong\\u003E. When making a multi-word field search, wrap the query in double-quotes. Single-quoted field searches are not supported. Example: \\u003Ccode\\u003Eflair:\\u0026quot;Multi Word Text\\u0026quot;\\u003C/code\\u003E\\u003C/p\\u003E\\n\\u003Cp\\u003EComments are \\u003Cstrong\\u003Enot\\u003C/strong\\u003E included in the search index at this time.\\u003C/p\\u003E\\n\\u003Ch3 id=\\\"wiki_boolean_operators\\\"\\u003EBoolean operators\\u003C/h3\\u003E\\n\\u003Cp\\u003Ereddit search supports the boolean operators \\u003Ccode\\u003EAND\\u003C/code\\u003E, \\u003Ccode\\u003EOR\\u003C/code\\u003E, and \\u003Ccode\\u003ENOT\\u003C/code\\u003E (case sensitive) as well as parenthesis.\\u003C/p\\u003E\\n\\u003Cp\\u003EWe will be deprecating non-standard single character operators \\u003Ccode\\u003E\\u0026amp;\\u003C/code\\u003E, \\u003Ccode\\u003E|\\u003C/code\\u003E, and \\u003Ccode\\u003E-\\u003C/code\\u003E in the near future. Please update your queries to us the documented operators above instead.\\u003C/p\\u003E\\n\\u003Cul\\u003E\\n\\u003Cli\\u003EBy default, search queries use the \\u003Ccode\\u003EAND\\u003C/code\\u003E operator.\\u003Cbr /\\u003E\\nFor example, \\u003Ccode\\u003Ehedgehogs AND porcupines\\u003C/code\\u003E and \\u003Ccode\\u003Ehedgehogs porcupines\\u003C/code\\u003E are equivalent\\u003C/li\\u003E\\n\\u003Cli\\u003EYou can use the \\u003Ccode\\u003EOR\\u003C/code\\u003E operator when you want to match submissions that contain either term.\\u003Cbr /\\u003E\\nFor example, \\u003Ccode\\u003Ehedgehogs OR porcupines\\u003C/code\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003EYou can exclude terms with \\u003Ccode\\u003ENOT\\u003C/code\\u003E.\\u003Cbr /\\u003E\\nFor example, \\u003Ccode\\u003Ehedgehogs NOT porcupines\\u003C/code\\u003E\\u003Cbr /\\u003E\\u003C/li\\u003E\\n\\u003Cli\\u003EYou can use parentheses \\u003Ccode\\u003E( )\\u003C/code\\u003E to group parts of a search together.\\u003Cbr /\\u003E\\nFor example, \\u003Ccode\\u003E(hedgehogs OR porcupines) NOT sonic\\u003C/code\\u003E\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\u003Ch3 id=\\\"wiki_limitations_and_caveats\\\"\\u003ELimitations and caveats\\u003C/h3\\u003E\\n\\u003Cul\\u003E\\n\\u003Cli\\u003ESearch terms may be \\u003Ca href=\\\"http://en.wikipedia.org/wiki/Stemming\\\" rel=\\\"nofollow\\\"\\u003Estemmed\\u003C/a\\u003E. A search for \\u0026quot;dogs\\u0026quot; may return results with the word \\u0026quot;dog\\u0026quot; in them.\\u003C/li\\u003E\\n\\u003Cli\\u003ESearch results are limited to 1000 results.\\u003C/li\\u003E\\n\\u003C/ul\\u003E\\n\\u003Ch2 id=\\\"wiki_subreddits\\\"\\u003ESubreddits\\u003C/h2\\u003E\\n\\u003Cp\\u003EYou can search for subreddits from the subreddits page at \\u003Ca href=\\\"https://www.reddit.com/subreddits/search\\\" rel=\\\"nofollow\\\"\\u003Ehttps://www.reddit.com/subreddits/search\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\u003Cp\\u003ESubreddit results also appear at the top of the main search page at \\u003Ca href=\\\"https://www.reddit.com/search\\\" rel=\\\"nofollow\\\"\\u003Ehttps://www.reddit.com/search\\u003C/a\\u003E.\\u003C/p\\u003E\\n\\u003Ch2 id=\\\"wiki_staying_up_to_date_.28rss.29\\\"\\u003EStaying up to date (RSS)\\u003C/h2\\u003E\\n\\u003Cp\\u003EIf you want to stay up to date on a search result, you can subscribe to that search\\u0026#39;s RSS feed. All you need to do is add \\u003Ccode\\u003E.rss\\u003C/code\\u003E to the search URL, and add it to your news reader. For example, this is the RSS feed for the \\u0026quot;cats\\u0026quot; \\u003Ca href=\\\"https://www.reddit.com/search.rss?q=cats\\u0026amp;sort=new\\u0026amp;restrict_sr=\\u0026amp;t=all\\\" rel=\\\"nofollow\\\"\\u003Esearch results\\u003C/a\\u003E:\\u003C/p\\u003E\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/search.rss?q=cats\\u0026amp;sort=new\\u0026amp;restrict_sr=\\u0026amp;t=all\\\" rel=\\\"nofollow\\\"\\u003Ehttps://www.reddit.com/search.rss?q=cats\\u0026amp;sort=new\\u0026amp;restrict_sr=\\u0026amp;t=all\\u003C/a\\u003E\\u003C/p\\u003E\\n\\u003Ch2 id=\\\"wiki_search_api\\\"\\u003ESearch API\\u003C/h2\\u003E\\n\\u003Cp\\u003ESee the \\u003Ca href=\\\"https://www.reddit.com/dev/api#GET_search\\\" rel=\\\"nofollow\\\"\\u003Eapi documentation\\u003C/a\\u003E for a list of supported url parameters.\\u003C/p\\u003E\\n\\u003Cp\\u003E\\u003Ca href=\\\"https://www.reddit.com/search.json?q=cats\\\" rel=\\\"nofollow\\\"\\u003Ehttps://www.reddit.com/search.json?q=cats\\u003C/a\\u003E\\u003C/p\\u003E\\n\\u003Ch2 id=\\\"wiki_questions\\\"\\u003EQuestions\\u003C/h2\\u003E\\n\\u003Cp\\u003EPlease direct any questions about search to the \\u003Ca href=\\\"/r/help\\\" rel=\\\"nofollow\\\"\\u003E/r/help\\u003C/a\\u003E subreddit. If you\\u0026#39;ve found a bug, you may report it to the \\u003Ca href=\\\"/r/bugs\\\" rel=\\\"nofollow\\\"\\u003E/r/bugs\\u003C/a\\u003E subreddit.\\u003C/p\\u003E\\n\\u003Cp\\u003ECheck \\u003Ca href=\\\"/r/beta\\\" rel=\\\"nofollow\\\"\\u003E/r/beta\\u003C/a\\u003E for search features currently under beta testing.\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}}"
+        },
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "X-Moose",
+          "Cache-Control": "max-age=0, must-revalidate",
+          "Connection": "keep-alive",
+          "Content-Length": "15264",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 27 Jul 2021 23:45:23 GMT",
+          "Server": "snooserv",
+          "Set-Cookie": "csv=1; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None",
+          "Strict-Transport-Security": "max-age=15552000; includeSubDomains; preload",
+          "Vary": "accept-encoding",
+          "Via": "1.1 varnish",
+          "X-Clacks-Overhead": "GNU Terry Pratchett",
+          "X-Moose": "majestic",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "SAMEORIGIN",
+          "x-ratelimit-remaining": "299",
+          "x-ratelimit-reset": "277",
+          "x-ratelimit-used": "1",
+          "x-ua-compatible": "IE=edge",
+          "x-xss-protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/r/reddit.com/wiki/search?raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2021-07-27T18:45:23",
+  "version": 1
+}

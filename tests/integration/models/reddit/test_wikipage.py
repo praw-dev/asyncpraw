@@ -1,7 +1,7 @@
 from base64 import urlsafe_b64encode
 
 import pytest
-from asyncprawcore import NotFound
+from asyncprawcore import Forbidden, NotFound
 from asynctest import mock
 
 from asyncpraw.exceptions import RedditAPIException
@@ -26,6 +26,13 @@ class TestWikiPage(IntegrationTest):
             with pytest.raises(RedditAPIException) as excinfo:
                 await page._fetch()
             assert str(excinfo.value) == "INVALID_PAGE_NAME"
+
+    async def test_discussions(self):
+        subreddit = await self.reddit.subreddit("reddit.com")
+
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("search")
+            assert self.async_list(page.discussions())
 
     async def test_edit(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -143,6 +150,40 @@ class TestWikiPageModeration(IntegrationTest):
         with self.use_cassette():
             page = await subreddit.wiki.get_page("index")
             await page.mod.remove("Lil_SpazTest")
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_revert(self, _):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+        page = WikiPage(self.reddit, subreddit, "test")
+
+        self.reddit.read_only = False
+        with self.use_cassette():
+            revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
+            revision = await page.revision(revision_id)
+            await revision.mod.revert()
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_revert_css_fail(self, _):
+        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        self.reddit.read_only = False
+        with self.use_cassette():
+            page = await subreddit.wiki.get_page("config/stylesheet")
+            await subreddit.stylesheet.upload(
+                name="css-revert-fail",
+                image_path="tests/integration/files/icon.jpg",
+            )
+            await page.edit("div {background: url(%%css-revert-fail%%)}")
+            revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
+            await subreddit.stylesheet.delete_image("css-revert-fail")
+            with pytest.raises(Forbidden) as exc:
+                revision = await page.revision(revision_id)
+                await revision.mod.revert()
+            assert await exc.value.response.json() == {
+                "reason": "INVALID_CSS",
+                "message": "Forbidden",
+                "explanation": "%(css_error)s",
+            }
 
     async def test_settings(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
