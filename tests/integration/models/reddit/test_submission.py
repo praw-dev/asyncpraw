@@ -544,3 +544,18 @@ class TestSubmissionModeration(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.unspoiler()
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_crowd_control_level(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            submission = await self.reddit.submission("ol4d5w")
+            await submission.mod.update_crowd_control_level(2)
+            modlog = await self.async_next(
+                submission.subreddit.mod.log(
+                    action="adjust_post_crowd_control_level", limit=1
+                )
+            )
+            assert modlog.action == "adjust_post_crowd_control_level"
+            assert modlog.details == "medium"
+            assert modlog.target_fullname == submission.fullname
