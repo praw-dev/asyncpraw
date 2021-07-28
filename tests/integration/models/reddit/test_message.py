@@ -97,6 +97,22 @@ class TestMessage(IntegrationTest):
             assert reply.body == "Message reply"
             assert reply.first_message_name == message.fullname
 
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_unblock_subreddit(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            message1 = await self.async_next(self.reddit.inbox.messages(limit=1))
+            assert isinstance(message1, SubredditMessage)
+            message_fullname = message1.fullname
+            await message1.block()
+            message2 = await self.async_next(self.reddit.inbox.messages(limit=1))
+            assert message2.fullname == message_fullname
+            assert message2.subject == "[message from blocked subreddit]"
+            await message2.unblock_subreddit()
+            message3 = await self.async_next(self.reddit.inbox.messages(limit=1))
+            assert message3.fullname == message_fullname
+            assert message3.subject != "[message from blocked subreddit]"
+
 
 class TestSubredditMessage(IntegrationTest):
     async def test_mute(self):
