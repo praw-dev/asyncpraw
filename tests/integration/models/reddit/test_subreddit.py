@@ -1271,6 +1271,19 @@ class TestSubredditLinkFlairTemplates(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             await subreddit.flair.link_templates.clear()
 
+    async def test_user_selectable(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            templates = await self.async_list(
+                subreddit.flair.link_templates.user_selectable()
+            )
+        assert len(templates) >= 2
+
+        for template in templates:
+            assert template["flair_template_id"]
+            assert template["flair_text"]
+
 
 class TestSubredditListings(IntegrationTest):
     async def test_comments(self):
