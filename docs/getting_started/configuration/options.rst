@@ -92,6 +92,8 @@ PRAW.
 :timeout: Controls the amount of time Async PRAW will wait for a request from Reddit to
     complete before throwing an exception. By default, Async PRAW waits 16 seconds
     before throwing an exception.
+:warn_comment_sort: When ``true``, log a warning when the ``comment_sort`` attribute of
+    a submission is updated after _fetch() has been called. (default: ``true``)
 
 .. _custom_options:
 
