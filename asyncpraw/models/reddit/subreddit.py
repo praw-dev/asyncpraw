@@ -1003,6 +1003,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
                 inline
 
+        .. note::
+
+            To submit a post to a subreddit with the "news" flair, you can get the flair
+            id like this:
+
+            .. code-block::
+
+                choices = [template async for template in subreddit.link_templates.user_selectable()]
+                template_id = next(x for x in choices if x["flair_text"] == "news")["flair_template_id"]
+                await subreddit.submit("title", url="https://www.news.com/", flair_id=template_id)
+
         .. seealso::
 
             - :meth:`~.Subreddit.submit_image` to submit images
@@ -2125,7 +2136,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
     async def __aiter__(
         self,
     ) -> AsyncGenerator[Dict[str, Union[str, int, bool, List[Dict[str, str]]]], None]:
-        """Iterate through the link flair templates.
+        """Iterate through the link flair templates as a moderator.
 
         For example:
 
@@ -2202,6 +2213,26 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
         """
         await self._clear(is_link=True)
+
+    async def user_selectable(
+        self,
+    ) -> AsyncGenerator[Dict[str, Union[str, bool]], None]:
+        """Iterate through the link flair templates as a regular user.
+
+        For example:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("NAME")
+            async for template in subreddit.flair.link_templates.user_selectable():
+                print(template)
+
+        """
+        url = API_PATH["flairselector"].format(subreddit=self.subreddit)
+        for template in (
+            await self.subreddit._reddit.post(url, data={"is_newlink": True})
+        )["choices"]:
+            yield template
 
 
 class SubredditModeration:
