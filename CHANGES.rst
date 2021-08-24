@@ -13,6 +13,11 @@ Unreleased
   off the warning.
 - :meth:`.user_selectable` to get available subreddit link flairs.
 
+**Fixed**
+
+- Fixed return value type of methods returning a listing in :class:`.Subreddit` and its
+  helper classes.
+
 7.4.0 (2021/07/30)
 ------------------
 
