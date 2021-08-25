@@ -12,6 +12,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     AsyncGenerator,
+    AsyncIterator,
     Dict,
     Iterator,
     List,
@@ -851,7 +852,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         syntax: str = "lucene",
         time_filter: str = "all",
         **generator_kwargs: Any,
-    ) -> Iterator["asyncpraw.models.Submission"]:
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for items that match ``query``.
 
         :param query: The query string to search for.
@@ -1690,7 +1691,7 @@ class SubredditFlair:
         self,
         redditor: Optional[Union["asyncpraw.models.Redditor", str]] = None,
         **generator_kwargs: Any,
-    ) -> Iterator["asyncpraw.models.Redditor"]:
+    ) -> AsyncIterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors and their flairs.
 
         :param redditor: When provided, yield at most a single :class:`~.Redditor`
@@ -2270,7 +2271,9 @@ class SubredditModeration:
 
     def edited(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
+    ]:
         """Return a :class:`.ListingGenerator` for edited comments and submissions.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
@@ -2297,7 +2300,7 @@ class SubredditModeration:
 
     def inbox(
         self, **generator_kwargs: Any
-    ) -> Iterator["asyncpraw.models.SubredditMessage"]:
+    ) -> AsyncIterator["asyncpraw.models.SubredditMessage"]:
         """Return a :class:`.ListingGenerator` for moderator messages.
 
         .. warning::
@@ -2342,7 +2345,7 @@ class SubredditModeration:
         action: Optional[str] = None,
         mod: Optional[Union["asyncpraw.models.Redditor", str]] = None,
         **generator_kwargs: Any,
-    ) -> Iterator["asyncpraw.models.ModAction"]:
+    ) -> AsyncIterator["asyncpraw.models.ModAction"]:
         """Return a :class:`.ListingGenerator` for moderator log entries.
 
         :param action: If given, only return log entries for the specified action.
@@ -2371,7 +2374,9 @@ class SubredditModeration:
 
     def modqueue(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]
+    ]:
         """Return a :class:`.ListingGenerator` for modqueue items.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
@@ -2443,7 +2448,9 @@ class SubredditModeration:
 
     def reports(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]
+    ]:
         """Return a :class:`.ListingGenerator` for reported comments and submissions.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
@@ -2477,7 +2484,9 @@ class SubredditModeration:
 
     def spam(
         self, only: Optional[str] = None, **generator_kwargs: Any
-    ) -> Iterator[Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]
+    ]:
         """Return a :class:`.ListingGenerator` for spam comments and submissions.
 
         :param only: If specified, one of ``"comments"``, or ``"submissions"`` to yield
@@ -2504,7 +2513,7 @@ class SubredditModeration:
 
     def unmoderated(
         self, **generator_kwargs: Any
-    ) -> Iterator["asyncpraw.models.Submission"]:
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
         """Return a :class:`.ListingGenerator` for unmoderated submissions.
 
         Additional keyword arguments are passed in the initialization of
@@ -2527,7 +2536,7 @@ class SubredditModeration:
 
     def unread(
         self, **generator_kwargs: Any
-    ) -> Iterator["asyncpraw.models.SubredditMessage"]:
+    ) -> AsyncIterator["asyncpraw.models.SubredditMessage"]:
         """Return a :class:`.ListingGenerator` for unread moderator messages.
 
         .. warning::
@@ -2983,7 +2992,7 @@ class SubredditRelationship:
         self,
         redditor: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **generator_kwargs,
-    ) -> Iterator["asyncpraw.models.Redditor"]:
+    ) -> AsyncIterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors in the relationship.
 
         :param redditor: When provided, yield at most a single :class:`~.Redditor`
@@ -3191,7 +3200,7 @@ class ModeratorRelationship(SubredditRelationship):
         self,
         redditor: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **generator_kwargs: Any,
-    ) -> Iterator["asyncpraw.models.Redditor"]:
+    ) -> AsyncIterator["asyncpraw.models.Redditor"]:
         """Return a :class:`.ListingGenerator` for Redditors invited to be moderators.
 
         :param redditor: When provided, return a list containing at most one
