@@ -126,40 +126,81 @@ class TestReddit(UnitTest):
                     "errors": [
                         [
                             "RATELIMIT",
-                            "You are doing that too much. Try again in 5 seconds.",
+                            "Some unexpected error message",
                             "ratelimit",
                         ]
                     ]
                 }
             },
+        ],
+    )
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_post_ratelimit__invalid_rate_limit_message(self, mock_sleep, _):
+        with pytest.raises(RedditAPIException) as exception:
+            await self.reddit.post("test")
+        assert exception.value.message == "Some unexpected error message"
+        mock_sleep.assert_not_called()
+
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
             {
                 "json": {
                     "errors": [
                         [
                             "RATELIMIT",
-                            "You are doing that too much. Try again in 5 seconds.",
+                            "You are doing that too much. Try again in 6 seconds.",
                             "ratelimit",
                         ]
                     ]
                 }
             },
+        ],
+    )
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_post_ratelimit__over_threshold__seconds(self, mock_sleep, _):
+        with pytest.raises(RedditAPIException) as exception:
+            await self.reddit.post("test")
+        assert (
+            exception.value.message
+            == "You are doing that too much. Try again in 6 seconds."
+        )
+        mock_sleep.assert_not_called()
+
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
             {
                 "json": {
                     "errors": [
                         [
                             "RATELIMIT",
-                            "You are doing that too much. Try again in 10 minutes.",
+                            "You are doing that too much. Try again in 1 minute.",
                             "ratelimit",
                         ]
                     ]
                 }
             },
+        ],
+    )
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_post_ratelimit__over_threshold__minutes(self, __, _):
+        with pytest.raises(RedditAPIException) as exception:
+            await self.reddit.post("test")
+        assert (
+            exception.value.message
+            == "You are doing that too much. Try again in 1 minute."
+        )
+
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
             {
                 "json": {
                     "errors": [
                         [
                             "RATELIMIT",
-                            "APRIL FOOLS FROM REDDIT, TRY AGAIN",
+                            "You are doing that too much. Try again in 1 minute.",
                             "ratelimit",
                         ]
                     ]
@@ -169,23 +210,82 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit(self, __, _):
-        with pytest.raises(RedditAPIException) as exc:
+    async def test_post_ratelimit__under_threshold__minutes(self, mock_sleep, _):
+        self.reddit.config.ratelimit_seconds = 60
+        await self.reddit.post("test")
+        mock_sleep.assert_has_calls([mock.call(61)])
+
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
+            {
+                "json": {
+                    "errors": [
+                        [
+                            "RATELIMIT",
+                            "You are doing that too much. Try again in 5 seconds.",
+                            "ratelimit",
+                        ]
+                    ]
+                }
+            },
+            {},
+        ],
+    )
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_post_ratelimit__under_threshold__seconds(self, mock_sleep, _):
+        await self.reddit.post("test")
+        mock_sleep.assert_has_calls([mock.call(6)])
+
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        side_effect=[
+            {
+                "json": {
+                    "errors": [
+                        [
+                            "RATELIMIT",
+                            "You are doing that too much. Try again in 5 seconds.",
+                            "ratelimit",
+                        ]
+                    ]
+                }
+            },
+            {
+                "json": {
+                    "errors": [
+                        [
+                            "RATELIMIT",
+                            "You are doing that too much. Try again in 3 seconds.",
+                            "ratelimit",
+                        ]
+                    ]
+                }
+            },
+            {
+                "json": {
+                    "errors": [
+                        [
+                            "RATELIMIT",
+                            "You are doing that too much. Try again in 1 second.",
+                            "ratelimit",
+                        ]
+                    ]
+                }
+            },
+        ],
+    )
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_post_ratelimit__under_threshold__seconds_failure(
+        self, mock_sleep, _
+    ):
+        with pytest.raises(RedditAPIException) as exception:
             await self.reddit.post("test")
         assert (
-            exc.value.message == "You are doing that too much. Try again in 5 seconds."
+            exception.value.message
+            == "You are doing that too much. Try again in 1 second."
         )
-        with pytest.raises(RedditAPIException) as exc2:
-            await self.reddit.post("test")
-        assert (
-            exc2.value.message
-            == "You are doing that too much. Try again in 10 minutes."
-        )
-        with pytest.raises(RedditAPIException) as exc3:
-            await self.reddit.post("test")
-        assert exc3.value.message == "APRIL FOOLS FROM REDDIT, TRY AGAIN"
-        response = await self.reddit.post("test")
-        assert response == {}
+        mock_sleep.assert_has_calls([mock.call(6), mock.call(4), mock.call(2)])
 
     async def test_read_only__with_authenticated_core(self):
         async with Reddit(
