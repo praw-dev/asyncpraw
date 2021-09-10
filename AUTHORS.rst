@@ -25,6 +25,7 @@ Documentation Contributors
 - Aidan Welch `@AidanWelch <https://github.com/AidanWelch>`_
 - Tom Eagles `@deplorableword <https://github.com/deplorableword>`_
 - Rémy Pecqueur `@Lordshinjo <https://github.com/Lordshinjo>`_
+- Mohammad Ghalayini `@mghalayini <https://github.com/mghalayini>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
