@@ -27,18 +27,18 @@ repos:
   - repo: https://github.com/psf/black
     hooks:
       - id: black
-        language_version: python3
-    rev: 21.7b0
+    rev: 21.10b0
 
   - repo: https://github.com/LilSpazJoekp/docstrfmt
     hooks:
       - id: docstrfmt
-    rev: v1.4.0
+        require_serial: true
+    rev: v1.4.1
 
   - repo: https://github.com/pycqa/flake8
     hooks:
       - id: flake8
-    rev: 3.9.2
+    rev: 4.0.1
 
   - repo: https://github.com/ikamensh/flynt/
     hooks:
@@ -46,7 +46,7 @@ repos:
         args:
           - '-ll'
           - '1000'
-    rev: '0.66'
+    rev: '0.69'
 
   - repo: https://github.com/pycqa/isort
     hooks:
