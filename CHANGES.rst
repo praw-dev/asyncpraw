@@ -18,6 +18,8 @@ Unreleased
 
 - Fixed return value type of methods returning a listing in :class:`.Subreddit` and its
   helper classes.
+- An import error when using Async PRAW in environments where ``libsqlite3-dev`` is
+  needed to utilize ``aiosqlite`` package which depends on the ``sqlite3`` builtin.
 
 7.4.0 (2021/07/30)
 ------------------

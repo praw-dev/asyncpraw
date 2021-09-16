@@ -14,7 +14,6 @@ Async PRAW users will create their own token manager classes suitable for their 
 from abc import ABC, abstractmethod
 
 import aiofiles
-import aiosqlite
 from asyncio_extras import async_contextmanager
 
 
@@ -133,6 +132,8 @@ class SQLiteTokenManager(BaseTokenManager):
     async def connection(self):
         """Asynchronously setup and provide the sqlite3 connection."""
         if self._connection is None:
+            import aiosqlite
+
             self._connection = await aiosqlite.connect(self._database)
         if not self._setup_ran:
             await self._connection.execute(
