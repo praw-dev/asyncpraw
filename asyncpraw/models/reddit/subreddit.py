@@ -1011,7 +1011,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
             .. code-block::
 
-                choices = [template async for template in subreddit.link_templates.user_selectable()]
+                choices = [template async for template in subreddit.flair.link_templates.user_selectable()]
                 template_id = next(x for x in choices if x["flair_text"] == "news")["flair_template_id"]
                 await subreddit.submit("title", url="https://www.news.com/", flair_id=template_id)
 
