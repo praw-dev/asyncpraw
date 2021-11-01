@@ -26,30 +26,38 @@ One of the simplest ways to help with Async PRAW is by answering others'
 questions. When responding, always be positive. While something may be obvious
 to you, it likely is not to the person asking the question.
 
-## Pull Request Creation
+## Creating Pull Requests
 
 0. If you are fixing an already filed issue, please indicate your intentions by
    commenting on the issue. This act will hopefully minimize any duplicate
    work.
 
-1. Prior to creating a pull request run the `pre_push.py` script. This script
-   depends on the tools `black` `flake8`, `pylint`, `pydocstyle`, `sphinx`, `sphinx_rtd_theme`, and `sphinxcontrib-trio`. They can
-   be installed via `pip install black flake8 pydocstyle pylint sphinx sphinx_rtd_theme sphinxcontrib-trio` or via
-   `pip install asyncpraw[lint]`.
+1. Before committing, make sure to install [Pre-Commit](https://pre-commit.com/)
+   and the pre-commit hooks, which ensure any new code conforms to Async PRAW's
+   quality and style guidelines. To do so, install the linting dependencies
+   with `pip install asyncpraw[lint]`, then by the hooks with `pre-commit install`.
+   They will now run automatically every time you commit. If one of the formatters
+   (e.g. Black, isort) changes one or more files, the commit will automatically abort
+   so you can double-check the changes. If everything looks good, just `git add .` and
+   commit again.
 
-2. Add yourself as a contributor to the ``AUTHORS.rst``.
+2. Prior to creating a pull request, run the `pre_push.py` script.
+   This runs the pre-commit suite on all files, as well as builds the docs.
+   You'll need to have installed the linting dependencies first (see previous).
 
-3. Once pushed, ensure that your Github Actions build succeeds. Actions will error
+3. Add yourself as a contributor to the ``AUTHORS.rst``.
+
+4. Once pushed, ensure that your GitHub Actions build succeeds. Actions will error
    before running any tests if there are _any_ `flake8` or `pydocstyle`
    issues. Resolve any issues by updating your pull request.
 
-4. Ensure that your change has complete test coverage. Tests on methods that do
+5. Ensure that your change has complete test coverage. Tests on methods that do
    not require fetching data from Reddit, e.g., method argument validation,
    should be saved as a unit test. Tests that hit Reddit's servers should be an
    integration test and all network activity should be recorded via vcrpy.
    The required packages can be installed with `pip install asyncpraw[test]`.
 
-5. Feel free to check on the status of your pull request periodically by adding
+6. Feel free to check on the status of your pull request periodically by adding
    a comment.
 
 ## Becoming a Team Member
