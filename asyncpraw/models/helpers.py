@@ -4,11 +4,147 @@ from typing import TYPE_CHECKING, AsyncGenerator, List, Optional, Union
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase
+from .reddit.draft import Draft
 from .reddit.live import LiveThread
 from .reddit.multi import Multireddit, Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
+
+
+class DraftHelper(AsyncPRAWBase):
+    r"""Provide a set of functions to interact with :class:`Draft` instances.
+
+    .. note::
+
+        The methods provided by this class will only work on the currently authenticated
+        user's :class:`Draft`\ s.
+
+    """
+
+    async def __call__(
+        self, *, draft_id: Optional[str] = None, fetch: bool = True
+    ) -> Union[List["asyncpraw.models.Draft"], "asyncpraw.models.Draft"]:
+        """Return a list of :class:`.Draft` instances.
+
+        :param draft_id: When provided, this returns a :class:`.Draft` instance
+            (default: ``None``).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
+
+        :returns: A :class:`.Draft` instance if ``draft_id`` is provided. Otherwise, a
+            list of :class:`.Draft` objects.
+
+        This method can be used to fetch a specific draft by ID, like so:
+
+        .. code-block:: python
+
+            draft_id = "124862bc-e1e9-11eb-aa4f-e68667a77cbb"
+            draft = await reddit.drafts(draft_id=draft_id)
+            print(draft)
+
+        """
+        if draft_id is not None:
+            draft = Draft(self._reddit, id=draft_id)
+            if fetch:
+                await draft.load()
+            return draft
+        return await self._draft_list()
+
+    async def __aiter__(self):
+        r"""Iterate through all the :class:`.Draft`\ s.
+
+        :returns: An asynchronous iterator containing all the currently authenticated
+            user's :class:`.Draft`\ s.
+
+        .. code-block:: python
+
+            async for draft in reddit.drafts:
+                print(draft)
+
+        """
+        drafts = await self._draft_list()
+        for draft in drafts:
+            yield draft
+
+    async def _draft_list(self) -> List["asyncpraw.models.Draft"]:
+        """Get a list of :class:`.Draft` instances.
+
+        :returns: A list of :class:`.Draft` instances.
+
+        """
+        return await self._reddit.get(API_PATH["drafts"], params={"md_body": True})
+
+    async def create(
+        self,
+        *,
+        flair_id: Optional[str] = None,
+        flair_text: Optional[str] = None,
+        is_public_link: bool = False,
+        nsfw: bool = False,
+        original_content: bool = False,
+        selftext: Optional[str] = None,
+        send_replies: bool = True,
+        spoiler: bool = False,
+        subreddit: Optional[
+            Union[str, "asyncpraw.models.Subreddit", "asyncpraw.models.UserSubreddit"]
+        ] = None,
+        title: Optional[str] = None,
+        url: Optional[str] = None,
+        **draft_kwargs,
+    ) -> "asyncpraw.models.Draft":
+        """Create a new :class:`.Draft`.
+
+        :param flair_id: The flair template to select (default: ``None``).
+        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
+            this value will set a custom text (default: ``None``). ``flair_id`` is
+            required when ``flair_text`` is provided.
+        :param is_public_link: Whether to enable public viewing of the draft before it
+            is submitted (default: ``False``).
+        :param nsfw: Whether the draft should be marked NSFW (default: ``False``).
+        :param original_content: Whether the submission should be marked as original
+            content (default: ``False``).
+        :param selftext: The Markdown formatted content for a text submission draft. Use
+            ``None`` to make a title-only submission draft (default: ``None``).
+            ``selftext`` can not be provided if ``url`` is provided.
+        :param send_replies: When ``True``, messages will be sent to the submission
+            author when comments are made to the submission (default: ``True``).
+        :param spoiler: Whether the submission should be marked as a spoiler (default:
+            ``False``).
+        :param subreddit: The subreddit to create the draft for. This accepts a
+            subreddit display name, :class:`.Subreddit` object, or
+            :class:`.UserSubreddit` object. If ``None``, the :class:`.UserSubreddit` of
+            currently authenticated user will be used (default: ``None``).
+        :param title: The title of the draft (default: ``None``).
+        :param url: The URL for a ``link`` submission draft (default: ``None``). ``url``
+            can not be provided if ``selftext`` is provided.
+
+        Additional keyword arguments can be provided to handle new parameters as Reddit
+        introduces them.
+
+        :returns: The new :class:`.Draft` object.
+
+        """
+        if selftext and url:
+            raise TypeError("Exactly one of `selftext` or `url` must be provided.")
+        if isinstance(subreddit, str):
+            subreddit = await self._reddit.subreddit(subreddit)
+
+        data = await Draft._prepare_data(
+            flair_id=flair_id,
+            flair_text=flair_text,
+            is_public_link=is_public_link,
+            nsfw=nsfw,
+            original_content=original_content,
+            selftext=selftext,
+            send_replies=send_replies,
+            spoiler=spoiler,
+            subreddit=subreddit,
+            title=title,
+            url=url,
+            **draft_kwargs,
+        )
+        return await self._reddit.post(API_PATH["draft"], data=data)
 
 
 class LiveHelper(AsyncPRAWBase):

@@ -13,6 +13,12 @@ Unreleased
   off the warning.
 - :meth:`.user_selectable` to get available subreddit link flairs.
 - Automatic RateLimit handling will support errors with millisecond resolution.
+- :class:`.Draft` to represent a submission draft.
+- :meth:`.Draft.delete` to delete drafts.
+- :meth:`.Draft.submit` to submit drafts.
+- :meth:`.Draft.update` to modify drafts.
+- :class:`.DraftHelper` to fetch or create drafts on new Reddit.
+- :class:`.DraftList` to represent a list of :class:`.Draft` objects.
 
 **Fixed**
 
