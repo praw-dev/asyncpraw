@@ -274,7 +274,7 @@ class SubmissionModeration(ThingModerationMixin):
         .. note::
 
             When a submission is stickied two or more times, the Reddit API responds
-            with a 409 error that is raises as a ``Conflict`` by asyncprawcore. The
+            with a 409 error that is raised as a ``Conflict`` by asyncprawcore. This
             method suppresses these ``Conflict`` errors.
 
         This submission will replace the second stickied submission if one exists.
