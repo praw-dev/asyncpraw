@@ -68,6 +68,11 @@ class TestSubmission(UnitTest):
         submission.comment_sort = "new"
         assert caplog.records == []
 
+    async def test_comment_unfetched(self):
+        with pytest.raises(TypeError):
+            submission = await self.reddit.submission("1234", fetch=False)
+            submission.comments.list()
+
     def test_construct_from_url(self):
         assert Submission(self.reddit, url="http://my.it/2gmzqe") == "2gmzqe"
 

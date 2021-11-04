@@ -11,10 +11,9 @@ class TestSubmission(IntegrationTest):
     async def test_comments(self):
         with self.use_cassette():
             submission = await self.reddit.submission("2gmzqe")
-            comments = await submission.comments()
-            assert len(comments) == 1
-            assert isinstance(comments[0], Comment)
-            assert isinstance(comments[0].replies[0], Comment)
+            assert len(submission.comments) == 1
+            assert isinstance(submission.comments[0], Comment)
+            assert isinstance(submission.comments[0].replies[0], Comment)
 
     async def test_clear_vote(self):
         self.reddit.read_only = False

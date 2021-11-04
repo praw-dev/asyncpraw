@@ -41,16 +41,14 @@ class CommentForest:
 
         .. code-block:: python
 
-            comments = await submission.comments()
-            first_comment = comments[0]
+            first_comment = submission.comments[0]
 
         Alternatively, the presence of this method enables one to iterate over all top
         level comments, like so:
 
         .. code-block:: python
 
-            comments = await submission.comments()
-            for comment in comments:
+            for comment in submission.comments:
                 print(comment.body)
 
         """
@@ -63,7 +61,7 @@ class CommentForest:
 
         .. code-block:: python
 
-            comments = await submission.comments()
+            comments = submission.comments
             async for comment in comments:
                 print(comment.body)
 
@@ -88,10 +86,7 @@ class CommentForest:
 
     def __len__(self) -> int:
         """Return the number of top-level comments in the forest."""
-        if self._comments:
-            return len(self._comments)
-        else:
-            return 0
+        return len(self._comments or [])
 
     def _insert_comment(self, comment):
         if comment.name in self._submission._comments_by_id:
@@ -112,7 +107,7 @@ class CommentForest:
         for comment in comments:
             comment.submission = self._submission
 
-    async def list(
+    def list(
         self,
     ) -> List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]]:
         """Return a flattened list of all Comments.
@@ -127,7 +122,7 @@ class CommentForest:
             comment = queue.pop(0)
             comments.append(comment)
             if not isinstance(comment, MoreComments):
-                queue.extend([reply async for reply in comment.replies])
+                queue.extend(comment.replies)
         return comments
 
     async def replace_more(
@@ -154,15 +149,15 @@ class CommentForest:
         .. code-block:: python
 
             submission = await reddit.submission("3hahrw", fetch=False)
-            comments = await submission.comments()
-            await comments.replace_more()
+            await submission.comments.replace_more()
 
         Alternatively, to replace :class:`.MoreComments` instances within the replies of
         a single comment try:
 
         .. code-block:: python
 
-            comment = await reddit.comment("d8r4im1")
+            comment = await reddit.comment("d8r4im1", fetch=False)
+            await comment.refresh()
             await comment.replies.replace_more()
 
         .. note::
@@ -175,8 +170,7 @@ class CommentForest:
 
                 while True:
                     try:
-                        comments = await submission.comments()
-                        await comments.replace_more()
+                        await submission.comments.replace_more()
                         break
                     except PossibleExceptions:
                         print("Handling replace_more exception")

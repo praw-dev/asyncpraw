@@ -13,6 +13,7 @@ from .mixins import (
     UserContentMixin,
 )
 from .redditor import Redditor
+from .submission import Submission
 from .subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -136,23 +137,21 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
     @property
     def submission(self) -> "asyncpraw.models.Submission":
-        """Return the Submission object this comment belongs to."""
-        if not self._submission and self._fetched:  # Comment not from submission
-            from .. import Submission
+        """Return the Submission object this comment belongs to.
 
+        :raises: :py:class:`AttributeError` if the comment is not fetched.
+
+        """
+        if not self._submission:  # Comment not from submission
             self._submission = Submission(
                 self._reddit, id=self._extract_submission_id()
             )
-            return self._submission
-        elif self._submission:
-            return self._submission
-        else:
-            return None
+        return self._submission
 
     @submission.setter
     def submission(self, submission: "asyncpraw.models.Submission"):
         """Update the Submission associated with the Comment."""
-        submission._comments_by_id[self.name] = self
+        submission._comments_by_id[self.fullname] = self
         self._submission = submission
         # pylint: disable=not-an-iterable
         for reply in self.replies:
@@ -280,9 +279,6 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         if not self._fetched:
             await self._fetch()
 
-        if not self.submission._fetched:
-            await self.submission._fetch()
-
         if self.parent_id == self.submission.fullname:
             return self.submission
 
@@ -298,6 +294,9 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     async def refresh(self):
         """Refresh the comment's attributes.
 
+        If using :meth:`.Reddit.comment` with ``fetch=False``, this method must be
+        called in order to obtain the comment's replies.
+
         Example usage:
 
         .. code-block:: python
@@ -309,7 +308,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         if "context" in self.__dict__:  # Using hasattr triggers a fetch
             comment_path = self.context.split("?", 1)[0]
         else:
-            if not self.submission:
+            if self._submission is None:
                 await self._fetch()
             path = API_PATH["submission"].format(id=self.submission.id)
             comment_path = f"{path}_/{self.id}"
@@ -320,8 +319,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             params["limit"] = self.reply_limit
         if "reply_sort" in self.__dict__:
             params["sort"] = self.reply_sort
-        response = await self._reddit.get(comment_path, params=params)
-        comment_list = response[1].children
+        comment_list = (await self._reddit.get(comment_path, params=params))[1].children
         if not comment_list:
             raise ClientException(self.MISSING_COMMENT_MESSAGE)
 

@@ -147,9 +147,8 @@ class TestComment(IntegrationTest):
     async def test_parent__comment_from_forest(self):
         with self.use_cassette():
             submission = await self.reddit.submission("2gmzqe")
-            comments = await submission.comments()
-            comment = comments[0].replies[0]
-            parent = await comment.parent()
+            comment = submission.comments[0].replies[0]
+        parent = await comment.parent()
         assert comment in parent.replies
         assert isinstance(parent, Comment)
         assert parent.fullname == comment.parent_id
@@ -167,8 +166,8 @@ class TestComment(IntegrationTest):
         comment = Comment(self.reddit, "cklfmye")
         with self.use_cassette():
             parent = await comment.parent()
-            parent_comments = await parent.comments()
-            assert comment in parent_comments
+            await parent.load()
+            assert comment in parent.comments
         assert isinstance(parent, Submission)
         assert parent.fullname == comment.parent_id
 

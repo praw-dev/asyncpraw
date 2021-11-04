@@ -44,7 +44,7 @@ class MoreComments(AsyncPRAWBase):
         parent = await self._load_comment(self.parent_id.split("_", 1)[1])
         self._comments = parent.replies
         if update:
-            async for comment in self._comments:
+            for comment in self._comments:
                 comment.submission = self.submission
         return self._comments
 

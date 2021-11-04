@@ -495,7 +495,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         """Return the class's kind."""
         return self._reddit.config.kinds["submission"]
 
-    async def comments(self) -> CommentForest:
+    @property
+    def comments(self) -> CommentForest:
         """Provide an instance of :class:`.CommentForest`.
 
         This attribute can be used, for example, to obtain a flat list of comments, with
@@ -503,25 +504,20 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            comments = await submission.comments()
-            await comments.replace_more(limit=0)
-            comment_list = await comments.list()
-            for comment in comment_list:
-                # do stuff with comment
-                ...
+            await submission.comments.replace_more(limit=0)
+            comments = submission.comments.list()
 
-        Sort order and comment limit can be set with the ``comment_sort`` and
-        ``comment_limit`` attributes before comments are fetched, including any call to
-        :meth:`.replace_more`:
+        Sort order and comment limit must be set with the ``comment_sort`` and
+        ``comment_limit`` attributes before the submission and its comments are fetched,
+        including any call to :meth:`.replace_more`. The ``fetch`` argument will need to
+        set when initializing the :class:`.Submission` instance:
 
         .. code-block:: python
 
+            submission = await reddit.submission("8dmv8z", fetch=False)
             submission.comment_sort = "new"
-            comments = await submission.comments()
-            comment_list = await comments.list()
-            for comment in comment_list:
-                # do stuff with comment
-                ...
+            await submission.load()
+            comments = submission.comments.list()
 
         .. note::
 
@@ -532,9 +528,10 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         :class:`.CommentForest`.
 
         """
-        # This assumes _comments is set so that _fetch is called when it's not.
-        if "_comments" not in self.__dict__:
-            await self._fetch()
+        if not self._fetched:
+            raise TypeError(
+                "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
+            )
         return self._comments
 
     @cachedproperty
@@ -591,7 +588,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         :param reddit: An instance of :class:`~.Reddit`.
         :param id: A reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.
+        :param url: A URL supported by :meth:`~.id_from_url`.
 
         Either ``id`` or ``url`` can be provided, but not both.
 
@@ -611,6 +608,40 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         super().__init__(reddit, _data=_data)
 
         self._comments_by_id = {}
+        self.comments = CommentForest(self)
+        """Provide an instance of :class:`.CommentForest`.
+
+        This attribute can be used, for example, to obtain a flat list of comments, with
+        any :class:`.MoreComments` removed:
+
+        .. code-block:: python
+
+            await submission.comments.replace_more(limit=0)
+            comments = submission.comments.list()
+
+        :raises: :py:class:`TypeError` if the submission is not fetched.
+
+        Sort order and comment limit must be set with the ``comment_sort`` and
+        ``comment_limit`` attributes before the submission and its comments are fetched,
+        including any call to :meth:`.replace_more`. The ``fetch`` argument will need to
+        set when initializing the :class:`.Submission` instance:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("8dmv8z", fetch=False)
+            submission.comment_sort = "new"
+            await submission.load()
+            comments = submission.comments.list()
+
+        .. note::
+
+            The appropriate values for ``comment_sort`` include ``confidence``,
+            ``controversial``, ``new``, ``old``, ``q&a``, and ``top``
+
+        See :ref:`extracting_comments` for more on working with a
+        :class:`.CommentForest`.
+
+        """
 
     def __setattr__(self, attribute: str, value: Any):
         """Objectify author, subreddit, and poll data attributes."""
@@ -665,9 +696,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         submission._comments = CommentForest(self)
 
         self.__dict__.update(submission.__dict__)
-        self._comments._update(comment_listing.children)
-
         self._fetched = True
+        self.comments._update(comment_listing.children)
 
     async def mark_visited(self):
         """Mark submission as visited.
@@ -720,7 +750,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.unhide()
 
         .. seealso::

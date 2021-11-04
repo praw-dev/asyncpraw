@@ -3,7 +3,7 @@ import pytest
 from asynctest import mock
 
 from asyncpraw.exceptions import DuplicateReplaceException
-from asyncpraw.models import Comment, MoreComments, Submission
+from asyncpraw.models import Comment, MoreComments
 
 from .. import IntegrationTest
 
@@ -17,106 +17,94 @@ class TestCommentForest(IntegrationTest):
     async def test_replace__all(self):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
-            comments = await submission.comments()
-            before_count = len(await comments.list())
-            skipped = await comments.replace_more(None, threshold=0)
+            before_count = len(submission.comments.list())
+            skipped = await submission.comments.replace_more(None, threshold=0)
             assert len(skipped) == 0
-            assert all([isinstance(x, Comment) for x in await comments.list()])
-            assert all([x.submission == submission for x in await comments.list()])
-            assert before_count < len(await comments.list())
+            assert all(isinstance(x, Comment) for x in submission.comments.list())
+            assert all(x.submission == submission for x in submission.comments.list())
+            assert before_count < len(submission.comments.list())
 
     async def test_replace__all_large(self):
         with self.use_cassette():
-            submission = Submission(self.reddit, "n49rw")
-            comments = await submission.comments()
-            skipped = await comments.replace_more(None, threshold=0)
+            submission = await self.reddit.submission("n49rw")
+            skipped = await submission.comments.replace_more(None, threshold=0)
             assert len(skipped) == 0
-            assert all([isinstance(x, Comment) for x in await comments.list()])
-            assert len(await comments.list()) > 1000
-            assert len(await comments.list()) == len(submission._comments_by_id)
+            assert all(isinstance(x, Comment) for x in submission.comments.list())
+            assert len(submission.comments.list()) > 1000
+            assert len(submission.comments.list()) == len(submission._comments_by_id)
 
     async def test_replace__all_with_comment_limit(self):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             submission.comment_limit = 10
-            comments = await submission.comments()
-            skipped = await comments.replace_more(None, threshold=0)
+            skipped = await submission.comments.replace_more(None, threshold=0)
             assert len(skipped) == 0
-            assert len(await comments.list()) >= 500
+            assert len(submission.comments.list()) >= 500
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_replace__all_with_comment_sort(self, _):
         with self.use_cassette():
-            submission = await self.reddit.submission("3hahrw")
+            submission = await self.reddit.submission("3hahrw", fetch=False)
             submission.comment_sort = "old"
-            comments = await submission.comments()
-            skipped = await comments.replace_more(None, threshold=0)
+            await submission.load()
+            skipped = await submission.comments.replace_more(None, threshold=0)
             assert len(skipped) == 0
-            assert len(await comments.list()) >= 500
+            assert len(submission.comments.list()) >= 500
 
     async def test_replace__skip_at_limit(self):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
-            comments = await submission.comments()
-            skipped = await comments.replace_more(1)
+            skipped = await submission.comments.replace_more(1)
             assert len(skipped) == 5
 
-    # async def test_replace__skip_below_threshold(self): # FIXME: not currently working; same with praw
+    # def test_replace__skip_below_threshold(self): # FIXME: not currently working; same with praw
     #     with self.use_cassette():
-    #         submission = Submission(self.reddit, "hkwbo0")
-    #         comments = await submission.comments()
-    #         before_count = len(await comments.list())
-    #         skipped = await comments.replace_more(16, 5)
-    #         assert len(skipped) == 6
+    #         submission = await self.reddit.submission("3hahrw")
+    #         before_count = len(submission.comments.list())
+    #         skipped = submission.comments.replace_more(16, 5)
+    #         assert len(skipped) == 13
     #         assert all(x.count < 5 for x in skipped)
     #         assert all(x.submission == submission for x in skipped)
-    #         assert before_count < len(await comments.list())
+    #         assert before_count < len(submission.comments.list())
 
     async def test_replace__skip_all(self):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
-            comments = await submission.comments()
-            before_count = len(await comments.list())
-            skipped = await comments.replace_more(limit=0)
+            before_count = len(submission.comments.list())
+            skipped = await submission.comments.replace_more(limit=0)
             assert len(skipped) == 6
             assert all(x.submission == submission for x in skipped)
-            after_count = len(await comments.list())
+            after_count = len(submission.comments.list())
             assert before_count == after_count + len(skipped)
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_replace__on_comment_from_submission(self, _):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
-            comments = await submission.comments()
-            types = [type(x) for x in await comments.list()]
+            types = [type(x) for x in submission.comments.list()]
             assert types.count(Comment) == 527
             assert types.count(MoreComments) == 6
-            new_comments = await submission.comments()
-            replace_more = await new_comments[0].replies.replace_more()
-            assert replace_more == []
-            types = [type(x) for x in await comments.list()]
+            assert (await submission.comments[0].replies.replace_more()) == []
+            types = [type(x) for x in submission.comments.list()]
             assert types.count(Comment) == 531
             assert types.count(MoreComments) == 3
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_replace__on_direct_comment(self, _):
         with self.use_cassette():
-            comment = await self.reddit.comment("d8r4im1")
+            comment = await self.reddit.comment("d8r4im1", fetch=False)
             await comment.refresh()
-            assert any(
-                [isinstance(x, MoreComments) for x in await comment.replies.list()]
-            )
+            assert any(isinstance(x, MoreComments) for x in comment.replies.list())
             await comment.replies.replace_more()
-            assert all([isinstance(x, Comment) for x in await comment.replies.list()])
+            assert all(isinstance(x, Comment) for x in comment.replies.list())
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_comment_forest_refresh_error(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             submission = await self.async_next(self.reddit.front.top())
-            # await submission._fetch()
             submission.comment_limit = 1
-            comments = await submission.comments()
-            await comments[1].comments()
+            await submission.load()
+            await submission.comments[1].comments()
             with pytest.raises(DuplicateReplaceException):
-                await comments.replace_more(limit=1)
+                await submission.comments.replace_more(limit=1)

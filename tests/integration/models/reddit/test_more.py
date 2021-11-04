@@ -30,8 +30,7 @@ class TestMore(IntegrationTest):
         with self.use_cassette():
             more = MoreComments(self.reddit, data)
             more.submission = await self.reddit.submission("3hahrw")
-            comments = await more.comments()
-            assert len(comments) == 7
+            assert len((await more.comments())) == 7
 
     async def test_comments__continue_thread_type(self):
         data = {
@@ -44,5 +43,4 @@ class TestMore(IntegrationTest):
         with self.use_cassette():
             more = MoreComments(self.reddit, data)
             more.submission = await self.reddit.submission("3hahrw")
-            comments = await more.comments()
-            assert len(comments) == 1
+            assert len((await more.comments())) == 1
