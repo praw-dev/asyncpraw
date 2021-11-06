@@ -96,6 +96,12 @@ class TestDeprecation(UnitTest):
         with pytest.raises(DeprecationWarning):
             await self.reddit.user.me()
 
+    async def test_submission_comments_async(self):
+        submission = await self.reddit.submission("1234", fetch=False)
+        submission._fetched = True
+        with pytest.deprecated_call():
+            await submission.comments()
+
     async def test_subreddit_rules_call(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             subreddit = Subreddit(self.reddit, display_name="test")

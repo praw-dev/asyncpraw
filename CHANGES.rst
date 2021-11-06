@@ -18,6 +18,7 @@ Unreleased
 
 - Ability to use :class:`.CommentForest` as an asynchronous iterator.
 - :meth:`.CommentForest.list` no longer needs to be awaited.
+- :attr:`.Submission.comments` no longer needs to be awaited and is now a property.
 
 **Fixed**
 

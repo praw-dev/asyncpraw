@@ -77,6 +77,18 @@ class CommentForest:
         for comment in self:
             yield comment
 
+    async def __call__(self):  # noqa: D102
+        warn(
+            "`Submission.comments` is now a property and no longer needs to be awaited. This"
+            " will raise an error in a future version of Async PRAW.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
+        if not self._submission._fetched:
+            await self._submission._fetch()
+        self._comments = self._submission.comments._comments
+        return self
+
     def __init__(
         self,
         submission: "asyncpraw.models.Submission",

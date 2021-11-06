@@ -495,45 +495,6 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         """Return the class's kind."""
         return self._reddit.config.kinds["submission"]
 
-    @property
-    def comments(self) -> CommentForest:
-        """Provide an instance of :class:`.CommentForest`.
-
-        This attribute can be used, for example, to obtain a flat list of comments, with
-        any :class:`.MoreComments` removed:
-
-        .. code-block:: python
-
-            await submission.comments.replace_more(limit=0)
-            comments = submission.comments.list()
-
-        Sort order and comment limit must be set with the ``comment_sort`` and
-        ``comment_limit`` attributes before the submission and its comments are fetched,
-        including any call to :meth:`.replace_more`. The ``fetch`` argument will need to
-        set when initializing the :class:`.Submission` instance:
-
-        .. code-block:: python
-
-            submission = await reddit.submission("8dmv8z", fetch=False)
-            submission.comment_sort = "new"
-            await submission.load()
-            comments = submission.comments.list()
-
-        .. note::
-
-            The appropriate values for ``comment_sort`` include ``confidence``,
-            ``controversial``, ``new``, ``old``, ``q&a``, and ``top``
-
-        See :ref:`extracting_comments` for more on working with a
-        :class:`.CommentForest`.
-
-        """
-        if not self._fetched:
-            raise TypeError(
-                "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
-            )
-        return self._comments
-
     @cachedproperty
     def flair(self) -> SubmissionFlair:
         """Provide an instance of :class:`.SubmissionFlair`.
@@ -693,7 +654,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         submission = type(self)(self._reddit, _data=submission_data)
         delattr(submission, "comment_limit")
         delattr(submission, "comment_sort")
-        submission._comments = CommentForest(self)
+        submission.comments = CommentForest(self)
 
         self.__dict__.update(submission.__dict__)
         self._fetched = True
