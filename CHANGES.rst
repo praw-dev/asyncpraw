@@ -14,6 +14,10 @@ Unreleased
 - :meth:`.user_selectable` to get available subreddit link flairs.
 - Automatic RateLimit handling will support errors with millisecond resolution.
 
+**Deprecated**
+
+- Ability to use :class:`.CommentForest` as an asynchronous iterator.
+
 **Fixed**
 
 - Fixed return value type of methods returning a listing in :class:`.Subreddit` and its

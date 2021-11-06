@@ -1,6 +1,7 @@
 """Provide CommentForest for Submission comments."""
 from heapq import heappop, heappush
 from typing import TYPE_CHECKING, AsyncIterator, List, Optional, Union
+from warnings import warn
 
 from ..exceptions import DuplicateReplaceException
 from .reddit.more import MoreComments
@@ -66,7 +67,13 @@ class CommentForest:
                 print(comment.body)
 
         """
-        for comment in self._comments:
+        warn(
+            "Using CommentForest as an asynchronous iterator has been deprecated and"
+            " will be removed in a future version.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
+        for comment in self:
             yield comment
 
     def __init__(
