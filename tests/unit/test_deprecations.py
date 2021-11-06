@@ -34,6 +34,13 @@ class TestDeprecation(UnitTest):
             async for comment in submission.comments:
                 assert isinstance(comment, Comment)
 
+    async def test_comment_forest_list_async(self):
+        submission = await self.reddit.submission("1234", fetch=False)
+        submission._fetched = True
+        submission.comments._comments = []
+        with pytest.deprecated_call():
+            await submission.comments.list()
+
     async def test_gild_method(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             submission = await self.reddit.submission("1234", fetch=False)

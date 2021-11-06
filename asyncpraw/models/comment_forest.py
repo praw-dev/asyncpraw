@@ -1,6 +1,7 @@
 """Provide CommentForest for Submission comments."""
+import inspect
 from heapq import heappop, heappush
-from typing import TYPE_CHECKING, AsyncIterator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Coroutine, List, Optional, Union
 from warnings import warn
 
 from ..exceptions import DuplicateReplaceException
@@ -116,7 +117,14 @@ class CommentForest:
 
     def list(
         self,
-    ) -> List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]]:
+    ) -> Union[
+        List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]],
+        Coroutine[
+            Any,
+            Any,
+            List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]],
+        ],
+    ]:
         """Return a flattened list of all Comments.
 
         This list may contain :class:`.MoreComments` instances if :meth:`.replace_more`
@@ -130,6 +138,27 @@ class CommentForest:
             comments.append(comment)
             if not isinstance(comment, MoreComments):
                 queue.extend(comment.replies)
+        # check if this got called with await
+        # I'm so sorry this really gross
+        if any(
+            [
+                "await" in context
+                for context in inspect.getframeinfo(
+                    inspect.currentframe().f_back
+                ).code_context
+            ]
+        ):
+
+            async def async_func():
+                warn(
+                    "`CommentForest.list()` no longer needs to be awaited and this"
+                    " will raise an error in a future version of Async PRAW.",
+                    category=DeprecationWarning,
+                    stacklevel=3,
+                )
+                return comments
+
+            return async_func()
         return comments
 
     async def replace_more(
