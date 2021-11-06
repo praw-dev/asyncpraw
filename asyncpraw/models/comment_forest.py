@@ -54,6 +54,10 @@ class CommentForest:
                 print(comment.body)
 
         """
+        if not (self._comments is not None or self._submission._fetched):
+            raise TypeError(
+                "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
+            )
         return self._comments[index]
 
     async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Comment"]:

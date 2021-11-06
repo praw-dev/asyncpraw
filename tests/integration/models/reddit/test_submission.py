@@ -15,6 +15,15 @@ class TestSubmission(IntegrationTest):
             assert isinstance(submission.comments[0], Comment)
             assert isinstance(submission.comments[0].replies[0], Comment)
 
+    async def test_comments__fetch_async_call(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            submission = await self.reddit.submission("2gmzqe", fetch=False)
+            with pytest.deprecated_call():
+                await submission.comments()
+                assert submission._fetched
+                assert submission.comments
+
     async def test_clear_vote(self):
         self.reddit.read_only = False
         with self.use_cassette():
