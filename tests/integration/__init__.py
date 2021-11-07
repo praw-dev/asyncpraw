@@ -7,7 +7,7 @@ import asynctest
 import pytest
 
 from asyncpraw import Reddit
-from tests.conftest import VCR
+from tests.conftest import vcr
 
 
 class IntegrationTest(asynctest.TestCase):
@@ -26,7 +26,7 @@ class IntegrationTest(asynctest.TestCase):
 
     def setup_vcr(self):
         """Configure VCR instance."""
-        self.recorder = VCR
+        self.recorder = vcr
 
         # Disable response compression in order to see the response bodies in
         # the VCR cassettes.
@@ -80,8 +80,7 @@ class IntegrationTest(asynctest.TestCase):
     @staticmethod
     async def async_next(async_generator):
         """Return the next item from an async iterator."""
-        async for item in async_generator:
-            return item
+        return await async_generator.__anext__()
 
     def use_cassette(self, cassette_name=None, **kwargs):
         """Use a cassette. The cassette name is dynamically generated.
@@ -103,6 +102,11 @@ class IntegrationTest(asynctest.TestCase):
                     f"Dynamic cassette name for function {dynamic_name} does not match"
                     f" the provided cassette name: {cassette_name}"
                 )
+        match_on = kwargs.get(
+            "match_requests_on", None
+        )  # keep interface same as in PRAW
+        if match_on:
+            kwargs["match_on"] = kwargs.pop("match_requests_on")
         return self.recorder.use_cassette(cassette_name or dynamic_name, **kwargs)
 
     def get_cassette_name(self) -> str:

@@ -27,7 +27,7 @@ class TestMore(IntegrationTest):
                 "cu5pbdh",
             ],
         }
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             more = MoreComments(self.reddit, data)
             more.submission = await self.reddit.submission("3hahrw")
             comments = await more.comments()
@@ -41,7 +41,7 @@ class TestMore(IntegrationTest):
             "parent_id": "t1_cu5v5h7",
             "children": [],
         }
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             more = MoreComments(self.reddit, data)
             more.submission = await self.reddit.submission("3hahrw")
             comments = await more.comments()

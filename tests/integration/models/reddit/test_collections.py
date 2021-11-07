@@ -161,7 +161,7 @@ class TestSubredditCollections(IntegrationTest):
     async def test_call(self, _):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            collection = await self.async_next(subreddit.collections)
+            collection = next(iter(await self.async_list(subreddit.collections)))
             test_collection = await subreddit.collections(collection.collection_id)
             assert collection == test_collection
             test_collection = await subreddit.collections(

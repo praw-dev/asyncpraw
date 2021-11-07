@@ -57,7 +57,7 @@ class TestInbox(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_mark_read(self, _):
         self.reddit.read_only = False
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             await self.reddit.inbox.mark_read(
                 await self.async_list(self.reddit.inbox.unread())
             )
@@ -65,7 +65,7 @@ class TestInbox(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_mark_unread(self, _):
         self.reddit.read_only = False
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             await self.reddit.inbox.mark_unread(
                 await self.async_list(self.reddit.inbox.all())
             )
@@ -107,7 +107,7 @@ class TestInbox(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_message_collapse(self, _):
         self.reddit.read_only = False
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             await self.reddit.inbox.collapse(
                 await self.async_list(self.reddit.inbox.messages())
             )
@@ -115,7 +115,7 @@ class TestInbox(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_message_uncollapse(self, _):
         self.reddit.read_only = False
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             await self.reddit.inbox.uncollapse(
                 await self.async_list(self.reddit.inbox.messages())
             )

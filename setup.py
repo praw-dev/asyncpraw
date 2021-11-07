@@ -30,7 +30,7 @@ extras = {
         "pytest-asyncio",
         "pytest-vcr",
         "testfixtures >4.13.2, <7",
-        "vcrpy==4.0.2",
+        "vcrpy==4.1.1",
     ],
 }
 extras["dev"] += extras["lint"] + extras["test"]

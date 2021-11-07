@@ -140,23 +140,15 @@ class CustomSerializer(object):
         return json.loads(cassette_string)
 
 
-class CustomVCR(VCR):
-    """Derived from VCR to make setting paths easier."""
-
-    def use_cassette(self, path="", **kwargs):
-        """Use a cassette."""
-        path += ".json"
-        return super().use_cassette(path, **kwargs)
-
-
-VCR = CustomVCR(
-    serializer="custom_serializer",
+vcr = VCR(
+    before_record_response=filter_access_token,
     cassette_library_dir="tests/integration/cassettes",
     match_on=["uri", "method"],
-    before_record_response=filter_access_token,
+    path_transformer=VCR.ensure_suffix(".json"),
+    serializer="custom_serializer",
 )
-VCR.register_serializer("custom_serializer", CustomSerializer)
-VCR.register_persister(CustomPersister)
+vcr.register_serializer("custom_serializer", CustomSerializer)
+vcr.register_persister(CustomPersister)
 
 
 def after_init(func, *args):
