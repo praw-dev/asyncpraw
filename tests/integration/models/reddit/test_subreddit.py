@@ -1118,7 +1118,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.delete(template["id"])
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1126,7 +1126,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
                 "PRAW updated",
@@ -1157,7 +1157,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
                 "PRAW updated",
@@ -1172,7 +1172,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
                 "PRAW updated",
@@ -1186,7 +1186,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
                 css_class="myCSS",
@@ -1200,7 +1200,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
                 text_color="dark",
@@ -1213,7 +1213,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(template["id"], fetch=True)
             newtemplate = list(
                 filter(
@@ -1228,7 +1228,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            template = await self.async_next(subreddit.flair.templates)
+            template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"], text_editable=True, fetch=True
             )

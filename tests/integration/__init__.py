@@ -80,8 +80,7 @@ class IntegrationTest(asynctest.TestCase):
     @staticmethod
     async def async_next(async_generator):
         """Return the next item from an async iterator."""
-        async for item in async_generator:
-            return item
+        return await async_generator.__anext__()
 
     def use_cassette(self, cassette_name=None, **kwargs):
         """Use a cassette. The cassette name is dynamically generated.
