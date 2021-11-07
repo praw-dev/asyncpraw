@@ -7,7 +7,7 @@ import asynctest
 import pytest
 
 from asyncpraw import Reddit
-from tests.conftest import VCR
+from tests.conftest import vcr
 
 
 class IntegrationTest(asynctest.TestCase):
@@ -26,7 +26,7 @@ class IntegrationTest(asynctest.TestCase):
 
     def setup_vcr(self):
         """Configure VCR instance."""
-        self.recorder = VCR
+        self.recorder = vcr
 
         # Disable response compression in order to see the response bodies in
         # the VCR cassettes.
