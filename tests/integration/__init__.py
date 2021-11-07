@@ -102,6 +102,11 @@ class IntegrationTest(asynctest.TestCase):
                     f"Dynamic cassette name for function {dynamic_name} does not match"
                     f" the provided cassette name: {cassette_name}"
                 )
+        match_on = kwargs.get(
+            "match_requests_on", None
+        )  # keep interface same as in PRAW
+        if match_on:
+            kwargs["match_on"] = kwargs.pop("match_requests_on")
         return self.recorder.use_cassette(cassette_name or dynamic_name, **kwargs)
 
     def get_cassette_name(self) -> str:

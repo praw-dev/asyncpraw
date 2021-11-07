@@ -15,7 +15,7 @@ class TestCommentForest(IntegrationTest):
         self.reddit._core._requestor._http._default_headers["Accept-Encoding"] = "gzip"
 
     async def test_replace__all(self):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             comments = await submission.comments()
             before_count = len(await comments.list())
@@ -26,7 +26,7 @@ class TestCommentForest(IntegrationTest):
             assert before_count < len(await comments.list())
 
     async def test_replace__all_large(self):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = Submission(self.reddit, "n49rw")
             comments = await submission.comments()
             skipped = await comments.replace_more(None, threshold=0)
@@ -36,7 +36,7 @@ class TestCommentForest(IntegrationTest):
             assert len(await comments.list()) == len(submission._comments_by_id)
 
     async def test_replace__all_with_comment_limit(self):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             submission.comment_limit = 10
             comments = await submission.comments()
@@ -46,7 +46,7 @@ class TestCommentForest(IntegrationTest):
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_replace__all_with_comment_sort(self, _):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             submission.comment_sort = "old"
             comments = await submission.comments()
@@ -55,14 +55,14 @@ class TestCommentForest(IntegrationTest):
             assert len(await comments.list()) >= 500
 
     async def test_replace__skip_at_limit(self):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             comments = await submission.comments()
             skipped = await comments.replace_more(1)
             assert len(skipped) == 5
 
     # async def test_replace__skip_below_threshold(self): # FIXME: not currently working; same with praw
-    #     with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+    #     with self.use_cassette():
     #         submission = Submission(self.reddit, "hkwbo0")
     #         comments = await submission.comments()
     #         before_count = len(await comments.list())
@@ -73,7 +73,7 @@ class TestCommentForest(IntegrationTest):
     #         assert before_count < len(await comments.list())
 
     async def test_replace__skip_all(self):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             comments = await submission.comments()
             before_count = len(await comments.list())
@@ -85,7 +85,7 @@ class TestCommentForest(IntegrationTest):
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_replace__on_comment_from_submission(self, _):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             comments = await submission.comments()
             types = [type(x) for x in await comments.list()]
@@ -100,7 +100,7 @@ class TestCommentForest(IntegrationTest):
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_replace__on_direct_comment(self, _):
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             comment = await self.reddit.comment("d8r4im1")
             await comment.refresh()
             assert any(
@@ -112,7 +112,7 @@ class TestCommentForest(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_comment_forest_refresh_error(self, _):
         self.reddit.read_only = False
-        with self.use_cassette(match_requests_on=["uri", "method", "body"]):
+        with self.use_cassette():
             submission = await self.async_next(self.reddit.front.top())
             # await submission._fetch()
             submission.comment_limit = 1
