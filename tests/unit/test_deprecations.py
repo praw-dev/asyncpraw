@@ -40,6 +40,15 @@ class TestDeprecation(UnitTest):
                 == "`subreddits.gold` has be renamed to `subreddits.premium`."
             )
 
+    async def test_lazy_argument_rename(self):
+        with pytest.deprecated_call() as warning_info:
+            await self.reddit.submission("1234", lazy=True)
+        assert (
+            str(warning_info.list[0].message)
+            == "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
+            " the ``lazy`` parameter will be removed in a future version of Async PRAW."
+        )
+
     def test_praw_exception_rename(self):
         with pytest.raises(AsyncPRAWException):
             Reddit()
