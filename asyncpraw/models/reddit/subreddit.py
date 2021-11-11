@@ -39,7 +39,7 @@ from ...exceptions import (
 from ...util.cache import cachedproperty
 from ..listing.generator import ListingGenerator
 from ..listing.mixins import SubredditListingMixin
-from ..util import permissions_string, stream_generator
+from ..util import deprecate_lazy, permissions_string, stream_generator
 from .base import RedditBase
 from .emoji import SubredditEmoji
 from .mixins import FullnameMixin, MessageableMixin
@@ -4083,7 +4083,8 @@ class SubredditStylesheet:
 class SubredditWiki:
     """Provides a set of wiki functions to a Subreddit."""
 
-    async def get_page(self, page_name, lazy=False) -> WikiPage:
+    @deprecate_lazy
+    async def get_page(self, page_name, fetch: bool = True, **kwargs) -> WikiPage:
         """Return the WikiPage for the subreddit named ``page_name``.
 
         Set ``lazy=True`` to skip fetching the wiki page.
@@ -4098,7 +4099,7 @@ class SubredditWiki:
 
         """
         wikipage = WikiPage(self.subreddit._reddit, self.subreddit, page_name.lower())
-        if not lazy:
+        if fetch:
             await wikipage._fetch()
         return wikipage
 

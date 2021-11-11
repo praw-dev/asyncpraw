@@ -40,6 +40,7 @@ from .exceptions import (
     MissingRequiredAttributeException,
     RedditAPIException,
 )
+from .models.util import deprecate_lazy
 from .objector import Objector
 from .util.token_manager import BaseTokenManager
 
@@ -573,11 +574,13 @@ class Reddit:
         self._read_only_core = session(read_only_authorizer)
         self._prepare_common_authorizer(authenticator)
 
+    @deprecate_lazy
     async def comment(
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         url: Optional[str] = None,
-        lazy: bool = False,
+        fetch: bool = True,
+        **kwargs,
     ):
         """Return an instance of :class:`~.Comment`.
 
@@ -601,7 +604,7 @@ class Reddit:
 
         """
         comment = models.Comment(self, id=id, url=url)
-        if not lazy:
+        if fetch:
             await comment._fetch()
         return comment
 
@@ -957,8 +960,13 @@ class Reddit:
                 [data["reason"], explanation, field]
             ) from exception
 
+    @deprecate_lazy
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
-        self, id: Optional[str] = None, url: Optional[str] = None, lazy=False
+        self,
+        id: Optional[str] = None,
+        url: Optional[str] = None,
+        fetch: bool = True,
+        **kwargs,
     ) -> "asyncpraw.models.Submission":
         """Return an instance of :class:`~.Submission`.
 
@@ -979,7 +987,7 @@ class Reddit:
 
         """
         submission = models.Submission(self, id=id, url=url)
-        if not lazy:
+        if fetch:
             await submission._fetch()
         return submission
 

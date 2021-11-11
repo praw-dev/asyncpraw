@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ...const import API_PATH
 from ...exceptions import ClientException
+from ..util import deprecate_lazy
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -139,7 +140,8 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a Subreddit for emoji."""
 
-    async def get_emoji(self, name: str, lazy: bool = False) -> Emoji:
+    @deprecate_lazy
+    async def get_emoji(self, name: str, fetch: bool = True, **kwargs) -> Emoji:
         """Return the Emoji for the subreddit named ``name``.
 
         :param name: The name of the emoji
@@ -164,7 +166,7 @@ class SubredditEmoji:
 
         """
         emoji = Emoji(self._reddit, self.subreddit, name)
-        if not lazy:
+        if fetch:
             await emoji._fetch()
         return emoji
 

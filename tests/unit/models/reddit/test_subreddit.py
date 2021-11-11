@@ -181,7 +181,7 @@ class TestSubredditFlairTemplates(UnitTest):
 class TestSubredditWiki(UnitTest):
     async def test__getitem(self):
         subreddit = Subreddit(self.reddit, display_name="name")
-        wikipage = await subreddit.wiki.get_page("Foo", lazy=True)
+        wikipage = await subreddit.wiki.get_page("Foo", fetch=False)
         assert isinstance(wikipage, WikiPage)
         assert "foo" == wikipage.name
 

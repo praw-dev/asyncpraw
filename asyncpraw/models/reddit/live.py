@@ -5,7 +5,7 @@ from ...const import API_PATH
 from ...util.cache import cachedproperty
 from ..list.redditor import RedditorList
 from ..listing.generator import ListingGenerator
-from ..util import stream_generator
+from ..util import deprecate_lazy, stream_generator
 from .base import RedditBase
 from .mixins import FullnameMixin
 from .redditor import Redditor
@@ -365,8 +365,9 @@ class LiveThread(RedditBase):
             return other == str(self)
         return isinstance(other, self.__class__) and str(self) == str(other)
 
+    @deprecate_lazy
     async def get_update(
-        self, update_id: str, lazy: bool = False
+        self, update_id: str, fetch: bool = True, **kwargs
     ) -> "asyncpraw.models.LiveUpdate":
         """Return a :class:`.LiveUpdate` instance.
 
@@ -395,7 +396,7 @@ class LiveThread(RedditBase):
 
         """
         update = LiveUpdate(self._reddit, self.id, update_id)
-        if not lazy:
+        if fetch:
             await update._fetch()
         return update
 

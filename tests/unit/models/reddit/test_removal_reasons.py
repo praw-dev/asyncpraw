@@ -59,7 +59,9 @@ class TestRemovalReason(UnitTest):
 
     async def test__get(self):
         subreddit = Subreddit(self.reddit, display_name="a")
-        removal_reason = await subreddit.mod.removal_reasons.get_reason("a", lazy=True)
+        removal_reason = await subreddit.mod.removal_reasons.get_reason(
+            "a", fetch=False
+        )
         assert isinstance(removal_reason, RemovalReason)
 
     def test_hash(self):

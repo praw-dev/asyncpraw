@@ -464,7 +464,7 @@ class TestReddit(UnitTest):
         )
 
     async def test_submission(self):
-        submission = await self.reddit.submission("2gmzqe", lazy=True)
+        submission = await self.reddit.submission("2gmzqe", fetch=False)
         assert submission.id == "2gmzqe"
 
     async def test_subreddit(self):
