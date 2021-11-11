@@ -518,7 +518,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         :returns: The specified Collection.
 
@@ -546,7 +546,7 @@ class SubredditCollections(AsyncPRAWBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
-            collection = await subreddit.collections(uuid, lazy=True)
+            collection = await subreddit.collections(uuid, fetch=False)
             await collection.mod.add("submission_id")
 
         """

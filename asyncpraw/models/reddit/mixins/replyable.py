@@ -29,10 +29,10 @@ class ReplyableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.reply("reply")
 
-            comment = await reddit.comment(id="dxolpyc", lazy=True)
+            comment = await reddit.comment(id="dxolpyc", fetch=False)
             await comment.reply("reply")
 
         """

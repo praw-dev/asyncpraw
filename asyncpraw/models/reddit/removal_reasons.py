@@ -152,7 +152,7 @@ class SubredditRemovalReasons:
         """Return the Removal Reason with the ID/number/slice ``reason_id``.
 
         :param reason_id: The ID or index of the removal reason.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         This method is to be used to fetch a specific removal reason, like so:
 
@@ -197,7 +197,7 @@ class SubredditRemovalReasons:
 
             reason_id = "141vv5c16py7d"
             subreddit = await reddit.subreddit("NAME")
-            reason = await subreddit.mod.removal_reasons.get_reason(reason_id, lazy=True)
+            reason = await subreddit.mod.removal_reasons.get_reason(reason_id, fetch=False)
             await reason.delete()
 
         """

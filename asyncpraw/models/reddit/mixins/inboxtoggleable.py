@@ -12,10 +12,10 @@ class InboxToggleableMixin:
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.disable_inbox_replies()
 
-            submission = await reddit.submission("8dmv8z", lazy=True)
+            submission = await reddit.submission("8dmv8z", fetch=False)
             await submission.disable_inbox_replies()
 
         .. seealso::
@@ -34,10 +34,10 @@ class InboxToggleableMixin:
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.enable_inbox_replies()
 
-            submission = await reddit.submission("8dmv8z", lazy=True)
+            submission = await reddit.submission("8dmv8z", fetch=False)
             await submission.enable_inbox_replies()
 
         .. seealso::

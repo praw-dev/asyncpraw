@@ -3345,7 +3345,7 @@ class Modmail:
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
         :param mark_read: If True, conversation is marked as read (default: False).
-        :param fetch: If True, conversation fully fetched (default: True).
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         For example:
 
@@ -3360,7 +3360,7 @@ class Modmail:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("redditdev")
-            message = await subreddit.modmail("2gmz", lazy=True)
+            message = await subreddit.modmail("2gmz", fetch=False)
             await message.archive()
 
         To print all messages from a conversation as Markdown source:
@@ -4088,7 +4088,7 @@ class SubredditWiki:
         """Return the WikiPage for the subreddit named ``page_name``.
 
         :param page_name: Name of the wikipage.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         This method is to be used to fetch a specific wikipage, like so:
 

@@ -101,7 +101,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.approve()
 
         """
@@ -242,7 +242,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            comment = await reddit.comment("cklhv0f", lazy=True)
+            comment = await reddit.comment("cklhv0f", fetch=False)
             parent = await comment.parent()
             # `replies` is empty until the comment is refreshed
             print(parent.replies)  # Output: []
@@ -302,7 +302,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.refresh()
 
         """
@@ -352,7 +352,7 @@ class CommentModeration(ThingModerationMixin):
 
     .. code-block:: python
 
-        comment = await reddit.comment("dkk4qjd", lazy=True)
+        comment = await reddit.comment("dkk4qjd", fetch=False)
         await comment.mod.approve()
 
     """
@@ -375,7 +375,7 @@ class CommentModeration(ThingModerationMixin):
         .. code-block:: python
 
             # Uncollapse a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.show()
 
         """

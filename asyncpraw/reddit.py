@@ -586,20 +586,20 @@ class Reddit:
 
         :param id: The ID of the comment.
         :param url: A permalink pointing to the comment.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         If you don't need the object fetched right away (e.g., to utilize a class
         method) then you can do:
 
         .. code-block:: python
 
-            comment = await reddit.comment("comment_id", lazy=True)
+            comment = await reddit.comment("comment_id", fetch=False)
             await comment.reply("reply")
 
         .. note::
 
-            If call this with ``lazy=True`` and you need to obtain the comment's
-            replies, you will need to call this without ``lazy=True`` or call
+            If call this with ``fetch=False`` and you need to obtain the comment's
+            replies, you will need to call this without ``fetch=False`` or call
             :meth:`~.Comment.refresh` on the returned :class:`.Comment`.
 
         """
@@ -895,6 +895,7 @@ class Reddit:
 
         :param name: The name of the redditor.
         :param fullname: The fullname of the redditor, starting with ``t2_``.
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         Either ``name`` or ``fullname`` can be provided, but not both.
 
@@ -972,7 +973,7 @@ class Reddit:
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
         :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         Either ``id`` or ``url`` can be provided, but not both.
 
@@ -981,7 +982,7 @@ class Reddit:
 
         .. code-block:: python
 
-            submission = await reddit.submission("submission_id", lazy=True)
+            submission = await reddit.submission("submission_id", fetch=False)
             await submission.mod.remove()
 
         """

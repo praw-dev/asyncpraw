@@ -60,7 +60,7 @@ want to remove a post, you don't need the object fully fetched to do that.
   .. code-block:: python
 
       # network request is not made and object is lazily loaded
-      submission = await reddit.submission("id", lazy=True)
+      submission = await reddit.submission("id", fetch=False)
 
       # object is not fetched and is only removed
       await submission.mod.remove()
@@ -86,8 +86,8 @@ Inversely, the following objects are now fully fetched when initialized:
 - :class:`.Submission`
 - :class:`.WikiPage`
 
-You can pass ``lazy=True`` in their respective helper method if you want to lazily load
-it.
+You can pass ``fetch=False`` in their respective helper method if you want to lazily
+load it.
 
 In addition, there will be a ``load()`` method provided for manually fetching/refreshing
 objects that subclass :class:`.RedditBase`. If you need to later on access an attribute
@@ -96,7 +96,7 @@ you need to call the ``.load()`` method first:
 .. code-block:: python
 
     # object is lazily loaded and no requests are made
-    submission = await reddit.submission("id", lazy=True)
+    submission = await reddit.submission("id", fetch=False)
     ...
     # network request is made and item is fully fetched
     await submission.load()

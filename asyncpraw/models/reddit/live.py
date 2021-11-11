@@ -96,7 +96,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
 
             # "manage" and "settings" permissions
             await thread.contributor.invite(redditor, ["manage", "settings"])
@@ -140,7 +140,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
             await thread.contributor.remove(redditor)
             await thread.contributor.remove("t2_1w72")  # with fullname
 
@@ -164,7 +164,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
             await thread.contributor.remove_invite(redditor)
             await thread.contributor.remove_invite("t2_1w72")  # with fullname
 
@@ -373,7 +373,7 @@ class LiveThread(RedditBase):
 
         :param update_id: A live update ID, e.g.,
             ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         Usage:
 
@@ -391,7 +391,7 @@ class LiveThread(RedditBase):
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", lazy=True)
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", fetch=False)
             update.contrib  # LiveUpdateContribution instance
 
         """
@@ -718,7 +718,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", lazy=True)
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", fetch=False)
             update.contrib  # LiveUpdateContribution instance
 
         """
