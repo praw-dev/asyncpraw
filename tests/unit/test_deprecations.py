@@ -78,7 +78,10 @@ class TestDeprecation(UnitTest):
             await subreddit.rules()
         assert (
             excinfo.value.args[0]
-            == "Calling SubredditRules to get a list of rules is deprecated. Remove the parentheses to use the iterator. View the Async PRAW documentation on how to change the code in order to use the iterator (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__)."
+            == "Calling SubredditRules to get a list of rules is deprecated. Remove the"
+            " parentheses to use the iterator. View the Async PRAW documentation on how"
+            " to change the code in order to use the iterator"
+            " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__)."
         )
 
     async def test_synchronous_context_manager(self):
@@ -87,7 +90,9 @@ class TestDeprecation(UnitTest):
                 pass
             assert (
                 excinfo.value.args[0]
-                == "Using this class as a synchronous context manager is deprecated and will be removed in the next release. Use this class as an asynchronous context manager instead."
+                == "Using this class as a synchronous context manager is deprecated and"
+                " will be removed in the next release. Use this class as an"
+                " asynchronous context manager instead."
             )
 
     def test_user_subreddit_as_dict(self):
@@ -97,12 +102,16 @@ class TestDeprecation(UnitTest):
             assert display_name == "test"
             assert (
                 warning_info.list[0].message.args[0]
-                == "`Redditor.subreddit` is no longer a dict and is now an `UserSubreddit` object. Accessing attributes using string indices is deprecated."
+                == "`Redditor.subreddit` is no longer a dict and is now an"
+                " `UserSubreddit` object. Accessing attributes using string indices is"
+                " deprecated."
             )
             assert user_subreddit.keys() == user_subreddit.__dict__.keys()
             assert (
                 warning_info.list[1].message.args[0]
-                == "`Redditor.subreddit` is no longer a dict and is now an `UserSubreddit` object. Using `keys` is deprecated and will be removed in Async PRAW 8."
+                == "`Redditor.subreddit` is no longer a dict and is now an"
+                " `UserSubreddit` object. Using `keys` is deprecated and will be"
+                " removed in Async PRAW 8."
             )
 
     def test_validate_on_submit(self):
@@ -120,5 +129,7 @@ class TestDeprecation(UnitTest):
             _ = exc.original_exception
         assert (
             excinfo.value.args[0]
-            == "Accessing the attribute original_exception is deprecated. Please rewrite your code in such a way that this attribute does not need to be used. It will be removed in Async PRAW 8.0."
+            == "Accessing the attribute original_exception is deprecated. Please"
+            " rewrite your code in such a way that this attribute does not need to"
+            " be used. It will be removed in Async PRAW 8.0."
         )

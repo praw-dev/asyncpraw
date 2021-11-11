@@ -260,8 +260,12 @@ class TestSubreddit(IntegrationTest):
             await submission.load()
             assert submission.author == pytest.placeholders.username
             assert (
-                submission.selftext
-                == "Text with a gif\n\n[optional caption](https://i.redd.it/s1i7ejqkgdc61.gif)\n\nan image\n\n[optional caption](https://preview.redd.it/95pza2skgdc61.png?width=128&format=png&auto=webp&s=c81d303645d9792afcdb9c47f0a6039708714274)\n\nand a video\n\n[optional caption](https://reddit.com/link/l0vyxc/video/qeg2azskgdc61/player)\n\ninline"
+                submission.selftext == "Text with a gif\n\n[optional"
+                " caption](https://i.redd.it/s1i7ejqkgdc61.gif)\n\nan"
+                " image\n\n[optional"
+                " caption](https://preview.redd.it/95pza2skgdc61.png?width=128&format=png&auto=webp&s=c81d303645d9792afcdb9c47f0a6039708714274)\n\nand"
+                " a video\n\n[optional"
+                " caption](https://reddit.com/link/l0vyxc/video/qeg2azskgdc61/player)\n\ninline"
             )
             assert submission.title == "title"
 

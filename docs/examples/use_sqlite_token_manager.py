@@ -43,7 +43,8 @@ async def main():
         return 1
     if len(sys.argv) != 2:
         sys.stderr.write(
-            "KEY must be provided.\n\nUsage: python3 use_sqlite_token_manager.py TOKEN_KEY\n"
+            "KEY must be provided.\n\nUsage: python3 use_sqlite_token_manager.py"
+            " TOKEN_KEY\n"
         )
         return 1
 
@@ -62,7 +63,8 @@ async def main():
         print(f"{await reddit.user.me()} is authenticated with all scopes")
     elif "identity" in scopes:
         print(
-            f"{await reddit.user.me()} is authenticated with the following scopes: {scopes}"
+            f"{await reddit.user.me()} is authenticated with the following scopes:"
+            f" {scopes}"
         )
     else:
         print(f"You are authenticated with the following scopes: {scopes}")

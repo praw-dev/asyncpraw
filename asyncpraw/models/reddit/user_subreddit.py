@@ -98,7 +98,7 @@ class UserSubreddit(Subreddit):
             warn(
                 "`Redditor.subreddit` is no longer a dict and is now an `UserSubreddit`"
                 f" object. Using `{func.__name__}` is deprecated and will be removed in"
-                f" Async PRAW 8.",
+                " Async PRAW 8.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
