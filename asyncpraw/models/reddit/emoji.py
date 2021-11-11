@@ -144,8 +144,8 @@ class SubredditEmoji:
     async def get_emoji(self, name: str, fetch: bool = True, **kwargs) -> Emoji:
         """Return the Emoji for the subreddit named ``name``.
 
-        :param name: The name of the emoji
-        :param lazy: If True, object is loaded lazily (default: False)
+        :param name: The name of the emoji.
+        :param lazy: If True, object is loaded lazily (default: False).
 
         This method is to be used to fetch a specific emoji url, like so:
 

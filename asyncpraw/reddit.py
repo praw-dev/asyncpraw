@@ -971,8 +971,7 @@ class Reddit:
         """Return an instance of :class:`~.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by
-            :meth:`~asyncpraw.models.Submission.id_from_url`.`.
+        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.
         :param lazy: If True, object is loaded lazily (default: False).
 
         Either ``id`` or ``url`` can be provided, but not both.

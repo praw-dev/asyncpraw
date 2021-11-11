@@ -20,7 +20,7 @@ class SavableMixin:
             submission = await reddit.submission(id="5or86n", lazy=True)
             await submission.save(category="view later")
 
-            comment = await reddit.comment(id="dxolpyc", lazy=True, lazy=True)
+            comment = await reddit.comment(id="dxolpyc", lazy=True)
             await comment.save()
 
         .. seealso::

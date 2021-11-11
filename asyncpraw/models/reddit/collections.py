@@ -518,7 +518,7 @@ class SubredditCollections(AsyncPRAWBase):
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
-        :param lazy: If True, object is loaded lazily (default: False)
+        :param lazy: If True, object is loaded lazily (default: False).
 
         :returns: The specified Collection.
 

@@ -151,7 +151,7 @@ class SubredditRemovalReasons:
     ) -> RemovalReason:
         """Return the Removal Reason with the ID/number/slice ``reason_id``.
 
-        :param reason_id: The ID or index of the removal reason
+        :param reason_id: The ID or index of the removal reason.
         :param lazy: If True, object is loaded lazily (default: False).
 
         This method is to be used to fetch a specific removal reason, like so:

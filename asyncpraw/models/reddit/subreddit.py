@@ -4087,7 +4087,8 @@ class SubredditWiki:
     async def get_page(self, page_name, fetch: bool = True, **kwargs) -> WikiPage:
         """Return the WikiPage for the subreddit named ``page_name``.
 
-        Set ``lazy=True`` to skip fetching the wiki page.
+        :param page_name: Name of the wikipage.
+        :param lazy: If True, object is loaded lazily (default: False).
 
         This method is to be used to fetch a specific wikipage, like so:
 
