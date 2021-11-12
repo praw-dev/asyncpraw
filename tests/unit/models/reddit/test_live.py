@@ -64,7 +64,7 @@ class TestLiveThread(UnitTest):
         thread_id = "dummy_thread_id"
         update_id = "dummy_update_id"
         thread = LiveThread(self.reddit, id=thread_id)
-        update = await thread.get_update(update_id, lazy=True)
+        update = await thread.get_update(update_id, fetch=False)
         assert isinstance(update, LiveUpdate)
         assert update.id == update_id
 

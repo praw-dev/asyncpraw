@@ -23,13 +23,13 @@ class TestEmoji(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             with pytest.raises(ClientException) as excinfo:
                 await subreddit.emoji.get_emoji("invalid")
-            assert str(excinfo.value) == (
-                f"r/{subreddit} does not have the emoji invalid"
+            assert (
+                str(excinfo.value) == f"r/{subreddit} does not have the emoji invalid"
             )
             with pytest.raises(ClientException) as excinfo2:
                 await subreddit.emoji.get_emoji("Test_png")
-            assert str(excinfo2.value) == (
-                f"r/{subreddit} does not have the emoji Test_png"
+            assert (
+                str(excinfo2.value) == f"r/{subreddit} does not have the emoji Test_png"
             )
 
     async def test_delete(self):

@@ -5,6 +5,7 @@ from ...const import API_PATH
 from ...exceptions import ClientException
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
+from ..util import deprecate_lazy
 from .base import RedditBase
 from .redditor import Redditor
 from .submission import Submission
@@ -505,17 +506,19 @@ class SubredditCollections(AsyncPRAWBase):
         """
         return SubredditCollectionsModeration(self._reddit, self.subreddit)
 
+    @deprecate_lazy
     async def __call__(
         self,
         collection_id: Optional[str] = None,
         permalink: Optional[str] = None,
-        lazy: bool = False,
+        fetch: bool = True,
+        **kwargs,
     ):
         """Return the :class:`.Collection` with the specified ID.
 
         :param collection_id: The ID of a Collection (default: None).
         :param permalink: The permalink of a Collection (default: None).
-        :param lazy: If True, object is loaded lazily (default: False)
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         :returns: The specified Collection.
 
@@ -543,7 +546,7 @@ class SubredditCollections(AsyncPRAWBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("SUBREDDIT", fetch=True)
-            collection = await subreddit.collections(uuid, lazy=True)
+            collection = await subreddit.collections(uuid, fetch=False)
             await collection.mod.add("submission_id")
 
         """
@@ -554,7 +557,7 @@ class SubredditCollections(AsyncPRAWBase):
         collection = Collection(
             self._reddit, collection_id=collection_id, permalink=permalink
         )
-        if not lazy:
+        if fetch:
             await collection._fetch()
         return collection
 

@@ -39,7 +39,7 @@ from ...exceptions import (
 from ...util.cache import cachedproperty
 from ..listing.generator import ListingGenerator
 from ..listing.mixins import SubredditListingMixin
-from ..util import permissions_string, stream_generator
+from ..util import deprecate_lazy, permissions_string, stream_generator
 from .base import RedditBase
 from .emoji import SubredditEmoji
 from .mixins import FullnameMixin, MessageableMixin
@@ -3345,7 +3345,7 @@ class Modmail:
 
         :param id: A reddit base36 conversation ID, e.g., ``2gmz``.
         :param mark_read: If True, conversation is marked as read (default: False).
-        :param fetch: If True, conversation fully fetched (default: True).
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         For example:
 
@@ -3360,7 +3360,7 @@ class Modmail:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("redditdev")
-            message = await subreddit.modmail("2gmz", lazy=True)
+            message = await subreddit.modmail("2gmz", fetch=False)
             await message.archive()
 
         To print all messages from a conversation as Markdown source:
@@ -4083,10 +4083,12 @@ class SubredditStylesheet:
 class SubredditWiki:
     """Provides a set of wiki functions to a Subreddit."""
 
-    async def get_page(self, page_name, lazy=False) -> WikiPage:
+    @deprecate_lazy
+    async def get_page(self, page_name, fetch: bool = True, **kwargs) -> WikiPage:
         """Return the WikiPage for the subreddit named ``page_name``.
 
-        Set ``lazy=True`` to skip fetching the wiki page.
+        :param page_name: Name of the wikipage.
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         This method is to be used to fetch a specific wikipage, like so:
 
@@ -4098,7 +4100,7 @@ class SubredditWiki:
 
         """
         wikipage = WikiPage(self.subreddit._reddit, self.subreddit, page_name.lower())
-        if not lazy:
+        if fetch:
             await wikipage._fetch()
         return wikipage
 

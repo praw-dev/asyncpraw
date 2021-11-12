@@ -64,7 +64,8 @@ class TestReddit(UnitTest):
             )
         assert (
             str(excinfo.value)
-            == "``refresh_token`` setting cannot be provided when providing ``token_manager``"
+            == "``refresh_token`` setting cannot be provided when providing"
+            " ``token_manager``"
         )
 
     async def test_context_manager(self):
@@ -90,13 +91,15 @@ class TestReddit(UnitTest):
             Reddit(timeout="test", **self.REQUIRED_DUMMY_SETTINGS)
         assert (
             excinfo.value.args[0]
-            == "An incorrect config type was given for option timeout. The expected type is int, but the given value is test."
+            == "An incorrect config type was given for option timeout. The expected"
+            " type is int, but the given value is test."
         )
         with pytest.raises(ValueError) as excinfo:
             Reddit(ratelimit_seconds="test", **self.REQUIRED_DUMMY_SETTINGS)
         assert (
             excinfo.value.args[0]
-            == "An incorrect config type was given for option ratelimit_seconds. The expected type is int, but the given value is test."
+            == "An incorrect config type was given for option ratelimit_seconds. The"
+            " expected type is int, but the given value is test."
         )
 
     def test_info__not_list(self):
@@ -464,7 +467,7 @@ class TestReddit(UnitTest):
         )
 
     async def test_submission(self):
-        submission = await self.reddit.submission("2gmzqe", lazy=True)
+        submission = await self.reddit.submission("2gmzqe", fetch=False)
         assert submission.id == "2gmzqe"
 
     async def test_subreddit(self):

@@ -50,7 +50,7 @@ class TestSubmission(UnitTest):
     @pytest.mark.filterwarnings("error", category=UserWarning)
     async def test_comment_sort_warning(self):
         with pytest.raises(UserWarning) as excinfo:
-            submission = await self.reddit.submission("1234", lazy=True)
+            submission = await self.reddit.submission("1234", fetch=False)
             submission._fetched = True
             submission.comment_sort = "new"
         assert (
@@ -63,7 +63,7 @@ class TestSubmission(UnitTest):
     @pytest.LogCaptureFixture
     async def test_comment_sort_warning__disabled(self, caplog):
         self.reddit.config.warn_comment_sort = False
-        submission = await self.reddit.submission("1234", lazy=False)
+        submission = await self.reddit.submission("1234")
         submission._fetched = True
         submission.comment_sort = "new"
         assert caplog.records == []

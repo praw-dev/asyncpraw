@@ -37,7 +37,8 @@ class TestReddit(IntegrationTest):
                 )
             assert (
                 str(excinfo.value)
-                == "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n"
+                == "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid"
+                " request.\n</body></html>\n"
             )
 
     async def test_bare_badrequest(self):

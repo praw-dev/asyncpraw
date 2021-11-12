@@ -34,7 +34,7 @@ class LiveHelper(AsyncPRAWBase):
             await livethread.close()
 
         :param id: A live thread ID, e.g., ``ukaeu1ik4sw5``.
-        :param fetch: Determines if the object is lazily loaded (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         """
         live_thread = LiveThread(self._reddit, id=id)
@@ -154,7 +154,7 @@ class MultiredditHelper(AsyncPRAWBase):
         :param redditor: A redditor name (e.g., ``"spez"``) or :class:`~.Redditor`
             instance who owns the multireddit.
         :param name: The name of the multireddit.
-        :param fetch: Determines if the object is lazily loaded (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         """
         path = f"/user/{redditor}/m/{name}"
@@ -227,7 +227,7 @@ class SubredditHelper(AsyncPRAWBase):
                 print(comment.author)
 
         :param display_name: The name of the subreddit.
-        :param fetch: Determines if the object is lazily loaded (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         """
         lower_name = display_name.lower()

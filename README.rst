@@ -81,7 +81,7 @@ With the ``reddit`` instance you can then interact with Reddit:
 
     # Comment on a known submission
     submission = await reddit.submission(
-        url="https://www.reddit.com/comments/5e1az9", lazy=True
+        url="https://www.reddit.com/comments/5e1az9", fetch=False
     )
     await submission.reply("Super rad!")
 

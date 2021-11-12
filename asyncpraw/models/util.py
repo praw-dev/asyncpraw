@@ -2,7 +2,9 @@
 import asyncio
 import random
 from collections import OrderedDict
+from functools import wraps
 from typing import Any, AsyncGenerator, Callable, List, Optional, Set
+from warnings import warn
 
 
 class BoundedSet:
@@ -60,6 +62,25 @@ class ExponentialCounter:
     def reset(self):
         """Reset the counter to 1."""
         self._base = 1
+
+
+def deprecate_lazy(func):  # noqa: D401
+    """A decorator used for deprecating the ``lazy`` keyword argument."""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if "lazy" in kwargs:
+            kwargs.setdefault("fetch", not kwargs.pop("lazy"))
+            warn(
+                "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
+                " the ``lazy`` parameter will be removed in a future version of Async"
+                " PRAW.",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def permissions_string(

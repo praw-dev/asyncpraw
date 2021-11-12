@@ -153,7 +153,7 @@ class CommentForest:
 
         .. code-block:: python
 
-            submission = await reddit.submission("3hahrw", lazy=True)
+            submission = await reddit.submission("3hahrw", fetch=False)
             comments = await submission.comments()
             await comments.replace_more()
 

@@ -5,7 +5,7 @@ from ...const import API_PATH
 from ...util.cache import cachedproperty
 from ..list.redditor import RedditorList
 from ..listing.generator import ListingGenerator
-from ..util import stream_generator
+from ..util import deprecate_lazy, stream_generator
 from .base import RedditBase
 from .mixins import FullnameMixin
 from .redditor import Redditor
@@ -96,7 +96,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
 
             # "manage" and "settings" permissions
             await thread.contributor.invite(redditor, ["manage", "settings"])
@@ -140,7 +140,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
             await thread.contributor.remove(redditor)
             await thread.contributor.remove("t2_1w72")  # with fullname
 
@@ -164,7 +164,7 @@ class LiveContributorRelationship:
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
             await thread.contributor.remove_invite(redditor)
             await thread.contributor.remove_invite("t2_1w72")  # with fullname
 
@@ -365,14 +365,15 @@ class LiveThread(RedditBase):
             return other == str(self)
         return isinstance(other, self.__class__) and str(self) == str(other)
 
+    @deprecate_lazy
     async def get_update(
-        self, update_id: str, lazy: bool = False
+        self, update_id: str, fetch: bool = True, **kwargs
     ) -> "asyncpraw.models.LiveUpdate":
         """Return a :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g.,
             ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         Usage:
 
@@ -390,12 +391,12 @@ class LiveThread(RedditBase):
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", lazy=True)
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", fetch=False)
             update.contrib  # LiveUpdateContribution instance
 
         """
         update = LiveUpdate(self._reddit, self.id, update_id)
-        if not lazy:
+        if fetch:
             await update._fetch()
         return update
 
@@ -717,7 +718,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
         .. code-block:: python
 
             thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", lazy=True)
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", fetch=False)
             update.contrib  # LiveUpdateContribution instance
 
         """

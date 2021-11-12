@@ -55,10 +55,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # approve a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.approve()
             # approve a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.approve()
 
         """
@@ -81,10 +81,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # distinguish and sticky a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.distinguish(how="yes", sticky=True)
             # undistinguish a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.distinguish(how="no")
 
         .. seealso::
@@ -110,10 +110,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # ignore future reports on a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.ignore_reports()
             # ignore future reports on a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.ignore_reports()
 
         .. seealso::
@@ -133,10 +133,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # lock a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.lock()
             # lock a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.lock()
 
         .. seealso::
@@ -164,15 +164,15 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # remove a comment and mark as spam:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.remove(spam=True)
             # remove a submission
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.remove()
             # remove a submission with a removal reason
             sub = await reddit.subreddit("subreddit")
             reason = await sub.mod.removal_reasons.get_reason("110ni21zo23ql")
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.remove(reason_id=reason.id)
 
         """
@@ -234,10 +234,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # undistinguish a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.undistinguish()
             # undistinguish a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.undistinguish()
 
         .. seealso::
@@ -258,10 +258,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # accept future reports on a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.unignore_reports()
             # accept future reports on a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.unignore_reports()
 
         .. seealso::
@@ -281,10 +281,10 @@ class ThingModerationMixin:
         .. code-block:: python
 
             # unlock a comment:
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.mod.unlock()
             # unlock a submission:
-            submission = await reddit.submission(id="5or86n", lazy=True)
+            submission = await reddit.submission(id="5or86n", fetch=False)
             await submission.mod.unlock()
 
         .. seealso::

@@ -40,6 +40,7 @@ from .exceptions import (
     MissingRequiredAttributeException,
     RedditAPIException,
 )
+from .models.util import deprecate_lazy
 from .objector import Objector
 from .util.token_manager import BaseTokenManager
 
@@ -573,35 +574,37 @@ class Reddit:
         self._read_only_core = session(read_only_authorizer)
         self._prepare_common_authorizer(authenticator)
 
+    @deprecate_lazy
     async def comment(
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
         url: Optional[str] = None,
-        lazy: bool = False,
+        fetch: bool = True,
+        **kwargs,
     ):
         """Return an instance of :class:`~.Comment`.
 
         :param id: The ID of the comment.
         :param url: A permalink pointing to the comment.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         If you don't need the object fetched right away (e.g., to utilize a class
         method) then you can do:
 
         .. code-block:: python
 
-            comment = await reddit.comment("comment_id", lazy=True)
+            comment = await reddit.comment("comment_id", fetch=False)
             await comment.reply("reply")
 
         .. note::
 
-            If call this with ``lazy=True`` and you need to obtain the comment's
-            replies, you will need to call this without ``lazy=True`` or call
+            If call this with ``fetch=False`` and you need to obtain the comment's
+            replies, you will need to call this without ``fetch=False`` or call
             :meth:`~.Comment.refresh` on the returned :class:`.Comment`.
 
         """
         comment = models.Comment(self, id=id, url=url)
-        if not lazy:
+        if fetch:
             await comment._fetch()
         return comment
 
@@ -892,6 +895,7 @@ class Reddit:
 
         :param name: The name of the redditor.
         :param fullname: The fullname of the redditor, starting with ``t2_``.
+        :param fetch: Determines if Async PRAW will fetch the object (default: False).
 
         Either ``name`` or ``fullname`` can be provided, but not both.
 
@@ -957,15 +961,19 @@ class Reddit:
                 [data["reason"], explanation, field]
             ) from exception
 
+    @deprecate_lazy
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
-        self, id: Optional[str] = None, url: Optional[str] = None, lazy=False
+        self,
+        id: Optional[str] = None,
+        url: Optional[str] = None,
+        fetch: bool = True,
+        **kwargs,
     ) -> "asyncpraw.models.Submission":
         """Return an instance of :class:`~.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by
-            :meth:`~asyncpraw.models.Submission.id_from_url`.`.
-        :param lazy: If True, object is loaded lazily (default: False).
+        :param url: A URL supported by :meth:`~asyncpraw.models.Submission.id_from_url`.
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         Either ``id`` or ``url`` can be provided, but not both.
 
@@ -974,12 +982,12 @@ class Reddit:
 
         .. code-block:: python
 
-            submission = await reddit.submission("submission_id", lazy=True)
+            submission = await reddit.submission("submission_id", fetch=False)
             await submission.mod.remove()
 
         """
         submission = models.Submission(self, id=id, url=url)
-        if not lazy:
+        if fetch:
             await submission._fetch()
         return submission
 

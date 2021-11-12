@@ -41,8 +41,9 @@ class TestRemovalReason(IntegrationTest):
         with self.use_cassette():
             with pytest.raises(ClientException) as excinfo:
                 await subreddit.mod.removal_reasons.get_reason("invalid")
-            assert str(excinfo.value) == (
-                f"Subreddit {subreddit} does not have the removal reason invalid"
+            assert (
+                str(excinfo.value)
+                == f"Subreddit {subreddit} does not have the removal reason invalid"
             )
 
     @mock.patch("asyncio.sleep", return_value=None)

@@ -34,14 +34,14 @@ class MessageableMixin:
 
         .. code-block:: python
 
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
             await redditor.message("TEST", "test message from Async PRAW")
 
         To send a message to ``u/spez`` from the moderators of ``r/test`` try:
 
         .. code-block:: python
 
-            redditor = await reddit.redditor("spez", lazy=True)
+            redditor = await reddit.redditor("spez", fetch=False)
             await redditor.message("TEST", "test message from r/test", from_subreddit="test")
 
         To send a message to the moderators of ``r/test``, try:

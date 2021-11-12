@@ -27,7 +27,7 @@ class TestEmoji(UnitTest):
 
     async def test__get(self):
         subreddit = Subreddit(self.reddit, display_name="a")
-        emoji = await subreddit.emoji.get_emoji("a", lazy=True)
+        emoji = await subreddit.emoji.get_emoji("a", fetch=False)
         assert isinstance(emoji, Emoji)
 
     def test_hash(self):

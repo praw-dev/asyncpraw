@@ -141,7 +141,10 @@ class TestSubreddit(UnitTest):
     async def test_submit_gallery__too_long_caption(self):
         message = "Caption must be 180 characters or less."
         subreddit = Subreddit(self.reddit, display_name="name")
-        caption = "wayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy too long caption"
+        caption = (
+            "wayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+            " too long caption"
+        )
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit_gallery(
                 "Cool title", images=[{"image_path": __file__, "caption": caption}]
@@ -181,7 +184,7 @@ class TestSubredditFlairTemplates(UnitTest):
 class TestSubredditWiki(UnitTest):
     async def test__getitem(self):
         subreddit = Subreddit(self.reddit, display_name="name")
-        wikipage = await subreddit.wiki.get_page("Foo", lazy=True)
+        wikipage = await subreddit.wiki.get_page("Foo", fetch=False)
         assert isinstance(wikipage, WikiPage)
         assert "foo" == wikipage.name
 

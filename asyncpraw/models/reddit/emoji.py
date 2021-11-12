@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ...const import API_PATH
 from ...exceptions import ClientException
+from ..util import deprecate_lazy
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -139,11 +140,12 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a Subreddit for emoji."""
 
-    async def get_emoji(self, name: str, lazy: bool = False) -> Emoji:
+    @deprecate_lazy
+    async def get_emoji(self, name: str, fetch: bool = True, **kwargs) -> Emoji:
         """Return the Emoji for the subreddit named ``name``.
 
-        :param name: The name of the emoji
-        :param lazy: If True, object is loaded lazily (default: False)
+        :param name: The name of the emoji.
+        :param fetch: Determines if Async PRAW will fetch the object (default: True).
 
         This method is to be used to fetch a specific emoji url, like so:
 
@@ -159,12 +161,12 @@ class SubredditEmoji:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("praw_test")
-            emoji = await subreddit.emoji.get_emoji("test", lazy=True)
+            emoji = await subreddit.emoji.get_emoji("test", fetch=False)
             await emoji.delete()
 
         """
         emoji = Emoji(self._reddit, self.subreddit, name)
-        if not lazy:
+        if fetch:
             await emoji._fetch()
         return emoji
 

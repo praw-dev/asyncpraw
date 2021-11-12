@@ -60,34 +60,34 @@ want to remove a post, you don't need the object fully fetched to do that.
   .. code-block:: python
 
       # network request is not made and object is lazily loaded
-      submission = await reddit.submission("id", lazy=True)
+      submission = await reddit.submission("id", fetch=False)
 
       # object is not fetched and is only removed
       await submission.mod.remove()
 
 The following objects are still lazily loaded by default:
 
-- :class:`.Subreddit`
-- :class:`.Redditor`
 - :class:`.LiveThread`
 - :class:`.Multireddit`
+- :class:`.Redditor`
+- :class:`.Subreddit`
 
 You can pass ``fetch=True`` in their respective helper method to fully load it.
 
 Inversely, the following objects are now fully fetched when initialized:
 
-- :class:`.Submission`
-- :class:`.Comment`
-- :class:`.WikiPage`
-- :class:`.RemovalReason`
 - :class:`.Collection`
+- :class:`.Comment`
 - :class:`.Emoji`
 - :class:`.LiveUpdate`
-- :class:`.Rule`
 - :class:`.Preferences`
+- :class:`.RemovalReason`
+- :class:`.Rule`
+- :class:`.Submission`
+- :class:`.WikiPage`
 
-You can pass ``lazy=True`` in their respective helper method if you want to lazily load
-it.
+You can pass ``fetch=False`` in their respective helper method if you want to lazily
+load it.
 
 In addition, there will be a ``load()`` method provided for manually fetching/refreshing
 objects that subclass :class:`.RedditBase`. If you need to later on access an attribute
@@ -96,7 +96,7 @@ you need to call the ``.load()`` method first:
 .. code-block:: python
 
     # object is lazily loaded and no requests are made
-    submission = await reddit.submission("id", lazy=True)
+    submission = await reddit.submission("id", fetch=False)
     ...
     # network request is made and item is fully fetched
     await submission.load()
@@ -109,8 +109,8 @@ Getting items by Indices
 
 .. _objects_by_indices:
 
-In PRAW you could get specific :class:`.WikiPage`, :class:`.RemovalReason`,
-:class:`.Emoji`, :class:`.LiveUpdate`, and :class:`.Rule` objects by using string
+In PRAW you could get specific :class:`.Emoji`, :class:`.LiveUpdate`,
+:class:`.RemovalReason`, :class:`.Rule`, and :class:`.WikiPage`, objects by using string
 indices. This will no longer work and has been converted to a ``.get_<item name>(item)``
 method. Also, they are not lazily loaded by default anymore.
 

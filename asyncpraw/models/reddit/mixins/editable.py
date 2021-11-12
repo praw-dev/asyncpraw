@@ -12,10 +12,10 @@ class EditableMixin:
 
         .. code-block:: python
 
-            comment = await reddit.comment("dkk4qjd", lazy=True)
+            comment = await reddit.comment("dkk4qjd", fetch=False)
             await comment.delete()
 
-            submission = await reddit.submission("8dmv8z", lazy=True)
+            submission = await reddit.submission("8dmv8z", fetch=False)
             await submission.delete()
 
         """

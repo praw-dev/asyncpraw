@@ -300,5 +300,5 @@ For example:
     import pprint
 
     # assume you have a Reddit instance bound to variable `reddit`
-    submission = await reddit.submission(id="39zje0", lazy=False)
+    submission = await reddit.submission(id="39zje0")
     pprint.pprint(vars(submission))
