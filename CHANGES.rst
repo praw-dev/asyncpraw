@@ -13,6 +13,12 @@ Unreleased
   off the warning.
 - :meth:`.user_selectable` to get available subreddit link flairs.
 - Automatic RateLimit handling will support errors with millisecond resolution.
+- :class:`.Draft` to represent a submission draft.
+- :meth:`.Draft.delete` to delete drafts.
+- :meth:`.Draft.submit` to submit drafts.
+- :meth:`.Draft.update` to modify drafts.
+- :class:`.DraftHelper` to fetch or create drafts on new Reddit.
+- :class:`.DraftList` to represent a list of :class:`.Draft` objects.
 
 **Deprecated**
 
@@ -48,6 +54,10 @@ Unreleased
 - The configuration setting ``refresh_token`` has been added back. See
   https://www.reddit.com/r/redditdev/comments/olk5e6/followup_oauth2_api_changes_regarding_refresh/
   for more info.
+
+**Changed**
+
+- :meth:`.Reddit.delete` now accepts the ``params`` parameter.
 
 **Deprecated**
 
