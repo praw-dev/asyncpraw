@@ -1,6 +1,8 @@
 """Provide CommentForest for Submission comments."""
+import inspect
 from heapq import heappop, heappush
-from typing import TYPE_CHECKING, AsyncIterator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncIterator, Coroutine, List, Optional, Union
+from warnings import warn
 
 from ..exceptions import DuplicateReplaceException
 from .reddit.more import MoreComments
@@ -41,19 +43,21 @@ class CommentForest:
 
         .. code-block:: python
 
-            comments = await submission.comments()
-            first_comment = comments[0]
+            first_comment = submission.comments[0]
 
         Alternatively, the presence of this method enables one to iterate over all top
         level comments, like so:
 
         .. code-block:: python
 
-            comments = await submission.comments()
-            for comment in comments:
+            for comment in submission.comments:
                 print(comment.body)
 
         """
+        if not (self._comments is not None or self._submission._fetched):
+            raise TypeError(
+                "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
+            )
         return self._comments[index]
 
     async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Comment"]:
@@ -63,13 +67,31 @@ class CommentForest:
 
         .. code-block:: python
 
-            comments = await submission.comments()
+            comments = submission.comments
             async for comment in comments:
                 print(comment.body)
 
         """
-        for comment in self._comments:
+        warn(
+            "Using CommentForest as an asynchronous iterator has been deprecated and"
+            " will be removed in a future version.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
+        for comment in self:
             yield comment
+
+    async def __call__(self):  # noqa: D102
+        warn(
+            "`Submission.comments` is now a property and no longer needs to be awaited. This"
+            " will raise an error in a future version of Async PRAW.",
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
+        if not self._submission._fetched:
+            await self._submission._fetch()
+        self._comments = self._submission.comments._comments
+        return self
 
     def __init__(
         self,
@@ -78,7 +100,7 @@ class CommentForest:
     ):
         """Initialize a CommentForest instance.
 
-        :param submission: An instance of :class:`~.Subreddit` that is the parent of the
+        :param submission: An instance of :class:`.Submission` that is the parent of the
             comments.
         :param comments: Initialize the Forest with a list of comments (default: None).
 
@@ -88,10 +110,7 @@ class CommentForest:
 
     def __len__(self) -> int:
         """Return the number of top-level comments in the forest."""
-        if self._comments:
-            return len(self._comments)
-        else:
-            return 0
+        return len(self._comments or [])
 
     def _insert_comment(self, comment):
         if comment.name in self._submission._comments_by_id:
@@ -112,9 +131,16 @@ class CommentForest:
         for comment in comments:
             comment.submission = self._submission
 
-    async def list(
+    def list(
         self,
-    ) -> List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]]:
+    ) -> Union[
+        List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]],
+        Coroutine[
+            Any,
+            Any,
+            List[Union["asyncpraw.models.Comment", "asyncpraw.models.MoreComments"]],
+        ],
+    ]:
         """Return a flattened list of all Comments.
 
         This list may contain :class:`.MoreComments` instances if :meth:`.replace_more`
@@ -127,7 +153,28 @@ class CommentForest:
             comment = queue.pop(0)
             comments.append(comment)
             if not isinstance(comment, MoreComments):
-                queue.extend([reply async for reply in comment.replies])
+                queue.extend(comment.replies)
+        # check if this got called with await
+        # I'm so sorry this really gross
+        if any(
+            [
+                "await" in context
+                for context in inspect.getframeinfo(
+                    inspect.currentframe().f_back
+                ).code_context
+            ]
+        ):
+
+            async def async_func():
+                warn(
+                    "`CommentForest.list()` no longer needs to be awaited and this"
+                    " will raise an error in a future version of Async PRAW.",
+                    category=DeprecationWarning,
+                    stacklevel=3,
+                )
+                return comments
+
+            return async_func()
         return comments
 
     async def replace_more(
@@ -154,15 +201,15 @@ class CommentForest:
         .. code-block:: python
 
             submission = await reddit.submission("3hahrw", fetch=False)
-            comments = await submission.comments()
-            await comments.replace_more()
+            await submission.comments.replace_more()
 
         Alternatively, to replace :class:`.MoreComments` instances within the replies of
         a single comment try:
 
         .. code-block:: python
 
-            comment = await reddit.comment("d8r4im1")
+            comment = await reddit.comment("d8r4im1", fetch=False)
+            await comment.refresh()
             await comment.replies.replace_more()
 
         .. note::
@@ -175,8 +222,7 @@ class CommentForest:
 
                 while True:
                     try:
-                        comments = await submission.comments()
-                        await comments.replace_more()
+                        await submission.comments.replace_more()
                         break
                     except PossibleExceptions:
                         print("Handling replace_more exception")

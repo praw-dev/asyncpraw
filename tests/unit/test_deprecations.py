@@ -4,7 +4,7 @@ import pytest
 
 from asyncpraw import Reddit
 from asyncpraw.exceptions import APIException, AsyncPRAWException, WebSocketException
-from asyncpraw.models import Subreddit
+from asyncpraw.models import Comment, Subreddit
 from asyncpraw.models.reddit.user_subreddit import UserSubreddit
 from asyncpraw.util.token_manager import FileTokenManager
 
@@ -25,6 +25,21 @@ class TestDeprecation(UnitTest):
             exc.message
         with pytest.raises(DeprecationWarning):
             exc.field
+
+    async def test_comment_forest_async_iterator(self):
+        submission = await self.reddit.submission("1234", fetch=False)
+        submission._fetched = True
+        submission.comments._comments = [Comment(None, id="1234")]
+        with pytest.deprecated_call():
+            async for comment in submission.comments:
+                assert isinstance(comment, Comment)
+
+    async def test_comment_forest_list_async(self):
+        submission = await self.reddit.submission("1234", fetch=False)
+        submission._fetched = True
+        submission.comments._comments = []
+        with pytest.deprecated_call():
+            await submission.comments.list()
 
     async def test_gild_method(self):
         with pytest.raises(DeprecationWarning) as excinfo:
@@ -80,6 +95,12 @@ class TestDeprecation(UnitTest):
     async def test_reddit_user_me_read_only(self):
         with pytest.raises(DeprecationWarning):
             await self.reddit.user.me()
+
+    async def test_submission_comments_async(self):
+        submission = await self.reddit.submission("1234", fetch=False)
+        submission._fetched = True
+        with pytest.deprecated_call():
+            await submission.comments()
 
     async def test_subreddit_rules_call(self):
         with pytest.raises(DeprecationWarning) as excinfo:
