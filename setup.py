@@ -73,7 +73,7 @@ setup(
     long_description=README,
     package_data={
         "": ["LICENSE.txt", "praw_license.txt"],
-        PACKAGE_NAME: ["*.ini", "images/*.jpg"],
+        PACKAGE_NAME: ["*.ini", "images/*.png"],
     },
     packages=find_packages(exclude=["tests", "tests.*", "tools", "tools.*"]),
     project_urls={
