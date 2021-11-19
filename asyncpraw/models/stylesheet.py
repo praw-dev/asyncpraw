@@ -6,12 +6,7 @@ from .base import AsyncPRAWBase
 class Stylesheet(AsyncPRAWBase):
     """Represent a stylesheet.
 
-    **Typical Attributes**
-
-    This table describes attributes that typically belong to objects of this class.
-    Since attributes are dynamically provided (see
-    :ref:`determine-available-attributes-of-an-object`), there is not a guarantee that
-    these attributes will always be present, nor is this list necessarily complete.
+    .. include:: ../../typical_attributes.rst
 
     ============== ============================================
     Attribute      Description
