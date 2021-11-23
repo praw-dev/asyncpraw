@@ -1,9 +1,10 @@
 """Test asyncpraw.models.user."""
+import asyncprawcore.exceptions
 import pytest
 from asynctest import mock
 
 from asyncpraw.exceptions import RedditAPIException
-from asyncpraw.models import Multireddit, Redditor, Subreddit
+from asyncpraw.models import Multireddit, Redditor, Submission, Subreddit
 
 from .. import IntegrationTest
 
@@ -79,7 +80,7 @@ class TestUser(IntegrationTest):
             me = await self.reddit.user.me()
             me.praw_is_cached = True
             me = await self.reddit.user.me(use_cache=False)
-            assert not hasattr(me, "praw_is_cached")
+            assert not hasattr(me, "Async PRAW_is_cached")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_moderator_subreddits(self, _):
@@ -98,6 +99,151 @@ class TestUser(IntegrationTest):
             assert isinstance(multireddits, list)
             assert multireddits
             assert all(isinstance(x, Multireddit) for x in multireddits)
+
+    async def test_pin(self):
+        self.reddit.read_only = False
+        self.reddit.validate_on_submit = True
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            submission_list = []
+            for i in range(1, 5):
+                submission = await subreddit.submit(
+                    title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}"
+                )
+                submission_list.append(submission)
+                await self.reddit.user.pin(submission)
+
+            for i in range(5, 9):
+                await subreddit.submit(
+                    title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}"
+                )
+            new_posts = await self.async_list(
+                (await self.reddit.user.me()).new(limit=4)
+            )
+            new_posts.reverse()
+            assert new_posts == submission_list
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_pin__comment(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            comment = await self.reddit.comment(id="hnxx8f2")
+            await self.reddit.user.pin(comment)
+            new_content = await self.async_next(
+                (await self.reddit.user.me()).new(limit=1)
+            )
+            assert new_content != comment
+
+    async def test_pin__deleted_submission(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            with pytest.raises(asyncprawcore.exceptions.BadRequest):
+                await self.reddit.user.pin(Submission(self.reddit, "rmhl6m"))
+
+    async def test_pin__empty_slot(self):
+        self.reddit.read_only = False
+        self.reddit.validate_on_submit = True
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            new_posts = await self.async_list(
+                (await self.reddit.user.me()).new(limit=4)
+            )
+            new_posts.reverse()
+            for i in range(2, 4):
+                await self.reddit.user.pin(new_posts[i], state=False)
+            submission = await subreddit.submit(
+                title="Async PRAW Test 5", selftext="Testing .pin method 5"
+            )
+            await self.reddit.user.pin(submission, num=4)
+            new_posts = await self.async_list(
+                (await self.reddit.user.me()).new(limit=4)
+            )
+            new_posts.reverse()
+            assert new_posts[-1] == submission
+
+    async def test_pin__ignore_conflicts(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await self.reddit.user.pin(Submission(self.reddit, "rmi79w"))
+            await self.reddit.user.pin(Submission(self.reddit, "rmi79w"))
+
+    async def test_pin__invalid_num(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            await self.reddit.user.pin(Submission(self.reddit, "rmi7hx"), num=7)
+            submission = await self.async_next(
+                (await self.reddit.user.me()).new(limit=1)
+            )
+            assert submission.id == "rmi7hx"
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_pin__num(self, _):
+        self.reddit.read_only = False
+        self.reddit.validate_on_submit = True
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            submission_list = []
+            for i in range(1, 5):
+                submission = await subreddit.submit(
+                    title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}"
+                )
+                submission_list.append(submission)
+            submission_list.reverse()
+            for num, submission in enumerate(submission_list, 1):
+                await self.reddit.user.pin(submission, num=num)
+
+            new_posts = await self.async_list(
+                (await self.reddit.user.me()).new(limit=4)
+            )
+            assert new_posts == submission_list
+
+    async def test_pin__remove(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            unpinned_posts = set()
+            async for post in (await self.reddit.user.me()).new(limit=4):
+                await self.reddit.user.pin(post, state=False)
+                unpinned_posts.add(post.title)
+            new_posts = set(
+                [
+                    submission.title
+                    async for submission in (await self.reddit.user.me()).new(limit=4)
+                ]
+            )
+            assert unpinned_posts != new_posts
+
+    async def test_pin__remove_num(self):
+        self.reddit.read_only = False
+        self.reddit.validate_on_submit = True
+        with self.use_cassette():
+            await self.reddit.user.pin(
+                Submission(self.reddit, "rmi7ab"), num=1, state=False
+            )
+            submission = await self.async_next(
+                (await self.reddit.user.me()).new(limit=1)
+            )
+            assert submission.id != "rmi7ab"
+
+    async def test_pin__removed_submission(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            with pytest.raises(asyncprawcore.exceptions.BadRequest):
+                await self.reddit.user.pin(Submission(self.reddit, "rmi7ab"))
+
+    async def test_pin__replace_slot(self):
+        self.reddit.read_only = False
+        self.reddit.validate_on_submit = True
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            submission = await subreddit.submit(
+                title="Async PRAW Test replace slot 1", selftext="Testing .pin method 1"
+            )
+            await self.reddit.user.pin(submission, num=1)
+            new_posts = await self.async_list(
+                (await self.reddit.user.me()).new(limit=4)
+            )
+            new_posts.reverse()
+            assert new_posts[-1] == submission
 
     async def test_subreddits(self):
         self.reddit.read_only = False

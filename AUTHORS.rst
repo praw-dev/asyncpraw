@@ -83,4 +83,5 @@ Source Contributors
 - Gerard Rodes <GerardRodesVidal@gmail.com> `@GerardRodes
   <https://github.com/GerardRodes>`_
 - cmays90 `@cmays90 <https://github.com/cmays90>`_
+- Dio Brando `@isFakeAccount <https://github.com/isFakeAccount>`_
 - Add "Name <email (optional)> and github profile link" above this line.
