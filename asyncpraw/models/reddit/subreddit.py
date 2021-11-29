@@ -1571,7 +1571,7 @@ class SubredditFilters:
     """
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditFilters instance.
+        """Initialize a SubredditFilters instance.
 
         :param subreddit: The special subreddit whose filters to work with.
 
@@ -1718,7 +1718,7 @@ class SubredditFlair:
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditFlair instance.
+        """Initialize a SubredditFlair instance.
 
         :param subreddit: The subreddit whose flair to work with.
 
@@ -1896,7 +1896,7 @@ class SubredditFlairTemplates:
         return "LINK_FLAIR" if is_link else "USER_FLAIR"
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditFlairTemplate instance.
+        """Initialize a SubredditFlairTemplates instance.
 
         :param subreddit: The subreddit whose flair templates to work with.
 
@@ -2259,7 +2259,7 @@ class SubredditModeration:
             RedditBase._safely_add_arguments(generator_kwargs, "params", only=only)
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditModeration instance.
+        """Initialize a SubredditModeration instance.
 
         :param subreddit: The subreddit to moderate.
 
@@ -2697,7 +2697,7 @@ class SubredditModerationStream:
     """Provides moderator streams."""
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditModerationStream instance.
+        """Initialize a SubredditModerationStream instance.
 
         :param subreddit: The moderated subreddit associated with the streams.
 
@@ -2923,7 +2923,7 @@ class SubredditQuarantine:
     """
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditQuarantine instance.
+        """Initialize a SubredditQuarantine instance.
 
         :param subreddit: The subreddit associated with the quarantine.
 
@@ -3011,7 +3011,7 @@ class SubredditRelationship:
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit", relationship: str):
-        """Create a SubredditRelationship instance.
+        """Initialize a SubredditRelationship instance.
 
         :param subreddit: The subreddit for the relationship.
         :param relationship: The name of the relationship.
@@ -3406,7 +3406,7 @@ class Modmail:
         return modmail_conversation
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Construct an instance of the Modmail object."""
+        """Initialize a Modmail instance."""
         self.subreddit = subreddit
 
     def _build_subreddit_list(
@@ -3610,7 +3610,7 @@ class SubredditStream:
     """Provides submission and comment streams."""
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditStream instance.
+        """Initialize a SubredditStream instance.
 
         :param subreddit: The subreddit associated with the streams.
 
@@ -3708,7 +3708,7 @@ class SubredditStylesheet:
         return await self.subreddit._reddit.get(url)
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditStylesheet instance.
+        """Initialize a SubredditStylesheet instance.
 
         :param subreddit: The subreddit associated with the stylesheet.
 
@@ -4121,7 +4121,7 @@ class SubredditWiki:
         return wikipage
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditWiki instance.
+        """Initialize a SubredditWiki instance.
 
         :param subreddit: The subreddit whose wiki to work with.
 

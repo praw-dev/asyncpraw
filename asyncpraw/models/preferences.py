@@ -33,7 +33,7 @@ class Preferences:
         return await self._reddit.get(API_PATH["preferences"])
 
     def __init__(self, reddit: "asyncpraw.Reddit"):
-        """Create a Preferences instance.
+        """Initialize a Preferences instance.
 
         :param reddit: The Reddit instance.
 

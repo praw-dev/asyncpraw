@@ -48,7 +48,7 @@ class CollectionModeration(AsyncPRAWBase):
             return Submission(self._reddit, id=post).fullname
 
     def __init__(self, reddit: "asyncpraw.Reddit", collection_id: str):
-        """Initialize an instance of CollectionModeration.
+        """Initialize a CollectionModeration instance.
 
         :param collection_id: The ID of a collection.
 
@@ -467,7 +467,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         subreddit: "asyncpraw.models.Subreddit",
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Initialize the SubredditCollectionsModeration instance."""
+        """Initialize a SubredditCollectionsModeration instance."""
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
@@ -594,7 +594,7 @@ class SubredditCollections(AsyncPRAWBase):
         subreddit: "asyncpraw.models.Subreddit",
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Initialize an instance of SubredditCollections."""
+        """Initialize a SubredditCollections instance."""
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 

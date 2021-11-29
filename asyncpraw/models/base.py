@@ -33,7 +33,7 @@ class AsyncPRAWBase:
         return cls(reddit, _data=data)
 
     def __init__(self, reddit: "asyncpraw.Reddit", _data: Optional[Dict[str, Any]]):
-        """Initialize a PRAWModel instance.
+        """Initialize a :class:`.AsyncPRAWBase` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
 

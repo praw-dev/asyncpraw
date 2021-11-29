@@ -164,7 +164,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         url: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Construct an instance of the Comment object."""
+        """Initialize a Comment instance."""
         if (id, url, _data).count(None) != 2:
             raise TypeError("Exactly one of `id`, `url`, or `_data` must be provided.")
         fetched = False
@@ -358,7 +358,7 @@ class CommentModeration(ThingModerationMixin):
     REMOVAL_MESSAGE_API = "removal_comment_message"
 
     def __init__(self, comment: "asyncpraw.models.Comment"):
-        """Create a CommentModeration instance.
+        """Initialize a CommentModeration instance.
 
         :param comment: The comment to moderate.
 

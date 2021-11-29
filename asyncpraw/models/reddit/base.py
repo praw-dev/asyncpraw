@@ -53,7 +53,7 @@ class RedditBase(AsyncPRAWBase):
         _fetched: bool = False,
         _str_field: bool = True,
     ):
-        """Initialize a RedditBase instance (or a subclass).
+        """Initialize a RedditBase instance.
 
         :param reddit: An instance of :class:`~.Reddit`.
 
