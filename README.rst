@@ -2,7 +2,7 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
 ======================================================
 
 .. image:: https://img.shields.io/pypi/v/asyncpraw.svg
-    :alt: Latest asyncpraw Version
+    :alt: Latest Async PRAW Version
     :target: https://pypi.python.org/pypi/asyncpraw
 
 .. image:: https://img.shields.io/pypi/pyversions/asyncpraw
@@ -41,7 +41,7 @@ you're set.
 Installation
 ------------
 
-Async PRAW is supported on Python 3.6+. The recommended way to install Async PRAW is via
+Async PRAW is supported on Python 3.7+. The recommended way to install Async PRAW is via
 `pip <https://pypi.python.org/pypi/pip>`_.
 
 .. code-block:: bash
