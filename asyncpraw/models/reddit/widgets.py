@@ -2,11 +2,15 @@
 
 import os.path
 from json import JSONEncoder, dumps
+from typing import TYPE_CHECKING
 
 from ...const import API_PATH
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
 from ..list.base import BaseList
+
+if TYPE_CHECKING:  # pragma: no cover
+    import asyncpraw
 
 
 class Button(AsyncPRAWBase):
@@ -267,7 +271,7 @@ class SubredditWidgets(AsyncPRAWBase):
         return self._items
 
     @cachedproperty
-    def mod(self):
+    def mod(self) -> "asyncpraw.models.SubredditWidgetsModeration":
         """Get an instance of :class:`.SubredditWidgetsModeration`.
 
         .. note::
@@ -480,7 +484,7 @@ class SubredditWidgetsModeration:
                 {
                     "kind": "text",
                     "text": "View source",
-                    "url": "https://github.com/praw-dev/praw",
+                    "url": "https://github.com/asyncpraw-dev/asyncpraw",
                     "color": "#FF0000",
                     "textColor": "#00FF00",
                     "fillColor": "#0000FF",
@@ -495,7 +499,7 @@ class SubredditWidgetsModeration:
                 {
                     "kind": "image",
                     "text": "View documentation",
-                    "linkUrl": "https://praw.readthedocs.io",
+                    "linkUrl": "https://asyncpraw.readthedocs.io",
                     "url": my_image,
                     "height": 200,
                     "width": 200,
@@ -716,13 +720,13 @@ class SubredditWidgetsModeration:
                         "url": "https://some.link",  # from upload_image()
                         "width": 600,
                         "height": 450,
-                        "linkUrl": "https://github.com/praw-dev/praw",
+                        "linkUrl": "https://github.com/asyncpraw-dev/asyncpraw",
                     },
                     {
                         "url": "https://other.link",  # from upload_image()
                         "width": 450,
                         "height": 600,
-                        "linkUrl": "https://praw.readthedocs.io",
+                        "linkUrl": "https://asyncpraw.readthedocs.io",
                     },
                 ]
 
@@ -806,7 +810,7 @@ class SubredditWidgetsModeration:
                 {
                     "text": "Python packages",
                     "children": [
-                        {"text": "PRAW", "url": "https://praw.readthedocs.io/"},
+                        {"text": "PRAW", "url": "https://asyncpraw.readthedocs.io/"},
                         {"text": "requests", "url": "http://python-requests.org"},
                     ],
                 },
@@ -967,7 +971,7 @@ class Widget(AsyncPRAWBase):
     """Base class to represent a :class:`.Widget`."""
 
     @cachedproperty
-    def mod(self):
+    def mod(self) -> "asyncpraw.models.WidgetModeration":
         """Get an instance of :class:`.WidgetModeration` for this widget.
 
         .. note::
@@ -1005,7 +1009,7 @@ class ButtonWidget(Widget, BaseList):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.ButtonWidget):
+            if isinstance(widget, asyncpraw.models.ButtonWidget):
                 button_widget = widget
                 break
 
@@ -1022,7 +1026,7 @@ class ButtonWidget(Widget, BaseList):
             {
                 "kind": "text",
                 "text": "View source",
-                "url": "https://github.com/praw-dev/praw",
+                "url": "https://github.com/asyncpraw-dev/asyncpraw",
                 "color": "#FF0000",
                 "textColor": "#00FF00",
                 "fillColor": "#0000FF",
@@ -1037,7 +1041,7 @@ class ButtonWidget(Widget, BaseList):
             {
                 "kind": "text",
                 "text": "View documentation",
-                "url": "https://praw.readthedocs.io",
+                "url": "https://asyncpraw.readthedocs.io",
                 "color": "#FFFFFF",
                 "textColor": "#FFFF00",
                 "fillColor": "#0000FF",
@@ -1099,7 +1103,7 @@ class Calendar(Widget):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.Calendar):
+            if isinstance(widget, asyncpraw.models.Calendar):
                 calendar = widget
                 break
 
@@ -1171,7 +1175,7 @@ class CommunityList(Widget, BaseList):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.CommunityList):
+            if isinstance(widget, asyncpraw.models.CommunityList):
                 community_list = widget
                 break
 
@@ -1238,7 +1242,7 @@ class CustomWidget(Widget):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.CustomWidget):
+            if isinstance(widget, asyncpraw.models.CustomWidget):
                 custom = widget
                 break
 
@@ -1351,7 +1355,7 @@ class ImageWidget(Widget, BaseList):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.ImageWidget):
+            if isinstance(widget, asyncpraw.models.ImageWidget):
                 image_widget = widget
                 break
 
@@ -1427,9 +1431,9 @@ class Menu(Widget, BaseList):
         topbar = [widget async for widget in subreddit.widgets.topbar()]
         if len(topbar) > 0:
             probably_menu = topbar[0]
-            assert isinstance(probably_menu, praw.models.Menu)
+            assert isinstance(probably_menu, asyncpraw.models.Menu)
             for item in probably_menu:
-                if isinstance(item, praw.models.Submenu):
+                if isinstance(item, asyncpraw.models.Submenu):
                     print(item.text)
                     for child in item:
                         print("\t", child.text, child.url)
@@ -1447,7 +1451,7 @@ class Menu(Widget, BaseList):
             {
                 "text": "Python packages",
                 "children": [
-                    {"text": "PRAW", "url": "https://praw.readthedocs.io/"},
+                    {"text": "PRAW", "url": "https://asyncpraw.readthedocs.io/"},
                     {"text": "requests", "url": "http://python-requests.org"},
                 ],
             },
@@ -1544,7 +1548,7 @@ class PostFlairWidget(Widget, BaseList):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.PostFlairWidget):
+            if isinstance(widget, asyncpraw.models.PostFlairWidget):
                 post_flair_widget = widget
                 break
 
@@ -1610,7 +1614,7 @@ class RulesWidget(Widget, BaseList):
         widgets = subreddit.widgets
         rules_widget = None
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.RulesWidget):
+            if isinstance(widget, asyncpraw.models.RulesWidget):
                 rules_widget = widget
                 break
         from pprint import pprint
@@ -1664,7 +1668,7 @@ class TextArea(Widget):
         widgets = subreddit.widgets
         text_area = None
         async for widget in widgets.sidebar():
-            if isinstance(widget, praw.models.TextArea):
+            if isinstance(widget, asyncpraw.models.TextArea):
                 text_area = widget
                 break
         print(text_area.text)
