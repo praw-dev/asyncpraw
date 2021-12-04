@@ -217,7 +217,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = await self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission("6vx01b")
 
             submission = await crosspost_parent.crosspost(subreddit)
             await submission.load()
@@ -230,7 +230,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            crosspost_parent = await self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission("6vx01b")
 
             submission = await crosspost_parent.crosspost(subreddit)
             await submission.load()
@@ -243,7 +243,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            crosspost_parent = await self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission("6vx01b")
 
             submission = await crosspost_parent.crosspost(subreddit, "my title")
             await submission.load()
@@ -259,7 +259,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = await self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission("6vx01b")
 
             submission = await crosspost_parent.crosspost(
                 subreddit, flair_id=flair_id, flair_text=flair_text
@@ -274,7 +274,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = await self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission("6vx01b")
 
             submission = await crosspost_parent.crosspost(subreddit, nsfw=True)
             await submission.load()
@@ -286,7 +286,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = pytest.placeholders.test_subreddit
-            crosspost_parent = await self.reddit.submission(id="6vx01b")
+            crosspost_parent = await self.reddit.submission("6vx01b")
 
             submission = await crosspost_parent.crosspost(subreddit, spoiler=True)
             await submission.load()

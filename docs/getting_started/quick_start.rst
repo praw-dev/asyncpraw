@@ -219,7 +219,7 @@ You can create :class:`.Submission` instances in other ways too:
 .. code-block:: python
 
     # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
-    submission = await reddit.submission(id="39zje0")
+    submission = await reddit.submission("39zje0")
     print(submission.title)
     # Output: reddit will soon only be available ...
 
@@ -275,7 +275,7 @@ comments as a flattened list you can call the :meth:`.list` method on a
     .. code-block:: python
 
         # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
-        submission = await reddit.submission(id="39zje0")
+        submission = await reddit.submission("39zje0")
         submission.comment_sort = "new"
         top_level_comments = await submission.comments()
 
@@ -300,5 +300,5 @@ For example:
     import pprint
 
     # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
-    submission = await reddit.submission(id="39zje0")
+    submission = await reddit.submission("39zje0")
     pprint.pprint(vars(submission))

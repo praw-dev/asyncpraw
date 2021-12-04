@@ -127,7 +127,7 @@ class TestUser(IntegrationTest):
     async def test_pin__comment(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            comment = await self.reddit.comment(id="hnxx8f2")
+            comment = await self.reddit.comment("hnxx8f2")
             await self.reddit.user.pin(comment)
             new_content = await self.async_next(
                 (await self.reddit.user.me()).new(limit=1)

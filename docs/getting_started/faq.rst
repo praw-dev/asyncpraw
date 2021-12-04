@@ -11,9 +11,9 @@ A: There is two ways to do this:
 
   .. code-block:: python
 
-      await reddit.comment(id=comment.id)
+      await reddit.comment(comment.id)
       await reddit.subreddit(display_name=subreddit.display_name)
-      await reddit.submission(id=submission.id)
+      await reddit.submission(submission.id)
 
 - Calling :meth:`~.RedditBase.load`:
 

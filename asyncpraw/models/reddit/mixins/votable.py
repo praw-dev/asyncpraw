@@ -25,10 +25,10 @@ class VotableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.clear_vote()
 
-            comment = await reddit.comment(id="dxolpyc", fetch=False)
+            comment = await reddit.comment("dxolpyc", fetch=False)
             await comment.clear_vote()
 
         """
@@ -49,10 +49,10 @@ class VotableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.downvote()
 
-            comment = await reddit.comment(id="dxolpyc", fetch=False)
+            comment = await reddit.comment("dxolpyc", fetch=False)
             await comment.downvote()
 
         .. seealso::
@@ -77,10 +77,10 @@ class VotableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.upvote()
 
-            comment = await reddit.comment(id="dxolpyc", fetch=False)
+            comment = await reddit.comment("dxolpyc", fetch=False)
             await comment.upvote()
 
         .. seealso::

@@ -41,7 +41,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
             redditor = await reddit.redditor("spez")
             async for comment in redditor.comments.new(limit=None):
-                print(comment.body.split("\n", 1)[0][:79])
+                print(comment.body.split("\\n", 1)[0][:79])
 
         """
         return SubListing(self._reddit, self._path, "comments")

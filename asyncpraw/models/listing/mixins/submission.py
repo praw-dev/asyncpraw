@@ -24,7 +24,7 @@ class SubmissionListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
 
             async for duplicate in submission.duplicates():
                 # process each duplicate

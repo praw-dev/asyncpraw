@@ -88,7 +88,7 @@ class SubmissionModeration(ThingModerationMixin):
 
     .. code-block:: python
 
-        submission = await reddit.submission(id="8dmv8z", fetch=False)
+        submission = await reddit.submission("8dmv8z", fetch=False)
         await submission.mod.approve()
 
     """
@@ -121,7 +121,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.mod.contest_mode(state=True)
 
         """
@@ -151,7 +151,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.mod.flair(text="PRAW", css_class="bot")
 
         """
@@ -230,7 +230,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.mod.sfw()
 
         .. seealso::
@@ -252,7 +252,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.mod.spoiler()
 
         .. seealso::
@@ -285,7 +285,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.mod.sticky()
 
         """
@@ -388,7 +388,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="745ryj")
+            submission = await reddit.submission("745ryj")
             await submission.mod.update_crowd_control_level(2)
 
         .. seealso::
@@ -521,7 +521,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="8dmv8z", fetch=False)
+            submission = await reddit.submission("8dmv8z", fetch=False)
             await submission.mod.approve()
 
         """
@@ -668,7 +668,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.mark_visited()
 
         """
@@ -688,7 +688,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.hide()
 
         .. seealso::
@@ -712,7 +712,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.unhide()
 
         .. seealso::
@@ -759,7 +759,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n")
+            submission = await reddit.submission("5or86n")
             cross_post = await submission.crosspost(
                 subreddit="learnprogramming", send_replies=False
             )

@@ -17,10 +17,10 @@ class SavableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.save(category="view later")
 
-            comment = await reddit.comment(id="dxolpyc", fetch=False)
+            comment = await reddit.comment("dxolpyc", fetch=False)
             await comment.save()
 
         .. seealso::
@@ -39,10 +39,10 @@ class SavableMixin:
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
             await submission.unsave()
 
-            comment = await reddit.comment(id="dxolpyc", fetch=False)
+            comment = await reddit.comment("dxolpyc", fetch=False)
             await comment.unsave()
 
         .. seealso::
