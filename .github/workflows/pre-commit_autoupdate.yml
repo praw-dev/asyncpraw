@@ -23,6 +23,7 @@ jobs:
           title: Update pre-commit hooks
           commit-message: "Update pre-commit hooks"
           body: Update versions of pre-commit hooks to the latest version.
+      - uses: ./.github/ci@main
 name: 'Update pre-commit hooks'
 on:
   schedule:
