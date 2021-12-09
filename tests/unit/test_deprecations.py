@@ -41,6 +41,11 @@ class TestDeprecation(UnitTest):
         with pytest.deprecated_call():
             await submission.comments.list()
 
+    async def test_conversations_after_argument(self):
+        with pytest.deprecated_call():
+            subreddit = await self.reddit.subreddit("all")
+            subreddit.modmail.conversations(after="after")
+
     async def test_gild_method(self):
         with pytest.raises(DeprecationWarning) as excinfo:
             submission = await self.reddit.submission("1234", fetch=False)
