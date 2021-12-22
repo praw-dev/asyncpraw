@@ -155,7 +155,7 @@ class CommentForest:
             if not isinstance(comment, MoreComments):
                 queue.extend(comment.replies)
         # check if this got called with await
-        # I'm so sorry this really gross
+        # I'm so sorry this is really gross
         if any(
             [
                 "await" in context
