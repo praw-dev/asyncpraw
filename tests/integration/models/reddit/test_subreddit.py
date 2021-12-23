@@ -1591,29 +1591,34 @@ class TestSubredditModmail(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_conversations(self, _):
         self.reddit.read_only = False
-        subreddit = await self.reddit.subreddit("all")
         with self.use_cassette():
-            async for conversation in subreddit.modmail.conversations():
+            subreddit = await self.reddit.subreddit("all")
+            conversations = subreddit.modmail.conversations()
+            async for conversation in conversations:
                 assert isinstance(conversation, ModmailConversation)
                 assert isinstance(conversation.authors[0], Redditor)
 
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_conversations__params(self, _):
-        self.reddit.read_only = False
-        subreddit = await self.reddit.subreddit("all")
-        with self.use_cassette():
-            async for conversation in subreddit.modmail.conversations(state="mod"):
-                assert conversation.is_internal
-
-    @mock.patch("asyncio.sleep", return_value=None)
     async def test_conversations__other_subreddits(self, _):
         self.reddit.read_only = False
-        subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
-            conversations = await self.async_list(
-                subreddit.modmail.conversations(other_subreddits=["dankmemes"])
+            subreddit = await self.reddit.subreddit("pics")
+            conversations = subreddit.modmail.conversations(
+                other_subreddits=["LifeProTips"]
             )
-            assert len(set(conversation.owner for conversation in conversations)) > 1
+            assert (
+                len(set([conversation.owner async for conversation in conversations]))
+                > 1
+            )
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_conversations__params(self, _):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit("all")
+            conversations = subreddit.modmail.conversations(state="mod")
+            async for conversation in conversations:
+                assert conversation.is_internal
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_create(self, _):
@@ -1918,7 +1923,7 @@ class TestSubredditModerationStreams(IntegrationTest):
         subreddit = await self.reddit.subreddit("mod")
         with self.use_cassette():
             generator = subreddit.mod.stream.modmail_conversations()
-            for i in range(10):
+            for i in range(101):
                 assert isinstance(await self.async_next(generator), ModmailConversation)
 
     @mock.patch("asyncio.sleep", return_value=None)
