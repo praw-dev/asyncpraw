@@ -3,7 +3,7 @@
 import pytest
 from asynctest import mock
 
-from asyncpraw.exceptions import ClientException
+from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.models import Submission
 
 from ... import IntegrationTest
@@ -143,6 +143,80 @@ class TestCollectionModeration(IntegrationTest):
             collection = await subreddit.collections(uuid)
             await collection.mod.update_description(new_description)
             assert new_description == collection.description
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_display_layout__empty_string(self, _):
+        self.reddit.read_only = False
+        uuid = "3aa31024-711b-46b2-9514-3fd50619f6e8"
+        empty_string = ""
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid, fetch=False)
+            await collection.mod.update_display_layout(empty_string)
+            await collection.load()
+            assert empty_string != collection.display_layout
+            assert collection.display_layout is None
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_display_layout__gallery(self, _):
+        self.reddit.read_only = False
+        uuid = "3aa31024-711b-46b2-9514-3fd50619f6e8"
+        gallery_layout = "GALLERY"
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid, fetch=False)
+            await collection.mod.update_display_layout(gallery_layout)
+            await collection.load()
+            assert gallery_layout == collection.display_layout
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_display_layout__invalid_layout(self, _):
+        self.reddit.read_only = False
+        uuid = "3aa31024-711b-46b2-9514-3fd50619f6e8"
+        invalid_layout = "colossal atom cake"
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid, fetch=False)
+            with pytest.raises(RedditAPIException):
+                await collection.mod.update_display_layout(invalid_layout)
+            await collection.load()
+            assert collection.display_layout is None
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_display_layout__lowercase(self, _):
+        self.reddit.read_only = False
+        uuid = "3aa31024-711b-46b2-9514-3fd50619f6e8"
+        lowercase_gallery_layout = "gallery"
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid, fetch=False)
+            with pytest.raises(RedditAPIException):
+                await collection.mod.update_display_layout(lowercase_gallery_layout)
+            await collection.load()
+            assert collection.display_layout is None
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_display_layout__none(self, _):
+        self.reddit.read_only = False
+        uuid = "3aa31024-711b-46b2-9514-3fd50619f6e8"
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid, fetch=False)
+            await collection.mod.update_display_layout(None)
+            await collection.load()
+            assert collection.display_layout is None
+
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_update_display_layout__timeline(self, _):
+        self.reddit.read_only = False
+        uuid = "3aa31024-711b-46b2-9514-3fd50619f6e8"
+        timeline_layout = "TIMELINE"
+        with self.use_cassette():
+            subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
+            collection = await subreddit.collections(uuid, fetch=False)
+            await collection.mod.update_display_layout(timeline_layout)
+            await collection.load()
+            assert timeline_layout == collection.display_layout
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_update_title(self, _):
