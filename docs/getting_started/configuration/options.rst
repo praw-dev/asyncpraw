@@ -87,6 +87,7 @@ PRAW.
 
         Async PRAW sleeps for the ratelimit value plus 1 second.
 
+    See :ref:`ratelimits` for more info.
 :timeout: Controls the amount of time Async PRAW will wait for a request from Reddit to
     complete before throwing an exception. By default, Async PRAW waits 16 seconds
     before throwing an exception.
