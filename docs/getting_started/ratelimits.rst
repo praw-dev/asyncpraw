@@ -12,7 +12,7 @@ less than or equal to Async PRAW's |ratelimit_seconds|_, Async PRAW will wait fo
 requested time plus 1 second. If the requested wait time exceeds the set value of
 ``ratelimit_seconds``, Async PRAW will raise :class:`.RedditAPIException`.
 
-For example, given the following Reddit instance:
+For example, given the following :class:`.Reddit` instance:
 
 .. code-block:: python
 

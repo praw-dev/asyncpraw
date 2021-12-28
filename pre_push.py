@@ -10,7 +10,7 @@ from tempfile import TemporaryDirectory
 def do_process(args, shell=False):
     """Run program provided by args.
 
-    Return True on success.
+    Return ``True`` on success.
 
     Output failed message on non-zero exit and return False.
 
@@ -84,7 +84,7 @@ def main():
         "--all",
         action="store_true",
         default=False,
-        help="Run all of the tests (static and unit). Overrides the unstatic argument.",
+        help="Run all the tests (static and unit). Overrides the unstatic argument.",
     )
     args = parser.parse_args()
     success = True

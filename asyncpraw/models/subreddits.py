@@ -89,9 +89,10 @@ class Subreddits(AsyncPRAWBase):
     ) -> List["asyncpraw.models.Subreddit"]:
         """Return subreddits recommended for the given list of subreddits.
 
-        :param subreddits: A list of Subreddit instances and/or subreddit names.
-        :param omit_subreddits: A list of Subreddit instances and/or subreddit names to
-            exclude from the results (Reddit's end may not work as expected).
+        :param subreddits: A list of :class:`.Subreddit` instances and/or subreddit
+            names.
+        :param omit_subreddits: A list of :class:`.Subreddit` instances and/or subreddit
+            names to exclude from the results (Reddit's end may not work as expected).
 
         """
         if not isinstance(subreddits, list):
@@ -120,7 +121,7 @@ class Subreddits(AsyncPRAWBase):
 
         .. seealso::
 
-            :meth:`~.search_by_name` to search by subreddit names
+            :meth:`.search_by_name` to search by subreddit names
 
         """
         self._safely_add_arguments(generator_kwargs, "params", q=query)
@@ -134,8 +135,8 @@ class Subreddits(AsyncPRAWBase):
         """Return list of Subreddits whose names begin with ``query``.
 
         :param query: Search for subreddits beginning with this string.
-        :param include_nsfw: Include subreddits labeled NSFW (default: True).
-        :param exact: Return only exact matches to ``query`` (default: False).
+        :param include_nsfw: Include subreddits labeled NSFW (default: ``True``).
+        :param exact: Return only exact matches to ``query`` (default: ``False``).
 
         """
         results = await self._reddit.post(

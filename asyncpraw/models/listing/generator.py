@@ -14,10 +14,10 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
     .. warning::
 
-        This class should not be directly utilized. Instead you will find a number of
-        methods that return instances of the class:
+        This class should not be directly utilized. Instead, you will find a number of
+        methods that return instances of the class here_.
 
-        http://asyncpraw.readthedocs.io/en/latest/search.html?q=ListingGenerator
+    .. _here: https://asyncpraw.readthedocs.io/en/latest/search.html?q=ListingGenerator
 
     """
 
@@ -28,14 +28,14 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         limit: int = 100,
         params: Optional[Dict[str, Union[str, int]]] = None,
     ):
-        """Initialize a ListingGenerator instance.
+        """Initialize a :class:`.ListingGenerator` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
-        :param url: A URL returning a reddit listing.
-        :param limit: The number of content entries to fetch. If ``limit`` is None, then
-            fetch as many entries as possible. Most of reddit's listings contain a
+        :param url: A URL returning a Reddit listing.
+        :param limit: The number of content entries to fetch. If ``limit`` is ``None``,
+            then fetch as many entries as possible. Most of Reddit's listings contain a
             maximum of 1000 items, and are returned 100 at a time. This class will
-            automatically issue all necessary requests (default: 100).
+            automatically issue all necessary requests (default: ``100``).
         :param params: A dictionary containing additional query string parameters to
             send with the request.
 
@@ -51,11 +51,11 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         self.yielded = 0
 
     def __aiter__(self) -> AsyncIterator[Any]:
-        """Permit ListingGenerator to operate as an async iterator."""
+        """Permit :class:`.ListingGenerator` to operate as an async iterator."""
         return self
 
     async def __anext__(self) -> Any:
-        """Permit ListingGenerator to operate as a async generator."""
+        """Permit :class:`.ListingGenerator` to operate as a async generator."""
         if self.limit is not None and self.yielded >= self.limit:
             raise StopAsyncIteration()
 

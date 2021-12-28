@@ -1,5 +1,10 @@
 """Provide the EditableMixin class."""
+from typing import TYPE_CHECKING, Union
+
 from ....const import API_PATH
+
+if TYPE_CHECKING:  # pragma: no cover
+    import asyncpraw
 
 
 class EditableMixin:
@@ -21,7 +26,9 @@ class EditableMixin:
         """
         await self._reddit.post(API_PATH["del"], {"id": self.fullname})
 
-    async def edit(self, body):
+    async def edit(
+        self, body
+    ) -> Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]:
         """Replace the body of the object with ``body``.
 
         :param body: The Markdown formatted content for the updated object.

@@ -8,7 +8,7 @@ Async PRAW users will create their own token manager classes suitable for their 
 
 .. deprecated:: 7.4.0
 
-    Tokens managers have been depreciated and will be removed in the near future.
+    Tokens managers have been deprecated and will be removed in the near future.
 
 """
 from abc import ABC, abstractmethod
@@ -21,7 +21,7 @@ class BaseTokenManager(ABC):
     """An abstract class for all token managers."""
 
     def __init__(self):
-        """Prepare attributes needed by all token manager classes."""
+        """Initialize a :class:`.BaseTokenManager` instance."""
         self._reddit = None
 
     @property
@@ -78,7 +78,7 @@ class FileTokenManager(BaseTokenManager):
     """
 
     def __init__(self, filename):
-        """Load and save refresh tokens from a file.
+        """Initialize a :class:`.FileTokenManager` instance.
 
         :param filename: The file the contains the refresh token.
 
@@ -113,7 +113,7 @@ class SQLiteTokenManager(BaseTokenManager):
     """
 
     def __init__(self, database, key):
-        """Load and save refresh tokens from a SQLite database.
+        """Initialize a :class:`.SQLiteTokenManager` instance.
 
         :param database: The path to the SQLite database.
         :param key: The key used to locate the ``refresh_token``. This ``key`` can be

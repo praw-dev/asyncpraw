@@ -463,7 +463,7 @@ class TestReddit(UnitTest):
                 json={"key": "value"},
             )
         assert str(excinfo.value).startswith(
-            "At most one of `data` and `json` is supported."
+            "At most one of `data` or `json` is supported."
         )
 
     async def test_submission(self):

@@ -10,7 +10,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class SubmissionListingMixin(AsyncPRAWBase):
-    """Adds additional methods pertaining to Submission instances."""
+    """Adds additional methods pertaining to :class:`.Submission` instances."""
 
     def duplicates(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
@@ -24,7 +24,7 @@ class SubmissionListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            submission = await reddit.submission(id="5or86n", fetch=False)
+            submission = await reddit.submission("5or86n", fetch=False)
 
             async for duplicate in submission.duplicates():
                 # process each duplicate
@@ -32,7 +32,7 @@ class SubmissionListingMixin(AsyncPRAWBase):
 
         .. seealso::
 
-            :meth:`~.upvote`
+            :meth:`.upvote`
 
         """
         url = API_PATH["duplicates"].format(submission_id=self.id)

@@ -29,9 +29,9 @@ Environment variables have the highest priority, followed by keyword arguments t
 Using an HTTP or HTTPS proxy with Async PRAW
 --------------------------------------------
 
-Async PRAW internally relies upon the `aiohttp <https://docs.aiohttp.org/>`_ package to
-handle HTTP requests. Aiohttp supports use of ``HTTP_PROXY`` and ``HTTPS_PROXY``
-environment variables in order to proxy HTTP and HTTPS requests respectively [`ref
+Async PRAW internally relies upon the aiohttp_ package to handle HTTP requests. Aiohttp
+supports use of ``HTTP_PROXY`` and ``HTTPS_PROXY`` environment variables in order to
+proxy HTTP and HTTPS requests respectively [`ref
 <https://docs.aiohttp.org/en/stable/client_advanced.html?highlight=proxy#proxy-support>`_].
 
 Given that Async PRAW exclusively communicates with Reddit via HTTPS, only the
@@ -44,9 +44,9 @@ variable can be provided on the command line like so:
 
     HTTPS_PROXY=http://localhost:3128 ./prawbot.py
 
-Contrary to the Requests library, aiohttp won’t read environment variables by default.
-But you can do so by passing ``trust_env=True`` into aiohttp and configuring Async PRAW
-like so:
+Contrary to the Requests library, aiohttp_ won’t read environment variables by default.
+But you can do so by passing ``trust_env=True`` into a custom ClientSession_ and
+configuring Async PRAW like so:
 
 .. code-block:: python
 
@@ -59,7 +59,7 @@ like so:
         client_id="SI8pN3DSbt0zor",
         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
         password="1guiwevlfo00esyy",
-        requestor_kwargs={"session": session},  # pass Session
+        requestor_kwargs={"session": session},  # pass the custom Session instance
         user_agent="testscript by u/fakebot3",
         username="fakebot3",
     )
@@ -68,13 +68,12 @@ Configuring a custom aiohttp ClientSession
 ------------------------------------------
 
 Async PRAW uses aiohttp_ to handle networking. If your use-case requires custom
-configuration, it is possible to configure a `ClientSession
-<https://docs.aiohttp.org/en/stable/client_advanced.html>`_ and then use it with Async
+configuration, it is possible to configure a ClientSession_ and then use it with Async
 PRAW.
 
 For example, some networks use self-signed SSL certificates when connecting to HTTPS
-sites. By default, this would raise an exception in Aiohttp. To use a self-signed SSL
-certificate without an exception from Aiohttp, first export the certificate as a
+sites. By default, this would raise an exception in aiohttp_. To use a self-signed SSL
+certificate without an exception from aiohttp_, first export the certificate as a
 ``.pem`` file. Then configure Async PRAW like so:
 
 .. code-block:: python
@@ -93,14 +92,17 @@ certificate without an exception from Aiohttp, first export the certificate as a
         client_id="SI8pN3DSbt0zor",
         client_secret="xaxkj7HNh8kwg8e5t4m6KvSrbTI",
         password="1guiwevlfo00esyy",
-        requestor_kwargs={"session": session},  # pass Session
+        requestor_kwargs={"session": session},  # pass the custom Session instance
         user_agent="testscript by u/fakebot3",
         username="fakebot3",
     )
 
-The code above creates a ``ClientSession`` and `configures it to use a custom
-certificate
+The code above creates a ClientSession_ and `configures it to use a custom certificate
 <https://docs.aiohttp.org/en/stable/client_advanced.html#ssl-control-for-tcp-sockets>`_,
 then passes it as a parameter when creating the :class:`.Reddit` instance. Note that the
 example above uses a :ref:`password_flow` authentication type, but this method will work
 for any authentication type.
+
+.. _aiohttp: https://docs.aiohttp.org/
+
+.. _clientsession: https://docs.aiohttp.org/en/stable/client_advanced.html

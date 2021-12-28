@@ -14,17 +14,12 @@ if TYPE_CHECKING:  # pragma: no cover
 class RemovalReason(RedditBase):
     """An individual Removal Reason object.
 
-    **Typical Attributes**
-
-    This table describes attributes that typically belong to objects of this class.
-    Since attributes are dynamically provided (see
-    :ref:`determine-available-attributes-of-an-object`), there is not a guarantee that
-    these attributes will always be present, nor is this list necessarily complete.
+    .. include:: ../../typical_attributes.rst
 
     =========== ==================================
     Attribute   Description
     =========== ==================================
-    ``id``      The id of the removal reason.
+    ``id``      The ID of the removal reason.
     ``message`` The message of the removal reason.
     ``title``   The title of the removal reason.
     =========== ==================================
@@ -35,7 +30,7 @@ class RemovalReason(RedditBase):
 
     @staticmethod
     def _warn_reason_id(reason_id_value: Optional[str], id_value: Optional[str]):
-        """Reason id param is deprecated. Warns if it's used.
+        """Reason ID param is deprecated. Warns if it's used.
 
         :param reason_id_value: The value passed as parameter ``reason_id``.
         :param id_value: Returns the actual value of parameter ``id`` is parameter
@@ -72,13 +67,13 @@ class RemovalReason(RedditBase):
         reason_id: Optional[str] = None,
         _data: Optional[Dict[str, Any]] = None,
     ):
-        """Construct an instance of the Removal Reason object.
+        """Initialize a :class:`.RemovalReason` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
         :param subreddit: An instance of :class:`.Subreddit`.
-        :param id: The id of the removal reason.
-        :param reason_id: (Deprecated) The original name of the ``id`` parameter. Used
-            for backwards compatibility. This parameter should not be used.
+        :param id: The ID of the removal reason.
+        :param reason_id: The original name of the ``id`` parameter. Used for backwards
+            compatibility. This parameter should not be used.
 
         """
         id = self._warn_reason_id(reason_id, id)
@@ -103,11 +98,11 @@ class RemovalReason(RedditBase):
     async def delete(self):
         """Delete a removal reason from this subreddit.
 
-        To delete ``"141vv5c16py7d"`` from the subreddit ``"NAME"`` try:
+        To delete ``"141vv5c16py7d"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason("141vv5c16py7d")
             await reason.delete()
 
@@ -125,11 +120,11 @@ class RemovalReason(RedditBase):
         :param message: The removal reason's new message.
         :param title: The removal reason's new title.
 
-        To update ``"141vv5c16py7d"`` from the subreddit ``"NAME"`` try:
+        To update ``"141vv5c16py7d"`` from r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason("141vv5c16py7d")
             await reason.update(message="New message", title="New title")
 
@@ -143,7 +138,7 @@ class RemovalReason(RedditBase):
 
 
 class SubredditRemovalReasons:
-    """Provide a set of functions to a Subreddit's removal reasons."""
+    """Provide a set of functions to a :class:`.Subreddit`'s removal reasons."""
 
     @deprecate_lazy
     async def get_reason(
@@ -152,14 +147,15 @@ class SubredditRemovalReasons:
         """Return the Removal Reason with the ID/number/slice ``reason_id``.
 
         :param reason_id: The ID or index of the removal reason.
-        :param fetch: Determines if Async PRAW will fetch the object (default: True).
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
 
         This method is to be used to fetch a specific removal reason, like so:
 
         .. code-block:: python
 
             reason_id = "141vv5c16py7d"
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id)
             print(reason)
 
@@ -174,18 +170,18 @@ class SubredditRemovalReasons:
         :raises: :py:class:`IndexError` if a removal reason of a specific number does
             not exist.
 
-        For example, to get the second removal reason of the subreddit ``"NAME"``:
+        For example, to get the second removal reason of r/test:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.mod.removal_reasons.get_reason(1)
 
         To get the last three removal reasons in a subreddit:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reasons = await subreddit.mod.removal_reasons.get_reason(slice(-3, None))
             for reason in reasons:
                 print(reason)
@@ -196,7 +192,7 @@ class SubredditRemovalReasons:
         .. code-block:: python
 
             reason_id = "141vv5c16py7d"
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason(reason_id, fetch=False)
             await reason.delete()
 
@@ -211,7 +207,7 @@ class SubredditRemovalReasons:
         return reason
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Create a SubredditRemovalReasons instance.
+        """Initialize a :class:`.SubredditRemovalReasons` instance.
 
         :param subreddit: The subreddit whose removal reasons to work with.
 
@@ -226,7 +222,7 @@ class SubredditRemovalReasons:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             async for removal_reason in subreddit.mod.removal_reasons:
                 print(removal_reason)
 
@@ -254,15 +250,15 @@ class SubredditRemovalReasons:
         :param message: The message associated with the removal reason.
         :param title: The title of the removal reason
 
-        :returns: The RemovalReason added.
+        :returns: The :class:`.RemovalReason` added.
 
-        The message will be prepended with `Hi u/username,` automatically.
+        The message will be prepended with ``Hi u/username,`` automatically.
 
-        To add ``"Test"`` to the subreddit ``"NAME"`` try:
+        To add ``"Test"`` to r/test try:
 
         .. code-block:: python
 
-            subreddit = await reddit.subreddit("NAME")
+            subreddit = await reddit.subreddit("test")
             await subreddit.mod.removal_reasons.add(message="Foobar", title="Test")
 
         """

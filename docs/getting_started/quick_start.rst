@@ -2,8 +2,8 @@ Quick Start
 ===========
 
 In this section, we go over everything you need to know to start building scripts or
-bots using Async PRAW, the Python Reddit API Wrapper. It's fun and easy. Let's get
-started.
+bots using Async PRAW, the Asynchronous Python Reddit API Wrapper. It's fun and easy.
+Let's get started.
 
 Prerequisites
 -------------
@@ -49,8 +49,8 @@ Obtain a :class:`.Reddit` Instance
 .. warning::
 
     For the sake of brevity, the following examples pass authentication information via
-    arguments to :py:func:`asyncpraw.Reddit`. If you do this, you need to be careful not
-    to reveal this information to the outside world if you share your code. It is
+    arguments to :meth:`asyncpraw.Reddit`. If you do this, you need to be careful not to
+    reveal this information to the outside world if you share your code. It is
     recommended to use a :ref:`praw.ini file <praw.ini>` in order to keep your
     authentication information separate from your code.
 
@@ -98,7 +98,7 @@ With a read-only instance, you can do something like obtaining 10 "hot" submissi
 
     # continued from code above
 
-    subreddit = await reddit.subreddit("learnpython")
+    subreddit = await reddit.subreddit("test")
     async for submission in subreddit.hot(limit=10):
         print(submission.title)
 
@@ -109,7 +109,7 @@ authorized :class:`.Reddit` instance.
 
 .. note::
 
-    In the above example we are limiting the results to 10. Without the ``limit``
+    In the above example we are limiting the results to ``10``. Without the ``limit``
     parameter Async PRAW should yield as many results as it can with a single request.
     For most endpoints this results in 100 items per request. If you want to retrieve as
     many as possible pass in ``limit=None``.
@@ -165,7 +165,7 @@ To obtain a :class:`.Subreddit` instance, pass the subreddit's name when calling
 
 .. code-block:: python
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     subreddit = await reddit.subreddit("redditdev", fetch=True)
 
     print(subreddit.display_name)
@@ -218,8 +218,8 @@ You can create :class:`.Submission` instances in other ways too:
 
 .. code-block:: python
 
-    # assume you have a Reddit instance bound to variable `reddit`
-    submission = await reddit.submission(id="39zje0")
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
+    submission = await reddit.submission("39zje0")
     print(submission.title)
     # Output: reddit will soon only be available ...
 
@@ -244,7 +244,7 @@ For example:
     print(redditor1.name)
     # Output: name of the redditor
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     redditor2 = await reddit.redditor("bboe", fetch=True)
     print(redditor2.link_karma)
     # Output: u/bboe's karma
@@ -260,7 +260,7 @@ comments as a flattened list you can call the :meth:`.list` method on a
 
 .. code-block:: python
 
-    # assume you have a Reddit instance bound to variable `reddit`
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
     top_level_comments = await submission.comments()
     all_comments = await submission.comments.list()
 
@@ -274,8 +274,8 @@ comments as a flattened list you can call the :meth:`.list` method on a
 
     .. code-block:: python
 
-        # assume you have a Reddit instance bound to variable `reddit`
-        submission = await reddit.submission(id="39zje0")
+        # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
+        submission = await reddit.submission("39zje0")
         submission.comment_sort = "new"
         top_level_comments = await submission.comments()
 
@@ -299,6 +299,6 @@ For example:
 
     import pprint
 
-    # assume you have a Reddit instance bound to variable `reddit`
-    submission = await reddit.submission(id="39zje0")
+    # assume you have a asyncpraw.Reddit instance bound to variable `reddit`
+    submission = await reddit.submission("39zje0")
     pprint.pprint(vars(submission))

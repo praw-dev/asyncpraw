@@ -18,16 +18,16 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
     :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=master
 
 .. image:: https://github.com/praw-dev/asyncpraw/workflows/CI/badge.svg
-    :alt: Github Actions Coverage
+    :alt: GitHub Actions Status
     :target: https://github.com/praw-dev/asyncpraw/actions?query=branch%3Amaster
-
-.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-    :target: https://github.com/pre-commit/pre-commit
-    :alt: pre-commit
 
 .. image:: https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg
     :alt: Contributor Covenant
     :target: https://github.com/praw-dev/.github/blob/main/CODE_OF_CONDUCT.md
+
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    :target: https://github.com/pre-commit/pre-commit
+    :alt: pre-commit
 
 Async PRAW, an abbreviation for "Asynchronous Python Reddit API Wrapper", is a Python
 package that allows for simple access to Reddit's API. Async PRAW aims to be easy to use
@@ -99,8 +99,8 @@ With the ``reddit`` instance you can then interact with Reddit:
     async for submission in reddit.front.hot(limit=256):
         print(submission.score)
 
-    # Obtain the moderator listing for r/redditdev
-    subreddit = await reddit.subreddit("redditdev")
+    # Obtain the moderator listing for r/test
+    subreddit = await reddit.subreddit("test")
     async for moderator in subreddit.moderator:
         print(moderator)
 

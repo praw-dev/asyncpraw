@@ -29,7 +29,7 @@ class RedditBase(AsyncPRAWBase):
         )
 
     def __getattr__(self, attribute: str) -> Any:
-        """Return the value of `attribute`."""
+        """Return the value of ``attribute``."""
         if not attribute.startswith("_") and not self._fetched:
             raise AttributeError(
                 "{0!r} object has no attribute {1!r}. {0!r} object has not been"
@@ -53,9 +53,9 @@ class RedditBase(AsyncPRAWBase):
         _fetched: bool = False,
         _str_field: bool = True,
     ):
-        """Initialize a RedditBase instance (or a subclass).
+        """Initialize a :class:`.RedditBase` instance.
 
-        :param reddit: An instance of :class:`~.Reddit`.
+        :param reddit: An instance of :class:`.Reddit`.
 
         """
         super().__init__(reddit, _data=_data)
