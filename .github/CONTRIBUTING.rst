@@ -48,16 +48,6 @@ Creating Pull Requests
    as a unit test. Tests that hit Reddit's servers will be an integration test and all
    network activity will be recorded via vcrpy. The required packages can be installed
    with ``pip install asyncpraw[test]``.
-
-   .. note::
-
-       Async PRAW uses a fork of `vcrpy` before you can run tests locally you must
-       install the forked version.
-
-       .. code-block:: bash
-
-           pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip
-
 7. Feel free to check on the status of your pull request periodically by adding a
    comment.
 
