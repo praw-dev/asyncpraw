@@ -58,8 +58,8 @@ class TestReddit(UnitTest):
     def test_conflicting_settings(self):
         with pytest.raises(TypeError) as excinfo:
             Reddit(
-                refresh_token="dummy",
                 token_manager="dummy",
+                refresh_token="dummy",
                 **self.REQUIRED_DUMMY_SETTINGS,
             )
         assert (
@@ -333,9 +333,9 @@ class TestReddit(UnitTest):
 
     async def test_read_only__with_authenticated_core(self):
         async with Reddit(
+            token_manager=DummyTokenManager(),
             password=None,
             username=None,
-            token_manager=DummyTokenManager(),
             **self.REQUIRED_DUMMY_SETTINGS,
         ) as reddit:
             assert not reddit.read_only
@@ -359,11 +359,11 @@ class TestReddit(UnitTest):
 
     async def test_read_only__with_authenticated_core__non_confidential(self):
         async with Reddit(
+            token_manager=DummyTokenManager(),
             client_id="dummy",
             client_secret=None,
             redirect_uri="dummy",
             user_agent="dummy",
-            token_manager=DummyTokenManager(),
         ) as reddit:
             assert not reddit.read_only
             reddit.read_only = True
@@ -489,21 +489,21 @@ class TestRedditCustomRequestor(UnitTest):
             pass
 
         async with Reddit(
+            requestor_class=CustomRequestor,
             client_id="dummy",
             client_secret="dummy",
             password="dummy",
             user_agent="dummy",
             username="dummy",
-            requestor_class=CustomRequestor,
         ) as temp_reddit:
             assert isinstance(temp_reddit._core._requestor, CustomRequestor)
         assert not isinstance(reddit._core._requestor, CustomRequestor)
 
         async with Reddit(
+            requestor_class=CustomRequestor,
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
-            requestor_class=CustomRequestor,
         ) as temp_reddit:
             assert isinstance(temp_reddit._core._requestor, CustomRequestor)
         assert not isinstance(reddit._core._requestor, CustomRequestor)
@@ -511,10 +511,10 @@ class TestRedditCustomRequestor(UnitTest):
     async def test_requestor_kwargs(self):
         session = AsyncMock(headers={})
         async with Reddit(
+            requestor_kwargs={"session": session},
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
-            requestor_kwargs={"session": session},
         ) as reddit:
 
             assert reddit._core._requestor._http is session

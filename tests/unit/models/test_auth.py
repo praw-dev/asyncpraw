@@ -102,9 +102,7 @@ class TestAuth(UnitTest):
 
     async def test_url__web_app_without_redirect_uri(self):
         async with Reddit(
-            client_id="dummy client",
-            client_secret="dummy secret",
-            user_agent="dummy",
+            client_id="dummy client", client_secret="dummy secret", user_agent="dummy"
         ) as reddit:
             with pytest.raises(ClientException):
                 reddit.auth.url(["dummy scope"], "dummy state")

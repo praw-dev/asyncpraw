@@ -89,11 +89,11 @@ class TestDeprecation(UnitTest):
     async def test_reddit_token_manager(self):
         with pytest.raises(DeprecationWarning):
             async with Reddit(
+                token_manager=FileTokenManager("name"),
                 client_id="dummy",
                 client_secret=None,
                 redirect_uri="dummy",
                 user_agent="dummy",
-                token_manager=FileTokenManager("name"),
             ) as reddit:
                 reddit._core._requestor._http = None
 
