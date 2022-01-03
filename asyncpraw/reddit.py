@@ -616,20 +616,22 @@ class Reddit:
         self._read_only_core = session(read_only_authorizer)
         self._prepare_common_authorizer(authenticator)
 
+    @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
     async def comment(
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
-        url: Optional[str] = None,
+        *,
         fetch: bool = True,
+        url: Optional[str] = None,
         **kwargs,
     ):
         """Return an instance of :class:`.Comment`.
 
         :param id: The ID of the comment.
-        :param url: A permalink pointing to the comment.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
+        :param url: A permalink pointing to the comment.
 
         If you don't need the object fetched right away (e.g., to utilize a class
         method) then you can do:
