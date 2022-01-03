@@ -24,7 +24,7 @@ class EditableMixin:
             await submission.delete()
 
         """
-        await self._reddit.post(API_PATH["del"], {"id": self.fullname})
+        await self._reddit.post(API_PATH["del"], data={"id": self.fullname})
 
     async def edit(
         self, body
