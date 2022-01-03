@@ -752,9 +752,10 @@ class Reddit:
 
     async def _objectify_request(
         self,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
-        json=None,
+        json: Optional[Dict[Any, Any]] = None,
         method: str = "",
         params: Optional[Union[str, Dict[str, str]]] = None,
         path: str = "",
@@ -841,7 +842,7 @@ class Reddit:
 
         """
         return await self._objectify_request(
-            data=data, method="PATCH", path=path, json=json
+            data=data, json=json, method="PATCH", path=path
         )
 
     async def post(
@@ -1049,5 +1050,5 @@ class Reddit:
 
         """
         return await self._objectify_request(
-            path=API_PATH["username_available"], params={"user": name}, method="GET"
+            method="GET", params={"user": name}, path=API_PATH["username_available"]
         )
