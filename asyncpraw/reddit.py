@@ -661,9 +661,11 @@ class Reddit:
         """
         return models.DomainListing(self, domain)
 
+    @_deprecate_args("path", "params")
     async def get(
         self,
         path: str,
+        *,
         params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
     ):
         """Return parsed objects returned from a GET request to ``path``.
