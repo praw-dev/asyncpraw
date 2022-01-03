@@ -50,7 +50,7 @@ class TestRedditor(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             redditor = await self.reddit.redditor(
-                fullname=self.FRIEND_FULLNAME, fetch=True
+                fetch=True, fullname=self.FRIEND_FULLNAME
             )
             assert redditor.name == self.FRIEND
 

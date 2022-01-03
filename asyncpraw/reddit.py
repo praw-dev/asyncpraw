@@ -945,18 +945,20 @@ class Reddit:
         await subreddit._fetch()
         return subreddit
 
+    @_deprecate_args("name", "fullname", "fetch")
     async def redditor(
         self,
         name: Optional[str] = None,
-        fullname: Optional[str] = None,
+        *,
         fetch: bool = False,
+        fullname: Optional[str] = None,
     ) -> "asyncpraw.models.Redditor":
         """Return an instance of :class:`.Redditor`.
 
         :param name: The name of the redditor.
-        :param fullname: The fullname of the redditor, starting with ``t2_``.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``False``).
+        :param fullname: The fullname of the redditor, starting with ``t2_``.
 
         Either ``name`` or ``fullname`` can be provided, but not both.
 
