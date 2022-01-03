@@ -3739,7 +3739,7 @@ class SubredditStylesheet:
 
     async def _update_structured_styles(self, style_data: Dict[str, Union[str, Any]]):
         url = API_PATH["structured_styles"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.patch(url, style_data)
+        await self.subreddit._reddit.patch(url, data=style_data)
 
     async def _upload_image(
         self, image_path: str, data: Dict[str, Union[str, Any]]
