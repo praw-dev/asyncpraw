@@ -301,7 +301,7 @@ class Collection(RedditBase):
             print(await collection.subreddit())
 
         """
-        async for subreddit in self._reddit.info([self.subreddit_id]):
+        async for subreddit in self._reddit.info(fullnames=[self.subreddit_id]):
             return subreddit
 
     def __init__(

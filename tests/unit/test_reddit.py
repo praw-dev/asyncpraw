@@ -76,13 +76,13 @@ class TestReddit(UnitTest):
 
     def test_info__invalid_param(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            reddit.info(None)
+            reddit.info(fullnames=None)
 
         err_str = "Either `fullnames`, `url`, or `subreddits` must be provided."
         assert str(excinfo.value) == err_str
 
         with pytest.raises(TypeError) as excinfo:
-            reddit.info([], "")
+            reddit.info(fullnames=[], url="")
 
         assert str(excinfo.value) == err_str
 
@@ -104,7 +104,7 @@ class TestReddit(UnitTest):
 
     def test_info__not_list(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            reddit.info("Let's try a string")
+            reddit.info(fullnames="Let's try a string")
 
         assert "must be a non-str iterable" in str(excinfo.value)
 

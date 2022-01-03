@@ -63,7 +63,7 @@ class TestReddit(IntegrationTest):
                 items.append(f"{base}{i:02d}")
 
         with self.use_cassette():
-            results = await self.async_list(self.reddit.info(items))
+            results = await self.async_list(self.reddit.info(fullnames=items))
         assert len(results) > 100
         for item in results:
             assert isinstance(item, RedditBase)
