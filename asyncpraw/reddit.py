@@ -926,8 +926,9 @@ class Reddit:
             data=data, json=json, method="PUT", path=path
         )
 
+    @_deprecate_args("nsfw")
     async def random_subreddit(
-        self, nsfw: bool = False
+        self, *, nsfw: bool = False
     ) -> "asyncpraw.models.Subreddit":
         """Return a random instance of :class:`.Subreddit`.
 
