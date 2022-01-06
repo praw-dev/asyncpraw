@@ -1025,20 +1025,22 @@ class Reddit:
                 [data["reason"], explanation, field]
             ) from exception
 
+    @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
         self,
         id: Optional[str] = None,
-        url: Optional[str] = None,
+        *,
         fetch: bool = True,
+        url: Optional[str] = None,
         **kwargs,
     ) -> "asyncpraw.models.Submission":
         """Return an instance of :class:`.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by :meth:`.Submission.id_from_url`.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
+        :param url: A URL supported by :meth:`.Submission.id_from_url`.
 
         Either ``id`` or ``url`` can be provided, but not both.
 
