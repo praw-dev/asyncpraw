@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Union
 
 from ...const import API_PATH
+from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..list.redditor import RedditorList
 from ..listing.generator import ListingGenerator
@@ -74,9 +75,11 @@ class LiveContributorRelationship:
         url = API_PATH["live_accept_invite"].format(id=self.thread.id)
         await self.thread._reddit.post(url)
 
+    @_deprecate_args("redditor", "permissions")
     async def invite(
         self,
         redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         permissions: Optional[List[str]] = None,
     ):
         """Invite a redditor to be a contributor of the live thread.
@@ -97,7 +100,7 @@ class LiveContributorRelationship:
             redditor = await reddit.redditor("spez", fetch=False)
 
             # "manage" and "settings" permissions
-            await thread.contributor.invite(redditor, ["manage", "settings"])
+            await thread.contributor.invite(redditor, permissions=["manage", "settings"])
 
         .. seealso::
 
