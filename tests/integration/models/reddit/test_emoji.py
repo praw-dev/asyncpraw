@@ -77,8 +77,8 @@ class TestSubredditEmoji(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             for extension in ["jpg", "png"]:
                 emoji = await subreddit.emoji.add(
-                    f"test_{extension}",
-                    f"tests/integration/files/test.{extension}",
+                    name=f"test_{extension}",
+                    image_path=f"tests/integration/files/test.{extension}",
                 )
                 assert isinstance(emoji, Emoji)
 
@@ -89,8 +89,8 @@ class TestSubredditEmoji(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             for extension in ["jpg", "png"]:
                 emoji = await subreddit.emoji.add(
-                    f"test_{extension}",
-                    f"tests/integration/files/test.{extension}",
+                    name=f"test_{extension}",
+                    image_path=f"tests/integration/files/test.{extension}",
                     mod_flair_only=True,
                     post_flair_allowed=True,
                     user_flair_allowed=False,
