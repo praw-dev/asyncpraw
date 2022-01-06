@@ -175,7 +175,7 @@ class SubredditRules:
             stacklevel=2,
         )
         return await self._reddit.request(
-            "GET", API_PATH["rules"].format(subreddit=self.subreddit)
+            method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit)
         )
 
     async def get_rule(

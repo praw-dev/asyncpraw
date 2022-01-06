@@ -166,7 +166,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     async def _fetch_data(self):
         name, fields, params = await self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -177,7 +177,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
     async def _friend(self, method, data):
         url = API_PATH["friend_v1"].format(user=self)
-        await self._reddit.request(method, url, data=dumps(data))
+        await self._reddit.request(data=dumps(data), method=method, path=url)
 
     async def block(self):
         """Block the :class:`.Redditor`.

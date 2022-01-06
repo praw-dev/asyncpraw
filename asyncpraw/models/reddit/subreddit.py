@@ -633,7 +633,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def _fetch_data(self) -> dict:
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", path=path, params=params)
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -1175,7 +1175,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 }
             )
         response = await self._reddit.request(
-            "POST", API_PATH["submit_gallery_post"], json=data
+            method="POST", path=API_PATH["submit_gallery_post"], json=data
         )
         response = response["json"]
         if response["errors"]:

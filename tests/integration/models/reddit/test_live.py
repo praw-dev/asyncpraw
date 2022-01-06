@@ -38,7 +38,7 @@ class TestLiveThread(IntegrationTest):
         thread = LiveThread(self.reddit, "xyu8kmjvfrww")
         url = API_PATH["live_contributors"].format(id=thread.id)
         with self.use_cassette():
-            data = await thread._reddit.request("GET", url)
+            data = await thread._reddit.request(method="GET", path=url)
             contributors = [contributor async for contributor in thread.contributor()]
         assert isinstance(data, dict)
         assert isinstance(contributors, list)

@@ -640,7 +640,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     async def _fetch(self):
         data = await self._fetch_data()
