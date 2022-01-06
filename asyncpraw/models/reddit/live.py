@@ -183,9 +183,11 @@ class LiveContributorRelationship:
         url = API_PATH["live_remove_invite"].format(id=self.thread.id)
         await self.thread._reddit.post(url, data=data)
 
+    @_deprecate_args("redditor", "permissions")
     async def update(
         self,
         redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         permissions: Optional[List[str]] = None,
     ):
         """Update the contributor permissions for ``redditor``.
@@ -208,13 +210,13 @@ class LiveContributorRelationship:
 
         .. code-block:: python
 
-            await thread.contributor.update("spez", ["access", "edit"])
+            await thread.contributor.update("spez", permissions=["access", "edit"])
 
         To remove all permissions from the contributor, try:
 
         .. code-block:: python
 
-            await subreddit.moderator.update("spez", [])
+            await subreddit.moderator.update("spez", permissions=[])
 
         """
         url = API_PATH["live_update_perms"].format(id=self.thread.id)
