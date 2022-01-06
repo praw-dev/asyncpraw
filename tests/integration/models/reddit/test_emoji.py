@@ -46,9 +46,7 @@ class TestEmoji(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             emoji = await subreddit.emoji.get_emoji("test_png")
             await emoji.update(
-                mod_flair_only=False,
-                post_flair_allowed=True,
-                user_flair_allowed=True,
+                mod_flair_only=False, post_flair_allowed=True, user_flair_allowed=True
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
