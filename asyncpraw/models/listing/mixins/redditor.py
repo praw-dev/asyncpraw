@@ -56,7 +56,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         .. code-block:: python
 
             redditor = await reddit.redditor("spez")
-            async for submission in redditor.submissions.top("all"):
+            async for submission in redditor.submissions.top(time_filter="all"):
                 print(submission.title)
 
         """

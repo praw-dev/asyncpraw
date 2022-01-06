@@ -11,4 +11,4 @@ class TestFront(UnitTest):
 
     def test_top_raises_value_error(self, reddit):
         with pytest.raises(ValueError):
-            reddit.front.top("second")
+            reddit.front.top(time_filter="second")

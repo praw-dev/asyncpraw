@@ -143,8 +143,10 @@ class BaseListingMixin(AsyncPRAWBase):
         url = _prepare(self, generator_kwargs, "new")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
+    @_deprecate_args("time_filter")
     def top(
         self,
+        *,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
     ) -> AsyncIterator[Any]:
@@ -162,22 +164,22 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            reddit.domain("imgur.com").top("week")
+            reddit.domain("imgur.com").top(time_filter="week")
 
             multireddit = await reddit.multireddit("samuraisam", "programming")
-            multireddit.top("day")
+            multireddit.top(time_filter="day")
 
             redditor = await reddit.redditor("spez")
-            redditor.top("month")
+            redditor.top(time_filter="month")
 
             redditor = await reddit.redditor("spez")
-            redditor.comments.top("year")
+            redditor.comments.top(time_filter="year")
 
             redditor = await reddit.redditor("spez")
-            redditor.submissions.top("all")
+            redditor.submissions.top(time_filter="all")
 
             subreddit = await reddit.subreddit("all")
-            subreddit.top("hour")
+            subreddit.top(time_filter="hour")
 
         """
         self._validate_time_filter(time_filter)
