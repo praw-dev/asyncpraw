@@ -67,7 +67,9 @@ class TestRedditor(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             redditor = await self.reddit.redditor("subreddit_stats")
-            await redditor.message("Async PRAW test", "This is a test from Async PRAW")
+            await redditor.message(
+                subject="Async PRAW test", message="This is a test from Async PRAW"
+            )
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_message_from_subreddit(self, _):
@@ -75,8 +77,8 @@ class TestRedditor(IntegrationTest):
         with self.use_cassette():
             redditor = await self.reddit.redditor("subreddit_stats")
             await redditor.message(
-                "Async PRAW test",
-                "This is a test from Async PRAW",
+                subject="Async PRAW test",
+                message="This is a test from Async PRAW",
                 from_subreddit=pytest.placeholders.test_subreddit,
             )
 

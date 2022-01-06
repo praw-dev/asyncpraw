@@ -136,7 +136,9 @@ class TestSubreddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            await subreddit.message("Test from Async PRAW", message="Test content")
+            await subreddit.message(
+                subject="Test from Async PRAW", message="Test content"
+            )
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_post_requirements(self, _):
