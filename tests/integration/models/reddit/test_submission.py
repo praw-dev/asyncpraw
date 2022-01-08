@@ -340,14 +340,14 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_flair(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Submission(self.reddit, "hmkbt8").mod.flair("AF")
+            await Submission(self.reddit, "hmkbt8").mod.flair(text="AF")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_flair_template_id(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.flair(
-                "submission flair",
+                text="submission flair",
                 flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
             )
 
@@ -355,14 +355,14 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_flair_text_only(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Submission(self.reddit, "hmkbt8").mod.flair("submission flair")
+            await Submission(self.reddit, "hmkbt8").mod.flair(text="submission flair")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_flair_text_and_css_class(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.flair(
-                "submission flair", css_class="submission flair"
+                text="submission flair", css_class="submission flair"
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -370,7 +370,7 @@ class TestSubmissionModeration(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.flair(
-                "submission flair",
+                text="submission flair",
                 css_class="submission flair",
                 flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
             )
