@@ -3445,8 +3445,10 @@ class Modmail:
         subreddits = [self.subreddit] + (other_subreddits or [])
         return ",".join(str(subreddit) for subreddit in subreddits)
 
+    @_deprecate_args("other_subreddits", "state")
     async def bulk_read(
         self,
+        *,
         other_subreddits: Optional[
             List[Union["asyncpraw.models.Subreddit", str]]
         ] = None,
@@ -3454,9 +3456,11 @@ class Modmail:
     ) -> List[ModmailConversation]:
         """Mark conversations for subreddit(s) as read.
 
-        Due to server-side restrictions, "all" is not a valid subreddit for this method.
-        Instead, use :meth:`~.Modmail.subreddits` to get a list of subreddits using the
-        new modmail.
+        .. note::
+
+            Due to server-side restrictions, r/all is not a valid subreddit for this
+            method. Instead, use :meth:`~.Modmail.subreddits` to get a list of
+            subreddits using the new modmail.
 
         :param other_subreddits: A list of :class:`.Subreddit` instances for which to
             mark conversations (default: ``None``).
