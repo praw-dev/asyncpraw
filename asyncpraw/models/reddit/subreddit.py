@@ -3184,28 +3184,29 @@ class ModeratorRelationship(SubredditRelationship):
         await super().add(redditor, **other_settings)
 
     # pylint: enable=arguments-differ
-
+    @_deprecate_args("redditor", "permissions")
     async def invite(
         self,
         redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         permissions: Optional[List[str]] = None,
         **other_settings: Any,
     ):
-        """Invite ``redditor`` to be a moderator of the subreddit.
+        """Invite ``redditor`` to be a moderator of the :class:`.Subreddit`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided ``None``, indicates
-            full permissions.
+            full permissions (default: ``None``).
 
-        For example, to invite ``"spez"`` with ``posts`` and ``mail``
+        For example, to invite u/spez with ``"posts"`` and ``"mail"``
             permissions to r/test, try:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.moderator.invite("spez", ["posts", "mail"])
+            await subreddit.moderator.invite("spez", permissions=["posts", "mail"])
 
         """
         data = self._handle_permissions(permissions, other_settings)
