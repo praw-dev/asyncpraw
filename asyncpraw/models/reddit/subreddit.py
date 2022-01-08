@@ -3491,8 +3491,10 @@ class Modmail:
             for conversation_id in response["conversation_ids"]
         ]
 
+    @_deprecate_args("after", "other_subreddits", "sort", "state")
     def conversations(
         self,
+        *,
         after: Optional[str] = None,
         other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None,
         sort: Optional[str] = None,
