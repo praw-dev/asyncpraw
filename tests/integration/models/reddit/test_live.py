@@ -194,21 +194,25 @@ class TestLiveContributorRelationship(IntegrationTest):
         self.reddit.read_only = False
         thread = LiveThread(self.reddit, "1595195m6j9zw")
         with self.use_cassette():
-            await thread.contributor.update_invite(pytest.placeholders.username, [])
+            await thread.contributor.update_invite(
+                pytest.placeholders.username, permissions=[]
+            )
 
     async def test_update_invite__limited(self):
         self.reddit.read_only = False
         thread = LiveThread(self.reddit, "1595195m6j9zw")
         with self.use_cassette():
             await thread.contributor.update_invite(
-                pytest.placeholders.username, ["manage", "edit"]
+                pytest.placeholders.username, permissions=["manage", "edit"]
             )
 
     async def test_update_invite__none(self):
         self.reddit.read_only = False
         thread = LiveThread(self.reddit, "1595195m6j9zw")
         with self.use_cassette():
-            await thread.contributor.update_invite(pytest.placeholders.username, None)
+            await thread.contributor.update_invite(
+                pytest.placeholders.username, permissions=None
+            )
 
 
 class TestLiveThreadContribution(IntegrationTest):
