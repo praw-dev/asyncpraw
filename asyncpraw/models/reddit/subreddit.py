@@ -428,7 +428,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.modmail.create("test", "hello", "spez")
+            await subreddit.modmail.create(subject="test", body="hello", recipient="spez")
 
         """
         return Modmail(self)
@@ -3364,7 +3364,7 @@ class Modmail:
     .. code-block:: python
 
         subreddit = await reddit.subreddit("test")
-        await subreddit.modmail.create("test", "hello", "spez")
+        await subreddit.modmail.create(subject="test", body="hello", recipient="spez")
 
     """
 
@@ -3564,21 +3564,23 @@ class Modmail:
             **generator_kwargs,
         )
 
+    @_deprecate_args("subject", "body", "recipient", "author_hidden")
     async def create(
         self,
-        subject: str,
+        *,
+        author_hidden: bool = False,
         body: str,
         recipient: Union[str, "asyncpraw.models.Redditor"],
-        author_hidden: bool = False,
+        subject: str,
     ) -> ModmailConversation:
         """Create a new :class:`.ModmailConversation`.
 
-        :param subject: The message subject. Cannot be empty.
+        :param author_hidden: When ``True``, author is hidden from non-moderators
+            (default: ``False``).
         :param body: The message body. Cannot be empty.
         :param recipient: The recipient; a username or an instance of
             :class:`.Redditor`.
-        :param author_hidden: When ``True``, author is hidden from non-moderators
-            (default: ``False``).
+        :param subject: The message subject. Cannot be empty.
 
         :returns: A :class:`.ModmailConversation` object for the newly created
             conversation.
@@ -3587,7 +3589,7 @@ class Modmail:
 
             subreddit = await reddit.subreddit("test")
             redditor = await reddit.redditor("bboe")
-            await subreddit.modmail.create("Subject", "Body", redditor)
+            await subreddit.modmail.create(subject="Subject", body="Body", recipient=redditor)
 
         """
         data = {

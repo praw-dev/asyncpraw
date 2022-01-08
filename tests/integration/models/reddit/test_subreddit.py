@@ -1628,7 +1628,11 @@ class TestSubredditModmail(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             redditor = await self.reddit.redditor(pytest.placeholders.username)
-            conversation = await subreddit.modmail.create("Subject", "Body", redditor)
+            conversation = await subreddit.modmail.create(
+                subject="Subject",
+                body="Body",
+                recipient=redditor,
+            )
         assert isinstance(conversation, ModmailConversation)
 
     async def test_subreddits(self):
