@@ -13,8 +13,8 @@ class TestRule(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             rule = await subreddit.rules.mod.add(
-                "PRAW Test",
-                "all",
+                short_name="PRAW Test",
+                kind="all",
                 description="Test by Async PRAW",
                 violation_reason="PTest",
             )
@@ -27,7 +27,9 @@ class TestRule(IntegrationTest):
         self.reddit.read_only = False
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
-            rule = await subreddit.rules.mod.add("PRAW Test 2", "comment")
+            rule = await subreddit.rules.mod.add(
+                short_name="PRAW Test 2", kind="comment"
+            )
             assert rule.short_name == "PRAW Test 2"
             assert rule.kind == "comment"
             assert rule.description == ""
