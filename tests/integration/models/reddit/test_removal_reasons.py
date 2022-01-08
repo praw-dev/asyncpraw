@@ -89,5 +89,7 @@ class TestSubredditRemovalReasons(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            reason = await subreddit.mod.removal_reasons.add("test", "Test")
+            reason = await subreddit.mod.removal_reasons.add(
+                title="Test", message="test"
+            )
             assert isinstance(reason, RemovalReason)
