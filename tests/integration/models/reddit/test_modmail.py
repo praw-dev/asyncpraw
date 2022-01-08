@@ -85,7 +85,7 @@ class TestModmailConversation(IntegrationTest):
         subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
             conversation = await subreddit.modmail("faj6z")
-            reply = await conversation.reply("A message")
+            reply = await conversation.reply(body="A message")
         assert isinstance(reply, ModmailMessage)
 
     @mock.patch("asyncio.sleep", return_value=None)
