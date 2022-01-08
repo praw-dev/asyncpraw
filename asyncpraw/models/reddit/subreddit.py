@@ -38,7 +38,7 @@ from ...exceptions import (
     TooLargeMediaException,
     WebSocketException,
 )
-from ...util.cache import cachedproperty
+from ...util import _deprecate_args, cachedproperty
 from ..listing.generator import ListingGenerator
 from ..listing.mixins import SubredditListingMixin
 from ..util import deprecate_lazy, permissions_string, stream_generator
@@ -3153,9 +3153,11 @@ class ModeratorRelationship(SubredditRelationship):
         return await self.subreddit._reddit.get(url, params=params)
 
     # pylint: disable=arguments-differ
+    @_deprecate_args("redditor", "permissions")
     async def add(
         self,
         redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         permissions: Optional[List[str]] = None,
         **other_settings: Any,
     ):
@@ -3165,17 +3167,17 @@ class ModeratorRelationship(SubredditRelationship):
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided ``None``, indicates
-            full permissions.
+            full permissions (default: ``None``).
 
         An invite will be sent unless the user making this call is an admin user.
 
-        For example, to invite ``"spez"`` with ``"posts"`` and ``"mail"`` permissions to
+        For example, to invite u/spez with ``"posts"`` and ``"mail"`` permissions to
         r/test, try:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.moderator.add("spez", ["posts", "mail"])
+            await subreddit.moderator.add("spez", permissions=["posts", "mail"])
 
         """
         other_settings = self._handle_permissions(permissions, other_settings)
