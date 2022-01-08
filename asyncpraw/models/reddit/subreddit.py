@@ -3314,9 +3314,11 @@ class ModeratorRelationship(SubredditRelationship):
         )
         await self.subreddit._reddit.post(url, data=data)
 
+    @_deprecate_args("redditor", "permissions")
     async def update_invite(
         self,
         redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         permissions: Optional[List[str]] = None,
     ):
         """Update the moderator invite permissions for ``redditor``.
@@ -3325,14 +3327,14 @@ class ModeratorRelationship(SubredditRelationship):
         :param permissions: When provided (not ``None``), permissions should be a list
             of strings specifying which subset of permissions to grant. An empty list
             ``[]`` indicates no permissions, and when not provided, ``None``, indicates
-            full permissions.
+            full permissions (default: ``None``).
 
-        For example, to grant the ``flair`` and ``mail`` permissions to the moderator
-        invite, try:
+        For example, to grant the ``"flair"`` and ``"mail"`` permissions to the
+        moderator invite, try:
 
         .. code-block:: python
 
-            await subreddit.moderator.update_invite("spez", ["flair", "mail"])
+            await subreddit.moderator.update_invite("spez", permissions=["flair", "mail"])
 
         """
         url = API_PATH["setpermissions"].format(subreddit=self.subreddit)
