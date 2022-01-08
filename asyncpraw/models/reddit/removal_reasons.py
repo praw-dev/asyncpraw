@@ -4,6 +4,7 @@ from warnings import warn
 
 from ...const import API_PATH
 from ...exceptions import ClientException
+from ...util import _deprecate_args
 from ..util import deprecate_lazy
 from .base import RedditBase
 
@@ -110,7 +111,10 @@ class RemovalReason(RedditBase):
         url = API_PATH["removal_reason"].format(subreddit=self.subreddit, id=self.id)
         await self._reddit.delete(url)
 
-    async def update(self, message: Optional[str] = None, title: Optional[str] = None):
+    @_deprecate_args("message", "title")
+    async def update(
+        self, *, message: Optional[str] = None, title: Optional[str] = None
+    ):
         """Update the removal reason from this subreddit.
 
         .. note::
@@ -126,7 +130,7 @@ class RemovalReason(RedditBase):
 
             subreddit = await reddit.subreddit("test")
             reason = await subreddit.mod.removal_reasons.get_reason("141vv5c16py7d")
-            await reason.update(message="New message", title="New title")
+            await reason.update(title="New title", message="New message")
 
         """
         url = API_PATH["removal_reason"].format(subreddit=self.subreddit, id=self.id)
