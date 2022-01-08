@@ -266,13 +266,14 @@ class SubmissionModeration(ThingModerationMixin):
             API_PATH["spoiler"], data={"id": self.thing.fullname}
         )
 
-    async def sticky(self, state: bool = True, bottom: bool = True):
+    @_deprecate_args("state", "bottom")
+    async def sticky(self, *, bottom: bool = True, state: bool = True):
         """Set the submission's sticky state in its subreddit.
 
-        :param state: ``True`` sets the sticky for the submission and ``False`` unsets
-            (default: ``True``).
         :param bottom: When ``True``, set the submission as the bottom sticky. If no top
             sticky exists, this submission will become the top sticky regardless
+            (default: ``True``).
+        :param state: ``True`` sets the sticky for the submission and ``False`` unsets
             (default: ``True``).
 
         .. note::
