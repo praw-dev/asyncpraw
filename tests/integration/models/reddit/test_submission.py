@@ -245,7 +245,7 @@ class TestSubmission(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             crosspost_parent = await self.reddit.submission("6vx01b")
 
-            submission = await crosspost_parent.crosspost(subreddit, "my title")
+            submission = await crosspost_parent.crosspost(subreddit, title="my title")
             await submission.load()
             assert submission.author == pytest.placeholders.username
             assert submission.title == "my title"
