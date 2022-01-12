@@ -700,9 +700,9 @@ class TestSubreddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            image = image_path("test.mov")
+            video = image_path("test.mov")
             submission = await subreddit.submit_video(
-                "Test Title", image, flair_id=flair_id, flair_text=flair_text
+                "Test Title", video, flair_id=flair_id, flair_text=flair_text
             )
             assert submission.link_flair_css_class == flair_class
             assert submission.link_flair_text == flair_text
@@ -715,9 +715,9 @@ class TestSubreddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            image = image_path("test.mov")
+            video = image_path("test.mov")
             submission = await subreddit.submit_video(
-                "Test Title", image, discussion_type="CHAT"
+                "Test Title", video, discussion_type="CHAT"
             )
             await submission.load()
             assert submission.discussion_type == "CHAT"
@@ -728,12 +728,12 @@ class TestSubreddit(IntegrationTest):
         self.reddit.validate_on_submit = True
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            image = image_path("test.mov")
+            video = image_path("test.mov")
             with pytest.raises(
                 (RedditAPIException, BadRequest)
             ):  # waiting for prawcore fix
                 await subreddit.submit_video(
-                    "gdfgfdgdgdgfgfdgdfgfdgfdg", image, without_websockets=True
+                    "gdfgfdgdgdgfgfdgdfgfdgfdg", video, without_websockets=True
                 )
 
     @mock.patch("asyncio.sleep", return_value=None)
