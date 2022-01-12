@@ -2860,8 +2860,10 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.edited, only=only, **stream_options)
 
+    @_deprecate_args("action", "mod")
     def log(
         self,
+        *,
         action: Optional[str] = None,
         mod: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **stream_options: Any,
