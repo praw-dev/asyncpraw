@@ -2237,7 +2237,7 @@ class TestSubredditWiki(IntegrationTest):
 
         with self.use_cassette():
             wikipage = await subreddit.wiki.create(
-                "Async PRAW New Page", "This is the new wiki page"
+                name="Async PRAW New Page", content="This is the new wiki page"
             )
             await wikipage.load()
             assert wikipage.name == "async_praw_new_page"

@@ -4344,10 +4344,12 @@ class SubredditWiki:
         for page_name in response["data"]:
             yield WikiPage(self.subreddit._reddit, self.subreddit, page_name)
 
+    @_deprecate_args("name", "content", "reason")
     async def create(
         self,
-        name: str,
+        *,
         content: str,
+        name: str,
         reason: Optional[str] = None,
         **other_settings: Any,
     ):
@@ -4365,7 +4367,7 @@ class SubredditWiki:
 
             subreddit = await reddit.subreddit("test")
             await subreddit.wiki.create(
-                "praw_test", "wiki body text", reason="Async PRAW Test Creation"
+                name="praw_test", content="wiki body text", reason="Async PRAW Test Creation"
             )
 
         """
