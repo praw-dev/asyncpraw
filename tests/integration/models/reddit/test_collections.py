@@ -85,7 +85,7 @@ class TestCollectionModeration(IntegrationTest):
             await collection.mod.add_post(posts[3].id)  # id
 
             posts.append(
-                await subreddit.submit("Post #4", selftext="", collection_id=uuid)
+                await subreddit.submit("Post #4", collection_id=uuid, selftext="")
             )
 
             with pytest.raises(TypeError):
@@ -115,7 +115,7 @@ class TestCollectionModeration(IntegrationTest):
         uuid = self.NONEMPTY_REAL_UUID
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            post = await subreddit.submit("The title", selftext="", collection_id=uuid)
+            post = await subreddit.submit("The title", collection_id=uuid, selftext="")
             collection = await subreddit.collections(uuid)
             await collection.mod.remove_post(post)
 

@@ -214,9 +214,9 @@ class TestSubreddit(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             submission = await subreddit.submit(
                 "Test Title",
-                selftext="Test text.",
                 flair_id=flair_id,
                 flair_text=flair_text,
+                selftext="Test text.",
             )
             await submission.load()
             assert submission.link_flair_css_class == flair_class
@@ -257,7 +257,7 @@ class TestSubreddit(IntegrationTest):
             )
             media = {"gif1": gif, "image1": image, "video1": video}
             submission = await subreddit.submit(
-                "title", selftext=selftext, inline_media=media
+                "title", inline_media=media, selftext=selftext
             )
             await submission.load()
             assert submission.author == pytest.placeholders.username
@@ -277,7 +277,7 @@ class TestSubreddit(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             submission = await subreddit.submit(
-                "Test Title", selftext="", discussion_type="CHAT"
+                "Test Title", discussion_type="CHAT", selftext=""
             )
             await submission.load()
             assert submission.discussion_type == "CHAT"
@@ -300,7 +300,7 @@ class TestSubreddit(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             submission = await subreddit.submit(
-                "Test Title", selftext="Test text.", nsfw=True
+                "Test Title", nsfw=True, selftext="Test text."
             )
             await submission.load()
             assert submission.over_18 is True
