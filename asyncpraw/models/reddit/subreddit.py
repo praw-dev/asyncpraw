@@ -4068,7 +4068,8 @@ class SubredditStylesheet:
         url = API_PATH["delete_sr_icon"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
-    async def update(self, stylesheet: str, reason: Optional[str] = None):
+    @_deprecate_args("stylesheet", "reason")
+    async def update(self, stylesheet: str, *, reason: Optional[str] = None):
         """Update the :class:`.Subreddit`'s stylesheet.
 
         :param stylesheet: The CSS for the new stylesheet.
@@ -4079,7 +4080,7 @@ class SubredditStylesheet:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.stylesheet.update("p { color: green; }", "color text green")
+            await subreddit.stylesheet.update("p { color: green; }", reason="color text green")
 
         """
         data = {
