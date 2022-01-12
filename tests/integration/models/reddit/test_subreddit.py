@@ -2051,7 +2051,7 @@ class TestSubredditStylesheet(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             response = await subreddit.stylesheet.upload(
-                "asyncpraw", image_path("white-square.png")
+                name="asyncpraw", image_path=image_path("white-square.png")
             )
         assert response["img_src"].endswith(".png")
 
@@ -2061,7 +2061,7 @@ class TestSubredditStylesheet(IntegrationTest):
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
                 await subreddit.stylesheet.upload(
-                    "asyncpraw", image_path("invalid.jpg")
+                    name="asyncpraw", image_path=image_path("invalid.jpg")
                 )
         assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
 
@@ -2071,7 +2071,7 @@ class TestSubredditStylesheet(IntegrationTest):
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
                 await subreddit.stylesheet.upload(
-                    "asyncpraw", image_path("white-square.png")
+                    name="asyncpraw", image_path=image_path("white-square.png")
                 )
         assert excinfo.value.items[0].error_type == "BAD_CSS_NAME"
 
@@ -2081,7 +2081,7 @@ class TestSubredditStylesheet(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             with pytest.raises(TooLarge):
                 await subreddit.stylesheet.upload(
-                    "asyncpraw", image_path("too_large.jpg")
+                    name="asyncpraw", image_path=image_path("too_large.jpg")
                 )
 
     @mock.patch("asyncio.sleep", return_value=None)

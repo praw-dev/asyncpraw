@@ -4091,12 +4091,13 @@ class SubredditStylesheet:
         url = API_PATH["subreddit_stylesheet"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    async def upload(self, name: str, image_path: str) -> Dict[str, str]:
+    @_deprecate_args("name", "image_path")
+    async def upload(self, *, image_path: str, name: str) -> Dict[str, str]:
         """Upload an image to the :class:`.Subreddit`.
 
+        :param image_path: A path to a jpeg or png image.
         :param name: The name to use for the image. If an image already exists with the
             same name, it will be replaced.
-        :param image_path: A path to a jpeg or png image.
 
         :returns: A dictionary containing a link to the uploaded image under the key
             ``img_src``.
@@ -4113,7 +4114,7 @@ class SubredditStylesheet:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.stylesheet.upload("smile", "img.png")
+            await subreddit.stylesheet.upload(name="smile", image_path="img.png")
 
         """
         return await self._upload_image(
