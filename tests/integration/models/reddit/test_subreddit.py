@@ -1083,7 +1083,7 @@ class TestSubredditFlair(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             redditor = await self.reddit.user.me()
             response = await subreddit.flair.update(
-                [redditor], text='"testing"', css_class="testing"
+                [redditor], css_class="testing", text='"testing"'
             )
             assert all(x["ok"] for x in response)
             flair = await self.async_next(subreddit.flair(redditor))
