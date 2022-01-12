@@ -1132,10 +1132,10 @@ class TestSubredditFlairTemplates(IntegrationTest):
             template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
-                "PRAW updated",
-                css_class="myCSS",
-                text_color="dark",
                 background_color="#00FFFF",
+                css_class="myCSS",
+                text="PRAW updated",
+                text_color="dark",
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1148,11 +1148,11 @@ class TestSubredditFlairTemplates(IntegrationTest):
                 )
                 await subreddit.flair.templates.update(
                     "fake id",
-                    "PRAW updated",
-                    css_class="myCSS",
-                    text_color="dark",
                     background_color="#00FFFF",
+                    css_class="myCSS",
                     fetch=True,
+                    text="PRAW updated",
+                    text_color="dark",
                 )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1163,11 +1163,11 @@ class TestSubredditFlairTemplates(IntegrationTest):
             template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
-                "PRAW updated",
-                css_class="myCSS",
-                text_color="dark",
                 background_color="#00FFFF",
+                css_class="myCSS",
                 fetch=True,
+                text="PRAW updated",
+                text_color="dark",
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1178,10 +1178,10 @@ class TestSubredditFlairTemplates(IntegrationTest):
             template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
-                "PRAW updated",
-                text_color="dark",
                 background_color="#00FFFF",
                 fetch=True,
+                text="PRAW updated",
+                text_color="dark",
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1192,10 +1192,10 @@ class TestSubredditFlairTemplates(IntegrationTest):
             template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
-                css_class="myCSS",
-                text_color="dark",
                 background_color="#00FFFF",
+                css_class="myCSS",
                 fetch=True,
+                text_color="dark",
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1206,9 +1206,9 @@ class TestSubredditFlairTemplates(IntegrationTest):
             template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
                 template["id"],
-                text_color="dark",
                 background_color="#00FFFF",
                 fetch=True,
+                text_color="dark",
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -1233,10 +1233,10 @@ class TestSubredditFlairTemplates(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             template = next(iter(await self.async_list(subreddit.flair.templates)))
             await subreddit.flair.templates.update(
-                template["id"], text_editable=True, fetch=True
+                template["id"], fetch=True, text_editable=True
             )
             await subreddit.flair.templates.update(
-                template["id"], text_editable=False, fetch=True
+                template["id"], fetch=True, text_editable=False
             )
             newtemplate = list(
                 filter(
