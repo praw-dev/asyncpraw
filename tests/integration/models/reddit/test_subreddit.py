@@ -1107,7 +1107,7 @@ class TestSubredditFlairTemplates(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             await subreddit.flair.templates.add(
-                "PRAW", css_class="myCSS", background_color="#ABCDEF"
+                "PRAW", background_color="#ABCDEF", css_class="myCSS"
             )
 
     async def test_clear(self):
