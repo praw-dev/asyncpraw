@@ -2892,8 +2892,10 @@ class SubredditModerationStream:
             **stream_options,
         )
 
+    @_deprecate_args("other_subreddits", "sort", "state")
     def modmail_conversations(
         self,
+        *,
         other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None,
         sort: Optional[str] = None,
         state: Optional[str] = None,
