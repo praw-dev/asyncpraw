@@ -2472,8 +2472,10 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
+    @_deprecate_args("action", "mod")
     def log(
         self,
+        *,
         action: Optional[str] = None,
         mod: Optional[Union["asyncpraw.models.Redditor", str]] = None,
         **generator_kwargs: Any,
