@@ -849,9 +849,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         except ClientException:
             return None
 
+    @_deprecate_args("query", "sort", "syntax", "time_filter")
     def search(
         self,
         query: str,
+        *,
         sort: str = "relevance",
         syntax: str = "lucene",
         time_filter: str = "all",
@@ -870,7 +872,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         For more information on building a search query see:
         https://www.reddit.com/wiki/search
 
-        For example, to search all subreddits for ``praw`` try:
+        For example, to search all subreddits for ``"praw"`` try:
 
         .. code-block:: python
 
