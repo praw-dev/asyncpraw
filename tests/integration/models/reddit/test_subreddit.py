@@ -1007,7 +1007,7 @@ class TestSubredditFlair(IntegrationTest):
             flair = "c99ff6d0-c559-11ea-b93b-0ef0f80279f1"
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             await subreddit.flair.set(
-                redditor, "redditor flair", flair_template_id=flair
+                redditor, flair_template_id=flair, text="redditor flair"
             )
 
     async def test_set__flair_id_default_text(self):
@@ -1023,7 +1023,7 @@ class TestSubredditFlair(IntegrationTest):
         with self.use_cassette():
             redditor = await self.reddit.redditor(pytest.placeholders.username)
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            await subreddit.flair.set(redditor, "redditor flair")
+            await subreddit.flair.set(redditor, text="redditor flair")
 
     async def test_set__redditor_css_only(self):
         self.reddit.read_only = False
@@ -1038,7 +1038,7 @@ class TestSubredditFlair(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             await subreddit.flair.set(
-                pytest.placeholders.username, "new flair", "some class"
+                pytest.placeholders.username, css_class="some class", text="new flair"
             )
 
     async def test_update(self):

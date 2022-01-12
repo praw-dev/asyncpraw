@@ -1874,12 +1874,14 @@ class SubredditFlair:
         all_flairs = [x["user"] async for x in self()]
         return await self.update(all_flairs)
 
+    @_deprecate_args("redditor", "text", "css_class", "flair_template_id")
     async def set(
         self,
         redditor: Union["asyncpraw.models.Redditor", str],
-        text: str = "",
+        *,
         css_class: str = "",
         flair_template_id: Optional[str] = None,
+        text: str = "",
     ):
         """Set flair for a :class:`.Redditor`.
 
@@ -1899,10 +1901,10 @@ class SubredditFlair:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.flair.set("bboe", "PRAW author", css_class="mods")
+            await subreddit.flair.set("bboe", text="PRAW author", css_class="mods")
             template = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
             subreddit = await reddit.subreddit("test")
-            await subreddit.flair.set("spez", "Reddit CEO", flair_template_id=template)
+            await subreddit.flair.set("spez", text="Reddit CEO", flair_template_id=template)
 
         """
         if css_class and flair_template_id is not None:
