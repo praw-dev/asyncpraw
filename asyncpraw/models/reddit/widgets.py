@@ -238,9 +238,9 @@ class SubredditWidgets(AsyncPRAWBase):
     .. code-block:: python
 
         await widgets.mod.add_text_area(
-            "My title",
-            "**bold text**",
-            {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"},
+            short_name="My title",
+            text="**bold text**",
+            styles={"backgroundColor": "#FFFF66", "headerColor": "#3333EE"},
         )
 
     For more information, see :class:`.SubredditWidgetsModeration`.
@@ -387,7 +387,9 @@ class SubredditWidgetsModeration:
 
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         subreddit = await reddit.subreddit("test")
-        await subreddit.widgets.mod.add_text_area("My title", "**bold text**", styles)
+        await subreddit.widgets.mod.add_text_area(
+            short_name="My title", text="**bold text**", styles=styles
+        )
 
     .. note::
 
@@ -956,16 +958,17 @@ class SubredditWidgetsModeration:
         post_flair.update(other_settings)
         return await self._create_widget(post_flair)
 
+    @_deprecate_args("short_name", "text", "styles")
     async def add_text_area(
-        self, short_name: str, text: str, styles: Dict[str, str], **other_settings
+        self, *, short_name: str, styles: Dict[str, str], text: str, **other_settings
     ) -> "asyncpraw.models.TextArea":
         """Add and return a :class:`.TextArea` widget.
 
         :param short_name: A name for the widget, no longer than 30 characters.
+        :param styles: A dictionary with keys ``"backgroundColor"`` and
+            ``"headerColor"``, and values of hex colors. For example,
+            ``{"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}``.
         :param text: The Markdown text displayed in the widget.
-        :param styles: A ``dict`` with keys ``backgroundColor`` and ``headerColor``, and
-            values of hex colors. For example, ``{"backgroundColor": "#FFFF66",
-            "headerColor": "#3333EE"}``.
 
         :returns: The created :class:`.TextArea`.
 
@@ -977,7 +980,7 @@ class SubredditWidgetsModeration:
             widget_moderation = subreddit.widgets.mod
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             new_widget = await widget_moderation.add_text_area(
-                "My cool title", "*Hello* **world**!", styles
+                short_name="My cool title", text="*Hello* **world**!", styles=styles
             )
 
         """
@@ -1795,7 +1798,7 @@ class TextArea(Widget):
         widgets = subreddit.widgets
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         text_area = await widgets.mod.add_text_area(
-            "My cool title", "*Hello* **world**!", styles
+            short_name="My cool title", text="*Hello* **world**!", styles=styles
         )
 
     For more information on creation, see :meth:`.add_text_area`.
