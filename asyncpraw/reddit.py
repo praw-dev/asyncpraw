@@ -392,11 +392,11 @@ class Reddit:
         """An instance of :class:`.LiveHelper`.
 
         Provides the interface for working with :class:`.LiveThread` instances. At
-        present only new LiveThreads can be created.
+        present only new live threads can be created.
 
         .. code-block:: python
 
-            await reddit.live.create("title", "description")
+            await reddit.live.create(title="title", description="description")
 
         """
 
