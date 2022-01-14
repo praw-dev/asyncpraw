@@ -10,6 +10,7 @@ from typing import (
 )
 
 from ...const import API_PATH
+from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..listing.generator import ListingGenerator
 from .base import RedditBase
@@ -284,10 +285,11 @@ class WikiPage(RedditBase):
         self.__dict__.update(data)
         self._fetched = True
 
+    @_deprecate_args("content", "reason")
     async def edit(
-        self, content: str, reason: Optional[str] = None, **other_settings: Any
+        self, *, content: str, reason: Optional[str] = None, **other_settings: Any
     ):
-        """Edit this WikiPage's contents.
+        """Edit this wiki page's contents.
 
         :param content: The updated Markdown content of the page.
         :param reason: The reason for the revision.
