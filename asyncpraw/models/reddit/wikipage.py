@@ -142,8 +142,9 @@ class WikiPageModeration:
         response = await self.wikipage._reddit.get(url)
         return response["data"]
 
+    @_deprecate_args("listed", "permlevel")
     async def update(
-        self, listed: bool, permlevel: int, **other_settings: Any
+        self, *, listed: bool, permlevel: int, **other_settings: Any
     ) -> Dict[str, Any]:
         """Update the settings for this :class:`.WikiPage`.
 
