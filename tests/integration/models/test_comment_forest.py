@@ -18,7 +18,7 @@ class TestCommentForest(IntegrationTest):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             before_count = len(submission.comments.list())
-            skipped = await submission.comments.replace_more(None, threshold=0)
+            skipped = await submission.comments.replace_more(limit=None, threshold=0)
             assert len(skipped) == 0
             assert all(isinstance(x, Comment) for x in submission.comments.list())
             assert all(x.submission == submission for x in submission.comments.list())
@@ -27,7 +27,7 @@ class TestCommentForest(IntegrationTest):
     async def test_replace__all_large(self):
         with self.use_cassette():
             submission = await self.reddit.submission("n49rw")
-            skipped = await submission.comments.replace_more(None, threshold=0)
+            skipped = await submission.comments.replace_more(limit=None, threshold=0)
             assert len(skipped) == 0
             assert all(isinstance(x, Comment) for x in submission.comments.list())
             assert len(submission.comments.list()) > 1000
@@ -37,7 +37,7 @@ class TestCommentForest(IntegrationTest):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
             submission.comment_limit = 10
-            skipped = await submission.comments.replace_more(None, threshold=0)
+            skipped = await submission.comments.replace_more(limit=None, threshold=0)
             assert len(skipped) == 0
             assert len(submission.comments.list()) >= 500
 
@@ -47,21 +47,21 @@ class TestCommentForest(IntegrationTest):
             submission = await self.reddit.submission("3hahrw", fetch=False)
             submission.comment_sort = "old"
             await submission.load()
-            skipped = await submission.comments.replace_more(None, threshold=0)
+            skipped = await submission.comments.replace_more(limit=None, threshold=0)
             assert len(skipped) == 0
             assert len(submission.comments.list()) >= 500
 
     async def test_replace__skip_at_limit(self):
         with self.use_cassette():
             submission = await self.reddit.submission("3hahrw")
-            skipped = await submission.comments.replace_more(1)
+            skipped = await submission.comments.replace_more(limit=1)
             assert len(skipped) == 5
 
     # def test_replace__skip_below_threshold(self): # FIXME: not currently working; same with praw
     #     with self.use_cassette():
     #         submission = await self.reddit.submission("3hahrw")
     #         before_count = len(submission.comments.list())
-    #         skipped = submission.comments.replace_more(16, 5)
+    #         skipped = submission.comments.replace_more(limit=16, threshold=5)
     #         assert len(skipped) == 13
     #         assert all(x.count < 5 for x in skipped)
     #         assert all(x.submission == submission for x in skipped)
