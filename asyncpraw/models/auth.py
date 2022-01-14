@@ -9,6 +9,7 @@ from asyncprawcore import (
 )
 
 from ..exceptions import InvalidImplicitAuth, MissingRequiredAttributeException
+from ..util import _deprecate_args
 from .base import AsyncPRAWBase
 
 
@@ -60,7 +61,8 @@ class Auth(AsyncPRAWBase):
         self._reddit._core = self._reddit._authorized_core = authorized_session
         return authorizer.refresh_token
 
-    def implicit(self, access_token: str, expires_in: int, scope: str) -> None:
+    @_deprecate_args("access_token", "expires_in", "scope")
+    def implicit(self, *, access_token: str, expires_in: int, scope: str) -> None:
         """Set the active authorization to be an implicit authorization.
 
         :param access_token: The access_token obtained from Reddit's callback.
