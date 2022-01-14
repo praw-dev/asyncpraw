@@ -74,7 +74,7 @@ class TestAuth(UnitTest):
             assert expected == app.auth.limits
 
     async def test_url__installed_app(self, installed_app):
-        url = installed_app.auth.url(["dummy scope"], "dummy state")
+        url = installed_app.auth.url(scopes=["dummy scope"], state="dummy state")
         assert "client_id=dummy+client" in url
         assert "duration=permanent" in url
         assert "redirect_uri=https://dummy.tld/" in url
@@ -83,7 +83,9 @@ class TestAuth(UnitTest):
         assert "state=dummy+state" in url
 
     async def test_url__installed_app__implicit(self, installed_app):
-        url = installed_app.auth.url(["dummy scope"], "dummy state", implicit=True)
+        url = installed_app.auth.url(
+            implicit=True, scopes=["dummy scope"], state="dummy state"
+        )
         assert "client_id=dummy+client" in url
         assert "duration=temporary" in url
         assert "redirect_uri=https://dummy.tld/" in url
@@ -92,7 +94,7 @@ class TestAuth(UnitTest):
         assert "state=dummy+state" in url
 
     def test_url__web_app(self, web_app):
-        url = web_app.auth.url(["dummy scope"], "dummy state")
+        url = web_app.auth.url(scopes=["dummy scope"], state="dummy state")
         assert "client_id=dummy+client" in url
         assert "secret" not in url
         assert "redirect_uri=https://dummy.tld/" in url
@@ -102,11 +104,11 @@ class TestAuth(UnitTest):
 
     def test_url__web_app__implicit(self, web_app):
         with pytest.raises(ClientException):
-            web_app.auth.url(["dummy scope"], "dummy state", implicit=True)
+            web_app.auth.url(implicit=True, scopes=["dummy scope"], state="dummy state")
 
     async def test_url__web_app_without_redirect_uri(self):
         async with Reddit(
             client_id="dummy client", client_secret="dummy secret", user_agent="dummy"
         ) as reddit:
             with pytest.raises(ClientException):
-                reddit.auth.url(["dummy scope"], "dummy state")
+                reddit.auth.url(scopes=["dummy scope"], state="dummy state")
