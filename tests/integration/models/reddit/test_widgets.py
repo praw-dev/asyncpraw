@@ -278,28 +278,31 @@ class TestCommunityList(IntegrationTest):
 
         with self.use_cassette():
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            redditdev = await self.reddit.subreddit("redditdev")
-            subreddits = ["learnpython", redditdev]
+            subreddits = ["learnpython", Subreddit(self.reddit, "redditdev")]
             widget = await widgets.mod.add_community_list(
-                "My fav subs", subreddits, styles
+                short_name="My fav subs",
+                data=subreddits,
+                styles=styles,
+                description="My description",
             )
             assert isinstance(widget, CommunityList)
             assert widget.shortName == "My fav subs"
             assert widget.styles == styles
-            learnpython = await self.reddit.subreddit("learnpython")
-            assert learnpython in widget
+            # assert widget.description == "My description" # no longer returned
+            assert Subreddit(self.reddit, "learnpython") in widget
             assert "redditdev" in widget
 
             widget = await widget.mod.update(
                 shortName="My least fav subs :(",
                 data=["redesign"],
+                description="My new description",
             )
 
             assert isinstance(widget, CommunityList)
             assert widget.shortName == "My least fav subs :("
             assert widget.styles == styles
-            redesign = await self.reddit.subreddit("redesign")
-            assert redesign in widget
+            # assert widget.description == "My new description" # no longer returned
+            assert Subreddit(self.reddit, "redesign") in widget
 
             await widget.mod.delete()
 
