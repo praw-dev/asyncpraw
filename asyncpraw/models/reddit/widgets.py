@@ -768,19 +768,20 @@ class SubredditWidgetsModeration:
         custom_widget.update(other_settings)
         return await self._create_widget(custom_widget)
 
+    @_deprecate_args("short_name", "data", "styles")
     async def add_image_widget(
         self,
-        short_name: str,
+        *,
         data: List[Dict[str, Union[str, int]]],
+        short_name: str,
         styles: Dict[str, str],
         **other_settings,
     ) -> "asyncpraw.models.ImageWidget":
-        r"""Add and return an :class:`.ImageWidget`.
+        """Add and return an :class:`.ImageWidget`.
 
-        :param short_name: A name for the widget, no longer than 30 characters.
-        :param data: A list of ``dict``\ s as specified in `Reddit docs`_. Each ``dict``
-            has the key ``"url"`` which maps to the URL of an image hosted on Reddit's
-            servers. Images should be uploaded using :meth:`.upload_image`.
+        :param data: A list of dictionaries as specified in `Reddit docs`_. Each
+            dictionary has the key ``"url"`` which maps to the URL of an image hosted on
+            Reddit's servers. Images should be uploaded using :meth:`.upload_image`.
 
             For example:
 
@@ -801,9 +802,10 @@ class SubredditWidgetsModeration:
                     },
                 ]
 
-        :param styles: A ``dict`` with keys ``backgroundColor`` and ``headerColor``, and
-            values of hex colors. For example, ``{"backgroundColor": "#FFFF66",
-            "headerColor": "#3333EE"}``.
+        :param short_name: A name for the widget, no longer than 30 characters.
+        :param styles: A dictionary with keys ``"backgroundColor"`` and
+            ``"headerColor"``, and values of hex colors. For example,
+            ``{"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}``.
 
         :returns: The created :class:`.ImageWidget`.
 
@@ -816,7 +818,7 @@ class SubredditWidgetsModeration:
             subreddit = await reddit.subreddit("test")
             widget_moderation = subreddit.widgets.mod
             image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-            image_dicts = [
+            image_data = [
                 {
                     "width": 600,
                     "height": 450,
@@ -827,7 +829,7 @@ class SubredditWidgetsModeration:
             ]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             new_widget = await widget_moderation.add_image_widget(
-                "My cool pictures", image_dicts, styles
+                short_name="My cool pictures", data=image_data, styles=styles
             )
 
         """
@@ -1030,9 +1032,11 @@ class SubredditWidgetsModeration:
 
             my_sub = await reddit.subreddit("test")
             image_url = await my_sub.widgets.mod.upload_image("/path/to/image.jpg")
-            images = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ""}]
+            image_data = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ""}]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-            await my_sub.widgets.mod.add_image_widget("My cool pictures", images, styles)
+            await my_sub.widgets.mod.add_image_widget(
+                short_name="My cool pictures", data=image_data, styles=styles
+            )
 
         """
         img_data = {
@@ -1473,7 +1477,7 @@ class ImageWidget(Widget, BaseList):
         subreddit = await reddit.subreddit("test")
         widgets = subreddit.widgets
         image_paths = ["/path/to/image1.jpg", "/path/to/image2.png"]
-        image_dicts = [
+        image_data = [
             {
                 "width": 600,
                 "height": 450,
@@ -1484,7 +1488,7 @@ class ImageWidget(Widget, BaseList):
         ]
         styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
         image_widget = await widgets.mod.add_image_widget(
-            "My cool pictures", image_dicts, styles
+            short_name="My cool pictures", data=image_data, styles=styles
         )
 
     For more information on creation, see :meth:`.add_image_widget`.
