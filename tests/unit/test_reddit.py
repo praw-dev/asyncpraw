@@ -118,7 +118,7 @@ class TestReddit(UnitTest):
         assert str(excinfo.value) == "ids must be a list"
 
     async def test_multireddit(self, reddit):
-        multireddit = await reddit.multireddit("bboe", "aa")
+        multireddit = await reddit.multireddit(redditor="bboe", name="aa")
         assert multireddit.path == "/user/bboe/m/aa"
 
     @mock.patch(

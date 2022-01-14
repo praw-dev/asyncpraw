@@ -54,7 +54,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
             reddit.domain("imgur.com").controversial(time_filter="week")
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
             multireddit.controversial(time_filter="day")
 
             redditor = await reddit.redditor("spez")
@@ -89,7 +89,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
             reddit.domain("imgur.com").hot()
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
             multireddit.hot()
 
             redditor = await reddit.redditor("spez")
@@ -123,7 +123,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
             reddit.domain("imgur.com").new()
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
             multireddit.new()
 
             redditor = await reddit.redditor("spez")
@@ -166,7 +166,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
             reddit.domain("imgur.com").top(time_filter="week")
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
             multireddit.top(time_filter="day")
 
             redditor = await reddit.redditor("spez")

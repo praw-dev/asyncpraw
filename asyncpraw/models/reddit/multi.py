@@ -73,7 +73,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("spez", "fun")
+            multireddit = await reddit.multireddit(redditor="spez", name="fun")
             async for comment in multireddit.stream.comments():
                 print(comment)
 
@@ -82,7 +82,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "games")
+            multireddit = await reddit.multireddit(redditor="bboe", name="games")
             async for submission in multireddit.stream.submissions():
                 print(submission)
 
@@ -133,7 +133,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.add(subreddit)
 
         """
@@ -157,7 +157,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.copy("testing")
 
         """
@@ -183,7 +183,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.delete()
 
         """
@@ -203,7 +203,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.remove(subreddit)
 
         """
@@ -244,7 +244,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.update(display_name="testing")
 
         """

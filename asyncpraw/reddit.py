@@ -414,7 +414,9 @@ class Reddit:
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("samuraisam", "programming", fetch=True)
+            multireddit = await reddit.multireddit(
+                redditor="samuraisam", name="programming", fetch=True
+            )
 
         """
 

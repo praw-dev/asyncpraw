@@ -274,23 +274,26 @@ class LiveHelper(AsyncPRAWBase):
 class MultiredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with multireddits."""
 
+    @_deprecate_args("redditor", "name")
     async def __call__(
         self,
-        redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         name: str,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
         fetch: bool = False,
     ) -> "asyncpraw.models.Multireddit":
-        """Return an instance of :class:`.Multireddit`.
+        """Return a lazy instance of :class:`.Multireddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can
         do:
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("redditor", "multi", fetch=True)
+            multireddit = await reddit.multireddit(redditor="redditor", name="multi", fetch=True)
             async for comment in multireddit.comments(limit=25):
                 print(comment.author)
 
+        :param name: The name of the multireddit.
         :param redditor: A redditor name or :class:`.Redditor` instance who owns the
             multireddit.
         :param name: The name of the multireddit.
