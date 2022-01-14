@@ -327,7 +327,12 @@ class TestCustomWidget(IntegrationTest):
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
             widget = await widgets.mod.add_custom_widget(
-                "My widget", "# Hello world!", "/**/", 200, image_dicts, styles
+                short_name="My widget",
+                text="# Hello world!",
+                css="/**/",
+                height=200,
+                image_data=image_dicts,
+                styles=styles,
             )
 
             assert isinstance(widget, CustomWidget)
