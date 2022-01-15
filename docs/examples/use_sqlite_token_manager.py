@@ -48,7 +48,7 @@ async def main():
         )
         return 1
 
-    refresh_token_manager = SQLiteTokenManager(DATABASE_PATH, key=sys.argv[1])
+    refresh_token_manager = SQLiteTokenManager(database=DATABASE_PATH, key=sys.argv[1])
     reddit = asyncpraw.Reddit(
         token_manager=refresh_token_manager,
         user_agent="sqlite_token_manager/v0 by u/bboe",
