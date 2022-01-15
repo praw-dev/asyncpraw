@@ -6,6 +6,8 @@ from functools import wraps
 from typing import Any, AsyncGenerator, Callable, List, Optional, Set
 from warnings import warn
 
+from ..util import _deprecate_args
+
 
 class BoundedSet:
     """A set with a maximum size that evicts the oldest items when necessary.
@@ -52,7 +54,7 @@ class ExponentialCounter:
         self._base = 1
         self._max = max_counter
 
-    def counter(self) -> int:
+    def counter(self) -> Union[int, float]:
         """Increment the counter and return the current value with jitter."""
         max_jitter = self._base / 16.0
         value = self._base + random.random() * max_jitter - max_jitter / 2
@@ -83,18 +85,19 @@ def deprecate_lazy(func):  # noqa: D401
     return wrapper
 
 
+@_deprecate_args("permissions", "known_permissions")
 def permissions_string(
-    permissions: Optional[List[str]], known_permissions: Set[str]
+    *, known_permissions: Set[str], permissions: Optional[List[str]]
 ) -> str:
     """Return a comma separated string of permission changes.
 
+    :param known_permissions: A set of strings representing the available permissions.
     :param permissions: A list of strings, or ``None``. These strings can exclusively
         contain ``+`` or ``-`` prefixes, or contain no prefixes at all. When prefixed,
         the resulting string will simply be the joining of these inputs. When not
         prefixed, all permissions are considered to be additions, and all permissions in
         the ``known_permissions`` set that aren't provided are considered to be
         removals. When ``None``, the result is ``"+all"``.
-    :param known_permissions: A set of strings representing the available permissions.
 
     """
     if permissions is None:
