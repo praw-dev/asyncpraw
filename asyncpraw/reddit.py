@@ -441,7 +441,7 @@ class Reddit:
 
         .. code-block:: python
 
-            await reddit.subreddit.create("coolnewsubname")
+            await reddit.subreddit.create(name="coolnewsubname")
 
         To obtain a lazy :class:`.Subreddit` instance run:
 

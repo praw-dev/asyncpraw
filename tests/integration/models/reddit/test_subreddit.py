@@ -76,10 +76,10 @@ class TestSubreddit(IntegrationTest):
         new_name = pytest.placeholders.test_subreddit
         with self.use_cassette():
             subreddit = await self.reddit.subreddit.create(
-                name=new_name,
-                title="Sub",
+                new_name,
                 link_type="any",
                 subreddit_type="public",
+                title="Sub",
                 wikimode="disabled",
                 wiki_edit_age=0,
                 wiki_edit_karma=0,
@@ -94,9 +94,9 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(RedditAPIException) as excinfo:
                 await self.reddit.subreddit.create(
                     "redditdev",
-                    title="redditdev",
                     link_type="any",
                     subreddit_type="public",
+                    title="redditdev",
                     wikimode="disabled",
                 )
             assert excinfo.value.items[0].error_type == "SUBREDDIT_EXISTS"
@@ -107,10 +107,10 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(RedditAPIException) as excinfo:
                 # Supplying invalid setting for link_type
                 await self.reddit.subreddit.create(
-                    name="PRAW_iavynavff2",
-                    title="sub",
+                    "PRAW_iavynavff2",
                     link_type="abcd",
                     subreddit_type="public",
+                    title="sub",
                     wikimode="disabled",
                 )
             assert excinfo.value.items[0].error_type == "INVALID_OPTION"
@@ -121,10 +121,10 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(RedditAPIException) as excinfo:
                 # Not supplying required field wiki_edit_age.
                 await self.reddit.subreddit.create(
-                    name="PRAW_iavynavff3",
-                    title=None,
+                    "PRAW_iavynavff3",
                     link_type="any",
                     subreddit_type="public",
+                    title=None,
                     wikimode="disabled",
                     wiki_edit_karma=0,
                     comment_score_hide_mins=0,
