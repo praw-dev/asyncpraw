@@ -46,7 +46,7 @@ class TestMultireddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             multireddit = await self.reddit.multireddit.create(
-                "Async PRAW create test", subreddits=["redditdev"]
+                display_name="Async PRAW create test", subreddits=["redditdev"]
             )
         assert multireddit.display_name == "Async PRAW create test"
         assert multireddit.name == "async_praw_create_test"
