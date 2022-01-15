@@ -2901,9 +2901,9 @@ class SubredditModerationStream:
         """
         return stream_generator(
             self.subreddit.mod.log,
+            attribute_name="id",
             action=action,
             mod=mod,
-            attribute_name="id",
             **stream_options,
         )
 
@@ -2943,11 +2943,11 @@ class SubredditModerationStream:
             self.subreddit = Subreddit(self.subreddit._reddit, "all")
         return stream_generator(
             self.subreddit.modmail.conversations,
+            attribute_name="id",
+            exclude_before=True,
             other_subreddits=other_subreddits,
             sort=sort,
             state=state,
-            attribute_name="id",
-            exclude_before=True,
             **stream_options,
         )
 
