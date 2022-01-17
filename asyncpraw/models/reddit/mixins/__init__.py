@@ -3,6 +3,7 @@ from json import dumps
 from typing import TYPE_CHECKING, Optional
 
 from ....const import API_PATH
+from ....util import _deprecate_args
 from .editable import EditableMixin
 from .fullname import FullnameMixin
 from .gildable import GildableMixin
@@ -72,12 +73,14 @@ class ThingModerationMixin:
             API_PATH["approve"], data={"id": self.thing.fullname}
         )
 
-    async def distinguish(self, how: str = "yes", sticky: bool = False):
+    @_deprecate_args("how", "sticky")
+    async def distinguish(self, *, how: str = "yes", sticky: bool = False):
         """Distinguish a :class:`.Comment` or :class:`.Submission`.
 
         :param how: One of ``"yes"``, ``"no"``, ``"admin"``, or ``"special"``. ``"yes"``
             adds a moderator level distinguish. ``"no"`` removes any distinction.
-            ``"admin"`` and ``"special"`` require special user privileges to use.
+            ``"admin"`` and ``"special"`` require special user privileges to use
+            (default ``"yes"``).
         :param sticky: :class:`.Comment` is stickied if ``True``, placing it at the top
             of the comment page regardless of score. If thing is not a top-level
             comment, this parameter is silently ignored (default ``False``).
@@ -88,7 +91,7 @@ class ThingModerationMixin:
 
             # distinguish and sticky a comment:
             comment = await reddit.comment("dkk4qjd", fetch=False)
-            await comment.mod.distinguish(how="yes", sticky=True)
+            await comment.mod.distinguish(sticky=True)
             # undistinguish a submission:
             submission = await reddit.submission("5or86n", fetch=False)
             await submission.mod.distinguish(how="no")
