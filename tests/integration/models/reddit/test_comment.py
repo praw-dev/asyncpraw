@@ -345,7 +345,9 @@ class TestCommentModeration(IntegrationTest):
             await mod.remove()
             message = "message"
             res = [
-                await mod.send_removal_message(message, "title", type)
+                await mod.send_removal_message(
+                    message=message, title="title", type=type
+                )
                 for type in ("public", "private", "private_exposed")
             ]
             assert isinstance(res[0], Comment)
@@ -361,7 +363,9 @@ class TestCommentModeration(IntegrationTest):
             comment = await self.reddit.comment("fx1jgsp")
             await comment.mod.remove()
             with pytest.raises(RedditAPIException) as excinfo:
-                await comment.mod.send_removal_message("message", "a" * 51)
+                await comment.mod.send_removal_message(
+                    message="message", title="a" * 51
+                )
             exception = excinfo.value
             assert "title" == exception.field
             assert "TOO_LONG" == exception.error_type

@@ -461,7 +461,9 @@ class TestSubmissionModeration(IntegrationTest):
             await mod.remove()
             message = "message"
             res = [
-                await mod.send_removal_message(message, "Be Kind", type)
+                await mod.send_removal_message(
+                    message=type, title="title", type=message
+                )
                 for type in ("public", "private", "private_exposed")
             ]
             assert isinstance(res[0], Comment)

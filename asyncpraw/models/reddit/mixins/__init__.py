@@ -194,8 +194,10 @@ class ThingModerationMixin:
         if any([reason_id, mod_note]):
             await self._add_removal_reason(mod_note, reason_id)
 
+    @_deprecate_args("message", "title", "type")
     async def send_removal_message(
         self,
+        *,
         message: str,
         title: str = "ignored",
         type: str = "public",  # pylint: disable=redefined-builtin

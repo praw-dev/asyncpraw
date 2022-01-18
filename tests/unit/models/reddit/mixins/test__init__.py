@@ -9,5 +9,5 @@ class TestThingModerationMixin(UnitTest):
     async def test_must_be_extended(self):
         with pytest.raises(NotImplementedError):
             await ThingModerationMixin().send_removal_message(
-                "public", "title", "message"
+                message="public", title="title", type="message"
             )
