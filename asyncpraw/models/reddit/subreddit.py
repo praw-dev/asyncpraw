@@ -707,8 +707,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     async def _upload_media(
         self,
-        media_path: str,
+        *,
         expected_mime_prefix: Optional[str] = None,
+        media_path: str,
         upload_type: str = "link",
     ):
         """Upload media and return its URL and a websocket (Undocumented endpoint).
@@ -780,7 +781,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """
         self._validate_inline_media(inline_media)
         inline_media.media_id, _ = await self._upload_media(
-            inline_media.path, upload_type="selfpost"
+            media_path=inline_media.path, upload_type="selfpost"
         )
         return inline_media
 
@@ -1197,8 +1198,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                     "outbound_url": image.get("outbound_url", ""),
                     "media_id": (
                         await self._upload_media(
-                            image["image_path"],
                             expected_mime_prefix="image",
+                            media_path=image["image_path"],
                             upload_type="gallery",
                         )
                     )[0],
@@ -1324,7 +1325,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 data[key] = value
 
         image_url, websocket_url = await self._upload_media(
-            image_path, expected_mime_prefix="image"
+            expected_mime_prefix="image", media_path=image_path
         )
         data.update(kind="image", url=image_url)
         if without_websockets:
@@ -1551,9 +1552,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 data[key] = value
 
         video_url, websocket_url = await self._upload_media(
-            video_path, expected_mime_prefix="video"
+            expected_mime_prefix="video", media_path=video_path
         )
-        video_poster_url, _ = await self._upload_media(thumbnail_path)
+        video_poster_url, _ = await self._upload_media(media_path=thumbnail_path)
         data.update(
             kind="videogif" if videogif else "video",
             url=video_url,
