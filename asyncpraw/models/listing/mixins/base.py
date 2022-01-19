@@ -7,14 +7,6 @@ from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 
-def _prepare(asyncpraw_object, arguments_dict, target):
-    """Fix for :class:`.Redditor` methods that use a query param rather than subpath."""
-    if asyncpraw_object.__dict__.get("_listing_use_sort"):
-        AsyncPRAWBase._safely_add_arguments(arguments_dict, "params", sort=target)
-        return asyncpraw_object._path
-    return urljoin(asyncpraw_object._path, target)
-
-
 class BaseListingMixin(AsyncPRAWBase):
     """Adds minimum set of methods that apply to all listing objects."""
 
@@ -30,6 +22,13 @@ class BaseListingMixin(AsyncPRAWBase):
         if time_filter not in BaseListingMixin.VALID_TIME_FILTERS:
             valid_time_filters = ", ".join(BaseListingMixin.VALID_TIME_FILTERS)
             raise ValueError(f"time_filter must be one of: {valid_time_filters}")
+
+    def _prepare(self, *, arguments, sort):
+        """Fix for :class:`.Redditor` methods that use a query param rather than subpath."""
+        if self.__dict__.get("_listing_use_sort"):
+            self._safely_add_arguments(arguments, "params", sort=sort)
+            return self._path
+        return urljoin(self._path, sort)
 
     @_deprecate_args("time_filter")
     def controversial(
@@ -72,7 +71,7 @@ class BaseListingMixin(AsyncPRAWBase):
         """
         self._validate_time_filter(time_filter)
         self._safely_add_arguments(generator_kwargs, "params", t=time_filter)
-        url = _prepare(self, generator_kwargs, "controversial")
+        url = self._prepare(arguments=generator_kwargs, sort="controversial")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     def hot(
@@ -106,7 +105,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
         """
         generator_kwargs.setdefault("params", {})
-        url = _prepare(self, generator_kwargs, "hot")
+        url = self._prepare(arguments=generator_kwargs, sort="hot")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     def new(
@@ -140,7 +139,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
         """
         generator_kwargs.setdefault("params", {})
-        url = _prepare(self, generator_kwargs, "new")
+        url = self._prepare(arguments=generator_kwargs, sort="new")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     @_deprecate_args("time_filter")
@@ -184,5 +183,5 @@ class BaseListingMixin(AsyncPRAWBase):
         """
         self._validate_time_filter(time_filter)
         self._safely_add_arguments(generator_kwargs, "params", t=time_filter)
-        url = _prepare(self, generator_kwargs, "top")
+        url = self._prepare(arguments=generator_kwargs, sort="top")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
