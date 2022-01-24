@@ -20,7 +20,7 @@ class CommentForest:
     """
 
     @staticmethod
-    def _gather_more_comments(tree, parent_tree=None):
+    def _gather_more_comments(tree, *, parent_tree=None):
         """Return a list of :class:`.MoreComments` objects obtained from tree."""
         more_comments = []
         queue = [(None, x) for x in tree]
@@ -254,7 +254,9 @@ class CommentForest:
                 remaining -= 1
 
             # Add new MoreComment objects to the heap of more_comments
-            for more in self._gather_more_comments(new_comments, self._comments):
+            for more in self._gather_more_comments(
+                new_comments, parent_tree=self._comments
+            ):
                 more.submission = self._submission
                 heappush(more_comments, more)
             # Insert all items into the tree
