@@ -3933,7 +3933,7 @@ class SubredditStylesheet:
         await self.subreddit._reddit.patch(url, data=style_data)
 
     async def _upload_image(
-        self, image_path: str, data: Dict[str, Union[str, Any]]
+        self, *, data: Dict[str, Union[str, Any]], image_path: str
     ) -> Dict[str, Any]:
         with open(image_path, "rb") as image:
             header = image.read(len(JPEG_HEADER))
@@ -4137,7 +4137,7 @@ class SubredditStylesheet:
 
         """
         return await self._upload_image(
-            image_path, {"name": name, "upload_type": "img"}
+            data={"name": name, "upload_type": "img"}, image_path=image_path
         )
 
     async def upload_banner(self, image_path: str):
@@ -4256,7 +4256,9 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload_header("header.png")
 
         """
-        return await self._upload_image(image_path, {"upload_type": "header"})
+        return await self._upload_image(
+            data={"upload_type": "header"}, image_path=image_path
+        )
 
     async def upload_mobile_header(self, image_path: str) -> Dict[str, str]:
         """Upload an image to be used as the :class:`.Subreddit`'s mobile header.
@@ -4281,7 +4283,9 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload_mobile_header("header.png")
 
         """
-        return await self._upload_image(image_path, {"upload_type": "banner"})
+        return await self._upload_image(
+            data={"upload_type": "banner"}, image_path=image_path
+        )
 
     async def upload_mobile_icon(self, image_path: str) -> Dict[str, str]:
         """Upload an image to be used as the :class:`.Subreddit`'s mobile icon.
@@ -4306,7 +4310,9 @@ class SubredditStylesheet:
             await subreddit.stylesheet.upload_mobile_icon("icon.png")
 
         """
-        return await self._upload_image(image_path, {"upload_type": "icon"})
+        return await self._upload_image(
+            data={"upload_type": "icon"}, image_path=image_path
+        )
 
 
 class SubredditWiki:
