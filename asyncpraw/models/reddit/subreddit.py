@@ -3953,7 +3953,7 @@ class SubredditStylesheet:
                 raise RedditAPIException([[error_type, error_value, None]])
             return response
 
-    async def _upload_style_asset(self, image_path: str, image_type: str) -> str:
+    async def _upload_style_asset(self, *, image_path: str, image_type: str) -> str:
         data = {"imagetype": image_type, "filepath": basename(image_path)}
         data["mimetype"] = "image/jpeg"
         if image_path.lower().endswith(".png"):
@@ -4161,7 +4161,9 @@ class SubredditStylesheet:
 
         """
         image_type = "bannerBackgroundImage"
-        image_url = await self._upload_style_asset(image_path, image_type)
+        image_url = await self._upload_style_asset(
+            image_path=image_path, image_type=image_type
+        )
         await self._update_structured_styles({image_type: image_url})
 
     @_deprecate_args("image_path", "align")
@@ -4201,7 +4203,9 @@ class SubredditStylesheet:
             alignment["bannerPositionedImagePosition"] = align
 
         image_type = "bannerPositionedImage"
-        image_url = await self._upload_style_asset(image_path, image_type)
+        image_url = await self._upload_style_asset(
+            image_path=image_path, image_type=image_type
+        )
         style_data = {image_type: image_url}
         if alignment:
             style_data.update(alignment)
@@ -4230,7 +4234,9 @@ class SubredditStylesheet:
 
         """
         image_type = "secondaryBannerPositionedImage"
-        image_url = await self._upload_style_asset(image_path, image_type)
+        image_url = await self._upload_style_asset(
+            image_path=image_path, image_type=image_type
+        )
         await self._update_structured_styles({image_type: image_url})
 
     async def upload_header(self, image_path: str) -> Dict[str, str]:
