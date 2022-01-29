@@ -655,7 +655,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 actual=int(actual), maximum_size=int(maximum_size)
             )
 
-    async def _submit_media(self, data: dict, timeout: int, websocket_url: str = None):
+    async def _submit_media(
+        self, *, data: Dict[Any, Any], timeout: int, websocket_url: Optional[str] = None
+    ):
         """Submit and return an `image`, `video`, or `videogif`.
 
         This is a helper method for submitting posts that are not link posts or self
@@ -1331,9 +1333,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if without_websockets:
             websocket_url = None
         return await self._submit_media(
-            data,
-            timeout,
-            websocket_url=websocket_url,
+            data=data, timeout=timeout, websocket_url=websocket_url
         )
 
     @_deprecate_args(
@@ -1564,9 +1564,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if without_websockets:
             websocket_url = None
         return await self._submit_media(
-            data,
-            timeout,
-            websocket_url=websocket_url,
+            data=data, timeout=timeout, websocket_url=websocket_url
         )
 
     async def subscribe(
