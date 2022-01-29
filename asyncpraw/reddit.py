@@ -321,7 +321,9 @@ class Reddit:
             )
         self._check_for_update()
         self._prepare_objector()
-        self.requestor = self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
+        self.requestor = self._prepare_asyncprawcore(
+            requestor_class=requestor_class, requestor_kwargs=requestor_kwargs
+        )
 
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
@@ -574,7 +576,7 @@ class Reddit:
         }
         self._objector = Objector(self, mappings)
 
-    def _prepare_asyncprawcore(self, requestor_class=None, requestor_kwargs=None):
+    def _prepare_asyncprawcore(self, *, requestor_class=None, requestor_kwargs=None):
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
 
