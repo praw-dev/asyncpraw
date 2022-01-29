@@ -201,9 +201,10 @@ class WikiPage(RedditBase):
 
     @staticmethod
     async def _revision_generator(
+        *,
+        generator_kwargs: Dict[str, Any],
         subreddit: "asyncpraw.models.Subreddit",
         url: str,
-        generator_kwargs: Dict[str, Any],
     ) -> AsyncGenerator[
         Dict[str, Optional[Union[Redditor, "WikiPage", str, int, bool]]], None
     ]:
@@ -385,4 +386,6 @@ class WikiPage(RedditBase):
         url = API_PATH["wiki_page_revisions"].format(
             subreddit=self.subreddit, page=self.name
         )
-        return self._revision_generator(self.subreddit, url, generator_kwargs)
+        return self._revision_generator(
+            generator_kwargs=generator_kwargs, subreddit=self.subreddit, url=url
+        )
