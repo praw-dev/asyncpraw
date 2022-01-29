@@ -626,7 +626,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             )
         super().__setattr__(attribute, value)
 
-    def _chunk(self, other_submissions, chunk_size):
+    def _chunk(self, *, chunk_size, other_submissions):
         all_submissions = [self.fullname]
         if other_submissions:
             all_submissions += [x.fullname for x in other_submissions]
@@ -698,7 +698,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             :meth:`.unhide`
 
         """
-        for submissions in self._chunk(other_submissions, 50):
+        for submissions in self._chunk(
+            chunk_size=50, other_submissions=other_submissions
+        ):
             await self._reddit.post(API_PATH["hide"], data={"id": submissions})
 
     async def unhide(
@@ -722,7 +724,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             :meth:`.hide`
 
         """
-        for submissions in self._chunk(other_submissions, 50):
+        for submissions in self._chunk(
+            chunk_size=50, other_submissions=other_submissions
+        ):
             await self._reddit.post(API_PATH["unhide"], data={"id": submissions})
 
     @_deprecate_args(
