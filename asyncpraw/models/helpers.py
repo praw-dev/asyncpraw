@@ -431,8 +431,8 @@ class SubredditHelper(AsyncPRAWBase):
         """
         await Subreddit._create_or_update(
             _reddit=self._reddit,
-            name=name,
             link_type=link_type,
+            name=name,
             subreddit_type=subreddit_type,
             title=title or name,
             wikimode=wikimode,
