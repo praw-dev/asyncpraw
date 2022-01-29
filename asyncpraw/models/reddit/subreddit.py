@@ -2403,7 +2403,7 @@ class SubredditModeration:
     """
 
     @staticmethod
-    def _handle_only(only: Optional[str], generator_kwargs: Dict[str, Any]):
+    def _handle_only(*, generator_kwargs: Dict[str, Any], only: Optional[str]):
         if only is not None:
             if only == "submissions":
                 only = "links"
@@ -2445,7 +2445,7 @@ class SubredditModeration:
                 print(item)
 
         """
-        self._handle_only(only, generator_kwargs)
+        self._handle_only(generator_kwargs=generator_kwargs, only=only)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_edited"].format(subreddit=self.subreddit),
@@ -2550,7 +2550,7 @@ class SubredditModeration:
                 print(item)
 
         """
-        self._handle_only(only, generator_kwargs)
+        self._handle_only(generator_kwargs=generator_kwargs, only=only)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_modqueue"].format(subreddit=self.subreddit),
@@ -2625,7 +2625,7 @@ class SubredditModeration:
                 print("Mod Reports: {}".format(reported_item.mod_reports))
 
         """
-        self._handle_only(only, generator_kwargs)
+        self._handle_only(generator_kwargs=generator_kwargs, only=only)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_reports"].format(subreddit=self.subreddit),
@@ -2660,7 +2660,7 @@ class SubredditModeration:
                 print(item)
 
         """
-        self._handle_only(only, generator_kwargs)
+        self._handle_only(generator_kwargs=generator_kwargs, only=only)
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_spam"].format(subreddit=self.subreddit),
