@@ -7,6 +7,7 @@ from asyncprawcore import Conflict
 from ..const import API_PATH
 from ..exceptions import ReadOnlyException
 from ..models import Preferences
+from ..util import _deprecate_args
 from ..util.cache import cachedproperty
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
@@ -129,8 +130,9 @@ class User(AsyncPRAWBase):
             karma_map[subreddit] = row
         return karma_map
 
+    @_deprecate_args("use_cache")
     async def me(
-        self, use_cache: bool = True
+        self, *, use_cache: bool = True
     ) -> Optional["asyncpraw.models.Redditor"]:  # pylint: disable=invalid-name
         """Return a :class:`.Redditor` instance for the authenticated user.
 
