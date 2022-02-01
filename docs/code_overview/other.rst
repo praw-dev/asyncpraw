@@ -127,6 +127,7 @@ them bound to an attribute of one of the Async PRAW models.
     other/modmailmessage
     other/polldata
     other/polloption
+    other/partialredditor
     other/preferences
     other/redditbase
     other/redditorlist
