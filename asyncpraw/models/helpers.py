@@ -24,7 +24,7 @@ class DraftHelper(AsyncPRAWBase):
     """
 
     async def __call__(
-        self, *, draft_id: Optional[str] = None, fetch: bool = True
+        self, draft_id: Optional[str] = None, fetch: bool = True
     ) -> Union[List["asyncpraw.models.Draft"], "asyncpraw.models.Draft"]:
         """Return a list of :class:`.Draft` instances.
 
@@ -41,7 +41,7 @@ class DraftHelper(AsyncPRAWBase):
         .. code-block:: python
 
             draft_id = "124862bc-e1e9-11eb-aa4f-e68667a77cbb"
-            draft = await reddit.drafts(draft_id=draft_id)
+            draft = await reddit.drafts(draft_id)
             print(draft)
 
         """

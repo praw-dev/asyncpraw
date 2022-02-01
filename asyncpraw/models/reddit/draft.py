@@ -135,7 +135,7 @@ class Draft(RedditBase):
 
         .. code-block:: python
 
-            draft = await reddit.drafts(draft_id="124862bc-e1e9-11eb-aa4f-e68667a77cbb")
+            draft = await reddit.drafts("124862bc-e1e9-11eb-aa4f-e68667a77cbb")
             await draft.delete()
 
         """
@@ -194,7 +194,7 @@ class Draft(RedditBase):
 
         .. code-block:: python
 
-            draft = await reddit.drafts(draft_id="5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
+            draft = await reddit.drafts("5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
             await draft.update(title="New title")
 
         """
@@ -265,14 +265,14 @@ class Draft(RedditBase):
 
         .. code-block:: python
 
-            draft = await reddit.drafts(draft_id="5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
+            draft = await reddit.drafts("5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
             submission = await draft.submit()
 
         For example, to submit a draft but use a different title than what is set:
 
         .. code-block:: python
 
-            draft = reddit.drafts(draft_id="5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
+            draft = reddit.drafts("5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
             submission = draft.submit(title="New Title")
 
         .. seealso::
