@@ -320,7 +320,7 @@ class LiveThread(RedditBase):
 
             thread = await reddit.live("ukaeu1ik4sw5")
             async for contributor in thread.contributor():
-                # prints `(Redditor(name="Acidtwist"), [u"all"])`
+                # prints `Redditor(name="Acidtwist") [u"all"]`
                 print(contributor, contributor.permissions)
 
         """
