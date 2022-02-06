@@ -247,7 +247,7 @@ class TestComment(IntegrationTest):
     async def test_save(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Comment(self.reddit, "fx19hsi").save("foo")
+            await Comment(self.reddit, "fx19hsi").save(category="foo")
 
     async def test_unsave(self):
         self.reddit.read_only = False
