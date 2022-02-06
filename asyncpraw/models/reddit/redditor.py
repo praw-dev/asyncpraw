@@ -263,7 +263,8 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         """
         return await self._reddit.get(API_PATH["friend_v1"].format(user=self))
 
-    async def gild(self, months: int = 1):
+    @_deprecate_args("months")
+    async def gild(self, *, months: int = 1):
         """Gild the :class:`.Redditor`.
 
         :param months: Specifies the number of months to gild up to 36 (default: ``1``).
