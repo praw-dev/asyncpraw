@@ -2538,8 +2538,9 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
+    @_deprecate_args("only")
     def modqueue(
-        self, only: Optional[str] = None, **generator_kwargs: Any
+        self, *, only: Optional[str] = None, **generator_kwargs: Any
     ) -> AsyncIterator[
         Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]
     ]:
