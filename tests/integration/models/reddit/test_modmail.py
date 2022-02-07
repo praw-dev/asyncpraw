@@ -1,4 +1,3 @@
-import sys
 from datetime import datetime
 
 from asynctest import mock
@@ -45,22 +44,12 @@ class TestModmailConversation(IntegrationTest):
         subreddit = Subreddit(self.reddit, "all")
         with self.use_cassette():
             conversation = await subreddit.modmail("g46rw")
-            await conversation.mute(7)
+            await conversation.mute(num_days=7)
             conversation = await subreddit.modmail("g46rw")
             assert conversation.user.mute_status["isMuted"]
-            if sys.version_info >= (3, 7, 0):
-                diff = datetime.fromisoformat(
-                    conversation.user.mute_status["endDate"]
-                ) - datetime.fromisoformat(conversation.mod_actions[-1].date)
-            else:
-                end_date = "".join(
-                    conversation.user.mute_status["endDate"].rsplit(":", 1)
-                )
-                start_date = "".join(conversation.mod_actions[-1].date.rsplit(":", 1))
-                date_format = "%Y-%m-%dT%H:%M:%S.%f%z"
-                diff = datetime.strptime(end_date, date_format) - datetime.strptime(
-                    start_date, date_format
-                )
+            diff = datetime.fromisoformat(
+                conversation.user.mute_status["endDate"]
+            ) - datetime.fromisoformat(conversation.mod_actions[-1].date)
             assert diff.days == 6  # 6 here because it is not 7 whole days
 
     @mock.patch("asyncio.sleep", return_value=None)

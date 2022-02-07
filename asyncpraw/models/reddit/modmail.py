@@ -179,7 +179,8 @@ class ModmailConversation(RedditBase):
         """
         await self._reddit.post(API_PATH["modmail_highlight"].format(id=self.id))
 
-    async def mute(self, num_days=3):
+    @_deprecate_args("num_days")
+    async def mute(self, *, num_days=3):
         """Mute the non-mod user associated with the conversation.
 
         :param num_days: Duration of mute in days. Valid options are ``3``, ``7``, or
@@ -199,7 +200,7 @@ class ModmailConversation(RedditBase):
 
             subreddit = await reddit.subreddit("test")
             conversation = await subreddit.modmail("2gmz")
-            await conversation.mute(7)
+            await conversation.mute(num_days=7)
 
         """
         if num_days != 3:  # no need to pass params if it's the default
