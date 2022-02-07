@@ -2972,8 +2972,9 @@ class SubredditModerationStream:
             **stream_options,
         )
 
+    @_deprecate_args("only")
     def modqueue(
-        self, only: Optional[str] = None, **stream_options: Any
+        self, *, only: Optional[str] = None, **stream_options: Any
     ) -> AsyncGenerator[
         Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
     ]:
