@@ -3403,8 +3403,10 @@ class ModeratorRelationship(SubredditRelationship):
         url = API_PATH["friend"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
+    @_deprecate_args("redditor")
     def invited(
         self,
+        *,
         redditor: Optional[Union[str, "asyncpraw.models.Redditor"]] = None,
         **generator_kwargs: Any,
     ) -> AsyncIterator["asyncpraw.models.Redditor"]:
