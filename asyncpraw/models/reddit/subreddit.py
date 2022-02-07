@@ -1568,8 +1568,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             data=data, timeout=timeout, websocket_url=websocket_url
         )
 
+    @_deprecate_args("other_subreddits")
     async def subscribe(
-        self, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None
+        self, *, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None
     ):
         """Subscribe to the subreddit.
 
