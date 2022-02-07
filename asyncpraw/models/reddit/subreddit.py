@@ -3022,8 +3022,9 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.reports, only=only, **stream_options)
 
+    @_deprecate_args("only")
     def spam(
-        self, only: Optional[str] = None, **stream_options: Any
+        self, *, only: Optional[str] = None, **stream_options: Any
     ) -> AsyncGenerator[
         Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
     ]:
