@@ -194,7 +194,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             with pytest.raises(NotFound):
-                await subreddit.sticky(2)
+                await subreddit.sticky(number=2)
 
     async def test_search(self):
         with self.use_cassette():

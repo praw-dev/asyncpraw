@@ -901,7 +901,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         url = API_PATH["search"].format(subreddit=self)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    async def sticky(self, number: int = 1) -> "asyncpraw.models.Submission":
+    @_deprecate_args("number")
+    async def sticky(self, *, number: int = 1) -> "asyncpraw.models.Submission":
         """Return a :class:`.Submission` object for a sticky of the subreddit.
 
         :param number: Specify which sticky to return. 1 appears at the top (default:
