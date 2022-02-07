@@ -2430,8 +2430,9 @@ class SubredditModeration:
         url = API_PATH["accept_mod_invite"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
+    @_deprecate_args("only")
     def edited(
-        self, only: Optional[str] = None, **generator_kwargs: Any
+        self, *, only: Optional[str] = None, **generator_kwargs: Any
     ) -> AsyncIterator[
         Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
     ]:
