@@ -2871,8 +2871,9 @@ class SubredditModerationStream:
         """
         self.subreddit = subreddit
 
+    @_deprecate_args("only")
     def edited(
-        self, only: Optional[str] = None, **stream_options: Any
+        self, *, only: Optional[str] = None, **stream_options: Any
     ) -> AsyncGenerator[
         Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"], None
     ]:
