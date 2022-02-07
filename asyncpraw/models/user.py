@@ -85,16 +85,17 @@ class User(AsyncPRAWBase):
             self._reddit, API_PATH["my_contributor"], **generator_kwargs
         )
 
+    @_deprecate_args("user")
     async def friends(
-        self, user: Optional[Union[str, "asyncpraw.models.Redditor"]] = None
+        self, *, user: Optional[Union[str, "asyncpraw.models.Redditor"]] = None
     ) -> Union[List["asyncpraw.models.Redditor"], "asyncpraw.models.Redditor"]:
         r"""Return a :class:`.RedditorList` of friends or a :class:`.Redditor` in the friends list.
 
         :param user: Checks to see if you are friends with the redditor. Either an
             instance of :class:`.Redditor` or a string can be given.
 
-        :returns: A list of :class:`.Redditor`\ s, or a :class:`.Redditor` if you are
-            friends with the given :class:`.Redditor`. The :class:`.Redditor` also has
+        :returns: A list of :class:`.Redditor`\ s, or a single :class:`.Redditor` if
+            ``user`` is specified. The :class:`.Redditor` instance(s) returned also has
             friend attributes.
 
         :raises: An instance of ``asyncprawcore.exceptions.BadRequest`` if you are not
