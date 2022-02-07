@@ -1,5 +1,5 @@
 """Provide the Message class."""
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from ...const import API_PATH
 from .base import RedditBase
@@ -70,9 +70,51 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
         """Return the class's kind."""
         return self._reddit.config.kinds["message"]
 
+    @property
+    def parent(self) -> Optional["asyncpraw.models.Message"]:
+        """Return the parent of the message if it exists.
+
+        .. note::
+
+            If the message is from an inbox listing, the returned parent will be lazy
+            and must be fetched manually. For example:
+
+            .. code-block:: python
+
+                async for message in reddit.inbox.all(limit=1):
+                    parent = message.parent
+                    await parent.load()
+                    print(parent.body)
+
+        """
+        if not self._parent:
+            if not self._fetched:
+                raise AttributeError(
+                    "Message must be fetched with `.load()` before accessing the parent."
+                )
+            if self.parent_id:
+                self._parent = Message(
+                    self._reddit, {"id": self.parent_id.split("_")[1]}
+                )
+                self._parent._fetched = False
+        return self._parent
+
+    @parent.setter
+    def parent(self, value):
+        self._parent = value
+
     def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
         """Initialize a :class:`.Message` instance."""
         super().__init__(reddit, _data=_data, _fetched=True)
+        self._parent = None
+        for reply in _data.get("replies", []):
+            if reply.parent_id == self.fullname:
+                reply.parent = self
+
+    async def _fetch(self):
+        message = await self._reddit.inbox.message(self.id)
+        self.__dict__.update(message.__dict__)
+        self._fetched = True
 
     async def delete(self):
         """Delete the message.
