@@ -2061,7 +2061,7 @@ class SubredditFlairTemplates:
         }
         await self.subreddit._reddit.post(url, data=data)
 
-    async def _clear(self, is_link: Optional[bool] = None):
+    async def _clear(self, *, is_link: Optional[bool] = None):
         url = API_PATH["flairtemplateclear"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(
             url, data={"flair_type": self.flair_type(is_link)}
