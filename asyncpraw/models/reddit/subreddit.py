@@ -2650,8 +2650,9 @@ class SubredditModeration:
         response = await self.subreddit._reddit.get(url)
         return response["data"]
 
+    @_deprecate_args("only")
     def spam(
-        self, only: Optional[str] = None, **generator_kwargs: Any
+        self, *, only: Optional[str] = None, **generator_kwargs: Any
     ) -> AsyncIterator[
         Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]
     ]:
