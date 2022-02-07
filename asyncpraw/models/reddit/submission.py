@@ -303,7 +303,8 @@ class SubmissionModeration(ThingModerationMixin):
         except Conflict:
             pass
 
-    async def suggested_sort(self, sort: str = "blank"):
+    @_deprecate_args("sort")
+    async def suggested_sort(self, *, sort: str = "blank"):
         """Set the suggested sort for the comments of the submission.
 
         :param sort: Can be one of: ``"confidence"``, ``"top"``, ``"new"``,
