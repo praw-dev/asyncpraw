@@ -882,7 +882,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
         with self.use_cassette():
             await subreddit.unsubscribe(
-                ["redditdev", await self.reddit.subreddit("iama")]
+                other_subreddits=["redditdev", await self.reddit.subreddit("iama")]
             )
 
 

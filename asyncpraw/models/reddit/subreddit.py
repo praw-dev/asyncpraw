@@ -1623,8 +1623,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """
         return await self._reddit.get(API_PATH["about_traffic"].format(subreddit=self))
 
+    @_deprecate_args("other_subreddits")
     async def unsubscribe(
-        self, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None
+        self, *, other_subreddits: Optional[List["asyncpraw.models.Subreddit"]] = None
     ):
         """Unsubscribe from the subreddit.
 
