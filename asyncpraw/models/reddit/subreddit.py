@@ -2613,8 +2613,9 @@ class SubredditModeration:
         """
         return SubredditRemovalReasons(self.subreddit)
 
+    @_deprecate_args("only")
     def reports(
-        self, only: Optional[str] = None, **generator_kwargs: Any
+        self, *, only: Optional[str] = None, **generator_kwargs: Any
     ) -> AsyncIterator[
         Union["asyncpraw.models.Submission", "asyncpraw.models.Comment"]
     ]:
