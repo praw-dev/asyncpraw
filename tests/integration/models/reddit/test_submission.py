@@ -127,7 +127,7 @@ class TestSubmission(IntegrationTest):
             Submission(self.reddit, "c625v"),
         ]
         with self.use_cassette():
-            await Submission(self.reddit, "1eipl7").hide(submissions)
+            await Submission(self.reddit, "1eipl7").hide(other_submissions=submissions)
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_hide_multiple_in_batches(self, _):
@@ -136,7 +136,7 @@ class TestSubmission(IntegrationTest):
             subreddit = await self.reddit.subreddit("popular")
             submissions = await self.async_list(subreddit.hot(limit=100))
             assert len(submissions) == 100
-            await submissions[0].hide(submissions[1:])
+            await submissions[0].hide(other_submissions=submissions[1:])
 
     async def test_invalid_attribute(self):
         with self.use_cassette():

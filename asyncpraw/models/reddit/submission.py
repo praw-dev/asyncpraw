@@ -679,8 +679,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         data = {"links": self.fullname}
         await self._reddit.post(API_PATH["store_visits"], data=data)
 
+    @_deprecate_args("other_submissions")
     async def hide(
-        self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
     ):
         """Hide :class:`.Submission`.
 
