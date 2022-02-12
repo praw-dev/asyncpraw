@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Union
 
 from ....const import API_PATH
+from ...util import _deprecate_args
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
@@ -26,8 +27,9 @@ class EditableMixin:
         """
         await self._reddit.post(API_PATH["del"], data={"id": self.fullname})
 
+    @_deprecate_args("body")
     async def edit(
-        self, body
+        self, *, body: str
     ) -> Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]:
         """Replace the body of the object with ``body``.
 
@@ -44,7 +46,7 @@ class EditableMixin:
             # construct the text of an edited comment
             # by appending to the old body:
             edited_body = comment.body + "Edit: thanks for the gold!"
-            await comment.edit(edited_body)
+            await comment.edit(body=edited_body)
 
         """
         data = {

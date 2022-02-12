@@ -60,7 +60,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             submission = Submission(self.reddit, "hmkbt8")
-            await submission.edit("New text")
+            await submission.edit(body="New text")
             assert submission.selftext == "New text"
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -70,7 +70,7 @@ class TestSubmission(IntegrationTest):
         with self.use_cassette():
             submission = Submission(self.reddit, "hmkfoy")
             with pytest.raises(RedditAPIException):
-                await submission.edit("rewtwert")
+                await submission.edit(body="rewtwert")
 
     async def test_enable_inbox_replies(self):
         self.reddit.read_only = False
