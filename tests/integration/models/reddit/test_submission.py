@@ -403,6 +403,17 @@ class TestSubmissionModeration(IntegrationTest):
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.ignore_reports()
 
+    async def test_notes(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            submission = await self.reddit.submission("uflrmv")
+            note = await submission.mod.create_note(
+                label="HELPFUL_USER", note="test note"
+            )
+            notes = await self.async_list(submission.mod.author_notes())
+            assert note in notes
+            assert notes[notes.index(note)].user == submission.author
+
     async def test_nsfw(self):
         self.reddit.read_only = False
         with self.use_cassette():

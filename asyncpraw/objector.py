@@ -191,6 +191,25 @@ class Objector:
                     draft["modified"] / 1000
                 ).astimezone()
             parser = self.parsers["DraftList"]
+        elif {"mod_action_data", "user_note_data"}.issubset(data):
+            redditor_parser = self.parsers[self._reddit.config.kinds["redditor"]]
+            subreddit_parser = self.parsers[self._reddit.config.kinds["subreddit"]]
+            data["moderator"] = redditor_parser(self._reddit, data["operator"])
+            data["subreddit"] = subreddit_parser(self._reddit, data["subreddit"])
+            data["user"] = redditor_parser(self._reddit, data["user"])
+            # move these sub dict values into the main dict for simplicity
+            data.update(data["mod_action_data"])
+            del data["mod_action_data"]
+            data.update(data["user_note_data"])
+            del data["user_note_data"]
+            parser = self.parsers["mod_note"]
+        elif (
+            "created" in data
+            and isinstance(data["created"], dict)
+            and {"mod_action_data", "user_note_data"}.issubset(data["created"])
+        ):
+            data = data["created"]
+            return self._objectify_dict(data)
         else:
             if "user" in data:
                 parser = self.parsers[self._reddit.config.kinds["redditor"]]

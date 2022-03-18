@@ -123,6 +123,15 @@ class TestComment(IntegrationTest):
             comment = await self.async_next(self.reddit.inbox.comment_replies())
             await comment.mark_unread()
 
+    async def test_notes(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            comment = await self.reddit.comment("id4adsw")
+            note = await comment.mod.create_note(label="HELPFUL_USER", note="test note")
+            notes = await self.async_list(comment.mod.author_notes())
+            assert note in notes
+            assert notes[notes.index(note)].user == comment.author
+
     async def test_parent__comment(self):
         comment = Comment(self.reddit, "cklhv0f")
         with self.use_cassette():

@@ -384,7 +384,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return SubredditFlair(self)
 
     @cachedproperty
-    def mod(self) -> "asyncpraw.models.reddit.subreddit.SubredditModeration":
+    def mod(self) -> "SubredditModeration":
         """Provide an instance of :class:`.SubredditModeration`.
 
         For example, to accept a moderation invite from r/test:
@@ -2415,6 +2415,26 @@ class SubredditModeration:
             RedditBase._safely_add_arguments(
                 arguments=generator_kwargs, key="params", only=only
             )
+
+    @cachedproperty
+    def notes(self) -> "asyncpraw.models.SubredditModNotes":
+        """Provide an instance of :class:`.SubredditModNotes`.
+
+        This provides an interface for managing moderator notes for this subreddit.
+
+        For example, all the notes for u/spez in r/test can be iterated through like so:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+
+            async for note in subreddit.mod.notes.redditors("spez"):
+                print(f"{note.label}: {note.note}")
+
+        """
+        from ..mod_notes import SubredditModNotes
+
+        return SubredditModNotes(self.subreddit._reddit, subreddit=self.subreddit)
 
     def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
         """Initialize a :class:`.SubredditModeration` instance.

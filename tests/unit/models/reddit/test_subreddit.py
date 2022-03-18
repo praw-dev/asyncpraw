@@ -103,6 +103,14 @@ class TestSubreddit(UnitTest):
                 "Test", "/dev/null"
             )
 
+    async def test_notes_delete__invalid_args(self):
+        with pytest.raises(TypeError) as excinfo:
+            await Subreddit(None, "SubTestBot1").mod.notes.delete(note_id="111")
+        assert excinfo.value.args[0] == (
+            "Either the `redditor` parameter must be provided or this method must be"
+            " called from a Redditor instance (e.g., `redditor.notes`)."
+        )
+
     def test_repr(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")
         assert repr(subreddit) == "Subreddit(display_name='name')"
