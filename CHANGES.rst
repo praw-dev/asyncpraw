@@ -6,6 +6,11 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+**Fixed**
+
+- An issue where :class:`.ModmailConversation`'s ``messages`` attribute would only
+  contain the latest message.
+
 7.6.0 (2022/10/23)
 ------------------
 
