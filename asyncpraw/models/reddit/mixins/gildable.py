@@ -107,7 +107,7 @@ class GildableMixin:
         }
         return await self._reddit.post(API_PATH["award_thing"], params=params)
 
-    async def gild(self):
+    async def gild(self) -> dict:
         """Alias for :meth:`.award` to maintain backwards compatibility."""
         warn(
             "`.gild` has been renamed to `.award`.",
