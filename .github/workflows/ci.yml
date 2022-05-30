@@ -28,7 +28,16 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install .[lint]
     - name: Run pre-commit hooks
-      uses: pre-commit/action@v2.0.3
+      run: |
+        pre-commit run --all-files end-of-file-fixer
+        pre-commit run --all-files static_word_checks
+        pre-commit run --all-files check_documentation
+        pre-commit run --all-files black
+        pre-commit run --all-files flake8
+        pre-commit run --all-files flynt
+        pre-commit run --all-files isort
+        pre-commit run --all-files pydocstyle
+#      uses: pre-commit/action@v2.0.3
     - name: Run sphinx
       run: sphinx-build -W --keep-going docs/ /tmp/foo
     strategy:
