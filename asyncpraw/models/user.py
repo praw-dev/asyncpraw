@@ -287,7 +287,7 @@ class User(AsyncPRAWBase):
 
         .. code-block:: python
 
-            trusted_users = reddit.user.trusted()
+            trusted_users = await reddit.user.trusted()
             for user in trusted_users:
                 print(f"User: {user.name}, time: {user.date}")
 
