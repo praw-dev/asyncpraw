@@ -6,7 +6,6 @@ Author/Maintainer
 Documentation Contributors
 ==========================
 
-- Kaif `@kaif-00z <https://github.com/kaif-00z>`_
 - Dale Cudmore <dalecudmore@gmail.com> `@DCuddies <https://github.com/DCuddies>`_
 - Zhifu Ge <zhifu@me.com> `@zhifuge <https://github.com/zhifuge>`_
 - diceroll123 `@diceroll123 <https://github.com/diceroll123>`_
@@ -28,6 +27,7 @@ Documentation Contributors
 - Rémy Pecqueur `@Lordshinjo <https://github.com/Lordshinjo>`_
 - Mohammad Ghalayini `@mghalayini <https://github.com/mghalayini>`_
 - Jason Haines `@jghaines <https://github.com/jghaines>`_
+- Kaif `@kaif-00z <https://github.com/kaif-00z>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
