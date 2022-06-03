@@ -27,6 +27,7 @@ Documentation Contributors
 - Rémy Pecqueur `@Lordshinjo <https://github.com/Lordshinjo>`_
 - Mohammad Ghalayini `@mghalayini <https://github.com/mghalayini>`_
 - Jason Haines `@jghaines <https://github.com/jghaines>`_
+- Kaif `@kaif-00z <https://github.com/kaif-00z>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
