@@ -1,4 +1,4 @@
-"""PRAW Integration test suite."""
+"""Async PRAW Integration test suite."""
 import inspect
 import logging
 
@@ -11,7 +11,7 @@ from tests.conftest import vcr
 
 
 class IntegrationTest(asynctest.TestCase):
-    """Base class for PRAW integration tests."""
+    """Base class for Async PRAW integration tests."""
 
     logger = logging.getLogger(__name__)
 

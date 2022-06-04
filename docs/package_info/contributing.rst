@@ -67,15 +67,6 @@ tests locally. The simplest way is via:
 Without any configuration or modification, all the tests should pass. If they do not,
 please file a bug report.
 
-.. note::
-
-    Async PRAW uses a fork of `vcrpy` before you can run tests locally you must install
-    the forked version.
-
-    .. code-block:: bash
-
-        pip install https://github.com/LilSpazJoekp/vcrpy/archive/asyncpraw.zip
-
 Adding and Updating Integration Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
