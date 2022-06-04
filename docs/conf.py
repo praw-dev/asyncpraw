@@ -11,9 +11,10 @@ from asyncpraw import __version__  # noqa: E402
 copyright = datetime.today().strftime("%Y, Joel Payne")
 exclude_patterns = ["_build"]
 extensions = [
-    "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx_rtd_dark_mode",
+    "sphinx_rtd_theme",
     "sphinxcontrib_trio",
 ]
 html_static_path = ["_static"]
