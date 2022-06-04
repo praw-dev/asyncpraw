@@ -244,7 +244,7 @@ class User(AsyncPRAWBase):
 
             me = await reddit.user.me()
             async for submission in me.submissions.new():
-                reddit.user.pin(submission)
+                await reddit.user.pin(submission)
                 break
 
         """
