@@ -27,12 +27,13 @@ class TestWikiPage(IntegrationTest):
                 await page._fetch()
             assert str(excinfo.value) == "INVALID_PAGE_NAME"
 
-    async def test_discussions(self):
+    @mock.patch("asyncio.sleep", return_value=None)
+    async def test_discussions(self, _):
         subreddit = await self.reddit.subreddit("reddit.com")
 
         with self.use_cassette():
             page = await subreddit.wiki.get_page("search")
-            assert self.async_list(page.discussions())
+            assert await self.async_list(page.discussions())
 
     async def test_edit(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
