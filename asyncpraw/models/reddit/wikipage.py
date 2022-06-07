@@ -45,7 +45,7 @@ class WikiPageModeration:
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
 
-        To add ``"spez"`` as an editor on the wikipage ``"praw_test"`` try:
+        To add u/spez as an editor on the wikipage ``"praw_test"`` try:
 
         .. code-block:: python
 
@@ -65,7 +65,7 @@ class WikiPageModeration:
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
 
-        To remove ``"spez"`` as an editor on the wikipage ``"praw_test"`` try:
+        To remove u/spez as an editor on the wikipage ``"praw_test"`` try:
 
         .. code-block:: python
 
