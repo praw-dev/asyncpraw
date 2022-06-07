@@ -1,5 +1,6 @@
 """Package providing reddit class mixins."""
 from json import dumps
+from typing import TYPE_CHECKING, Optional
 
 from ....const import API_PATH
 from .editable import EditableMixin
@@ -13,13 +14,18 @@ from .reportable import ReportableMixin
 from .savable import SavableMixin
 from .votable import VotableMixin
 
+if TYPE_CHECKING:  # pragma: no cover
+    import asyncpraw
+
 
 class ThingModerationMixin:
     r"""Provides moderation methods for :class:`.Comment`\ s and :class:`.Submission`\ s."""
 
     REMOVAL_MESSAGE_API = None
 
-    async def _add_removal_reason(self, mod_note="", reason_id=None):
+    async def _add_removal_reason(
+        self, mod_note: str = "", reason_id: Optional[str] = None
+    ):
         """Add a removal reason for a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -66,7 +72,7 @@ class ThingModerationMixin:
             API_PATH["approve"], data={"id": self.thing.fullname}
         )
 
-    async def distinguish(self, how="yes", sticky=False):
+    async def distinguish(self, how: str = "yes", sticky: bool = False):
         """Distinguish a :class:`.Comment` or :class:`.Submission`.
 
         :param how: One of ``"yes"``, ``"no"``, ``"admin"``, or ``"special"``. ``"yes"``
@@ -149,7 +155,9 @@ class ThingModerationMixin:
             API_PATH["lock"], data={"id": self.thing.fullname}
         )
 
-    async def remove(self, spam=False, mod_note="", reason_id=None):
+    async def remove(
+        self, spam: bool = False, mod_note: str = "", reason_id: Optional[str] = None
+    ):
         """Remove a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -184,10 +192,10 @@ class ThingModerationMixin:
 
     async def send_removal_message(
         self,
-        message,
-        title="ignored",
-        type="public",  # pylint: disable=redefined-builtin
-    ):
+        message: str,
+        title: str = "ignored",
+        type: str = "public",  # pylint: disable=redefined-builtin
+    ) -> Optional["asyncpraw.models.Comment"]:
         """Send a removal message for a :class:`.Comment` or :class:`.Submission`.
 
         .. warning::
@@ -200,7 +208,7 @@ class ThingModerationMixin:
         Reddit adds human-readable information about the object to the message.
 
         :param type: One of ``"public"``, ``"private"``, or ``"private_exposed"``.
-            ``"public"`` leaves a stickied comment on the post. "private" sends a
+            ``"public"`` leaves a stickied comment on the post. ``"private"`` sends a
             modmail message with hidden username. ``"private_exposed"`` sends a modmail
             message without hidden username (default: ``"public"``).
         :param title: The short reason given in the message. Ignored if type is
