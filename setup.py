@@ -63,7 +63,7 @@ setup(
     ),
     extras_require=extras,
     install_requires=[
-        "aiofiles <=0.9.0",
+        "aiofiles <1",
         "aiohttp <4",
         "aiosqlite <=0.17.0",
         "asyncio_extras <=1.3.2",
