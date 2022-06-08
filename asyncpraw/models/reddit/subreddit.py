@@ -24,8 +24,10 @@ from warnings import warn
 from xml.etree.ElementTree import XML
 
 from aiohttp import ClientResponse
+from aiohttp.http_exceptions import HttpProcessingError
 from aiohttp.web_ws import WebSocketError
 from asyncprawcore import Redirect
+from asyncprawcore.exceptions import ServerError
 
 from ...const import API_PATH, JPEG_HEADER
 from ...exceptions import (
@@ -692,6 +694,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             url = ws_update["payload"]["redirect"]
             return await self._reddit.submission(url=url)
 
+    async def _read_and_post_media(self, media_path, upload_url, upload_data):
+        with open(media_path, "rb") as media:
+            response = await self._reddit._core._requestor._http.post(
+                upload_url, data=upload_data, files={"file": media}
+            )
+        return response
+
     async def _upload_media(
         self,
         media_path: str,
@@ -744,14 +753,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         upload_url = f"https:{upload_lease['action']}"
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
 
-        with open(media_path, "rb") as media:
-            upload_data["file"] = media
-            response = await self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data
-            )
+        response = await self._read_and_post_media(media_path, upload_url, upload_data)
         if not response.status == 201:
             self._parse_xml_response(response)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except HttpProcessingError:
+            raise ServerError(response=response)
 
         websocket_url = upload_response["asset"]["websocket_url"]
 

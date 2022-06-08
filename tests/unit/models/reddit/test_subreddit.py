@@ -71,12 +71,35 @@ class TestSubreddit(UnitTest):
         context_manager.__aenter__.return_value = recv_mock
         connection_mock.return_value = context_manager
 
-        # websockets_mock().__aenter__.recv =
         with pytest.raises(MediaPostFailed):
             await Subreddit(self.reddit, display_name="test").submit_image(
                 "Test", "dummy path"
             )
         await self.reddit._core._requestor._http.close()
+
+    @mock.patch("asyncpraw.models.Subreddit._read_and_post_media")
+    @mock.patch(
+        "asyncpraw.Reddit.post",
+        return_value={
+            "json": {"data": {"websocket_url": ""}},
+            "args": {"action": "", "fields": []},
+        },
+    )
+    @mock.patch("aiohttp.client.ClientSession.ws_connect")
+    async def test_media_upload_500(self, connection_mock, _mock_post, mock_method):
+        from aiohttp.http_exceptions import HttpProcessingError
+        from asyncprawcore.exceptions import ServerError
+
+        response = mock.Mock()
+        response.status = 201
+        response.raise_for_status = mock.Mock(
+            side_effect=HttpProcessingError(code=500, message="")
+        )
+        mock_method.return_value = response
+        with pytest.raises(ServerError):
+            await Subreddit(self.reddit, display_name="test").submit_image(
+                "Test", "/dev/null"
+            )
 
     def test_repr(self):
         subreddit = Subreddit(self.reddit, display_name="name")
