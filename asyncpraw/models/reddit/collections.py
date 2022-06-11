@@ -179,8 +179,8 @@ class CollectionModeration(AsyncPRAWBase):
         """Update the collection's display layout.
 
         :param display_layout: Either ``"TIMELINE"`` for events or discussions or
-            ``"GALLERY"`` for images or memes. Passing ``""`` or ``None`` will clear the
-            set layout and ``collection.display_layout`` will be ``None``, however, the
+            ``"GALLERY"`` for images or memes. Passing ``None`` will clear the set
+            layout and ``collection.display_layout`` will be ``None``, however, the
             collection will appear on Reddit as if ``display_layout`` is set to
             ``"TIMELINE"``.
 
@@ -465,7 +465,9 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
-    async def create(self, title: str, description: str):
+    async def create(
+        self, title: str, description: str, display_layout: Optional[str] = None
+    ):
         """Create a new :class:`.Collection`.
 
         The authenticated account must have appropriate moderator permissions in the
@@ -473,6 +475,10 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
 
         :param title: The title of the collection, up to 300 characters.
         :param description: The description, up to 500 characters.
+        :param display_layout: Either ``"TIMELINE"`` for events or discussions or
+            ``"GALLERY"`` for images or memes. Passing ``""`` or ``None`` will make the
+            collection appear on Reddit as if this is set to ``"TIMELINE"`` (default:
+            ``None``).
 
         :returns: The newly created :class:`.Collection`.
 
@@ -484,6 +490,16 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
             new_collection = await sub.collections.mod.create("Title", "desc")
             await new_collection.mod.add_post("bgibu9")
 
+        To specify the display layout as ``"GALLERY"`` when creating the collection:
+
+        .. code-block:: python
+
+            my_sub = await reddit.subreddit("test")
+            new_collection = await my_sub.collections.mod.create(
+                title="Title", description="desc", display_layout="GALLERY"
+            )
+            await new_collection.mod.add_post("bgibu9")
+
         .. seealso::
 
             :meth:`~.CollectionModeration.delete`
@@ -491,13 +507,16 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         """
         if not self.subreddit._fetched:
             await self.subreddit._fetch()
+        data = {
+            "sr_fullname": self.subreddit.fullname,
+            "title": title,
+            "description": description,
+        }
+        if display_layout:
+            data["display_layout"] = display_layout
         return await self._reddit.post(
             API_PATH["collection_create"],
-            data={
-                "sr_fullname": self.subreddit.fullname,
-                "title": title,
-                "description": description,
-            },
+            data=data,
         )
 
 
