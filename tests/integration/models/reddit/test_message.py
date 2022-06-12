@@ -87,6 +87,33 @@ class TestMessage(IntegrationTest):
             message = await self.async_next(self.reddit.inbox.messages())
             await message.uncollapse()
 
+    async def test_parent(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            message = await self.reddit.inbox.message("1aogu6u")
+            parent = message.parent
+            assert isinstance(parent, Message)
+            assert parent.fullname == message.parent_id
+
+    async def test_parent__from_inbox_listing(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            message = await self.async_next(self.reddit.inbox.sent(limit=1))
+            parent = message.parent
+            assert isinstance(parent, Message)
+            assert parent.fullname == message.parent_id
+            assert not parent._fetched
+            with pytest.raises(AttributeError) as excinfo:
+                _ = parent.parent
+                assert (
+                    excinfo.value.args[0]
+                    == "Message must be fetched with `.load()` before accessing the"
+                    " parent."
+                )
+            await parent.load()
+            assert isinstance(parent.parent, Message)
+            assert parent.body
+
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_reply(self, _):
         self.reddit.read_only = False
