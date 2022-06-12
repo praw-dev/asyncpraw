@@ -16,13 +16,13 @@ with open(path.join(HERE, PACKAGE_NAME, "const.py"), encoding="utf-8") as fp:
 extras = {
     "ci": ["coveralls"],
     "dev": ["packaging"],
-    "lint": [
-        "pre-commit",
+    "lint": ["pre-commit"],
+    "readthedocs": [
         "sphinx",
+        "sphinx-rtd-dark-mode",
         "sphinx_rtd_theme",
         "sphinxcontrib-trio",
     ],
-    "readthedocs": ["sphinx", "sphinx_rtd_theme", "sphinxcontrib-trio"],
     "test": [
         "asynctest >=0.13.0",
         "mock >=0.8",
@@ -35,6 +35,7 @@ extras = {
         else "vcrpy@git+https://github.com/kevin1024/vcrpy.git@b1bc5c3a02db0447c28ab9a4cee314aeb6cdf1a7",
     ],
 }
+extras["lint"] += extras["readthedocs"]
 extras["dev"] += extras["lint"] + extras["test"]
 
 setup(

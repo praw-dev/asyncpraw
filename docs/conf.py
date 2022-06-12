@@ -11,16 +11,17 @@ from asyncpraw import __version__  # noqa: E402
 copyright = datetime.today().strftime("%Y, Joel Payne")
 exclude_patterns = ["_build"]
 extensions = [
-    "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx_rtd_dark_mode",
+    "sphinx_rtd_theme",
     "sphinxcontrib_trio",
 ]
 html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {"collapse_navigation": True}
 htmlhelp_basename = "Async PRAW"
-intersphinx_mapping = {"python": ("https://docs.python.org", None)}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 master_doc = "index"
 nitpick_ignore = [
     ("py:class", "IO"),
