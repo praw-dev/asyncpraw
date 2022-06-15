@@ -112,6 +112,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     ``description``           Subreddit description, in Markdown.
     ``description_html``      Subreddit description, in HTML.
     ``display_name``          Name of the subreddit.
+    ``icon_img``              The url of the Subreddit's icon.
     ``id``                    ID of the subreddit.
     ``name``                  Fullname of the subreddit.
     ``over18``                Whether the subreddit is NSFW.
