@@ -7,10 +7,10 @@ from ... import UnitTest
 
 
 class TestSubmission(UnitTest):
-    def test_equality(self):
-        submission1 = Submission(self.reddit, _data={"id": "dummy1", "n": 1})
-        submission2 = Submission(self.reddit, _data={"id": "Dummy1", "n": 2})
-        submission3 = Submission(self.reddit, _data={"id": "dummy3", "n": 2})
+    def test_equality(self, reddit):
+        submission1 = Submission(reddit, _data={"id": "dummy1", "n": 1})
+        submission2 = Submission(reddit, _data={"id": "Dummy1", "n": 2})
+        submission3 = Submission(reddit, _data={"id": "dummy3", "n": 2})
         assert submission1 == submission1
         assert submission2 == submission2
         assert submission3 == submission3
@@ -20,37 +20,37 @@ class TestSubmission(UnitTest):
         assert "dummy1" == submission1
         assert submission2 == "dummy1"
 
-    def test_construct_failure(self):
+    def test_construct_failure(self, reddit):
         message = "Exactly one of `id`, `url`, or `_data` must be provided."
         with pytest.raises(TypeError) as excinfo:
-            Submission(self.reddit)
+            Submission(reddit)
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Submission(self.reddit, id="dummy", url="dummy")
+            Submission(reddit, id="dummy", url="dummy")
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Submission(self.reddit, "dummy", _data={"id": "dummy"})
+            Submission(reddit, "dummy", _data={"id": "dummy"})
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Submission(self.reddit, url="dummy", _data={"id": "dummy"})
+            Submission(reddit, url="dummy", _data={"id": "dummy"})
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Submission(self.reddit, "dummy", "dummy", {"id": "dummy"})
+            Submission(reddit, "dummy", "dummy", {"id": "dummy"})
         assert str(excinfo.value) == message
 
         with pytest.raises(ValueError):
-            Submission(self.reddit, "")
+            Submission(reddit, "")
         with pytest.raises(ValueError):
-            Submission(self.reddit, url="")
+            Submission(reddit, url="")
 
     @pytest.mark.filterwarnings("error", category=UserWarning)
-    async def test_comment_sort_warning(self):
+    async def test_comment_sort_warning(self, reddit):
         with pytest.raises(UserWarning) as excinfo:
-            submission = await self.reddit.submission("1234", fetch=False)
+            submission = await reddit.submission("1234", fetch=False)
             submission._fetched = True
             submission.comment_sort = "new"
         assert (
@@ -61,29 +61,29 @@ class TestSubmission(UnitTest):
 
     @pytest.mark.filterwarnings("error", category=UserWarning)
     @pytest.LogCaptureFixture
-    async def test_comment_sort_warning__disabled(self, caplog):
-        self.reddit.config.warn_comment_sort = False
-        submission = await self.reddit.submission("1234")
+    async def test_comment_sort_warning__disabled(self, caplog, reddit):
+        reddit.config.warn_comment_sort = False
+        submission = await reddit.submission("1234")
         submission._fetched = True
         submission.comment_sort = "new"
         assert caplog.records == []
 
-    async def test_comment_unfetched(self):
+    async def test_comment_unfetched(self, reddit):
         with pytest.raises(TypeError):
-            submission = await self.reddit.submission("1234", fetch=False)
+            submission = await reddit.submission("1234", fetch=False)
             submission.comments.list()
 
-    def test_construct_from_url(self):
-        assert Submission(self.reddit, url="http://my.it/2gmzqe") == "2gmzqe"
+    def test_construct_from_url(self, reddit):
+        assert Submission(reddit, url="http://my.it/2gmzqe") == "2gmzqe"
 
-    def test_fullname(self):
-        submission = Submission(self.reddit, _data={"id": "dummy"})
+    def test_fullname(self, reddit):
+        submission = Submission(reddit, _data={"id": "dummy"})
         assert submission.fullname == "t3_dummy"
 
-    def test_hash(self):
-        submission1 = Submission(self.reddit, _data={"id": "dummy1", "n": 1})
-        submission2 = Submission(self.reddit, _data={"id": "Dummy1", "n": 2})
-        submission3 = Submission(self.reddit, _data={"id": "dummy3", "n": 2})
+    def test_hash(self, reddit):
+        submission1 = Submission(reddit, _data={"id": "dummy1", "n": 1})
+        submission2 = Submission(reddit, _data={"id": "Dummy1", "n": 2})
+        submission3 = Submission(reddit, _data={"id": "dummy3", "n": 2})
         assert hash(submission1) == hash(submission1)
         assert hash(submission2) == hash(submission2)
         assert hash(submission3) == hash(submission3)
@@ -121,14 +121,14 @@ class TestSubmission(UnitTest):
             with pytest.raises(ClientException):
                 Submission.id_from_url(url)
 
-    def test_repr(self):
-        submission = Submission(self.reddit, id="2gmzqe")
+    def test_repr(self, reddit):
+        submission = Submission(reddit, id="2gmzqe")
         assert repr(submission) == "Submission(id='2gmzqe')"
 
-    def test_str(self):
-        submission = Submission(self.reddit, _data={"id": "dummy"})
+    def test_str(self, reddit):
+        submission = Submission(reddit, _data={"id": "dummy"})
         assert str(submission) == "dummy"
 
-    def test_shortlink(self):
-        submission = Submission(self.reddit, _data={"id": "dummy"})
+    def test_shortlink(self, reddit):
+        submission = Submission(reddit, _data={"id": "dummy"})
         assert submission.shortlink == "https://redd.it/dummy"

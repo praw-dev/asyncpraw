@@ -4,8 +4,8 @@ from ... import UnitTest
 
 
 class TestModmailConversationsListing(UnitTest):
-    def test_empty_conversations_list(self):
+    def test_empty_conversations_list(self, reddit):
         assert (
-            ModmailConversationsListing(self.reddit, _data={"conversations": []}).after
+            ModmailConversationsListing(reddit, _data={"conversations": []}).after
             is None
         )

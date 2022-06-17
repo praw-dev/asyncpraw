@@ -43,13 +43,12 @@ class TestBaseTokenManager(UnitTest):
 
 
 class TestFileTokenManager(UnitTest):
-    async def setUp(self):
+    def setup(self):
         aiofiles.threadpool.wrap.register(mock.MagicMock)(
             lambda *args, **kwargs: aiofiles.threadpool.AsyncBufferedIOBase(
                 *args, **kwargs
             )
         )
-        await super(TestFileTokenManager, self).setUp()
 
     async def test_post_refresh_token_callback__writes_to_file(self):
         authorizer = DummyAuthorizer("token_value")
@@ -99,7 +98,7 @@ class TestFileTokenManager(UnitTest):
 
 
 class TestSQLiteTokenManager(UnitTest):
-    def setUp(self):
+    def setup(self):
         self.manager = SQLiteTokenManager(":memory:", "dummy_key")
 
     async def test_is_registered(self):

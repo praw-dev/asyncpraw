@@ -16,33 +16,33 @@ from ... import UnitTest
 
 
 class TestWidgetEncoder(UnitTest):
-    def test_bad_encode(self):
+    def test_bad_encode(self, reddit):
         data = [
             1,
             "two",
             SubredditWidgetsModeration(
-                Subreddit(self.reddit, display_name="subreddit"), self.reddit
+                Subreddit(reddit, display_name="subreddit"), reddit
             ),
         ]
         with raises(TypeError):
             dumps(data, cls=WidgetEncoder)  # should throw TypeError
 
-    def test_good_encode(self):
+    def test_good_encode(self, reddit):
         data = [
             1,
             "two",
-            AsyncPRAWBase(self.reddit, _data={"_secret": "no", "3": 3}),
-            Subreddit(self.reddit, "four"),
+            AsyncPRAWBase(reddit, _data={"_secret": "no", "3": 3}),
+            Subreddit(reddit, "four"),
         ]
         assert '[1, "two", {"3": 3}, "four"]' == dumps(data, cls=WidgetEncoder)
 
 
 class TestWidgets(UnitTest):
-    def test_subredditwidgets_mod(self):
-        sw = SubredditWidgets(Subreddit(self.reddit, "fake_subreddit"))
+    def test_subredditwidgets_mod(self, reddit):
+        sw = SubredditWidgets(Subreddit(reddit, "fake_subreddit"))
         assert isinstance(sw.mod, SubredditWidgetsModeration)
 
-    def test_widget_mod(self):
-        w = Widget(self.reddit, {})
+    def test_widget_mod(self, reddit):
+        w = Widget(reddit, {})
         assert isinstance(w.mod, WidgetModeration)
         assert w.mod.widget == w

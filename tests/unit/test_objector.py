@@ -6,11 +6,11 @@ from . import UnitTest
 
 
 class TestObjector(UnitTest):
-    def test_objectify_returns_None_for_None(self):
-        assert self.reddit._objector.objectify(None) is None
+    def test_objectify_returns_None_for_None(self, reddit):
+        assert reddit._objector.objectify(None) is None
 
-    def test_parse_error(self):
-        objector = self.reddit._objector
+    def test_parse_error(self, reddit):
+        objector = reddit._objector
         assert objector.parse_error({}) is None
         assert objector.parse_error([]) is None
         assert objector.parse_error({"asdf": 1}) is None
@@ -35,8 +35,8 @@ class TestObjector(UnitTest):
         }
         assert isinstance(objector.parse_error(error_response), RedditAPIException)
 
-    def test_check_error(self):
-        objector = self.reddit._objector
+    def test_check_error(self, reddit):
+        objector = reddit._objector
         objector.check_error({"asdf": 1})
 
         error_response = {
