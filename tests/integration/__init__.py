@@ -7,10 +7,11 @@ import asynctest
 import pytest
 
 from asyncpraw import Reddit
+from tests import HelperMethodMixin
 from tests.conftest import vcr
 
 
-class IntegrationTest(asynctest.TestCase):
+class IntegrationTest(asynctest.TestCase, HelperMethodMixin):
     """Base class for Async PRAW integration tests."""
 
     logger = logging.getLogger(__name__)
@@ -71,16 +72,6 @@ class IntegrationTest(asynctest.TestCase):
                     user_agent=pytest.placeholders.user_agent,
                     refresh_token=pytest.placeholders.refresh_token,
                 )
-
-    @staticmethod
-    async def async_list(async_generator):
-        """Return a list from an async iterator."""
-        return [item async for item in async_generator]
-
-    @staticmethod
-    async def async_next(async_generator):
-        """Return the next item from an async iterator."""
-        return await async_generator.__anext__()
 
     def use_cassette(self, cassette_name=None, **kwargs):
         """Use a cassette. The cassette name is dynamically generated.

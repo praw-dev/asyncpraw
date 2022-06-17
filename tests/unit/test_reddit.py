@@ -52,8 +52,8 @@ class TestReddit(UnitTest):
         assert not Reddit.update_checked
         assert not mock_update_check.called
 
-    def test_comment(self):
-        assert Comment(self.reddit, id="cklfmye").id == "cklfmye"
+    def test_comment(self, reddit):
+        assert Comment(reddit, id="cklfmye").id == "cklfmye"
 
     def test_conflicting_settings(self):
         with pytest.raises(TypeError) as excinfo:
@@ -74,15 +74,15 @@ class TestReddit(UnitTest):
             assert not reddit.requestor._http.closed
         assert reddit.requestor._http.closed
 
-    def test_info__invalid_param(self):
+    def test_info__invalid_param(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            self.reddit.info(None)
+            reddit.info(None)
 
         err_str = "Either `fullnames`, `url`, or `subreddits` must be provided."
         assert str(excinfo.value) == err_str
 
         with pytest.raises(TypeError) as excinfo:
-            self.reddit.info([], "")
+            reddit.info([], "")
 
         assert str(excinfo.value) == err_str
 
@@ -102,23 +102,23 @@ class TestReddit(UnitTest):
             " expected type is int, but the given value is test."
         )
 
-    def test_info__not_list(self):
+    def test_info__not_list(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            self.reddit.info("Let's try a string")
+            reddit.info("Let's try a string")
 
         assert "must be a non-str iterable" in str(excinfo.value)
 
-    def test_live_info__valid_param(self):
-        gen = self.reddit.live.info(["dummy", "dummy2"])
+    def test_live_info__valid_param(self, reddit):
+        gen = reddit.live.info(["dummy", "dummy2"])
         assert isinstance(gen, types.AsyncGeneratorType)
 
-    def test_live_info__invalid_param(self):
+    def test_live_info__invalid_param(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            self.reddit.live.info(None)
+            reddit.live.info(None)
         assert str(excinfo.value) == "ids must be a list"
 
-    async def test_multireddit(self):
-        multireddit = await self.reddit.multireddit("bboe", "aa")
+    async def test_multireddit(self, reddit):
+        multireddit = await reddit.multireddit("bboe", "aa")
         assert multireddit.path == "/user/bboe/m/aa"
 
     @mock.patch(
@@ -138,9 +138,11 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__invalid_rate_limit_message(self, mock_sleep, _):
+    async def test_post_ratelimit__invalid_rate_limit_message(
+        self, mock_sleep, _, reddit
+    ):
         with pytest.raises(RedditAPIException) as exception:
-            await self.reddit.post("test")
+            await reddit.post("test")
         assert exception.value.message == "Some unexpected error message"
         mock_sleep.assert_not_called()
 
@@ -161,9 +163,9 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__over_threshold__seconds(self, mock_sleep, _):
+    async def test_post_ratelimit__over_threshold__seconds(self, mock_sleep, _, reddit):
         with pytest.raises(RedditAPIException) as exception:
-            await self.reddit.post("test")
+            await reddit.post("test")
         assert (
             exception.value.message
             == "You are doing that too much. Try again in 6 seconds."
@@ -187,9 +189,9 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__over_threshold__minutes(self, __, _):
+    async def test_post_ratelimit__over_threshold__minutes(self, _, __, reddit):
         with pytest.raises(RedditAPIException) as exception:
-            await self.reddit.post("test")
+            await reddit.post("test")
         assert (
             exception.value.message
             == "You are doing that too much. Try again in 1 minute."
@@ -224,8 +226,10 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__milliseconds(self, mock_sleep, _):
-        await self.reddit.post("test")
+    async def test_post_ratelimit__under_threshold__milliseconds(
+        self, mock_sleep, _, reddit
+    ):
+        await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(1), mock.call(1)])
 
     @mock.patch(
@@ -246,9 +250,11 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__minutes(self, mock_sleep, _):
-        self.reddit.config.ratelimit_seconds = 60
-        await self.reddit.post("test")
+    async def test_post_ratelimit__under_threshold__minutes(
+        self, mock_sleep, _, reddit
+    ):
+        reddit.config.ratelimit_seconds = 60
+        await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(61)])
 
     @mock.patch(
@@ -269,8 +275,10 @@ class TestReddit(UnitTest):
         ],
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__seconds(self, mock_sleep, _):
-        await self.reddit.post("test")
+    async def test_post_ratelimit__under_threshold__seconds(
+        self, mock_sleep, _, reddit
+    ):
+        await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(6)])
 
     @mock.patch(
@@ -313,10 +321,10 @@ class TestReddit(UnitTest):
     )
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_post_ratelimit__under_threshold__seconds_failure(
-        self, mock_sleep, _
+        self, mock_sleep, _, reddit
     ):
         with pytest.raises(RedditAPIException) as exception:
-            await self.reddit.post("test")
+            await reddit.post("test")
         assert (
             exception.value.message
             == "You are doing that too much. Try again in 1 second."
@@ -466,47 +474,47 @@ class TestReddit(UnitTest):
             "At most one of `data` or `json` is supported."
         )
 
-    async def test_submission(self):
-        submission = await self.reddit.submission("2gmzqe", fetch=False)
+    async def test_submission(self, reddit):
+        submission = await reddit.submission("2gmzqe", fetch=False)
         assert submission.id == "2gmzqe"
 
-    async def test_subreddit(self):
-        subreddit = await self.reddit.subreddit("redditdev")
+    async def test_subreddit(self, reddit):
+        subreddit = await reddit.subreddit("redditdev")
         assert subreddit.display_name == "redditdev"
 
 
 class TestRedditCustomRequestor(UnitTest):
-    def test_requestor_class(self):
+    async def test_requestor_class(self, reddit):
         class CustomRequestor(Requestor):
             pass
 
-        reddit = Reddit(
+        async with Reddit(
             client_id="dummy",
             client_secret="dummy",
             password="dummy",
             user_agent="dummy",
             username="dummy",
             requestor_class=CustomRequestor,
-        )
-        assert isinstance(reddit._core._requestor, CustomRequestor)
-        assert not isinstance(self.reddit._core._requestor, CustomRequestor)
+        ) as temp_reddit:
+            assert isinstance(temp_reddit._core._requestor, CustomRequestor)
+        assert not isinstance(reddit._core._requestor, CustomRequestor)
 
-        reddit = Reddit(
+        async with Reddit(
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
             requestor_class=CustomRequestor,
-        )
-        assert isinstance(reddit._core._requestor, CustomRequestor)
-        assert not isinstance(self.reddit._core._requestor, CustomRequestor)
+        ) as temp_reddit:
+            assert isinstance(temp_reddit._core._requestor, CustomRequestor)
+        assert not isinstance(reddit._core._requestor, CustomRequestor)
 
     async def test_requestor_kwargs(self):
         session = AsyncMock(headers={})
-        reddit = Reddit(
+        async with Reddit(
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
             requestor_kwargs={"session": session},
-        )
+        ) as reddit:
 
-        assert reddit._core._requestor._http is session
+            assert reddit._core._requestor._http is session

@@ -7,14 +7,14 @@ from ... import UnitTest
 
 
 class TestComment(UnitTest):
-    def test_attribute_error(self):
+    def test_attribute_error(self, reddit):
         with pytest.raises(AttributeError):
-            Comment(self.reddit, _data={"id": "1"}).mark_as_read()
+            Comment(reddit, _data={"id": "1"}).mark_as_read()
 
-    def test_equality(self):
-        comment1 = Comment(self.reddit, _data={"id": "dummy1", "n": 1})
-        comment2 = Comment(self.reddit, _data={"id": "Dummy1", "n": 2})
-        comment3 = Comment(self.reddit, _data={"id": "dummy3", "n": 2})
+    def test_equality(self, reddit):
+        comment1 = Comment(reddit, _data={"id": "dummy1", "n": 1})
+        comment2 = Comment(reddit, _data={"id": "Dummy1", "n": 2})
+        comment3 = Comment(reddit, _data={"id": "dummy3", "n": 2})
         assert comment1 == comment1
         assert comment2 == comment2
         assert comment3 == comment3
@@ -24,41 +24,41 @@ class TestComment(UnitTest):
         assert "dummy1" == comment1
         assert comment2 == "dummy1"
 
-    def test_construct_failure(self):
+    def test_construct_failure(self, reddit):
         message = "Exactly one of `id`, `url`, or `_data` must be provided."
         with pytest.raises(TypeError) as excinfo:
-            Comment(self.reddit)
+            Comment(reddit)
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Comment(self.reddit, id="dummy", url="dummy")
+            Comment(reddit, id="dummy", url="dummy")
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Comment(self.reddit, "dummy", _data={"id": "dummy"})
+            Comment(reddit, "dummy", _data={"id": "dummy"})
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Comment(self.reddit, url="dummy", _data={"id": "dummy"})
+            Comment(reddit, url="dummy", _data={"id": "dummy"})
         assert str(excinfo.value) == message
 
         with pytest.raises(TypeError) as excinfo:
-            Comment(self.reddit, "dummy", "dummy", {"id": "dummy"})
+            Comment(reddit, "dummy", "dummy", {"id": "dummy"})
         assert str(excinfo.value) == message
 
         with pytest.raises(ValueError):
-            Comment(self.reddit, "")
+            Comment(reddit, "")
         with pytest.raises(ValueError):
-            Comment(self.reddit, url="")
+            Comment(reddit, url="")
 
-    def test_construct_from_url(self):
+    def test_construct_from_url(self, reddit):
         url = "https://reddit.com/comments/2gmzqe/_/cklhv0f/"
-        assert Comment(self.reddit, url=url) == "cklhv0f"
+        assert Comment(reddit, url=url) == "cklhv0f"
 
-    def test_hash(self):
-        comment1 = Comment(self.reddit, _data={"id": "dummy1", "n": 1})
-        comment2 = Comment(self.reddit, _data={"id": "Dummy1", "n": 2})
-        comment3 = Comment(self.reddit, _data={"id": "dummy3", "n": 2})
+    def test_hash(self, reddit):
+        comment1 = Comment(reddit, _data={"id": "dummy1", "n": 1})
+        comment2 = Comment(reddit, _data={"id": "Dummy1", "n": 2})
+        comment3 = Comment(reddit, _data={"id": "dummy3", "n": 2})
         assert hash(comment1) == hash(comment1)
         assert hash(comment2) == hash(comment2)
         assert hash(comment3) == hash(comment3)
@@ -94,16 +94,16 @@ class TestComment(UnitTest):
             with pytest.raises(ClientException):
                 Comment.id_from_url(url)
 
-    def test_repr(self):
-        comment = Comment(self.reddit, id="dummy")
+    def test_repr(self, reddit):
+        comment = Comment(reddit, id="dummy")
         assert repr(comment) == "Comment(id='dummy')"
 
-    def test_str(self):
-        comment = Comment(self.reddit, _data={"id": "dummy"})
+    def test_str(self, reddit):
+        comment = Comment(reddit, _data={"id": "dummy"})
         assert str(comment) == "dummy"
 
-    def test_unset_hidden_attribute_does_not_fetch(self):
-        comment = Comment(self.reddit, _data={"id": "dummy"})
+    def test_unset_hidden_attribute_does_not_fetch(self, reddit):
+        comment = Comment(reddit, _data={"id": "dummy"})
         assert comment._fetched
         with pytest.raises(AttributeError):
             comment._ipython_canary_method_should_not_exist_

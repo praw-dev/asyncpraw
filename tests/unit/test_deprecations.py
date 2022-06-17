@@ -26,43 +26,43 @@ class TestDeprecation(UnitTest):
         with pytest.raises(DeprecationWarning):
             exc.field
 
-    async def test_comment_forest_async_iterator(self):
-        submission = await self.reddit.submission("1234", fetch=False)
+    async def test_comment_forest_async_iterator(self, reddit):
+        submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
         submission.comments._comments = [Comment(None, id="1234")]
         with pytest.deprecated_call():
             async for comment in submission.comments:
                 assert isinstance(comment, Comment)
 
-    async def test_comment_forest_list_async(self):
-        submission = await self.reddit.submission("1234", fetch=False)
+    async def test_comment_forest_list_async(self, reddit):
+        submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
         submission.comments._comments = []
         with pytest.deprecated_call():
             await submission.comments.list()
 
-    async def test_conversations_after_argument(self):
+    async def test_conversations_after_argument(self, reddit):
         with pytest.deprecated_call():
-            subreddit = await self.reddit.subreddit("all")
+            subreddit = await reddit.subreddit("all")
             subreddit.modmail.conversations(after="after")
 
-    async def test_gild_method(self):
+    async def test_gild_method(self, reddit):
         with pytest.raises(DeprecationWarning) as excinfo:
-            submission = await self.reddit.submission("1234", fetch=False)
+            submission = await reddit.submission("1234", fetch=False)
             await submission.gild()
             assert excinfo.value.args[0] == "`.gild` has been renamed to `.award`."
 
-    def test_gold_method(self):
+    def test_gold_method(self, reddit):
         with pytest.raises(DeprecationWarning) as excinfo:
-            self.reddit.subreddits.gold()
+            reddit.subreddits.gold()
             assert (
                 excinfo.value.args[0]
                 == "`subreddits.gold` has be renamed to `subreddits.premium`."
             )
 
-    async def test_lazy_argument_rename(self):
+    async def test_lazy_argument_rename(self, reddit):
         with pytest.deprecated_call() as warning_info:
-            await self.reddit.submission("1234", lazy=True)
+            await reddit.submission("1234", lazy=True)
         assert (
             str(warning_info.list[0].message)
             == "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
@@ -97,19 +97,19 @@ class TestDeprecation(UnitTest):
             ) as reddit:
                 reddit._core._requestor._http = None
 
-    async def test_reddit_user_me_read_only(self):
+    async def test_reddit_user_me_read_only(self, reddit):
         with pytest.raises(DeprecationWarning):
-            await self.reddit.user.me()
+            await reddit.user.me()
 
-    async def test_submission_comments_async(self):
-        submission = await self.reddit.submission("1234", fetch=False)
+    async def test_submission_comments_async(self, reddit):
+        submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
         with pytest.deprecated_call():
             await submission.comments()
 
-    async def test_subreddit_rules_call(self):
+    async def test_subreddit_rules_call(self, reddit):
         with pytest.raises(DeprecationWarning) as excinfo:
-            subreddit = Subreddit(self.reddit, display_name="test")
+            subreddit = Subreddit(reddit, display_name="test")
             await subreddit.rules()
         assert (
             excinfo.value.args[0]
@@ -119,9 +119,9 @@ class TestDeprecation(UnitTest):
             " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__)."
         )
 
-    async def test_synchronous_context_manager(self):
+    async def test_synchronous_context_manager(self, reddit):
         with pytest.raises(DeprecationWarning) as excinfo:
-            with self.reddit:
+            with reddit:
                 pass
             assert (
                 excinfo.value.args[0]
@@ -149,14 +149,14 @@ class TestDeprecation(UnitTest):
                 " removed in Async PRAW 8."
             )
 
-    def test_validate_on_submit(self):
+    def test_validate_on_submit(self, reddit):
         with pytest.raises(DeprecationWarning):
-            self.reddit.validate_on_submit
-        self.reddit.validate_on_submit = True
-        assert self.reddit.validate_on_submit
-        self.reddit.validate_on_submit = False
+            reddit.validate_on_submit
+        reddit.validate_on_submit = True
+        assert reddit.validate_on_submit
+        reddit.validate_on_submit = False
         with pytest.raises(DeprecationWarning):
-            self.reddit.validate_on_submit
+            reddit.validate_on_submit
 
     def test_web_socket_exception_attribute(self):
         exc = WebSocketException("Test", Exception("Test"))
