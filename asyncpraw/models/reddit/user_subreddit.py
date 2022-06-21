@@ -31,6 +31,7 @@ class UserSubreddit(Subreddit):
     ``description``           Subreddit description, in Markdown.
     ``description_html``      Subreddit description, in HTML.
     ``display_name``          Name of the subreddit.
+    ``icon_img``              The URL of the subreddit icon image.
     ``id``                    ID of the subreddit.
     ``name``                  Fullname of the subreddit.
     ``over18``                Whether the subreddit is NSFW.
