@@ -92,8 +92,8 @@ class UserSubreddit(Subreddit):
 
         def wrapper(*args, **kwargs):
             warn(
-                "`Redditor.subreddit` is no longer a dict and is now an `UserSubreddit`"
-                f" object. Using `{func.__name__}` is deprecated and will be removed in"
+                "'Redditor.subreddit' is no longer a dict and is now an UserSubreddit"
+                f" object. Using '{func.__name__}' is deprecated and will be removed in"
                 " Async PRAW 8.",
                 category=DeprecationWarning,
                 stacklevel=2,
@@ -117,9 +117,9 @@ class UserSubreddit(Subreddit):
         return UserSubredditModeration(self)
 
     def __getitem__(self, item):
-        """Show deprecation notice for dict method `__getitem__`."""
+        """Show deprecation notice for dict method ``__getitem__``."""
         warn(
-            "`Redditor.subreddit` is no longer a dict and is now an `UserSubreddit`"
+            "'Redditor.subreddit' is no longer a dict and is now an UserSubreddit"
             " object. Accessing attributes using string indices is deprecated.",
             category=DeprecationWarning,
             stacklevel=2,

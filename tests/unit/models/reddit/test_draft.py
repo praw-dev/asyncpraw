@@ -7,7 +7,7 @@ from ... import UnitTest
 
 class TestDraft(UnitTest):
     def test_construct_failure(self, reddit):
-        message = "Exactly one of `id` or `_data` must be provided."
+        message = "Exactly one of 'id' or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
             Draft(reddit)
         assert str(excinfo.value) == message
@@ -24,7 +24,7 @@ class TestDraft(UnitTest):
         with pytest.raises(TypeError) as excinfo:
             await reddit.drafts.create(url="url", selftext="selftext")
         assert (
-            str(excinfo.value) == "Exactly one of `selftext` or `url` must be provided."
+            str(excinfo.value) == "Exactly one of 'selftext' or 'url' must be provided."
         )
 
     def test_equality(self, reddit):
@@ -116,5 +116,5 @@ class TestDraft(UnitTest):
             await draft.submit()
             assert (
                 str(excinfo.value)
-                == "`subreddit` must be set on the Draft or passed as a keyword argument."
+                == "'subreddit' must be set on the Draft or passed as a keyword argument."
             )

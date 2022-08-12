@@ -20,7 +20,7 @@ class TestRedditor(UnitTest):
         assert redditor2 == "dummy1"
 
     def test_construct_failure(self, reddit):
-        message = "Exactly one of `name`, `fullname`, or `_data` must be provided."
+        message = "Exactly one of 'name', 'fullname', or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
             Redditor(reddit)
         assert str(excinfo.value) == message
