@@ -52,7 +52,7 @@ class TestRemovalReason(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             reason = await subreddit.mod.removal_reasons.get_reason("159bqhvme3rxe")
-            await reason.update(message="New Message", title="New Title")
+            await reason.update(title="New Title", message="New Message")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_update_empty(self, _):
@@ -89,5 +89,7 @@ class TestSubredditRemovalReasons(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            reason = await subreddit.mod.removal_reasons.add("test", "Test")
+            reason = await subreddit.mod.removal_reasons.add(
+                title="Test", message="test"
+            )
             assert isinstance(reason, RemovalReason)

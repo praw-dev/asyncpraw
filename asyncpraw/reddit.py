@@ -42,6 +42,7 @@ from .exceptions import (
 )
 from .models.util import deprecate_lazy
 from .objector import Objector
+from .util import _deprecate_args
 from .util.token_manager import BaseTokenManager
 
 try:
@@ -181,15 +182,22 @@ class Reddit:
         """Close the requestor."""
         await self.requestor.close()
 
+    @_deprecate_args(
+        "site_name",
+        "config_interpolation",
+        "requestor_class",
+        "requestor_kwargs",
+        "token_manager",
+    )
     def __init__(
         self,
-        site_name: str = None,
+        site_name: Optional[str] = None,
+        *,
         config_interpolation: Optional[str] = None,
         requestor_class: Optional[Type[Requestor]] = None,
-        requestor_kwargs: Dict[str, Any] = None,
-        *,
+        requestor_kwargs: Optional[Dict[str, Any]] = None,
         token_manager: Optional[BaseTokenManager] = None,
-        **config_settings: Union[str, bool],
+        **config_settings: Optional[Union[str, bool]],
     ):  # noqa: D207, D301
         """Initialize a :class:`.Reddit` instance.
 
@@ -199,7 +207,9 @@ class Reddit:
             credentials for different applications, or communicate with other servers
             running Reddit. If ``site_name`` is ``None``, then the site name will be
             looked for in the environment variable ``praw_site``. If it is not found
-            there, the ``DEFAULT`` site will be used.
+            there, the ``DEFAULT`` site will be used (default: ``None``).
+        :param config_interpolation: Config parser interpolation type that will be
+            passed to :class:`.Config` (default: ``None``).
         :param requestor_class: A class that will be used to create a requestor. If not
             set, use ``asyncprawcore.Requestor`` (default: ``None``).
         :param requestor_kwargs: Dictionary with additional keyword arguments used to
@@ -216,9 +226,9 @@ class Reddit:
 
         Required settings are:
 
-        - client_id
-        - client_secret (for installed applications set this value to ``None``)
-        - user_agent
+        - ``client_id``
+        - ``client_secret`` (for installed applications set this value to ``None``)
+        - ``user_agent``
 
         The ``requestor_class`` and ``requestor_kwargs`` allow for customization of the
         requestor :class:`.Reddit` will use. This allows, e.g., easily adding behavior
@@ -252,7 +262,7 @@ class Reddit:
             )
 
         You can automatically close the requestor session by using this class as an
-        context manager:
+        asynchronous context manager:
 
         .. code-block:: python
 
@@ -311,7 +321,9 @@ class Reddit:
             )
         self._check_for_update()
         self._prepare_objector()
-        self.requestor = self._prepare_asyncprawcore(requestor_class, requestor_kwargs)
+        self.requestor = self._prepare_asyncprawcore(
+            requestor_class=requestor_class, requestor_kwargs=requestor_kwargs
+        )
 
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
@@ -382,11 +394,11 @@ class Reddit:
         """An instance of :class:`.LiveHelper`.
 
         Provides the interface for working with :class:`.LiveThread` instances. At
-        present only new LiveThreads can be created.
+        present only new live threads can be created.
 
         .. code-block:: python
 
-            await reddit.live.create("title", "description")
+            await reddit.live.create(title="title", description="description")
 
         """
 
@@ -404,7 +416,9 @@ class Reddit:
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("samuraisam", "programming", fetch=True)
+            multireddit = await reddit.multireddit(
+                redditor="samuraisam", name="programming", fetch=True
+            )
 
         """
 
@@ -429,7 +443,7 @@ class Reddit:
 
         .. code-block:: python
 
-            await reddit.subreddit.create("coolnewsubname")
+            await reddit.subreddit.create(name="coolnewsubname")
 
         To obtain a lazy :class:`.Subreddit` instance run:
 
@@ -562,7 +576,7 @@ class Reddit:
         }
         self._objector = Objector(self, mappings)
 
-    def _prepare_asyncprawcore(self, requestor_class=None, requestor_kwargs=None):
+    def _prepare_asyncprawcore(self, *, requestor_class=None, requestor_kwargs=None):
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
 
@@ -606,20 +620,22 @@ class Reddit:
         self._read_only_core = session(read_only_authorizer)
         self._prepare_common_authorizer(authenticator)
 
+    @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
     async def comment(
         self,  # pylint: disable=invalid-name
         id: Optional[str] = None,  # pylint: disable=redefined-builtin
-        url: Optional[str] = None,
+        *,
         fetch: bool = True,
+        url: Optional[str] = None,
         **kwargs,
     ):
         """Return an instance of :class:`.Comment`.
 
         :param id: The ID of the comment.
-        :param url: A permalink pointing to the comment.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
+        :param url: A permalink pointing to the comment.
 
         If you don't need the object fetched right away (e.g., to utilize a class
         method) then you can do:
@@ -649,9 +665,11 @@ class Reddit:
         """
         return models.DomainListing(self, domain)
 
+    @_deprecate_args("path", "params")
     async def get(
         self,
         path: str,
+        *,
         params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
     ):
         """Return parsed objects returned from a GET request to ``path``.
@@ -662,11 +680,13 @@ class Reddit:
         """
         return await self._objectify_request(method="GET", params=params, path=path)
 
+    @_deprecate_args("fullnames", "url", "subreddits")
     def info(
         self,
+        *,
         fullnames: Optional[Iterable[str]] = None,
-        url: Optional[str] = None,
         subreddits: Optional[Iterable[Union["asyncpraw.models.Subreddit", str]]] = None,
+        url: Optional[str] = None,
     ) -> AsyncGenerator[
         Union[
             "asyncpraw.models.Subreddit",
@@ -679,9 +699,9 @@ class Reddit:
 
         :param fullnames: A list of fullnames for comments, submissions, and/or
             subreddits.
-        :param url: A url (as a string) to retrieve lists of link submissions from.
         :param subreddits: A list of subreddit names or :class:`.Subreddit` objects to
             retrieve subreddits from.
+        :param url: A url (as a string) to retrieve lists of link submissions from.
 
         :returns: A generator that yields found items in their relative order.
 
@@ -742,9 +762,10 @@ class Reddit:
 
     async def _objectify_request(
         self,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
-        json=None,
+        json: Optional[Dict[Any, Any]] = None,
         method: str = "",
         params: Optional[Union[str, Dict[str, str]]] = None,
         path: str = "",
@@ -758,7 +779,8 @@ class Reddit:
         :param json: JSON-serializable object to send in the body of the request with a
             Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
-        :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
+        :param method: The HTTP method (e.g., ``"GET"``, ``"POST"``, ``"PUT"``,
+            ``"DELETE"``).
         :param params: The query parameters to add to the request (default: ``None``).
         :param path: The path to fetch.
 
@@ -792,11 +814,13 @@ class Reddit:
                     return sleep_seconds
         return None
 
+    @_deprecate_args("path", "data", "json", "params")
     async def delete(
         self,
         path: str,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json=None,
+        json: Optional[Dict[Any, Any]] = None,
         params: Optional[Union[str, Dict[str, str]]] = None,
     ) -> Any:
         """Return parsed objects returned from a DELETE request to ``path``.
@@ -814,11 +838,13 @@ class Reddit:
             data=data, json=json, method="DELETE", params=params, path=path
         )
 
+    @_deprecate_args("path", "data", "json")
     async def patch(
         self,
         path: str,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json=None,
+        json: Optional[Dict[Any, Any]] = None,
     ) -> Any:
         """Return parsed objects returned from a PATCH request to ``path``.
 
@@ -831,16 +857,18 @@ class Reddit:
 
         """
         return await self._objectify_request(
-            data=data, method="PATCH", path=path, json=json
+            data=data, json=json, method="PATCH", path=path
         )
 
+    @_deprecate_args("path", "data", "files", "params", "json")
     async def post(
         self,
         path: str,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
+        json: Optional[Dict[Any, Any]] = None,
         params: Optional[Union[str, Dict[str, str]]] = None,
-        json=None,
     ) -> Any:
         """Return parsed objects returned from a POST request to ``path``.
 
@@ -849,10 +877,10 @@ class Reddit:
             request (default: ``None``).
         :param files: Dictionary, filename to file (like) object mapping (default:
             ``None``).
-        :param params: The query parameters to add to the request (default: ``None``).
         :param json: JSON-serializable object to send in the body of the request with a
             Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
+        :param params: The query parameters to add to the request (default: ``None``).
 
         """
         if json is None:
@@ -881,11 +909,13 @@ class Reddit:
                 await asyncio.sleep(seconds)
         raise last_exception
 
+    @_deprecate_args("path", "data", "json")
     async def put(
         self,
         path: str,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json=None,
+        json: Optional[Dict[Any, Any]] = None,
     ):
         """Return parsed objects returned from a PUT request to ``path``.
 
@@ -901,8 +931,9 @@ class Reddit:
             data=data, json=json, method="PUT", path=path
         )
 
+    @_deprecate_args("nsfw")
     async def random_subreddit(
-        self, nsfw: bool = False
+        self, *, nsfw: bool = False
     ) -> "asyncpraw.models.Subreddit":
         """Return a random instance of :class:`.Subreddit`.
 
@@ -920,18 +951,20 @@ class Reddit:
         await subreddit._fetch()
         return subreddit
 
+    @_deprecate_args("name", "fullname", "fetch")
     async def redditor(
         self,
         name: Optional[str] = None,
-        fullname: Optional[str] = None,
+        *,
         fetch: bool = False,
+        fullname: Optional[str] = None,
     ) -> "asyncpraw.models.Redditor":
         """Return an instance of :class:`.Redditor`.
 
         :param name: The name of the redditor.
-        :param fullname: The fullname of the redditor, starting with ``t2_``.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``False``).
+        :param fullname: The fullname of the redditor, starting with ``t2_``.
 
         Either ``name`` or ``fullname`` can be provided, but not both.
 
@@ -941,20 +974,19 @@ class Reddit:
             await redditor._fetch()
         return redditor
 
+    @_deprecate_args("method", "path", "params", "data", "files", "json")
     async def request(
         self,
-        method: str,
-        path: str,
-        params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
+        *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
-        json=None,
+        json: Optional[Dict[Any, Any]] = None,
+        method: str,
+        params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
+        path: str,
     ) -> Any:
         """Return the parsed JSON data returned from a request to URL.
 
-        :param method: The HTTP method (e.g., GET, POST, PUT, DELETE).
-        :param path: The path to fetch.
-        :param params: The query parameters to add to the request (default: ``None``).
         :param data: Dictionary, bytes, or file-like object to send in the body of the
             request (default: ``None``).
         :param files: Dictionary, filename to file (like) object mapping (default:
@@ -962,19 +994,22 @@ class Reddit:
         :param json: JSON-serializable object to send in the body of the request with a
             Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
+        :param method: The HTTP method (e.g., ``"GET"``, ``"POST"``, ``"PUT"``,
+            ``"DELETE"``).
+        :param params: The query parameters to add to the request (default: ``None``).
+        :param path: The path to fetch.
 
         """
         if data and json:
             raise ClientException("At most one of `data` or `json` is supported.")
         try:
             return await self._core.request(
-                method,
-                path,
                 data=data,
                 files=files,
-                params=params,
-                timeout=self.config.timeout,
                 json=json,
+                method=method,
+                params=params,
+                path=path,
             )
         except BadRequest as exception:
             try:
@@ -997,20 +1032,22 @@ class Reddit:
                 [data["reason"], explanation, field]
             ) from exception
 
+    @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
     async def submission(  # pylint: disable=invalid-name,redefined-builtin
         self,
         id: Optional[str] = None,
-        url: Optional[str] = None,
+        *,
         fetch: bool = True,
+        url: Optional[str] = None,
         **kwargs,
     ) -> "asyncpraw.models.Submission":
         """Return an instance of :class:`.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.
-        :param url: A URL supported by :meth:`.Submission.id_from_url`.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
+        :param url: A URL supported by :meth:`.Submission.id_from_url`.
 
         Either ``id`` or ``url`` can be provided, but not both.
 
@@ -1039,5 +1076,5 @@ class Reddit:
 
         """
         return await self._objectify_request(
-            path=API_PATH["username_available"], params={"user": name}, method="GET"
+            method="GET", params={"user": name}, path=API_PATH["username_available"]
         )

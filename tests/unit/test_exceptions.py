@@ -28,25 +28,35 @@ class TestAsyncPRAWException:
 
 class TestRedditErrorItem:
     def test_equality(self):
-        resp = ["BAD_SOMETHING", "invalid something", "some_field"]
-        error = RedditErrorItem(*resp)
-        error2 = RedditErrorItem(*resp)
+        resp = {
+            "error_type": "BAD_SOMETHING",
+            "field": "some_field",
+            "message": "invalid something",
+        }
+        error = RedditErrorItem(**resp)
+        error2 = RedditErrorItem(**resp)
         assert error == error2
         assert error != 0
 
     def test_property(self):
-        error = RedditErrorItem("BAD_SOMETHING", "invalid something", "some_field")
+        error = RedditErrorItem(
+            "BAD_SOMETHING", field="some_field", message="invalid something"
+        )
         assert (
             error.error_message
             == "BAD_SOMETHING: 'invalid something' on field 'some_field'"
         )
 
     def test_str(self):
-        error = RedditErrorItem("BAD_SOMETHING", "invalid something", "some_field")
+        error = RedditErrorItem(
+            "BAD_SOMETHING", field="some_field", message="invalid something"
+        )
         assert str(error) == "BAD_SOMETHING: 'invalid something' on field 'some_field'"
 
     def test_repr(self):
-        error = RedditErrorItem("BAD_SOMETHING", "invalid something", "some_field")
+        error = RedditErrorItem(
+            "BAD_SOMETHING", field="some_field", message="invalid something"
+        )
         assert (
             repr(error)
             == "RedditErrorItem(error_type='BAD_SOMETHING', message='invalid"
@@ -69,7 +79,9 @@ class TestRedditAPIException:
         container = RedditAPIException(
             [
                 ["BAD_SOMETHING", "invalid something", "some_field"],
-                RedditErrorItem("BAD_SOMETHING", "invalid something", "some_field"),
+                RedditErrorItem(
+                    "BAD_SOMETHING", field="some_field", message="invalid something"
+                ),
             ]
         )
         for exception in container.items:

@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, AsyncIterator, Dict, List, Optional, Union
 from warnings import warn
 
 from ..const import API_PATH
+from ..util import _deprecate_args
 from . import Subreddit
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
@@ -124,19 +125,24 @@ class Subreddits(AsyncPRAWBase):
             :meth:`.search_by_name` to search by subreddit names
 
         """
-        self._safely_add_arguments(generator_kwargs, "params", q=query)
+        self._safely_add_arguments(arguments=generator_kwargs, key="params", q=query)
         return ListingGenerator(
             self._reddit, API_PATH["subreddits_search"], **generator_kwargs
         )
 
+    @_deprecate_args("query", "include_nsfw", "exact")
     async def search_by_name(
-        self, query: str, include_nsfw: bool = True, exact: bool = False
-    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
-        """Return list of Subreddits whose names begin with ``query``.
+        self,
+        query: str,
+        *,
+        include_nsfw: bool = True,
+        exact: bool = False,
+    ) -> List["asyncpraw.models.Subreddit"]:
+        r"""Return list of :class:`.Subreddit`\ s whose names begin with ``query``.
 
         :param query: Search for subreddits beginning with this string.
-        :param include_nsfw: Include subreddits labeled NSFW (default: ``True``).
         :param exact: Return only exact matches to ``query`` (default: ``False``).
+        :param include_nsfw: Include subreddits labeled NSFW (default: ``True``).
 
         """
         results = await self._reddit.post(

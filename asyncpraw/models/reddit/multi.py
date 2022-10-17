@@ -4,6 +4,7 @@ from json import dumps
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ...const import API_PATH
+from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..listing.mixins import SubredditListingMixin
 from .base import RedditBase
@@ -73,7 +74,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("spez", "fun")
+            multireddit = await reddit.multireddit(redditor="spez", name="fun")
             async for comment in multireddit.stream.comments():
                 print(comment)
 
@@ -82,7 +83,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "games")
+            multireddit = await reddit.multireddit(redditor="bboe", name="games")
             async for submission in multireddit.stream.submissions():
                 print(submission)
 
@@ -114,7 +115,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
     async def _fetch_data(self):
         name, fields, params = await self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -133,7 +134,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.add(subreddit)
 
         """
@@ -144,8 +145,9 @@ class Multireddit(SubredditListingMixin, RedditBase):
         await self._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
+    @_deprecate_args("display_name")
     async def copy(
-        self, display_name: Optional[str] = None
+        self, *, display_name: Optional[str] = None
     ) -> "asyncpraw.models.Multireddit":
         """Copy this multireddit and return the new multireddit.
 
@@ -157,8 +159,8 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "test")
-            await multireddit.copy("testing")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
+            await multireddit.copy(display_name="testing")
 
         """
         if display_name:
@@ -183,7 +185,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.delete()
 
         """
@@ -203,7 +205,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.remove(subreddit)
 
         """
@@ -244,7 +246,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("bboe", "test")
+            multireddit = await reddit.multireddit(redditor="bboe", name="test")
             await multireddit.update(display_name="testing")
 
         """

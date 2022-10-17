@@ -2,16 +2,9 @@
 from typing import Any, AsyncIterator, Dict, Union
 from urllib.parse import urljoin
 
+from ....util import _deprecate_args
 from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
-
-
-def _prepare(asyncpraw_object, arguments_dict, target):
-    """Fix for :class:`.Redditor` methods that use a query param rather than subpath."""
-    if asyncpraw_object.__dict__.get("_listing_use_sort"):
-        AsyncPRAWBase._safely_add_arguments(arguments_dict, "params", sort=target)
-        return asyncpraw_object._path
-    return urljoin(asyncpraw_object._path, target)
 
 
 class BaseListingMixin(AsyncPRAWBase):
@@ -30,8 +23,17 @@ class BaseListingMixin(AsyncPRAWBase):
             valid_time_filters = ", ".join(BaseListingMixin.VALID_TIME_FILTERS)
             raise ValueError(f"time_filter must be one of: {valid_time_filters}")
 
+    def _prepare(self, *, arguments, sort):
+        """Fix for :class:`.Redditor` methods that use a query param rather than subpath."""
+        if self.__dict__.get("_listing_use_sort"):
+            self._safely_add_arguments(arguments=arguments, key="params", sort=sort)
+            return self._path
+        return urljoin(self._path, sort)
+
+    @_deprecate_args("time_filter")
     def controversial(
         self,
+        *,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
     ) -> AsyncIterator[Any]:
@@ -49,27 +51,29 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            reddit.domain("imgur.com").controversial("week")
+            reddit.domain("imgur.com").controversial(time_filter="week")
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
-            multireddit.controversial("day")
-
-            redditor = await reddit.redditor("spez")
-            redditor.controversial("month")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
+            multireddit.controversial(time_filter="day")
 
             redditor = await reddit.redditor("spez")
-            redditor.comments.controversial("year")
+            redditor.controversial(time_filter="month")
 
             redditor = await reddit.redditor("spez")
-            redditor.submissions.controversial("all")
+            redditor.comments.controversial(time_filter="year")
+
+            redditor = await reddit.redditor("spez")
+            redditor.submissions.controversial(time_filter="all")
 
             subreddit = await reddit.subreddit("all")
-            subreddit.controversial("hour")
+            subreddit.controversial(time_filter="hour")
 
         """
         self._validate_time_filter(time_filter)
-        self._safely_add_arguments(generator_kwargs, "params", t=time_filter)
-        url = _prepare(self, generator_kwargs, "controversial")
+        self._safely_add_arguments(
+            arguments=generator_kwargs, key="params", t=time_filter
+        )
+        url = self._prepare(arguments=generator_kwargs, sort="controversial")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     def hot(
@@ -86,7 +90,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
             reddit.domain("imgur.com").hot()
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
             multireddit.hot()
 
             redditor = await reddit.redditor("spez")
@@ -103,7 +107,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
         """
         generator_kwargs.setdefault("params", {})
-        url = _prepare(self, generator_kwargs, "hot")
+        url = self._prepare(arguments=generator_kwargs, sort="hot")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     def new(
@@ -120,7 +124,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
             reddit.domain("imgur.com").new()
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
             multireddit.new()
 
             redditor = await reddit.redditor("spez")
@@ -137,11 +141,13 @@ class BaseListingMixin(AsyncPRAWBase):
 
         """
         generator_kwargs.setdefault("params", {})
-        url = _prepare(self, generator_kwargs, "new")
+        url = self._prepare(arguments=generator_kwargs, sort="new")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
+    @_deprecate_args("time_filter")
     def top(
         self,
+        *,
         time_filter: str = "all",
         **generator_kwargs: Union[str, int, Dict[str, str]],
     ) -> AsyncIterator[Any]:
@@ -159,25 +165,27 @@ class BaseListingMixin(AsyncPRAWBase):
 
         .. code-block:: python
 
-            reddit.domain("imgur.com").top("week")
+            reddit.domain("imgur.com").top(time_filter="week")
 
-            multireddit = await reddit.multireddit("samuraisam", "programming")
-            multireddit.top("day")
-
-            redditor = await reddit.redditor("spez")
-            redditor.top("month")
+            multireddit = await reddit.multireddit(redditor="samuraisam", name="programming")
+            multireddit.top(time_filter="day")
 
             redditor = await reddit.redditor("spez")
-            redditor.comments.top("year")
+            redditor.top(time_filter="month")
 
             redditor = await reddit.redditor("spez")
-            redditor.submissions.top("all")
+            redditor.comments.top(time_filter="year")
+
+            redditor = await reddit.redditor("spez")
+            redditor.submissions.top(time_filter="all")
 
             subreddit = await reddit.subreddit("all")
-            subreddit.top("hour")
+            subreddit.top(time_filter="hour")
 
         """
         self._validate_time_filter(time_filter)
-        self._safely_add_arguments(generator_kwargs, "params", t=time_filter)
-        url = _prepare(self, generator_kwargs, "top")
+        self._safely_add_arguments(
+            arguments=generator_kwargs, key="params", t=time_filter
+        )
+        url = self._prepare(arguments=generator_kwargs, sort="top")
         return ListingGenerator(self._reddit, url, **generator_kwargs)

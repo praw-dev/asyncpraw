@@ -58,8 +58,8 @@ class TestReddit(UnitTest):
     def test_conflicting_settings(self):
         with pytest.raises(TypeError) as excinfo:
             Reddit(
-                refresh_token="dummy",
                 token_manager="dummy",
+                refresh_token="dummy",
                 **self.REQUIRED_DUMMY_SETTINGS,
             )
         assert (
@@ -76,13 +76,13 @@ class TestReddit(UnitTest):
 
     def test_info__invalid_param(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            reddit.info(None)
+            reddit.info(fullnames=None)
 
         err_str = "Either `fullnames`, `url`, or `subreddits` must be provided."
         assert str(excinfo.value) == err_str
 
         with pytest.raises(TypeError) as excinfo:
-            reddit.info([], "")
+            reddit.info(fullnames=[], url="")
 
         assert str(excinfo.value) == err_str
 
@@ -104,7 +104,7 @@ class TestReddit(UnitTest):
 
     def test_info__not_list(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            reddit.info("Let's try a string")
+            reddit.info(fullnames="Let's try a string")
 
         assert "must be a non-str iterable" in str(excinfo.value)
 
@@ -118,7 +118,7 @@ class TestReddit(UnitTest):
         assert str(excinfo.value) == "ids must be a list"
 
     async def test_multireddit(self, reddit):
-        multireddit = await reddit.multireddit("bboe", "aa")
+        multireddit = await reddit.multireddit(redditor="bboe", name="aa")
         assert multireddit.path == "/user/bboe/m/aa"
 
     @mock.patch(
@@ -333,9 +333,9 @@ class TestReddit(UnitTest):
 
     async def test_read_only__with_authenticated_core(self):
         async with Reddit(
+            token_manager=DummyTokenManager(),
             password=None,
             username=None,
-            token_manager=DummyTokenManager(),
             **self.REQUIRED_DUMMY_SETTINGS,
         ) as reddit:
             assert not reddit.read_only
@@ -359,11 +359,11 @@ class TestReddit(UnitTest):
 
     async def test_read_only__with_authenticated_core__non_confidential(self):
         async with Reddit(
+            token_manager=DummyTokenManager(),
             client_id="dummy",
             client_secret=None,
             redirect_uri="dummy",
             user_agent="dummy",
-            token_manager=DummyTokenManager(),
         ) as reddit:
             assert not reddit.read_only
             reddit.read_only = True
@@ -458,17 +458,14 @@ class TestReddit(UnitTest):
 
         reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
         with pytest.raises(Exception) as excinfo:
-            await reddit.request("POST", "/")
+            await reddit.request(method="POST", path="/")
         assert str(excinfo.value) == "received 400 HTTP response"
 
     async def test_request__json_and_body(self):
         reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
         with pytest.raises(ClientException) as excinfo:
             await reddit.request(
-                method="POST",
-                path="/",
-                data={"key": "value"},
-                json={"key": "value"},
+                data={"key": "value"}, json={"key": "value"}, method="POST", path="/"
             )
         assert str(excinfo.value).startswith(
             "At most one of `data` or `json` is supported."
@@ -489,21 +486,21 @@ class TestRedditCustomRequestor(UnitTest):
             pass
 
         async with Reddit(
+            requestor_class=CustomRequestor,
             client_id="dummy",
             client_secret="dummy",
             password="dummy",
             user_agent="dummy",
             username="dummy",
-            requestor_class=CustomRequestor,
         ) as temp_reddit:
             assert isinstance(temp_reddit._core._requestor, CustomRequestor)
         assert not isinstance(reddit._core._requestor, CustomRequestor)
 
         async with Reddit(
+            requestor_class=CustomRequestor,
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
-            requestor_class=CustomRequestor,
         ) as temp_reddit:
             assert isinstance(temp_reddit._core._requestor, CustomRequestor)
         assert not isinstance(reddit._core._requestor, CustomRequestor)
@@ -511,10 +508,10 @@ class TestRedditCustomRequestor(UnitTest):
     async def test_requestor_kwargs(self):
         session = AsyncMock(headers={})
         async with Reddit(
+            requestor_kwargs={"session": session},
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
-            requestor_kwargs={"session": session},
         ) as reddit:
 
             assert reddit._core._requestor._http is session

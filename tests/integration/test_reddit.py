@@ -21,8 +21,8 @@ class TestReddit(IntegrationTest):
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
                 await self.reddit.request(
-                    "GET",
-                    f"/api/morechildren?link_id=t3_n7r3uz&children={junk}",
+                    method="GET",
+                    path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk}",
                 )
             assert str(excinfo.value) == "Bad Request"
 
@@ -32,8 +32,8 @@ class TestReddit(IntegrationTest):
         with self.use_cassette():
             with pytest.raises(RedditAPIException) as excinfo:
                 await self.reddit.request(
-                    "GET",
-                    f"/api/morechildren?link_id=t3_n7r3uz&children={ids}",
+                    method="GET",
+                    path=f"/api/morechildren?link_id=t3_n7r3uz&children={ids}",
                 )
             assert (
                 str(excinfo.value)
@@ -63,7 +63,7 @@ class TestReddit(IntegrationTest):
                 items.append(f"{base}{i:02d}")
 
         with self.use_cassette():
-            results = await self.async_list(self.reddit.info(items))
+            results = await self.async_list(self.reddit.info(fullnames=items))
         assert len(results) > 100
         for item in results:
             assert isinstance(item, RedditBase)

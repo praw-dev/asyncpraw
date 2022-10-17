@@ -3,6 +3,7 @@ from json import dumps
 from typing import TYPE_CHECKING, AsyncGenerator, List, Optional, Union
 
 from ..const import API_PATH
+from ..util import _deprecate_args
 from .base import AsyncPRAWBase
 from .reddit.draft import Draft
 from .reddit.live import LiveThread
@@ -23,7 +24,7 @@ class DraftHelper(AsyncPRAWBase):
     """
 
     async def __call__(
-        self, *, draft_id: Optional[str] = None, fetch: bool = True
+        self, draft_id: Optional[str] = None, fetch: bool = True
     ) -> Union[List["asyncpraw.models.Draft"], "asyncpraw.models.Draft"]:
         """Return a list of :class:`.Draft` instances.
 
@@ -40,7 +41,7 @@ class DraftHelper(AsyncPRAWBase):
         .. code-block:: python
 
             draft_id = "124862bc-e1e9-11eb-aa4f-e68667a77cbb"
-            draft = await reddit.drafts(draft_id=draft_id)
+            draft = await reddit.drafts(draft_id)
             print(draft)
 
         """
@@ -223,14 +224,16 @@ class LiveHelper(AsyncPRAWBase):
 
         return generator()
 
+    @_deprecate_args("title", "description", "nsfw", "resources")
     async def create(
         self,
         title: str,
+        *,
         description: Optional[str] = None,
         nsfw: bool = False,
         resources: str = None,
     ) -> "asyncpraw.models.LiveThread":
-        r"""Create a new :class:`.LiveThread`.
+        """Create a new :class:`.LiveThread`.
 
         :param title: The title of the new :class:`.LiveThread`.
         :param description: The new :class:`.LiveThread`'s description.
@@ -271,23 +274,26 @@ class LiveHelper(AsyncPRAWBase):
 class MultiredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with multireddits."""
 
+    @_deprecate_args("redditor", "name")
     async def __call__(
         self,
-        redditor: Union[str, "asyncpraw.models.Redditor"],
+        *,
         name: str,
+        redditor: Union[str, "asyncpraw.models.Redditor"],
         fetch: bool = False,
     ) -> "asyncpraw.models.Multireddit":
-        """Return an instance of :class:`.Multireddit`.
+        """Return a lazy instance of :class:`.Multireddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can
         do:
 
         .. code-block:: python
 
-            multireddit = await reddit.multireddit("redditor", "multi", fetch=True)
+            multireddit = await reddit.multireddit(redditor="redditor", name="multi", fetch=True)
             async for comment in multireddit.comments(limit=25):
                 print(comment.author)
 
+        :param name: The name of the multireddit.
         :param redditor: A redditor name or :class:`.Redditor` instance who owns the
             multireddit.
         :param name: The name of the multireddit.
@@ -301,13 +307,23 @@ class MultiredditHelper(AsyncPRAWBase):
             await multireddit._fetch()
         return multireddit
 
+    @_deprecate_args(
+        "display_name",
+        "subreddits",
+        "description_md",
+        "icon_name",
+        "key_color",
+        "visibility",
+        "weighting_scheme",
+    )
     async def create(
         self,
-        display_name: str,
-        subreddits: Union[str, "asyncpraw.models.Subreddit"],
+        *,
         description_md: Optional[str] = None,
+        display_name: str,
         icon_name: Optional[str] = None,
         key_color: Optional[str] = None,
+        subreddits: Union[str, "asyncpraw.models.Subreddit"],
         visibility: str = "private",
         weighting_scheme: str = "classic",
     ) -> "asyncpraw.models.Multireddit":
@@ -380,25 +396,27 @@ class SubredditHelper(AsyncPRAWBase):
             await subreddit._fetch()
         return subreddit
 
+    @_deprecate_args("name", "title", "link_type", "subreddit_type", "wikimode")
     async def create(
         self,
         name: str,
-        title: Optional[str] = None,
+        *,
         link_type: str = "any",
         subreddit_type: str = "public",
+        title: Optional[str] = None,
         wikimode: str = "disabled",
         **other_settings: Optional[str],
     ) -> "asyncpraw.models.Subreddit":
         """Create a new :class:`.Subreddit`.
 
         :param name: The name for the new subreddit.
-        :param title: The title of the subreddit. When ``None`` or ``""`` use the value
-            of ``"name"``.
         :param link_type: The types of submissions users can make. One of ``"any"``,
             ``"link"``, or ``"self"`` (default: ``"any"``).
         :param subreddit_type: One of ``"archived"``, ``"employees_only"``,
             ``"gold_only"``, ``"gold_restricted"``, ``"private"``, ``"public"``, or
             ``"restricted"`` (default: ``"public"``).
+        :param title: The title of the subreddit. When ``None`` or ``""`` use the value
+            of ``name``.
         :param wikimode: One of ``"anyone"``, ``"disabled"``, or ``"modonly"`` (default:
             ``"disabled"``).
 
@@ -413,8 +431,8 @@ class SubredditHelper(AsyncPRAWBase):
         """
         await Subreddit._create_or_update(
             _reddit=self._reddit,
-            name=name,
             link_type=link_type,
+            name=name,
             subreddit_type=subreddit_type,
             title=title or name,
             wikimode=wikimode,

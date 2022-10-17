@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Union
 
 from ...const import API_PATH
+from ...util import _deprecate_args
 from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -60,7 +61,10 @@ class MoreComments(AsyncPRAWBase):
         assert len(comments.children) == 1, "Please file a bug report with Async PRAW."
         return comments.children[0]
 
-    async def comments(self, update: bool = True) -> List["asyncpraw.models.Comment"]:
+    @_deprecate_args("update")
+    async def comments(
+        self, *, update: bool = True
+    ) -> List["asyncpraw.models.Comment"]:
         """Fetch and return the comments for a single :class:`.MoreComments` object."""
         if self._comments is None:
             if self.count == 0:  # Handle "continue this thread"

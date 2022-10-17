@@ -7,7 +7,7 @@ from asyncprawcore import Conflict
 
 from ...const import API_PATH
 from ...exceptions import InvalidURL
-from ...util.cache import cachedproperty
+from ...util import _deprecate_args, cachedproperty
 from ..comment_forest import CommentForest
 from ..listing.listing import Listing
 from ..listing.mixins import SubmissionListingMixin
@@ -52,11 +52,12 @@ class SubmissionFlair:
         )
         return data["choices"]
 
-    async def select(self, flair_template_id: str, text: Optional[str] = None):
+    @_deprecate_args("flair_template_id", "text")
+    async def select(self, flair_template_id: str, *, text: Optional[str] = None):
         """Select flair for submission.
 
-        :param flair_template_id: The flair template to select. The possible
-            ``flair_template_id`` values can be discovered through :meth:`.choices`.
+        :param flair_template_id: The flair template to select. The possible values can
+            be discovered through :meth:`.choices`.
         :param text: If the template's ``flair_text_editable`` value is ``True``, this
             value will set a custom text (default: ``None``).
 
@@ -67,7 +68,7 @@ class SubmissionFlair:
 
             choices = await submission.flair.choices()
             template_id = next(x for x in choices if x["flair_text_editable"])["flair_template_id"]
-            await submission.flair.select(template_id, "my custom value")
+            await submission.flair.select(template_id, text="my custom value")
 
         """
         data = {
@@ -103,7 +104,8 @@ class SubmissionModeration(ThingModerationMixin):
         """
         self.thing = submission
 
-    async def contest_mode(self, state: bool = True):
+    @_deprecate_args("state")
+    async def contest_mode(self, *, state: bool = True):
         """Set contest mode for the comments of this submission.
 
         :param state: ``True`` enables contest mode and ``False`` disables (default:
@@ -122,27 +124,28 @@ class SubmissionModeration(ThingModerationMixin):
         .. code-block:: python
 
             submission = await reddit.submission("5or86n", fetch=False)
-            await submission.mod.contest_mode(state=True)
+            await submission.mod.contest_mode()
 
         """
         await self.thing._reddit.post(
-            API_PATH["contest_mode"],
-            data={"id": self.thing.fullname, "state": state},
+            API_PATH["contest_mode"], data={"id": self.thing.fullname, "state": state}
         )
 
+    @_deprecate_args("text", "css_class", "flair_template_id")
     async def flair(
         self,
-        text: str = "",
+        *,
         css_class: str = "",
         flair_template_id: Optional[str] = None,
+        text: str = "",
     ):
         """Set flair for the submission.
 
-        :param text: The flair text to associate with the :class:`.Submission` (default:
-            ``""``).
         :param css_class: The css class to associate with the flair html (default:
             ``""``).
         :param flair_template_id: The flair template ID to use when flairing.
+        :param text: The flair text to associate with the :class:`.Submission` (default:
+            ``""``).
 
         This method can only be used by an authenticated user who is a moderator of the
         submission's :class:`.Subreddit`.
@@ -264,13 +267,14 @@ class SubmissionModeration(ThingModerationMixin):
             API_PATH["spoiler"], data={"id": self.thing.fullname}
         )
 
-    async def sticky(self, state: bool = True, bottom: bool = True):
+    @_deprecate_args("state", "bottom")
+    async def sticky(self, *, bottom: bool = True, state: bool = True):
         """Set the submission's sticky state in its subreddit.
 
-        :param state: ``True`` sets the sticky for the submission and ``False`` unsets
-            (default: ``True``).
         :param bottom: When ``True``, set the submission as the bottom sticky. If no top
             sticky exists, this submission will become the top sticky regardless
+            (default: ``True``).
+        :param state: ``True`` sets the sticky for the submission and ``False`` unsets
             (default: ``True``).
 
         .. note::
@@ -299,7 +303,8 @@ class SubmissionModeration(ThingModerationMixin):
         except Conflict:
             pass
 
-    async def suggested_sort(self, sort: str = "blank"):
+    @_deprecate_args("sort")
+    async def suggested_sort(self, *, sort: str = "blank"):
         """Set the suggested sort for the comments of the submission.
 
         :param sort: Can be one of: ``"confidence"``, ``"top"``, ``"new"``,
@@ -308,8 +313,7 @@ class SubmissionModeration(ThingModerationMixin):
 
         """
         await self.thing._reddit.post(
-            API_PATH["suggested_sort"],
-            data={"id": self.thing.fullname, "sort": sort},
+            API_PATH["suggested_sort"], data={"id": self.thing.fullname, "sort": sort}
         )
 
     async def unset_original_content(self):
@@ -508,7 +512,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
             choices = await submission.flair.choices()
             template_id = next(x for x in choices if x["flair_text_editable"])["flair_template_id"]
-            await submission.flair.select(template_id, "my custom value")
+            await submission.flair.select(template_id, text="my custom value")
 
         """
         return SubmissionFlair(self)
@@ -624,7 +628,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             )
         super().__setattr__(attribute, value)
 
-    def _chunk(self, other_submissions, chunk_size):
+    def _chunk(self, *, chunk_size, other_submissions):
         all_submissions = [self.fullname]
         if other_submissions:
             all_submissions += [x.fullname for x in other_submissions]
@@ -642,7 +646,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -675,8 +679,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         data = {"links": self.fullname}
         await self._reddit.post(API_PATH["store_visits"], data=data)
 
+    @_deprecate_args("other_submissions")
     async def hide(
-        self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
     ):
         """Hide :class:`.Submission`.
 
@@ -696,11 +701,14 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             :meth:`.unhide`
 
         """
-        for submissions in self._chunk(other_submissions, 50):
+        for submissions in self._chunk(
+            chunk_size=50, other_submissions=other_submissions
+        ):
             await self._reddit.post(API_PATH["hide"], data={"id": submissions})
 
+    @_deprecate_args("other_submissions")
     async def unhide(
-        self, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
     ):
         """Unhide :class:`.Submission`.
 
@@ -720,18 +728,30 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             :meth:`.hide`
 
         """
-        for submissions in self._chunk(other_submissions, 50):
+        for submissions in self._chunk(
+            chunk_size=50, other_submissions=other_submissions
+        ):
             await self._reddit.post(API_PATH["unhide"], data={"id": submissions})
 
+    @_deprecate_args(
+        "subreddit",
+        "title",
+        "send_replies",
+        "flair_id",
+        "flair_text",
+        "nsfw",
+        "spoiler",
+    )
     async def crosspost(
         self,
         subreddit: "asyncpraw.models.Subreddit",
-        title: Optional[str] = None,
-        send_replies: bool = True,
+        *,
         flair_id: Optional[str] = None,
         flair_text: Optional[str] = None,
         nsfw: bool = False,
+        send_replies: bool = True,
         spoiler: bool = False,
+        title: Optional[str] = None,
     ) -> "asyncpraw.models.Submission":
         """Crosspost the submission to a subreddit.
 
@@ -741,17 +761,17 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         :param subreddit: Name of the subreddit or :class:`.Subreddit` object to
             crosspost into.
-        :param title: Title of the submission. Will use this submission's title if
-            `None` (default: ``None``).
         :param flair_id: The flair template to select (default: ``None``).
-        :param flair_text: If the template's ``flair_text_editable`` value is True, this
-            value will set a custom text (default: ``None``).
-        :param send_replies: When ``True``, messages will be sent to the submission
-            author when comments are made to the submission (default: ``True``).
-        :param nsfw: Whether or not the submission should be marked NSFW (default:
+        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
+            this value will set a custom text (default: ``None``).
+        :param nsfw: Whether the submission should be marked NSFW (default: ``False``).
+        :param send_replies: When ``True``, messages will be sent to the created
+            submission's author when comments are made to the submission (default:
+            ``True``).
+        :param spoiler: Whether the submission should be marked as a spoiler (default:
             ``False``).
-        :param spoiler: Whether or not the submission should be marked as a spoiler
-            (default: ``False``).
+        :param title: Title of the submission. Will use this submission's title if
+            ``None`` (default: ``None``).
 
         :returns: A :class:`.Submission` object for the newly created submission.
 
@@ -760,9 +780,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         .. code-block:: python
 
             submission = await reddit.submission("5or86n")
-            cross_post = await submission.crosspost(
-                subreddit="learnprogramming", send_replies=False
-            )
+            cross_post = await submission.crosspost("learnprogramming", send_replies=False)
 
         .. seealso::
 

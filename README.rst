@@ -91,7 +91,7 @@ With the ``reddit`` instance you can then interact with Reddit:
 
     # Reply to the first comment of a weekly top thread of a moderated community
     subreddit = await reddit.subreddit("mod")
-    async for submission in subreddit.top("week"):
+    async for submission in subreddit.top(time_filter="week"):
         comments = await submission.comments()
         await comments[0].reply("An automated reply")
 

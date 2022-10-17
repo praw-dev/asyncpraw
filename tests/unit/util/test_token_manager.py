@@ -99,7 +99,7 @@ class TestFileTokenManager(UnitTest):
 
 class TestSQLiteTokenManager(UnitTest):
     def setup(self):
-        self.manager = SQLiteTokenManager(":memory:", "dummy_key")
+        self.manager = SQLiteTokenManager(database=":memory:", key="dummy_key")
 
     async def test_is_registered(self):
         assert not await self.manager.is_registered()
@@ -110,9 +110,9 @@ class TestSQLiteTokenManager(UnitTest):
     )
     async def test_multiple_instances(self):
         with NamedTemporaryFile() as fp:
-            manager1 = SQLiteTokenManager(fp.name, "dummy_key1")
-            manager2 = SQLiteTokenManager(fp.name, "dummy_key1")
-            manager3 = SQLiteTokenManager(fp.name, "dummy_key2")
+            manager1 = SQLiteTokenManager(database=fp.name, key="dummy_key1")
+            manager2 = SQLiteTokenManager(database=fp.name, key="dummy_key1")
+            manager3 = SQLiteTokenManager(database=fp.name, key="dummy_key2")
 
             await manager1.register("dummy_value1")
             assert await manager2.is_registered()

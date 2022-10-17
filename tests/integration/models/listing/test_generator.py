@@ -20,5 +20,5 @@ class TestListingGenerator(IntegrationTest):
     async def test_no_items(self):
         with self.use_cassette():
             spez = await self.reddit.redditor("spez")
-            submissions = await self.async_list(spez.top("hour"))
+            submissions = await self.async_list(spez.top(time_filter="hour"))
         assert len(submissions) == 0

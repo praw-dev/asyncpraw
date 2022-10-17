@@ -85,7 +85,7 @@ class TestCollectionModeration(IntegrationTest):
             await collection.mod.add_post(posts[3].id)  # id
 
             posts.append(
-                await subreddit.submit("Post #4", selftext="", collection_id=uuid)
+                await subreddit.submit("Post #4", collection_id=uuid, selftext="")
             )
 
             with pytest.raises(TypeError):
@@ -105,7 +105,7 @@ class TestCollectionModeration(IntegrationTest):
                 pytest.placeholders.test_subreddit, fetch=True
             )
             collection = await subreddit.collections.mod.create(
-                "Title", "Description", "GALLERY"
+                title="Title", description=""
             )
             await collection.mod.delete()
 
@@ -115,7 +115,7 @@ class TestCollectionModeration(IntegrationTest):
         uuid = self.NONEMPTY_REAL_UUID
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            post = await subreddit.submit("The title", selftext="", collection_id=uuid)
+            post = await subreddit.submit("The title", collection_id=uuid, selftext="")
             collection = await subreddit.collections(uuid)
             await collection.mod.remove_post(post)
 
@@ -267,7 +267,9 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
-            collection = await subreddit.collections.mod.create(title, description)
+            collection = await subreddit.collections.mod.create(
+                title=title, description=description
+            )
             assert collection.title == title
             assert collection.description == description
             assert len(collection) == 0
@@ -281,7 +283,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections.mod.create(
-                title, description, layout
+                title=title, description=description, display_layout=layout
             )
             assert collection.title == title
             assert collection.description == description
@@ -297,7 +299,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections.mod.create(
-                title, description, layout
+                title=title, description=description, display_layout=layout
             )
             assert collection.title == title
             assert collection.description == description
@@ -315,7 +317,9 @@ class TestSubredditCollectionsModeration(IntegrationTest):
                 subreddit = await self.reddit.subreddit(
                     pytest.placeholders.test_subreddit
                 )
-                await subreddit.collections.mod.create(title, description, layout)
+                await subreddit.collections.mod.create(
+                    title=title, description=description, display_layout=layout
+                )
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_create__lowercase_layout(self, _):
@@ -328,7 +332,9 @@ class TestSubredditCollectionsModeration(IntegrationTest):
                 subreddit = await self.reddit.subreddit(
                     pytest.placeholders.test_subreddit
                 )
-                await subreddit.collections.mod.create(title, description, layout)
+                await subreddit.collections.mod.create(
+                    title=title, description=description, display_layout=layout
+                )
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_create__none_layout(self, _):
@@ -339,7 +345,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections.mod.create(
-                title, description, layout
+                title=title, description=description, display_layout=layout
             )
             assert collection.title == title
             assert collection.description == description
@@ -355,7 +361,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         with self.use_cassette():
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             collection = await subreddit.collections.mod.create(
-                title, description, layout
+                title=title, description=description, display_layout=layout
             )
             assert collection.title == title
             assert collection.description == description

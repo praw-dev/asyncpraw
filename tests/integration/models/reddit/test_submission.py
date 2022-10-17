@@ -60,7 +60,7 @@ class TestSubmission(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             submission = Submission(self.reddit, "hmkbt8")
-            await submission.edit("New text")
+            await submission.edit(body="New text")
             assert submission.selftext == "New text"
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -70,7 +70,7 @@ class TestSubmission(IntegrationTest):
         with self.use_cassette():
             submission = Submission(self.reddit, "hmkfoy")
             with pytest.raises(RedditAPIException):
-                await submission.edit("rewtwert")
+                await submission.edit(body="rewtwert")
 
     async def test_enable_inbox_replies(self):
         self.reddit.read_only = False
@@ -127,7 +127,7 @@ class TestSubmission(IntegrationTest):
             Submission(self.reddit, "c625v"),
         ]
         with self.use_cassette():
-            await Submission(self.reddit, "1eipl7").hide(submissions)
+            await Submission(self.reddit, "1eipl7").hide(other_submissions=submissions)
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_hide_multiple_in_batches(self, _):
@@ -136,7 +136,7 @@ class TestSubmission(IntegrationTest):
             subreddit = await self.reddit.subreddit("popular")
             submissions = await self.async_list(subreddit.hot(limit=100))
             assert len(submissions) == 100
-            await submissions[0].hide(submissions[1:])
+            await submissions[0].hide(other_submissions=submissions[1:])
 
     async def test_invalid_attribute(self):
         with self.use_cassette():
@@ -191,7 +191,9 @@ class TestSubmission(IntegrationTest):
             Submission(self.reddit, "c625v"),
         ]
         with self.use_cassette():
-            await Submission(self.reddit, "1eipl7").unhide(submissions)
+            await Submission(self.reddit, "1eipl7").unhide(
+                other_submissions=submissions
+            )
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_unhide_multiple_in_batches(self, _):
@@ -200,7 +202,7 @@ class TestSubmission(IntegrationTest):
             subreddit = await self.reddit.subreddit("popular")
             submissions = await self.async_list(subreddit.hot(limit=100))
             assert len(submissions) == 100
-            await submissions[0].unhide(submissions[1:])
+            await submissions[0].unhide(other_submissions=submissions[1:])
 
     async def test_unsave(self):
         self.reddit.read_only = False
@@ -245,7 +247,7 @@ class TestSubmission(IntegrationTest):
             subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
             crosspost_parent = await self.reddit.submission("6vx01b")
 
-            submission = await crosspost_parent.crosspost(subreddit, "my title")
+            submission = await crosspost_parent.crosspost(subreddit, title="my title")
             await submission.load()
             assert submission.author == pytest.placeholders.username
             assert submission.title == "my title"
@@ -340,14 +342,14 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_flair(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Submission(self.reddit, "hmkbt8").mod.flair("AF")
+            await Submission(self.reddit, "hmkbt8").mod.flair(text="AF")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_flair_template_id(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.flair(
-                "submission flair",
+                text="submission flair",
                 flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
             )
 
@@ -355,14 +357,14 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_flair_text_only(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Submission(self.reddit, "hmkbt8").mod.flair("submission flair")
+            await Submission(self.reddit, "hmkbt8").mod.flair(text="submission flair")
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_flair_text_and_css_class(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.flair(
-                "submission flair", css_class="submission flair"
+                text="submission flair", css_class="submission flair"
             )
 
     @mock.patch("asyncio.sleep", return_value=None)
@@ -370,7 +372,7 @@ class TestSubmissionModeration(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             await Submission(self.reddit, "hmkbt8").mod.flair(
-                "submission flair",
+                text="submission flair",
                 css_class="submission flair",
                 flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
             )
@@ -461,7 +463,9 @@ class TestSubmissionModeration(IntegrationTest):
             await mod.remove()
             message = "message"
             res = [
-                await mod.send_removal_message(message, "Be Kind", type)
+                await mod.send_removal_message(
+                    message=type, title="title", type=message
+                )
                 for type in ("public", "private", "private_exposed")
             ]
             assert isinstance(res[0], Comment)

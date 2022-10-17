@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ...const import API_PATH
 from ...exceptions import ClientException
+from ...util import _deprecate_args
 from ..util import deprecate_lazy
 from .base import RedditBase
 
@@ -79,8 +80,10 @@ class Emoji(RedditBase):
         )
         await self._reddit.delete(url)
 
+    @_deprecate_args("mod_flair_only", "post_flair_allowed", "user_flair_allowed")
     async def update(
         self,
+        *,
         mod_flair_only: Optional[bool] = None,
         post_flair_allowed: Optional[bool] = None,
         user_flair_allowed: Optional[bool] = None,
@@ -201,18 +204,19 @@ class SubredditEmoji:
 
     async def add(
         self,
-        name: str,
+        *,
         image_path: str,
         mod_flair_only: Optional[bool] = None,
+        name: str,
         post_flair_allowed: Optional[bool] = None,
         user_flair_allowed: Optional[bool] = None,
     ) -> Emoji:
         """Add an emoji to this subreddit.
 
-        :param name: The name of the emoji.
         :param image_path: A path to a jpeg or png image.
         :param mod_flair_only: When provided, indicate whether the emoji is restricted
             to mod use only (default: ``None``).
+        :param name: The name of the emoji.
         :param post_flair_allowed: When provided, indicate whether the emoji may appear
             in post flair (default: ``None``).
         :param user_flair_allowed: When provided, indicate whether the emoji may appear
@@ -225,7 +229,7 @@ class SubredditEmoji:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.emoji.add("emoji", "emoji.png")
+            await subreddit.emoji.add(name="emoji", image_path="emoji.png")
 
         """
         data = {

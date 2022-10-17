@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Union
 
 from ...const import API_PATH
 from ...exceptions import ClientException
+from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
 from ..util import deprecate_lazy
@@ -99,8 +100,7 @@ class CollectionModeration(AsyncPRAWBase):
 
         """
         await self._reddit.post(
-            API_PATH["collection_delete"],
-            data={"collection_id": self.collection_id},
+            API_PATH["collection_delete"], data={"collection_id": self.collection_id}
         )
 
     async def remove_post(self, submission: "asyncpraw.models.Submission"):
@@ -301,7 +301,7 @@ class Collection(RedditBase):
             print(await collection.subreddit())
 
         """
-        async for subreddit in self._reddit.info([self.subreddit_id]):
+        async for subreddit in self._reddit.info(fullnames=[self.subreddit_id]):
             return subreddit
 
     def __init__(
@@ -381,7 +381,7 @@ class Collection(RedditBase):
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -465,20 +465,21 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
+    @_deprecate_args("title", "description", "display_layout")
     async def create(
-        self, title: str, description: str, display_layout: Optional[str] = None
+        self, *, description: str, display_layout: Optional[str] = None, title: str
     ):
         """Create a new :class:`.Collection`.
 
         The authenticated account must have appropriate moderator permissions in the
         subreddit this collection belongs to.
 
-        :param title: The title of the collection, up to 300 characters.
         :param description: The description, up to 500 characters.
         :param display_layout: Either ``"TIMELINE"`` for events or discussions or
             ``"GALLERY"`` for images or memes. Passing ``""`` or ``None`` will make the
             collection appear on Reddit as if this is set to ``"TIMELINE"`` (default:
             ``None``).
+        :param title: The title of the collection, up to 300 characters.
 
         :returns: The newly created :class:`.Collection`.
 
@@ -487,7 +488,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         .. code-block:: python
 
             sub = await reddit.subreddit("test")
-            new_collection = await sub.collections.mod.create("Title", "desc")
+            new_collection = await sub.collections.mod.create(title="Title", description="desc")
             await new_collection.mod.add_post("bgibu9")
 
         To specify the display layout as ``"GALLERY"`` when creating the collection:
@@ -541,7 +542,7 @@ class SubredditCollections(AsyncPRAWBase):
         .. code-block:: python
 
             my_sub = await reddit.subreddit("test", fetch=True)
-            new_collection = await my_sub.collections.mod.create("Title", "desc")
+            new_collection = await my_sub.collections.mod.create(title="Title", description="desc")
 
         """
         return SubredditCollectionsModeration(self._reddit, self.subreddit)

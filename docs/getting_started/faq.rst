@@ -12,7 +12,7 @@ A: There is two ways to do this:
   .. code-block:: python
 
       await reddit.comment(comment.id)
-      await reddit.subreddit(display_name=subreddit.display_name)
+      await reddit.subreddit(subreddit.display_name)
       await reddit.submission(submission.id)
 
 - Calling :meth:`~.RedditBase.load`:

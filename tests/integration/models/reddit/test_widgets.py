@@ -107,10 +107,10 @@ class TestButtonWidget(IntegrationTest):
                 },
             ]
             widget = await widgets.mod.add_button_widget(
-                "Things to click",
-                "Click some of these *cool* links!",
-                buttons,
-                styles,
+                short_name="Things to click",
+                description="Click some of these *cool* links!",
+                buttons=buttons,
+                styles=styles,
             )
 
             assert isinstance(widget, ButtonWidget)
@@ -217,7 +217,11 @@ class TestCalendar(IntegrationTest):
             }
             cal_id = "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
             widget = await widgets.mod.add_calendar(
-                "Upcoming Events", cal_id, True, config, styles
+                short_name="Upcoming Events",
+                google_calendar_id=cal_id,
+                requires_sync=True,
+                configuration=config,
+                styles=styles,
             )
 
             assert isinstance(widget, Calendar)
@@ -274,28 +278,31 @@ class TestCommunityList(IntegrationTest):
 
         with self.use_cassette():
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-            redditdev = await self.reddit.subreddit("redditdev")
-            subreddits = ["learnpython", redditdev]
+            subreddits = ["learnpython", Subreddit(self.reddit, "redditdev")]
             widget = await widgets.mod.add_community_list(
-                "My fav subs", subreddits, styles
+                short_name="My fav subs",
+                data=subreddits,
+                styles=styles,
+                description="My description",
             )
             assert isinstance(widget, CommunityList)
             assert widget.shortName == "My fav subs"
             assert widget.styles == styles
-            learnpython = await self.reddit.subreddit("learnpython")
-            assert learnpython in widget
+            # assert widget.description == "My description" # no longer returned
+            assert Subreddit(self.reddit, "learnpython") in widget
             assert "redditdev" in widget
 
             widget = await widget.mod.update(
                 shortName="My least fav subs :(",
                 data=["redesign"],
+                description="My new description",
             )
 
             assert isinstance(widget, CommunityList)
             assert widget.shortName == "My least fav subs :("
             assert widget.styles == styles
-            redesign = await self.reddit.subreddit("redesign")
-            assert redesign in widget
+            # assert widget.description == "My new description" # no longer returned
+            assert Subreddit(self.reddit, "redesign") in widget
 
             await widget.mod.delete()
 
@@ -320,7 +327,12 @@ class TestCustomWidget(IntegrationTest):
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
             widget = await widgets.mod.add_custom_widget(
-                "My widget", "# Hello world!", "/**/", 200, image_dicts, styles
+                short_name="My widget",
+                text="# Hello world!",
+                css="/**/",
+                height=200,
+                image_data=image_dicts,
+                styles=styles,
             )
 
             assert isinstance(widget, CustomWidget)
@@ -430,7 +442,7 @@ class TestImageWidget(IntegrationTest):
 
         with self.use_cassette():
             image_paths = (image_path(name) for name in ("test.jpg", "test.png"))
-            image_dicts = [
+            image_data = [
                 {
                     "width": 10,
                     "height": 10,
@@ -442,7 +454,7 @@ class TestImageWidget(IntegrationTest):
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
             widget = await widgets.mod.add_image_widget(
-                short_name="My new pics!", data=image_dicts, styles=styles
+                short_name="My new pics!", data=image_data, styles=styles
             )
 
             assert isinstance(widget, ImageWidget)
@@ -452,7 +464,7 @@ class TestImageWidget(IntegrationTest):
             assert all(isinstance(img, Image) for img in widget)
 
             widget = await widget.mod.update(
-                shortName="My old pics :(", data=image_dicts[:1]
+                shortName="My old pics :(", data=image_data[:1]
             )
 
             assert isinstance(widget, ImageWidget)
@@ -506,7 +518,7 @@ class TestMenu(IntegrationTest):
         ]
 
         with self.use_cassette():
-            widget = await widgets.mod.add_menu(menu_contents)
+            widget = await widgets.mod.add_menu(data=menu_contents)
 
             assert isinstance(widget, Menu)
             assert len(widget) == 3
@@ -630,7 +642,7 @@ class TestPostFlairWidget(IntegrationTest):
 
             styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
             widget = await widgets.mod.add_post_flair_widget(
-                "Some flairs", "list", flairs, styles
+                display="Some flairs", order="list", short_name=flairs, styles=styles
             )
 
             assert isinstance(widget, PostFlairWidget)

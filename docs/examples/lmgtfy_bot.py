@@ -10,11 +10,11 @@ REPLY_TEMPLATE = "[Let me google that for you](https://lmgtfy.com/?q={})"
 
 async def main():
     reddit = asyncpraw.Reddit(
-        user_agent="LMGTFY (by u/USERNAME)",
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
-        username="USERNAME",
         password="PASSWORD",
+        user_agent="LMGTFY (by u/USERNAME)",
+        username="USERNAME",
     )
 
     subreddit = await reddit.subreddit("AskReddit")

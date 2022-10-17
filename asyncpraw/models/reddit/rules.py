@@ -5,7 +5,7 @@ from warnings import warn
 
 from ...const import API_PATH
 from ...exceptions import ClientException
-from ...util.cache import cachedproperty
+from ...util import _deprecate_args, cachedproperty
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -175,7 +175,7 @@ class SubredditRules:
             stacklevel=2,
         )
         return await self._reddit.request(
-            "GET", API_PATH["rules"].format(subreddit=self.subreddit)
+            method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit)
         )
 
     async def get_rule(
@@ -308,8 +308,10 @@ class RuleModeration:
         }
         await self.rule._reddit.post(API_PATH["remove_subreddit_rule"], data=data)
 
+    @_deprecate_args("description", "kind", "short_name", "violation_reason")
     async def update(
         self,
+        *,
         description: Optional[str] = None,
         kind: Optional[str] = None,
         short_name: Optional[str] = None,
@@ -386,24 +388,26 @@ class SubredditRulesModeration:
         """Initialize a :class:`.SubredditRulesModeration` instance."""
         self.subreddit_rules = subreddit_rules
 
+    @_deprecate_args("short_name", "kind", "description", "violation_reason")
     async def add(
         self,
-        short_name: str,
-        kind: str,
+        *,
         description: str = "",
+        kind: str,
+        short_name: str,
         violation_reason: Optional[str] = None,
     ) -> "asyncpraw.models.Rule":
         """Add a removal reason to this subreddit.
 
-        :param short_name: The name of the rule.
+        :param description: The description for the rule.
         :param kind: The kind of item that the rule applies to. One of ``"link"``,
             ``"comment"``, or ``"all"``.
-        :param description: The description for the rule.
+        :param short_name: The name of the rule.
         :param violation_reason: The reason that is shown on the report menu. If a
             violation reason is not specified, the short name will be used as the
             violation reason.
 
-        :returns: The Rule added.
+        :returns: The added :class:`.Rule`.
 
         To add rule ``"No spam"`` to r/test try:
 

@@ -10,6 +10,7 @@ from typing import (
 )
 
 from ...const import API_PATH
+from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..listing.generator import ListingGenerator
 from .base import RedditBase
@@ -141,8 +142,9 @@ class WikiPageModeration:
         response = await self.wikipage._reddit.get(url)
         return response["data"]
 
+    @_deprecate_args("listed", "permlevel")
     async def update(
-        self, listed: bool, permlevel: int, **other_settings: Any
+        self, *, listed: bool, permlevel: int, **other_settings: Any
     ) -> Dict[str, Any]:
         """Update the settings for this :class:`.WikiPage`.
 
@@ -199,9 +201,10 @@ class WikiPage(RedditBase):
 
     @staticmethod
     async def _revision_generator(
+        *,
+        generator_kwargs: Dict[str, Any],
         subreddit: "asyncpraw.models.Subreddit",
         url: str,
-        generator_kwargs: Dict[str, Any],
     ) -> AsyncGenerator[
         Dict[str, Optional[Union[Redditor, "WikiPage", str, int, bool]]], None
     ]:
@@ -272,7 +275,7 @@ class WikiPage(RedditBase):
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
-        return await self._reddit.request("GET", path, params)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -284,10 +287,11 @@ class WikiPage(RedditBase):
         self.__dict__.update(data)
         self._fetched = True
 
+    @_deprecate_args("content", "reason")
     async def edit(
-        self, content: str, reason: Optional[str] = None, **other_settings: Any
+        self, *, content: str, reason: Optional[str] = None, **other_settings: Any
     ):
-        """Edit this WikiPage's contents.
+        """Edit this wiki page's contents.
 
         :param content: The updated Markdown content of the page.
         :param reason: The reason for the revision.
@@ -305,8 +309,7 @@ class WikiPage(RedditBase):
         """
         other_settings.update({"content": content, "page": self.name, "reason": reason})
         await self._reddit.post(
-            API_PATH["wiki_edit"].format(subreddit=self.subreddit),
-            data=other_settings,
+            API_PATH["wiki_edit"].format(subreddit=self.subreddit), data=other_settings
         )
 
     def discussions(
@@ -383,4 +386,6 @@ class WikiPage(RedditBase):
         url = API_PATH["wiki_page_revisions"].format(
             subreddit=self.subreddit, page=self.name
         )
-        return self._revision_generator(self.subreddit, url, generator_kwargs)
+        return self._revision_generator(
+            generator_kwargs=generator_kwargs, subreddit=self.subreddit, url=url
+        )

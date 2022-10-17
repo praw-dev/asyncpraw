@@ -41,7 +41,7 @@ class TestWikiPage(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             page = await subreddit.wiki.get_page("test")
-            await page.edit("PRAW updated")
+            await page.edit(content="PRAW updated")
 
     async def test_edit__usernotes(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -51,7 +51,7 @@ class TestWikiPage(IntegrationTest):
 
         self.reddit.read_only = False
         with self.use_cassette():
-            await page.edit(large_content)
+            await page.edit(content=large_content)
 
     async def test_edit__with_reason(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -59,7 +59,7 @@ class TestWikiPage(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             page = await subreddit.wiki.get_page("test")
-            await page.edit("PRAW updated with reason", reason="PRAW testing")
+            await page.edit(content="PRAW updated with reason", reason="PRAW testing")
 
     async def test_init__with_revision(self):
         subreddit = await self.reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -174,7 +174,7 @@ class TestWikiPageModeration(IntegrationTest):
                 name="css-revert-fail",
                 image_path="tests/integration/files/icon.jpg",
             )
-            await page.edit("div {background: url(%%css-revert-fail%%)}")
+            await page.edit(content="div {background: url(%%css-revert-fail%%)}")
             revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
             await subreddit.stylesheet.delete_image("css-revert-fail")
             with pytest.raises(Forbidden) as exc:

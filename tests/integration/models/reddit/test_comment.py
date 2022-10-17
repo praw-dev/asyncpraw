@@ -61,7 +61,7 @@ class TestComment(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             comment = Comment(self.reddit, "fwxxs5d")
-            await comment.edit("New text")
+            await comment.edit(body="New text")
             assert comment.body == "New text"
 
     async def test_enable_inbox_replies(self):
@@ -247,7 +247,7 @@ class TestComment(IntegrationTest):
     async def test_save(self):
         self.reddit.read_only = False
         with self.use_cassette():
-            await Comment(self.reddit, "fx19hsi").save("foo")
+            await Comment(self.reddit, "fx19hsi").save(category="foo")
 
     async def test_unsave(self):
         self.reddit.read_only = False
@@ -345,7 +345,9 @@ class TestCommentModeration(IntegrationTest):
             await mod.remove()
             message = "message"
             res = [
-                await mod.send_removal_message(message, "title", type)
+                await mod.send_removal_message(
+                    message=message, title="title", type=type
+                )
                 for type in ("public", "private", "private_exposed")
             ]
             assert isinstance(res[0], Comment)
@@ -361,7 +363,9 @@ class TestCommentModeration(IntegrationTest):
             comment = await self.reddit.comment("fx1jgsp")
             await comment.mod.remove()
             with pytest.raises(RedditAPIException) as excinfo:
-                await comment.mod.send_removal_message("message", "a" * 51)
+                await comment.mod.send_removal_message(
+                    message="message", title="a" * 51
+                )
             exception = excinfo.value
             assert "title" == exception.field
             assert "TOO_LONG" == exception.error_type

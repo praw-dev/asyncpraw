@@ -59,12 +59,12 @@ class TestRedditor(UnitTest):
 
     async def test_guild__min(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            await Redditor(reddit, name="RedditorName").gild(0)
+            await Redditor(reddit, name="RedditorName").gild(months=0)
         assert str(excinfo.value) == "months must be between 1 and 36"
 
     async def test_guild__max(self, reddit):
         with pytest.raises(TypeError) as excinfo:
-            await Redditor(reddit, name="RedditorName").gild(37)
+            await Redditor(reddit, name="RedditorName").gild(months=37)
         assert str(excinfo.value) == "months must be between 1 and 36"
 
     def test_hash(self, reddit):

@@ -21,7 +21,7 @@ class TestMultireddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             multi = await self.reddit.multireddit(
-                "kjoneslol", "sfwpornnetwork", fetch=True
+                redditor="kjoneslol", name="sfwpornnetwork", fetch=True
             )
             new = await multi.copy()
         assert new.name == multi.name
@@ -31,7 +31,9 @@ class TestMultireddit(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_copy__with_display_name(self, _):
         self.reddit.read_only = False
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         name = "A--B\n" * 10
         with self.use_cassette():
             new = await multi.copy(display_name=name)
@@ -44,7 +46,7 @@ class TestMultireddit(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             multireddit = await self.reddit.multireddit.create(
-                "Async PRAW create test", subreddits=["redditdev"]
+                display_name="Async PRAW create test", subreddits=["redditdev"]
             )
         assert multireddit.display_name == "Async PRAW create test"
         assert multireddit.name == "async_praw_create_test"
@@ -70,7 +72,7 @@ class TestMultireddit(IntegrationTest):
     async def test_subreddits(self):
         with self.use_cassette():
             multi = await self.reddit.multireddit(
-                "kjoneslol", "sfwpornnetwork", fetch=True
+                redditor="kjoneslol", name="sfwpornnetwork", fetch=True
             )
             assert multi.subreddits
         assert all(isinstance(x, Subreddit) for x in multi.subreddits)
@@ -93,31 +95,41 @@ class TestMultireddit(IntegrationTest):
 
 class TestMultiredditListings(IntegrationTest):
     async def test_comments(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             comments = await self.async_list(multi.comments())
         assert len(comments) == 100
 
     async def test_controversial(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.controversial())
         assert len(submissions) == 100
 
     async def test_gilded(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.gilded())
         assert len(submissions) == 100
 
     async def test_hot(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.hot())
         assert len(submissions) == 100
 
     async def test_new(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.new())
         assert len(submissions) == 100
@@ -132,19 +144,25 @@ class TestMultiredditListings(IntegrationTest):
         assert len(submissions) == 100
 
     async def test_random_rising(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.random_rising())
         assert len(submissions) > 0
 
     async def test_rising(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.rising())
         assert len(submissions) > 0
 
     async def test_top(self):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             submissions = await self.async_list(multi.top())
         assert len(submissions) == 100
@@ -153,7 +171,9 @@ class TestMultiredditListings(IntegrationTest):
 class TestMultiredditStreams(IntegrationTest):
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_comments(self, _):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             generator = multi.stream.comments()
             for i in range(101):
@@ -161,7 +181,9 @@ class TestMultiredditStreams(IntegrationTest):
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_comments__with_pause(self, _):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             comment_stream = multi.stream.comments(pause_after=0)
             comment_count = 1
@@ -178,7 +200,9 @@ class TestMultiredditStreams(IntegrationTest):
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_submissions(self, _):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette():
             generator = multi.stream.submissions()
             for i in range(102):
@@ -186,7 +210,9 @@ class TestMultiredditStreams(IntegrationTest):
 
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_submissions__with_pause(self, _):
-        multi = await self.reddit.multireddit("kjoneslol", "sfwpornnetwork")
+        multi = await self.reddit.multireddit(
+            redditor="kjoneslol", name="sfwpornnetwork"
+        )
         with self.use_cassette("TestMultiredditStreams.test_submissions"):
             generator = multi.stream.submissions(pause_after=-1)
             submission = await self.async_next(generator)

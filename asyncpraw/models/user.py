@@ -7,6 +7,7 @@ from asyncprawcore import Conflict
 from ..const import API_PATH
 from ..exceptions import ReadOnlyException
 from ..models import Preferences
+from ..util import _deprecate_args
 from ..util.cache import cachedproperty
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
@@ -84,16 +85,17 @@ class User(AsyncPRAWBase):
             self._reddit, API_PATH["my_contributor"], **generator_kwargs
         )
 
+    @_deprecate_args("user")
     async def friends(
-        self, user: Optional[Union[str, "asyncpraw.models.Redditor"]] = None
+        self, *, user: Optional[Union[str, "asyncpraw.models.Redditor"]] = None
     ) -> Union[List["asyncpraw.models.Redditor"], "asyncpraw.models.Redditor"]:
         r"""Return a :class:`.RedditorList` of friends or a :class:`.Redditor` in the friends list.
 
         :param user: Checks to see if you are friends with the redditor. Either an
             instance of :class:`.Redditor` or a string can be given.
 
-        :returns: A list of :class:`.Redditor`\ s, or a :class:`.Redditor` if you are
-            friends with the given :class:`.Redditor`. The :class:`.Redditor` also has
+        :returns: A list of :class:`.Redditor`\ s, or a single :class:`.Redditor` if
+            ``user`` is specified. The :class:`.Redditor` instance(s) returned also has
             friend attributes.
 
         :raises: An instance of ``asyncprawcore.exceptions.BadRequest`` if you are not
@@ -129,8 +131,9 @@ class User(AsyncPRAWBase):
             karma_map[subreddit] = row
         return karma_map
 
+    @_deprecate_args("use_cache")
     async def me(
-        self, use_cache: bool = True
+        self, *, use_cache: bool = True
     ) -> Optional["asyncpraw.models.Redditor"]:  # pylint: disable=invalid-name
         """Return a :class:`.Redditor` instance for the authenticated user.
 
