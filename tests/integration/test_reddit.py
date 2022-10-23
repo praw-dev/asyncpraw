@@ -155,6 +155,40 @@ class TestReddit(IntegrationTest):
             now = await self.reddit.live.now()
             assert now is None
 
+    async def test_notes__call__(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            notes = await self.async_list(
+                self.reddit.notes(
+                    pairs=[
+                        (
+                            await self.reddit.subreddit(
+                                pytest.placeholders.test_subreddit
+                            ),
+                            "Watchful1",
+                        ),
+                        (
+                            pytest.placeholders.test_subreddit,
+                            await self.reddit.redditor("Watchful12"),
+                        ),
+                        (pytest.placeholders.test_subreddit, "spez"),
+                    ],
+                    things=[await self.reddit.submission("uflrmv")],
+                )
+            )
+            assert len(notes) == 4
+            assert notes[0].user.name.lower() == "watchful1"
+            assert notes[1].user.name.lower() == "watchful12"
+            assert notes[2] is None
+
+    async def test_notes__things(self):
+        self.reddit.read_only = False
+        with self.use_cassette():
+            thing = await self.reddit.submission("uflrmv")
+            notes = await self.async_list(self.reddit.notes.things(thing))
+            assert len(notes) == 9
+            assert notes[0].user == thing.author
+
     async def test_random_subreddit(self):
         names = set()
         with self.use_cassette():

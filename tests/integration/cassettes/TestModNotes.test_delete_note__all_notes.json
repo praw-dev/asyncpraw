@@ -1,0 +1,779 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "body": [
+          [
+            "grant_type",
+            "refresh_token"
+          ],
+          [
+            "refresh_token",
+            "<REFRESH_TOKEN>"
+          ]
+        ],
+        "headers": {
+          "AUTHORIZATION": [
+            "Basic <BASIC_AUTH>"
+          ],
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://www.reddit.com/api/v1/access_token"
+      },
+      "response": {
+        "body": {
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 86400, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"creddits modnote modcontributors modmail modconfig subscribe structuredstyles vote wikiedit mysubreddits submit modlog modposts modflair save modothers adsconversions read privatemessages report identity livemanage account modtraffic wikiread edit modwiki modself flair history\"}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, max-age=3600"
+          ],
+          "Connection": [
+            "close"
+          ],
+          "Content-Length": [
+            "454"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:22 GMT"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "edgebucket=TS8wU4ybUwsovyI5Ov; Domain=reddit.com; Max-Age=63071999; Path=/;  secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "296"
+          ],
+          "x-ratelimit-reset": [
+            "579"
+          ],
+          "x-ratelimit-used": [
+            "4"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://www.reddit.com/api/v1/access_token"
+      }
+    },
+    {
+      "request": {
+        "body": [
+          [
+            "api_type",
+            "json"
+          ],
+          [
+            "note",
+            "test note"
+          ],
+          [
+            "subreddit",
+            "<TEST_SUBREDDIT>"
+          ],
+          [
+            "user",
+            "pyapitestuser3"
+          ]
+        ],
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "edgebucket=TS8wU4ybUwsovyI5Ov"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "POST",
+        "uri": "https://oauth.reddit.com/api/mod/notes?raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"created\": {\"subreddit_id\": \"t5_29ey0j\", \"operator_id\": \"t2_o77bz\", \"mod_action_data\": {\"action\": null, \"reddit_id\": null, \"details\": null, \"description\": null}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"user\": \"PyAPITestUser3\", \"operator\": \"<USERNAME>\", \"id\": \"ModNote_ce8e4f5d-896c-48a6-a56c-ad599573e91f\", \"user_note_data\": {\"note\": \"test note\", \"reddit_id\": null, \"label\": null}, \"user_id\": \"t2_6c1xj\", \"created_at\": 1666553423, \"type\": \"NOTE\"}}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "436"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:23 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; Domain=reddit.com; Max-Age=63071999; Path=/; expires=Tue, 22-Oct-2024 19:30:23 GMT; secure",
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553423201.Z0FBQUFBQmpWWlpQM2tmQmZrckJsZmlIdlR4QV9lUW9HSlBMMXh3Mk5tMHpTaW1LWTNXZ3piVFgwUUVJSTJ4Y2tsMXVKbE1rSmZIRzgzWVp6SlZGRXN4NFd6cllLNjNid01GZ2txUjhTVE9pOFVQV1ZtdjJEYU9EVTNYdnY5Umx5RWpuY1FTcmZ5VkQ; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:23 GMT; secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "592.0"
+          ],
+          "x-ratelimit-reset": [
+            "577"
+          ],
+          "x-ratelimit-used": [
+            "8"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "edgebucket=TS8wU4ybUwsovyI5Ov; loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; session_tracker=ajjkqnlmcooplofmnb.0.1666553423201.Z0FBQUFBQmpWWlpQM2tmQmZrckJsZmlIdlR4QV9lUW9HSlBMMXh3Mk5tMHpTaW1LWTNXZ3piVFgwUUVJSTJ4Y2tsMXVKbE1rSmZIRzgzWVp6SlZGRXN4NFd6cllLNjNid01GZ2txUjhTVE9pOFVQV1ZtdjJEYU9EVTNYdnY5Umx5RWpuY1FTcmZ5VkQ"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/mod/notes?subreddit=<TEST_SUBREDDIT>&user=PyAPITestUser3&limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"mod_notes\": [{\"subreddit_id\": \"t5_29ey0j\", \"operator_id\": \"t2_o77bz\", \"mod_action_data\": {\"action\": null, \"reddit_id\": null, \"details\": null, \"description\": null}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"user\": \"PyAPITestUser3\", \"operator\": \"<USERNAME>\", \"id\": \"ModNote_ce8e4f5d-896c-48a6-a56c-ad599573e91f\", \"user_note_data\": {\"note\": \"test note\", \"reddit_id\": null, \"label\": null}, \"user_id\": \"t2_6c1xj\", \"created_at\": 1666553423, \"cursor\": \"MTY2NjU1MzQyMzIzMQ==\", \"type\": \"NOTE\"}, {\"subreddit_id\": \"t5_29ey0j\", \"operator_id\": \"t2_o77bz\", \"mod_action_data\": {\"action\": null, \"reddit_id\": \"t3_tpbemz\", \"details\": null, \"description\": null}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"user\": \"PyAPITestUser3\", \"operator\": \"<USERNAME>\", \"id\": \"ModNote_86ac047d-8604-4477-afc5-3e8f72f48cfc\", \"user_note_data\": {\"note\": \"test note\", \"reddit_id\": \"t3_tpbemz\", \"label\": \"HELPFUL_USER\"}, \"user_id\": \"t2_6c1xj\", \"created_at\": 1651360999, \"cursor\": \"MTY1MTM2MDk5OTMzMg==\", \"type\": \"NOTE\"}, {\"subreddit_id\": \"t5_29ey0j\", \"operator_id\": \"t2_o77bz\", \"mod_action_data\": {\"action\": null, \"reddit_id\": null, \"details\": null, \"description\": null}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"user\": \"PyAPITestUser3\", \"operator\": \"<USERNAME>\", \"id\": \"ModNote_40d89b3e-aa8d-492b-a1b4-b3722105de3a\", \"user_note_data\": {\"note\": \"test note\", \"reddit_id\": null, \"label\": \"HELPFUL_USER\"}, \"user_id\": \"t2_6c1xj\", \"created_at\": 1651359817, \"cursor\": \"MTY1MTM1OTgxNzc1MA==\", \"type\": \"NOTE\"}, {\"subreddit_id\": \"t5_29ey0j\", \"operator_id\": \"t2_o77bz\", \"mod_action_data\": {\"action\": null, \"reddit_id\": null, \"details\": null, \"description\": null}, \"subreddit\": \"<TEST_SUBREDDIT>\", \"user\": \"PyAPITestUser3\", \"operator\": \"<USERNAME>\", \"id\": \"ModNote_a3c253ae-6629-4f9f-b255-6c7d9587bcc7\", \"user_note_data\": {\"note\": \"test note\", \"reddit_id\": null, \"label\": \"HELPFUL_USER\"}, \"user_id\": \"t2_6c1xj\", \"created_at\": 1651358414, \"cursor\": \"MTY1MTM1ODQxNDU5Mw==\", \"type\": \"NOTE\"}], \"start_cursor\": \"MTY2NjU1MzQyMzIzMQ==\", \"end_cursor\": \"MTY1MTM1ODQxNDU5Mw==\", \"has_next_page\": false}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "1997"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:23 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; Max-Age=63072000; Path=/; Domain=.reddit.com; SameSite=None; Secure",
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553423465.Z0FBQUFBQmpWWlpQTXc2REM2S2RreDVtdVBYQnNGejdERmFmTEo3eW1fZTBuYWtpUFBCMUxoa1hYek1SN1BTd1NPb1d0OFExdmU1bktOZUN0Qm1UMzdIVDNGT3g0a2kyc1hhSHpDVHdDdXlmbG1pakZ3NjNoRGFYX1RndjE5V185MlEtRG0zTVlVZmY; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:23 GMT; secure; SameSite=None; Secure",
+            "csv=2; Max-Age=63072000; Domain=.reddit.com; Path=/; Secure; SameSite=None"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Vary": [
+            "accept-encoding"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "591.0"
+          ],
+          "x-ratelimit-reset": [
+            "577"
+          ],
+          "x-ratelimit-used": [
+            "9"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?subreddit=<TEST_SUBREDDIT>&user=PyAPITestUser3&limit=100&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "csv=2; edgebucket=TS8wU4ybUwsovyI5Ov; loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; session_tracker=ajjkqnlmcooplofmnb.0.1666553423465.Z0FBQUFBQmpWWlpQTXc2REM2S2RreDVtdVBYQnNGejdERmFmTEo3eW1fZTBuYWtpUFBCMUxoa1hYek1SN1BTd1NPb1d0OFExdmU1bktOZUN0Qm1UMzdIVDNGT3g0a2kyc1hhSHpDVHdDdXlmbG1pakZ3NjNoRGFYX1RndjE5V185MlEtRG0zTVlVZmY"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "DELETE",
+        "uri": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_ce8e4f5d-896c-48a6-a56c-ad599573e91f&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"deleted\": true}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "17"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:24 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553424135.Z0FBQUFBQmpWWlpRNVhpa3JUSjhhZ1hUdDVJWmdzUml6U05FQTJaSENKbFA0WmZRWTk1blpxUUNrZmV0S3NXZmhGVGNfTm5rcl82U2ZFOXJzbGVEUXV2TE5lVnZNZ3h2QXhIU0tJcExzYjE2MEVrZHNnQ2drTFJNNU5JVlNVcnh3V2pOVGRONkMtdUY; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:24 GMT; secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "590.0"
+          ],
+          "x-ratelimit-reset": [
+            "576"
+          ],
+          "x-ratelimit-used": [
+            "10"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_ce8e4f5d-896c-48a6-a56c-ad599573e91f&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "csv=2; edgebucket=TS8wU4ybUwsovyI5Ov; loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; session_tracker=ajjkqnlmcooplofmnb.0.1666553424135.Z0FBQUFBQmpWWlpRNVhpa3JUSjhhZ1hUdDVJWmdzUml6U05FQTJaSENKbFA0WmZRWTk1blpxUUNrZmV0S3NXZmhGVGNfTm5rcl82U2ZFOXJzbGVEUXV2TE5lVnZNZ3h2QXhIU0tJcExzYjE2MEVrZHNnQ2drTFJNNU5JVlNVcnh3V2pOVGRONkMtdUY"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "DELETE",
+        "uri": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_86ac047d-8604-4477-afc5-3e8f72f48cfc&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"deleted\": true}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "17"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:24 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553424469.Z0FBQUFBQmpWWlpRdnhzMW40Z0lEeHdhbXFzMU9pdUxLc1NHbENwYWFGNV9TVXJrR2xIbUZyV1hNckFlTEhlcGhpMWJkcThZcm9VOEMzcEYyajdZYzhhdnQyMWsxajRmOEFxNXFHVFFJMGR5SUZDOUsxZDVhTEhzZXRoSjlLcTU5MGdVZkdBTHRSY0c; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:24 GMT; secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "589.0"
+          ],
+          "x-ratelimit-reset": [
+            "576"
+          ],
+          "x-ratelimit-used": [
+            "11"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_86ac047d-8604-4477-afc5-3e8f72f48cfc&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "csv=2; edgebucket=TS8wU4ybUwsovyI5Ov; loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; session_tracker=ajjkqnlmcooplofmnb.0.1666553424469.Z0FBQUFBQmpWWlpRdnhzMW40Z0lEeHdhbXFzMU9pdUxLc1NHbENwYWFGNV9TVXJrR2xIbUZyV1hNckFlTEhlcGhpMWJkcThZcm9VOEMzcEYyajdZYzhhdnQyMWsxajRmOEFxNXFHVFFJMGR5SUZDOUsxZDVhTEhzZXRoSjlLcTU5MGdVZkdBTHRSY0c"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "DELETE",
+        "uri": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_40d89b3e-aa8d-492b-a1b4-b3722105de3a&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"deleted\": true}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "17"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:24 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553424742.Z0FBQUFBQmpWWlpRLUpfWXA2Zk5RREtCWFpWOWlxM0d6Nm9felZtZ0djYXc2RnhtcFhSS0JZdV9YWnc2VUh1bmZObEN3X29CWTZtR2p6R3c5YzBFeFRzSkRRYkxlRnVKRXNxUG5tM3JXd1pDSG0yQ2NLTHg3ZThndHVaNjFmZ05mMHlmYk1wMFNhR0c; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:24 GMT; secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "588.0"
+          ],
+          "x-ratelimit-reset": [
+            "576"
+          ],
+          "x-ratelimit-used": [
+            "12"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_40d89b3e-aa8d-492b-a1b4-b3722105de3a&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "csv=2; edgebucket=TS8wU4ybUwsovyI5Ov; loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; session_tracker=ajjkqnlmcooplofmnb.0.1666553424742.Z0FBQUFBQmpWWlpRLUpfWXA2Zk5RREtCWFpWOWlxM0d6Nm9felZtZ0djYXc2RnhtcFhSS0JZdV9YWnc2VUh1bmZObEN3X29CWTZtR2p6R3c5YzBFeFRzSkRRYkxlRnVKRXNxUG5tM3JXd1pDSG0yQ2NLTHg3ZThndHVaNjFmZ05mMHlmYk1wMFNhR0c"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "DELETE",
+        "uri": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_a3c253ae-6629-4f9f-b255-6c7d9587bcc7&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"deleted\": true}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "17"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:25 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553425364.Z0FBQUFBQmpWWlpSVXZ2SXplWDY3ZEUtN2NNcEY1QW02bmNvazJ3SXZEVkZKODhzMklFZkF3TXhfMW5ieHFPdDdrVi1ORW1EXzl6UUdad013a0lDMzlheFFwYXcyT0VNZUMya3lSemx1MWxEdkZ1S1FwblNqVU1ZUmR1MjdTM3RIWERaWnBodGZBQWo; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:25 GMT; secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "587.0"
+          ],
+          "x-ratelimit-reset": [
+            "575"
+          ],
+          "x-ratelimit-used": [
+            "13"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?user=PyAPITestUser3&subreddit=<TEST_SUBREDDIT>&note_id=ModNote_a3c253ae-6629-4f9f-b255-6c7d9587bcc7&raw_json=1"
+      }
+    },
+    {
+      "request": {
+        "body": null,
+        "headers": {
+          "Accept-Encoding": [
+            "identity"
+          ],
+          "Authorization": [
+            "bearer <ACCESS_TOKEN>"
+          ],
+          "Cookie": [
+            "csv=2; edgebucket=TS8wU4ybUwsovyI5Ov; loid=0000000000000o77bz.2.1434669370561.Z0FBQUFBQmpWWlpQcm9mcVUwcl92QUMtczgwQ2wtT3RXTU1UR0xHampEamZpS3gyOGYxLWlfc19jYnNNUDZyWkd2RnpmUW5lX0VPeVVXVl9yV21DQU1Vc1ZtSmpPbXZuVHNWSzBrc0xXNkF4cm5jejNPS1g1VV9WUkFpbUxEanVKQVl1YVREeXhZZGs; session_tracker=ajjkqnlmcooplofmnb.0.1666553425364.Z0FBQUFBQmpWWlpSVXZ2SXplWDY3ZEUtN2NNcEY1QW02bmNvazJ3SXZEVkZKODhzMklFZkF3TXhfMW5ieHFPdDdrVi1ORW1EXzl6UUdad013a0lDMzlheFFwYXcyT0VNZUMya3lSemx1MWxEdkZ1S1FwblNqVU1ZUmR1MjdTM3RIWERaWnBodGZBQWo"
+          ],
+          "User-Agent": [
+            "<USER_AGENT> Async PRAW/7.5.1.dev0 asyncprawcore/2.3.0"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://oauth.reddit.com/api/mod/notes?subreddit=<TEST_SUBREDDIT>&user=pyapitestuser3&limit=100&raw_json=1"
+      },
+      "response": {
+        "body": {
+          "string": "{\"mod_notes\": [], \"start_cursor\": null, \"end_cursor\": null, \"has_next_page\": false}"
+        },
+        "headers": {
+          "Accept-Ranges": [
+            "bytes"
+          ],
+          "Cache-Control": [
+            "private, s-maxage=0, max-age=0, must-revalidate, no-store"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "Content-Length": [
+            "83"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Sun, 23 Oct 2022 19:30:25 GMT"
+          ],
+          "Expires": [
+            "-1"
+          ],
+          "NEL": [
+            "{\"report_to\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": false, \"success_fraction\": 0.2, \"failure_fraction\": 0.2}"
+          ],
+          "Report-To": [
+            "{\"group\": \"w3-reporting-nel\", \"max_age\": 14400, \"include_subdomains\": true,  \"endpoints\": [{ \"url\": \"https://w3-reporting-nel.reddit.com/reports\" }]}, {\"group\": \"w3-reporting\", \"max_age\": 14400, \"include_subdomains\": true, \"endpoints\": [{ \"url\": \"https://w3-reporting.reddit.com/reports\" }]}"
+          ],
+          "Server": [
+            "snooserv"
+          ],
+          "Set-Cookie": [
+            "session_tracker=ajjkqnlmcooplofmnb.0.1666553425505.Z0FBQUFBQmpWWlpSSUhMdHpnTVFFZ19OalpYd2ZUVzQ3UUlqb2EyQmVtcjlJeVc4UjdmOHBDaHF6TXAwYWhuT1dYQml3VmpBTGdHN2JRNnZMYkpfWUtyaFZnVW91TjVXVzdyVjZfS3R3UUxrX19ldlJjMDNrSGdQZkJ5bnFZN3JjcVRpVVJ6YTJiUzc; Domain=reddit.com; Max-Age=7199; Path=/; expires=Sun, 23-Oct-2022 21:30:25 GMT; secure; SameSite=None; Secure"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains"
+          ],
+          "Via": [
+            "1.1 varnish"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ],
+          "x-moose": [
+            "majestic"
+          ],
+          "x-ratelimit-remaining": [
+            "586.0"
+          ],
+          "x-ratelimit-reset": [
+            "575"
+          ],
+          "x-ratelimit-used": [
+            "14"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://oauth.reddit.com/api/mod/notes?subreddit=<TEST_SUBREDDIT>&user=pyapitestuser3&limit=100&raw_json=1"
+      }
+    }
+  ],
+  "recorded_at": "2022-10-23T14:30:25",
+  "version": 1
+}

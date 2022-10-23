@@ -3,7 +3,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Optional, Union
 
 from ..base import AsyncPRAWBase
-from .listing import FlairListing
+from .listing import FlairListing, ModNoteListing
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
@@ -66,15 +66,28 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         self.yielded += 1
         return self._listing[self._list_index - 1]
 
+    def _extract_sublist(self, listing):
+        if isinstance(listing, list):
+            return listing[1]  # for submission duplicates
+        elif isinstance(listing, dict):
+            classes = [FlairListing, ModNoteListing]
+
+            for listing_type in classes:
+                if listing_type.CHILD_ATTRIBUTE in listing:
+                    return listing_type(self._reddit, listing)
+            else:
+                raise ValueError(
+                    "The generator returned a dictionary Async PRAW didn't"
+                    " recognize. File a bug report at Async PRAW."
+                )
+        return listing
+
     async def _next_batch(self):
         if self._exhausted:
             raise StopAsyncIteration()
 
         self._listing = await self._reddit.get(self.url, params=self.params)
-        if isinstance(self._listing, list):
-            self._listing = self._listing[1]  # for submission duplicates
-        elif isinstance(self._listing, dict):
-            self._listing = FlairListing(self._reddit, self._listing)
+        self._listing = self._extract_sublist(self._listing)
         self._list_index = 0
 
         if not self._listing:
