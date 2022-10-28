@@ -6,6 +6,11 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+**Changed**
+
+- Revert :meth:`~.Comment.edit` positional argument deprecation.
+- Revert :meth:`~.Submission.edit` positional argument deprecation.
+
 **Fixed**
 
 - An issue where :class:`.ModmailConversation`'s ``messages`` attribute would only

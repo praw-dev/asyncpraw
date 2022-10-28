@@ -67,7 +67,7 @@ class TestComment(IntegrationTest):
         self.reddit.read_only = False
         with self.use_cassette():
             comment = Comment(self.reddit, "fwxxs5d")
-            await comment.edit(body="New text")
+            await comment.edit("New text")
             assert comment.body == "New text"
 
     async def test_enable_inbox_replies(self):
