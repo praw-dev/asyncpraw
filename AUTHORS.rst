@@ -30,6 +30,7 @@ Documentation Contributors
 - Kaif `@kaif-00z <https://github.com/kaif-00z>`_
 - Johanna Rührig `@TheRealVira <https://github.com/TheRealVira>`_
 - Sam Snarr `@sss-ng <https://github.com/sss-ng>`_
+- Moshe Dicker `@dickermoshe <https://github.com/dickermoshe>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
