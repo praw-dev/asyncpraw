@@ -16,13 +16,12 @@ class IntegrationTest(asynctest.TestCase, HelperMethodMixin):
 
     logger = logging.getLogger(__name__)
 
-    def setUp(self):
-        """Setup runs before all test cases."""
+    def setup_method(self, method):
         self._overrode_reddit_setup = True
         self.setup_reddit()
         self.setup_vcr()
 
-    async def tearDown(self) -> None:
+    async def teardown_method(self, _):
         await self.reddit.close()
 
     def setup_vcr(self):

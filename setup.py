@@ -26,7 +26,7 @@ extras = {
     "test": [
         "asynctest >=0.13.0",
         "mock >=0.8",
-        "pytest >=2.7.3",
+        "pytest ==7.2.*",
         "pytest-asyncio",
         "pytest-vcr",
         "testfixtures >4.13.2, <7",

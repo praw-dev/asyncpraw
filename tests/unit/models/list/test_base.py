@@ -2,6 +2,7 @@
 import pytest
 
 from asyncpraw.models.list.base import BaseList
+from ... import UnitTest
 
 
 class DummyObjector:
@@ -15,11 +16,11 @@ class Dummy:
         self._objector = DummyObjector
 
 
-class TestBaseList:
-    def setup(self):
+class TestBaseList(UnitTest):
+    def setup_method(self, _):
         self._prev_child_attribute = BaseList.CHILD_ATTRIBUTE
 
-    def teardown(self):
+    def teardown_method(self, _):
         BaseList.CHILD_ATTRIBUTE = self._prev_child_attribute
 
     def test__init__CHILD_ATTRIBUTE_not_set(self):
