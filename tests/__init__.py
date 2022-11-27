@@ -1,4 +1,16 @@
 """Async PRAW Test Suite."""
+import sys
+
+if sys.version_info < (3, 8):
+    from asynctest import TestCase
+
+    class BaseTest(TestCase):
+        """Base class for Async PRAW tests."""
+
+else:
+
+    class BaseTest:
+        """Base class for Async PRAW tests."""
 
 
 class HelperMethodMixin:

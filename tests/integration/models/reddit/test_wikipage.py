@@ -1,8 +1,13 @@
+import sys
 from base64 import urlsafe_b64encode
 
 import pytest
 from asyncprawcore import Forbidden, NotFound
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import Redditor, WikiPage

@@ -1,7 +1,13 @@
 """Test asyncpraw.models.inbox."""
+import sys
+
 import pytest
 from asyncprawcore import Forbidden
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.models import Comment, Message, Redditor, Subreddit
 

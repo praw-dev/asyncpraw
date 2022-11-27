@@ -2,6 +2,7 @@
 import pytest
 
 from asyncpraw.models.list.base import BaseList
+
 from ... import UnitTest
 
 

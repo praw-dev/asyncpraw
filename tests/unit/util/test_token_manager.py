@@ -4,7 +4,11 @@ from tempfile import NamedTemporaryFile
 
 import aiofiles
 import pytest
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.util.token_manager import (
     BaseTokenManager,

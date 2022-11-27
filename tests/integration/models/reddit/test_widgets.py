@@ -2,7 +2,11 @@ import sys
 from os.path import abspath, dirname, join
 
 import pytest
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.models import (
     Button,

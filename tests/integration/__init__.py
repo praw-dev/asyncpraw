@@ -1,28 +1,30 @@
 """Async PRAW Integration test suite."""
+import asyncio
 import inspect
 import logging
 
 import aiohttp
-import asynctest
 import pytest
 
 from asyncpraw import Reddit
-from tests import HelperMethodMixin
+from tests import BaseTest, HelperMethodMixin
 from tests.conftest import vcr
 
 
-class IntegrationTest(asynctest.TestCase, HelperMethodMixin):
+class IntegrationTest(BaseTest, HelperMethodMixin):
     """Base class for Async PRAW integration tests."""
 
     logger = logging.getLogger(__name__)
+
+    @pytest.fixture(autouse=True)
+    def auto_close_reddit(self, event_loop):
+        yield
+        event_loop.run_until_complete(self.reddit.close())
 
     def setup_method(self, method):
         self._overrode_reddit_setup = True
         self.setup_reddit()
         self.setup_vcr()
-
-    async def teardown_method(self, _):
-        await self.reddit.close()
 
     def setup_vcr(self):
         """Configure VCR instance."""
@@ -102,3 +104,12 @@ class IntegrationTest(asynctest.TestCase, HelperMethodMixin):
     def get_cassette_name(self) -> str:
         function_name = inspect.currentframe().f_back.f_back.f_code.co_name
         return f"{type(self).__name__}.{function_name}"
+
+    @pytest.fixture(autouse=True, scope="function")
+    def patch_sleep(self, monkeypatch):
+        """Patch sleep to speed up tests."""
+
+        async def _sleep(*_, **__):
+            pass
+
+        monkeypatch.setattr(asyncio, "sleep", value=_sleep)

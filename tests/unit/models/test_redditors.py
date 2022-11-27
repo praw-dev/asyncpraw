@@ -1,6 +1,12 @@
 """Test asyncpraw.models.redditors."""
 
-from asynctest import patch
+import sys
+
+if sys.version_info < (3, 8):
+    from asynctest import CoroutineMock as AsyncMock
+    from asynctest import patch
+else:
+    from unittest.mock import patch, AsyncMock
 
 from .. import UnitTest
 
@@ -13,14 +19,18 @@ class TestRedditors(UnitTest):
         assert params == {"dummy": "value"}
 
     async def test_partial_redditors(self, reddit):
-        with patch.object(reddit, "request") as mock_method:
+        with patch.object(
+            reddit, "request", AsyncMock(return_value={"data": {"children": []}})
+        ) as mock_method:
             in_ids_list = [("t2_%d" % n) for n in range(100)]
             await self.async_list(reddit.redditors.partial_redditors(in_ids_list))
 
             assert mock_method.call_count == 1
             assert mock_method.call_args[1]["params"]["ids"] == ",".join(in_ids_list)
 
-        with patch.object(reddit, "request") as mock_method:
+        with patch.object(
+            reddit, "request", AsyncMock(return_value={"data": {"children": []}})
+        ) as mock_method:
             in_ids_list = [("t2_%d" % n) for n in range(102)]
             await self.async_list(reddit.redditors.partial_redditors(in_ids_list))
 

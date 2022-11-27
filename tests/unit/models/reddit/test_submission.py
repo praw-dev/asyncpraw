@@ -60,10 +60,10 @@ class TestSubmission(UnitTest):
         )
 
     @pytest.mark.filterwarnings("error", category=UserWarning)
-    @pytest.LogCaptureFixture
+    @pytest.mark.usefixtures("caplog", "reddit")
     async def test_comment_sort_warning__disabled(self, caplog, reddit):
         reddit.config.warn_comment_sort = False
-        submission = await reddit.submission("1234")
+        submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
         submission.comment_sort = "new"
         assert caplog.records == []

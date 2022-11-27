@@ -1,6 +1,10 @@
+import sys
 from datetime import datetime
 
-from asynctest import mock
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.models import ModmailMessage, Subreddit
 

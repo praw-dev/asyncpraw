@@ -24,7 +24,7 @@ extras = {
         "sphinxcontrib-trio",
     ],
     "test": [
-        "asynctest >=0.13.0",
+        "asynctest >=0.13.0 ; python_version < '3.8'",
         "mock >=0.8",
         "pytest ==7.2.*",
         "pytest-asyncio",

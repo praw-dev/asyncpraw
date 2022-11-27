@@ -2,7 +2,11 @@ import os
 import sys
 
 import pytest
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException
