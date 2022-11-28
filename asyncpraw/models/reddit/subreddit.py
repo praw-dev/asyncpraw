@@ -2342,9 +2342,9 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            await subreddit.flair.templates.add(
-                "PRAW",
-                css_class="praw",
+            await subreddit.flair.link_templates.add(
+                "Async PRAW",
+                css_class="asyncpraw",
                 text_editable=True,
             )
 
