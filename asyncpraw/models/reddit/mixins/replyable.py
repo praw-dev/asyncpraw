@@ -1,11 +1,16 @@
 """Provide the ReplyableMixin class."""
+from typing import TYPE_CHECKING, Optional
+
 from ....const import API_PATH
+
+if TYPE_CHECKING:  # pragma: no cover
+    import asyncpraw
 
 
 class ReplyableMixin:
     """Interface for :class:`.RedditBase` classes that can be replied to."""
 
-    async def reply(self, body: str):
+    async def reply(self, body: str) -> Optional["asyncpraw.models.Comment"]:
         """Reply to the object.
 
         :param body: The Markdown formatted content for a comment.

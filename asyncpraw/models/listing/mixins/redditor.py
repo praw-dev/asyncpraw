@@ -1,5 +1,5 @@
 """Provide the RedditorListingMixin class."""
-from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Union
+from typing import TYPE_CHECKING, AsyncIterator, Dict, Union
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
@@ -64,8 +64,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def downvoted(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Any]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
+    ]:
         """Return a :class:`.ListingGenerator` for items the user has downvoted.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
+            :class:`.Submission` objects the user has downvoted.
 
         :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
             list.
@@ -94,8 +99,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def gildings(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Any]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
+    ]:
         """Return a :class:`.ListingGenerator` for items the user has gilded.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
+            :class:`.Submission` objects the user has gilded.
 
         :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
             list.
@@ -124,8 +134,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def hidden(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Any]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
+    ]:
         """Return a :class:`.ListingGenerator` for items the user has hidden.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
+            :class:`.Submission` objects the user has hid.
 
         :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
             list.
@@ -154,8 +169,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def saved(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Any]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
+    ]:
         """Return a :class:`.ListingGenerator` for items the user has saved.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
+            :class:`.Submission` objects the user has saved.
 
         :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
             list.
@@ -184,8 +204,13 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
     def upvoted(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[Any]:
+    ) -> AsyncIterator[
+        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
+    ]:
         """Return a :class:`.ListingGenerator` for items the user has upvoted.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
+            :class:`.Submission` objects the user has upvoted.
 
         :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
             list.
