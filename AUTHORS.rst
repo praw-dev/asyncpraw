@@ -29,6 +29,7 @@ Documentation Contributors
 - Jason Haines `@jghaines <https://github.com/jghaines>`_
 - Kaif `@kaif-00z <https://github.com/kaif-00z>`_
 - Johanna Rührig `@TheRealVira <https://github.com/TheRealVira>`_
+- Sam Snarr `@sss-ng <https://github.com/sss-ng>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
