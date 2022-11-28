@@ -1,6 +1,14 @@
+import sys
+
 import aiohttp
 import pytest
-from asynctest import CoroutineMock, MagicMock, mock
+
+if sys.version_info < (3, 8):
+    from asynctest import CoroutineMock as AsyncMock
+    from asynctest import MagicMock, mock
+else:
+    from unittest import mock
+    from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw.exceptions import MediaPostFailed
 from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
@@ -64,7 +72,7 @@ class TestSubreddit(UnitTest):
     ):
         reddit._core._requestor._http = aiohttp.ClientSession()
         recv_mock = MagicMock()
-        recv_mock.receive_json = CoroutineMock(
+        recv_mock.receive_json = AsyncMock(
             return_value={"payload": {}, "type": "failed"}
         )
         context_manager = MagicMock()

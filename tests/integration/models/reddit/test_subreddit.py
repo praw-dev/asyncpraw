@@ -8,7 +8,11 @@ import pytest
 from aiohttp import ClientResponse
 from aiohttp.http_websocket import WebSocketError
 from asyncprawcore import BadRequest, Forbidden, NotFound, TooLarge
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.const import PNG_HEADER
 from asyncpraw.exceptions import (

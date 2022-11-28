@@ -1,11 +1,17 @@
 import configparser
+import sys
 import types
 
 import pytest
 from asyncprawcore import Requestor
 from asyncprawcore.exceptions import BadRequest
-from asynctest import mock
-from mock import AsyncMock
+
+if sys.version_info < (3, 8):
+    from asynctest import CoroutineMock as AsyncMock
+    from asynctest import mock
+else:
+    from unittest import mock
+    from unittest.mock import AsyncMock
 
 from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config
@@ -450,7 +456,7 @@ class TestReddit(UnitTest):
 
     @mock.patch("asyncprawcore.sessions.Session")
     async def test_request__badrequest_with_no_json_body(self, mock_session):
-        response = mock.Mock(status=400, text=mock.CoroutineMock(return_value=""))
+        response = mock.Mock(status=400, text=AsyncMock(return_value=""))
         response.json.side_effect = ValueError
         mock_session.return_value.request = mock.Mock(
             side_effect=BadRequest(response=response)
@@ -507,11 +513,11 @@ class TestRedditCustomRequestor(UnitTest):
 
     async def test_requestor_kwargs(self):
         session = AsyncMock(headers={})
-        async with Reddit(
+        reddit = Reddit(
             requestor_kwargs={"session": session},
             client_id="dummy",
             client_secret="dummy",
             user_agent="dummy",
-        ) as reddit:
+        )
 
-            assert reddit._core._requestor._http is session
+        assert reddit._core._requestor._http is session

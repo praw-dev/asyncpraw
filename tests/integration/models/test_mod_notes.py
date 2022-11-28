@@ -43,7 +43,7 @@ class TestModNotes(IntegrationTest):
             assert result_note.user == submission.author
             assert result_note.note == "test note"
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     async def test_delete_note(self, _):
         self.reddit.read_only = False
         with self.use_cassette():
@@ -57,7 +57,7 @@ class TestModNotes(IntegrationTest):
             notes = await self.async_list(subreddit.mod.notes.redditors(self.REDDITOR))
             assert result_note not in notes
 
-    @mock.patch("time.sleep", return_value=None)
+    @mock.patch("asyncio.sleep", return_value=None)
     async def test_delete_note__all_notes(self, _):
         self.reddit.read_only = False
         with self.use_cassette():

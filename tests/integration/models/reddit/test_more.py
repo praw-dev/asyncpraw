@@ -4,8 +4,8 @@ from ... import IntegrationTest
 
 
 class TestMore(IntegrationTest):
-    async def setUp(self):
-        super().setUp()
+    def setup_method(self, method):
+        super().setup_method(method)
         # Responses do not decode well on travis so manually renable gzip.
         self.reddit._core._requestor._http._default_headers["Accept-Encoding"] = "gzip"
 

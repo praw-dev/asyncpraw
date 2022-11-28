@@ -1,6 +1,12 @@
 """Test asyncpraw.models.LiveThread"""
+import sys
+
 import pytest
-from asynctest import mock
+
+if sys.version_info < (3, 8):
+    from asynctest import mock
+else:
+    from unittest import mock
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import RedditAPIException

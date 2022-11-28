@@ -12,7 +12,6 @@ from asyncpraw import Reddit
 from asyncpraw.models import Submission
 
 
-@pytest.mark.asyncio
 @pytest.mark.skipif(
     not os.getenv("NETWORK_TEST_CLIENT_ID"),
     reason="Not running from the NETWORK_TEST ci task on praw-dev/asyncpraw",
