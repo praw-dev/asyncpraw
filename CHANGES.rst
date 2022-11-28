@@ -6,6 +6,9 @@ Async PRAW follows `semantic versioning <http://semver.org/>`_.
 Unreleased
 ----------
 
+7.6.1 (2022/11/28)
+------------------
+
 **Changed**
 
 - Revert :meth:`~.Comment.edit` positional argument deprecation.
