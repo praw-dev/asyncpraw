@@ -1,5 +1,5 @@
 """Provide the ReplyableMixin class."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
 from ....const import API_PATH
 
@@ -10,13 +10,15 @@ if TYPE_CHECKING:  # pragma: no cover
 class ReplyableMixin:
     """Interface for :class:`.RedditBase` classes that can be replied to."""
 
-    async def reply(self, body: str) -> Optional["asyncpraw.models.Comment"]:
+    async def reply(
+        self, body: str
+    ) -> Optional[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]:
         """Reply to the object.
 
         :param body: The Markdown formatted content for a comment.
 
-        :returns: A :class:`.Comment` object for the newly created comment or ``None``
-            if Reddit doesn't provide one.
+        :returns: A :class:`.Comment` or :class:`.Message` object for the newly created
+            comment or message or ``None`` if Reddit doesn't provide one.
 
         :raises: ``asyncprawcore.exceptions.Forbidden`` when attempting to reply to some
             items, such as locked submissions/comments or non-replyable messages.
