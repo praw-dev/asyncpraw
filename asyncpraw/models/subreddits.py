@@ -36,7 +36,7 @@ class Subreddits(AsyncPRAWBase):
     def gold(self, **generator_kwargs) -> AsyncIterator["asyncpraw.models.Subreddit"]:
         """Alias for :meth:`.premium` to maintain backwards compatibility."""
         warn(
-            "`subreddits.gold` has be renamed to `subreddits.premium`.",
+            "'subreddits.gold' has be renamed to 'subreddits.premium'.",
             category=DeprecationWarning,
             stacklevel=2,
         )

@@ -50,14 +50,14 @@ class TestDeprecation(UnitTest):
         with pytest.raises(DeprecationWarning) as excinfo:
             submission = await reddit.submission("1234", fetch=False)
             await submission.gild()
-            assert excinfo.value.args[0] == "`.gild` has been renamed to `.award`."
+            assert excinfo.value.args[0] == "'.gild' has been renamed to '.award'."
 
     def test_gold_method(self, reddit):
         with pytest.raises(DeprecationWarning) as excinfo:
             reddit.subreddits.gold()
             assert (
                 excinfo.value.args[0]
-                == "`subreddits.gold` has be renamed to `subreddits.premium`."
+                == "'subreddits.gold' has be renamed to 'subreddits.premium'."
             )
 
     async def test_lazy_argument_rename(self, reddit):
@@ -137,16 +137,16 @@ class TestDeprecation(UnitTest):
             assert display_name == "test"
             assert (
                 warning_info.list[0].message.args[0]
-                == "`Redditor.subreddit` is no longer a dict and is now an"
-                " `UserSubreddit` object. Accessing attributes using string indices is"
+                == "'Redditor.subreddit' is no longer a dict and is now an"
+                " UserSubreddit object. Accessing attributes using string indices is"
                 " deprecated."
             )
             assert user_subreddit.keys() == user_subreddit.__dict__.keys()
             assert (
                 warning_info.list[1].message.args[0]
-                == "`Redditor.subreddit` is no longer a dict and is now an"
-                " `UserSubreddit` object. Using `keys` is deprecated and will be"
-                " removed in Async PRAW 8."
+                == "'Redditor.subreddit' is no longer a dict and is now an"
+                " UserSubreddit object. Using 'keys' is deprecated and will be removed"
+                " in Async PRAW 8."
             )
 
     def test_validate_on_submit(self, reddit):
@@ -164,7 +164,7 @@ class TestDeprecation(UnitTest):
             _ = exc.original_exception
         assert (
             excinfo.value.args[0]
-            == "Accessing the attribute original_exception is deprecated. Please"
+            == "Accessing the attribute 'original_exception' is deprecated. Please"
             " rewrite your code in such a way that this attribute does not need to"
             " be used. It will be removed in Async PRAW 8.0."
         )

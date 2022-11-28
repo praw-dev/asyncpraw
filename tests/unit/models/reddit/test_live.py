@@ -24,7 +24,7 @@ class TestLiveThread(UnitTest):
         assert thread.id == thread_id
 
     def test_construct_failure(self, reddit):
-        message = "Either `id` or `_data` must be provided."
+        message = "Either 'id' or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
             LiveThread(reddit)
         assert str(excinfo.value) == message
@@ -118,7 +118,7 @@ class TestLiveUpdate(UnitTest):
         assert update._fetched
 
     def test_construct_failure(self, reddit):
-        message = "Either `thread_id` and `update_id`, or `_data` must be provided."
+        message = "Either 'thread_id' and 'update_id', or '_data' must be provided."
         thread_id = "dummy_thread_id"
         update_id = "dummy_update_id"
 

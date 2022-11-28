@@ -25,7 +25,7 @@ class TestComment(UnitTest):
         assert comment2 == "dummy1"
 
     def test_construct_failure(self, reddit):
-        message = "Exactly one of `id`, `url`, or `_data` must be provided."
+        message = "Exactly one of 'id', 'url', or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
             Comment(reddit)
         assert str(excinfo.value) == message

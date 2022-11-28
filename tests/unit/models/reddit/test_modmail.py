@@ -7,7 +7,7 @@ from ... import UnitTest
 
 class TestModmailConversation(UnitTest):
     def test_construct_failure(self, reddit):
-        message = "Either `id` or `_data` must be provided."
+        message = "Either 'id' or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
             ModmailConversation(reddit)
         assert str(excinfo.value) == message

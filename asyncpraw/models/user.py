@@ -157,8 +157,8 @@ class User(AsyncPRAWBase):
         if self._reddit.read_only:
             if not self._reddit.config.custom.get("praw8_raise_exception_on_me"):
                 warn(
-                    "The `None` return value is deprecated, and will raise a"
-                    " `ReadOnlyException` beginning with Async PRAW 8. See"
+                    "The 'None' return value is deprecated, and will raise a"
+                    " ReadOnlyException beginning with Async PRAW 8. See"
                     " documentation for forward compatibility options.",
                     category=DeprecationWarning,
                     stacklevel=2,

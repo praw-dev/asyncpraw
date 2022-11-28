@@ -70,8 +70,8 @@ class TestReddit(UnitTest):
             )
         assert (
             str(excinfo.value)
-            == "``refresh_token`` setting cannot be provided when providing"
-            " ``token_manager``"
+            == "'refresh_token' setting cannot be provided when providing"
+            " 'token_manager'"
         )
 
     async def test_context_manager(self):
@@ -84,7 +84,7 @@ class TestReddit(UnitTest):
         with pytest.raises(TypeError) as excinfo:
             reddit.info(fullnames=None)
 
-        err_str = "Either `fullnames`, `url`, or `subreddits` must be provided."
+        err_str = "Either 'fullnames', 'url', or 'subreddits' must be provided."
         assert str(excinfo.value) == err_str
 
         with pytest.raises(TypeError) as excinfo:
@@ -474,7 +474,7 @@ class TestReddit(UnitTest):
                 data={"key": "value"}, json={"key": "value"}, method="POST", path="/"
             )
         assert str(excinfo.value).startswith(
-            "At most one of `data` or `json` is supported."
+            "At most one of 'data' or 'json' is supported."
         )
 
     async def test_submission(self, reddit):

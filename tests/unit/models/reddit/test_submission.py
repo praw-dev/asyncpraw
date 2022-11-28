@@ -21,7 +21,7 @@ class TestSubmission(UnitTest):
         assert submission2 == "dummy1"
 
     def test_construct_failure(self, reddit):
-        message = "Exactly one of `id`, `url`, or `_data` must be provided."
+        message = "Exactly one of 'id', 'url', or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
             Submission(reddit)
         assert str(excinfo.value) == message

@@ -334,7 +334,7 @@ class SubredditWidgets(AsyncPRAWBase):
         await self._fetch()
 
     def __getattr__(self, attr: str) -> Any:
-        """Return the value of `attr`."""
+        """Return the value of ``attr``."""
         if not attr.startswith("_") and not self._fetched:
             raise AttributeError(
                 f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you"

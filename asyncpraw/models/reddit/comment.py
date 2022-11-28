@@ -161,7 +161,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     ):
         """Initialize a :class:`.Comment` instance."""
         if (id, url, _data).count(None) != 2:
-            raise TypeError("Exactly one of `id`, `url`, or `_data` must be provided.")
+            raise TypeError("Exactly one of 'id', 'url', or '_data' must be provided.")
         fetched = False
         self._replies = []
         self._submission = None
@@ -238,7 +238,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
             comment = await reddit.comment("cklhv0f", fetch=False)
             parent = await comment.parent()
-            # `replies` is empty until the comment is refreshed
+            # 'replies' is empty until the comment is refreshed
             print(parent.replies)  # Output: []
             await parent.refresh()
             print(parent.replies)  # Output is at least: [Comment(id="cklhv0f")]

@@ -143,7 +143,7 @@ class APIException(AsyncPRAWException):
 
     def _get_old_attr(self, attrname):
         warn(
-            f"Accessing attribute ``{attrname}`` through APIException is deprecated."
+            f"Accessing attribute '{attrname}' through APIException is deprecated."
             " This behavior will be removed in Async PRAW 8.0. Check out"
             " https://praw.readthedocs.io/en/latest/package_info/praw7_migration.html"
             " to learn how to migrate your code.",
@@ -188,7 +188,7 @@ class DuplicateReplaceException(ClientException):
         """Initialize a :class:`.DuplicateReplaceException` instance."""
         super().__init__(
             "A duplicate comment has been detected. Are you attempting to call"
-            " ``replace_more_comments`` more than once?"
+            " 'replace_more_comments' more than once?"
         )
 
 
@@ -198,8 +198,8 @@ class InvalidFlairTemplateID(ClientException):
     def __init__(self, template_id: str):
         """Initialize an :class:`.InvalidFlairTemplateID` instance."""
         super().__init__(
-            f"The flair template ID ``{template_id}`` is invalid. If you are trying to"
-            " create a flair, please use the ``add`` method."
+            f"The flair template ID '{template_id}' is invalid. If you are trying to"
+            " create a flair, please use the 'add' method."
         )
 
 
@@ -258,9 +258,9 @@ class WebSocketException(ClientException):
 
     @property
     def original_exception(self) -> Exception:
-        """Access the original_exception attribute (now deprecated)."""
+        """Access the ``original_exception`` attribute (now deprecated)."""
         warn(
-            "Accessing the attribute original_exception is deprecated. Please rewrite"
+            "Accessing the attribute 'original_exception' is deprecated. Please rewrite"
             " your code in such a way that this attribute does not need to be used. It"
             " will be removed in Async PRAW 8.0.",
             category=DeprecationWarning,
