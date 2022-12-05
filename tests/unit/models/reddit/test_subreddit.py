@@ -94,9 +94,7 @@ class TestSubreddit(UnitTest):
         },
     )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
-    async def test_media_upload_500(
-        self, connection_mock, _mock_post, mock_method, reddit
-    ):
+    async def test_media_upload_500(self, connection_mock, _mock_post, mock_method, reddit):
         from aiohttp.http_exceptions import HttpProcessingError
         from asyncprawcore.exceptions import ServerError
 

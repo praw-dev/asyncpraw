@@ -462,20 +462,27 @@ class TestReddit(UnitTest):
             side_effect=BadRequest(response=response)
         )
 
-        reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
-        with pytest.raises(Exception) as excinfo:
-            await reddit.request(method="POST", path="/")
+        async with Reddit(
+            client_id="dummy", client_secret="dummy", user_agent="dummy"
+        ) as reddit:
+            with pytest.raises(Exception) as excinfo:
+                await reddit.request(method="POST", path="/")
         assert str(excinfo.value) == "received 400 HTTP response"
 
     async def test_request__json_and_body(self):
-        reddit = Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy")
-        with pytest.raises(ClientException) as excinfo:
-            await reddit.request(
-                data={"key": "value"}, json={"key": "value"}, method="POST", path="/"
+        async with Reddit(
+            client_id="dummy", client_secret="dummy", user_agent="dummy"
+        ) as reddit:
+            with pytest.raises(ClientException) as excinfo:
+                await reddit.request(
+                    data={"key": "value"},
+                    json={"key": "value"},
+                    method="POST",
+                    path="/",
+                )
+            assert str(excinfo.value).startswith(
+                "At most one of 'data' or 'json' is supported."
             )
-        assert str(excinfo.value).startswith(
-            "At most one of 'data' or 'json' is supported."
-        )
 
     async def test_submission(self, reddit):
         submission = await reddit.submission("2gmzqe", fetch=False)
@@ -511,13 +518,14 @@ class TestRedditCustomRequestor(UnitTest):
             assert isinstance(temp_reddit._core._requestor, CustomRequestor)
         assert not isinstance(reddit._core._requestor, CustomRequestor)
 
-    async def test_requestor_kwargs(self):
+    def test_requestor_kwargs(self):
         session = AsyncMock(headers={})
-        reddit = Reddit(
-            requestor_kwargs={"session": session},
-            client_id="dummy",
-            client_secret="dummy",
-            user_agent="dummy",
+        assert (
+            Reddit(
+                requestor_kwargs={"session": session},
+                client_id="dummy",
+                client_secret="dummy",
+                user_agent="dummy",
+            )._core._requestor._http
+            is session
         )
-
-        assert reddit._core._requestor._http is session

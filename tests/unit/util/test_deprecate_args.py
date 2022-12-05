@@ -211,7 +211,8 @@ def pytest_generate_tests(metafunc):
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
 class TestDeprecateArgs(UnitTest):
-    def setup_method(self, _):
+    @pytest.fixture(autouse=True)
+    def arg_test(self):
         self.arg_test = ArgTest()
 
     params = {
