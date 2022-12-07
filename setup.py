@@ -10,7 +10,7 @@ HERE = path.abspath(path.dirname(__file__))
 with open(path.join(HERE, "README.rst"), encoding="utf-8") as fp:
     README = fp.read()
 with open(path.join(HERE, PACKAGE_NAME, "const.py"), encoding="utf-8") as fp:
-    VERSION = re.search('__version__ = "([^"]+)"', fp.read()).group(1)
+    VERSION = re.search(r'__version__ = "([^"]+)"', fp.read()).group(1)
 
 extras = {
     "ci": ["coveralls"],

@@ -8,10 +8,10 @@ from asyncprawcore.exceptions import BadRequest
 
 if sys.version_info < (3, 8):
     from asynctest import CoroutineMock as AsyncMock
-    from asynctest import mock
+    from asynctest import MagicMock, mock
 else:
     from unittest import mock
-    from unittest.mock import AsyncMock
+    from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config
@@ -456,9 +456,9 @@ class TestReddit(UnitTest):
 
     @mock.patch("asyncprawcore.sessions.Session")
     async def test_request__badrequest_with_no_json_body(self, mock_session):
-        response = mock.Mock(status=400, text=AsyncMock(return_value=""))
+        response = MagicMock(status=400, text=AsyncMock(return_value=""))
         response.json.side_effect = ValueError
-        mock_session.return_value.request = mock.Mock(
+        mock_session.return_value.request = MagicMock(
             side_effect=BadRequest(response=response)
         )
 

@@ -37,10 +37,7 @@ class TestWidgetEncoder(UnitTest):
         assert '[1, "two", {"3": 3}, "four"]' == dumps(data, cls=WidgetEncoder)
 
 
-class TestWidgets(UnitTest):
-    def test_subredditwidgets_mod(self, reddit):
-        sw = SubredditWidgets(Subreddit(reddit, "fake_subreddit"))
-        assert isinstance(sw.mod, SubredditWidgetsModeration)
+class TestSubredditWidgets(UnitTest):
 
     def test_widget_mod(self, reddit):
         w = Widget(reddit, {})
