@@ -1752,6 +1752,11 @@ class TestSubredditStylesheet(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.stylesheet.delete_mobile_header()
 
+    async def test_delete_mobile_banner(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.delete_mobile_banner()
+
     async def test_delete_mobile_icon(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1852,6 +1857,16 @@ class TestSubredditStylesheet(IntegrationTest):
         await subreddit.stylesheet.upload_banner_hover_image(
             image_path("white-square.png")
         )
+
+    async def test_upload_mobile_banner__jpg(self, reddit, image_path):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.jpg"))
+
+    async def test_upload_mobile_banner__png(self, reddit, image_path):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.png"))
 
     async def test_upload_header__jpg(self, reddit, image_path):
         reddit.read_only = False
