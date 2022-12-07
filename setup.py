@@ -18,6 +18,7 @@ extras = {
     "dev": ["packaging"],
     "lint": ["pre-commit"],
     "readthedocs": [
+        "readthedocs-sphinx-search",
         "sphinx",
         "sphinx-rtd-dark-mode",
         "sphinx_rtd_theme",

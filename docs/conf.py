@@ -1,4 +1,3 @@
-import os
 import sys
 from datetime import datetime
 
@@ -15,6 +14,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_rtd_dark_mode",
     "sphinx_rtd_theme",
+    "sphinx_search.extension",
     "sphinxcontrib_trio",
 ]
 html_static_path = ["_static"]
@@ -35,13 +35,6 @@ release = __version__
 source_suffix = ".rst"
 suppress_warnings = ["image.nonlocal_uri"]
 version = ".".join(__version__.split(".", 2)[:2])
-
-
-# Use RTD theme locally
-if not os.environ.get("READTHEDOCS"):
-    import sphinx_rtd_theme
-
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 
 def skip(app, what, name, obj, skip, options):
