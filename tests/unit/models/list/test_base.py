@@ -18,11 +18,11 @@ class Dummy:
 
 
 class TestBaseList(UnitTest):
-    def setup_method(self, _):
-        self._prev_child_attribute = BaseList.CHILD_ATTRIBUTE
-
-    def teardown_method(self, _):
-        BaseList.CHILD_ATTRIBUTE = self._prev_child_attribute
+    @pytest.fixture(autouse=True)
+    def _patch_base_list(self):
+        _prev_child_attribute = BaseList.CHILD_ATTRIBUTE
+        yield
+        BaseList.CHILD_ATTRIBUTE = _prev_child_attribute
 
     def test__init__CHILD_ATTRIBUTE_not_set(self):
         with pytest.raises(NotImplementedError):

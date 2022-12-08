@@ -4,12 +4,7 @@ from ... import IntegrationTest
 
 
 class TestMore(IntegrationTest):
-    def setup_method(self, method):
-        super().setup_method(method)
-        # Responses do not decode well on travis so manually renable gzip.
-        self.reddit._core._requestor._http._default_headers["Accept-Encoding"] = "gzip"
-
-    async def test_comments(self):
+    async def test_comments(self, reddit):
         data = {
             "count": 9,
             "name": "t1_cu5tt8h",
@@ -27,12 +22,11 @@ class TestMore(IntegrationTest):
                 "cu5pbdh",
             ],
         }
-        with self.use_cassette():
-            more = MoreComments(self.reddit, data)
-            more.submission = await self.reddit.submission("3hahrw")
-            assert len((await more.comments())) == 7
+        more = MoreComments(reddit, data)
+        more.submission = await reddit.submission("3hahrw")
+        assert len((await more.comments())) == 7
 
-    async def test_comments__continue_thread_type(self):
+    async def test_comments__continue_thread_type(self, reddit):
         data = {
             "count": 0,
             "name": "t1__",
@@ -40,7 +34,6 @@ class TestMore(IntegrationTest):
             "parent_id": "t1_cu5v5h7",
             "children": [],
         }
-        with self.use_cassette():
-            more = MoreComments(self.reddit, data)
-            more.submission = await self.reddit.submission("3hahrw")
-            assert len((await more.comments())) == 1
+        more = MoreComments(reddit, data)
+        more.submission = await reddit.submission("3hahrw")
+        assert len((await more.comments())) == 1
