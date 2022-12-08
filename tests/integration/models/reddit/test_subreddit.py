@@ -473,14 +473,6 @@ class TestSubreddit(IntegrationTest):
             with pytest.raises(ClientException):
                 await subreddit.submit_image("Test Title", image)
 
-    async def test_submit_image__bad_filetype(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.mov", "test.mp4"):
-            image = image_path(file_name)
-            with pytest.raises(ClientException):
-                await subreddit.submit_image("Test Title", image)
-
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect", return_value=WebsocketMock("l6evpd")
     )  # update with cassette
@@ -594,14 +586,6 @@ class TestSubreddit(IntegrationTest):
             # assert submission.is_reddit_media_domain
             # for some reason returns false
             assert submission.title == f"Test Title {i}"
-
-    async def test_submit_video__bad_filetype(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.jpg", "test.png", "test.gif"):
-            video = image_path(file_name)
-            with pytest.raises(ClientException):
-                await subreddit.submit_video("Test Title", video)
 
     @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
     @mock.patch("aiohttp.client.ClientSession.ws_connect", return_value=WebsocketMock())

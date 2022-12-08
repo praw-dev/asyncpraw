@@ -712,13 +712,6 @@ class TestRulesWidget(IntegrationTest):
 
 class TestSubredditWidgets(IntegrationTest):
     @pytest.mark.cassette_name("TestSubredditWidgets.fetch_widgets")
-    async def test_bad_attribute(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        widgets = subreddit.widgets
-        with pytest.raises(AttributeError):
-            widgets.nonexistant_attribute
-
-    @pytest.mark.cassette_name("TestSubredditWidgets.fetch_widgets")
     async def test_items(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets

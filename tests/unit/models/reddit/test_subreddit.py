@@ -10,7 +10,7 @@ else:
     from unittest import mock
     from unittest.mock import AsyncMock, MagicMock
 
-from asyncpraw.exceptions import MediaPostFailed
+from asyncpraw.exceptions import ClientException, MediaPostFailed
 from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
@@ -145,6 +145,20 @@ class TestSubreddit(UnitTest):
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit("Cool title", selftext="", url="b")
         assert str(excinfo.value) == message
+
+    async def test_submit_image__bad_filetype(self, reddit, image_path):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.mov", "test.mp4"):
+            image = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_image("Test Title", image)
+
+    async def test_submit_video__bad_filetype(self, reddit, image_path):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.jpg", "test.png", "test.gif"):
+            video = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_video("Test Title", video)
 
     async def test_upload_banner_additional_image(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")
