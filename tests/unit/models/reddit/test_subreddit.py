@@ -10,7 +10,7 @@ else:
     from unittest import mock
     from unittest.mock import AsyncMock, MagicMock
 
-from asyncpraw.exceptions import MediaPostFailed
+from asyncpraw.exceptions import ClientException, MediaPostFailed
 from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
@@ -67,9 +67,7 @@ class TestSubreddit(UnitTest):
         return_value=("fake_media_url", "fake_websocket_url"),
     )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
-    async def test_invalid_media(
-        self, connection_mock, _mock_upload_media, _mock_post, reddit
-    ):
+    async def test_invalid_media(self, connection_mock, _, __, reddit):
         reddit._core._requestor._http = aiohttp.ClientSession()
         recv_mock = MagicMock()
         recv_mock.receive_json = AsyncMock(
@@ -94,15 +92,13 @@ class TestSubreddit(UnitTest):
         },
     )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
-    async def test_media_upload_500(
-        self, connection_mock, _mock_post, mock_method, reddit
-    ):
+    async def test_media_upload_500(self, _, __, mock_method, reddit):
         from aiohttp.http_exceptions import HttpProcessingError
         from asyncprawcore.exceptions import ServerError
 
-        response = mock.Mock()
+        response = MagicMock()
         response.status = 201
-        response.raise_for_status = mock.Mock(
+        response.raise_for_status = MagicMock(
             side_effect=HttpProcessingError(code=500, message="")
         )
         mock_method.return_value = response
@@ -134,7 +130,7 @@ class TestSubreddit(UnitTest):
         subreddit = Subreddit(reddit, _data={"display_name": "name", "id": "dummy"})
         assert str(subreddit) == "name"
 
-    async def test_submit_failure(self, reddit):
+    async def test_submit__failure(self, reddit):
         message = "Either 'selftext' or 'url' must be provided."
         subreddit = Subreddit(reddit, display_name="name")
 
@@ -149,6 +145,20 @@ class TestSubreddit(UnitTest):
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit("Cool title", selftext="", url="b")
         assert str(excinfo.value) == message
+
+    async def test_submit_image__bad_filetype(self, reddit, image_path):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.mov", "test.mp4"):
+            image = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_image("Test Title", image)
+
+    async def test_submit_video__bad_filetype(self, reddit, image_path):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.jpg", "test.png", "test.gif"):
+            video = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_video("Test Title", video)
 
     async def test_upload_banner_additional_image(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")

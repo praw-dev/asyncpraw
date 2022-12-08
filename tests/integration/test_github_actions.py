@@ -17,12 +17,12 @@ from asyncpraw.models import Submission
     reason="Not running from the NETWORK_TEST ci task on praw-dev/asyncpraw",
 )
 async def test_github_actions():
-    reddit = Reddit(
+    async with Reddit(
         client_id=os.getenv("NETWORK_TEST_CLIENT_ID"),
         client_secret=os.getenv("NETWORK_TEST_CLIENT_SECRET"),
         user_agent="GitHub Actions CI Testing",
-    )
-    subreddit = await reddit.subreddit("all")
-    async for submission in subreddit.hot():
-        assert isinstance(submission, Submission)
-        break
+    ) as reddit:
+        subreddit = await reddit.subreddit("all")
+        async for submission in subreddit.hot():
+            assert isinstance(submission, Submission)
+            break

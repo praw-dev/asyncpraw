@@ -1,14 +1,8 @@
 """Test asyncpraw.reddit."""
-import sys
 from base64 import urlsafe_b64encode
 
 import pytest
 from asyncprawcore.exceptions import BadRequest, ServerError
-
-if sys.version_info < (3, 8):
-    from asynctest import mock
-else:
-    from unittest import mock
 
 from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import LiveThread
@@ -20,33 +14,27 @@ from . import IntegrationTest
 
 
 class TestReddit(IntegrationTest):
-    async def test_bad_request_without_json_text_plain_response(self):
+    async def test_bad_request_without_json_text_plain_response(self, reddit):
         with open("tests/integration/files/too_large.jpg", "rb") as fp:
             junk = urlsafe_b64encode(fp.read()).decode()
-        with self.use_cassette():
-            with pytest.raises(RedditAPIException) as excinfo:
-                await self.reddit.request(
-                    method="GET",
-                    path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk}",
-                )
-            assert str(excinfo.value) == "Bad Request"
+        with pytest.raises(RedditAPIException) as excinfo:
+            await reddit.request(
+                method="GET",
+                path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk}",
+            )
+        assert str(excinfo.value) == "Bad Request"
 
-    async def test_bad_request_without_json_text_html_response(self):
+    async def test_bad_request_without_json_text_html_response(self, reddit):
         with open("tests/integration/files/comment_ids.txt") as fp:
             ids = fp.read()[:8000]
-        with self.use_cassette():
-            with pytest.raises(RedditAPIException) as excinfo:
-                await self.reddit.request(
-                    method="GET",
-                    path=f"/api/morechildren?link_id=t3_n7r3uz&children={ids}",
-                )
-            assert (
-                str(excinfo.value)
-                == "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid"
-                " request.\n</body></html>\n"
+        with pytest.raises(BadRequest) as excinfo:
+            await reddit.request(
+                method="GET",
+                path=f"/api/morechildren?link_id=t3_n7r3uz&children={ids}",
             )
+        assert str(excinfo.value) == "received 400 HTTP response"
 
-    async def test_bare_badrequest(self):
+    async def test_bare_badrequest(self, reddit):
         data = {
             "sr": "AskReddit",
             "field": "link",
@@ -55,65 +43,53 @@ class TestReddit(IntegrationTest):
             "text": "lol",
             "show_error_list": True,
         }
-        self.reddit.read_only = False
-        with self.use_cassette():
-            with pytest.raises(BadRequest):
-                await self.reddit.post("/api/validate_submission_field", data=data)
+        reddit.read_only = False
+        with pytest.raises(BadRequest):
+            await reddit.post("/api/validate_submission_field", data=data)
 
-    async def test_info(self):
+    async def test_info(self, reddit):
         bases = ["t1_d7ltv", "t3_5dec", "t5_2qk"]
         items = []
         for i in range(100):
             for base in bases:
                 items.append(f"{base}{i:02d}")
-
-        with self.use_cassette():
-            results = await self.async_list(self.reddit.info(fullnames=items))
+        results = await self.async_list(reddit.info(fullnames=items))
         assert len(results) > 100
         for item in results:
             assert isinstance(item, RedditBase)
 
-    async def test_info_url(self):
-        with self.use_cassette():
-            results = await self.async_list(self.reddit.info(url="youtube.com"))
+    async def test_info_url(self, reddit):
+        results = await self.async_list(reddit.info(url="youtube.com"))
         assert len(results) > 0
         for item in results:
             assert isinstance(item, Submission)
 
-    async def test_info_sr_names(self):
-        items = [await self.reddit.subreddit("redditdev"), "reddit.com", "t:1337", "nl"]
-        item_generator = self.reddit.info(subreddits=items)
-        with self.use_cassette():
-            results = await self.async_list(item_generator)
+    async def test_info_sr_names(self, reddit):
+        items = [await reddit.subreddit("redditdev"), "reddit.com", "t:1337", "nl"]
+        item_generator = reddit.info(subreddits=items)
+        results = await self.async_list(item_generator)
         assert len(results) == 4
         for item in results:
             assert isinstance(item, Subreddit)
 
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_live_call(self, _):
+    async def test_live_call(self, reddit):
         thread_id = "ukaeu1ik4sw5"
-        with self.use_cassette():
-            thread = await self.reddit.live(thread_id, fetch=True)
-            assert thread.title == "reddit updates"
+        thread = await reddit.live(thread_id, fetch=True)
+        assert thread.title == "reddit updates"
 
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_live_create(self, _):
-        self.reddit.read_only = False
-        with self.use_cassette():
-            live = await self.reddit.live.create("PRAW Create Test")
-            assert isinstance(live, LiveThread)
-            await live._fetch()
-            assert live.title == "PRAW Create Test"
+    async def test_live_create(self, reddit):
+        reddit.read_only = False
+        live = await reddit.live.create("PRAW Create Test")
+        assert isinstance(live, LiveThread)
+        await live._fetch()
+        assert live.title == "PRAW Create Test"
 
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_live_info__contain_invalid_id(self, _):
-        gen = self.reddit.live.info(["invalid"])
-        with self.use_cassette():
-            with pytest.raises(ServerError):
-                await self.async_list(gen)
+    async def test_live_info__contain_invalid_id(self, reddit):
+        gen = reddit.live.info(["invalid"])
+        with pytest.raises(ServerError):
+            await self.async_list(gen)
 
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_live_info(self, _):
+    async def test_live_info(self, reddit):
         ids = """
         ta40aifzobnv ta40l9u2ermf ta40ucdiq366 ta416hjgvbhy ta41ln5vsyaz
         ta42cyzy1nze ta42i49806k0 ta436ojd653m ta43945wgmaa ta43znjvza9t
@@ -141,124 +117,105 @@ class TestReddit(IntegrationTest):
 
         ta72azs1l4u9 ta74r3dp2pt5 ta7pfcqdx9cl ta8zxbt2sk6z ta94nde51q4i
         """.split()
-        gen = self.reddit.live.info(ids)
-        with self.use_cassette():
-            threads = await self.async_list(gen)
+        gen = reddit.live.info(ids)
+        threads = await self.async_list(gen)
         assert len(threads) > 100
         assert all(isinstance(thread, LiveThread) for thread in threads)
         thread_ids = [thread.id for thread in threads]
         assert thread_ids == ids
 
-    # async def test_live_now__featured(self): # TODO: record when something is featured
-    #     with self.use_cassette():
-    #         thread = await self.reddit.live.now()
+    # async def test_live_now__featured(self, reddit): # TODO: record when something is featured
+    #     thread = await reddit.live.now()
     #     assert isinstance(thread, LiveThread)
     #     assert thread.id == "z2f981agq7ky"
 
-    async def test_live_now__no_featured(self):
-        with self.use_cassette():
-            now = await self.reddit.live.now()
-            assert now is None
+    async def test_live_now__no_featured(self, reddit):
+        now = await reddit.live.now()
+        assert now is None
 
-    async def test_notes__call__(self):
-        self.reddit.read_only = False
-        with self.use_cassette():
-            notes = await self.async_list(
-                self.reddit.notes(
-                    pairs=[
-                        (
-                            await self.reddit.subreddit(
-                                pytest.placeholders.test_subreddit
-                            ),
-                            "Watchful1",
-                        ),
-                        (
-                            pytest.placeholders.test_subreddit,
-                            await self.reddit.redditor("Watchful12"),
-                        ),
-                        (pytest.placeholders.test_subreddit, "spez"),
-                    ],
-                    things=[await self.reddit.submission("uflrmv")],
-                )
+    async def test_notes__call__(self, reddit):
+        reddit.read_only = False
+        notes = await self.async_list(
+            reddit.notes(
+                pairs=[
+                    (
+                        await reddit.subreddit(pytest.placeholders.test_subreddit),
+                        "Watchful1",
+                    ),
+                    (
+                        pytest.placeholders.test_subreddit,
+                        await reddit.redditor("Watchful12"),
+                    ),
+                    (pytest.placeholders.test_subreddit, "spez"),
+                ],
+                things=[await reddit.submission("uflrmv")],
             )
-            assert len(notes) == 4
-            assert notes[0].user.name.lower() == "watchful1"
-            assert notes[1].user.name.lower() == "watchful12"
-            assert notes[2] is None
+        )
+        assert len(notes) == 4
+        assert notes[0].user.name.lower() == "watchful1"
+        assert notes[1].user.name.lower() == "watchful12"
+        assert notes[2] is None
 
-    async def test_notes__things(self):
-        self.reddit.read_only = False
-        with self.use_cassette():
-            thing = await self.reddit.submission("uflrmv")
-            notes = await self.async_list(self.reddit.notes.things(thing))
-            assert len(notes) == 9
-            assert notes[0].user == thing.author
+    async def test_notes__things(self, reddit):
+        reddit.read_only = False
+        thing = await reddit.submission("uflrmv")
+        notes = await self.async_list(reddit.notes.things(thing))
+        assert len(notes) == 9
+        assert notes[0].user == thing.author
 
-    async def test_random_subreddit(self):
+    async def test_random_subreddit(self, reddit):
         names = set()
-        with self.use_cassette():
-            for i in range(3):
-                sub = await self.reddit.random_subreddit()
-                names.add(sub.display_name)
+        for i in range(3):
+            sub = await reddit.random_subreddit()
+            names.add(sub.display_name)
         assert len(names) == 3
 
-    async def test_subreddit_with_randnsfw(self):
-        with self.use_cassette():
-            subreddit = await self.reddit.subreddit("randnsfw")
-            assert subreddit.display_name != "randnsfw"
-            assert subreddit.over18
+    async def test_subreddit_with_randnsfw(self, reddit):
+        subreddit = await reddit.subreddit("randnsfw")
+        assert subreddit.display_name != "randnsfw"
+        assert subreddit.over18
 
-    async def test_subreddit_with_random(self):
-        with self.use_cassette():
-            subreddit = await self.reddit.subreddit("random")
-            assert subreddit.display_name != "random"
+    async def test_subreddit_with_random(self, reddit):
+        subreddit = await reddit.subreddit("random")
+        assert subreddit.display_name != "random"
 
-    async def test_username_available__available(self):
+    async def test_username_available__available(self, reddit):
         fake_user = "prawtestuserabcd1234"
-        with self.use_cassette():
-            assert await self.reddit.username_available(fake_user)
+        assert await reddit.username_available(fake_user)
 
-    async def test_username_available__unavailable(self):
-        with self.use_cassette():
-            assert not await self.reddit.username_available("bboe")
+    async def test_username_available__unavailable(self, reddit):
+        assert not await reddit.username_available("bboe")
 
-    async def test_username_available_exception(self):
-        with self.use_cassette():
-            with pytest.raises(RedditAPIException) as exc:
-                await self.reddit.username_available("a")
-            assert str(exc.value) == "BAD_USERNAME: 'invalid user name' on field 'user'"
+    async def test_username_available_exception(self, reddit):
+        with pytest.raises(RedditAPIException) as exc:
+            await reddit.username_available("a")
+        assert str(exc.value) == "BAD_USERNAME: 'invalid user name' on field 'user'"
 
 
 class TestDomainListing(IntegrationTest):
-    async def test_controversial(self):
-        with self.use_cassette():
-            submissions = await self.async_list(
-                self.reddit.domain("youtube.com").controversial()
-            )
+    async def test_controversial(self, reddit):
+        submissions = await self.async_list(
+            reddit.domain("youtube.com").controversial()
+        )
         assert len(submissions) == 100
 
-    async def test_hot(self):
-        with self.use_cassette():
-            submissions = await self.async_list(self.reddit.domain("youtube.com").hot())
+    async def test_hot(self, reddit):
+        submissions = await self.async_list(reddit.domain("youtube.com").hot())
         assert len(submissions) == 100
 
-    async def test_new(self):
-        with self.use_cassette():
-            submissions = await self.async_list(self.reddit.domain("youtube.com").new())
+    async def test_new(self, reddit):
+        submissions = await self.async_list(reddit.domain("youtube.com").new())
         assert len(submissions) == 100
 
-    async def test_random_rising(self):
-        with self.use_cassette():
-            submissions = await self.async_list(
-                self.reddit.domain("youtube.com").random_rising()
-            )
+    async def test_random_rising(self, reddit):
+        submissions = await self.async_list(
+            reddit.domain("youtube.com").random_rising()
+        )
         assert len(submissions) == 100
 
-    async def test_rising(self):
-        with self.use_cassette():
-            await self.async_list(self.reddit.domain("youtube.com").rising())
+    async def test_rising(self, reddit):
+        await self.async_list(reddit.domain("youtube.com").rising())
 
-    async def test_top(self):
-        with self.use_cassette():
-            submissions = await self.async_list(self.reddit.domain("youtube.com").top())
+    async def test_top(self, reddit):
+        submissions = await self.async_list(reddit.domain("youtube.com").top())
         assert len(submissions) == 100

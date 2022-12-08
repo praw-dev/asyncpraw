@@ -10,20 +10,16 @@ from asyncpraw.util.token_manager import FileTokenManager
 
 from . import UnitTest
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Unclosed client session", category=ResourceWarning
-)
-
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
 class TestDeprecation(UnitTest):
     def test_api_exception(self):
         exc = APIException(["test", "testing", "test"])
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             exc.error_type
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             exc.message
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             exc.field
 
     async def test_comment_forest_async_iterator(self, reddit):
@@ -47,16 +43,19 @@ class TestDeprecation(UnitTest):
             subreddit.modmail.conversations(after="after")
 
     async def test_gild_method(self, reddit):
-        with pytest.raises(DeprecationWarning) as excinfo:
+        with pytest.deprecated_call() as warning_info:
             submission = await reddit.submission("1234", fetch=False)
             await submission.gild()
-            assert excinfo.value.args[0] == "'.gild' has been renamed to '.award'."
+            assert (
+                str(warning_info.list[0].message)
+                == "'.gild' has been renamed to '.award'."
+            )
 
     def test_gold_method(self, reddit):
-        with pytest.raises(DeprecationWarning) as excinfo:
+        with pytest.deprecated_call() as warning_info:
             reddit.subreddits.gold()
             assert (
-                excinfo.value.args[0]
+                str(warning_info.list[0].message)
                 == "'subreddits.gold' has be renamed to 'subreddits.premium'."
             )
 
@@ -73,32 +72,32 @@ class TestDeprecation(UnitTest):
         with pytest.raises(AsyncPRAWException):
             Reddit()
 
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             import asyncpraw
 
             asyncpraw.exceptions.PRAWException
 
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             from asyncpraw import exceptions
 
             exceptions.PRAWException
 
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             from asyncpraw.exceptions import PRAWException  # noqa: F401
 
     async def test_reddit_token_manager(self):
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             async with Reddit(
                 token_manager=FileTokenManager("name"),
                 client_id="dummy",
                 client_secret=None,
                 redirect_uri="dummy",
                 user_agent="dummy",
-            ) as reddit:
-                reddit._core._requestor._http = None
+            ):
+                pass
 
     async def test_reddit_user_me_read_only(self, reddit):
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             await reddit.user.me()
 
     async def test_submission_comments_async(self, reddit):
@@ -108,11 +107,11 @@ class TestDeprecation(UnitTest):
             await submission.comments()
 
     async def test_subreddit_rules_call(self, reddit):
-        with pytest.raises(DeprecationWarning) as excinfo:
+        with pytest.deprecated_call() as warning_info:
             subreddit = Subreddit(reddit, display_name="test")
             await subreddit.rules()
         assert (
-            excinfo.value.args[0]
+            str(warning_info.list[0].message)
             == "Calling SubredditRules to get a list of rules is deprecated. Remove the"
             " parentheses to use the iterator. View the Async PRAW documentation on how"
             " to change the code in order to use the iterator"
@@ -120,11 +119,11 @@ class TestDeprecation(UnitTest):
         )
 
     async def test_synchronous_context_manager(self, reddit):
-        with pytest.raises(DeprecationWarning) as excinfo:
+        with pytest.deprecated_call() as warning_info:
             with reddit:
                 pass
             assert (
-                excinfo.value.args[0]
+                str(warning_info.list[0].message)
                 == "Using this class as a synchronous context manager is deprecated and"
                 " will be removed in the next release. Use this class as an"
                 " asynchronous context manager instead."
@@ -150,20 +149,20 @@ class TestDeprecation(UnitTest):
             )
 
     def test_validate_on_submit(self, reddit):
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             reddit.validate_on_submit
         reddit.validate_on_submit = True
         assert reddit.validate_on_submit
         reddit.validate_on_submit = False
-        with pytest.raises(DeprecationWarning):
+        with pytest.deprecated_call():
             reddit.validate_on_submit
 
     def test_web_socket_exception_attribute(self):
         exc = WebSocketException("Test", Exception("Test"))
-        with pytest.raises(DeprecationWarning) as excinfo:
+        with pytest.deprecated_call() as warning_info:
             _ = exc.original_exception
         assert (
-            excinfo.value.args[0]
+            str(warning_info.list[0].message)
             == "Accessing the attribute 'original_exception' is deprecated. Please"
             " rewrite your code in such a way that this attribute does not need to"
             " be used. It will be removed in Async PRAW 8.0."

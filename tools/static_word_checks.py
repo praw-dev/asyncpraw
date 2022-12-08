@@ -10,7 +10,7 @@ class StaticChecker:
     def __init__(self, replace: bool):
         """Initialize a :class:`.StaticChecker` instance.
 
-        :param replace: Whether or not to make replacements.
+        :param replace: Whether to make replacements.
 
         """
         self.full_file_checks = [

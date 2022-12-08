@@ -47,7 +47,8 @@ class TestBaseTokenManager(UnitTest):
 
 
 class TestFileTokenManager(UnitTest):
-    def setup(self):
+    @pytest.fixture(autouse=True)
+    def _patch_aiofiles(self):
         aiofiles.threadpool.wrap.register(mock.MagicMock)(
             lambda *args, **kwargs: aiofiles.threadpool.AsyncBufferedIOBase(
                 *args, **kwargs
@@ -102,17 +103,18 @@ class TestFileTokenManager(UnitTest):
 
 
 class TestSQLiteTokenManager(UnitTest):
-    def setup(self):
-        self.manager = SQLiteTokenManager(database=":memory:", key="dummy_key")
+    @pytest.fixture
+    def manager(self):
+        return SQLiteTokenManager(database=":memory:", key="dummy_key")
 
-    async def test_is_registered(self):
-        assert not await self.manager.is_registered()
-        await self.manager.close()
+    async def test_is_registered(self, manager):
+        assert not await manager.is_registered()
+        await manager.close()
 
     @pytest.mark.skipif(
         sys.platform.startswith("win"), reason="this test fails on windows"
     )
-    async def test_multiple_instances(self):
+    async def test_multiple_instances(self, manager):
         with NamedTemporaryFile() as fp:
             manager1 = SQLiteTokenManager(database=fp.name, key="dummy_key1")
             manager2 = SQLiteTokenManager(database=fp.name, key="dummy_key1")
@@ -125,41 +127,41 @@ class TestSQLiteTokenManager(UnitTest):
             await manager2.close()
             await manager3.close()
 
-    async def test_post_refresh_token_callback__sets_value(self):
+    async def test_post_refresh_token_callback__sets_value(self, manager):
         authorizer = DummyAuthorizer("dummy_value")
 
-        await self.manager.post_refresh_callback(authorizer)
+        await manager.post_refresh_callback(authorizer)
         assert authorizer.refresh_token is None
-        assert await self.manager._get() == "dummy_value"
-        await self.manager.close()
+        assert await manager._get() == "dummy_value"
+        await manager.close()
 
-    async def test_post_refresh_token_callback__updates_value(self):
+    async def test_post_refresh_token_callback__updates_value(self, manager):
         authorizer = DummyAuthorizer("dummy_value_updated")
-        await self.manager.register("dummy_value")
+        await manager.register("dummy_value")
 
-        await self.manager.post_refresh_callback(authorizer)
+        await manager.post_refresh_callback(authorizer)
         assert authorizer.refresh_token is None
-        assert await self.manager._get() == "dummy_value_updated"
-        await self.manager.close()
+        assert await manager._get() == "dummy_value_updated"
+        await manager.close()
 
-    async def test_pre_refresh_token_callback(self):
+    async def test_pre_refresh_token_callback(self, manager):
         authorizer = DummyAuthorizer(None)
-        await self.manager.register("dummy_value")
+        await manager.register("dummy_value")
 
-        await self.manager.pre_refresh_callback(authorizer)
+        await manager.pre_refresh_callback(authorizer)
         assert authorizer.refresh_token == "dummy_value"
-        await self.manager.close()
+        await manager.close()
 
-    async def test_pre_refresh_token_callback__raises_key_error(self):
+    async def test_pre_refresh_token_callback__raises_key_error(self, manager):
         authorizer = DummyAuthorizer(None)
 
         with pytest.raises(KeyError):
-            await self.manager.pre_refresh_callback(authorizer)
-        await self.manager.close()
+            await manager.pre_refresh_callback(authorizer)
+        await manager.close()
 
-    async def test_register(self):
-        assert await self.manager.register("dummy_value")
-        assert await self.manager.is_registered()
-        assert not await self.manager.register("dummy_value2")
-        assert await self.manager._get() == "dummy_value"
-        await self.manager.close()
+    async def test_register(self, manager):
+        assert await manager.register("dummy_value")
+        assert await manager.is_registered()
+        assert not await manager.register("dummy_value2")
+        assert await manager._get() == "dummy_value"
+        await manager.close()

@@ -1,5 +1,4 @@
 """asyncpraw setup.py"""
-import os
 import re
 from codecs import open
 from os import path
@@ -11,7 +10,7 @@ HERE = path.abspath(path.dirname(__file__))
 with open(path.join(HERE, "README.rst"), encoding="utf-8") as fp:
     README = fp.read()
 with open(path.join(HERE, PACKAGE_NAME, "const.py"), encoding="utf-8") as fp:
-    VERSION = re.search('__version__ = "([^"]+)"', fp.read()).group(1)
+    VERSION = re.search(r'__version__ = "([^"]+)"', fp.read()).group(1)
 
 extras = {
     "ci": ["coveralls"],
@@ -24,15 +23,13 @@ extras = {
         "sphinxcontrib-trio",
     ],
     "test": [
-        "asynctest >=0.13.0 ; python_version < '3.8'",
-        "mock >=0.8",
-        "pytest ==7.2.*",
-        "pytest-asyncio",
-        "pytest-vcr",
-        "testfixtures >4.13.2, <7",
-        "vcrpy >=4.1.1"
-        if os.getenv("PYPI_UPLOAD", False)
-        else "vcrpy@git+https://github.com/kevin1024/vcrpy.git@b1bc5c3a02db0447c28ab9a4cee314aeb6cdf1a7",
+        "asynctest ==0.13.* ; python_version < '3.8'",  # TODO: Remove me when support for 3.7 is dropped
+        "mock ==4.*",
+        "pytest ==7.*",
+        "pytest-asyncio ==0.18.*",
+        "pytest-vcr ==1.*",
+        "testfixtures ==6.*",
+        "vcrpy ==4.*",
     ],
 }
 extras["lint"] += extras["readthedocs"]

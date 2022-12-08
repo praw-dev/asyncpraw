@@ -1,7 +1,3 @@
 include CHANGES.rst LICENSE.txt README.rst praw_license.txt
 include asyncpraw/praw.ini
 include "asyncpraw/images/PRAW logo.png"
-include docs/Makefile
-recursive-include docs *.png *.py *.rst
-recursive-include tests *.json *.py
-recursive-include tests/files *

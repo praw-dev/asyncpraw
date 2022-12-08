@@ -1,115 +1,106 @@
 """Async PRAW Integration test suite."""
 import asyncio
-import inspect
-import logging
+import os
 
 import aiohttp
 import pytest
+from vcr import VCR
 
 from asyncpraw import Reddit
-from tests import BaseTest, HelperMethodMixin
-from tests.conftest import vcr
+from tests import HelperMethodMixin
+
+from .utils import (
+    CustomPersister,
+    CustomSerializer,
+    ensure_environment_variables,
+    ensure_integration_test,
+    filter_access_token,
+)
+
+CASSETTES_PATH = "tests/integration/cassettes"
+existing_cassettes = set()
+used_cassettes = set()
 
 
-class IntegrationTest(BaseTest, HelperMethodMixin):
+class IntegrationTest(HelperMethodMixin):
     """Base class for Async PRAW integration tests."""
 
-    logger = logging.getLogger(__name__)
+    @pytest.fixture
+    def cassette_name(self, request, vcr_cassette_name):
+        """Return the name of the cassette to use."""
+        marker = request.node.get_closest_marker("cassette_name")
+        if marker is None:
+            return vcr_cassette_name
+        return marker.args[0]
+
+    @pytest.fixture(scope="session", autouse=True)
+    def cassette_tracker(self):
+        """Return a dictionary to track cassettes."""
+        global existing_cassettes
+        for cassette in os.listdir(CASSETTES_PATH):
+            if cassette.endswith(".json"):
+                existing_cassettes.add(cassette.replace(".json", ""))
+        yield
+        unused_cassettes = existing_cassettes - used_cassettes
+        if unused_cassettes:
+            raise AssertionError(
+                f"The following cassettes are unused: {', '.join(unused_cassettes)}."
+            )
 
     @pytest.fixture(autouse=True)
-    def auto_close_reddit(self, event_loop):
-        yield
-        event_loop.run_until_complete(self.reddit.close())
-
-    def setup_method(self, method):
-        self._overrode_reddit_setup = True
-        self.setup_reddit()
-        self.setup_vcr()
-
-    def setup_vcr(self):
-        """Configure VCR instance."""
-        self.recorder = vcr
-
-        # Disable response compression in order to see the response bodies in
-        # the VCR cassettes.
-        self.reddit._core._requestor._http._default_headers[
-            "Accept-Encoding"
-        ] = "identity"
-
+    def read_only(self, reddit):
+        """Make reddit instance read-only."""
         # Require tests to explicitly disable read_only mode.
-        self.reddit.read_only = True
+        reddit.read_only = True
 
-        pytest.set_up_record = self.set_up_record  # used in conftest.py
+    @pytest.fixture
+    async def reddit(self, vcr, event_loop: asyncio.AbstractEventLoop):
+        """Configure Reddit."""
+        reddit_kwargs = {
+            "client_id": pytest.placeholders.client_id,
+            "client_secret": pytest.placeholders.client_secret,
+            "requestor_kwargs": {
+                "session": aiohttp.ClientSession(
+                    loop=event_loop, headers={"Accept-Encoding": "identity"}
+                )
+            },
+            "user_agent": pytest.placeholders.user_agent,
+        }
 
-    def setup_reddit(self):
-        self._overrode_reddit_setup = False
-
-        self._session = aiohttp.ClientSession()
         if pytest.placeholders.refresh_token != "placeholder_refresh_token":
-            self.reddit = Reddit(
-                requestor_kwargs={"session": self._session},
-                client_id=pytest.placeholders.client_id,
-                client_secret=pytest.placeholders.client_secret,
-                user_agent=pytest.placeholders.user_agent,
-                refresh_token=pytest.placeholders.refresh_token,
-            )
+            reddit_kwargs["refresh_token"] = pytest.placeholders.refresh_token
         else:
-            self.reddit = Reddit(
-                requestor_kwargs={"session": self._session},
-                client_id=pytest.placeholders.client_id,
-                client_secret=pytest.placeholders.client_secret,
-                password=pytest.placeholders.password,
-                user_agent=pytest.placeholders.user_agent,
-                username=pytest.placeholders.username,
-            )
+            reddit_kwargs["username"] = pytest.placeholders.username
+            reddit_kwargs["password"] = pytest.placeholders.password
 
-    def set_up_record(self):
-        if not self._overrode_reddit_setup:
-            if pytest.placeholders.refresh_token != "placeholder_refresh_token":
-                self.reddit = Reddit(
-                    requestor_kwargs={"session": self._session},
-                    client_id=pytest.placeholders.client_id,
-                    client_secret=pytest.placeholders.client_secret,
-                    user_agent=pytest.placeholders.user_agent,
-                    refresh_token=pytest.placeholders.refresh_token,
-                )
+        async with Reddit(**reddit_kwargs) as reddit_instance:
+            yield reddit_instance
 
-    def use_cassette(self, cassette_name=None, **kwargs):
-        """Use a cassette. The cassette name is dynamically generated.
+    @pytest.fixture(autouse=True)
+    def vcr(self):
+        """Configure VCR instance."""
+        vcr = VCR()
+        vcr.before_record_response = filter_access_token
+        vcr.cassette_library_dir = CASSETTES_PATH
+        vcr.decode_compressed_response = True
+        vcr.match_on = ["uri", "method"]
+        vcr.path_transformer = VCR.ensure_suffix(".json")
+        vcr.register_persister(CustomPersister)
+        vcr.register_serializer("custom_serializer", CustomSerializer)
+        vcr.serializer = "custom_serializer"
+        yield vcr
 
-        :param cassette_name: (Deprecated) The name to use for the cassette. All names
-            that are not equal to the dynamically generated name will be logged.
-        :param kwargs: All keyword arguments for the main function
-            (``VCR.use_cassette``).
-
-        """
-        dynamic_name = self.get_cassette_name()
-        if cassette_name:
-            self.logger.debug(
-                f"Static cassette name provided by {dynamic_name}. The following name"
-                f" was provided: {cassette_name}"
-            )
-            if cassette_name != dynamic_name:
-                self.logger.warning(
-                    f"Dynamic cassette name for function {dynamic_name} does not match"
-                    f" the provided cassette name: {cassette_name}"
-                )
-        match_on = kwargs.get(
-            "match_requests_on", None
-        )  # keep interface same as in PRAW
-        if match_on:
-            kwargs["match_on"] = kwargs.pop("match_requests_on")
-        return self.recorder.use_cassette(cassette_name or dynamic_name, **kwargs)
-
-    def get_cassette_name(self) -> str:
-        function_name = inspect.currentframe().f_back.f_back.f_code.co_name
-        return f"{type(self).__name__}.{function_name}"
-
-    @pytest.fixture(autouse=True, scope="function")
-    def patch_sleep(self, monkeypatch):
-        """Patch sleep to speed up tests."""
-
-        async def _sleep(*_, **__):
-            pass
-
-        monkeypatch.setattr(asyncio, "sleep", value=_sleep)
+    @pytest.fixture(autouse=True)
+    def vcr_cassette(self, request, vcr, cassette_name):
+        """Wrap a test in a VCR.py cassette"""
+        global used_cassettes
+        kwargs = {}
+        marker = request.node.get_closest_marker("recorder_kwargs")
+        if marker is not None:
+            kwargs.update(kwargs)
+        with vcr.use_cassette(cassette_name, **kwargs) as cassette:
+            if not cassette.write_protected:
+                ensure_environment_variables()
+            yield cassette
+            ensure_integration_test(cassette)
+            used_cassettes.add(cassette_name)
