@@ -794,13 +794,11 @@ class TestSubredditFilters(IntegrationTest):
         subreddit = await reddit.subreddit("all")
         await subreddit.filters.add(await reddit.subreddit("redditdev"))
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: no longer raises not found; same with praw
-    # async def test_add__non_special(self, reddit):
+    # async def test_add__non_special(self, reddit): # FIXME: no longer raises not found; same with praw
     #     reddit.read_only = False
-    #     with self.use_cassette():
-    #         with pytest.raises(NotFound):
-    #             subreddit = await reddit.subreddit("redditdev")
-    #             await subreddit.filters.add("redditdev")
+    #     with pytest.raises(NotFound):
+    #         subreddit = await reddit.subreddit("redditdev")
+    #         await subreddit.filters.add("redditdev")
 
     async def test_remove(self, reddit):
         reddit.read_only = False
@@ -813,13 +811,11 @@ class TestSubredditFilters(IntegrationTest):
         subreddit = await reddit.subreddit("mod")
         await subreddit.filters.remove(await reddit.subreddit("redditdev"))
 
-    # @mock.patch("asyncio.sleep", return_value=None) # FIXME: no longer rases not found; same with praw
-    # async def test_remove__non_special(self, reddit):
+    # async def test_remove__non_special(self, reddit):  # FIXME: no longer rases not found; same with praw
     #     reddit.read_only = False
-    #     with self.use_cassette():
-    #         with pytest.raises(NotFound):
-    #             subreddit = await reddit.subreddit("redditdev")
-    #             await subreddit.filters.remove("redditdev")
+    #     with pytest.raises(NotFound):
+    #         subreddit = await reddit.subreddit("redditdev")
+    #         await subreddit.filters.remove("redditdev")
 
 
 class TestSubredditFlair(IntegrationTest):
