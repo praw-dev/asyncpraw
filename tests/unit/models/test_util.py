@@ -1,8 +1,5 @@
 """Test asyncpraw.models.util."""
 from collections import namedtuple
-from unittest import mock
-
-import pytest
 
 from asyncpraw.models.util import (
     BoundedSet,
@@ -78,9 +75,7 @@ class TestBoundedSet(UnitTest):
 
 
 class TestStream(UnitTest):
-    @pytest.mark.asyncio
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_stream(self, _):
+    async def test_stream(self):
         Thing = namedtuple("Thing", ["fullname"])
         initial_things = [Thing(n) for n in reversed(range(100))]
         counter = 99

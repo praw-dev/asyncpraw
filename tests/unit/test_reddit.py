@@ -194,8 +194,7 @@ class TestReddit(UnitTest):
             },
         ],
     )
-    @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__over_threshold__minutes(self, _, __, reddit):
+    async def test_post_ratelimit__over_threshold__minutes(self, _, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
         assert (
