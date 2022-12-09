@@ -42,7 +42,7 @@ class IntegrationTest(HelperMethodMixin):
                 existing_cassettes.add(cassette.replace(".json", ""))
         yield
         unused_cassettes = existing_cassettes - used_cassettes
-        if unused_cassettes:
+        if unused_cassettes and os.getenv("ensure_no_unused_cassettes", "0") == "1":
             raise AssertionError(
                 f"The following cassettes are unused: {', '.join(unused_cassettes)}."
             )
