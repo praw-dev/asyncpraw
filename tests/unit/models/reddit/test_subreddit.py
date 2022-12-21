@@ -60,14 +60,17 @@ class TestSubreddit(UnitTest):
         assert hash(subreddit1) != hash(subreddit3)
 
     @mock.patch(
-        "asyncpraw.Reddit.post", return_value={"json": {"data": {"websocket_url": ""}}}
+        "asyncpraw.Reddit.post",
+        new=AsyncMock(return_value={"json": {"data": {"websocket_url": ""}}}),
     )
     @mock.patch(
         "asyncpraw.models.Subreddit._upload_media",
-        return_value=("fake_media_url", "fake_websocket_url"),
+        new=AsyncMock(
+            return_value=("fake_media_url", "fake_websocket_url"),
+        ),
     )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
-    async def test_invalid_media(self, connection_mock, _, __, reddit):
+    async def test_invalid_media(self, connection_mock, reddit):
         reddit._core._requestor._http = aiohttp.ClientSession()
         recv_mock = MagicMock()
         recv_mock.receive_json = AsyncMock(
@@ -83,16 +86,18 @@ class TestSubreddit(UnitTest):
             )
         await reddit._core._requestor._http.close()
 
-    @mock.patch("asyncpraw.models.Subreddit._read_and_post_media")
+    @mock.patch("aiohttp.client.ClientSession.ws_connect", new=AsyncMock())
     @mock.patch(
         "asyncpraw.Reddit.post",
-        return_value={
-            "json": {"data": {"websocket_url": ""}},
-            "args": {"action": "", "fields": []},
-        },
+        new=AsyncMock(
+            return_value={
+                "json": {"data": {"websocket_url": ""}},
+                "args": {"action": "", "fields": []},
+            },
+        ),
     )
-    @mock.patch("aiohttp.client.ClientSession.ws_connect")
-    async def test_media_upload_500(self, _, __, mock_method, reddit):
+    @mock.patch("asyncpraw.models.Subreddit._read_and_post_media")
+    async def test_media_upload_500(self, mock_method, reddit):
         from aiohttp.http_exceptions import HttpProcessingError
         from asyncprawcore.exceptions import ServerError
 
@@ -146,14 +151,14 @@ class TestSubreddit(UnitTest):
             await subreddit.submit("Cool title", selftext="", url="b")
         assert str(excinfo.value) == message
 
-    async def test_submit_image__bad_filetype(self, reddit, image_path):
+    async def test_submit_image__bad_filetype(self, image_path, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.mov", "test.mp4"):
             image = image_path(file_name)
             with pytest.raises(ClientException):
                 await subreddit.submit_image("Test Title", image)
 
-    async def test_submit_video__bad_filetype(self, reddit, image_path):
+    async def test_submit_video__bad_filetype(self, image_path, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.jpg", "test.png", "test.gif"):
             video = image_path(file_name)

@@ -43,16 +43,14 @@ class TestReddit(UnitTest):
         assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
 
     @mock.patch("asyncpraw.reddit.update_check", create=True)
-    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", False)
-    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
     async def test_check_for_updates(self, mock_update_check):
         Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
         assert Reddit.update_checked
         mock_update_check.assert_called_with("asyncpraw", __version__)
 
-    @mock.patch("asyncpraw.reddit.update_check", create=True)
-    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", True)
     @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
+    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", True)
+    @mock.patch("asyncpraw.reddit.update_check", create=True)
     async def test_check_for_updates_update_checker_missing(self, mock_update_check):
         Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
         assert not Reddit.update_checked
@@ -129,24 +127,24 @@ class TestReddit(UnitTest):
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "Some unexpected error message",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "Some unexpected error message",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-        ],
+                    }
+                },
+            ],
+        ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__invalid_rate_limit_message(
-        self, mock_sleep, _, reddit
-    ):
+    async def test_post_ratelimit__invalid_rate_limit_message(self, mock_sleep, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
         assert exception.value.message == "Some unexpected error message"
@@ -154,22 +152,24 @@ class TestReddit(UnitTest):
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 6 seconds.",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 6 seconds.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-        ],
+                    }
+                },
+            ],
+        ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__over_threshold__seconds(self, mock_sleep, _, reddit):
+    async def test_post_ratelimit__over_threshold__seconds(self, mock_sleep, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
         assert (
@@ -180,21 +180,23 @@ class TestReddit(UnitTest):
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 1 minute.",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 1 minute.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-        ],
+                    }
+                },
+            ],
+        ),
     )
-    async def test_post_ratelimit__over_threshold__minutes(self, _, reddit):
+    async def test_post_ratelimit__over_threshold__minutes(self, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
         assert (
@@ -204,129 +206,133 @@ class TestReddit(UnitTest):
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 2 milliseconds.",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 2 milliseconds.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 1 millisecond.",
-                            "ratelimit",
+                    }
+                },
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 1 millisecond.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-            {},
-        ],
+                    }
+                },
+                {},
+            ],
+        ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_post_ratelimit__under_threshold__milliseconds(
-        self, mock_sleep, _, reddit
+        self, mock_sleep, reddit
     ):
         await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(1), mock.call(1)])
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 1 minute.",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 1 minute.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-            {},
-        ],
+                    }
+                },
+                {},
+            ],
+        ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__minutes(
-        self, mock_sleep, _, reddit
-    ):
+    async def test_post_ratelimit__under_threshold__minutes(self, mock_sleep, reddit):
         reddit.config.ratelimit_seconds = 60
         await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(61)])
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 5 seconds.",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 5 seconds.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-            {},
-        ],
+                    }
+                },
+                {},
+            ],
+        ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__seconds(
-        self, mock_sleep, _, reddit
-    ):
+    async def test_post_ratelimit__under_threshold__seconds(self, mock_sleep, reddit):
         await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(6)])
 
     @mock.patch(
         "asyncpraw.Reddit.request",
-        side_effect=[
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 5 seconds.",
-                            "ratelimit",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 5 seconds.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 3 seconds.",
-                            "ratelimit",
+                    }
+                },
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 3 seconds.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-            {
-                "json": {
-                    "errors": [
-                        [
-                            "RATELIMIT",
-                            "You are doing that too much. Try again in 1 second.",
-                            "ratelimit",
+                    }
+                },
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
+                                "You are doing that too much. Try again in 1 second.",
+                                "ratelimit",
+                            ]
                         ]
-                    ]
-                }
-            },
-        ],
+                    }
+                },
+            ],
+        ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
     async def test_post_ratelimit__under_threshold__seconds_failure(
-        self, mock_sleep, _, reddit
+        self, mock_sleep, reddit
     ):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")

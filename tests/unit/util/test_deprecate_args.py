@@ -5,7 +5,7 @@ from enum import IntFlag, auto
 
 import pytest
 
-from asyncpraw.util import _deprecate_args
+from asyncpraw.util import _deprecate_args  # noqa
 
 from .. import UnitTest
 
@@ -22,13 +22,13 @@ keyword_only = {
         [("arg2",), dict(arg1="arg1")],
         (None, "arg1", "arg2", None),
     ],
-    "one_kwarg": [
-        [(), dict(arg0="arg0")],
-        ("arg0", None, None, None),
-    ],
     "one_arg": [
         [("arg2",), dict()],
         (None, None, "arg2", None),
+    ],
+    "one_kwarg": [
+        [(), dict(arg0="arg0")],
+        ("arg0", None, None, None),
     ],
 }
 with_positional = {
@@ -44,12 +44,12 @@ with_positional = {
         [("arg0", "arg2"), dict(arg1="arg1", arg3=None)],
         ("arg0", "arg1", "arg2", None),
     ],
-    "one_kwarg": [
-        [(), dict(arg0="arg0")],
-        ("arg0", None, None, None),
-    ],
     "one_arg": [
         [("arg0",), dict()],
+        ("arg0", None, None, None),
+    ],
+    "one_kwarg": [
+        [(), dict(arg0="arg0")],
         ("arg0", None, None, None),
     ],
 }
@@ -202,7 +202,8 @@ def pytest_generate_tests(metafunc):
         if async_type in AsyncType.ASYNC | AsyncType.ASYNC_GENERATOR:
             function_name += str(async_type)
         for test_case, parameters in test_cases.items():
-            cases.append([function_name, *parameters, async_type])
+            arguments, expected_results = parameters
+            cases.append([arguments, async_type, expected_results, function_name])
             ids.append(",".join([repr(async_type), test_case]))
     signature = inspect.signature(metafunc.function)
     args = [arg.name for arg in signature.parameters.values() if arg.name != "self"]
@@ -220,7 +221,7 @@ class TestDeprecateArgs(UnitTest):
         "positional": with_positional,
     }
 
-    async def _execute_test(self, func_name, arguments, expected_results, async_type):
+    async def _execute_test(self, arguments, async_type, expected_results, func_name):
         if "global" in func_name:
             func = globals()[func_name]
         else:
@@ -236,19 +237,19 @@ class TestDeprecateArgs(UnitTest):
         assert expected_results == results
 
     async def test_arg_test_global(
-        self, func_name, arguments, expected_result, async_type
+        self, arguments, async_type, expected_result, func_name
     ):
-        await self._execute_test(func_name, arguments, expected_result, async_type)
+        await self._execute_test(arguments, async_type, expected_result, func_name)
 
     async def test_arg_test_global_with_positional(
-        self, func_name, arguments, expected_result, async_type
+        self, arguments, async_type, expected_result, func_name
     ):
-        await self._execute_test(func_name, arguments, expected_result, async_type)
+        await self._execute_test(arguments, async_type, expected_result, func_name)
 
-    async def test_arg_test(self, func_name, arguments, expected_result, async_type):
-        await self._execute_test(func_name, arguments, expected_result, async_type)
+    async def test_arg_test(self, arguments, async_type, expected_result, func_name):
+        await self._execute_test(arguments, async_type, expected_result, func_name)
 
     async def test_arg_test_with_positional(
-        self, func_name, arguments, expected_result, async_type
+        self, arguments, async_type, expected_result, func_name
     ):
-        await self._execute_test(func_name, arguments, expected_result, async_type)
+        await self._execute_test(arguments, async_type, expected_result, func_name)

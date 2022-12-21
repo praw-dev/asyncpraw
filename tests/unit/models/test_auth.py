@@ -49,7 +49,7 @@ class TestAuth(UnitTest):
         ) as reddit:
             yield reddit
 
-    def test_implicit__from_script_app(self, script_app_with_password, script_app):
+    def test_implicit__from_script_app(self, script_app, script_app_with_password):
         with pytest.raises(ClientException):
             script_app.auth.implicit(
                 access_token="dummy token", expires_in=10, scope=""
@@ -63,7 +63,7 @@ class TestAuth(UnitTest):
         with pytest.raises(ClientException):
             web_app.auth.implicit(access_token="dummy token", expires_in=10, scope="")
 
-    def test_limits(self, web_app, script_app_with_password, script_app, installed_app):
+    def test_limits(self, installed_app, script_app, script_app_with_password, web_app):
         expected = {"remaining": None, "reset_timestamp": None, "used": None}
         for app in [
             installed_app,
