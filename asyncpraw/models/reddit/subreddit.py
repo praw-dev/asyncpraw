@@ -702,8 +702,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     async def _read_and_post_media(self, media_path, upload_url, upload_data):
         with open(media_path, "rb") as media:
+            upload_data["file"] = media
             response = await self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data, files={"file": media}
+                upload_url, data=upload_data
             )
         return response
 

@@ -14,6 +14,7 @@ Unreleased
 **Fixed**
 
 - An issue with iterating :class:`.ModNote` when a user has more than a hundred notes.
+- An issue when uploading media to submit.
 
 7.6.1 (2022/11/28)
 ------------------
