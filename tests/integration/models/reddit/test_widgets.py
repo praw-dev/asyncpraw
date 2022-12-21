@@ -48,7 +48,7 @@ class TestButtonWidget(IntegrationTest):
 
         assert subreddit == button_widget.subreddit
 
-    async def test_create_and_update_and_delete(self, reddit, image_path):
+    async def test_create_and_update_and_delete(self, image_path, reddit):
         reddit.read_only = False
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -290,7 +290,7 @@ class TestCommunityList(IntegrationTest):
 
 
 class TestCustomWidget(IntegrationTest):
-    async def test_create_and_update_and_delete(self, reddit, image_path):
+    async def test_create_and_update_and_delete(self, image_path, reddit):
         reddit.read_only = False
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -410,7 +410,7 @@ class TestIDCard(IntegrationTest):
 
 
 class TestImageWidget(IntegrationTest):
-    async def test_create_and_update_and_delete(self, reddit, image_path):
+    async def test_create_and_update_and_delete(self, image_path, reddit):
         reddit.read_only = False
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -817,7 +817,7 @@ class TestSubredditWidgetsModeration(IntegrationTest):
         order = await self.async_list(widgets.sidebar())
         assert order == new_order
 
-    async def test_upload_image(self, reddit, image_path):
+    async def test_upload_image(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets

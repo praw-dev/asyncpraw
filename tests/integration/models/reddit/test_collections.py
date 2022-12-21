@@ -264,8 +264,8 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         description = "The description."
         layout = "milk before cereal"
         reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(RedditAPIException):
-            subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
             await subreddit.collections.mod.create(
                 title=title, description=description, display_layout=layout
             )
@@ -275,8 +275,8 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         description = "The description."
         layout = "gallery"
         reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(RedditAPIException):
-            subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
             await subreddit.collections.mod.create(
                 title=title, description=description, display_layout=layout
             )
