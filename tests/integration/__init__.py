@@ -33,13 +33,12 @@ class IntegrationTest(HelperMethodMixin):
             return vcr_cassette_name
         return marker.args[0]
 
-    @pytest.fixture(scope="session", autouse=True)
+    @pytest.fixture(autouse=True, scope="session")
     def cassette_tracker(self):
-        """Return a dictionary to track cassettes."""
+        """Track cassettes to ensure unused cassettes are not uploaded."""
         global existing_cassettes
         for cassette in os.listdir(CASSETTES_PATH):
-            if cassette.endswith(".json"):
-                existing_cassettes.add(cassette.replace(".json", ""))
+            existing_cassettes.add(cassette[: cassette.rindex(".")])
         yield
         unused_cassettes = existing_cassettes - used_cassettes
         if unused_cassettes and os.getenv("ENSURE_NO_UNUSED_CASSETTES", "0") == "1":
@@ -48,10 +47,44 @@ class IntegrationTest(HelperMethodMixin):
             )
 
     @pytest.fixture(autouse=True)
+    def cassette(self, request, recorder, cassette_name):
+        """Wrap a test in a VCR cassette."""
+        global used_cassettes
+        kwargs = {}
+        for marker in request.node.iter_markers("add_placeholder"):
+            recorder.persister.add_additional_placeholders(marker.kwargs)
+        for marker in request.node.iter_markers("recorder_kwargs"):
+            for key, value in marker.kwargs.items():
+                #  Don't overwrite existing values since function markers are provided
+                #  before class markers.
+                kwargs.setdefault(key, value)
+        with recorder.use_cassette(cassette_name, **kwargs) as cassette:
+            if not cassette.write_protected:
+                ensure_environment_variables()
+            yield cassette
+            ensure_integration_test(cassette)
+            used_cassettes.add(cassette_name)
+
+    @pytest.fixture(autouse=True)
     def read_only(self, reddit):
-        """Make reddit instance read-only."""
+        """Make the Reddit instance read-only."""
         # Require tests to explicitly disable read_only mode.
         reddit.read_only = True
+
+    @pytest.fixture(autouse=True)
+    def recorder(self):
+        """Configure VCR."""
+        vcr = VCR()
+        vcr.before_record_response = filter_access_token
+        vcr.cassette_library_dir = CASSETTES_PATH
+        vcr.decode_compressed_response = True
+        vcr.match_on = ["uri", "method"]
+        vcr.path_transformer = VCR.ensure_suffix(".json")
+        vcr.register_persister(CustomPersister)
+        vcr.register_serializer("custom_serializer", CustomSerializer)
+        vcr.serializer = "custom_serializer"
+        yield vcr
+        CustomPersister.additional_placeholders = {}
 
     @pytest.fixture
     async def reddit(self, vcr, event_loop: asyncio.AbstractEventLoop):
@@ -75,32 +108,3 @@ class IntegrationTest(HelperMethodMixin):
 
         async with Reddit(**reddit_kwargs) as reddit_instance:
             yield reddit_instance
-
-    @pytest.fixture(autouse=True)
-    def vcr(self):
-        """Configure VCR instance."""
-        vcr = VCR()
-        vcr.before_record_response = filter_access_token
-        vcr.cassette_library_dir = CASSETTES_PATH
-        vcr.decode_compressed_response = True
-        vcr.match_on = ["uri", "method"]
-        vcr.path_transformer = VCR.ensure_suffix(".json")
-        vcr.register_persister(CustomPersister)
-        vcr.register_serializer("custom_serializer", CustomSerializer)
-        vcr.serializer = "custom_serializer"
-        yield vcr
-
-    @pytest.fixture(autouse=True)
-    def vcr_cassette(self, request, vcr, cassette_name):
-        """Wrap a test in a VCR.py cassette"""
-        global used_cassettes
-        kwargs = {}
-        marker = request.node.get_closest_marker("recorder_kwargs")
-        if marker is not None:
-            kwargs.update(kwargs)
-        with vcr.use_cassette(cassette_name, **kwargs) as cassette:
-            if not cassette.write_protected:
-                ensure_environment_variables()
-            yield cassette
-            ensure_integration_test(cassette)
-            used_cassettes.add(cassette_name)

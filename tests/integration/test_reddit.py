@@ -13,24 +13,32 @@ from asyncpraw.models.reddit.subreddit import Subreddit
 from . import IntegrationTest
 
 
+def comment_ids():
+    with open("tests/integration/files/comment_ids.txt") as fp:
+        return fp.read()[:8000]
+
+
+def junk_data():
+    with open("tests/integration/files/too_large.jpg", "rb") as fp:
+        return urlsafe_b64encode(fp.read()).decode()
+
+
 class TestReddit(IntegrationTest):
+    @pytest.mark.add_placeholder(content=junk_data())
     async def test_bad_request_without_json_text_plain_response(self, reddit):
-        with open("tests/integration/files/too_large.jpg", "rb") as fp:
-            junk = urlsafe_b64encode(fp.read()).decode()
         with pytest.raises(RedditAPIException) as excinfo:
             await reddit.request(
                 method="GET",
-                path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk}",
+                path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk_data()}",
             )
         assert str(excinfo.value) == "Bad Request"
 
+    @pytest.mark.add_placeholder(comment_ids=comment_ids())
     async def test_bad_request_without_json_text_html_response(self, reddit):
-        with open("tests/integration/files/comment_ids.txt") as fp:
-            ids = fp.read()[:8000]
         with pytest.raises(BadRequest) as excinfo:
             await reddit.request(
                 method="GET",
-                path=f"/api/morechildren?link_id=t3_n7r3uz&children={ids}",
+                path=f"/api/morechildren?link_id=t3_n7r3uz&children={comment_ids()}",
             )
         assert str(excinfo.value) == "received 400 HTTP response"
 
@@ -179,9 +187,9 @@ class TestReddit(IntegrationTest):
         subreddit = await reddit.subreddit("random")
         assert subreddit.display_name != "random"
 
+    @pytest.mark.add_placeholder(available_name="prawtestuserabcd1234")
     async def test_username_available__available(self, reddit):
-        fake_user = "prawtestuserabcd1234"
-        assert await reddit.username_available(fake_user)
+        assert await reddit.username_available("prawtestuserabcd1234")
 
     async def test_username_available__unavailable(self, reddit):
         assert not await reddit.username_available("bboe")
