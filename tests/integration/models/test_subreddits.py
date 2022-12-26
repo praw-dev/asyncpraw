@@ -10,21 +10,13 @@ class TestSubreddits(IntegrationTest):
         subreddits = await self.async_list(reddit.subreddits.default(limit=None))
         assert 0 < len(subreddits) < 100
 
-    async def test_premium__without_premium(self, reddit):
-        subreddits = await self.async_list(reddit.subreddits.premium())
-        assert len(subreddits) == 0
-
-    async def test_premium__with_premium(self, reddit):
-        subreddits = await self.async_list(reddit.subreddits.premium())
+    async def test_gold__with_gold(self, reddit):  # ensure backwards compatibility
+        subreddits = await self.async_list(reddit.subreddits.gold())
         assert len(subreddits) == 100
 
     async def test_gold__without_gold(self, reddit):  # ensure backwards compatibility
         subreddits = await self.async_list(reddit.subreddits.gold())
         assert len(subreddits) == 0
-
-    async def test_gold__with_gold(self, reddit):  # ensure backwards compatibility
-        subreddits = await self.async_list(reddit.subreddits.gold())
-        assert len(subreddits) == 100
 
     async def test_new(self, reddit):
         subreddits = await self.async_list(reddit.subreddits.new(limit=300))
@@ -33,6 +25,14 @@ class TestSubreddits(IntegrationTest):
     async def test_popular(self, reddit):
         subreddits = await self.async_list(reddit.subreddits.popular(limit=15))
         assert len(subreddits) == 15
+
+    async def test_premium__with_premium(self, reddit):
+        subreddits = await self.async_list(reddit.subreddits.premium())
+        assert len(subreddits) == 100
+
+    async def test_premium__without_premium(self, reddit):
+        subreddits = await self.async_list(reddit.subreddits.premium())
+        assert len(subreddits) == 0
 
     async def test_recommended(
         self, reddit

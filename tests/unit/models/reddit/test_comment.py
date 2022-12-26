@@ -11,19 +11,6 @@ class TestComment(UnitTest):
         with pytest.raises(AttributeError):
             Comment(reddit, _data={"id": "1"}).mark_as_read()
 
-    def test_equality(self, reddit):
-        comment1 = Comment(reddit, _data={"id": "dummy1", "n": 1})
-        comment2 = Comment(reddit, _data={"id": "Dummy1", "n": 2})
-        comment3 = Comment(reddit, _data={"id": "dummy3", "n": 2})
-        assert comment1 == comment1
-        assert comment2 == comment2
-        assert comment3 == comment3
-        assert comment1 == comment2
-        assert comment2 != comment3
-        assert comment1 != comment3
-        assert "dummy1" == comment1
-        assert comment2 == "dummy1"
-
     def test_construct_failure(self, reddit):
         message = "Exactly one of 'id', 'url', or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
@@ -54,6 +41,19 @@ class TestComment(UnitTest):
     def test_construct_from_url(self, reddit):
         url = "https://reddit.com/comments/2gmzqe/_/cklhv0f/"
         assert Comment(reddit, url=url) == "cklhv0f"
+
+    def test_equality(self, reddit):
+        comment1 = Comment(reddit, _data={"id": "dummy1", "n": 1})
+        comment2 = Comment(reddit, _data={"id": "Dummy1", "n": 2})
+        comment3 = Comment(reddit, _data={"id": "dummy3", "n": 2})
+        assert comment1 == comment1
+        assert comment2 == comment2
+        assert comment3 == comment3
+        assert comment1 == comment2
+        assert comment2 != comment3
+        assert comment1 != comment3
+        assert "dummy1" == comment1
+        assert comment2 == "dummy1"
 
     def test_hash(self, reddit):
         comment1 = Comment(reddit, _data={"id": "dummy1", "n": 1})

@@ -12,12 +12,6 @@ from .. import UnitTest
 
 
 class TestRedditors(UnitTest):
-    async def test_search__params_not_modified(self, reddit):
-        params = {"dummy": "value"}
-        generator = reddit.redditors.search(None, params=params)
-        assert generator.params["dummy"] == "value"
-        assert params == {"dummy": "value"}
-
     async def test_partial_redditors(self, reddit):
         with patch.object(
             reddit, "request", AsyncMock(return_value={"data": {"children": []}})
@@ -45,3 +39,9 @@ class TestRedditors(UnitTest):
             func(list("abc"))
             func(tuple("abc"))
             func(c for c in "abc")
+
+    async def test_search__params_not_modified(self, reddit):
+        params = {"dummy": "value"}
+        generator = reddit.redditors.search(None, params=params)
+        assert generator.params["dummy"] == "value"
+        assert params == {"dummy": "value"}

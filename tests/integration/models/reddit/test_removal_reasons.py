@@ -13,6 +13,16 @@ class TestRemovalReason(IntegrationTest):
         reason = await subreddit.mod.removal_reasons.get_reason("159bqhvme3rxe")
         assert reason.title.startswith("Be Kind")
 
+    async def test__fetch__invalid_reason(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        with pytest.raises(ClientException) as excinfo:
+            await subreddit.mod.removal_reasons.get_reason("invalid")
+        assert (
+            str(excinfo.value)
+            == f"Subreddit {subreddit} does not have the removal reason invalid"
+        )
+
     @pytest.mark.cassette_name("TestRemovalReason.test__fetch")
     async def test__fetch_int(self, reddit):
         reddit.read_only = False
@@ -29,15 +39,11 @@ class TestRemovalReason(IntegrationTest):
         for reason in reasons:
             assert isinstance(reason, RemovalReason)
 
-    async def test__fetch__invalid_reason(self, reddit):
+    async def test_delete(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        with pytest.raises(ClientException) as excinfo:
-            await subreddit.mod.removal_reasons.get_reason("invalid")
-        assert (
-            str(excinfo.value)
-            == f"Subreddit {subreddit} does not have the removal reason invalid"
-        )
+        reason = await subreddit.mod.removal_reasons.get_reason("157l8fono55wf")
+        await reason.delete()
 
     async def test_update(self, reddit):
         reddit.read_only = False
@@ -51,12 +57,6 @@ class TestRemovalReason(IntegrationTest):
         reasons = [reason async for reason in subreddit.mod.removal_reasons]
         reason = reasons[0]
         await reason.update()
-
-    async def test_delete(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        reason = await subreddit.mod.removal_reasons.get_reason("157l8fono55wf")
-        await reason.delete()
 
 
 class TestSubredditRemovalReasons(IntegrationTest):

@@ -18,19 +18,6 @@ from ... import UnitTest
 
 
 class TestSubreddit(UnitTest):
-    def test_equality(self, reddit):
-        subreddit1 = Subreddit(reddit, _data={"display_name": "dummy1", "n": 1})
-        subreddit2 = Subreddit(reddit, _data={"display_name": "Dummy1", "n": 2})
-        subreddit3 = Subreddit(reddit, _data={"display_name": "dummy3", "n": 2})
-        assert subreddit1 == subreddit1
-        assert subreddit2 == subreddit2
-        assert subreddit3 == subreddit3
-        assert subreddit1 == subreddit2
-        assert subreddit2 != subreddit3
-        assert subreddit1 != subreddit3
-        assert "dummy1" == subreddit1
-        assert subreddit2 == "dummy1"
-
     def test_construct_failure(self, reddit):
         message = "Either 'display_name' or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
@@ -43,6 +30,19 @@ class TestSubreddit(UnitTest):
 
         with pytest.raises(ValueError):
             Subreddit(reddit, "")
+
+    def test_equality(self, reddit):
+        subreddit1 = Subreddit(reddit, _data={"display_name": "dummy1", "n": 1})
+        subreddit2 = Subreddit(reddit, _data={"display_name": "Dummy1", "n": 2})
+        subreddit3 = Subreddit(reddit, _data={"display_name": "dummy3", "n": 2})
+        assert subreddit1 == subreddit1
+        assert subreddit2 == subreddit2
+        assert subreddit3 == subreddit3
+        assert subreddit1 == subreddit2
+        assert subreddit2 != subreddit3
+        assert subreddit1 != subreddit3
+        assert "dummy1" == subreddit1
+        assert subreddit2 == "dummy1"
 
     def test_fullname(self, reddit):
         subreddit = Subreddit(reddit, _data={"display_name": "name", "id": "dummy"})
@@ -151,26 +151,15 @@ class TestSubreddit(UnitTest):
             await subreddit.submit("Cool title", selftext="", url="b")
         assert str(excinfo.value) == message
 
-    async def test_submit_image__bad_filetype(self, image_path, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.mov", "test.mp4"):
-            image = image_path(file_name)
-            with pytest.raises(ClientException):
-                await subreddit.submit_image("Test Title", image)
-
-    async def test_submit_video__bad_filetype(self, image_path, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.jpg", "test.png", "test.gif"):
-            video = image_path(file_name)
-            with pytest.raises(ClientException):
-                await subreddit.submit_video("Test Title", video)
-
-    async def test_upload_banner_additional_image(self, reddit):
+    async def test_submit_gallery__invalid_path(self, reddit):
+        message = "'invalid_image_path' is not a valid image path."
         subreddit = Subreddit(reddit, display_name="name")
-        with pytest.raises(ValueError):
-            await subreddit.stylesheet.upload_banner_additional_image(
-                "dummy_path", align="asdf"
+
+        with pytest.raises(TypeError) as excinfo:
+            await subreddit.submit_gallery(
+                "Cool title", [{"image_path": "invalid_image_path"}]
             )
+        assert str(excinfo.value) == message
 
     async def test_submit_gallery__missing_path(self, reddit):
         message = "'image_path' is required."
@@ -179,16 +168,6 @@ class TestSubreddit(UnitTest):
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit_gallery(
                 "Cool title", [{"caption": "caption"}, {"caption": "caption2"}]
-            )
-        assert str(excinfo.value) == message
-
-    async def test_submit_gallery__invalid_path(self, reddit):
-        message = "'invalid_image_path' is not a valid image path."
-        subreddit = Subreddit(reddit, display_name="name")
-
-        with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery(
-                "Cool title", [{"image_path": "invalid_image_path"}]
             )
         assert str(excinfo.value) == message
 
@@ -206,6 +185,13 @@ class TestSubreddit(UnitTest):
             )
         assert str(excinfo.value) == message
 
+    async def test_submit_image__bad_filetype(self, image_path, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.mov", "test.mp4"):
+            image = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_image("Test Title", image)
+
     async def test_submit_inline_media__invalid_path(self, reddit):
         message = "'invalid_image_path' is not a valid file path."
         subreddit = Subreddit(reddit, display_name="name")
@@ -217,6 +203,20 @@ class TestSubreddit(UnitTest):
         with pytest.raises(ValueError) as excinfo:
             await subreddit.submit("title", inline_media=media, selftext=selftext)
         assert str(excinfo.value) == message
+
+    async def test_submit_video__bad_filetype(self, image_path, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.jpg", "test.png", "test.gif"):
+            video = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_video("Test Title", video)
+
+    async def test_upload_banner_additional_image(self, reddit):
+        subreddit = Subreddit(reddit, display_name="name")
+        with pytest.raises(ValueError):
+            await subreddit.stylesheet.upload_banner_additional_image(
+                "dummy_path", align="asdf"
+            )
 
 
 class TestSubredditFlair(UnitTest):
@@ -236,21 +236,21 @@ class TestSubredditFlairTemplates(UnitTest):
             ).__aiter__()
 
 
+class TestSubredditModmailConversationsStream(UnitTest):
+    async def test_conversation_stream_capitalization(self, reddit):
+        submodstream = Subreddit(reddit, display_name="Mod").mod.stream
+        submodstream.modmail_conversations()
+        assert submodstream.subreddit == "all"
+
+    async def test_conversation_stream_init(self, reddit):
+        submodstream = Subreddit(reddit, display_name="mod").mod.stream
+        submodstream.modmail_conversations()
+        assert submodstream.subreddit == "all"
+
+
 class TestSubredditWiki(UnitTest):
     async def test__getitem(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")
         wikipage = await subreddit.wiki.get_page("Foo", fetch=False)
         assert isinstance(wikipage, WikiPage)
         assert "foo" == wikipage.name
-
-
-class TestSubredditModmailConversationsStream(UnitTest):
-    async def test_conversation_stream_init(self, reddit):
-        submodstream = Subreddit(reddit, display_name="mod").mod.stream
-        submodstream.modmail_conversations()
-        assert submodstream.subreddit == "all"
-
-    async def test_conversation_stream_capitalization(self, reddit):
-        submodstream = Subreddit(reddit, display_name="Mod").mod.stream
-        submodstream.modmail_conversations()
-        assert submodstream.subreddit == "all"

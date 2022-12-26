@@ -30,6 +30,17 @@ class TestRule(IntegrationTest):
         assert rule.description == ""
         assert rule.violation_reason == "PRAW Test 2"
 
+    @pytest.mark.filterwarnings("ignore", category=DeprecationWarning)
+    async def test_aiter_call(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        rules = await subreddit.rules()
+        assert rules["rules"][0]["short_name"] == "Test post 12"
+
+    async def test_aiter_rules(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        async for rule in subreddit.rules:
+            assert isinstance(rule, Rule)
+
     async def test_delete_rule(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -38,23 +49,11 @@ class TestRule(IntegrationTest):
         await rule.mod.delete()
         assert len(await self.async_list(subreddit.rules)) == (len(rules) - 1)
 
-    async def test_aiter_rules(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        async for rule in subreddit.rules:
-            assert isinstance(rule, Rule)
-
-    @pytest.mark.filterwarnings("ignore", category=DeprecationWarning)
-    async def test_aiter_call(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        rules = await subreddit.rules()
-        assert rules["rules"][0]["short_name"] == "Test post 12"
-
     @pytest.mark.cassette_name("TestRule.test_aiter_rules")
-    async def test_iter_rule_string(self, reddit):
+    async def test_iter_rule_int(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        rule = await subreddit.rules.get_rule("PRAW Test")
+        rule = await subreddit.rules.get_rule(0)
         assert isinstance(rule, Rule)
-        assert rule.kind
 
     @pytest.mark.cassette_name("TestRule.test_aiter_rules")
     async def test_iter_rule_invalid(self, reddit):
@@ -65,12 +64,6 @@ class TestRule(IntegrationTest):
             excinfo.value.args[0]
             == f"Subreddit {subreddit} does not have the rule fake rule"
         )
-
-    @pytest.mark.cassette_name("TestRule.test_aiter_rules")
-    async def test_iter_rule_int(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        rule = await subreddit.rules.get_rule(0)
-        assert isinstance(rule, Rule)
 
     @pytest.mark.cassette_name("TestRule.test_aiter_rules")
     async def test_iter_rule_negative_int(self, reddit):
@@ -85,6 +78,13 @@ class TestRule(IntegrationTest):
         assert len(rules) == 3
         for rule in rules:
             assert isinstance(rule, Rule)
+
+    @pytest.mark.cassette_name("TestRule.test_aiter_rules")
+    async def test_iter_rule_string(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        rule = await subreddit.rules.get_rule("PRAW Test")
+        assert isinstance(rule, Rule)
+        assert rule.kind
 
     async def test_reorder_rules(self, reddit):
         reddit.read_only = False
@@ -142,6 +142,22 @@ class TestRule(IntegrationTest):
         assert rule.violation_reason != rule2.violation_reason
         assert rule2.violation_reason == "PUpdate"
 
+    async def test_update_rule_no_params(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        rule = await subreddit.rules.get_rule("Test Rule")
+        rule2 = await rule.mod.update()
+        for attr in (
+            "created_utc",
+            "description",
+            "kind",
+            "priority",
+            "short_name",
+            "subreddit",
+            "violation_reason",
+        ):
+            assert getattr(rule, attr) == getattr(rule2, attr)
+
     async def test_update_rule_short_name(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -162,19 +178,3 @@ class TestRule(IntegrationTest):
         assert rule2.violation_reason == "PUpdate"
         async for new_rule in subreddit.rules:
             assert new_rule.short_name != rule.short_name
-
-    async def test_update_rule_no_params(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        rule = await subreddit.rules.get_rule("Test Rule")
-        rule2 = await rule.mod.update()
-        for attr in (
-            "created_utc",
-            "description",
-            "kind",
-            "priority",
-            "short_name",
-            "subreddit",
-            "violation_reason",
-        ):
-            assert getattr(rule, attr) == getattr(rule2, attr)

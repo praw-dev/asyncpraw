@@ -6,19 +6,6 @@ from ... import UnitTest
 
 
 class TestRedditor(UnitTest):
-    def test_equality(self, reddit):
-        redditor1 = Redditor(reddit, _data={"name": "dummy1", "n": 1})
-        redditor2 = Redditor(reddit, _data={"name": "Dummy1", "n": 2})
-        redditor3 = Redditor(reddit, _data={"name": "dummy3", "n": 2})
-        assert redditor1 == redditor1
-        assert redditor2 == redditor2
-        assert redditor3 == redditor3
-        assert redditor1 == redditor2
-        assert redditor2 != redditor3
-        assert redditor1 != redditor3
-        assert "dummy1" == redditor1
-        assert redditor2 == "dummy1"
-
     def test_construct_failure(self, reddit):
         message = "Exactly one of 'name', 'fullname', or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
@@ -53,18 +40,31 @@ class TestRedditor(UnitTest):
         with pytest.raises(ValueError):
             Redditor(reddit, fullname="")
 
+    def test_equality(self, reddit):
+        redditor1 = Redditor(reddit, _data={"name": "dummy1", "n": 1})
+        redditor2 = Redditor(reddit, _data={"name": "Dummy1", "n": 2})
+        redditor3 = Redditor(reddit, _data={"name": "dummy3", "n": 2})
+        assert redditor1 == redditor1
+        assert redditor2 == redditor2
+        assert redditor3 == redditor3
+        assert redditor1 == redditor2
+        assert redditor2 != redditor3
+        assert redditor1 != redditor3
+        assert "dummy1" == redditor1
+        assert redditor2 == "dummy1"
+
     def test_fullname(self, reddit):
         redditor = Redditor(reddit, _data={"name": "name", "id": "dummy"})
         assert redditor.fullname == "t2_dummy"
 
-    async def test_guild__min(self, reddit):
-        with pytest.raises(TypeError) as excinfo:
-            await Redditor(reddit, name="RedditorName").gild(months=0)
-        assert str(excinfo.value) == "months must be between 1 and 36"
-
     async def test_guild__max(self, reddit):
         with pytest.raises(TypeError) as excinfo:
             await Redditor(reddit, name="RedditorName").gild(months=37)
+        assert str(excinfo.value) == "months must be between 1 and 36"
+
+    async def test_guild__min(self, reddit):
+        with pytest.raises(TypeError) as excinfo:
+            await Redditor(reddit, name="RedditorName").gild(months=0)
         assert str(excinfo.value) == "months must be between 1 and 36"
 
     def test_hash(self, reddit):

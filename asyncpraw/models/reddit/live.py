@@ -363,6 +363,69 @@ class LiveThread(RedditBase):
             return other == str(self)
         return isinstance(other, self.__class__) and str(self) == str(other)
 
+    def __hash__(self) -> int:
+        """Return the hash of the current instance."""
+        return hash(self.__class__.__name__) ^ hash(str(self))
+
+    def __init__(
+        self,
+        reddit: "asyncpraw.Reddit",
+        id: Optional[str] = None,
+        _data: Optional[Dict[str, Any]] = None,  # pylint: disable=redefined-builtin
+    ):
+        """Initialize a :class:`.LiveThread` instance.
+
+        :param reddit: An instance of :class:`.Reddit`.
+        :param id: A live thread ID, e.g., ``"ukaeu1ik4sw5"``
+
+        """
+        if (id, _data).count(None) != 1:
+            raise TypeError("Either 'id' or '_data' must be provided.")
+        if id:
+            self.id = id
+        super().__init__(reddit, _data=_data)
+
+    async def _fetch(self):
+        data = await self._fetch_data()
+        data = data["data"]
+        other = type(self)(self._reddit, _data=data)
+        self.__dict__.update(other.__dict__)
+        self._fetched = True
+
+    async def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
+
+    def _fetch_info(self):
+        return "liveabout", {"id": self.id}, None
+
+    def discussions(
+        self, **generator_kwargs: Union[str, int, Dict[str, str]]
+    ) -> AsyncIterator["asyncpraw.models.Submission"]:
+        """Get submissions linking to the thread.
+
+        :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
+            constructor.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Submission`
+            objects.
+
+        Additional keyword arguments are passed in the initialization of
+        :class:`.ListingGenerator`.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            async for submission in thread.discussions(limit=None):
+                print(submission.title)
+
+        """
+        url = API_PATH["live_discussions"].format(id=self.id)
+        return ListingGenerator(self._reddit, url, **generator_kwargs)
+
     @deprecate_lazy
     async def get_update(
         self, update_id: str, fetch: bool = True, **kwargs
@@ -398,69 +461,6 @@ class LiveThread(RedditBase):
         if fetch:
             await update._fetch()
         return update
-
-    def __hash__(self) -> int:
-        """Return the hash of the current instance."""
-        return hash(self.__class__.__name__) ^ hash(str(self))
-
-    def __init__(
-        self,
-        reddit: "asyncpraw.Reddit",
-        id: Optional[str] = None,
-        _data: Optional[Dict[str, Any]] = None,  # pylint: disable=redefined-builtin
-    ):
-        """Initialize a :class:`.LiveThread` instance.
-
-        :param reddit: An instance of :class:`.Reddit`.
-        :param id: A live thread ID, e.g., ``"ukaeu1ik4sw5"``
-
-        """
-        if (id, _data).count(None) != 1:
-            raise TypeError("Either 'id' or '_data' must be provided.")
-        if id:
-            self.id = id
-        super().__init__(reddit, _data=_data)
-
-    def _fetch_info(self):
-        return "liveabout", {"id": self.id}, None
-
-    async def _fetch_data(self):
-        name, fields, params = self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
-
-    async def _fetch(self):
-        data = await self._fetch_data()
-        data = data["data"]
-        other = type(self)(self._reddit, _data=data)
-        self.__dict__.update(other.__dict__)
-        self._fetched = True
-
-    def discussions(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["asyncpraw.models.Submission"]:
-        """Get submissions linking to the thread.
-
-        :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
-            constructor.
-
-        :returns: A :class:`.ListingGenerator` object which yields :class:`.Submission`
-            objects.
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            async for submission in thread.discussions(limit=None):
-                print(submission.title)
-
-        """
-        url = API_PATH["live_discussions"].format(id=self.id)
-        return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     async def report(self, type: str):  # pylint: disable=redefined-builtin
         """Report the thread violating the Reddit rules.
@@ -683,6 +683,66 @@ class LiveThreadStream:
         return stream_generator(self.live_thread.updates, **stream_options)
 
 
+class LiveUpdateContribution:
+    """Provides a set of contribution functions to :class:`.LiveUpdate`."""
+
+    def __init__(self, update: "asyncpraw.models.LiveUpdate"):
+        """Initialize a :class:`.LiveUpdateContribution` instance.
+
+        :param update: An instance of :class:`.LiveUpdate`.
+
+        This instance can be retrieved through ``update.contrib`` where update is a
+        :class:`.LiveUpdate` instance. E.g.,
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update.contrib  # LiveUpdateContribution instance
+            await update.contrib.remove()
+
+        """
+        self.update = update
+
+    async def remove(self):
+        """Remove a live update.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ydwwxneu7vsa")
+            update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
+            await update.contrib.remove()
+
+        """
+        url = API_PATH["live_remove_update"].format(id=self.update.thread.id)
+        data = {"id": self.update.fullname}
+        await self.update.thread._reddit.post(url, data=data)
+
+    async def strike(self):
+        """Strike a content of a live update.
+
+        .. code-block:: python
+
+            thread = await reddit.live("xyu8kmjvfrww")
+            update = await thread.get_update("cb5fe532-dbee-11e6-9a91-0e6d74fabcc4")
+            await update.contrib.strike()
+
+        To check whether the update is stricken or not, use ``update.stricken``
+        attribute.
+
+        .. note::
+
+            Accessing lazy attributes on updates (includes ``update.stricken``) may
+            raise :py:class:`AttributeError`. See :class:`.LiveUpdate` for details.
+
+        """
+        url = API_PATH["live_strike"].format(id=self.update.thread.id)
+        data = {"id": self.update.fullname}
+        await self.update.thread._reddit.post(url, data=data)
+
+
 class LiveUpdate(FullnameMixin, RedditBase):
     """An individual :class:`.LiveUpdate` object.
 
@@ -779,63 +839,3 @@ class LiveUpdate(FullnameMixin, RedditBase):
         other = response[0]
         self.__dict__.update(other.__dict__)
         self._fetched = True
-
-
-class LiveUpdateContribution:
-    """Provides a set of contribution functions to :class:`.LiveUpdate`."""
-
-    def __init__(self, update: "asyncpraw.models.LiveUpdate"):
-        """Initialize a :class:`.LiveUpdateContribution` instance.
-
-        :param update: An instance of :class:`.LiveUpdate`.
-
-        This instance can be retrieved through ``update.contrib`` where update is a
-        :class:`.LiveUpdate` instance. E.g.,
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
-            update.contrib  # LiveUpdateContribution instance
-            await update.contrib.remove()
-
-        """
-        self.update = update
-
-    async def remove(self):
-        """Remove a live update.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ydwwxneu7vsa")
-            update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
-            await update.contrib.remove()
-
-        """
-        url = API_PATH["live_remove_update"].format(id=self.update.thread.id)
-        data = {"id": self.update.fullname}
-        await self.update.thread._reddit.post(url, data=data)
-
-    async def strike(self):
-        """Strike a content of a live update.
-
-        .. code-block:: python
-
-            thread = await reddit.live("xyu8kmjvfrww")
-            update = await thread.get_update("cb5fe532-dbee-11e6-9a91-0e6d74fabcc4")
-            await update.contrib.strike()
-
-        To check whether the update is stricken or not, use ``update.stricken``
-        attribute.
-
-        .. note::
-
-            Accessing lazy attributes on updates (includes ``update.stricken``) may
-            raise :py:class:`AttributeError`. See :class:`.LiveUpdate` for details.
-
-        """
-        url = API_PATH["live_strike"].format(id=self.update.thread.id)
-        data = {"id": self.update.fullname}
-        await self.update.thread._reddit.post(url, data=data)

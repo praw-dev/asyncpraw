@@ -7,6 +7,11 @@ from ... import UnitTest
 
 
 class TestEmoji(UnitTest):
+    async def test__get(self, reddit):
+        subreddit = Subreddit(reddit, display_name="a")
+        emoji = await subreddit.emoji.get_emoji("a", fetch=False)
+        assert isinstance(emoji, Emoji)
+
     def test_equality(self, reddit):
         emoji1 = Emoji(reddit, subreddit=Subreddit(reddit, "a"), name="x")
         emoji2 = Emoji(reddit, subreddit=Subreddit(reddit, "a"), name="2")
@@ -24,11 +29,6 @@ class TestEmoji(UnitTest):
         assert emoji1 != emoji5
         assert emoji1 != emoji6
         assert emoji1 != 5
-
-    async def test__get(self, reddit):
-        subreddit = Subreddit(reddit, display_name="a")
-        emoji = await subreddit.emoji.get_emoji("a", fetch=False)
-        assert isinstance(emoji, Emoji)
 
     def test_hash(self, reddit):
         emoji1 = Emoji(reddit, subreddit=Subreddit(reddit, "a"), name="x")

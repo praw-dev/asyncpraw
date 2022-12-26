@@ -23,16 +23,36 @@ def junk_data():
         return urlsafe_b64encode(fp.read()).decode()
 
 
-class TestReddit(IntegrationTest):
-    @pytest.mark.add_placeholder(content=junk_data())
-    async def test_bad_request_without_json_text_plain_response(self, reddit):
-        with pytest.raises(RedditAPIException) as excinfo:
-            await reddit.request(
-                method="GET",
-                path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk_data()}",
-            )
-        assert str(excinfo.value) == "Bad Request"
+class TestDomainListing(IntegrationTest):
+    async def test_controversial(self, reddit):
+        submissions = await self.async_list(
+            reddit.domain("youtube.com").controversial()
+        )
+        assert len(submissions) == 100
 
+    async def test_hot(self, reddit):
+        submissions = await self.async_list(reddit.domain("youtube.com").hot())
+        assert len(submissions) == 100
+
+    async def test_new(self, reddit):
+        submissions = await self.async_list(reddit.domain("youtube.com").new())
+        assert len(submissions) == 100
+
+    async def test_random_rising(self, reddit):
+        submissions = await self.async_list(
+            reddit.domain("youtube.com").random_rising()
+        )
+        assert len(submissions) == 100
+
+    async def test_rising(self, reddit):
+        await self.async_list(reddit.domain("youtube.com").rising())
+
+    async def test_top(self, reddit):
+        submissions = await self.async_list(reddit.domain("youtube.com").top())
+        assert len(submissions) == 100
+
+
+class TestReddit(IntegrationTest):
     @pytest.mark.add_placeholder(comment_ids=comment_ids())
     async def test_bad_request_without_json_text_html_response(self, reddit):
         with pytest.raises(BadRequest) as excinfo:
@@ -41,6 +61,15 @@ class TestReddit(IntegrationTest):
                 path=f"/api/morechildren?link_id=t3_n7r3uz&children={comment_ids()}",
             )
         assert str(excinfo.value) == "received 400 HTTP response"
+
+    @pytest.mark.add_placeholder(content=junk_data())
+    async def test_bad_request_without_json_text_plain_response(self, reddit):
+        with pytest.raises(RedditAPIException) as excinfo:
+            await reddit.request(
+                method="GET",
+                path=f"/api/morechildren?link_id=t3_n7r3uz&children={junk_data()}",
+            )
+        assert str(excinfo.value) == "Bad Request"
 
     async def test_bare_badrequest(self, reddit):
         data = {
@@ -66,12 +95,6 @@ class TestReddit(IntegrationTest):
         for item in results:
             assert isinstance(item, RedditBase)
 
-    async def test_info_url(self, reddit):
-        results = await self.async_list(reddit.info(url="youtube.com"))
-        assert len(results) > 0
-        for item in results:
-            assert isinstance(item, Submission)
-
     async def test_info_sr_names(self, reddit):
         items = [await reddit.subreddit("redditdev"), "reddit.com", "t:1337", "nl"]
         item_generator = reddit.info(subreddits=items)
@@ -79,6 +102,12 @@ class TestReddit(IntegrationTest):
         assert len(results) == 4
         for item in results:
             assert isinstance(item, Subreddit)
+
+    async def test_info_url(self, reddit):
+        results = await self.async_list(reddit.info(url="youtube.com"))
+        assert len(results) > 0
+        for item in results:
+            assert isinstance(item, Submission)
 
     async def test_live_call(self, reddit):
         thread_id = "ukaeu1ik4sw5"
@@ -91,11 +120,6 @@ class TestReddit(IntegrationTest):
         assert isinstance(live, LiveThread)
         await live._fetch()
         assert live.title == "PRAW Create Test"
-
-    async def test_live_info__contain_invalid_id(self, reddit):
-        gen = reddit.live.info(["invalid"])
-        with pytest.raises(ServerError):
-            await self.async_list(gen)
 
     async def test_live_info(self, reddit):
         ids = """
@@ -131,6 +155,11 @@ class TestReddit(IntegrationTest):
         assert all(isinstance(thread, LiveThread) for thread in threads)
         thread_ids = [thread.id for thread in threads]
         assert thread_ids == ids
+
+    async def test_live_info__contain_invalid_id(self, reddit):
+        gen = reddit.live.info(["invalid"])
+        with pytest.raises(ServerError):
+            await self.async_list(gen)
 
     # async def test_live_now__featured(self, reddit): # TODO: record when something is featured
     #     thread = await reddit.live.now()
@@ -198,32 +227,3 @@ class TestReddit(IntegrationTest):
         with pytest.raises(RedditAPIException) as exc:
             await reddit.username_available("a")
         assert str(exc.value) == "BAD_USERNAME: 'invalid user name' on field 'user'"
-
-
-class TestDomainListing(IntegrationTest):
-    async def test_controversial(self, reddit):
-        submissions = await self.async_list(
-            reddit.domain("youtube.com").controversial()
-        )
-        assert len(submissions) == 100
-
-    async def test_hot(self, reddit):
-        submissions = await self.async_list(reddit.domain("youtube.com").hot())
-        assert len(submissions) == 100
-
-    async def test_new(self, reddit):
-        submissions = await self.async_list(reddit.domain("youtube.com").new())
-        assert len(submissions) == 100
-
-    async def test_random_rising(self, reddit):
-        submissions = await self.async_list(
-            reddit.domain("youtube.com").random_rising()
-        )
-        assert len(submissions) == 100
-
-    async def test_rising(self, reddit):
-        await self.async_list(reddit.domain("youtube.com").rising())
-
-    async def test_top(self, reddit):
-        submissions = await self.async_list(reddit.domain("youtube.com").top())
-        assert len(submissions) == 100

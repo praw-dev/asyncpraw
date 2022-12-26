@@ -50,42 +50,6 @@ class UserSubreddit(Subreddit):
 
     """
 
-    def __init__(self, reddit: "asyncpraw.Reddit", *args, **kwargs):
-        """Initialize an :class:`.UserSubreddit` instance.
-
-        :param reddit: An instance of :class:`.Reddit`.
-
-        .. note::
-
-            This class should not be initialized directly. Instead, obtain an instance
-            via:
-
-            .. code-block:: python
-
-                user = await reddit.user.me()
-                user.subreddit
-
-                # or
-
-                redditor = await reddit.redditor("redditor_name")
-                redditor.subreddit
-
-        """
-
-        def predicate(item):
-            name = getattr(item, "__name__", None)
-            return name not in dir(object) + dir(Subreddit) and name in dir(dict)
-
-        for name, member in inspect.getmembers(dict, predicate=predicate):
-            if name != "__getitem__":
-                setattr(
-                    self,
-                    name,
-                    self._dict_depreciated_wrapper(getattr(self.__dict__, name)),
-                )
-
-        super().__init__(reddit, *args, **kwargs)
-
     @staticmethod
     def _dict_depreciated_wrapper(func):
         """Show deprecation notice for dict only methods."""
@@ -125,6 +89,42 @@ class UserSubreddit(Subreddit):
             stacklevel=2,
         )
         return getattr(self, item)
+
+    def __init__(self, reddit: "asyncpraw.Reddit", *args, **kwargs):
+        """Initialize an :class:`.UserSubreddit` instance.
+
+        :param reddit: An instance of :class:`.Reddit`.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via:
+
+            .. code-block:: python
+
+                user = await reddit.user.me()
+                user.subreddit
+
+                # or
+
+                redditor = await reddit.redditor("redditor_name")
+                redditor.subreddit
+
+        """
+
+        def predicate(item):
+            name = getattr(item, "__name__", None)
+            return name not in dir(object) + dir(Subreddit) and name in dir(dict)
+
+        for name, member in inspect.getmembers(dict, predicate=predicate):
+            if name != "__getitem__":
+                setattr(
+                    self,
+                    name,
+                    self._dict_depreciated_wrapper(getattr(self.__dict__, name)),
+                )
+
+        super().__init__(reddit, *args, **kwargs)
 
 
 class UserSubredditModeration(SubredditModeration):

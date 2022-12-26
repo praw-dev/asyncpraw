@@ -17,6 +17,13 @@ class TestCollection(IntegrationTest):
         with pytest.raises(ClientException):
             await subreddit.collections(uuid)
 
+    async def test_follow(self, reddit):
+        reddit.read_only = False
+        uuid = self.NONEMPTY_REAL_UUID
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        collection = await subreddit.collections(uuid)
+        await collection.follow()
+
     async def test_init(self, reddit):
         uuid = self.NONEMPTY_REAL_UUID
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -33,13 +40,6 @@ class TestCollection(IntegrationTest):
             assert isinstance(post, Submission)
             found_some = True
         assert found_some
-
-    async def test_follow(self, reddit):
-        reddit.read_only = False
-        uuid = self.NONEMPTY_REAL_UUID
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        collection = await subreddit.collections(uuid)
-        await collection.follow()
 
     async def test_subreddit(self, reddit):
         uuid = self.NONEMPTY_REAL_UUID

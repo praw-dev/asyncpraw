@@ -6,9 +6,15 @@ from base64 import b64encode
 import pytest
 
 
-class Placeholders:
-    def __init__(self, _dict):
-        self.__dict__ = _dict
+@pytest.fixture(autouse=True)
+def patch_sleep(monkeypatch):
+    """Auto patch sleep to speed up tests."""
+
+    async def _sleep(*_, **__):
+        """Dud sleep function."""
+        pass
+
+    monkeypatch.setattr(asyncio, "sleep", value=_sleep)
 
 
 @pytest.fixture
@@ -35,15 +41,9 @@ def pytest_configure(config):
     )
 
 
-@pytest.fixture(autouse=True)
-def patch_sleep(monkeypatch):
-    """Auto patch sleep to speed up tests."""
-
-    async def _sleep(*_, **__):
-        """Dud sleep function."""
-        pass
-
-    monkeypatch.setattr(asyncio, "sleep", value=_sleep)
+class Placeholders:
+    def __init__(self, _dict):
+        self.__dict__ = _dict
 
 
 os.environ["praw_check_for_updates"] = "False"

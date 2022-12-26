@@ -74,6 +74,20 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             raise InvalidURL(url)
         return parts[-1]
 
+    @cachedproperty
+    def mod(self) -> "asyncpraw.models.reddit.comment.CommentModeration":
+        """Provide an instance of :class:`.CommentModeration`.
+
+        Example usage:
+
+        .. code-block:: python
+
+            comment = await reddit.comment("dkk4qjd", fetch=False)
+            await comment.mod.approve()
+
+        """
+        return CommentModeration(self)
+
     @property
     def _kind(self) -> str:
         """Return the class's kind."""
@@ -88,20 +102,6 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         """
         parent_type = self.parent_id.split("_", 1)[0]
         return parent_type == self._reddit.config.kinds["submission"]
-
-    @cachedproperty
-    def mod(self) -> "asyncpraw.models.reddit.comment.CommentModeration":
-        """Provide an instance of :class:`.CommentModeration`.
-
-        Example usage:
-
-        .. code-block:: python
-
-            comment = await reddit.comment("dkk4qjd", fetch=False)
-            await comment.mod.approve()
-
-        """
-        return CommentModeration(self)
 
     @property
     def replies(self) -> CommentForest:
@@ -192,13 +192,10 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
                 value = Subreddit(self._reddit, display_name=value)
         super().__setattr__(attribute, value)
 
-    def _fetch_info(self):
-        return "info", {}, {"id": self.fullname}
-
-    async def _fetch_data(self):
-        name, fields, params = self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
+    def _extract_submission_id(self):
+        if "context" in self.__dict__:
+            return self.context.rsplit("/", 4)[1]
+        return self.link_id.split("_", 1)[1]
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -212,10 +209,13 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    def _extract_submission_id(self):
-        if "context" in self.__dict__:
-            return self.context.rsplit("/", 4)[1]
-        return self.link_id.split("_", 1)[1]
+    async def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
+
+    def _fetch_info(self):
+        return "info", {}, {"id": self.fullname}
 
     async def parent(
         self,

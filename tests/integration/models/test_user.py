@@ -30,12 +30,6 @@ class TestUser(IntegrationTest):
             count += 1
         assert count > 0
 
-    async def test_friends(self, reddit):
-        reddit.read_only = False
-        friends = await reddit.user.friends()
-        assert len(friends) > 0
-        assert all(isinstance(friend, Redditor) for friend in friends)
-
     async def test_friend_exist(self, reddit):
         reddit.read_only = False
         friend = await reddit.user.friends(user=await reddit.user.me())
@@ -45,6 +39,12 @@ class TestUser(IntegrationTest):
         reddit.read_only = False
         with pytest.raises(RedditAPIException):
             await reddit.user.friends(user="fake__user_user_user")
+
+    async def test_friends(self, reddit):
+        reddit.read_only = False
+        friends = await reddit.user.friends()
+        assert len(friends) > 0
+        assert all(isinstance(friend, Redditor) for friend in friends)
 
     async def test_karma(self, reddit):
         reddit.read_only = False

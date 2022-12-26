@@ -144,6 +144,68 @@ class RemovalReason(RedditBase):
 class SubredditRemovalReasons:
     """Provide a set of functions to a :class:`.Subreddit`'s removal reasons."""
 
+    async def __aiter__(self) -> AsyncIterator[RemovalReason]:
+        """Return a list of Removal Reasons for the subreddit.
+
+        This method is used to discover all removal reasons for a subreddit:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            async for removal_reason in subreddit.mod.removal_reasons:
+                print(removal_reason)
+
+        """
+        for reason in await self._removal_reason_list():
+            yield reason
+
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
+        """Initialize a :class:`.SubredditRemovalReasons` instance.
+
+        :param subreddit: The subreddit whose removal reasons to work with.
+
+        """
+        self.subreddit = subreddit
+        self._reddit = subreddit._reddit
+
+    async def _removal_reason_list(self) -> List[RemovalReason]:
+        """Get a list of Removal Reason objects.
+
+        :returns: A list of instances of :class:`.RemovalReason`.
+
+        """
+        response = await self._reddit.get(
+            API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
+        )
+        return [
+            RemovalReason(self._reddit, self.subreddit, _data=reason_data)
+            for id, reason_data in response["data"].items()
+        ]
+
+    @_deprecate_args("message", "title")
+    async def add(self, *, message: str, title: str) -> RemovalReason:
+        """Add a removal reason to this subreddit.
+
+        :param message: The message associated with the removal reason.
+        :param title: The title of the removal reason.
+
+        :returns: The :class:`.RemovalReason` added.
+
+        The message will be prepended with ``Hi u/username,`` automatically.
+
+        To add ``"Test"`` to r/test try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            await subreddit.mod.removal_reasons.add(title="Test", message="Foobar")
+
+        """
+        data = {"message": message, "title": title}
+        url = API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
+        id = await self._reddit.post(url, data=data)
+        return RemovalReason(self._reddit, self.subreddit, id["id"])
+
     @deprecate_lazy
     async def get_reason(
         self, reason_id: Union[str, int, slice], fetch: bool = True, **kwargs
@@ -209,65 +271,3 @@ class SubredditRemovalReasons:
         if fetch:
             await reason._fetch()
         return reason
-
-    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Initialize a :class:`.SubredditRemovalReasons` instance.
-
-        :param subreddit: The subreddit whose removal reasons to work with.
-
-        """
-        self.subreddit = subreddit
-        self._reddit = subreddit._reddit
-
-    async def __aiter__(self) -> AsyncIterator[RemovalReason]:
-        """Return a list of Removal Reasons for the subreddit.
-
-        This method is used to discover all removal reasons for a subreddit:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            async for removal_reason in subreddit.mod.removal_reasons:
-                print(removal_reason)
-
-        """
-        for reason in await self._removal_reason_list():
-            yield reason
-
-    async def _removal_reason_list(self) -> List[RemovalReason]:
-        """Get a list of Removal Reason objects.
-
-        :returns: A list of instances of :class:`.RemovalReason`.
-
-        """
-        response = await self._reddit.get(
-            API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
-        )
-        return [
-            RemovalReason(self._reddit, self.subreddit, _data=reason_data)
-            for id, reason_data in response["data"].items()
-        ]
-
-    @_deprecate_args("message", "title")
-    async def add(self, *, message: str, title: str) -> RemovalReason:
-        """Add a removal reason to this subreddit.
-
-        :param message: The message associated with the removal reason.
-        :param title: The title of the removal reason.
-
-        :returns: The :class:`.RemovalReason` added.
-
-        The message will be prepended with ``Hi u/username,`` automatically.
-
-        To add ``"Test"`` to r/test try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            await subreddit.mod.removal_reasons.add(title="Test", message="Foobar")
-
-        """
-        data = {"message": message, "title": title}
-        url = API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
-        id = await self._reddit.post(url, data=data)
-        return RemovalReason(self._reddit, self.subreddit, id["id"])

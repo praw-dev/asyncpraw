@@ -25,14 +25,6 @@ used_cassettes = set()
 class IntegrationTest(HelperMethodMixin):
     """Base class for Async PRAW integration tests."""
 
-    @pytest.fixture
-    def cassette_name(self, request, vcr_cassette_name):
-        """Return the name of the cassette to use."""
-        marker = request.node.get_closest_marker("cassette_name")
-        if marker is None:
-            return vcr_cassette_name
-        return marker.args[0]
-
     @pytest.fixture(autouse=True, scope="session")
     def cassette_tracker(self):
         """Track cassettes to ensure unused cassettes are not uploaded."""
@@ -85,6 +77,14 @@ class IntegrationTest(HelperMethodMixin):
         vcr.serializer = "custom_serializer"
         yield vcr
         CustomPersister.additional_placeholders = {}
+
+    @pytest.fixture
+    def cassette_name(self, request, vcr_cassette_name):
+        """Return the name of the cassette to use."""
+        marker = request.node.get_closest_marker("cassette_name")
+        if marker is None:
+            return vcr_cassette_name
+        return marker.args[0]
 
     @pytest.fixture
     async def reddit(self, vcr, event_loop: asyncio.AbstractEventLoop):

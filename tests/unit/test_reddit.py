@@ -35,13 +35,6 @@ class TestReddit(UnitTest):
         x: "dummy" for x in ["client_id", "client_secret", "user_agent"]
     }
 
-    async def test_close_session(self):
-        temp_reddit = Reddit(**self.REQUIRED_DUMMY_SETTINGS)
-        assert not temp_reddit.requestor._http.closed
-        async with temp_reddit as reddit:
-            pass
-        assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
-
     @mock.patch("asyncpraw.reddit.update_check", create=True)
     async def test_check_for_updates(self, mock_update_check):
         Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
@@ -55,6 +48,13 @@ class TestReddit(UnitTest):
         Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
         assert not Reddit.update_checked
         assert not mock_update_check.called
+
+    async def test_close_session(self):
+        temp_reddit = Reddit(**self.REQUIRED_DUMMY_SETTINGS)
+        assert not temp_reddit.requestor._http.closed
+        async with temp_reddit as reddit:
+            pass
+        assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
 
     def test_comment(self, reddit):
         assert Comment(reddit, id="cklfmye").id == "cklfmye"
@@ -90,6 +90,12 @@ class TestReddit(UnitTest):
 
         assert str(excinfo.value) == err_str
 
+    def test_info__not_list(self, reddit):
+        with pytest.raises(TypeError) as excinfo:
+            reddit.info(fullnames="Let's try a string")
+
+        assert "must be a non-str iterable" in str(excinfo.value)
+
     def test_invalid_config(self):
         with pytest.raises(ValueError) as excinfo:
             Reddit(timeout="test", **self.REQUIRED_DUMMY_SETTINGS)
@@ -106,20 +112,14 @@ class TestReddit(UnitTest):
             " expected type is int, but the given value is test."
         )
 
-    def test_info__not_list(self, reddit):
-        with pytest.raises(TypeError) as excinfo:
-            reddit.info(fullnames="Let's try a string")
-
-        assert "must be a non-str iterable" in str(excinfo.value)
-
-    def test_live_info__valid_param(self, reddit):
-        gen = reddit.live.info(["dummy", "dummy2"])
-        assert isinstance(gen, types.AsyncGeneratorType)
-
     def test_live_info__invalid_param(self, reddit):
         with pytest.raises(TypeError) as excinfo:
             reddit.live.info(None)
         assert str(excinfo.value) == "ids must be a list"
+
+    def test_live_info__valid_param(self, reddit):
+        gen = reddit.live.info(["dummy", "dummy2"])
+        assert isinstance(gen, types.AsyncGeneratorType)
 
     async def test_multireddit(self, reddit):
         multireddit = await reddit.multireddit(redditor="bboe", name="aa")
@@ -159,6 +159,32 @@ class TestReddit(UnitTest):
                         "errors": [
                             [
                                 "RATELIMIT",
+                                "You are doing that too much. Try again in 1 minute.",
+                                "ratelimit",
+                            ]
+                        ]
+                    }
+                },
+            ],
+        ),
+    )
+    async def test_post_ratelimit__over_threshold__minutes(self, reddit):
+        with pytest.raises(RedditAPIException) as exception:
+            await reddit.post("test")
+        assert (
+            exception.value.message
+            == "You are doing that too much. Try again in 1 minute."
+        )
+
+    @mock.patch(
+        "asyncpraw.Reddit.request",
+        new=AsyncMock(
+            side_effect=[
+                {
+                    "json": {
+                        "errors": [
+                            [
+                                "RATELIMIT",
                                 "You are doing that too much. Try again in 6 seconds.",
                                 "ratelimit",
                             ]
@@ -177,32 +203,6 @@ class TestReddit(UnitTest):
             == "You are doing that too much. Try again in 6 seconds."
         )
         mock_sleep.assert_not_called()
-
-    @mock.patch(
-        "asyncpraw.Reddit.request",
-        new=AsyncMock(
-            side_effect=[
-                {
-                    "json": {
-                        "errors": [
-                            [
-                                "RATELIMIT",
-                                "You are doing that too much. Try again in 1 minute.",
-                                "ratelimit",
-                            ]
-                        ]
-                    }
-                },
-            ],
-        ),
-    )
-    async def test_post_ratelimit__over_threshold__minutes(self, reddit):
-        with pytest.raises(RedditAPIException) as exception:
-            await reddit.post("test")
-        assert (
-            exception.value.message
-            == "You are doing that too much. Try again in 1 minute."
-        )
 
     @mock.patch(
         "asyncpraw.Reddit.request",

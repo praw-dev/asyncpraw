@@ -71,6 +71,10 @@ class RedditBase(AsyncPRAWBase):
                 f"argument for the {self.STR_FIELD} parameter is not empty."
             )
 
+    def __ne__(self, other: Any) -> bool:
+        """Return whether the other instance differs from the current."""
+        return not self == other
+
     def __repr__(self) -> str:
         """Return an object initialization representation of the instance."""
         return f"{self.__class__.__name__}({self.STR_FIELD}={str(self)!r})"
@@ -78,10 +82,6 @@ class RedditBase(AsyncPRAWBase):
     def __str__(self) -> str:
         """Return a string representation of the instance."""
         return getattr(self, self.STR_FIELD)
-
-    def __ne__(self, other: Any) -> bool:
-        """Return whether the other instance differs from the current."""
-        return not self == other
 
     async def _fetch(self):  # pragma: no cover
         self._fetched = True

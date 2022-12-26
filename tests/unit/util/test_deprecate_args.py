@@ -55,16 +55,13 @@ with_positional = {
 }
 
 
-class AsyncType(IntFlag):
-    ASYNC = auto()
-    ASYNC_GENERATOR = auto()
-    SYNC = auto()
-
-    def __str__(self):
-        return f"__{self.name.lower()}"
-
-    def __repr__(self):
-        return self.name.lower()
+@contextmanager
+def _check_warning(func, args):
+    if args:
+        with pytest.warns(DeprecationWarning, match=_gen_warning(func, args)):
+            yield
+    else:
+        yield
 
 
 def _gen_warning(func, args):
@@ -82,15 +79,6 @@ def _gen_warning(func, args):
         f"Positional arguments for {func.__qualname__!r} will no longer be supported in"
         f" Async PRAW 8.\nCall this function with {arg_string}."
     )
-
-
-@contextmanager
-def _check_warning(func, args):
-    if args:
-        with pytest.warns(DeprecationWarning, match=_gen_warning(func, args)):
-            yield
-    else:
-        yield
 
 
 def _prepare_args(arguments, func):
@@ -150,6 +138,28 @@ async def arg_test_global_with_positional__async_generator(
     yield arg3
 
 
+def pytest_generate_tests(metafunc):
+    # called once per each test function
+    if "positional" in metafunc.function.__name__:
+        test_cases = metafunc.cls.params["positional"]
+    else:
+        test_cases = metafunc.cls.params["keyword"]
+    name = "_".join(metafunc.function.__name__.split("_")[1:])
+    cases = []
+    ids = []
+    for async_type in list(AsyncType):
+        function_name = name
+        if async_type in AsyncType.ASYNC | AsyncType.ASYNC_GENERATOR:
+            function_name += str(async_type)
+        for test_case, parameters in test_cases.items():
+            arguments, expected_results = parameters
+            cases.append([arguments, async_type, expected_results, function_name])
+            ids.append(",".join([repr(async_type), test_case]))
+    signature = inspect.signature(metafunc.function)
+    args = [arg.name for arg in signature.parameters.values() if arg.name != "self"]
+    metafunc.parametrize(argnames=args, argvalues=cases, ids=ids)
+
+
 class ArgTest:
     @_deprecate_args("arg2", "arg1", "arg3", "arg0")
     def arg_test(self, *, arg0=None, arg1=None, arg2=None, arg3=None):
@@ -188,26 +198,16 @@ class ArgTest:
         yield arg3
 
 
-def pytest_generate_tests(metafunc):
-    # called once per each test function
-    if "positional" in metafunc.function.__name__:
-        test_cases = metafunc.cls.params["positional"]
-    else:
-        test_cases = metafunc.cls.params["keyword"]
-    name = "_".join(metafunc.function.__name__.split("_")[1:])
-    cases = []
-    ids = []
-    for async_type in list(AsyncType):
-        function_name = name
-        if async_type in AsyncType.ASYNC | AsyncType.ASYNC_GENERATOR:
-            function_name += str(async_type)
-        for test_case, parameters in test_cases.items():
-            arguments, expected_results = parameters
-            cases.append([arguments, async_type, expected_results, function_name])
-            ids.append(",".join([repr(async_type), test_case]))
-    signature = inspect.signature(metafunc.function)
-    args = [arg.name for arg in signature.parameters.values() if arg.name != "self"]
-    metafunc.parametrize(argnames=args, argvalues=cases, ids=ids)
+class AsyncType(IntFlag):
+    ASYNC = auto()
+    ASYNC_GENERATOR = auto()
+    SYNC = auto()
+
+    def __repr__(self):
+        return self.name.lower()
+
+    def __str__(self):
+        return f"__{self.name.lower()}"
 
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
@@ -236,6 +236,9 @@ class TestDeprecateArgs(UnitTest):
                 results = func(*args, **kwargs)
         assert expected_results == results
 
+    async def test_arg_test(self, arguments, async_type, expected_result, func_name):
+        await self._execute_test(arguments, async_type, expected_result, func_name)
+
     async def test_arg_test_global(
         self, arguments, async_type, expected_result, func_name
     ):
@@ -244,9 +247,6 @@ class TestDeprecateArgs(UnitTest):
     async def test_arg_test_global_with_positional(
         self, arguments, async_type, expected_result, func_name
     ):
-        await self._execute_test(arguments, async_type, expected_result, func_name)
-
-    async def test_arg_test(self, arguments, async_type, expected_result, func_name):
         await self._execute_test(arguments, async_type, expected_result, func_name)
 
     async def test_arg_test_with_positional(

@@ -138,46 +138,6 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a :class:`.Subreddit` for emoji."""
 
-    @deprecate_lazy
-    async def get_emoji(self, name: str, fetch: bool = True, **kwargs) -> Emoji:
-        """Return the :class:`.Emoji` for the subreddit named ``name``.
-
-        :param name: The name of the emoji.
-        :param fetch: Determines if Async PRAW will fetch the object (default:
-            ``True``).
-
-        This method is to be used to fetch a specific emoji url, like so:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            emoji = await subreddit.emoji.get_emoji("emoji")
-            print(emoji)
-
-        If you don't need the object fetched right away (e.g., to utilize a class
-        method) you can do:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            emoji = await subreddit.emoji.get_emoji("emoji", fetch=False)
-            await emoji.delete()
-
-        """
-        emoji = Emoji(self._reddit, self.subreddit, name)
-        if fetch:
-            await emoji._fetch()
-        return emoji
-
-    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Initialize a :class:`.SubredditEmoji` instance.
-
-        :param subreddit: The subreddit whose emoji are affected.
-
-        """
-        self.subreddit = subreddit
-        self._reddit = subreddit._reddit
-
     async def __aiter__(self) -> List[Emoji]:
         """Return a list of :class:`.Emoji` for the subreddit.
 
@@ -201,6 +161,15 @@ class SubredditEmoji:
         assert len(subreddit_keys) == 1
         for emoji_name, emoji_data in response[subreddit_keys[0]].items():
             yield Emoji(self._reddit, self.subreddit, emoji_name, _data=emoji_data)
+
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
+        """Initialize a :class:`.SubredditEmoji` instance.
+
+        :param subreddit: The subreddit whose emoji are affected.
+
+        """
+        self.subreddit = subreddit
+        self._reddit = subreddit._reddit
 
     async def add(
         self,
@@ -263,3 +232,34 @@ class SubredditEmoji:
         url = API_PATH["emoji_upload"].format(subreddit=self.subreddit)
         await self._reddit.post(url, data=data)
         return Emoji(self._reddit, self.subreddit, name)
+
+    @deprecate_lazy
+    async def get_emoji(self, name: str, fetch: bool = True, **kwargs) -> Emoji:
+        """Return the :class:`.Emoji` for the subreddit named ``name``.
+
+        :param name: The name of the emoji.
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
+
+        This method is to be used to fetch a specific emoji url, like so:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            emoji = await subreddit.emoji.get_emoji("emoji")
+            print(emoji)
+
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            emoji = await subreddit.emoji.get_emoji("emoji", fetch=False)
+            await emoji.delete()
+
+        """
+        emoji = Emoji(self._reddit, self.subreddit, name)
+        if fetch:
+            await emoji._fetch()
+        return emoji
