@@ -26,8 +26,8 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
     :target: https://github.com/praw-dev/.github/blob/main/CODE_OF_CONDUCT.md
 
 .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-    :target: https://github.com/pre-commit/pre-commit
     :alt: pre-commit
+    :target: https://github.com/pre-commit/pre-commit
 
 Async PRAW, an abbreviation for "Asynchronous Python Reddit API Wrapper", is a Python
 package that allows for simple access to Reddit's API. Async PRAW aims to be easy to use
