@@ -1,0 +1,9 @@
+jobs:
+  pypi:
+    name: Upload Python Package
+    secrets: inherit
+    uses: praw-dev/.github/.github/workflows/pypi.yml@main
+name: Upload Python Package
+on:
+  release:
+    types: [ published ]
