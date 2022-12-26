@@ -7,6 +7,11 @@ from .. import UnitTest
 
 
 class TestTrophy(UnitTest):
+    def test_equality(self, reddit):
+        name = "Inciteful Link"
+        trophy = Trophy(reddit, {"name": name})
+        assert trophy != 5
+
     def test_init__reject_no_name(self, reddit):
         with pytest.raises(AssertionError):
             Trophy(reddit, {})
@@ -23,11 +28,6 @@ class TestTrophy(UnitTest):
         name = "Inciteful Link"
         trophy = Trophy(reddit, {"name": name})
         assert str(trophy) == trophy.name == name
-
-    def test_equality(self, reddit):
-        name = "Inciteful Link"
-        trophy = Trophy(reddit, {"name": name})
-        assert trophy != 5
 
     def test_repr(self, reddit):
         name = "Inciteful Link"

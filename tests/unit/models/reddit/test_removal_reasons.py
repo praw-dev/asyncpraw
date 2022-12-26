@@ -7,6 +7,13 @@ from ... import UnitTest
 
 
 class TestRemovalReason(UnitTest):
+    async def test__get(self, reddit):
+        subreddit = Subreddit(reddit, display_name="a")
+        removal_reason = await subreddit.mod.removal_reasons.get_reason(
+            "a", fetch=False
+        )
+        assert isinstance(removal_reason, RemovalReason)
+
     def test_equality(self, reddit):
         reason1 = RemovalReason(
             reddit, subreddit=Subreddit(reddit, display_name="a"), id="x"
@@ -52,13 +59,6 @@ class TestRemovalReason(UnitTest):
                 subreddit=Subreddit(reddit, display_name="a"),
                 reason_id="",
             )
-
-    async def test__get(self, reddit):
-        subreddit = Subreddit(reddit, display_name="a")
-        removal_reason = await subreddit.mod.removal_reasons.get_reason(
-            "a", fetch=False
-        )
-        assert isinstance(removal_reason, RemovalReason)
 
     def test_hash(self, reddit):
         reason1 = RemovalReason(

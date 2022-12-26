@@ -43,764 +43,6 @@ from asyncpraw.models import (
 from ... import IntegrationTest
 
 
-class WebsocketMock:
-    POST_URL = "https://reddit.com/r/<TEST_SUBREDDIT>/comments/{}/test_title/"
-
-    @classmethod
-    def make_dict(cls, post_id):
-        return {"payload": {"redirect": cls.POST_URL.format(post_id)}}
-
-    def __init__(self, *post_ids):
-        self.post_ids = post_ids
-        self.i = -1
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    async def receive_json(self):
-        if not self.post_ids:
-            raise WebSocketError(0, "")
-        assert 0 <= self.i + 1 < len(self.post_ids)
-        self.i += 1
-        return self.make_dict(self.post_ids[self.i])
-
-
-class TestSubreddit(IntegrationTest):
-    async def test_create(self, reddit):
-        reddit.read_only = False
-        new_name = pytest.placeholders.test_subreddit
-        subreddit = await reddit.subreddit.create(
-            new_name,
-            link_type="any",
-            subreddit_type="public",
-            title="Sub",
-            wikimode="disabled",
-            wiki_edit_age=0,
-            wiki_edit_karma=0,
-            comment_score_hide_mins=0,
-        )
-        assert subreddit.display_name == new_name
-        assert subreddit.submission_type == "any"
-
-    async def test_create__exists(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await reddit.subreddit.create(
-                "redditdev",
-                link_type="any",
-                subreddit_type="public",
-                title="redditdev",
-                wikimode="disabled",
-            )
-        assert excinfo.value.items[0].error_type == "SUBREDDIT_EXISTS"
-
-    async def test_create__invalid_parameter(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            # Supplying invalid setting for link_type
-            await reddit.subreddit.create(
-                "PRAW_iavynavff2",
-                link_type="abcd",
-                subreddit_type="public",
-                title="sub",
-                wikimode="disabled",
-            )
-        assert excinfo.value.items[0].error_type == "INVALID_OPTION"
-
-    async def test_create__missing_parameter(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            # Not supplying required field wiki_edit_age.
-            await reddit.subreddit.create(
-                "PRAW_iavynavff3",
-                link_type="any",
-                subreddit_type="public",
-                title=None,
-                wikimode="disabled",
-                wiki_edit_karma=0,
-                comment_score_hide_mins=0,
-            )
-        assert excinfo.value.items[0].error_type == "BAD_NUMBER"
-
-    async def test_message(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.message(subject="Test from Async PRAW", message="Test content")
-
-    async def test_post_requirements(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        data = await subreddit.post_requirements()
-        tags = [
-            "domain_blacklist",
-            "body_restriction_policy",
-            "domain_whitelist",
-            "title_regexes",
-            "body_blacklisted_strings",
-            "body_required_strings",
-            "title_text_min_length",
-            "is_flair_required",
-            "title_text_max_length",
-            "body_regexes",
-            "link_repost_age",
-            "body_text_min_length",
-            "link_restriction_policy",
-            "body_text_max_length",
-            "title_required_strings",
-            "title_blacklisted_strings",
-            "guidelines_text",
-            "guidelines_display_policy",
-        ]
-        assert list(data) == tags
-
-    async def test_random(self, reddit):
-        subreddit = await reddit.subreddit("pics")
-        submissions = [
-            await subreddit.random(),
-            await subreddit.random(),
-            await subreddit.random(),
-            await subreddit.random(),
-        ]
-        assert len(submissions) == len(set(submissions))
-
-    async def test_random__returns_none(self, reddit):
-        subreddit = await reddit.subreddit("wallpapers")
-        assert await subreddit.random() is None
-
-    async def test_sticky(self, reddit):
-        subreddit = await reddit.subreddit("pics")
-        submission = await subreddit.sticky()
-        assert isinstance(submission, Submission)
-
-    async def test_sticky__not_set(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        with pytest.raises(NotFound):
-            await subreddit.sticky(number=2)
-
-    async def test_search(self, reddit):
-        subreddit = await reddit.subreddit("all")
-        async for item in subreddit.search(
-            "praw oauth search", syntax="cloudsearch", limit=None
-        ):
-            assert isinstance(item, Submission)
-
-    async def test_submit__flair(self, reddit):
-        flair_id = "94f13282-e2e8-11e8-8291-0eae4e167256"
-        flair_text = "AF"
-        flair_class = ""
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit(
-            "Test Title",
-            flair_id=flair_id,
-            flair_text=flair_text,
-            selftext="Test text.",
-        )
-        await submission.load()
-        assert submission.link_flair_css_class == flair_class
-        assert submission.link_flair_text == flair_text
-
-    async def test_submit__selftext(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit("Test Title", selftext="Test text.")
-        await submission.load()
-        assert submission.author == pytest.placeholders.username
-        assert submission.selftext == "Test text."
-        assert submission.title == "Test Title"
-
-    async def test_submit__selftext_blank(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit("Test Title", selftext="")
-        await submission.load()
-        assert submission.author == pytest.placeholders.username
-        assert submission.selftext == ""
-        assert submission.title == "Test Title"
-
-    async def test_submit__selftext_inline_media(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        gif = InlineGif(image_path("test.gif"), "optional caption")
-        image = InlineImage(image_path("test.png"), "optional caption")
-        video = InlineVideo(image_path("test.mp4"), "optional caption")
-        selftext = (
-            "Text with a gif {gif1} an image {image1} and a video {video1} inline"
-        )
-        media = {"gif1": gif, "image1": image, "video1": video}
-        submission = await subreddit.submit(
-            "title", inline_media=media, selftext=selftext
-        )
-        await submission.load()
-        assert submission.author == pytest.placeholders.username
-        assert (
-            submission.selftext == "Text with a gif\n\n[optional"
-            " caption](https://i.redd.it/s1i7ejqkgdc61.gif)\n\nan"
-            " image\n\n[optional"
-            " caption](https://preview.redd.it/95pza2skgdc61.png?width=128&format=png&auto=webp&s=c81d303645d9792afcdb9c47f0a6039708714274)\n\nand"
-            " a video\n\n[optional"
-            " caption](https://reddit.com/link/l0vyxc/video/qeg2azskgdc61/player)\n\ninline"
-        )
-        assert submission.title == "title"
-
-    async def test_submit_live_chat(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit(
-            "Test Title", discussion_type="CHAT", selftext=""
-        )
-        await submission.load()
-        assert submission.discussion_type == "CHAT"
-
-    async def test_submit__url(self, reddit):
-        url = "https://asyncpraw.readthedocs.org/en/stable/"
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit("Test Title", url=url)
-        await submission.load()
-        assert submission.author == pytest.placeholders.username
-        assert submission.url == url
-        assert submission.title == "Test Title"
-
-    async def test_submit__nsfw(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit(
-            "Test Title", nsfw=True, selftext="Test text."
-        )
-        await submission.load()
-        assert submission.over_18 is True
-
-    async def test_submit__spoiler(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit(
-            "Test Title", selftext="Test text.", spoiler=True
-        )
-        await submission.load()
-        assert submission.spoiler is True
-
-    async def test_submit__verify_invalid(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        reddit.validate_on_submit = True
-        with pytest.raises(
-            (RedditAPIException, BadRequest)
-        ):  # waiting for prawcore fix
-            await subreddit.submit("dfgfdgfdgdf", url="https://www.google.com")
-
-    async def test_submit_poll(self, reddit):
-        options = ["Yes", "No", "3", "4", "5", "6"]
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit_poll(
-            "Test Poll", duration=6, options=options, selftext="Test poll text."
-        )
-        await submission.load()
-        assert submission.author == pytest.placeholders.username
-        assert submission.selftext.startswith("Test poll text.")
-        assert submission.title == "Test Poll"
-        assert [str(option) for option in submission.poll_data.options] == options
-        assert submission.poll_data.voting_end_timestamp > submission.created_utc
-
-    async def test_submit_poll__flair(self, reddit):
-        flair_id = "94f13282-e2e8-11e8-8291-0eae4e167256"
-        flair_text = "AF"
-        flair_class = ""
-        options = ["Yes", "No"]
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit_poll(
-            "Test Poll",
-            duration=6,
-            flair_id=flair_id,
-            flair_text=flair_text,
-            options=options,
-            selftext="Test poll text.",
-        )
-        await submission.load()
-        assert submission.link_flair_text == flair_text
-        assert submission.link_flair_css_class == flair_class
-
-    async def test_submit_poll__live_chat(self, reddit):
-        options = ["Yes", "No"]
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit_poll(
-            "Test Poll",
-            discussion_type="CHAT",
-            duration=2,
-            options=options,
-            selftext="",
-        )
-        await submission.load()
-        assert submission.discussion_type == "CHAT"
-
-    async def test_submit_gallery(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        images = [
-            {"image_path": image_path("test.png")},
-            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
-            {
-                "image_path": image_path("test.gif"),
-                "outbound_url": "https://example.com",
-            },
-            {
-                "image_path": image_path("test.png"),
-                "caption": "test.png",
-                "outbound_url": "https://example.com",
-            },
-        ]
-
-        submission = await subreddit.submit_gallery("Test Title", images)
-        assert submission.author == pytest.placeholders.username
-        assert submission.is_gallery
-        assert submission.title == "Test Title"
-        items = submission.gallery_data["items"]
-        assert isinstance(submission.gallery_data["items"], list)
-        for i, item in enumerate(items):
-            test_data = images[i]
-            test_data.pop("image_path")
-            item.pop("id")
-            item.pop("media_id")
-            assert item == test_data
-
-    async def test_submit_gallery__disabled(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        images = [
-            {"image_path": image_path("test.png")},
-            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
-            {
-                "image_path": image_path("test.gif"),
-                "outbound_url": "https://example.com",
-            },
-            {
-                "image_path": image_path("test.png"),
-                "caption": "test.png",
-                "outbound_url": "https://example.com",
-            },
-        ]
-
-        with pytest.raises(RedditAPIException):
-            await subreddit.submit_gallery("Test Title", images)
-
-    async def test_submit_gallery__flair(self, image_path, reddit):
-        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
-        flair_text = "test"
-        flair_class = "test-flair-class"
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        images = [
-            {"image_path": image_path("test.png")},
-            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
-            {
-                "image_path": image_path("test.gif"),
-                "outbound_url": "https://example.com",
-            },
-            {
-                "image_path": image_path("test.png"),
-                "caption": "test.png",
-                "outbound_url": "https://example.com",
-            },
-        ]
-        submission = await subreddit.submit_gallery(
-            "Test Title", images, flair_id=flair_id, flair_text=flair_text
-        )
-        assert submission.link_flair_css_class == flair_class
-        assert submission.link_flair_text == flair_text
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock(
-                "l6eqw6", "l6er3r", "l6erfu"  # update with cassette
-            ),
-        ),
-    )
-    async def test_submit_image(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for i, file_name in enumerate(("test.png", "test.jpg", "test.gif")):
-            image = image_path(file_name)
-            submission = await subreddit.submit_image(f"Test Title {i}", image)
-            await submission.load()
-            assert submission.author == pytest.placeholders.username
-            assert submission.is_reddit_media_domain
-            assert submission.title == f"Test Title {i}"
-
-    async def test_submit_image__large(self, reddit, tmp_path):
-        reddit.read_only = False
-        mock_data = (
-            '<?xml version="1.0" encoding="UTF-8"?>'
-            "<Error>"
-            "<Code>EntityTooLarge</Code>"
-            "<Message>Your proposed upload exceeds the maximum allowed size</Message>"
-            "<ProposedSize>20971528</ProposedSize>"
-            "<MaxSizeAllowed>20971520</MaxSizeAllowed>"
-            "<RequestId>23F056D6990D87E0</RequestId>"
-            "<HostId>iYEVOuRfbLiKwMgHt2ewqQRIm0NWL79uiC2rPLj9P0PwW55MhjY2/O8d9JdKTf1iwzLjwWMnGQ=</HostId>"
-            "</Error>"
-        )
-        _post = reddit._core._requestor._http.post
-
-        async def patch_request(url, *args, **kwargs):
-            """Patch requests to return mock data on specific url."""
-            if "https://reddit-uploaded-media.s3-accelerate.amazonaws.com" in url:
-                response = ClientResponse
-                response.text = mock_data
-                response.status = 400
-                return response
-            return await _post(url, *args, **kwargs)
-
-        reddit._core._requestor._http.post = patch_request
-
-        fake_png = PNG_HEADER + b"\x1a" * 10  # Normally 1024 ** 2 * 20 (20 MB)
-        with open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
-            tempfile.write(fake_png)
-        with pytest.raises(TooLargeMediaException):
-            subreddit = await reddit.subreddit("test")
-            await subreddit.submit_image("test", tempfile.name)
-
-    @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock()),
-    )
-    async def test_submit_image__bad_websocket(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.png", "test.jpg"):
-            image = image_path(file_name)
-            with pytest.raises(ClientException):
-                await subreddit.submit_image("Test Title", image)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6evpd")),
-    )  # update with cassette
-    async def test_submit_image__flair(self, image_path, reddit):
-        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
-        flair_text = "Test flair text"
-        flair_class = ""
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        submission = await subreddit.submit_image(
-            "Test Title", image, flair_id=flair_id, flair_text=flair_text
-        )
-        await submission.load()
-        assert submission.link_flair_css_class == flair_class
-        assert submission.link_flair_text == flair_text
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6ey7j")),
-    )  # update with cassette
-    async def test_submit_image_chat(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        submission = await subreddit.submit_image(
-            "Test Title", image, discussion_type="CHAT"
-        )
-        await submission.load()
-        assert submission.discussion_type == "CHAT"
-
-    async def test_submit_image_verify_invalid(self, image_path, reddit):
-        reddit.read_only = False
-        reddit.validate_on_submit = True
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        with pytest.raises(
-            (RedditAPIException, BadRequest)
-        ):  # waiting for prawcore fix
-            await subreddit.submit_image(
-                "gdfgfdgdgdgfgfdgdfgfdgfdg", image, without_websockets=True
-            )
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(side_effect=BlockingIOError),
-    )  # happens with timeout=0
-    async def test_submit_image__timeout_1(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            side_effect=socket.timeout
-            # happens with timeout=0.00001
-        ),
-    )
-    async def test_submit_image__timeout_2(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            side_effect=TimeoutError,
-            # could happen but Async PRAW should handle it
-        ),
-    )
-    async def test_submit_image__timeout_3(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            side_effect=WebSocketError(None, None),
-            # could happen but Async PRAW should handle it
-        ),
-    )
-    async def test_submit_image__timeout_4(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        image = image_path("test.jpg")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
-
-    async def test_submit_image__without_websockets(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.png", "test.jpg", "test.gif"):
-            image = image_path(file_name)
-            submission = await subreddit.submit_image(
-                "Test Title", image, without_websockets=True
-            )
-            assert submission is None
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock("l6g58s", "l6g5al"),  # update with cassette
-        ),
-    )
-    async def test_submit_video(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for i, file_name in enumerate(("test.mov", "test.mp4")):
-            video = image_path(file_name)
-            submission = await subreddit.submit_video(f"Test Title {i}", video)
-            await submission.load()
-            assert submission.author == pytest.placeholders.username
-            # assert submission.is_reddit_media_domain
-            # for some reason returns false
-            assert submission.title == f"Test Title {i}"
-
-    @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock()),
-    )
-    async def test_submit_video__bad_websocket(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.mov", "test.mp4"):
-            video = image_path(file_name)
-            with pytest.raises(ClientException):
-                await subreddit.submit_video("Test Title", video)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6g771")),
-    )  # update with cassette
-    async def test_submit_video__flair(self, image_path, reddit):
-        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
-        flair_text = "Test flair text"
-        flair_class = ""
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        submission = await subreddit.submit_video(
-            "Test Title", video, flair_id=flair_id, flair_text=flair_text
-        )
-        assert submission.link_flair_css_class == flair_class
-        assert submission.link_flair_text == flair_text
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6gocy")),
-    )  # update with cassette
-    async def test_submit_video_chat(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        submission = await subreddit.submit_video(
-            "Test Title", video, discussion_type="CHAT"
-        )
-        await submission.load()
-        assert submission.discussion_type == "CHAT"
-
-    async def test_submit_video_verify_invalid(self, image_path, reddit):
-        reddit.read_only = False
-        reddit.validate_on_submit = True
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        with pytest.raises(
-            (RedditAPIException, BadRequest)
-        ):  # waiting for prawcore fix
-            await subreddit.submit_video(
-                "gdfgfdgdgdgfgfdgdfgfdgfdg", video, without_websockets=True
-            )
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock("l6gvvi", "l6gvx7"),  # update with cassette
-        ),
-    )
-    async def test_submit_video__thumbnail(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for video_name, thumb_name in (
-            ("test.mov", "test.jpg"),
-            ("test.mp4", "test.png"),
-        ):
-            video = image_path(video_name)
-            thumb = image_path(thumb_name)
-            submission = await subreddit.submit_video(
-                "Test Title", video, thumbnail_path=thumb
-            )
-            await submission.load()
-            assert submission.author == pytest.placeholders.username
-            assert submission.is_video
-            assert submission.title == "Test Title"
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(side_effect=BlockingIOError),
-    )  # happens with timeout=0
-    async def test_submit_video__timeout_1(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            side_effect=socket.timeout
-            # happens with timeout=0.00001
-        ),
-    )
-    async def test_submit_video__timeout_2(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            side_effect=TimeoutError,
-            # could happen, and Async PRAW should handle it
-        ),
-    )
-    async def test_submit_video__timeout_3(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            side_effect=WebSocketError(None, None),
-            # could happen, and Async PRAW should handle it
-        ),
-    )
-    async def test_submit_video__timeout_4(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        video = image_path("test.mov")
-        with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
-
-    @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock("l6gtwa", "l6gty1"),  # update with cassette
-        ),
-    )
-    async def test_submit_video__videogif(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.mov", "test.mp4"):
-            video = image_path(file_name)
-            submission = await subreddit.submit_video(
-                "Test Title", video, videogif=True
-            )
-            assert submission.author == pytest.placeholders.username
-            assert submission.is_video
-            assert submission.title == "Test Title"
-
-    async def test_submit_video__without_websockets(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for file_name in ("test.mov", "test.mp4"):
-            video = image_path(file_name)
-            submission = await subreddit.submit_video(
-                "Test Title", video, without_websockets=True
-            )
-            assert submission is None
-
-    async def test_subscribe(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.subscribe()
-
-    async def test_subscribe__multiple(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.subscribe(
-            other_subreddits=["redditdev", await reddit.subreddit("iama")]
-        )
-
-    async def test_traffic(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        traffic = await subreddit.traffic()
-        assert isinstance(traffic, dict)
-
-    async def test_traffic__not_public(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("announcements")
-        with pytest.raises(NotFound):
-            await subreddit.traffic()
-
-    async def test_unsubscribe(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.unsubscribe()
-
-    async def test_unsubscribe__multiple(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.unsubscribe(
-            other_subreddits=["redditdev", await reddit.subreddit("iama")]
-        )
-
-
 class TestSubredditFilters(IntegrationTest):
     async def test__aiter__all(self, reddit):
         reddit.read_only = False
@@ -1010,18 +252,23 @@ class TestSubredditFlairTemplates(IntegrationTest):
             text_color="dark",
         )
 
-    async def test_update_invalid(self, reddit):
+    async def test_update_false(self, reddit):
         reddit.read_only = False
-        with pytest.raises(InvalidFlairTemplateID):
-            subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-            await subreddit.flair.templates.update(
-                "fake id",
-                background_color="#00FFFF",
-                css_class="myCSS",
-                fetch=True,
-                text="PRAW updated",
-                text_color="dark",
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        template = next(iter(await self.async_list(subreddit.flair.templates)))
+        await subreddit.flair.templates.update(
+            template["id"], fetch=True, text_editable=True
+        )
+        await subreddit.flair.templates.update(
+            template["id"], fetch=True, text_editable=False
+        )
+        newtemplate = list(
+            filter(
+                lambda _template: _template["id"] == template["id"],
+                [flair async for flair in subreddit.flair.templates],
             )
+        )[0]
+        assert newtemplate["text_editable"] is False
 
     async def test_update_fetch(self, reddit):
         reddit.read_only = False
@@ -1084,23 +331,18 @@ class TestSubredditFlairTemplates(IntegrationTest):
         )[0]
         assert newtemplate == template
 
-    async def test_update_false(self, reddit):
+    async def test_update_invalid(self, reddit):
         reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        template = next(iter(await self.async_list(subreddit.flair.templates)))
-        await subreddit.flair.templates.update(
-            template["id"], fetch=True, text_editable=True
-        )
-        await subreddit.flair.templates.update(
-            template["id"], fetch=True, text_editable=False
-        )
-        newtemplate = list(
-            filter(
-                lambda _template: _template["id"] == template["id"],
-                [flair async for flair in subreddit.flair.templates],
+        with pytest.raises(InvalidFlairTemplateID):
+            subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+            await subreddit.flair.templates.update(
+                "fake id",
+                background_color="#00FFFF",
+                css_class="myCSS",
+                fetch=True,
+                text="PRAW updated",
+                text_color="dark",
             )
-        )[0]
-        assert newtemplate["text_editable"] is False
 
 
 class TestSubredditLinkFlairTemplates(IntegrationTest):
@@ -1390,6 +632,64 @@ class TestSubredditModeration(IntegrationTest):
         assert before_settings == after_settings
 
 
+class TestSubredditModerationStreams(IntegrationTest):
+    async def test_edited(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.edited()
+        for i in range(101):
+            assert isinstance(await self.async_next(generator), (Comment, Submission))
+
+    async def test_log(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.log()
+        for i in range(101):
+            assert isinstance(await self.async_next(generator), ModAction)
+
+    async def test_modmail_conversations(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.modmail_conversations()
+        for i in range(101):
+            assert isinstance(await self.async_next(generator), ModmailConversation)
+
+    async def test_modqueue(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.modqueue()
+        for i in range(10):
+            assert isinstance(await self.async_next(generator), (Comment, Submission))
+
+    async def test_reports(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.reports()
+        for i in range(10):
+            assert isinstance(await self.async_next(generator), (Comment, Submission))
+
+    async def test_spam(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.spam()
+        for i in range(101):
+            assert isinstance(await self.async_next(generator), (Comment, Submission))
+
+    async def test_unmoderated(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.unmoderated()
+        for i in range(101):
+            assert isinstance(await self.async_next(generator), (Comment, Submission))
+
+    async def test_unread(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        generator = subreddit.mod.stream.unread()
+        for i in range(2):
+            assert isinstance(await self.async_next(generator), SubredditMessage)
+
+
 class TestSubredditModmail(IntegrationTest):
     async def test_bulk_read(self, reddit):
         reddit.read_only = False
@@ -1520,16 +820,16 @@ class TestSubredditRelationships(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await self._add_remove(subreddit, "contributor", self.REDDITOR)
 
-    async def test_contributor_leave(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.contributor.leave()
-
     async def test_contributor__user_filter(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         contributor = subreddit.contributor(redditor="pyapitestuser3")
         assert len(await self.async_list(contributor)) == 1
+
+    async def test_contributor_leave(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.contributor.leave()
 
     async def test_moderator(self, reddit):
         reddit.read_only = False
@@ -1540,12 +840,6 @@ class TestSubredditRelationships(IntegrationTest):
         await subreddit.moderator.add(self.REDDITOR)
         assert self.REDDITOR not in await subreddit.moderator()
 
-    async def test_moderator_aiter(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        async for moderator in subreddit.moderator:
-            assert isinstance(moderator, Redditor)
-
     async def test_moderator__limited_permissions(self, reddit):
         reddit.read_only = False
         # Moderators can only be invited.
@@ -1554,6 +848,19 @@ class TestSubredditRelationships(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.moderator.add(self.REDDITOR, permissions=["access", "wiki"])
         assert self.REDDITOR not in await subreddit.moderator()
+
+    async def test_moderator__user_filter(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        moderator = await subreddit.moderator(redditor=pytest.placeholders.username)
+        assert len(moderator) == 1
+        assert "mod_permissions" in moderator[0].__dict__
+
+    async def test_moderator_aiter(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        async for moderator in subreddit.moderator:
+            assert isinstance(moderator, Redditor)
 
     async def test_moderator_invite__invalid_perm(self, reddit):
         reddit.read_only = False
@@ -1584,6 +891,11 @@ class TestSubredditRelationships(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.moderator.leave()
 
+    async def test_moderator_remove_invite(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.moderator.remove_invite(self.REDDITOR)
+
     async def test_moderator_update(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1596,22 +908,10 @@ class TestSubredditRelationships(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.moderator.update_invite(self.REDDITOR, permissions=["mail"])
 
-    async def test_moderator__user_filter(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        moderator = await subreddit.moderator(redditor=pytest.placeholders.username)
-        assert len(moderator) == 1
-        assert "mod_permissions" in moderator[0].__dict__
-
     async def test_muted(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await self._add_remove(subreddit, "muted", self.REDDITOR)
-
-    async def test_moderator_remove_invite(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.moderator.remove_invite(self.REDDITOR)
 
     async def test_wiki_banned(self, reddit):
         reddit.read_only = False
@@ -1685,64 +985,6 @@ class TestSubredditStreams(IntegrationTest):
         assert submission_count < 100
 
 
-class TestSubredditModerationStreams(IntegrationTest):
-    async def test_edited(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.edited()
-        for i in range(101):
-            assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_log(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.log()
-        for i in range(101):
-            assert isinstance(await self.async_next(generator), ModAction)
-
-    async def test_modmail_conversations(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.modmail_conversations()
-        for i in range(101):
-            assert isinstance(await self.async_next(generator), ModmailConversation)
-
-    async def test_modqueue(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.modqueue()
-        for i in range(10):
-            assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_spam(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.spam()
-        for i in range(101):
-            assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_reports(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.reports()
-        for i in range(10):
-            assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_unmoderated(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.unmoderated()
-        for i in range(101):
-            assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_unread(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.unread()
-        for i in range(2):
-            assert isinstance(await self.async_next(generator), SubredditMessage)
-
-
 class TestSubredditStylesheet(IntegrationTest):
     async def test_call(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1776,15 +1018,15 @@ class TestSubredditStylesheet(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.stylesheet.delete_image("praw")
 
-    async def test_delete_mobile_header(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.delete_mobile_header()
-
     async def test_delete_mobile_banner(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.stylesheet.delete_mobile_banner()
+
+    async def test_delete_mobile_header(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.delete_mobile_header()
 
     async def test_delete_mobile_icon(self, reddit):
         reddit.read_only = False
@@ -1827,106 +1069,6 @@ class TestSubredditStylesheet(IntegrationTest):
             )
         assert excinfo.value.items[0].error_type == "BAD_CSS_NAME"
 
-    async def test_upload__too_large(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        with pytest.raises(TooLarge):
-            await subreddit.stylesheet.upload(
-                name="asyncpraw", image_path=image_path("too_large.jpg")
-            )
-
-    async def test_upload_banner__jpg(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner(image_path("white-square.jpg"))
-
-    async def test_upload_banner__png(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner(image_path("white-square.png"))
-
-    async def test_upload_banner_additional_image__jpg(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(
-            image_path("white-square.jpg")
-        )
-
-    async def test_upload_banner_additional_image__png(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(
-            image_path("white-square.png")
-        )
-
-    async def test_upload_banner_additional_image__align(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        for alignment in ("left", "centered", "right"):
-            await subreddit.stylesheet.upload_banner_additional_image(
-                image_path("white-square.png"), align=alignment
-            )
-
-    async def test_upload_banner_hover_image__jpg(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(
-            image_path("white-square.png")
-        )
-        await subreddit.stylesheet.upload_banner_hover_image(
-            image_path("white-square.jpg")
-        )
-
-    async def test_upload_banner_hover_image__png(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(
-            image_path("white-square.jpg")
-        )
-        await subreddit.stylesheet.upload_banner_hover_image(
-            image_path("white-square.png")
-        )
-
-    async def test_upload_mobile_banner__jpg(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.jpg"))
-
-    async def test_upload_mobile_banner__png(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.png"))
-
-    async def test_upload_header__jpg(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_header(
-            image_path("white-square.jpg")
-        )
-        assert response["img_src"].endswith(".jpg")
-
-    async def test_upload_header__png(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_header(
-            image_path("white-square.png")
-        )
-        assert response["img_src"].endswith(".png")
-
-    async def test_upload_mobile_header(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_mobile_header(
-            image_path("header.jpg")
-        )
-        assert response["img_src"].endswith(".jpg")
-
-    async def test_upload_mobile_icon(self, image_path, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_mobile_icon(image_path("icon.jpg"))
-        assert response["img_src"].endswith(".jpg")
-
     async def test_upload__others_invalid(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1952,6 +1094,106 @@ class TestSubredditStylesheet(IntegrationTest):
                     subreddit.stylesheet,
                     method,
                 )(image_path("too_large.jpg"))
+
+    async def test_upload__too_large(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        with pytest.raises(TooLarge):
+            await subreddit.stylesheet.upload(
+                name="asyncpraw", image_path=image_path("too_large.jpg")
+            )
+
+    async def test_upload_banner__jpg(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_banner(image_path("white-square.jpg"))
+
+    async def test_upload_banner__png(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_banner(image_path("white-square.png"))
+
+    async def test_upload_banner_additional_image__align(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for alignment in ("left", "centered", "right"):
+            await subreddit.stylesheet.upload_banner_additional_image(
+                image_path("white-square.png"), align=alignment
+            )
+
+    async def test_upload_banner_additional_image__jpg(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_banner_additional_image(
+            image_path("white-square.jpg")
+        )
+
+    async def test_upload_banner_additional_image__png(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_banner_additional_image(
+            image_path("white-square.png")
+        )
+
+    async def test_upload_banner_hover_image__jpg(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_banner_additional_image(
+            image_path("white-square.png")
+        )
+        await subreddit.stylesheet.upload_banner_hover_image(
+            image_path("white-square.jpg")
+        )
+
+    async def test_upload_banner_hover_image__png(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_banner_additional_image(
+            image_path("white-square.jpg")
+        )
+        await subreddit.stylesheet.upload_banner_hover_image(
+            image_path("white-square.png")
+        )
+
+    async def test_upload_header__jpg(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        response = await subreddit.stylesheet.upload_header(
+            image_path("white-square.jpg")
+        )
+        assert response["img_src"].endswith(".jpg")
+
+    async def test_upload_header__png(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        response = await subreddit.stylesheet.upload_header(
+            image_path("white-square.png")
+        )
+        assert response["img_src"].endswith(".png")
+
+    async def test_upload_mobile_banner__jpg(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.jpg"))
+
+    async def test_upload_mobile_banner__png(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.png"))
+
+    async def test_upload_mobile_header(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        response = await subreddit.stylesheet.upload_mobile_header(
+            image_path("header.jpg")
+        )
+        assert response["img_src"].endswith(".jpg")
+
+    async def test_upload_mobile_icon(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        response = await subreddit.stylesheet.upload_mobile_icon(image_path("icon.jpg"))
+        assert response["img_src"].endswith(".jpg")
 
 
 class TestSubredditWiki(IntegrationTest):
@@ -1983,3 +1225,761 @@ class TestSubredditWiki(IntegrationTest):
             assert isinstance(revision["author"], Redditor)
             assert isinstance(revision["page"], WikiPage)
         assert count == 2
+
+
+class WebsocketMock:
+    POST_URL = "https://reddit.com/r/<TEST_SUBREDDIT>/comments/{}/test_title/"
+
+    @classmethod
+    def make_dict(cls, post_id):
+        return {"payload": {"redirect": cls.POST_URL.format(post_id)}}
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def __init__(self, *post_ids):
+        self.post_ids = post_ids
+        self.i = -1
+
+    async def receive_json(self):
+        if not self.post_ids:
+            raise WebSocketError(0, "")
+        assert 0 <= self.i + 1 < len(self.post_ids)
+        self.i += 1
+        return self.make_dict(self.post_ids[self.i])
+
+
+class TestSubreddit(IntegrationTest):
+    async def test_create(self, reddit):
+        reddit.read_only = False
+        new_name = pytest.placeholders.test_subreddit
+        subreddit = await reddit.subreddit.create(
+            new_name,
+            link_type="any",
+            subreddit_type="public",
+            title="Sub",
+            wikimode="disabled",
+            wiki_edit_age=0,
+            wiki_edit_karma=0,
+            comment_score_hide_mins=0,
+        )
+        assert subreddit.display_name == new_name
+        assert subreddit.submission_type == "any"
+
+    async def test_create__exists(self, reddit):
+        reddit.read_only = False
+        with pytest.raises(RedditAPIException) as excinfo:
+            await reddit.subreddit.create(
+                "redditdev",
+                link_type="any",
+                subreddit_type="public",
+                title="redditdev",
+                wikimode="disabled",
+            )
+        assert excinfo.value.items[0].error_type == "SUBREDDIT_EXISTS"
+
+    async def test_create__invalid_parameter(self, reddit):
+        reddit.read_only = False
+        with pytest.raises(RedditAPIException) as excinfo:
+            # Supplying invalid setting for link_type
+            await reddit.subreddit.create(
+                "PRAW_iavynavff2",
+                link_type="abcd",
+                subreddit_type="public",
+                title="sub",
+                wikimode="disabled",
+            )
+        assert excinfo.value.items[0].error_type == "INVALID_OPTION"
+
+    async def test_create__missing_parameter(self, reddit):
+        reddit.read_only = False
+        with pytest.raises(RedditAPIException) as excinfo:
+            # Not supplying required field wiki_edit_age.
+            await reddit.subreddit.create(
+                "PRAW_iavynavff3",
+                link_type="any",
+                subreddit_type="public",
+                title=None,
+                wikimode="disabled",
+                wiki_edit_karma=0,
+                comment_score_hide_mins=0,
+            )
+        assert excinfo.value.items[0].error_type == "BAD_NUMBER"
+
+    async def test_message(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.message(subject="Test from Async PRAW", message="Test content")
+
+    async def test_post_requirements(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        data = await subreddit.post_requirements()
+        tags = [
+            "domain_blacklist",
+            "body_restriction_policy",
+            "domain_whitelist",
+            "title_regexes",
+            "body_blacklisted_strings",
+            "body_required_strings",
+            "title_text_min_length",
+            "is_flair_required",
+            "title_text_max_length",
+            "body_regexes",
+            "link_repost_age",
+            "body_text_min_length",
+            "link_restriction_policy",
+            "body_text_max_length",
+            "title_required_strings",
+            "title_blacklisted_strings",
+            "guidelines_text",
+            "guidelines_display_policy",
+        ]
+        assert list(data) == tags
+
+    async def test_random(self, reddit):
+        subreddit = await reddit.subreddit("pics")
+        submissions = [
+            await subreddit.random(),
+            await subreddit.random(),
+            await subreddit.random(),
+            await subreddit.random(),
+        ]
+        assert len(submissions) == len(set(submissions))
+
+    async def test_random__returns_none(self, reddit):
+        subreddit = await reddit.subreddit("wallpapers")
+        assert await subreddit.random() is None
+
+    async def test_search(self, reddit):
+        subreddit = await reddit.subreddit("all")
+        async for item in subreddit.search(
+            "praw oauth search", syntax="cloudsearch", limit=None
+        ):
+            assert isinstance(item, Submission)
+
+    async def test_sticky(self, reddit):
+        subreddit = await reddit.subreddit("pics")
+        submission = await subreddit.sticky()
+        assert isinstance(submission, Submission)
+
+    async def test_sticky__not_set(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        with pytest.raises(NotFound):
+            await subreddit.sticky(number=2)
+
+    async def test_submit__flair(self, reddit):
+        flair_id = "94f13282-e2e8-11e8-8291-0eae4e167256"
+        flair_text = "AF"
+        flair_class = ""
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit(
+            "Test Title",
+            flair_id=flair_id,
+            flair_text=flair_text,
+            selftext="Test text.",
+        )
+        await submission.load()
+        assert submission.link_flair_css_class == flair_class
+        assert submission.link_flair_text == flair_text
+
+    async def test_submit__nsfw(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit(
+            "Test Title", nsfw=True, selftext="Test text."
+        )
+        await submission.load()
+        assert submission.over_18 is True
+
+    async def test_submit__selftext(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit("Test Title", selftext="Test text.")
+        await submission.load()
+        assert submission.author == pytest.placeholders.username
+        assert submission.selftext == "Test text."
+        assert submission.title == "Test Title"
+
+    async def test_submit__selftext_blank(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit("Test Title", selftext="")
+        await submission.load()
+        assert submission.author == pytest.placeholders.username
+        assert submission.selftext == ""
+        assert submission.title == "Test Title"
+
+    async def test_submit__selftext_inline_media(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        gif = InlineGif(image_path("test.gif"), "optional caption")
+        image = InlineImage(image_path("test.png"), "optional caption")
+        video = InlineVideo(image_path("test.mp4"), "optional caption")
+        selftext = (
+            "Text with a gif {gif1} an image {image1} and a video {video1} inline"
+        )
+        media = {"gif1": gif, "image1": image, "video1": video}
+        submission = await subreddit.submit(
+            "title", inline_media=media, selftext=selftext
+        )
+        await submission.load()
+        assert submission.author == pytest.placeholders.username
+        assert (
+            submission.selftext == "Text with a gif\n\n[optional"
+            " caption](https://i.redd.it/s1i7ejqkgdc61.gif)\n\nan"
+            " image\n\n[optional"
+            " caption](https://preview.redd.it/95pza2skgdc61.png?width=128&format=png&auto=webp&s=c81d303645d9792afcdb9c47f0a6039708714274)\n\nand"
+            " a video\n\n[optional"
+            " caption](https://reddit.com/link/l0vyxc/video/qeg2azskgdc61/player)\n\ninline"
+        )
+        assert submission.title == "title"
+
+    async def test_submit__spoiler(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit(
+            "Test Title", selftext="Test text.", spoiler=True
+        )
+        await submission.load()
+        assert submission.spoiler is True
+
+    async def test_submit__url(self, reddit):
+        url = "https://asyncpraw.readthedocs.org/en/stable/"
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit("Test Title", url=url)
+        await submission.load()
+        assert submission.author == pytest.placeholders.username
+        assert submission.url == url
+        assert submission.title == "Test Title"
+
+    async def test_submit__verify_invalid(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        reddit.validate_on_submit = True
+        with pytest.raises(
+            (RedditAPIException, BadRequest)
+        ):  # waiting for prawcore fix
+            await subreddit.submit("dfgfdgfdgdf", url="https://www.google.com")
+
+    async def test_submit_gallery(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        images = [
+            {"image_path": image_path("test.png")},
+            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+            {
+                "image_path": image_path("test.gif"),
+                "outbound_url": "https://example.com",
+            },
+            {
+                "image_path": image_path("test.png"),
+                "caption": "test.png",
+                "outbound_url": "https://example.com",
+            },
+        ]
+
+        submission = await subreddit.submit_gallery("Test Title", images)
+        assert submission.author == pytest.placeholders.username
+        assert submission.is_gallery
+        assert submission.title == "Test Title"
+        items = submission.gallery_data["items"]
+        assert isinstance(submission.gallery_data["items"], list)
+        for i, item in enumerate(items):
+            test_data = images[i]
+            test_data.pop("image_path")
+            item.pop("id")
+            item.pop("media_id")
+            assert item == test_data
+
+    async def test_submit_gallery__disabled(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        images = [
+            {"image_path": image_path("test.png")},
+            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+            {
+                "image_path": image_path("test.gif"),
+                "outbound_url": "https://example.com",
+            },
+            {
+                "image_path": image_path("test.png"),
+                "caption": "test.png",
+                "outbound_url": "https://example.com",
+            },
+        ]
+
+        with pytest.raises(RedditAPIException):
+            await subreddit.submit_gallery("Test Title", images)
+
+    async def test_submit_gallery__flair(self, image_path, reddit):
+        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
+        flair_text = "test"
+        flair_class = "test-flair-class"
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        images = [
+            {"image_path": image_path("test.png")},
+            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+            {
+                "image_path": image_path("test.gif"),
+                "outbound_url": "https://example.com",
+            },
+            {
+                "image_path": image_path("test.png"),
+                "caption": "test.png",
+                "outbound_url": "https://example.com",
+            },
+        ]
+        submission = await subreddit.submit_gallery(
+            "Test Title", images, flair_id=flair_id, flair_text=flair_text
+        )
+        assert submission.link_flair_css_class == flair_class
+        assert submission.link_flair_text == flair_text
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            return_value=WebsocketMock(
+                "l6eqw6", "l6er3r", "l6erfu"  # update with cassette
+            ),
+        ),
+    )
+    async def test_submit_image(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for i, file_name in enumerate(("test.png", "test.jpg", "test.gif")):
+            image = image_path(file_name)
+            submission = await subreddit.submit_image(f"Test Title {i}", image)
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
+            assert submission.is_reddit_media_domain
+            assert submission.title == f"Test Title {i}"
+
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock()),
+    )
+    async def test_submit_image__bad_websocket(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.png", "test.jpg"):
+            image = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_image("Test Title", image)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock("l6evpd")),
+    )  # update with cassette
+    async def test_submit_image__flair(self, image_path, reddit):
+        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
+        flair_text = "Test flair text"
+        flair_class = ""
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        submission = await subreddit.submit_image(
+            "Test Title", image, flair_id=flair_id, flair_text=flair_text
+        )
+        await submission.load()
+        assert submission.link_flair_css_class == flair_class
+        assert submission.link_flair_text == flair_text
+
+    async def test_submit_image__large(self, reddit, tmp_path):
+        reddit.read_only = False
+        mock_data = (
+            '<?xml version="1.0" encoding="UTF-8"?>'
+            "<Error>"
+            "<Code>EntityTooLarge</Code>"
+            "<Message>Your proposed upload exceeds the maximum allowed size</Message>"
+            "<ProposedSize>20971528</ProposedSize>"
+            "<MaxSizeAllowed>20971520</MaxSizeAllowed>"
+            "<RequestId>23F056D6990D87E0</RequestId>"
+            "<HostId>iYEVOuRfbLiKwMgHt2ewqQRIm0NWL79uiC2rPLj9P0PwW55MhjY2/O8d9JdKTf1iwzLjwWMnGQ=</HostId>"
+            "</Error>"
+        )
+        _post = reddit._core._requestor._http.post
+
+        async def patch_request(url, *args, **kwargs):
+            """Patch requests to return mock data on specific url."""
+            if "https://reddit-uploaded-media.s3-accelerate.amazonaws.com" in url:
+                response = ClientResponse
+                response.text = mock_data
+                response.status = 400
+                return response
+            return await _post(url, *args, **kwargs)
+
+        reddit._core._requestor._http.post = patch_request
+
+        fake_png = PNG_HEADER + b"\x1a" * 10  # Normally 1024 ** 2 * 20 (20 MB)
+        with open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
+            tempfile.write(fake_png)
+        with pytest.raises(TooLargeMediaException):
+            subreddit = await reddit.subreddit("test")
+            await subreddit.submit_image("test", tempfile.name)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(side_effect=BlockingIOError),
+    )  # happens with timeout=0
+    async def test_submit_image__timeout_1(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_image("Test Title", image)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            side_effect=socket.timeout
+            # happens with timeout=0.00001
+        ),
+    )
+    async def test_submit_image__timeout_2(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_image("Test Title", image)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            side_effect=TimeoutError,
+            # could happen but Async PRAW should handle it
+        ),
+    )
+    async def test_submit_image__timeout_3(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_image("Test Title", image)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            side_effect=WebSocketError(None, None),
+            # could happen but Async PRAW should handle it
+        ),
+    )
+    async def test_submit_image__timeout_4(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_image("Test Title", image)
+
+    async def test_submit_image__without_websockets(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.png", "test.jpg", "test.gif"):
+            image = image_path(file_name)
+            submission = await subreddit.submit_image(
+                "Test Title", image, without_websockets=True
+            )
+            assert submission is None
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock("l6ey7j")),
+    )  # update with cassette
+    async def test_submit_image_chat(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        submission = await subreddit.submit_image(
+            "Test Title", image, discussion_type="CHAT"
+        )
+        await submission.load()
+        assert submission.discussion_type == "CHAT"
+
+    async def test_submit_image_verify_invalid(self, image_path, reddit):
+        reddit.read_only = False
+        reddit.validate_on_submit = True
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.jpg")
+        with pytest.raises(
+            (RedditAPIException, BadRequest)
+        ):  # waiting for prawcore fix
+            await subreddit.submit_image(
+                "gdfgfdgdgdgfgfdgdfgfdgfdg", image, without_websockets=True
+            )
+
+    async def test_submit_live_chat(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit(
+            "Test Title", discussion_type="CHAT", selftext=""
+        )
+        await submission.load()
+        assert submission.discussion_type == "CHAT"
+
+    async def test_submit_poll(self, reddit):
+        options = ["Yes", "No", "3", "4", "5", "6"]
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit_poll(
+            "Test Poll", duration=6, options=options, selftext="Test poll text."
+        )
+        await submission.load()
+        assert submission.author == pytest.placeholders.username
+        assert submission.selftext.startswith("Test poll text.")
+        assert submission.title == "Test Poll"
+        assert [str(option) for option in submission.poll_data.options] == options
+        assert submission.poll_data.voting_end_timestamp > submission.created_utc
+
+    async def test_submit_poll__flair(self, reddit):
+        flair_id = "94f13282-e2e8-11e8-8291-0eae4e167256"
+        flair_text = "AF"
+        flair_class = ""
+        options = ["Yes", "No"]
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit_poll(
+            "Test Poll",
+            duration=6,
+            flair_id=flair_id,
+            flair_text=flair_text,
+            options=options,
+            selftext="Test poll text.",
+        )
+        await submission.load()
+        assert submission.link_flair_text == flair_text
+        assert submission.link_flair_css_class == flair_class
+
+    async def test_submit_poll__live_chat(self, reddit):
+        options = ["Yes", "No"]
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit_poll(
+            "Test Poll",
+            discussion_type="CHAT",
+            duration=2,
+            options=options,
+            selftext="",
+        )
+        await submission.load()
+        assert submission.discussion_type == "CHAT"
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            return_value=WebsocketMock("l6g58s", "l6g5al"),  # update with cassette
+        ),
+    )
+    async def test_submit_video(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for i, file_name in enumerate(("test.mov", "test.mp4")):
+            video = image_path(file_name)
+            submission = await subreddit.submit_video(f"Test Title {i}", video)
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
+            # assert submission.is_reddit_media_domain
+            # for some reason returns false
+            assert submission.title == f"Test Title {i}"
+
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock()),
+    )
+    async def test_submit_video__bad_websocket(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.mov", "test.mp4"):
+            video = image_path(file_name)
+            with pytest.raises(ClientException):
+                await subreddit.submit_video("Test Title", video)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock("l6g771")),
+    )  # update with cassette
+    async def test_submit_video__flair(self, image_path, reddit):
+        flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
+        flair_text = "Test flair text"
+        flair_class = ""
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        submission = await subreddit.submit_video(
+            "Test Title", video, flair_id=flair_id, flair_text=flair_text
+        )
+        assert submission.link_flair_css_class == flair_class
+        assert submission.link_flair_text == flair_text
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            return_value=WebsocketMock("l6gvvi", "l6gvx7"),  # update with cassette
+        ),
+    )
+    async def test_submit_video__thumbnail(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for video_name, thumb_name in (
+            ("test.mov", "test.jpg"),
+            ("test.mp4", "test.png"),
+        ):
+            video = image_path(video_name)
+            thumb = image_path(thumb_name)
+            submission = await subreddit.submit_video(
+                "Test Title", video, thumbnail_path=thumb
+            )
+            await submission.load()
+            assert submission.author == pytest.placeholders.username
+            assert submission.is_video
+            assert submission.title == "Test Title"
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(side_effect=BlockingIOError),
+    )  # happens with timeout=0
+    async def test_submit_video__timeout_1(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_video("Test Title", video)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            side_effect=socket.timeout
+            # happens with timeout=0.00001
+        ),
+    )
+    async def test_submit_video__timeout_2(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_video("Test Title", video)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            side_effect=TimeoutError,
+            # could happen, and Async PRAW should handle it
+        ),
+    )
+    async def test_submit_video__timeout_3(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_video("Test Title", video)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            side_effect=WebSocketError(None, None),
+            # could happen, and Async PRAW should handle it
+        ),
+    )
+    async def test_submit_video__timeout_4(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        with pytest.raises(WebSocketException):
+            await subreddit.submit_video("Test Title", video)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            return_value=WebsocketMock("l6gtwa", "l6gty1"),  # update with cassette
+        ),
+    )
+    async def test_submit_video__videogif(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.mov", "test.mp4"):
+            video = image_path(file_name)
+            submission = await subreddit.submit_video(
+                "Test Title", video, videogif=True
+            )
+            assert submission.author == pytest.placeholders.username
+            assert submission.is_video
+            assert submission.title == "Test Title"
+
+    async def test_submit_video__without_websockets(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for file_name in ("test.mov", "test.mp4"):
+            video = image_path(file_name)
+            submission = await subreddit.submit_video(
+                "Test Title", video, without_websockets=True
+            )
+            assert submission is None
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock("l6gocy")),
+    )  # update with cassette
+    async def test_submit_video_chat(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        submission = await subreddit.submit_video(
+            "Test Title", video, discussion_type="CHAT"
+        )
+        await submission.load()
+        assert submission.discussion_type == "CHAT"
+
+    async def test_submit_video_verify_invalid(self, image_path, reddit):
+        reddit.read_only = False
+        reddit.validate_on_submit = True
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        video = image_path("test.mov")
+        with pytest.raises(
+            (RedditAPIException, BadRequest)
+        ):  # waiting for prawcore fix
+            await subreddit.submit_video(
+                "gdfgfdgdgdgfgfdgdfgfdgfdg", video, without_websockets=True
+            )
+
+    async def test_subscribe(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.subscribe()
+
+    async def test_subscribe__multiple(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.subscribe(
+            other_subreddits=["redditdev", await reddit.subreddit("iama")]
+        )
+
+    async def test_traffic(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        traffic = await subreddit.traffic()
+        assert isinstance(traffic, dict)
+
+    async def test_traffic__not_public(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("announcements")
+        with pytest.raises(NotFound):
+            await subreddit.traffic()
+
+    async def test_unsubscribe(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.unsubscribe()
+
+    async def test_unsubscribe__multiple(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        await subreddit.unsubscribe(
+            other_subreddits=["redditdev", await reddit.subreddit("iama")]
+        )

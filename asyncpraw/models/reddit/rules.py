@@ -61,6 +61,15 @@ class Rule(RedditBase):
         """
         return RuleModeration(self)
 
+    def __getattribute__(self, attribute: str) -> Any:
+        """Get the value of an attribute."""
+        value = super().__getattribute__(attribute)
+        if attribute == "subreddit" and value is None:
+            raise ValueError(
+                "The Rule is missing a subreddit. File a bug report at Async PRAW."
+            )
+        return value
+
     def __init__(
         self,
         reddit: "asyncpraw.Reddit",
@@ -79,15 +88,6 @@ class Rule(RedditBase):
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
-    def __getattribute__(self, attribute: str) -> Any:
-        """Get the value of an attribute."""
-        value = super().__getattribute__(attribute)
-        if attribute == "subreddit" and value is None:
-            raise ValueError(
-                "The Rule is missing a subreddit. File a bug report at Async PRAW."
-            )
-        return value
-
     async def _fetch(self):
         async for rule in self.subreddit.rules:
             if rule.short_name == self.short_name:
@@ -97,172 +97,6 @@ class Rule(RedditBase):
         raise ClientException(
             f"Subreddit {self.subreddit} does not have the rule {self.short_name}"
         )
-
-
-class SubredditRules:
-    """Provide a set of functions to access a :class:`.Subreddit`'s rules.
-
-    For example, to list all the rules for a subreddit:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        async for rule in subreddit.rules:
-            print(rule)
-
-    Moderators can also add rules to the subreddit. For example, to make a rule called
-    ``"No spam"`` in r/test:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        await subreddit.rules.mod.add(
-            short_name="No spam", kind="all", description="Do not spam. Spam bad"
-        )
-
-    """
-
-    @cachedproperty
-    def mod(self) -> "SubredditRulesModeration":
-        """Contain methods to moderate subreddit rules as a whole.
-
-        To add rule ``"No spam"`` to r/test try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            await subreddit.rules.mod.add(
-                short_name="No spam", kind="all", description="Do not spam. Spam bad"
-            )
-
-        To move the fourth rule to the first position, and then to move the prior first
-        rule to where the third rule originally was in r/test:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            rules = [rule async for rule in subreddit.rules]
-            new_rules = rules[3:4] + rules[1:3] + rules[0:1] + rules[4:]
-            # Alternate: [rules[3]] + rules[1:3] + [rules[0]] + rules[4:]
-            new_rule_list = await subreddit.rules.mod.reorder(new_rules)
-
-        """
-        return SubredditRulesModeration(self)
-
-    async def __call__(self) -> List["asyncpraw.models.Rule"]:
-        r"""Return a list of :class:`.Rule`\ s (Deprecated).
-
-        :returns: A list of instances of :class:`.Rule`.
-
-        .. deprecated:: 7.1
-
-            Use the iterator by removing the call to :class:`.SubredditRules`. For
-            example, in order to use the iterator:
-
-            .. code-block:: python
-
-                subreddit = await reddit.subreddit("test")
-                async for rule in subreddit.rules:
-                    print(rule)
-
-        """
-        warn(
-            "Calling SubredditRules to get a list of rules is deprecated. Remove the"
-            " parentheses to use the iterator. View the Async PRAW documentation on how"
-            " to change the code in order to use the iterator"
-            " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__).",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return await self._reddit.request(
-            method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit)
-        )
-
-    async def get_rule(
-        self, short_name: Union[str, int, slice]
-    ) -> "asyncpraw.models.Rule":
-        """Return the :class:`.Rule` for the subreddit with short_name ``short_name``.
-
-        :param short_name: The short_name of the rule, or the rule number.
-
-        This method is to be used to fetch a specific rule, like so:
-
-        .. code-block:: python
-
-            rule_name = "No spam"
-            subreddit = await reddit.subreddit("test")
-            rule = await subreddit.rules.get_rule(rule_name)
-            print(rule)
-
-        You can also fetch a numbered rule of a subreddit.
-
-        Rule numbers start at ``0``, so the first rule is at index ``0``, and the second
-        rule is at index ``1``, and so on.
-
-        :raises: :py:class:`IndexError` if a rule of a specific number does not exist.
-
-        .. note::
-
-            You can use negative indexes, such as ``-1``, to get the last rule. You can
-            also use slices, to get a subset of rules, such as the last three rules with
-            ``get_rule(slice(-3, None))``.
-
-        For example, to fetch the second rule of r/test:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            rule = await subreddit.rules.get_rule(1)
-
-        """
-        if not isinstance(short_name, str):
-            rules = await self._rule_list()
-            return rules[short_name]
-        rule = Rule(self._reddit, subreddit=self.subreddit, short_name=short_name)
-        await rule._fetch()
-        return rule
-
-    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
-        """Initialize a :class:`.SubredditRules` instance.
-
-        :param subreddit: The subreddit whose rules to work with.
-
-        """
-        self.subreddit = subreddit
-        self._reddit = subreddit._reddit
-
-    async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Rule"]:
-        """Iterate through the rules of the subreddit.
-
-        :returns: An asynchronous iterator containing all the rules of a subreddit.
-
-        This method is used to discover all rules for a subreddit.
-
-        For example, to get the rules for r/test:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            async for rule in subreddit.rules:
-                print(rule)
-
-        """
-        rules = await self._rule_list()
-        for rule in rules:
-            yield rule
-
-    async def _rule_list(self) -> List[Rule]:
-        """Get a list of :class:`.Rule` objects.
-
-        :returns: A list of instances of :class:`.Rule`.
-
-        """
-        rule_list = await self._reddit.get(
-            API_PATH["rules"].format(subreddit=self.subreddit)
-        )
-        for rule in rule_list:
-            rule.subreddit = self.subreddit
-        return rule_list
 
 
 class RuleModeration:
@@ -357,6 +191,172 @@ class RuleModeration:
         updated_rule = response[0]
         updated_rule.subreddit = self.rule.subreddit
         return updated_rule
+
+
+class SubredditRules:
+    """Provide a set of functions to access a :class:`.Subreddit`'s rules.
+
+    For example, to list all the rules for a subreddit:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        async for rule in subreddit.rules:
+            print(rule)
+
+    Moderators can also add rules to the subreddit. For example, to make a rule called
+    ``"No spam"`` in r/test:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        await subreddit.rules.mod.add(
+            short_name="No spam", kind="all", description="Do not spam. Spam bad"
+        )
+
+    """
+
+    @cachedproperty
+    def mod(self) -> "SubredditRulesModeration":
+        """Contain methods to moderate subreddit rules as a whole.
+
+        To add rule ``"No spam"`` to r/test try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            await subreddit.rules.mod.add(
+                short_name="No spam", kind="all", description="Do not spam. Spam bad"
+            )
+
+        To move the fourth rule to the first position, and then to move the prior first
+        rule to where the third rule originally was in r/test:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            rules = [rule async for rule in subreddit.rules]
+            new_rules = rules[3:4] + rules[1:3] + rules[0:1] + rules[4:]
+            # Alternate: [rules[3]] + rules[1:3] + [rules[0]] + rules[4:]
+            new_rule_list = await subreddit.rules.mod.reorder(new_rules)
+
+        """
+        return SubredditRulesModeration(self)
+
+    async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Rule"]:
+        """Iterate through the rules of the subreddit.
+
+        :returns: An asynchronous iterator containing all the rules of a subreddit.
+
+        This method is used to discover all rules for a subreddit.
+
+        For example, to get the rules for r/test:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            async for rule in subreddit.rules:
+                print(rule)
+
+        """
+        rules = await self._rule_list()
+        for rule in rules:
+            yield rule
+
+    async def __call__(self) -> List["asyncpraw.models.Rule"]:
+        r"""Return a list of :class:`.Rule`\ s (Deprecated).
+
+        :returns: A list of instances of :class:`.Rule`.
+
+        .. deprecated:: 7.1
+
+            Use the iterator by removing the call to :class:`.SubredditRules`. For
+            example, in order to use the iterator:
+
+            .. code-block:: python
+
+                subreddit = await reddit.subreddit("test")
+                async for rule in subreddit.rules:
+                    print(rule)
+
+        """
+        warn(
+            "Calling SubredditRules to get a list of rules is deprecated. Remove the"
+            " parentheses to use the iterator. View the Async PRAW documentation on how"
+            " to change the code in order to use the iterator"
+            " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__).",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return await self._reddit.request(
+            method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit)
+        )
+
+    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
+        """Initialize a :class:`.SubredditRules` instance.
+
+        :param subreddit: The subreddit whose rules to work with.
+
+        """
+        self.subreddit = subreddit
+        self._reddit = subreddit._reddit
+
+    async def _rule_list(self) -> List[Rule]:
+        """Get a list of :class:`.Rule` objects.
+
+        :returns: A list of instances of :class:`.Rule`.
+
+        """
+        rule_list = await self._reddit.get(
+            API_PATH["rules"].format(subreddit=self.subreddit)
+        )
+        for rule in rule_list:
+            rule.subreddit = self.subreddit
+        return rule_list
+
+    async def get_rule(
+        self, short_name: Union[str, int, slice]
+    ) -> "asyncpraw.models.Rule":
+        """Return the :class:`.Rule` for the subreddit with short_name ``short_name``.
+
+        :param short_name: The short_name of the rule, or the rule number.
+
+        This method is to be used to fetch a specific rule, like so:
+
+        .. code-block:: python
+
+            rule_name = "No spam"
+            subreddit = await reddit.subreddit("test")
+            rule = await subreddit.rules.get_rule(rule_name)
+            print(rule)
+
+        You can also fetch a numbered rule of a subreddit.
+
+        Rule numbers start at ``0``, so the first rule is at index ``0``, and the second
+        rule is at index ``1``, and so on.
+
+        :raises: :py:class:`IndexError` if a rule of a specific number does not exist.
+
+        .. note::
+
+            You can use negative indexes, such as ``-1``, to get the last rule. You can
+            also use slices, to get a subset of rules, such as the last three rules with
+            ``get_rule(slice(-3, None))``.
+
+        For example, to fetch the second rule of r/test:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            rule = await subreddit.rules.get_rule(1)
+
+        """
+        if not isinstance(short_name, str):
+            rules = await self._rule_list()
+            return rules[short_name]
+        rule = Rule(self._reddit, subreddit=self.subreddit, short_name=short_name)
+        await rule._fetch()
+        return rule
 
 
 class SubredditRulesModeration:

@@ -7,18 +7,31 @@ from ... import UnitTest
 
 
 class TestSubmission(UnitTest):
-    def test_equality(self, reddit):
-        submission1 = Submission(reddit, _data={"id": "dummy1", "n": 1})
-        submission2 = Submission(reddit, _data={"id": "Dummy1", "n": 2})
-        submission3 = Submission(reddit, _data={"id": "dummy3", "n": 2})
-        assert submission1 == submission1
-        assert submission2 == submission2
-        assert submission3 == submission3
-        assert submission1 == submission2
-        assert submission2 != submission3
-        assert submission1 != submission3
-        assert "dummy1" == submission1
-        assert submission2 == "dummy1"
+    @pytest.mark.filterwarnings("error", category=UserWarning)
+    async def test_comment_sort_warning(self, reddit):
+        with pytest.raises(UserWarning) as excinfo:
+            submission = await reddit.submission("1234", fetch=False)
+            submission._fetched = True
+            submission.comment_sort = "new"
+        assert (
+            excinfo.value.args[0]
+            == "The comments for this submission have already been fetched, "
+            "so the updated comment_sort will not have any effect"
+        )
+
+    @pytest.mark.filterwarnings("error", category=UserWarning)
+    @pytest.mark.usefixtures("caplog", "reddit")
+    async def test_comment_sort_warning__disabled(self, caplog, reddit):
+        reddit.config.warn_comment_sort = False
+        submission = await reddit.submission("1234", fetch=False)
+        submission._fetched = True
+        submission.comment_sort = "new"
+        assert caplog.records == []
+
+    async def test_comment_unfetched(self, reddit):
+        with pytest.raises(TypeError):
+            submission = await reddit.submission("1234", fetch=False)
+            submission.comments.list()
 
     def test_construct_failure(self, reddit):
         message = "Exactly one of 'id', 'url', or '_data' must be provided."
@@ -47,34 +60,21 @@ class TestSubmission(UnitTest):
         with pytest.raises(ValueError):
             Submission(reddit, url="")
 
-    @pytest.mark.filterwarnings("error", category=UserWarning)
-    async def test_comment_sort_warning(self, reddit):
-        with pytest.raises(UserWarning) as excinfo:
-            submission = await reddit.submission("1234", fetch=False)
-            submission._fetched = True
-            submission.comment_sort = "new"
-        assert (
-            excinfo.value.args[0]
-            == "The comments for this submission have already been fetched, "
-            "so the updated comment_sort will not have any effect"
-        )
-
-    @pytest.mark.filterwarnings("error", category=UserWarning)
-    @pytest.mark.usefixtures("caplog", "reddit")
-    async def test_comment_sort_warning__disabled(self, caplog, reddit):
-        reddit.config.warn_comment_sort = False
-        submission = await reddit.submission("1234", fetch=False)
-        submission._fetched = True
-        submission.comment_sort = "new"
-        assert caplog.records == []
-
-    async def test_comment_unfetched(self, reddit):
-        with pytest.raises(TypeError):
-            submission = await reddit.submission("1234", fetch=False)
-            submission.comments.list()
-
     def test_construct_from_url(self, reddit):
         assert Submission(reddit, url="http://my.it/2gmzqe") == "2gmzqe"
+
+    def test_equality(self, reddit):
+        submission1 = Submission(reddit, _data={"id": "dummy1", "n": 1})
+        submission2 = Submission(reddit, _data={"id": "Dummy1", "n": 2})
+        submission3 = Submission(reddit, _data={"id": "dummy3", "n": 2})
+        assert submission1 == submission1
+        assert submission2 == submission2
+        assert submission3 == submission3
+        assert submission1 == submission2
+        assert submission2 != submission3
+        assert submission1 != submission3
+        assert "dummy1" == submission1
+        assert submission2 == "dummy1"
 
     def test_fullname(self, reddit):
         submission = Submission(reddit, _data={"id": "dummy"})
@@ -125,10 +125,10 @@ class TestSubmission(UnitTest):
         submission = Submission(reddit, id="2gmzqe")
         assert repr(submission) == "Submission(id='2gmzqe')"
 
-    def test_str(self, reddit):
-        submission = Submission(reddit, _data={"id": "dummy"})
-        assert str(submission) == "dummy"
-
     def test_shortlink(self, reddit):
         submission = Submission(reddit, _data={"id": "dummy"})
         assert submission.shortlink == "https://redd.it/dummy"
+
+    def test_str(self, reddit):
+        submission = Submission(reddit, _data={"id": "dummy"})
+        assert str(submission) == "dummy"

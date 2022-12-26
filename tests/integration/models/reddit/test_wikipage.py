@@ -14,6 +14,68 @@ def large_content():
         return urlsafe_b64encode(fp.read()).decode()
 
 
+class TestWikiPageModeration(IntegrationTest):
+    async def test_add(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        reddit.read_only = False
+        page = await subreddit.wiki.get_page("index")
+        await page.mod.add("Lil_SpazTest")
+
+    async def test_remove(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        reddit.read_only = False
+        page = await subreddit.wiki.get_page("index")
+        await page.mod.remove("Lil_SpazTest")
+
+    async def test_revert(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        page = WikiPage(reddit, subreddit, "test")
+
+        reddit.read_only = False
+        revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
+        revision = await page.revision(revision_id)
+        await revision.mod.revert()
+
+    async def test_revert_css_fail(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        reddit.read_only = False
+        page = await subreddit.wiki.get_page("config/stylesheet")
+        await subreddit.stylesheet.upload(
+            name="css-revert-fail",
+            image_path="tests/integration/files/icon.jpg",
+        )
+        await page.edit(content="div {background: url(%%css-revert-fail%%)}")
+        revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
+        await subreddit.stylesheet.delete_image("css-revert-fail")
+        with pytest.raises(Forbidden) as exc:
+            revision = await page.revision(revision_id)
+            await revision.mod.revert()
+        assert await exc.value.response.json() == {
+            "reason": "INVALID_CSS",
+            "message": "Forbidden",
+            "explanation": "%(css_error)s",
+        }
+
+    async def test_settings(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        reddit.read_only = False
+        page = await subreddit.wiki.get_page("index")
+        settings = await page.mod.settings()
+        assert {"editors": [], "listed": True, "permlevel": 0} == settings
+
+    async def test_update(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+
+        reddit.read_only = False
+        page = await subreddit.wiki.get_page("index")
+        updated = await page.mod.update(listed=False, permlevel=1)
+        assert {"editors": [], "listed": False, "permlevel": 1} == updated
+
+
 class TestWikiPage(IntegrationTest):
     async def test_content_md(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -82,17 +144,17 @@ class TestWikiPage(IntegrationTest):
         with pytest.raises(NotFound):
             await subreddit.wiki.get_page("invalid")
 
-    async def test_revision_by(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = await subreddit.wiki.get_page("index")
-        assert isinstance(page.revision_by, Redditor)
-
     async def test_revision(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         revision_id = "08a4ddfa-c000-11ea-999f-0e1fd5dedea1"
         page = await subreddit.wiki.get_page("index")
         revision = await page.revision(revision_id)
         assert len(revision.content_md) > 0
+
+    async def test_revision_by(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        page = await subreddit.wiki.get_page("index")
+        assert isinstance(page.revision_by, Redditor)
 
     async def test_revisions(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -110,65 +172,3 @@ class TestWikiPage(IntegrationTest):
         assert any(
             [revision["author"] is None async for revision in page.revisions(limit=10)]
         )
-
-
-class TestWikiPageModeration(IntegrationTest):
-    async def test_add(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-
-        reddit.read_only = False
-        page = await subreddit.wiki.get_page("index")
-        await page.mod.add("Lil_SpazTest")
-
-    async def test_remove(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-
-        reddit.read_only = False
-        page = await subreddit.wiki.get_page("index")
-        await page.mod.remove("Lil_SpazTest")
-
-    async def test_revert(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        page = WikiPage(reddit, subreddit, "test")
-
-        reddit.read_only = False
-        revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
-        revision = await page.revision(revision_id)
-        await revision.mod.revert()
-
-    async def test_revert_css_fail(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-
-        reddit.read_only = False
-        page = await subreddit.wiki.get_page("config/stylesheet")
-        await subreddit.stylesheet.upload(
-            name="css-revert-fail",
-            image_path="tests/integration/files/icon.jpg",
-        )
-        await page.edit(content="div {background: url(%%css-revert-fail%%)}")
-        revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
-        await subreddit.stylesheet.delete_image("css-revert-fail")
-        with pytest.raises(Forbidden) as exc:
-            revision = await page.revision(revision_id)
-            await revision.mod.revert()
-        assert await exc.value.response.json() == {
-            "reason": "INVALID_CSS",
-            "message": "Forbidden",
-            "explanation": "%(css_error)s",
-        }
-
-    async def test_settings(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-
-        reddit.read_only = False
-        page = await subreddit.wiki.get_page("index")
-        settings = await page.mod.settings()
-        assert {"editors": [], "listed": True, "permlevel": 0} == settings
-
-    async def test_update(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-
-        reddit.read_only = False
-        page = await subreddit.wiki.get_page("index")
-        updated = await page.mod.update(listed=False, permlevel=1)
-        assert {"editors": [], "listed": False, "permlevel": 1} == updated

@@ -2,23 +2,6 @@ from .. import IntegrationTest
 
 
 class TestPreferences(IntegrationTest):
-    async def test_view(self, reddit):
-        some_known_keys = {
-            "allow_clicktracking",
-            "default_comment_sort",
-            "hide_from_robots",
-            "lang",
-            "no_profanity",
-            "over_18",
-            "public_votes",
-            "show_link_flair",
-        }
-
-        reddit.read_only = False
-        prefs_dict = await reddit.user.preferences()
-        assert isinstance(prefs_dict, dict)
-        assert some_known_keys.issubset(prefs_dict)
-
     async def test_update(self, reddit):
         # boolean params, as many as are reproducible on multiple accounts.
         bool_params = (
@@ -99,3 +82,20 @@ class TestPreferences(IntegrationTest):
             assert response[param] == values[0]
             response = await preferences.update(**{param: values[1]})
             assert response[param] == values[1]
+
+    async def test_view(self, reddit):
+        some_known_keys = {
+            "allow_clicktracking",
+            "default_comment_sort",
+            "hide_from_robots",
+            "lang",
+            "no_profanity",
+            "over_18",
+            "public_votes",
+            "show_link_flair",
+        }
+
+        reddit.read_only = False
+        prefs_dict = await reddit.user.preferences()
+        assert isinstance(prefs_dict, dict)
+        assert some_known_keys.issubset(prefs_dict)

@@ -265,18 +265,6 @@ class WikiPage(RedditBase):
         """Return a string representation of the instance."""
         return f"{self.subreddit}/{self.name}"
 
-    def _fetch_info(self):
-        return (
-            "wiki_page",
-            {"subreddit": self.subreddit, "page": self.name},
-            {"v": self._revision} if self._revision else None,
-        )
-
-    async def _fetch_data(self):
-        name, fields, params = self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
-
     async def _fetch(self):
         data = await self._fetch_data()
         data = data["data"]
@@ -287,29 +275,16 @@ class WikiPage(RedditBase):
         self.__dict__.update(data)
         self._fetched = True
 
-    @_deprecate_args("content", "reason")
-    async def edit(
-        self, *, content: str, reason: Optional[str] = None, **other_settings: Any
-    ):
-        """Edit this wiki page's contents.
+    async def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
-        :param content: The updated Markdown content of the page.
-        :param reason: The reason for the revision.
-        :param other_settings: Additional keyword arguments to pass.
-
-        For example, to replace the first wiki page of r/test with the phrase ``"test
-        wiki page"``:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("test", fetch=False)
-            await page.edit(content="test wiki page")
-
-        """
-        other_settings.update({"content": content, "page": self.name, "reason": reason})
-        await self._reddit.post(
-            API_PATH["wiki_edit"].format(subreddit=self.subreddit), data=other_settings
+    def _fetch_info(self):
+        return (
+            "wiki_page",
+            {"subreddit": self.subreddit, "page": self.name},
+            {"v": self._revision} if self._revision else None,
         )
 
     def discussions(
@@ -338,6 +313,31 @@ class WikiPage(RedditBase):
                 subreddit=self.subreddit, page=self.name
             ),
             **generator_kwargs,
+        )
+
+    @_deprecate_args("content", "reason")
+    async def edit(
+        self, *, content: str, reason: Optional[str] = None, **other_settings: Any
+    ):
+        """Edit this wiki page's contents.
+
+        :param content: The updated Markdown content of the page.
+        :param reason: The reason for the revision.
+        :param other_settings: Additional keyword arguments to pass.
+
+        For example, to replace the first wiki page of r/test with the phrase ``"test
+        wiki page"``:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            page = await subreddit.wiki.get_page("test", fetch=False)
+            await page.edit(content="test wiki page")
+
+        """
+        other_settings.update({"content": content, "page": self.name, "reason": reason})
+        await self._reddit.post(
+            API_PATH["wiki_edit"].format(subreddit=self.subreddit), data=other_settings
         )
 
     async def revision(self, revision: str):

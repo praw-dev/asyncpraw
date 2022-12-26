@@ -23,6 +23,22 @@ class DraftHelper(AsyncPRAWBase):
 
     """
 
+    async def __aiter__(self):
+        r"""Iterate through all the :class:`.Draft`\ s.
+
+        :returns: An asynchronous iterator containing all the currently authenticated
+            user's :class:`.Draft`\ s.
+
+        .. code-block:: python
+
+            async for draft in reddit.drafts:
+                print(draft)
+
+        """
+        drafts = await self._draft_list()
+        for draft in drafts:
+            yield draft
+
     async def __call__(
         self, draft_id: Optional[str] = None, fetch: bool = True
     ) -> Union[List["asyncpraw.models.Draft"], "asyncpraw.models.Draft"]:
@@ -51,22 +67,6 @@ class DraftHelper(AsyncPRAWBase):
                 await draft.load()
             return draft
         return await self._draft_list()
-
-    async def __aiter__(self):
-        r"""Iterate through all the :class:`.Draft`\ s.
-
-        :returns: An asynchronous iterator containing all the currently authenticated
-            user's :class:`.Draft`\ s.
-
-        .. code-block:: python
-
-            async for draft in reddit.drafts:
-                print(draft)
-
-        """
-        drafts = await self._draft_list()
-        for draft in drafts:
-            yield draft
 
     async def _draft_list(self) -> List["asyncpraw.models.Draft"]:
         """Get a list of :class:`.Draft` instances.
@@ -180,6 +180,37 @@ class LiveHelper(AsyncPRAWBase):
             await live_thread._fetch()
         return live_thread
 
+    @_deprecate_args("title", "description", "nsfw", "resources")
+    async def create(
+        self,
+        title: str,
+        *,
+        description: Optional[str] = None,
+        nsfw: bool = False,
+        resources: str = None,
+    ) -> "asyncpraw.models.LiveThread":
+        """Create a new :class:`.LiveThread`.
+
+        :param title: The title of the new :class:`.LiveThread`.
+        :param description: The new :class:`.LiveThread`'s description.
+        :param nsfw: Indicate whether this thread is not safe for work (default:
+            ``False``).
+        :param resources: Markdown formatted information that is useful for the
+            :class:`.LiveThread`.
+
+        :returns: The new :class:`.LiveThread` object.
+
+        """
+        return await self._reddit.post(
+            API_PATH["livecreate"],
+            data={
+                "description": description,
+                "nsfw": nsfw,
+                "resources": resources,
+                "title": title,
+            },
+        )
+
     def info(
         self, ids: List[str]
     ) -> AsyncGenerator["asyncpraw.models.LiveThread", None]:
@@ -223,37 +254,6 @@ class LiveHelper(AsyncPRAWBase):
                     yield result
 
         return generator()
-
-    @_deprecate_args("title", "description", "nsfw", "resources")
-    async def create(
-        self,
-        title: str,
-        *,
-        description: Optional[str] = None,
-        nsfw: bool = False,
-        resources: str = None,
-    ) -> "asyncpraw.models.LiveThread":
-        """Create a new :class:`.LiveThread`.
-
-        :param title: The title of the new :class:`.LiveThread`.
-        :param description: The new :class:`.LiveThread`'s description.
-        :param nsfw: Indicate whether this thread is not safe for work (default:
-            ``False``).
-        :param resources: Markdown formatted information that is useful for the
-            :class:`.LiveThread`.
-
-        :returns: The new :class:`.LiveThread` object.
-
-        """
-        return await self._reddit.post(
-            API_PATH["livecreate"],
-            data={
-                "description": description,
-                "nsfw": nsfw,
-                "resources": resources,
-                "title": title,
-            },
-        )
 
     async def now(self) -> Optional["asyncpraw.models.LiveThread"]:
         """Get the currently featured live thread.

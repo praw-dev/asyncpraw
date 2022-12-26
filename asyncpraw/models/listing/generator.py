@@ -21,6 +21,22 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
     """
 
+    def __aiter__(self) -> AsyncIterator[Any]:
+        """Permit :class:`.ListingGenerator` to operate as an async iterator."""
+        return self
+
+    async def __anext__(self) -> Any:
+        """Permit :class:`.ListingGenerator` to operate as a async generator."""
+        if self.limit is not None and self.yielded >= self.limit:
+            raise StopAsyncIteration()
+
+        if self._listing is None or self._list_index >= len(self._listing):
+            await self._next_batch()
+
+        self._list_index += 1
+        self.yielded += 1
+        return self._listing[self._list_index - 1]
+
     def __init__(
         self,
         reddit: "asyncpraw.Reddit",
@@ -49,22 +65,6 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         self.params["limit"] = limit or 1024
         self.url = url
         self.yielded = 0
-
-    def __aiter__(self) -> AsyncIterator[Any]:
-        """Permit :class:`.ListingGenerator` to operate as an async iterator."""
-        return self
-
-    async def __anext__(self) -> Any:
-        """Permit :class:`.ListingGenerator` to operate as a async generator."""
-        if self.limit is not None and self.yielded >= self.limit:
-            raise StopAsyncIteration()
-
-        if self._listing is None or self._list_index >= len(self._listing):
-            await self._next_batch()
-
-        self._list_index += 1
-        self.yielded += 1
-        return self._listing[self._list_index - 1]
 
     def _extract_sublist(self, listing):
         if isinstance(listing, list):

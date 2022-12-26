@@ -495,11 +495,6 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             raise InvalidURL(url)
         return submission_id
 
-    @property
-    def _kind(self) -> str:
-        """Return the class's kind."""
-        return self._reddit.config.kinds["submission"]
-
     @cachedproperty
     def flair(self) -> SubmissionFlair:
         """Provide an instance of :class:`.SubmissionFlair`.
@@ -532,6 +527,11 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         """
         return SubmissionModeration(self)
+
+    @property
+    def _kind(self) -> str:
+        """Return the class's kind."""
+        return self._reddit.config.kinds["submission"]
 
     @property
     def shortlink(self) -> str:
@@ -638,18 +638,6 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         for position in range(0, len(all_submissions), chunk_size):
             yield ",".join(all_submissions[position : position + 50])
 
-    def _fetch_info(self):
-        return (
-            "submission",
-            {"id": self.id},
-            {"limit": self.comment_limit, "sort": self.comment_sort},
-        )
-
-    async def _fetch_data(self):
-        name, fields, params = self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
-
     async def _fetch(self):
         data = await self._fetch_data()
         submission_listing, comment_listing = data
@@ -665,75 +653,17 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         self._fetched = True
         self.comments._update(comment_listing.children)
 
-    async def mark_visited(self):
-        """Mark submission as visited.
+    async def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
-        This method requires a subscription to reddit premium.
-
-        Example usage:
-
-        .. code-block:: python
-
-            submission = await reddit.submission("5or86n", fetch=False)
-            await submission.mark_visited()
-
-        """
-        data = {"links": self.fullname}
-        await self._reddit.post(API_PATH["store_visits"], data=data)
-
-    @_deprecate_args("other_submissions")
-    async def hide(
-        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
-    ):
-        """Hide :class:`.Submission`.
-
-        :param other_submissions: When provided, additionally hide this list of
-            :class:`.Submission` instances as part of a single request (default:
-            ``None``).
-
-        Example usage:
-
-        .. code-block:: python
-
-            submission = await reddit.submission("5or86n", fetch=False)
-            await submission.hide()
-
-        .. seealso::
-
-            :meth:`.unhide`
-
-        """
-        for submissions in self._chunk(
-            chunk_size=50, other_submissions=other_submissions
-        ):
-            await self._reddit.post(API_PATH["hide"], data={"id": submissions})
-
-    @_deprecate_args("other_submissions")
-    async def unhide(
-        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
-    ):
-        """Unhide :class:`.Submission`.
-
-        :param other_submissions: When provided, additionally unhide this list of
-            :class:`.Submission` instances as part of a single request (default:
-            ``None``).
-
-        Example usage:
-
-        .. code-block:: python
-
-            submission = await reddit.submission("5or86n", fetch=False)
-            await submission.unhide()
-
-        .. seealso::
-
-            :meth:`.hide`
-
-        """
-        for submissions in self._chunk(
-            chunk_size=50, other_submissions=other_submissions
-        ):
-            await self._reddit.post(API_PATH["unhide"], data={"id": submissions})
+    def _fetch_info(self):
+        return (
+            "submission",
+            {"id": self.id},
+            {"limit": self.comment_limit, "sort": self.comment_sort},
+        )
 
     @_deprecate_args(
         "subreddit",
@@ -806,6 +736,76 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
                 data[key] = value
 
         return await self._reddit.post(API_PATH["submit"], data=data)
+
+    @_deprecate_args("other_submissions")
+    async def hide(
+        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+    ):
+        """Hide :class:`.Submission`.
+
+        :param other_submissions: When provided, additionally hide this list of
+            :class:`.Submission` instances as part of a single request (default:
+            ``None``).
+
+        Example usage:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("5or86n", fetch=False)
+            await submission.hide()
+
+        .. seealso::
+
+            :meth:`.unhide`
+
+        """
+        for submissions in self._chunk(
+            chunk_size=50, other_submissions=other_submissions
+        ):
+            await self._reddit.post(API_PATH["hide"], data={"id": submissions})
+
+    async def mark_visited(self):
+        """Mark submission as visited.
+
+        This method requires a subscription to reddit premium.
+
+        Example usage:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("5or86n", fetch=False)
+            await submission.mark_visited()
+
+        """
+        data = {"links": self.fullname}
+        await self._reddit.post(API_PATH["store_visits"], data=data)
+
+    @_deprecate_args("other_submissions")
+    async def unhide(
+        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+    ):
+        """Unhide :class:`.Submission`.
+
+        :param other_submissions: When provided, additionally unhide this list of
+            :class:`.Submission` instances as part of a single request (default:
+            ``None``).
+
+        Example usage:
+
+        .. code-block:: python
+
+            submission = await reddit.submission("5or86n", fetch=False)
+            await submission.unhide()
+
+        .. seealso::
+
+            :meth:`.hide`
+
+        """
+        for submissions in self._chunk(
+            chunk_size=50, other_submissions=other_submissions
+        ):
+            await self._reddit.post(API_PATH["unhide"], data={"id": submissions})
 
 
 Subreddit._submission_class = Submission

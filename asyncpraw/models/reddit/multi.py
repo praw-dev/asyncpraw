@@ -104,6 +104,18 @@ class Multireddit(SubredditListingMixin, RedditBase):
         if not self._author._fetched:
             await self._author._fetch()
 
+    async def _fetch(self):
+        data = await self._fetch_data()
+        data = data["data"]
+        other = type(self)(self._reddit, _data=data)
+        self.__dict__.update(other.__dict__)
+        self._fetched = True
+
+    async def _fetch_data(self):
+        name, fields, params = await self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
+
     async def _fetch_info(self):
         await self._ensure_author_fetched()
         return (
@@ -111,18 +123,6 @@ class Multireddit(SubredditListingMixin, RedditBase):
             {"multi": self.name, "user": self._author.name},
             None,
         )
-
-    async def _fetch_data(self):
-        name, fields, params = await self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
-
-    async def _fetch(self):
-        data = await self._fetch_data()
-        data = data["data"]
-        other = type(self)(self._reddit, _data=data)
-        self.__dict__.update(other.__dict__)
-        self._fetched = True
 
     async def add(self, subreddit: "asyncpraw.models.Subreddit"):
         """Add a subreddit to this multireddit.

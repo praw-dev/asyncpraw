@@ -9,6 +9,15 @@ from .. import IntegrationTest
 
 
 class TestCommentForest(IntegrationTest):
+    async def test_comment_forest_refresh_error(self, reddit):
+        reddit.read_only = False
+        submission = await self.async_next(reddit.front.top())
+        submission.comment_limit = 1
+        await submission.load()
+        await submission.comments[1].comments()
+        with pytest.raises(DuplicateReplaceException):
+            await submission.comments.replace_more(limit=1)
+
     async def test_replace__all(self, reddit):
         submission = await reddit.submission("3hahrw")
         before_count = len(submission.comments.list())
@@ -41,10 +50,22 @@ class TestCommentForest(IntegrationTest):
         assert len(skipped) == 0
         assert len(submission.comments.list()) >= 500
 
-    async def test_replace__skip_at_limit(self, reddit):
+    async def test_replace__on_comment_from_submission(self, reddit):
         submission = await reddit.submission("3hahrw")
-        skipped = await submission.comments.replace_more(limit=1)
-        assert len(skipped) == 5
+        types = [type(x) for x in submission.comments.list()]
+        assert types.count(Comment) == 527
+        assert types.count(MoreComments) == 6
+        assert (await submission.comments[0].replies.replace_more()) == []
+        types = [type(x) for x in submission.comments.list()]
+        assert types.count(Comment) == 531
+        assert types.count(MoreComments) == 3
+
+    async def test_replace__on_direct_comment(self, reddit):
+        comment = await reddit.comment("d8r4im1", fetch=False)
+        await comment.refresh()
+        assert any(isinstance(x, MoreComments) for x in comment.replies.list())
+        await comment.replies.replace_more()
+        assert all(isinstance(x, Comment) for x in comment.replies.list())
 
     # def test_replace__skip_below_threshold(self, reddit): # FIXME: not currently working; same with praw
     #     submission = await reddit.submission("3hahrw")
@@ -64,28 +85,7 @@ class TestCommentForest(IntegrationTest):
         after_count = len(submission.comments.list())
         assert before_count == after_count + len(skipped)
 
-    async def test_replace__on_comment_from_submission(self, reddit):
+    async def test_replace__skip_at_limit(self, reddit):
         submission = await reddit.submission("3hahrw")
-        types = [type(x) for x in submission.comments.list()]
-        assert types.count(Comment) == 527
-        assert types.count(MoreComments) == 6
-        assert (await submission.comments[0].replies.replace_more()) == []
-        types = [type(x) for x in submission.comments.list()]
-        assert types.count(Comment) == 531
-        assert types.count(MoreComments) == 3
-
-    async def test_replace__on_direct_comment(self, reddit):
-        comment = await reddit.comment("d8r4im1", fetch=False)
-        await comment.refresh()
-        assert any(isinstance(x, MoreComments) for x in comment.replies.list())
-        await comment.replies.replace_more()
-        assert all(isinstance(x, Comment) for x in comment.replies.list())
-
-    async def test_comment_forest_refresh_error(self, reddit):
-        reddit.read_only = False
-        submission = await self.async_next(reddit.front.top())
-        submission.comment_limit = 1
-        await submission.load()
-        await submission.comments[1].comments()
-        with pytest.raises(DuplicateReplaceException):
-            await submission.comments.replace_more(limit=1)
+        skipped = await submission.comments.replace_more(limit=1)
+        assert len(skipped) == 5

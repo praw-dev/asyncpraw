@@ -6,6 +6,16 @@ from . import UnitTest
 
 
 class TestObjector(UnitTest):
+    def test_check_error(self, reddit):
+        objector = reddit._objector
+        objector.check_error({"asdf": 1})
+
+        error_response = {
+            "json": {"errors": [["USER_REQUIRED", "Please log in to do that.", None]]}
+        }
+        with pytest.raises(RedditAPIException):
+            objector.check_error(error_response)
+
     def test_objectify_returns_None_for_None(self, reddit):
         assert reddit._objector.objectify(None) is None
 
@@ -34,13 +44,3 @@ class TestObjector(UnitTest):
             }
         }
         assert isinstance(objector.parse_error(error_response), RedditAPIException)
-
-    def test_check_error(self, reddit):
-        objector = reddit._objector
-        objector.check_error({"asdf": 1})
-
-        error_response = {
-            "json": {"errors": [["USER_REQUIRED", "Please log in to do that.", None]]}
-        }
-        with pytest.raises(RedditAPIException):
-            objector.check_error(error_response)

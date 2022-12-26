@@ -34,6 +34,38 @@ class Redditors(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["users_new"], **generator_kwargs)
 
+    async def partial_redditors(
+        self, ids: Iterable[str]
+    ) -> AsyncIterator[PartialRedditor]:
+        """Get user summary data by redditor IDs.
+
+        :param ids: An iterable of redditor fullname IDs.
+
+        :returns: A iterator producing :class:`.PartialRedditor` objects.
+
+        Each ID must be prefixed with ``t2_``.
+
+        Invalid IDs are ignored by the server.
+
+        """
+        iterable = iter(ids)
+        while True:
+            chunk = list(islice(iterable, 100))
+            if not chunk:
+                break
+
+            params = {"ids": ",".join(chunk)}
+            try:
+                results = await self._reddit.get(
+                    API_PATH["user_by_fullname"], params=params
+                )
+            except asyncprawcore.exceptions.NotFound:
+                # None of the given IDs matched any Redditor.
+                continue
+
+            for fullname, user_data in results.items():
+                yield PartialRedditor(fullname=fullname, **user_data)
+
     def popular(
         self, **generator_kwargs: Union[str, int, Dict[str, str]]
     ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
@@ -81,35 +113,3 @@ class Redditors(AsyncPRAWBase):
 
         """
         return stream_generator(self.new, **stream_options)
-
-    async def partial_redditors(
-        self, ids: Iterable[str]
-    ) -> AsyncIterator[PartialRedditor]:
-        """Get user summary data by redditor IDs.
-
-        :param ids: An iterable of redditor fullname IDs.
-
-        :returns: A iterator producing :class:`.PartialRedditor` objects.
-
-        Each ID must be prefixed with ``t2_``.
-
-        Invalid IDs are ignored by the server.
-
-        """
-        iterable = iter(ids)
-        while True:
-            chunk = list(islice(iterable, 100))
-            if not chunk:
-                break
-
-            params = {"ids": ",".join(chunk)}
-            try:
-                results = await self._reddit.get(
-                    API_PATH["user_by_fullname"], params=params
-                )
-            except asyncprawcore.exceptions.NotFound:
-                # None of the given IDs matched any Redditor.
-                continue
-
-            for fullname, user_data in results.items():
-                yield PartialRedditor(fullname=fullname, **user_data)

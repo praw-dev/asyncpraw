@@ -86,6 +86,18 @@ class TestRedditor(IntegrationTest):
         else:
             assert False, "sfwpornnetwork not found in multireddits"
 
+    async def test_notes__subreddits(self, reddit):
+        reddit.read_only = False
+        redditor = await reddit.redditor("Lil_SpazTest")
+        notes = await self.async_list(
+            redditor.notes.subreddits(
+                pytest.placeholders.test_subreddit, "Lil_SpazTest"
+            )
+        )
+        assert len(notes) == 2
+        assert notes[0].user == redditor
+        assert notes[1] is None
+
     async def test_stream__comments(self, reddit):
         redditor = await reddit.redditor("AutoModerator")
         generator = redditor.stream.comments()
@@ -121,18 +133,6 @@ class TestRedditor(IntegrationTest):
         friends = await reddit.user.friends()
         redditor = friends[0]
         assert await redditor.unfriend() is None
-
-    async def test_notes__subreddits(self, reddit):
-        reddit.read_only = False
-        redditor = await reddit.redditor("Lil_SpazTest")
-        notes = await self.async_list(
-            redditor.notes.subreddits(
-                pytest.placeholders.test_subreddit, "Lil_SpazTest"
-            )
-        )
-        assert len(notes) == 2
-        assert notes[0].user == redditor
-        assert notes[1] is None
 
 
 class TestRedditorListings(IntegrationTest):

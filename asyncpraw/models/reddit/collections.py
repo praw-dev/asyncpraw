@@ -29,6 +29,15 @@ class CollectionModeration(AsyncPRAWBase):
 
     """
 
+    def __init__(self, reddit: "asyncpraw.Reddit", collection_id: str):
+        """Initialize a :class:`.CollectionModeration` instance.
+
+        :param collection_id: The ID of a :class:`.Collection`.
+
+        """
+        super().__init__(reddit, _data=None)
+        self.collection_id = collection_id
+
     def _post_fullname(self, post):
         """Get a post's fullname.
 
@@ -47,15 +56,6 @@ class CollectionModeration(AsyncPRAWBase):
             return Submission(self._reddit, url=post).fullname
         except ClientException:
             return Submission(self._reddit, id=post).fullname
-
-    def __init__(self, reddit: "asyncpraw.Reddit", collection_id: str):
-        """Initialize a :class:`.CollectionModeration` instance.
-
-        :param collection_id: The ID of a :class:`.Collection`.
-
-        """
-        super().__init__(reddit, _data=None)
-        self.collection_id = collection_id
 
     async def add_post(self, submission: "asyncpraw.models.Submission"):
         """Add a post to the collection.
@@ -225,225 +225,6 @@ class CollectionModeration(AsyncPRAWBase):
         )
 
 
-class Collection(RedditBase):
-    """Class to represent a :class:`.Collection`.
-
-    Obtain an instance via:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        collection = await subreddit.collections("some_uuid")
-
-    or
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        collection = await subreddit.collections(
-            permalink="https://reddit.com/r/test/collection/some_uuid"
-        )
-
-    .. include:: ../../typical_attributes.rst
-
-    =================== =============================================================
-    Attribute           Description
-    =================== =============================================================
-    ``author``          The :class:`.Redditor` who created the collection.
-    ``collection_id``   The UUID of the collection.
-    ``created_at_utc``  Time the collection was created, represented in `Unix Time`_.
-    ``description``     The collection description.
-    ``display_layout``  The collection display layout.
-    ``last_update_utc`` Time the collection was last updated, represented in `Unix
-                        Time`_.
-    ``link_ids``        A list of :class:`.Submission` fullnames.
-    ``permalink``       The collection's permalink (to view on the web).
-    ``sorted_links``    An iterable listing of the posts in this collection.
-    ``title``           The title of the collection.
-    =================== =============================================================
-
-    .. _unix time: https://en.wikipedia.org/wiki/Unix_time
-
-    """
-
-    STR_FIELD = "collection_id"
-
-    @cachedproperty
-    def mod(self) -> CollectionModeration:
-        """Get an instance of :class:`.CollectionModeration`.
-
-        Provides access to various methods, including
-        :meth:`~reddit.collections.CollectionModeration.add_post`,
-        :meth:`~reddit.collections.CollectionModeration.delete`,
-        :meth:`~reddit.collections.CollectionModeration.reorder`, and
-        :meth:`~reddit.collections.CollectionModeration.update_title`.
-
-        Example usage:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            collection = await subreddit.collections("some_uuid")
-            await collection.mod.update_title("My new title!")
-
-        """
-        return CollectionModeration(self._reddit, self.collection_id)
-
-    async def subreddit(self) -> "asyncpraw.models.Subreddit":
-        """Get the subreddit that this collection belongs to.
-
-        For example:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            collection = await subreddit.collections("some_uuid")
-            print(await collection.subreddit())
-
-        """
-        async for subreddit in self._reddit.info(fullnames=[self.subreddit_id]):
-            return subreddit
-
-    def __init__(
-        self,
-        reddit: "asyncpraw.Reddit",
-        _data: Dict[str, Any] = None,
-        collection_id: Optional[str] = None,
-        permalink: Optional[str] = None,
-    ):
-        """Initialize a :class:`.Collection` instance.
-
-        :param reddit: An instance of :class:`.Reddit`.
-        :param _data: Any data associated with the :class:`.Collection`.
-        :param collection_id: The ID of the :class:`.Collection`.
-        :param permalink: The permalink of the :class:`.Collection`.
-
-        """
-        if (_data, collection_id, permalink).count(None) != 2:
-            raise TypeError(
-                "Exactly one of '_data', 'collection_id', or 'permalink' must be"
-                " provided."
-            )
-
-        if permalink:
-            collection_id = self._url_parts(permalink)[4]
-
-        if collection_id:
-            self.collection_id = collection_id  # set from _data otherwise
-
-        super().__init__(reddit, _data)
-
-        self._info_params = {
-            "collection_id": self.collection_id,
-            "include_links": True,
-        }
-
-    def __iter__(self) -> Generator[Any, None, None]:
-        """Provide a way to iterate over the posts in this :class:`.Collection`.
-
-        Example usage:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            collection = await subreddit.collections("some_uuid")
-            for submission in collection:
-                print(submission.title, submission.permalink)
-
-        """
-        for item in self.sorted_links:
-            yield item
-
-    def __len__(self) -> int:
-        """Get the number of posts in this :class:`.Collection`.
-
-        Example usage:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            collection = await subreddit.collections("some_uuid")
-            print(len(collection))
-
-        """
-        return len(self.link_ids)
-
-    def __setattr__(self, attribute: str, value: Any):
-        """Objectify author, subreddit, and sorted_links attributes."""
-        if attribute == "author_name":
-            self.author = Redditor(self._reddit, name=attribute)
-        elif attribute == "sorted_links":
-            value = self._reddit._objector.objectify(value)
-        super().__setattr__(attribute, value)
-
-    def _fetch_info(self):
-        return "collection", {}, self._info_params
-
-    async def _fetch_data(self):
-        name, fields, params = self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
-
-    async def _fetch(self):
-        data = await self._fetch_data()
-        try:
-            self._reddit._objector.check_error(data)
-        except ClientException:
-            # A well-formed but invalid Collections ID during fetch time
-            # causes Reddit to return something that looks like an error
-            # but with no content.
-            raise ClientException(
-                f"Error during fetch. Check collection ID {self.collection_id!r} is"
-                " correct."
-            )
-
-        other = type(self)(self._reddit, _data=data)
-        self.__dict__.update(other.__dict__)
-        self._fetched = True
-
-    async def follow(self):
-        """Follow this :class:`.Collection`.
-
-        Example usage:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            collection = await subreddit.collections("some_uuid")
-            await collection.follow()
-
-        .. seealso::
-
-            :meth:`.unfollow`
-
-        """
-        await self._reddit.post(
-            API_PATH["collection_follow"],
-            data={"collection_id": self.collection_id, "follow": True},
-        )
-
-    async def unfollow(self):
-        """Unfollow this :class:`.Collection`.
-
-        Example usage:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            collection = await subreddit.collections("some_uuid")
-            await collection.unfollow()
-
-        .. seealso::
-
-            :meth:`.follow`
-
-        """
-        await self._reddit.post(
-            API_PATH["collection_follow"],
-            data={"collection_id": self.collection_id, "follow": False},
-        )
-
-
 class SubredditCollectionsModeration(AsyncPRAWBase):
     r"""Class to represent moderator actions on a :class:`.Subreddit`'s :class:`.Collection`\ s.
 
@@ -548,6 +329,27 @@ class SubredditCollections(AsyncPRAWBase):
         """
         return SubredditCollectionsModeration(self._reddit, self.subreddit)
 
+    async def __aiter__(self):
+        r"""Iterate over the :class:`.Subreddit`'s :class:`.Collection`\ s.
+
+        Example usage:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            async for collection in subreddit.collections:
+                print(collection.permalink)
+
+        """
+        if not self.subreddit._fetched:
+            await self.subreddit._fetch()
+        request = await self._reddit.get(
+            API_PATH["collection_subreddit"],
+            params={"sr_fullname": self.subreddit.fullname},
+        )
+        for collection in request:
+            yield collection
+
     @deprecate_lazy
     async def __call__(
         self,
@@ -614,26 +416,224 @@ class SubredditCollections(AsyncPRAWBase):
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
-    async def __aiter__(self):
-        r"""Iterate over the :class:`.Subreddit`'s :class:`.Collection`\ s.
+
+class Collection(RedditBase):
+    """Class to represent a :class:`.Collection`.
+
+    Obtain an instance via:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        collection = await subreddit.collections("some_uuid")
+
+    or
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        collection = await subreddit.collections(
+            permalink="https://reddit.com/r/test/collection/some_uuid"
+        )
+
+    .. include:: ../../typical_attributes.rst
+
+    =================== =============================================================
+    Attribute           Description
+    =================== =============================================================
+    ``author``          The :class:`.Redditor` who created the collection.
+    ``collection_id``   The UUID of the collection.
+    ``created_at_utc``  Time the collection was created, represented in `Unix Time`_.
+    ``description``     The collection description.
+    ``display_layout``  The collection display layout.
+    ``last_update_utc`` Time the collection was last updated, represented in `Unix
+                        Time`_.
+    ``link_ids``        A list of :class:`.Submission` fullnames.
+    ``permalink``       The collection's permalink (to view on the web).
+    ``sorted_links``    An iterable listing of the posts in this collection.
+    ``title``           The title of the collection.
+    =================== =============================================================
+
+    .. _unix time: https://en.wikipedia.org/wiki/Unix_time
+
+    """
+
+    STR_FIELD = "collection_id"
+
+    @cachedproperty
+    def mod(self) -> CollectionModeration:
+        """Get an instance of :class:`.CollectionModeration`.
+
+        Provides access to various methods, including
+        :meth:`~reddit.collections.CollectionModeration.add_post`,
+        :meth:`~reddit.collections.CollectionModeration.delete`,
+        :meth:`~reddit.collections.CollectionModeration.reorder`, and
+        :meth:`~reddit.collections.CollectionModeration.update_title`.
 
         Example usage:
 
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            async for collection in subreddit.collections:
-                print(collection.permalink)
+            collection = await subreddit.collections("some_uuid")
+            await collection.mod.update_title("My new title!")
 
         """
-        if not self.subreddit._fetched:
-            await self.subreddit._fetch()
-        request = await self._reddit.get(
-            API_PATH["collection_subreddit"],
-            params={"sr_fullname": self.subreddit.fullname},
+        return CollectionModeration(self._reddit, self.collection_id)
+
+    def __init__(
+        self,
+        reddit: "asyncpraw.Reddit",
+        _data: Dict[str, Any] = None,
+        collection_id: Optional[str] = None,
+        permalink: Optional[str] = None,
+    ):
+        """Initialize a :class:`.Collection` instance.
+
+        :param reddit: An instance of :class:`.Reddit`.
+        :param _data: Any data associated with the :class:`.Collection`.
+        :param collection_id: The ID of the :class:`.Collection`.
+        :param permalink: The permalink of the :class:`.Collection`.
+
+        """
+        if (_data, collection_id, permalink).count(None) != 2:
+            raise TypeError(
+                "Exactly one of '_data', 'collection_id', or 'permalink' must be"
+                " provided."
+            )
+
+        if permalink:
+            collection_id = self._url_parts(permalink)[4]
+
+        if collection_id:
+            self.collection_id = collection_id  # set from _data otherwise
+
+        super().__init__(reddit, _data)
+
+        self._info_params = {
+            "collection_id": self.collection_id,
+            "include_links": True,
+        }
+
+    def __iter__(self) -> Generator[Any, None, None]:
+        """Provide a way to iterate over the posts in this :class:`.Collection`.
+
+        Example usage:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            collection = await subreddit.collections("some_uuid")
+            for submission in collection:
+                print(submission.title, submission.permalink)
+
+        """
+        for item in self.sorted_links:
+            yield item
+
+    def __len__(self) -> int:
+        """Get the number of posts in this :class:`.Collection`.
+
+        Example usage:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            collection = await subreddit.collections("some_uuid")
+            print(len(collection))
+
+        """
+        return len(self.link_ids)
+
+    def __setattr__(self, attribute: str, value: Any):
+        """Objectify author, subreddit, and sorted_links attributes."""
+        if attribute == "author_name":
+            self.author = Redditor(self._reddit, name=attribute)
+        elif attribute == "sorted_links":
+            value = self._reddit._objector.objectify(value)
+        super().__setattr__(attribute, value)
+
+    async def _fetch(self):
+        data = await self._fetch_data()
+        try:
+            self._reddit._objector.check_error(data)
+        except ClientException:
+            # A well-formed but invalid Collections ID during fetch time
+            # causes Reddit to return something that looks like an error
+            # but with no content.
+            raise ClientException(
+                f"Error during fetch. Check collection ID {self.collection_id!r} is"
+                " correct."
+            )
+
+        other = type(self)(self._reddit, _data=data)
+        self.__dict__.update(other.__dict__)
+        self._fetched = True
+
+    async def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
+
+    def _fetch_info(self):
+        return "collection", {}, self._info_params
+
+    async def follow(self):
+        """Follow this :class:`.Collection`.
+
+        Example usage:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            collection = await subreddit.collections("some_uuid")
+            await collection.follow()
+
+        .. seealso::
+
+            :meth:`.unfollow`
+
+        """
+        await self._reddit.post(
+            API_PATH["collection_follow"],
+            data={"collection_id": self.collection_id, "follow": True},
         )
-        for collection in request:
-            yield collection
+
+    async def subreddit(self) -> "asyncpraw.models.Subreddit":
+        """Get the subreddit that this collection belongs to.
+
+        For example:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            collection = await subreddit.collections("some_uuid")
+            print(await collection.subreddit())
+
+        """
+        async for subreddit in self._reddit.info(fullnames=[self.subreddit_id]):
+            return subreddit
+
+    async def unfollow(self):
+        """Unfollow this :class:`.Collection`.
+
+        Example usage:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            collection = await subreddit.collections("some_uuid")
+            await collection.unfollow()
+
+        .. seealso::
+
+            :meth:`.follow`
+
+        """
+        await self._reddit.post(
+            API_PATH["collection_follow"],
+            data={"collection_id": self.collection_id, "follow": False},
+        )
 
 
 Subreddit._subreddit_collections_class = SubredditCollections

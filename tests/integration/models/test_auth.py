@@ -7,6 +7,26 @@ from asyncpraw import Reddit
 from .. import IntegrationTest
 
 
+class TestAuthImplicit(IntegrationTest):
+    @pytest.fixture
+    async def reddit(self):
+        async with Reddit(
+            client_id=pytest.placeholders.client_id,
+            client_secret=None,
+            user_agent=pytest.placeholders.user_agent,
+        ) as reddit:
+            yield reddit
+
+    async def test_implicit__with_invalid_token(self, reddit):
+        reddit.auth.implicit(access_token="invalid_token", expires_in=10, scope="read")
+        with pytest.raises(InvalidToken):
+            await reddit.user.me()
+
+    async def test_scopes__read_only(self, reddit):
+        assert reddit.read_only is True
+        assert await reddit.auth.scopes() == {"*"}
+
+
 class TestAuthScript(IntegrationTest):
     async def test_scopes(self, reddit):
         assert reddit.read_only is True
@@ -30,26 +50,6 @@ class TestAuthWeb(IntegrationTest):
         assert isinstance(token, str)
         assert reddit.read_only is False
         assert await reddit.auth.scopes() == {"submit"}
-
-    async def test_scopes__read_only(self, reddit):
-        assert reddit.read_only is True
-        assert await reddit.auth.scopes() == {"*"}
-
-
-class TestAuthImplicit(IntegrationTest):
-    @pytest.fixture
-    async def reddit(self):
-        async with Reddit(
-            client_id=pytest.placeholders.client_id,
-            client_secret=None,
-            user_agent=pytest.placeholders.user_agent,
-        ) as reddit:
-            yield reddit
-
-    async def test_implicit__with_invalid_token(self, reddit):
-        reddit.auth.implicit(access_token="invalid_token", expires_in=10, scope="read")
-        with pytest.raises(InvalidToken):
-            await reddit.user.me()
 
     async def test_scopes__read_only(self, reddit):
         assert reddit.read_only is True

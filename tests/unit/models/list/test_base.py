@@ -6,15 +6,15 @@ from asyncpraw.models.list.base import BaseList
 from ... import UnitTest
 
 
+class Dummy:
+    def __init__(self):
+        self._objector = DummyObjector
+
+
 class DummyObjector:
     @staticmethod
     def objectify(value):
         return value
-
-
-class Dummy:
-    def __init__(self):
-        self._objector = DummyObjector
 
 
 class TestBaseList(UnitTest):
@@ -23,10 +23,6 @@ class TestBaseList(UnitTest):
         _prev_child_attribute = BaseList.CHILD_ATTRIBUTE
         yield
         BaseList.CHILD_ATTRIBUTE = _prev_child_attribute
-
-    def test__init__CHILD_ATTRIBUTE_not_set(self):
-        with pytest.raises(NotImplementedError):
-            BaseList(None, None)
 
     def test__contains__(self):
         BaseList.CHILD_ATTRIBUTE = "asyncpraw"
@@ -41,6 +37,10 @@ class TestBaseList(UnitTest):
         base_list = BaseList(Dummy(), {"asyncpraw": items})
         for i, item in enumerate(items):
             assert item == base_list[i]
+
+    def test__init__CHILD_ATTRIBUTE_not_set(self):
+        with pytest.raises(NotImplementedError):
+            BaseList(None, None)
 
     def test__iter__(self):
         BaseList.CHILD_ATTRIBUTE = "asyncpraw"

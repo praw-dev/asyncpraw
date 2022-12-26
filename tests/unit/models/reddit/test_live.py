@@ -11,18 +11,6 @@ from ... import UnitTest
 
 
 class TestLiveThread(UnitTest):
-    def test_construct_success(self, reddit):
-        thread_id = "ukaeu1ik4sw5"
-        data = {"id": thread_id}
-
-        thread = LiveThread(reddit, thread_id)
-        assert isinstance(thread, LiveThread)
-        assert thread.id == thread_id
-
-        thread = LiveThread(reddit, _data=data)
-        assert isinstance(thread, LiveThread)
-        assert thread.id == thread_id
-
     def test_construct_failure(self, reddit):
         message = "Either 'id' or '_data' must be provided."
         with pytest.raises(TypeError) as excinfo:
@@ -35,6 +23,18 @@ class TestLiveThread(UnitTest):
 
         with pytest.raises(ValueError):
             LiveThread(reddit, "")
+
+    def test_construct_success(self, reddit):
+        thread_id = "ukaeu1ik4sw5"
+        data = {"id": thread_id}
+
+        thread = LiveThread(reddit, thread_id)
+        assert isinstance(thread, LiveThread)
+        assert thread.id == thread_id
+
+        thread = LiveThread(reddit, _data=data)
+        assert isinstance(thread, LiveThread)
+        assert thread.id == thread_id
 
     def test_contrib(self, reddit):
         thread_id = "ukaeu1ik4sw5"
@@ -95,6 +95,23 @@ class TestLiveThreadContribution(UnitTest):
 
 
 class TestLiveUpdate(UnitTest):
+    def test_construct_failure(self, reddit):
+        message = "Either 'thread_id' and 'update_id', or '_data' must be provided."
+        thread_id = "dummy_thread_id"
+        update_id = "dummy_update_id"
+
+        with pytest.raises(TypeError) as excinfo:
+            LiveUpdate(reddit)
+        assert str(excinfo.value) == message
+
+        with pytest.raises(TypeError) as excinfo:
+            LiveUpdate(reddit, thread_id=thread_id)
+        assert str(excinfo.value) == message
+
+        with pytest.raises(TypeError) as excinfo:
+            LiveUpdate(reddit, update_id=update_id)
+        assert str(excinfo.value) == message
+
     def test_construct_success(self, reddit):
         thread_id = "dummy_thread_id"
         update_id = "dummy_update_id"
@@ -116,23 +133,6 @@ class TestLiveUpdate(UnitTest):
         assert isinstance(update, LiveUpdate)
         assert update.id == update_id
         assert update._fetched
-
-    def test_construct_failure(self, reddit):
-        message = "Either 'thread_id' and 'update_id', or '_data' must be provided."
-        thread_id = "dummy_thread_id"
-        update_id = "dummy_update_id"
-
-        with pytest.raises(TypeError) as excinfo:
-            LiveUpdate(reddit)
-        assert str(excinfo.value) == message
-
-        with pytest.raises(TypeError) as excinfo:
-            LiveUpdate(reddit, thread_id=thread_id)
-        assert str(excinfo.value) == message
-
-        with pytest.raises(TypeError) as excinfo:
-            LiveUpdate(reddit, update_id=update_id)
-        assert str(excinfo.value) == message
 
     def test_contrib(self, reddit):
         thread_id = "dummy_thread_id"

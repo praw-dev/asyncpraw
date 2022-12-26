@@ -141,84 +141,6 @@ class Draft(RedditBase):
         """
         await self._reddit.delete(API_PATH["draft"], params={"draft_id": self.id})
 
-    async def update(
-        self,
-        *,
-        flair_id: Optional[str] = None,
-        flair_text: Optional[str] = None,
-        is_public_link: Optional[bool] = None,
-        nsfw: Optional[bool] = None,
-        original_content: Optional[bool] = None,
-        selftext: Optional[str] = None,
-        send_replies: Optional[bool] = None,
-        spoiler: Optional[bool] = None,
-        subreddit: Optional[
-            Union[str, "asyncpraw.models.Subreddit", "asyncpraw.models.UserSubreddit"]
-        ] = None,
-        title: Optional[str] = None,
-        url: Optional[str] = None,
-        **draft_kwargs,
-    ):
-        """Update the :class:`.Draft`.
-
-        .. note::
-
-            Only provided values will be updated.
-
-        :param flair_id: The flair template to select.
-        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
-            this value will set a custom text. ``flair_id`` is required when
-            ``flair_text`` is provided.
-        :param is_public_link: Whether to enable public viewing of the draft before it
-            is submitted.
-        :param nsfw: Whether the draft should be marked NSFW.
-        :param original_content: Whether the submission should be marked as original
-            content.
-        :param selftext: The Markdown formatted content for a text submission draft. Use
-            ``None`` to make a title-only submission draft. ``selftext`` can not be
-            provided if ``url`` is provided.
-        :param send_replies: When ``True``, messages will be sent to the submission
-            author when comments are made to the submission.
-        :param spoiler: Whether the submission should be marked as a spoiler.
-        :param subreddit: The subreddit to create the draft for. This accepts a
-            subreddit display name, :class:`.Subreddit` object, or
-            :class:`.UserSubreddit` object.
-        :param title: The title of the draft.
-        :param url: The URL for a ``link`` submission draft. ``url`` can not be provided
-            if ``selftext`` is provided.
-
-        Additional keyword arguments can be provided to handle new parameters as Reddit
-        introduces them.
-
-        For example, to update the title of a draft do:
-
-        .. code-block:: python
-
-            draft = await reddit.drafts("5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
-            await draft.update(title="New title")
-
-        """
-        if isinstance(subreddit, str):
-            subreddit = await self._reddit.subreddit(subreddit)
-        data = await self._prepare_data(
-            flair_id=flair_id,
-            flair_text=flair_text,
-            is_public_link=is_public_link,
-            nsfw=nsfw,
-            original_content=original_content,
-            selftext=selftext,
-            send_replies=send_replies,
-            spoiler=spoiler,
-            subreddit=subreddit,
-            title=title,
-            url=url,
-            **draft_kwargs,
-        )
-        data["id"] = self.id
-        _new_draft = await self._reddit.put(API_PATH["draft"], data=data)
-        await _new_draft._fetch()
-        self.__dict__.update(_new_draft.__dict__)
-
     async def submit(
         self,
         *,
@@ -310,3 +232,81 @@ class Draft(RedditBase):
         else:
             _subreddit = self.subreddit
         return await _subreddit.submit(**submit_kwargs)
+
+    async def update(
+        self,
+        *,
+        flair_id: Optional[str] = None,
+        flair_text: Optional[str] = None,
+        is_public_link: Optional[bool] = None,
+        nsfw: Optional[bool] = None,
+        original_content: Optional[bool] = None,
+        selftext: Optional[str] = None,
+        send_replies: Optional[bool] = None,
+        spoiler: Optional[bool] = None,
+        subreddit: Optional[
+            Union[str, "asyncpraw.models.Subreddit", "asyncpraw.models.UserSubreddit"]
+        ] = None,
+        title: Optional[str] = None,
+        url: Optional[str] = None,
+        **draft_kwargs,
+    ):
+        """Update the :class:`.Draft`.
+
+        .. note::
+
+            Only provided values will be updated.
+
+        :param flair_id: The flair template to select.
+        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
+            this value will set a custom text. ``flair_id`` is required when
+            ``flair_text`` is provided.
+        :param is_public_link: Whether to enable public viewing of the draft before it
+            is submitted.
+        :param nsfw: Whether the draft should be marked NSFW.
+        :param original_content: Whether the submission should be marked as original
+            content.
+        :param selftext: The Markdown formatted content for a text submission draft. Use
+            ``None`` to make a title-only submission draft. ``selftext`` can not be
+            provided if ``url`` is provided.
+        :param send_replies: When ``True``, messages will be sent to the submission
+            author when comments are made to the submission.
+        :param spoiler: Whether the submission should be marked as a spoiler.
+        :param subreddit: The subreddit to create the draft for. This accepts a
+            subreddit display name, :class:`.Subreddit` object, or
+            :class:`.UserSubreddit` object.
+        :param title: The title of the draft.
+        :param url: The URL for a ``link`` submission draft. ``url`` can not be provided
+            if ``selftext`` is provided.
+
+        Additional keyword arguments can be provided to handle new parameters as Reddit
+        introduces them.
+
+        For example, to update the title of a draft do:
+
+        .. code-block:: python
+
+            draft = await reddit.drafts("5f87d55c-e4fb-11eb-8965-6aeb41b0880e")
+            await draft.update(title="New title")
+
+        """
+        if isinstance(subreddit, str):
+            subreddit = await self._reddit.subreddit(subreddit)
+        data = await self._prepare_data(
+            flair_id=flair_id,
+            flair_text=flair_text,
+            is_public_link=is_public_link,
+            nsfw=nsfw,
+            original_content=original_content,
+            selftext=selftext,
+            send_replies=send_replies,
+            spoiler=spoiler,
+            subreddit=subreddit,
+            title=title,
+            url=url,
+            **draft_kwargs,
+        )
+        data["id"] = self.id
+        _new_draft = await self._reddit.put(API_PATH["draft"], data=data)
+        await _new_draft._fetch()
+        self.__dict__.update(_new_draft.__dict__)

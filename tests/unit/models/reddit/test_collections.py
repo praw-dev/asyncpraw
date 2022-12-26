@@ -44,6 +44,13 @@ class TestCollection(UnitTest):
         with pytest.raises(ValueError):
             Collection(reddit, permalink="")
 
+    def test_neq(self, reddit):
+        collection1 = Collection(reddit, collection_id="1")
+        collection2 = Collection(reddit, collection_id="2")
+        assert collection1 != collection2
+        assert "1" != collection2
+        assert "2" != collection1
+
     def test_repr(self, reddit):
         collection = Collection(reddit, collection_id="fake_uuid")
         assert "Collection(collection_id='fake_uuid')" == repr(collection)
@@ -51,13 +58,6 @@ class TestCollection(UnitTest):
     def test_str(self, reddit):
         collection = Collection(reddit, collection_id="fake_uuid")
         assert "fake_uuid" == str(collection)
-
-    def test_neq(self, reddit):
-        collection1 = Collection(reddit, collection_id="1")
-        collection2 = Collection(reddit, collection_id="2")
-        assert collection1 != collection2
-        assert "1" != collection2
-        assert "2" != collection1
 
 
 class TestSubredditCollections(UnitTest):

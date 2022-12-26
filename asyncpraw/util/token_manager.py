@@ -22,23 +22,6 @@ from . import _deprecate_args
 class BaseTokenManager(ABC):
     """An abstract class for all token managers."""
 
-    def __init__(self):
-        """Initialize a :class:`.BaseTokenManager` instance."""
-        self._reddit = None
-
-    @property
-    def reddit(self):
-        """Return the :class:`.Reddit` instance bound to the token manager."""
-        return self._reddit
-
-    @reddit.setter
-    def reddit(self, value):
-        if self._reddit is not None:
-            raise RuntimeError(
-                "'reddit' can only be set once and is done automatically"
-            )
-        self._reddit = value
-
     @abstractmethod
     def post_refresh_callback(self, authorizer):
         """Handle callback that is invoked after a refresh token is used.
@@ -62,6 +45,23 @@ class BaseTokenManager(ABC):
         ``asyncprawcore.Authorizer`` instance, such as setting the ``refresh_token``.
 
         """
+
+    @property
+    def reddit(self):
+        """Return the :class:`.Reddit` instance bound to the token manager."""
+        return self._reddit
+
+    @reddit.setter
+    def reddit(self, value):
+        if self._reddit is not None:
+            raise RuntimeError(
+                "'reddit' can only be set once and is done automatically"
+            )
+        self._reddit = value
+
+    def __init__(self):
+        """Initialize a :class:`.BaseTokenManager` instance."""
+        self._reddit = None
 
 
 class FileTokenManager(BaseTokenManager):
@@ -131,24 +131,6 @@ class SQLiteTokenManager(BaseTokenManager):
         self._setup_ran = False
         self.key = key
 
-    @async_contextmanager
-    async def connection(self):
-        """Asynchronously setup and provide the sqlite3 connection."""
-        if self._connection is None:
-            import aiosqlite
-
-            self._connection = await aiosqlite.connect(self._database)
-        if not self._setup_ran:
-            await self._connection.execute(
-                "CREATE TABLE IF NOT EXISTS tokens (id, refresh_token, updated_at)"
-            )
-            await self._connection.execute(
-                "CREATE UNIQUE INDEX IF NOT EXISTS ux_tokens_id on tokens(id)"
-            )
-            await self._connection.commit()
-            self._setup_ran = True
-        yield self._connection
-
     async def _get(self):
         async with self.connection() as conn:
             cursor = await conn.execute(
@@ -176,6 +158,24 @@ class SQLiteTokenManager(BaseTokenManager):
     async def close(self):
         """Close the sqlite3 connection."""
         await self._connection.close()
+
+    @async_contextmanager
+    async def connection(self):
+        """Asynchronously setup and provide the sqlite3 connection."""
+        if self._connection is None:
+            import aiosqlite
+
+            self._connection = await aiosqlite.connect(self._database)
+        if not self._setup_ran:
+            await self._connection.execute(
+                "CREATE TABLE IF NOT EXISTS tokens (id, refresh_token, updated_at)"
+            )
+            await self._connection.execute(
+                "CREATE UNIQUE INDEX IF NOT EXISTS ux_tokens_id on tokens(id)"
+            )
+            await self._connection.commit()
+            self._setup_ran = True
+        yield self._connection
 
     async def is_registered(self):
         """Return whether ``key`` already has a ``refresh_token``."""

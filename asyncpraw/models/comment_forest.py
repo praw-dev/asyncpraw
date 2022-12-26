@@ -37,30 +37,6 @@ class CommentForest:
                     queue.append((comment, item))
         return more_comments
 
-    def __getitem__(self, index: int):
-        """Return the comment at position ``index`` in the list.
-
-        This method is to be used like an array access, such as:
-
-        .. code-block:: python
-
-            first_comment = submission.comments[0]
-
-        Alternatively, the presence of this method enables one to iterate over all top
-        level comments, like so:
-
-        .. code-block:: python
-
-            for comment in submission.comments:
-                print(comment.body)
-
-        """
-        if not (self._comments is not None or self._submission._fetched):
-            raise TypeError(
-                "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
-            )
-        return self._comments[index]
-
     async def __aiter__(self) -> AsyncIterator["asyncpraw.models.Comment"]:
         """Allow CommentForest to be used as an AsyncIterator.
 
@@ -93,6 +69,30 @@ class CommentForest:
             await self._submission._fetch()
         self._comments = self._submission.comments._comments
         return self
+
+    def __getitem__(self, index: int):
+        """Return the comment at position ``index`` in the list.
+
+        This method is to be used like an array access, such as:
+
+        .. code-block:: python
+
+            first_comment = submission.comments[0]
+
+        Alternatively, the presence of this method enables one to iterate over all top
+        level comments, like so:
+
+        .. code-block:: python
+
+            for comment in submission.comments:
+                print(comment.body)
+
+        """
+        if not (self._comments is not None or self._submission._fetched):
+            raise TypeError(
+                "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
+            )
+        return self._comments[index]
 
     def __init__(
         self,
