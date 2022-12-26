@@ -3,35 +3,53 @@
 import json
 import os
 from datetime import datetime
+from typing import Dict
 
 import pytest
 from vcr.persisters.filesystem import FilesystemPersister
 from vcr.serialize import deserialize, serialize
 
-from tests.conftest import placeholders
+from tests.conftest import placeholders as _placeholders
 
 
 class CustomPersister(FilesystemPersister):
+    """Custom persister to handle placeholders."""
+
+    additional_placeholders = {}
+
+    @classmethod
+    def add_additional_placeholders(cls, placeholders: Dict[str, str]):
+        """Add additional placeholders."""
+        cls.additional_placeholders.update(placeholders)
+
+    @classmethod
+    def clear_additional_placeholders(cls):
+        """Clear additional placeholders."""
+        cls.additional_placeholders = {}
+
     @classmethod
     def load_cassette(cls, cassette_path, serializer):
+        """Load cassette."""
         try:
             with open(cassette_path) as f:
                 cassette_content = f.read()
         except OSError:
             raise ValueError("Cassette not found.")
         for replacement, value in [
-            (v, f"<{k.upper()}>") for k, v in placeholders.items()
+            (v, f"<{k.upper()}>")
+            for k, v in {**cls.additional_placeholders, **_placeholders}.items()
         ]:
             cassette_content = cassette_content.replace(value, replacement)
         cassette = deserialize(cassette_content, serializer)
         return cassette
 
-    @staticmethod
-    def save_cassette(cassette_path, cassette_dict, serializer):
-        cassette_dict["recorded_at"] = datetime.now().isoformat()[:-7]
+    @classmethod
+    def save_cassette(cls, cassette_path, cassette_dict, serializer):
+        """Save cassette."""
         data = serialize(cassette_dict, serializer)
         for replacement, value in [
-            (f"<{k.upper()}>", v) for k, v in placeholders.items()
+            (f"<{k.upper()}>", v)
+            for k, v in {**cls.additional_placeholders, **_placeholders}.items()
         ]:
             data = data.replace(value, replacement)
         dirname, filename = os.path.split(cassette_path)
@@ -42,6 +60,8 @@ class CustomPersister(FilesystemPersister):
 
 
 class CustomSerializer:
+    """Custom serializer to handle binary objects in dict."""
+
     @staticmethod
     def _serialize_file(file_name):
         with open(file_name, "rb") as f:
@@ -80,6 +100,15 @@ class CustomSerializer:
 
     @classmethod
     def serialize(cls, cassette_dict):
+        """Serialize cassette."""
+        timestamp = datetime.utcnow().isoformat()
+        try:
+            i = timestamp.rindex(".")
+        except ValueError:
+            pass
+        else:
+            timestamp = timestamp[:i]
+        cassette_dict["recorded_at"] = timestamp
         return f"{json.dumps(cls._serialize_dict(cassette_dict), sort_keys=True, indent=2)}\n"
 
     @staticmethod
@@ -95,7 +124,7 @@ def ensure_environment_variables():
     ):
         if getattr(pytest.placeholders, key) == f"placeholder_{key}":
             raise ValueError(
-                f"Environment variable 'prawtest_{key}' must be set for recording new "
+                f"Environment variable 'prawtest_{key}' must be set for recording new"
                 " cassettes."
             )
     auth_set = False
@@ -108,12 +137,13 @@ def ensure_environment_variables():
             break
     if not auth_set:
         raise ValueError(
-            "Environment variables 'prawtest_refresh_token' or 'prawtest_username'"
-            " and 'prawtest_password' must be set for new cassette recording."
+            "Environment variables 'prawtest_refresh_token' or 'prawtest_username' and"
+            " 'prawtest_password' must be set for new cassette recording."
         )
 
 
 def ensure_integration_test(cassette):
+    """Ensure test is being run is actually an integration test and error if not."""
     if cassette.write_protected:
         is_integration_test = cassette.play_count > 0
         action = "play back"
@@ -135,7 +165,7 @@ def filter_access_token(response):
         response["body"]["string"] = response["body"]["string"].replace(
             token.encode("utf-8"), b"<ACCESS_TOKEN>"
         )
-        placeholders["access_token"] = token
+        _placeholders["access_token"] = token
     except (KeyError, TypeError, ValueError):
         pass
     return response

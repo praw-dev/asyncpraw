@@ -1493,7 +1493,7 @@ class TestSubredditQuarantine(IntegrationTest):
 class TestSubredditRelationships(IntegrationTest):
     REDDITOR = "pyapitestuser3"
 
-    async def add_remove(self, base, user, relationship):
+    async def _add_remove(self, base, relationship, user):
         relationship = getattr(base, relationship)
         await relationship.add(user)
         relationships = await self.async_list(relationship())
@@ -1507,7 +1507,7 @@ class TestSubredditRelationships(IntegrationTest):
     async def test_banned(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await self.add_remove(subreddit, self.REDDITOR, "banned")
+        await self._add_remove(subreddit, "banned", self.REDDITOR)
 
     async def test_banned__user_filter(self, reddit):
         reddit.read_only = False
@@ -1518,7 +1518,7 @@ class TestSubredditRelationships(IntegrationTest):
     async def test_contributor(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await self.add_remove(subreddit, self.REDDITOR, "contributor")
+        await self._add_remove(subreddit, "contributor", self.REDDITOR)
 
     async def test_contributor_leave(self, reddit):
         reddit.read_only = False
@@ -1606,7 +1606,7 @@ class TestSubredditRelationships(IntegrationTest):
     async def test_muted(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await self.add_remove(subreddit, self.REDDITOR, "muted")
+        await self._add_remove(subreddit, "muted", self.REDDITOR)
 
     async def test_moderator_remove_invite(self, reddit):
         reddit.read_only = False
@@ -1616,12 +1616,12 @@ class TestSubredditRelationships(IntegrationTest):
     async def test_wiki_banned(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await self.add_remove(subreddit.wiki, self.REDDITOR, "banned")
+        await self._add_remove(subreddit.wiki, "banned", self.REDDITOR)
 
     async def test_wiki_contributor(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await self.add_remove(subreddit.wiki, self.REDDITOR, "contributor")
+        await self._add_remove(subreddit.wiki, "contributor", self.REDDITOR)
 
 
 class TestSubredditStreams(IntegrationTest):

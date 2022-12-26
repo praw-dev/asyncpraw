@@ -9,6 +9,11 @@ from asyncpraw.models import Redditor, WikiPage
 from ... import IntegrationTest
 
 
+def large_content():
+    with open("tests/integration/files/too_large.jpg", "rb") as fp:
+        return urlsafe_b64encode(fp.read()).decode()
+
+
 class TestWikiPage(IntegrationTest):
     async def test_content_md(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -34,14 +39,13 @@ class TestWikiPage(IntegrationTest):
         page = await subreddit.wiki.get_page("test")
         await page.edit(content="PRAW updated")
 
+    @pytest.mark.add_placeholder(content=large_content())
     async def test_edit__usernotes(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         page = WikiPage(reddit, subreddit, "usernotes")
-        with open("tests/integration/files/too_large.jpg", "rb") as fp:
-            large_content = urlsafe_b64encode(fp.read()).decode()
 
         reddit.read_only = False
-        await page.edit(content=large_content)
+        await page.edit(content=large_content())
 
     async def test_edit__with_reason(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
