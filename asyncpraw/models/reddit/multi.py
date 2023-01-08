@@ -105,19 +105,14 @@ class Multireddit(SubredditListingMixin, RedditBase):
             await self._author._fetch()
 
     async def _fetch(self):
+        await self._ensure_author_fetched()
         data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
         self._fetched = True
 
-    async def _fetch_data(self):
-        name, fields, params = await self._fetch_info()
-        path = API_PATH[name].format(**fields)
-        return await self._reddit.request(method="GET", params=params, path=path)
-
-    async def _fetch_info(self):
-        await self._ensure_author_fetched()
+    def _fetch_info(self):
         return (
             "multireddit_api",
             {"multi": self.name, "user": self._author.name},
