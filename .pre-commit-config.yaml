@@ -56,4 +56,4 @@ repos:
     hooks:
       - id: pydocstyle
         files: asyncpraw/.*
-    rev: 6.1.1
+    rev: 6.2.3
