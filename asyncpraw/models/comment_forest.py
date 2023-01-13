@@ -181,7 +181,7 @@ class CommentForest:
 
     @_deprecate_args("limit", "threshold")
     async def replace_more(
-        self, *, limit: int = 32, threshold: int = 0
+        self, *, limit: Optional[int] = 32, threshold: int = 0
     ) -> List["asyncpraw.models.MoreComments"]:
         """Update the comment forest by resolving instances of :class:`.MoreComments`.
 
