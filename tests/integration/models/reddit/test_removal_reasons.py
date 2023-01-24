@@ -55,7 +55,7 @@ class TestRemovalReason(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         reasons = [reason async for reason in subreddit.mod.removal_reasons]
-        reason = reasons[0]
+        reason = reasons[8]
         await reason.update()
 
 
