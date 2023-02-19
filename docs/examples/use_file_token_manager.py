@@ -52,7 +52,6 @@ async def main():
         token_manager=refresh_token_manager,
         user_agent="use_file_token_manager/v0 by u/bboe",
     ) as reddit:
-
         scopes = await reddit.auth.scopes()
         if scopes == {"*"}:
             print(f"{await reddit.user.me()} is authenticated with all scopes")

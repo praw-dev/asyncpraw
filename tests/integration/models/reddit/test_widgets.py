@@ -666,7 +666,6 @@ class TestPostFlairWidget(IntegrationTest):
 class TestRulesWidget(IntegrationTest):
     @pytest.mark.cassette_name("TestSubredditWidgets.fetch_widgets")
     async def test_rules_widget(self, reddit):
-
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         rules = None
