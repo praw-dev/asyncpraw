@@ -727,7 +727,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
             subreddit = await reddit.subreddit("test")
             async for mute in subreddit.muted():
-                print("{mute}: {mute.note}")
+                print("{mute}: {mute.date}")
 
         """
         return SubredditRelationship(self, "muted")
