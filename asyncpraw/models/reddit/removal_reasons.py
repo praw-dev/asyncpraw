@@ -178,8 +178,10 @@ class SubredditRemovalReasons:
             API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
         )
         return [
-            RemovalReason(self._reddit, self.subreddit, _data=reason_data)
-            for id, reason_data in response["data"].items()
+            RemovalReason(
+                self._reddit, self.subreddit, _data=response["data"][reason_id]
+            )
+            for reason_id in response["order"]
         ]
 
     @_deprecate_args("message", "title")
