@@ -6,9 +6,6 @@ Async PRAW follows `semantic versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-7.7.0 (2023/02/25)
-------------------
-
 **Added**
 
 - :meth:`.delete_mobile_banner` to delete mobile banners.
