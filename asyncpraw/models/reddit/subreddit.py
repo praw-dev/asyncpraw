@@ -2371,6 +2371,17 @@ class SubredditFlairTemplates:
         url = API_PATH["flairtemplatedelete"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data={"flair_template_id": template_id})
 
+    async def _reorder(self, flair_list: list, *, is_link: Optional[bool] = None):
+        url = API_PATH["flairtemplatereorder"].format(subreddit=self.subreddit)
+        await self.subreddit._reddit.patch(
+            url,
+            params={
+                "flair_type": self.flair_type(is_link),
+                "subreddit": self.subreddit.display_name,
+            },
+            json=flair_list,
+        )
+
     @_deprecate_args(
         "template_id",
         "text",
@@ -4400,6 +4411,22 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         """
         await self._clear(is_link=True)
 
+    async def reorder(self, flair_list: List[str]):
+        """Reorder a list of flairs.
+
+        :param flair_list: A list of flair IDs.
+
+        For example, to reverse the order of the link flair list try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            flairs = [flair["id"] async for flair in subreddit.flair.link_templates]
+            await subreddit.flair.link_templates.reorder(list(reversed(flairs)))
+
+        """
+        await self._reorder(flair_list, is_link=True)
+
     async def user_selectable(
         self,
     ) -> AsyncGenerator[Dict[str, Union[str, bool]], None]:
@@ -4520,3 +4547,20 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         """
         await self._clear(is_link=False)
+
+    async def reorder(self, flair_list: List[str]):
+        """Reorder a list of flairs.
+
+        :param flair_list: A list of flair IDs.
+
+        For example, to reverse the order of the :class:`.Redditor` flair templates list
+        try:
+
+        .. code-block:: python
+
+            subreddit = reddit.subreddit("test")
+            flairs = [flair["id"] for flair in subreddit.flair.templates]
+            subreddit.flair.templates.reorder(list(reversed(flairs)))
+
+        """
+        await self._reorder(flair_list, is_link=False)

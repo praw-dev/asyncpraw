@@ -13,6 +13,7 @@ from typing import (
     AsyncGenerator,
     Dict,
     Iterable,
+    List,
     Optional,
     Type,
     Union,
@@ -543,7 +544,7 @@ class Reddit:
         *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
-        json: Optional[Dict[Any, Any]] = None,
+        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
         method: str = "",
         params: Optional[Union[str, Dict[str, str]]] = None,
         path: str = "",
@@ -743,7 +744,7 @@ class Reddit:
         path: str,
         *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json: Optional[Dict[Any, Any]] = None,
+        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
         params: Optional[Union[str, Dict[str, str]]] = None,
     ) -> Any:
         """Return parsed objects returned from a DELETE request to ``path``.
@@ -870,7 +871,8 @@ class Reddit:
         path: str,
         *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json: Optional[Dict[Any, Any]] = None,
+        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
+        params: Optional[Union[str, Dict[str, str]]] = None,
     ) -> Any:
         """Return parsed objects returned from a PATCH request to ``path``.
 
@@ -880,10 +882,11 @@ class Reddit:
         :param json: JSON-serializable object to send in the body of the request with a
             Content-Type header of application/json (default: ``None``). If ``json`` is
             provided, ``data`` should not be.
+        :param params: The query parameters to add to the request (default: ``None``).
 
         """
         return await self._objectify_request(
-            data=data, json=json, method="PATCH", path=path
+            data=data, json=json, method="PATCH", params=params, path=path
         )
 
     @_deprecate_args("path", "data", "files", "params", "json")
@@ -893,7 +896,7 @@ class Reddit:
         *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
-        json: Optional[Dict[Any, Any]] = None,
+        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
         params: Optional[Union[str, Dict[str, str]]] = None,
     ) -> Any:
         """Return parsed objects returned from a POST request to ``path``.
@@ -941,7 +944,7 @@ class Reddit:
         path: str,
         *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json: Optional[Dict[Any, Any]] = None,
+        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
     ):
         """Return parsed objects returned from a PUT request to ``path``.
 
@@ -1006,7 +1009,7 @@ class Reddit:
         *,
         data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
         files: Optional[Dict[str, IO]] = None,
-        json: Optional[Dict[Any, Any]] = None,
+        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
         method: str,
         params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
         path: str,
