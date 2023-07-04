@@ -17,9 +17,8 @@ extras = {
     "dev": ["packaging"],
     "lint": ["pre-commit"],
     "readthedocs": [
+        "furo",
         "sphinx",
-        "sphinx-rtd-dark-mode",
-        "sphinx_rtd_theme",
         "sphinxcontrib-trio",
     ],
     "test": [
@@ -59,7 +58,7 @@ setup(
     ],
     description=(
         'Async PRAW, an abbreviation for "Asynchronous Python Reddit API Wrapper", is a'
-        " python package that allows for simple access to Reddit's API."
+        " Python package that allows for simple access to Reddit's API."
     ),
     extras_require=extras,
     install_requires=[
