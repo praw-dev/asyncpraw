@@ -66,7 +66,6 @@ setup(
         "aiofiles <1",
         "aiohttp <4",
         "aiosqlite <=0.17.0",
-        "asyncio_extras <=1.3.2",
         "asyncprawcore >=2.1, <3",
         "update_checker >=0.18",
     ],

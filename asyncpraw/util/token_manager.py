@@ -12,9 +12,9 @@ Async PRAW users will create their own token manager classes suitable for their 
 
 """
 from abc import ABC, abstractmethod
+from contextlib import asynccontextmanager
 
 import aiofiles
-from asyncio_extras import async_contextmanager
 
 from . import _deprecate_args
 
@@ -159,7 +159,7 @@ class SQLiteTokenManager(BaseTokenManager):
         """Close the sqlite3 connection."""
         await self._connection.close()
 
-    @async_contextmanager
+    @asynccontextmanager
     async def connection(self):
         """Asynchronously setup and provide the sqlite3 connection."""
         if self._connection is None:

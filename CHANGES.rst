@@ -6,6 +6,10 @@ Async PRAW follows `semantic versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+**Changed**
+
+- Drop asyncio_extras dependency, use contextlib.asynccontextmanager instead.
+
 7.7.0 (2023/02/25)
 ------------------
 
