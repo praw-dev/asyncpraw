@@ -29,7 +29,8 @@ extras = {
         "pytest-asyncio ==0.18.*",
         "pytest-vcr ==1.*",
         "testfixtures ==6.*",
-        "vcrpy ==4.*",
+        "urllib3 ==1.*",
+        "vcrpy ==4.2.1",
     ],
 }
 extras["lint"] += extras["readthedocs"]
