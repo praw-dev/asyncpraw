@@ -10,6 +10,10 @@ Unreleased
 
 - Drop asyncio_extras dependency, use contextlib.asynccontextmanager instead.
 
+**Fixed**
+
+- An issue with replying to a modmail conversation results in a error.
+
 7.7.0 (2023/02/25)
 ------------------
 
