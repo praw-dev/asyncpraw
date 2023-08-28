@@ -2,7 +2,6 @@
 import socket
 import sys
 from asyncio import TimeoutError
-from unittest.mock import AsyncMock, MagicMock
 
 import aiofiles
 import pytest
@@ -11,9 +10,11 @@ from aiohttp.http_websocket import WebSocketError
 from asyncprawcore import BadRequest, Forbidden, NotFound, TooLarge
 
 if sys.version_info < (3, 8):
-    from asynctest import mock
+    from asynctest import CoroutineMock as AsyncMock
+    from asynctest import MagicMock, mock
 else:
     from unittest import mock
+    from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw.const import PNG_HEADER
 from asyncpraw.exceptions import (
