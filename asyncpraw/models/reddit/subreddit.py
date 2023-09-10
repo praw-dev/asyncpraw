@@ -931,9 +931,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def _fetch_info(self):
         return "subreddit_about", {"subreddit": self}, None
 
-    def _parse_xml_response(self, response: ClientResponse):
+    async def _parse_xml_response(self, response: ClientResponse):
         """Parse the XML from a response and raise any errors found."""
-        xml = response.text
+        xml = await response.text()
         root = XML(xml)
         tags = [element.tag for element in root]
         if tags[:4] == ["Code", "Message", "ProposedSize", "MaxSizeAllowed"]:
@@ -1063,7 +1063,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         response = await self._read_and_post_media(media_path, upload_url, upload_data)
         if not response.status == 201:
-            self._parse_xml_response(response)
+            await self._parse_xml_response(response)
         try:
             response.raise_for_status()
         except HttpProcessingError:

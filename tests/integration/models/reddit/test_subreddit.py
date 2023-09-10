@@ -2,7 +2,7 @@
 import socket
 import sys
 from asyncio import TimeoutError
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from aiohttp import ClientResponse
@@ -1611,7 +1611,7 @@ class TestSubreddit(IntegrationTest):
             """Patch requests to return mock data on specific url."""
             if "https://reddit-uploaded-media.s3-accelerate.amazonaws.com" in url:
                 response = ClientResponse
-                response.text = mock_data
+                response.text = AsyncMock(return_value=mock_data)
                 response.status = 400
                 return response
             return await _post(url, *args, **kwargs)
