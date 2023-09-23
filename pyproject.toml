@@ -13,7 +13,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -34,7 +33,7 @@ license = {file = "LICENSE.txt"}
 maintainers = [{name = "Joel Payne", email = "lilspazjoekp@gmail.com"}]
 name = "asyncpraw"
 readme = "README.rst"
-requires-python = "~=3.7"
+requires-python = "~=3.8"
 
 [project.optional-dependencies]
 ci = ["coveralls"]
@@ -54,7 +53,6 @@ readthedocs = [
   "sphinxcontrib-trio"
 ]
 test = [
-  "asynctest ==0.13.* ; python_version < '3.8'", # TODO: Remove me when support for 3.7 is dropped
   "mock ==4.*",
   "pytest ==7.*",
   "pytest-asyncio ==0.18.*",
@@ -87,7 +85,7 @@ filterwarnings = "ignore::DeprecationWarning"
 testpaths = "tests"
 
 [tool.ruff]
-target-version = "py37"
+target-version = "py38"
 include = [
   "asyncpraw/**/*.py"
 ]

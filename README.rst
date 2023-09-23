@@ -49,7 +49,7 @@ you're set.
 Installation
 ------------
 
-Async PRAW is supported on Python 3.7+. The recommended way to install Async PRAW is via
+Async PRAW is supported on Python 3.8+. The recommended way to install Async PRAW is via
 `pip <https://pypi.python.org/pypi/pip>`_.
 
 .. code-block:: bash

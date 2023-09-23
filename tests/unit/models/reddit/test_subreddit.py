@@ -3,12 +3,8 @@ import sys
 import aiohttp
 import pytest
 
-if sys.version_info < (3, 8):
-    from asynctest import CoroutineMock as AsyncMock
-    from asynctest import MagicMock, mock
-else:
-    from unittest import mock
-    from unittest.mock import AsyncMock, MagicMock
+from unittest import mock
+from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw.exceptions import ClientException, MediaPostFailed
 from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
