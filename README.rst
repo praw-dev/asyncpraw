@@ -13,21 +13,29 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
     :alt: PyPI - Downloads - Monthly
     :target: https://pypi.python.org/pypi/asyncpraw
 
-.. image:: https://coveralls.io/repos/github/praw-dev/asyncpraw/badge.svg?branch=master
-    :alt: Coveralls Coverage
-    :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=master
-
-.. image:: https://github.com/praw-dev/asyncpraw/workflows/CI/badge.svg
+.. image:: https://github.com/asyncpraw-dev/asyncpraw/actions/workflows/ci.yml/badge.svg?event=push
     :alt: GitHub Actions Status
-    :target: https://github.com/praw-dev/asyncpraw/actions?query=branch%3Amaster
+    :target: https://github.com/asyncpraw-dev/asyncpraw/actions/workflows/ci.yml
+
+.. image:: https://coveralls.io/repos/github/asyncpraw-dev/asyncpraw/badge.svg
+    :alt: Coveralls Coverage
+    :target: https://coveralls.io/github/asyncpraw-dev/asyncpraw?branch=master
+
+.. image:: https://api.securityscorecards.dev/projects/github.com/asyncpraw-dev/asyncpraw/badge
+    :alt: OpenSSF Scorecard
+    :target: https://api.securityscorecards.dev/projects/github.com/asyncpraw-dev/asyncpraw
 
 .. image:: https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg
     :alt: Contributor Covenant
-    :target: https://github.com/praw-dev/.github/blob/main/CODE_OF_CONDUCT.md
+    :target: https://github.com/asyncpraw-dev/.github/blob/main/CODE_OF_CONDUCT.md
 
 .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
     :alt: pre-commit
     :target: https://github.com/pre-commit/pre-commit
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :alt: Black code style
+    :target: https://github.com/psf/black
 
 Async PRAW, an abbreviation for "Asynchronous Python Reddit API Wrapper", is a Python
 package that allows for simple access to Reddit's API. Async PRAW aims to be easy to use
