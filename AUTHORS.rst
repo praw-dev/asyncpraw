@@ -92,4 +92,5 @@ Source Contributors
 - Rolf Campbell `@endlisnis <https://github.com/endlisnis>`_
 - zacc `@zacc <https://github.com/zacc>`_
 - Arkadiy Illarionov `@qarkai <https://github.com/qarkai>`_
+- c0d3rman `@c0d3rman <https://github.com/c0d3rman>`
 - Add "Name <email (optional)> and github profile link" above this line.

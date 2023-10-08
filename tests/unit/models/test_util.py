@@ -127,3 +127,36 @@ class TestStream(UnitTest):
             counter += 1
             if counter == 400:
                 break
+
+    async def test_comments__with_continue_after_id(
+        self,
+    ):
+        Thing = namedtuple("Thing", ["fullname"])
+        initial_things = [Thing(n) for n in reversed(range(100))]
+        counter = 99
+
+        async def generate(limit, params=None, **kwargs):
+            nonlocal counter
+            counter += 1
+            sliced_things = initial_things
+            if params:
+                sliced_things = initial_things[
+                    : next(
+                        i
+                        for i, thing in enumerate(initial_things)
+                        if thing.fullname == params["before"]
+                    )
+                ]
+            if counter % 2 == 0:
+                things = sliced_things
+            else:
+                things = [Thing(counter)] + sliced_things[:-1]
+            for thing in things:
+                yield thing
+
+        stream = stream_generator(generate, continue_after_id=49)
+        expected_fullname = 50
+        for _ in range(50):
+            thing = await self.async_next(stream)
+            assert thing.fullname == expected_fullname, thing
+            expected_fullname += 1
