@@ -6,6 +6,13 @@ Async PRAW follows `semantic versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+**Added**
+
+- :meth:`~.SubredditLinkFlairTemplates.reorder` to reorder a subreddit's link flair
+  templates.
+- :meth:`~.SubredditRedditorFlairTemplates.reorder` to reorder a subreddit's redditor
+  flair templates.
+
 **Fixed**
 
 - XML parsing error when media uploads fail.

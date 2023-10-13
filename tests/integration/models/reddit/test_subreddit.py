@@ -240,6 +240,16 @@ class TestSubredditFlairTemplates(IntegrationTest):
         template = next(iter(await self.async_list(subreddit.flair.templates)))
         await subreddit.flair.templates.delete(template["id"])
 
+    async def test_reorder(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        original = await self.async_list(subreddit.flair.templates)
+        flairs = [flair["id"] async for flair in subreddit.flair.templates]
+        await subreddit.flair.templates.reorder(list(reversed(flairs)))
+        assert (await self.async_list(subreddit.flair.templates)) == list(
+            reversed(original)
+        )
+
     async def test_update(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -368,6 +378,16 @@ class TestSubredditLinkFlairTemplates(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.flair.link_templates.clear()
+
+    async def test_reorder(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        original = await self.async_list(subreddit.flair.link_templates)
+        flairs = [flair["id"] async for flair in subreddit.flair.link_templates]
+        await subreddit.flair.link_templates.reorder(list(reversed(flairs)))
+        assert (await self.async_list(subreddit.flair.link_templates)) == list(
+            reversed(original)
+        )
 
     async def test_user_selectable(self, reddit):
         reddit.read_only = False
