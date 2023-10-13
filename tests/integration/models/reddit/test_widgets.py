@@ -760,7 +760,7 @@ class TestSubredditWidgets(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         sidebar = [
-            isinstance(widget, Widget) and type(widget) != Widget
+            isinstance(widget, Widget) and type(widget) is not Widget
             async for widget in widgets.sidebar()
         ]
         assert all(sidebar)
@@ -777,7 +777,7 @@ class TestSubredditWidgets(IntegrationTest):
         assert 1 <= len(await self.async_list(widgets.topbar()))
         assert all(
             [
-                isinstance(widget, Widget) and type(widget) != Widget
+                isinstance(widget, Widget) and type(widget) is not Widget
                 async for widget in widgets.topbar()
             ]
         )
