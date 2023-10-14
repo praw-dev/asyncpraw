@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 from urllib.parse import urlparse
 
+from ...endpoints import API_PATH
 from ...exceptions import InvalidURL
 from ..base import AsyncPRAWBase
 
@@ -85,6 +86,11 @@ class RedditBase(AsyncPRAWBase):
 
     async def _fetch(self):  # pragma: no cover
         self._fetched = True
+
+    async def _fetch_data(self):
+        name, fields, params = self._fetch_info()
+        path = API_PATH[name].format(**fields)
+        return await self._reddit.request(method="GET", params=params, path=path)
 
     def _reset_attributes(self, *attributes):
         for attribute in attributes:

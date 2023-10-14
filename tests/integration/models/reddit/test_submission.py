@@ -1,12 +1,31 @@
 import pytest
 
 from asyncpraw.exceptions import RedditAPIException
-from asyncpraw.models import Comment, Submission
+from asyncpraw.models import Comment, InlineGif, InlineImage, InlineVideo, Submission
 
 from ... import IntegrationTest
 
 
 class TestSubmission(IntegrationTest):
+    @staticmethod
+    def _inline_media(image_path):
+        gif = InlineGif(image_path("test.gif"), "optional caption")
+        image = InlineImage(image_path("test.png"), "optional caption")
+        video = InlineVideo(image_path("test.mp4"), "optional caption")
+        return {"gif1": gif, "image1": image, "video1": video}
+
+    @staticmethod
+    async def _new_submission_instance(
+        reddit, submission_id, return_rtjson=False, fetch=True
+    ):
+        submission = Submission(reddit, submission_id)
+        submission.add_fetch_param("rtj", "all")
+        if fetch:
+            await submission.load()
+        if return_rtjson:
+            return submission, submission.rtjson
+        return submission
+
     async def test_award(self, reddit):
         reddit.read_only = False
         award_data = await Submission(reddit, "j3kyoo").award()
@@ -143,6 +162,77 @@ class TestSubmission(IntegrationTest):
         submission = Submission(reddit, "hmkbt8")
         await submission.edit("New text")
         assert submission.selftext == "New text"
+
+    # the edit inline media tests need to recorded in a specific order.
+    async def test_edit__existing_and_new_inline_media(self, image_path, reddit):
+        # 4th
+        reddit.read_only = False
+        inline_media = self._inline_media(image_path)
+        submission, original_rtjson = await self._new_submission_instance(
+            reddit, "mcqjl8", True
+        )
+        submission2 = await self._new_submission_instance(reddit, "mcqjl8", fetch=False)
+        new_selftext = (
+            "\n\nNew text with a gif {gif1} an image {image1} and a video {video1}"
+            " inline"
+        )
+        await submission._edit_experimental(
+            submission.selftext + new_selftext,
+            inline_media=inline_media,
+            preserve_inline_media=True,
+        )
+        await submission2.load()
+        added_rtjson = await submission2.subreddit._convert_to_fancypants(
+            new_selftext.format(**inline_media)
+        )
+        assert (
+            original_rtjson["document"] + added_rtjson["document"]
+        ) == submission2.rtjson["document"]
+
+    async def test_edit__existing_inline_media(self, reddit):
+        # 3rd
+        reddit.read_only = False
+        submission, original_rtjson = await self._new_submission_instance(
+            reddit, "mcqjl8", True
+        )
+        submission2 = await self._new_submission_instance(reddit, "mcqjl8", fetch=False)
+        assert not submission2._fetched
+        await submission._edit_experimental(
+            submission.selftext, preserve_inline_media=True
+        )
+        await submission2.load()
+        assert original_rtjson == submission2.rtjson
+
+    async def test_edit__experimental(self, reddit):
+        # 1st
+        reddit.read_only = False
+        submission = Submission(reddit, "mcqjl8")
+        await submission._edit_experimental("New text")
+        assert submission.selftext == "New text"
+
+    async def test_edit__new_inline_media(self, image_path, reddit):
+        # 2nd
+        reddit.read_only = False
+        inline_media = self._inline_media(image_path)
+        submission, original_rtjson = await self._new_submission_instance(
+            reddit, "mcqjl8", True
+        )
+        submission2 = await self._new_submission_instance(reddit, "mcqjl8", fetch=False)
+        additional_selftext = (
+            "\n\nNew Text with a gif {gif1} an image {image1} and a video {video1}"
+            " inline"
+        )
+        await submission._edit_experimental(
+            submission.selftext + additional_selftext,
+            inline_media=inline_media,
+        )
+        await submission2.load()
+        added_rtjson = await submission2.subreddit._convert_to_fancypants(
+            additional_selftext.format(**inline_media)
+        )
+        assert (
+            original_rtjson["document"] + added_rtjson["document"]
+        ) == submission2.rtjson["document"]
 
     async def test_edit_invalid(self, reddit):
         reddit.read_only = False
