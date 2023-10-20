@@ -1,5 +1,5 @@
 """Provide the Auth class."""
-from typing import Dict, List, Optional, Set, Union
+from __future__ import annotations
 
 from asyncprawcore import (
     Authorizer,
@@ -17,7 +17,7 @@ class Auth(AsyncPRAWBase):
     """Auth provides an interface to Reddit's authorization."""
 
     @property
-    def limits(self) -> Dict[str, Optional[Union[str, int]]]:
+    def limits(self) -> dict[str, str | int | None]:
         """Return a dictionary containing the rate limit info.
 
         The keys are:
@@ -44,7 +44,7 @@ class Auth(AsyncPRAWBase):
             "used": data.used,
         }
 
-    async def authorize(self, code: str) -> Optional[str]:
+    async def authorize(self, code: str) -> str | None:
         """Complete the web authorization flow and return the refresh token.
 
         :param code: The code obtained through the request to the redirect uri.
@@ -86,7 +86,7 @@ class Auth(AsyncPRAWBase):
         )
         self._reddit._core = self._reddit._authorized_core = implicit_session
 
-    async def scopes(self) -> Set[str]:
+    async def scopes(self) -> set[str]:
         """Return a set of scopes included in the current authorization.
 
         For read-only authorizations this should return ``{"*"}``.
@@ -103,17 +103,17 @@ class Auth(AsyncPRAWBase):
         *,
         duration: str = "permanent",
         implicit: bool = False,
-        scopes: List[str],
+        scopes: list[str],
         state: str,
     ) -> str:
         """Return the URL used out-of-band to grant access to your application.
 
         :param duration: Either ``"permanent"`` or ``"temporary"`` (default:
             ``"permanent"``). ``"temporary"`` authorizations generate access tokens that
-            last only 1 hour. ``"permanent"`` authorizations additionally ``permanent``
-            authorizations additionally generate a refresh token that expires 1 year
-            after the last use and can be used indefinitelyto generate new hour-long
-            access tokens. This value is ignored when ``implicit=True``.
+            last only 1 hour. ``"permanent"`` authorizations additionally generate a
+            refresh token that expires 1 year after the last use and can be used
+            indefinitely to generate new hour-long access tokens. This value is ignored
+            when ``implicit=True``.
         :param implicit: For **installed** applications, this value can be set to use
             the implicit, rather than the code flow. When ``True``, the ``duration``
             argument has no effect as only temporary tokens can be retrieved.
@@ -125,7 +125,8 @@ class Auth(AsyncPRAWBase):
         """
         authenticator = self._reddit._read_only_core._authorizer._authenticator
         if authenticator.redirect_uri is self._reddit.config.CONFIG_NOT_SET:
-            raise MissingRequiredAttributeException("redirect_uri must be provided")
+            msg = "redirect_uri must be provided"
+            raise MissingRequiredAttributeException(msg)
         if isinstance(authenticator, UntrustedAuthenticator):
             return authenticator.authorize_url(
                 "temporary" if implicit else duration,

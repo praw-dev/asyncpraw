@@ -1,5 +1,7 @@
 """Provide models for new modmail."""
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...util import _deprecate_args, snake_case_keys
@@ -7,6 +9,19 @@ from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
+
+
+class ModmailObject(RedditBase):
+    """A base class for objects within a modmail conversation."""
+
+    AUTHOR_ATTRIBUTE = "author"
+    STR_FIELD = "id"
+
+    def __setattr__(self, attribute: str, value: Any):
+        """Objectify the AUTHOR_ATTRIBUTE attribute."""
+        if attribute == self.AUTHOR_ATTRIBUTE:
+            value = self._reddit._objector.objectify(value)
+        super().__setattr__(attribute, value)
 
 
 class ModmailConversation(RedditBase):
@@ -50,7 +65,7 @@ class ModmailConversation(RedditBase):
     STR_FIELD = "id"
 
     @staticmethod
-    def _convert_conversation_objects(data, reddit):
+    def _convert_conversation_objects(data: dict[str, Any], reddit: asyncpraw.Reddit):
         """Convert messages and mod actions to Async PRAW objects."""
         result = {"messages": [], "modActions": []}
         for thing in data["objIds"]:
@@ -60,7 +75,7 @@ class ModmailConversation(RedditBase):
         data.update(result)
 
     @staticmethod
-    def _convert_user_summary(data, reddit):
+    def _convert_user_summary(data: dict[str, Any], reddit: asyncpraw.Reddit):
         """Convert dictionaries of recent user history to Async PRAW objects."""
         parsers = {
             "recentComments": reddit._objector.parsers[reddit.config.kinds["comment"]],
@@ -81,18 +96,15 @@ class ModmailConversation(RedditBase):
             data[kind] = sorted(objects, key=lambda x: int(x.id, base=36), reverse=True)
 
     @classmethod
-    def parse(  # pylint: disable=arguments-differ
+    def parse(
         cls,
-        data: Dict[str, Any],
-        reddit: "asyncpraw.Reddit",
-        convert_objects: bool = True,
-    ):
+        data: dict[str, Any],
+        reddit: asyncpraw.Reddit,
+    ) -> ModmailConversation:
         """Return an instance of :class:`.ModmailConversation` from ``data``.
 
         :param data: The structured data.
         :param reddit: An instance of :class:`.Reddit`.
-        :param convert_objects: If ``True``, convert message and mod action data into
-            objects (default: ``True``).
 
         """
         data["authors"] = [
@@ -111,10 +123,10 @@ class ModmailConversation(RedditBase):
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        id: Optional[str] = None,  # pylint: disable=redefined-builtin
+        reddit: asyncpraw.Reddit,
+        id: str | None = None,
         mark_read: bool = False,
-        _data: Optional[Dict[str, Any]] = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize a :class:`.ModmailConversation` instance.
 
@@ -123,7 +135,8 @@ class ModmailConversation(RedditBase):
 
         """
         if bool(id) == bool(_data):
-            raise TypeError("Either 'id' or '_data' must be provided.")
+            msg = "Either 'id' or '_data' must be provided."
+            raise TypeError(msg)
 
         if id:
             self.id = id
@@ -132,7 +145,9 @@ class ModmailConversation(RedditBase):
 
         self._info_params = {"markRead": True} if mark_read else None
 
-    def _build_conversation_list(self, other_conversations):
+    def _build_conversation_list(
+        self, other_conversations: list[ModmailConversation]
+    ) -> str:
         """Return a comma-separated list of conversation IDs."""
         conversations = [self] + (other_conversations or [])
         return ",".join(conversation.id for conversation in conversations)
@@ -141,7 +156,7 @@ class ModmailConversation(RedditBase):
         data = await self._fetch_data()
         other = self._reddit._objector.objectify(data)
         self.__dict__.update(other.__dict__)
-        self._fetched = True
+        await super()._fetch()
 
     def _fetch_info(self):
         return "modmail_conversation", {"id": self.id}, self._info_params
@@ -175,7 +190,7 @@ class ModmailConversation(RedditBase):
         await self._reddit.post(API_PATH["modmail_highlight"].format(id=self.id))
 
     @_deprecate_args("num_days")
-    async def mute(self, *, num_days=3):
+    async def mute(self, *, num_days: int = 3):
         """Mute the non-mod user associated with the conversation.
 
         :param num_days: Duration of mute in days. Valid options are ``3``, ``7``, or
@@ -198,10 +213,7 @@ class ModmailConversation(RedditBase):
             await conversation.mute(num_days=7)
 
         """
-        if num_days != 3:  # no need to pass params if it's the default
-            params = {"num_hours": num_days * 24}
-        else:
-            params = {}
+        params = {"num_hours": num_days * 24} if num_days != 3 else {}
         await self._reddit.request(
             method="POST",
             params=params,
@@ -210,8 +222,8 @@ class ModmailConversation(RedditBase):
 
     @_deprecate_args("other_conversations")
     async def read(
-        self, *, other_conversations: Optional[List["ModmailConversation"]] = None
-    ):  # noqa: D207, D301
+        self, *, other_conversations: list[ModmailConversation] | None = None
+    ):
         """Mark the conversation(s) as read.
 
         :param other_conversations: A list of other conversations to mark (default:
@@ -233,7 +245,7 @@ class ModmailConversation(RedditBase):
     @_deprecate_args("body", "author_hidden", "internal")
     async def reply(
         self, *, author_hidden: bool = False, body: str, internal: bool = False
-    ) -> "ModmailMessage":
+    ) -> ModmailMessage:
         """Reply to the conversation.
 
         :param author_hidden: When ``True``, author is hidden from non-moderators
@@ -272,10 +284,9 @@ class ModmailConversation(RedditBase):
             message_id = response["conversation"]["objIds"][-1]["id"]
             message_data = response["messages"][message_id]
             return self._reddit._objector.objectify(message_data)
-        else:
-            for message in response.messages:
-                if message.id == response.obj_ids[-1]["id"]:
-                    return message
+        for message in response.messages:  # noqa: RET503
+            if message.id == response.obj_ids[-1]["id"]:
+                return message
 
     async def unarchive(self):
         """Unarchive the conversation.
@@ -323,8 +334,8 @@ class ModmailConversation(RedditBase):
 
     @_deprecate_args("other_conversations")
     async def unread(
-        self, *, other_conversations: Optional[List["ModmailConversation"]] = None
-    ):  # noqa: D207, D301
+        self, *, other_conversations: list[ModmailConversation] | None = None
+    ):
         """Mark the conversation(s) as unread.
 
         :param other_conversations: A list of other conversations to mark (default:
@@ -342,19 +353,6 @@ class ModmailConversation(RedditBase):
         """
         data = {"conversationIds": self._build_conversation_list(other_conversations)}
         await self._reddit.post(API_PATH["modmail_unread"], data=data)
-
-
-class ModmailObject(RedditBase):
-    """A base class for objects within a modmail conversation."""
-
-    AUTHOR_ATTRIBUTE = "author"
-    STR_FIELD = "id"
-
-    def __setattr__(self, attribute: str, value: Any):
-        """Objectify the AUTHOR_ATTRIBUTE attribute."""
-        if attribute == self.AUTHOR_ATTRIBUTE:
-            value = self._reddit._objector.objectify(value)
-        super().__setattr__(attribute, value)
 
 
 class ModmailAction(ModmailObject):

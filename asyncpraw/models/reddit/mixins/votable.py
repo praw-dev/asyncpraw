@@ -1,11 +1,13 @@
 """Provide the VotableMixin class."""
+from __future__ import annotations
+
 from ....const import API_PATH
 
 
 class VotableMixin:
     """Interface for :class:`.RedditBase` classes that can be voted on."""
 
-    async def _vote(self, direction):
+    async def _vote(self, direction: int):
         await self._reddit.post(
             API_PATH["vote"], data={"dir": str(direction), "id": self.fullname}
         )

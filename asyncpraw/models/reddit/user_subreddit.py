@@ -1,6 +1,8 @@
 """Provide the :class:`.UserSubreddit` class."""
+from __future__ import annotations
+
 import inspect
-from typing import TYPE_CHECKING, Dict, Union
+from typing import TYPE_CHECKING, Any, Callable
 from warnings import warn
 
 from ...util.cache import cachedproperty
@@ -51,10 +53,10 @@ class UserSubreddit(Subreddit):
     """
 
     @staticmethod
-    def _dict_depreciated_wrapper(func):
+    def _dict_deprecated_wrapper(func: Callable) -> Callable:
         """Show deprecation notice for dict only methods."""
 
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any):
             warn(
                 "'Redditor.subreddit' is no longer a dict and is now an UserSubreddit"
                 f" object. Using '{func.__name__}' is deprecated and will be removed in"
@@ -67,7 +69,7 @@ class UserSubreddit(Subreddit):
         return wrapper
 
     @cachedproperty
-    def mod(self) -> "asyncpraw.models.reddit.user_subreddit.UserSubredditModeration":
+    def mod(self) -> asyncpraw.models.reddit.user_subreddit.UserSubredditModeration:
         """Provide an instance of :class:`.UserSubredditModeration`.
 
         For example, to update the authenticated user's display name:
@@ -80,7 +82,7 @@ class UserSubreddit(Subreddit):
         """
         return UserSubredditModeration(self)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str) -> Any:
         """Show deprecation notice for dict method ``__getitem__``."""
         warn(
             "'Redditor.subreddit' is no longer a dict and is now an UserSubreddit"
@@ -90,7 +92,7 @@ class UserSubreddit(Subreddit):
         )
         return getattr(self, item)
 
-    def __init__(self, reddit: "asyncpraw.Reddit", *args, **kwargs):
+    def __init__(self, reddit: asyncpraw.Reddit, *args: Any, **kwargs: Any):
         """Initialize an :class:`.UserSubreddit` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -112,21 +114,22 @@ class UserSubreddit(Subreddit):
 
         """
 
-        def predicate(item):
+        def predicate(item: str):
             name = getattr(item, "__name__", None)
             return name not in dir(object) + dir(Subreddit) and name in dir(dict)
 
-        for name, member in inspect.getmembers(dict, predicate=predicate):
+        for name, _member in inspect.getmembers(dict, predicate=predicate):
             if name != "__getitem__":
                 setattr(
                     self,
                     name,
-                    self._dict_depreciated_wrapper(getattr(self.__dict__, name)),
+                    self._dict_deprecated_wrapper(getattr(self.__dict__, name)),
                 )
 
         super().__init__(reddit, *args, **kwargs)
 
 
+# noinspection PyIncorrectDocstring
 class UserSubredditModeration(SubredditModeration):
     """Provides a set of moderation functions to a :class:`.UserSubreddit`.
 
@@ -140,8 +143,8 @@ class UserSubredditModeration(SubredditModeration):
     """
 
     async def update(
-        self, **settings: Union[str, int, bool]
-    ) -> Dict[str, Union[str, int, bool]]:
+        self, **settings: str | (int | bool)
+    ) -> dict[str, str | (int | bool)]:
         """Update the :class:`.Subreddit`'s settings.
 
         :param all_original_content: Mandate all submissions to be original content

@@ -1,4 +1,4 @@
-"""Checks for attributes and code examples in RedditBase subclasses"""
+"""Checks for attributes and code examples in RedditBase subclasses."""
 
 import os
 import re

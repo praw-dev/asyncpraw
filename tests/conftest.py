@@ -12,7 +12,7 @@ def patch_sleep(monkeypatch):
 
     async def _sleep(*_, **__):
         """Dud sleep function."""
-        pass
+        return
 
     monkeypatch.setattr(asyncio, "sleep", value=_sleep)
 
@@ -41,11 +41,6 @@ def pytest_configure(config):
     )
 
 
-class Placeholders:
-    def __init__(self, _dict):
-        self.__dict__ = _dict
-
-
 os.environ["praw_check_for_updates"] = "False"
 
 placeholders = {
@@ -59,3 +54,8 @@ placeholders = {
 placeholders["basic_auth"] = b64encode(
     f"{placeholders['client_id']}:{placeholders['client_secret']}".encode("utf-8")
 ).decode("utf-8")
+
+
+class Placeholders:
+    def __init__(self, _dict):
+        self.__dict__ = _dict

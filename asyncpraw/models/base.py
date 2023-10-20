@@ -1,6 +1,8 @@
 """Provide the AsyncPRAWBase superclass."""
+from __future__ import annotations
+
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
@@ -10,7 +12,9 @@ class AsyncPRAWBase:
     """Superclass for all models in Async PRAW."""
 
     @staticmethod
-    def _safely_add_arguments(*, arguments, key, **new_arguments):
+    def _safely_add_arguments(
+        *, arguments: dict[str, Any], key: str, **new_arguments: Any
+    ):
         """Replace arguments[key] with a deepcopy and update.
 
         This method is often called when new parameters need to be added to a request.
@@ -23,7 +27,7 @@ class AsyncPRAWBase:
         arguments[key] = value
 
     @classmethod
-    def parse(cls, data: Dict[str, Any], reddit: "asyncpraw.Reddit") -> Any:
+    def parse(cls, data: dict[str, Any], reddit: asyncpraw.Reddit) -> AsyncPRAWBase:
         """Return an instance of ``cls`` from ``data``.
 
         :param data: The structured data.
@@ -32,7 +36,7 @@ class AsyncPRAWBase:
         """
         return cls(reddit, _data=data)
 
-    def __init__(self, reddit: "asyncpraw.Reddit", _data: Optional[Dict[str, Any]]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any] | None):
         """Initialize a :class:`.AsyncPRAWBase` instance.
 
         :param reddit: An instance of :class:`.Reddit`.

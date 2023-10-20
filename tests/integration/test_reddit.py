@@ -1,6 +1,7 @@
 """Test asyncpraw.reddit."""
 from base64 import urlsafe_b64encode
 
+import aiofiles
 import pytest
 from asyncprawcore.exceptions import BadRequest, ServerError
 

@@ -1,6 +1,8 @@
 """Provide the helper classes."""
+from __future__ import annotations
+
 from json import dumps
-from typing import TYPE_CHECKING, AsyncGenerator, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncGenerator
 
 from ..const import API_PATH
 from ..util import _deprecate_args
@@ -40,8 +42,8 @@ class DraftHelper(AsyncPRAWBase):
             yield draft
 
     async def __call__(
-        self, draft_id: Optional[str] = None, fetch: bool = True
-    ) -> Union[List["asyncpraw.models.Draft"], "asyncpraw.models.Draft"]:
+        self, draft_id: str | None = None, fetch: bool = True
+    ) -> list[asyncpraw.models.Draft] | asyncpraw.models.Draft:
         """Return a list of :class:`.Draft` instances.
 
         :param draft_id: When provided, this returns a :class:`.Draft` instance
@@ -68,7 +70,7 @@ class DraftHelper(AsyncPRAWBase):
             return draft
         return await self._draft_list()
 
-    async def _draft_list(self) -> List["asyncpraw.models.Draft"]:
+    async def _draft_list(self) -> list[asyncpraw.models.Draft]:
         """Get a list of :class:`.Draft` instances.
 
         :returns: A list of :class:`.Draft` instances.
@@ -79,21 +81,22 @@ class DraftHelper(AsyncPRAWBase):
     async def create(
         self,
         *,
-        flair_id: Optional[str] = None,
-        flair_text: Optional[str] = None,
+        flair_id: str | None = None,
+        flair_text: str | None = None,
         is_public_link: bool = False,
         nsfw: bool = False,
         original_content: bool = False,
-        selftext: Optional[str] = None,
+        selftext: str | None = None,
         send_replies: bool = True,
         spoiler: bool = False,
-        subreddit: Optional[
-            Union[str, "asyncpraw.models.Subreddit", "asyncpraw.models.UserSubreddit"]
-        ] = None,
-        title: Optional[str] = None,
-        url: Optional[str] = None,
-        **draft_kwargs,
-    ) -> "asyncpraw.models.Draft":
+        subreddit: str
+        | asyncpraw.models.Subreddit
+        | asyncpraw.models.UserSubreddit
+        | None = None,
+        title: str | None = None,
+        url: str | None = None,
+        **draft_kwargs: Any,
+    ) -> asyncpraw.models.Draft:
         """Create a new :class:`.Draft`.
 
         :param flair_id: The flair template to select (default: ``None``).
@@ -127,7 +130,8 @@ class DraftHelper(AsyncPRAWBase):
 
         """
         if selftext and url:
-            raise TypeError("Exactly one of 'selftext' or 'url' must be provided.")
+            msg = "Exactly one of 'selftext' or 'url' must be provided."
+            raise TypeError(msg)
         if isinstance(subreddit, str):
             subreddit = await self._reddit.subreddit(subreddit)
 
@@ -153,7 +157,7 @@ class LiveHelper(AsyncPRAWBase):
 
     async def __call__(
         self, id: str, fetch: bool = False
-    ) -> "asyncpraw.models.LiveThread":  # pylint: disable=invalid-name,redefined-builtin
+    ) -> asyncpraw.models.LiveThread:
         """Return a new instance of :class:`.LiveThread`.
 
         This method is intended to be used as:
@@ -185,10 +189,10 @@ class LiveHelper(AsyncPRAWBase):
         self,
         title: str,
         *,
-        description: Optional[str] = None,
+        description: str | None = None,
         nsfw: bool = False,
         resources: str = None,
-    ) -> "asyncpraw.models.LiveThread":
+    ) -> asyncpraw.models.LiveThread:
         """Create a new :class:`.LiveThread`.
 
         :param title: The title of the new :class:`.LiveThread`.
@@ -211,9 +215,7 @@ class LiveHelper(AsyncPRAWBase):
             },
         )
 
-    def info(
-        self, ids: List[str]
-    ) -> AsyncGenerator["asyncpraw.models.LiveThread", None]:
+    def info(self, ids: list[str]) -> AsyncGenerator[asyncpraw.models.LiveThread, None]:
         """Fetch information about each live thread in ``ids``.
 
         :param ids: A list of IDs for a live thread.
@@ -243,7 +245,8 @@ class LiveHelper(AsyncPRAWBase):
 
         """
         if not isinstance(ids, list):
-            raise TypeError("ids must be a list")
+            msg = "ids must be a list"
+            raise TypeError(msg)
 
         async def generator():
             for position in range(0, len(ids), 100):
@@ -255,7 +258,7 @@ class LiveHelper(AsyncPRAWBase):
 
         return generator()
 
-    async def now(self) -> Optional["asyncpraw.models.LiveThread"]:
+    async def now(self) -> asyncpraw.models.LiveThread | None:
         """Get the currently featured live thread.
 
         :returns: The :class:`.LiveThread` object, or ``None`` if there is no currently
@@ -279,9 +282,9 @@ class MultiredditHelper(AsyncPRAWBase):
         self,
         *,
         name: str,
-        redditor: Union[str, "asyncpraw.models.Redditor"],
+        redditor: str | asyncpraw.models.Redditor,
         fetch: bool = False,
-    ) -> "asyncpraw.models.Multireddit":
+    ) -> asyncpraw.models.Multireddit:
         """Return a lazy instance of :class:`.Multireddit`.
 
         If you need the object fetched right away (e.g., to access an attribute) you can
@@ -319,14 +322,14 @@ class MultiredditHelper(AsyncPRAWBase):
     async def create(
         self,
         *,
-        description_md: Optional[str] = None,
+        description_md: str | None = None,
         display_name: str,
-        icon_name: Optional[str] = None,
-        key_color: Optional[str] = None,
-        subreddits: Union[str, "asyncpraw.models.Subreddit"],
+        icon_name: str | None = None,
+        key_color: str | None = None,
+        subreddits: str | asyncpraw.models.Subreddit,
         visibility: str = "private",
         weighting_scheme: str = "classic",
-    ) -> "asyncpraw.models.Multireddit":
+    ) -> asyncpraw.models.Multireddit:
         """Create a new :class:`.Multireddit`.
 
         :param display_name: The display name for the new multireddit.
@@ -369,7 +372,7 @@ class SubredditHelper(AsyncPRAWBase):
 
     async def __call__(
         self, display_name: str, fetch: bool = False
-    ) -> "asyncpraw.models.Subreddit":
+    ) -> asyncpraw.models.Subreddit:
         """Return an instance of :class:`.Subreddit`.
 
         :param display_name: The name of the subreddit.
@@ -403,10 +406,10 @@ class SubredditHelper(AsyncPRAWBase):
         *,
         link_type: str = "any",
         subreddit_type: str = "public",
-        title: Optional[str] = None,
+        title: str | None = None,
         wikimode: str = "disabled",
-        **other_settings: Optional[str],
-    ) -> "asyncpraw.models.Subreddit":
+        **other_settings: str | None,
+    ) -> asyncpraw.models.Subreddit:
         """Create a new :class:`.Subreddit`.
 
         :param name: The name for the new subreddit.
@@ -438,5 +441,4 @@ class SubredditHelper(AsyncPRAWBase):
             wikimode=wikimode,
             **other_settings,
         )
-        subreddit = await self(name, fetch=True)
-        return subreddit
+        return await self(name, fetch=True)

@@ -1,6 +1,8 @@
 """Provide the Emoji class."""
-import os
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from __future__ import annotations
+
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...exceptions import ClientException
@@ -31,7 +33,7 @@ class Emoji(RedditBase):
 
     STR_FIELD = "name"
 
-    def __eq__(self, other: Union[str, "Emoji"]) -> bool:
+    def __eq__(self, other: str | Emoji) -> bool:
         """Return whether the other instance equals the current."""
         if isinstance(other, str):
             return other == str(self)
@@ -45,10 +47,10 @@ class Emoji(RedditBase):
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        subreddit: "asyncpraw.models.Subreddit",
+        reddit: asyncpraw.Reddit,
+        subreddit: asyncpraw.models.Subreddit,
         name: str,
-        _data: Optional[Dict[str, Any]] = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize an :class:`.Emoji` instance."""
         self.name = name
@@ -59,9 +61,10 @@ class Emoji(RedditBase):
         async for emoji in self.subreddit.emoji:
             if emoji.name == self.name:
                 self.__dict__.update(emoji.__dict__)
-                self._fetched = True
+                await super()._fetch()
                 return
-        raise ClientException(f"r/{self.subreddit} does not have the emoji {self.name}")
+        msg = f"r/{self.subreddit} does not have the emoji {self.name}"
+        raise ClientException(msg)
 
     async def delete(self):
         """Delete an emoji from this subreddit by :class:`.Emoji`.
@@ -84,9 +87,9 @@ class Emoji(RedditBase):
     async def update(
         self,
         *,
-        mod_flair_only: Optional[bool] = None,
-        post_flair_allowed: Optional[bool] = None,
-        user_flair_allowed: Optional[bool] = None,
+        mod_flair_only: bool | None = None,
+        post_flair_allowed: bool | None = None,
+        user_flair_allowed: bool | None = None,
     ):
         """Update the permissions of an emoji in this subreddit.
 
@@ -122,12 +125,13 @@ class Emoji(RedditBase):
             )
         }
         if all(value is None for value in mapping.values()):
-            raise TypeError("At least one attribute must be provided")
+            msg = "At least one attribute must be provided"
+            raise TypeError(msg)
 
         data = {"name": self.name}
         for attribute, value in mapping.items():
             if value is None:
-                value = getattr(self, attribute)
+                value = getattr(self, attribute)  # noqa: PLW2901
             data[attribute] = value
         url = API_PATH["emoji_update"].format(subreddit=self.subreddit)
         await self._reddit.post(url, data=data)
@@ -138,7 +142,7 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a :class:`.Subreddit` for emoji."""
 
-    async def __aiter__(self) -> List[Emoji]:
+    async def __aiter__(self) -> list[Emoji]:
         """Return a list of :class:`.Emoji` for the subreddit.
 
         This method is to be used to discover all emoji for a subreddit:
@@ -155,14 +159,14 @@ class SubredditEmoji:
         )
         subreddit_keys = [
             key
-            for key in response.keys()
+            for key in response
             if key.startswith(self._reddit.config.kinds["subreddit"])
         ]
         assert len(subreddit_keys) == 1
         for emoji_name, emoji_data in response[subreddit_keys[0]].items():
             yield Emoji(self._reddit, self.subreddit, emoji_name, _data=emoji_data)
 
-    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit):
         """Initialize a :class:`.SubredditEmoji` instance.
 
         :param subreddit: The subreddit whose emoji are affected.
@@ -175,10 +179,10 @@ class SubredditEmoji:
         self,
         *,
         image_path: str,
-        mod_flair_only: Optional[bool] = None,
+        mod_flair_only: bool | None = None,
         name: str,
-        post_flair_allowed: Optional[bool] = None,
-        user_flair_allowed: Optional[bool] = None,
+        post_flair_allowed: bool | None = None,
+        user_flair_allowed: bool | None = None,
     ) -> Emoji:
         """Add an emoji to this subreddit.
 
@@ -201,8 +205,9 @@ class SubredditEmoji:
             await subreddit.emoji.add(name="emoji", image_path="emoji.png")
 
         """
+        file = Path(image_path)
         data = {
-            "filepath": os.path.basename(image_path),
+            "filepath": file.name,
             "mimetype": "image/jpeg",
         }
         if image_path.lower().endswith(".png"):
@@ -215,7 +220,7 @@ class SubredditEmoji:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        with open(image_path, "rb") as image:
+        with file.open("rb") as image:
             upload_data["file"] = image
             response = await self._reddit._core._requestor._http.post(
                 upload_url, data=upload_data
@@ -234,7 +239,7 @@ class SubredditEmoji:
         return Emoji(self._reddit, self.subreddit, name)
 
     @deprecate_lazy
-    async def get_emoji(self, name: str, fetch: bool = True, **kwargs) -> Emoji:
+    async def get_emoji(self, name: str, fetch: bool = True, **_: Any) -> Emoji:
         """Return the :class:`.Emoji` for the subreddit named ``name``.
 
         :param name: The name of the emoji.

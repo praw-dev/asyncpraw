@@ -1,5 +1,7 @@
 """Provide the Removal Reason class."""
-from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, AsyncIterator
 from warnings import warn
 
 from ...const import API_PATH
@@ -30,7 +32,9 @@ class RemovalReason(RedditBase):
     STR_FIELD = "id"
 
     @staticmethod
-    def _warn_reason_id(*, id_value: Optional[str], reason_id_value: Optional[str]):
+    def _warn_reason_id(
+        *, id_value: str | None, reason_id_value: str | None
+    ) -> str | None:
         """Reason ID param is deprecated. Warns if it's used.
 
         :param id_value: Returns the actual value of parameter ``id`` is parameter
@@ -50,7 +54,7 @@ class RemovalReason(RedditBase):
             return reason_id_value
         return id_value
 
-    def __eq__(self, other: Union[str, "RemovalReason"]) -> bool:
+    def __eq__(self, other: str | RemovalReason) -> bool:
         """Return whether the other instance equals the current."""
         if isinstance(other, str):
             return other == str(self)
@@ -62,11 +66,11 @@ class RemovalReason(RedditBase):
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        subreddit: "asyncpraw.models.Subreddit",
-        id: Optional[str] = None,  # pylint: disable=redefined-builtin
-        reason_id: Optional[str] = None,
-        _data: Optional[Dict[str, Any]] = None,
+        reddit: asyncpraw.Reddit,
+        subreddit: asyncpraw.models.Subreddit,
+        id: str | None = None,
+        reason_id: str | None = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize a :class:`.RemovalReason` instance.
 
@@ -77,12 +81,13 @@ class RemovalReason(RedditBase):
             compatibility. This parameter should not be used.
 
         """
-        id = self._warn_reason_id(id_value=id, reason_id_value=reason_id)
-        if (id, _data).count(None) != 1:
-            raise ValueError("Either id or _data needs to be given.")
+        reason_id = self._warn_reason_id(id_value=id, reason_id_value=reason_id)
+        if (reason_id, _data).count(None) != 1:
+            msg = "Either id or _data needs to be given."
+            raise ValueError(msg)
 
-        if id:
-            self.id = id
+        if reason_id:
+            self.id = reason_id
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
@@ -90,11 +95,10 @@ class RemovalReason(RedditBase):
         async for removal_reason in self.subreddit.mod.removal_reasons:
             if removal_reason.id == self.id:
                 self.__dict__.update(removal_reason.__dict__)
-                self._fetched = True
+                await super()._fetch()
                 return
-        raise ClientException(
-            f"Subreddit {self.subreddit} does not have the removal reason {self.id}"
-        )
+        msg = f"Subreddit {self.subreddit} does not have the removal reason {self.id}"
+        raise ClientException(msg)
 
     async def delete(self):
         """Delete a removal reason from this subreddit.
@@ -112,9 +116,7 @@ class RemovalReason(RedditBase):
         await self._reddit.delete(url)
 
     @_deprecate_args("message", "title")
-    async def update(
-        self, *, message: Optional[str] = None, title: Optional[str] = None
-    ):
+    async def update(self, *, message: str | None = None, title: str | None = None):
         """Update the removal reason from this subreddit.
 
         .. note::
@@ -159,7 +161,7 @@ class SubredditRemovalReasons:
         for reason in await self._removal_reason_list():
             yield reason
 
-    def __init__(self, subreddit: "asyncpraw.models.Subreddit"):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit):
         """Initialize a :class:`.SubredditRemovalReasons` instance.
 
         :param subreddit: The subreddit whose removal reasons to work with.
@@ -168,7 +170,7 @@ class SubredditRemovalReasons:
         self.subreddit = subreddit
         self._reddit = subreddit._reddit
 
-    async def _removal_reason_list(self) -> List[RemovalReason]:
+    async def _removal_reason_list(self) -> list[RemovalReason]:
         """Get a list of Removal Reason objects.
 
         :returns: A list of instances of :class:`.RemovalReason`.
@@ -205,12 +207,15 @@ class SubredditRemovalReasons:
         """
         data = {"message": message, "title": title}
         url = API_PATH["removal_reasons_list"].format(subreddit=self.subreddit)
-        id = await self._reddit.post(url, data=data)
-        return RemovalReason(self._reddit, self.subreddit, id["id"])
+        reason_id = await self._reddit.post(url, data=data)
+        return RemovalReason(self._reddit, self.subreddit, reason_id["id"])
 
     @deprecate_lazy
     async def get_reason(
-        self, reason_id: Union[str, int, slice], fetch: bool = True, **kwargs
+        self,
+        reason_id: str | (int | slice),
+        fetch: bool = True,
+        **_,
     ) -> RemovalReason:
         """Return the Removal Reason with the ID/number/slice ``reason_id``.
 
@@ -268,8 +273,7 @@ class SubredditRemovalReasons:
         if not isinstance(reason_id, str):
             reasons = await self._removal_reason_list()
             return reasons[reason_id]
-        else:
-            reason = RemovalReason(self._reddit, self.subreddit, reason_id)
+        reason = RemovalReason(self._reddit, self.subreddit, reason_id)
         if fetch:
             await reason._fetch()
         return reason

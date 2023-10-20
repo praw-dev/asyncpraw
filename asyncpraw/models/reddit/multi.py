@@ -1,7 +1,9 @@
 """Provide the Multireddit class."""
+from __future__ import annotations
+
 import re
 from json import dumps
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...util import _deprecate_args
@@ -49,7 +51,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
     RE_INVALID = re.compile(r"[\W_]+", re.UNICODE)
 
     @staticmethod
-    def sluggify(title: str):
+    def sluggify(title: str) -> str:
         """Return a slug version of the title.
 
         :param title: The title to make a slug of.
@@ -90,7 +92,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         """
         return SubredditStream(self)
 
-    def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
         """Initialize a :class:`.Multireddit` instance."""
         self.path = None
         super().__init__(reddit, _data=_data)
@@ -110,7 +112,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
-        self._fetched = True
+        await super()._fetch()
 
     def _fetch_info(self):
         return (
@@ -119,7 +121,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
             None,
         )
 
-    async def add(self, subreddit: "asyncpraw.models.Subreddit"):
+    async def add(self, subreddit: asyncpraw.models.Subreddit):
         """Add a subreddit to this multireddit.
 
         :param subreddit: The subreddit to add to this multi.
@@ -142,8 +144,8 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
     @_deprecate_args("display_name")
     async def copy(
-        self, *, display_name: Optional[str] = None
-    ) -> "asyncpraw.models.Multireddit":
+        self, *, display_name: str | None = None
+    ) -> asyncpraw.models.Multireddit:
         """Copy this multireddit and return the new multireddit.
 
         :param display_name: The display name for the copied multireddit. Reddit will
@@ -190,7 +192,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         )
         await self._reddit.delete(path)
 
-    async def remove(self, subreddit: "asyncpraw.models.Subreddit"):
+    async def remove(self, subreddit: asyncpraw.models.Subreddit):
         """Remove a subreddit from this multireddit.
 
         :param subreddit: The subreddit to remove from this multi.
@@ -213,9 +215,8 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
     async def update(
         self,
-        **updated_settings: Union[
-            str, List[Union[str, "asyncpraw.models.Subreddit", Dict[str, str]]]
-        ],
+        **updated_settings: str
+        | list[str | asyncpraw.models.Subreddit | dict[str, str]],
     ):
         """Update this multireddit.
 

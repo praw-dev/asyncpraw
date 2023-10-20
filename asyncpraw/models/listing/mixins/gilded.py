@@ -1,5 +1,7 @@
 """Provide the GildedListingMixin class."""
-from typing import Any, AsyncIterator, Dict, Union
+from __future__ import annotations
+
+from typing import Any, AsyncIterator
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase
@@ -10,7 +12,7 @@ class GildedListingMixin(AsyncPRAWBase):
     """Mixes in the gilded method."""
 
     def gilded(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
+        self, **generator_kwargs: str | int | dict[str, str]
     ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for gilded items.
 

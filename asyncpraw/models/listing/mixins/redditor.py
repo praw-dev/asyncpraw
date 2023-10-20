@@ -1,5 +1,7 @@
 """Provide the RedditorListingMixin class."""
-from typing import TYPE_CHECKING, AsyncIterator, Dict, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, AsyncIterator
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
@@ -14,7 +16,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class SubListing(BaseListingMixin):
     """Helper class for generating :class:`.ListingGenerator` objects."""
 
-    def __init__(self, reddit: "asyncpraw.Reddit", base_path: str, subpath: str):
+    def __init__(self, reddit: asyncpraw.Reddit, base_path: str, subpath: str):
         """Initialize a :class:`.SubListing` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -63,10 +65,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         return SubListing(self._reddit, self._path, "submitted")
 
     def downvoted(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[
-        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
-    ]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has downvoted.
 
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
@@ -98,10 +98,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         )
 
     def gildings(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[
-        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
-    ]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has gilded.
 
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
@@ -133,10 +131,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         )
 
     def hidden(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[
-        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
-    ]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has hidden.
 
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
@@ -168,10 +164,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         )
 
     def saved(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[
-        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
-    ]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has saved.
 
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
@@ -203,10 +197,8 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         )
 
     def upvoted(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator[
-        Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]
-    ]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has upvoted.
 
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or

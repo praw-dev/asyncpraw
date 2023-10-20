@@ -1,5 +1,7 @@
 """Provide the Message class."""
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from .base import RedditBase
@@ -38,7 +40,9 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
     STR_FIELD = "id"
 
     @classmethod
-    def parse(cls, data: Dict[str, Any], reddit: "asyncpraw.Reddit"):
+    def parse(
+        cls, data: dict[str, Any], reddit: asyncpraw.Reddit
+    ) -> Message | SubredditMessage:
         """Return an instance of :class:`.Message` or :class:`.SubredditMessage` from ``data``.
 
         :param data: The structured data.
@@ -71,7 +75,7 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
         return self._reddit.config.kinds["message"]
 
     @property
-    def parent(self) -> Optional["asyncpraw.models.Message"]:
+    def parent(self) -> asyncpraw.models.Message | None:
         """Return the parent of the message if it exists.
 
         .. note::
@@ -89,9 +93,8 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
         """
         if not self._parent:
             if not self._fetched:
-                raise AttributeError(
-                    "Message must be fetched with `.load()` before accessing the parent."
-                )
+                msg = "Message must be fetched with `.load()` before accessing the parent."
+                raise AttributeError(msg)
             if self.parent_id:
                 self._parent = Message(
                     self._reddit, {"id": self.parent_id.split("_")[1]}
@@ -100,10 +103,10 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
         return self._parent
 
     @parent.setter
-    def parent(self, value):
+    def parent(self, value: asyncpraw.models.Message | None):
         self._parent = value
 
-    def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
         """Initialize a :class:`.Message` instance."""
         super().__init__(reddit, _data=_data, _fetched=True)
         self._parent = None
@@ -114,7 +117,7 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
     async def _fetch(self):
         message = await self._reddit.inbox.message(self.id)
         self.__dict__.update(message.__dict__)
-        self._fetched = True
+        await super()._fetch()
 
     async def delete(self):
         """Delete the message.
