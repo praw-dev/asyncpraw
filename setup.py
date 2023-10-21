@@ -17,9 +17,8 @@ extras = {
     "dev": ["packaging"],
     "lint": ["pre-commit"],
     "readthedocs": [
+        "furo",
         "sphinx",
-        "sphinx-rtd-dark-mode",
-        "sphinx_rtd_theme",
         "sphinxcontrib-trio",
     ],
     "test": [
@@ -59,12 +58,13 @@ setup(
     ],
     description=(
         'Async PRAW, an abbreviation for "Asynchronous Python Reddit API Wrapper", is a'
-        " python package that allows for simple access to Reddit's API."
+        " Python package that allows for simple access to Reddit's API."
     ),
     extras_require=extras,
     install_requires=[
-        "aiofiles <1",
-        "aiohttp <4",
+        "aiofiles ==23.*",
+        "aiohttp <4; python_version < '3.12'",
+        "aiohttp==3.9.0b0; python_version == '3.12'",
         "aiosqlite <=0.17.0",
         "asyncprawcore >=2.1, <3",
         "update_checker >=0.18",
