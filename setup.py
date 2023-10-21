@@ -62,8 +62,9 @@ setup(
     ),
     extras_require=extras,
     install_requires=[
-        "aiofiles <1",
-        "aiohttp <4",
+        "aiofiles ==23.*",
+        "aiohttp <4; python_version < '3.12'",
+        "aiohttp==3.9.0b0; python_version == '3.12'",
         "aiosqlite <=0.17.0",
         "asyncprawcore >=2.1, <3",
         "update_checker >=0.18",
