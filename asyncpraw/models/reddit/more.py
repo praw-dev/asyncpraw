@@ -1,5 +1,7 @@
 """Provide the MoreComments class."""
-from typing import TYPE_CHECKING, Any, Dict, List, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...util import _deprecate_args
@@ -12,13 +14,13 @@ if TYPE_CHECKING:  # pragma: no cover
 class MoreComments(AsyncPRAWBase):
     """A class indicating there are more comments."""
 
-    def __eq__(self, other: Union[str, "MoreComments"]) -> bool:
+    def __eq__(self, other: str | MoreComments) -> bool:
         """Return ``True`` if these :class:`.MoreComments` instances are the same."""
         if isinstance(other, self.__class__):
             return self.count == other.count and self.children == other.children
         return super().__eq__(other)
 
-    def __init__(self, reddit: "asyncpraw.Reddit", _data: Dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
         """Initialize a :class:`.MoreComments` instance."""
         self.count = self.parent_id = None
         self.children = []
@@ -26,7 +28,7 @@ class MoreComments(AsyncPRAWBase):
         self._comments = None
         self.submission = None
 
-    def __lt__(self, other: "MoreComments") -> bool:
+    def __lt__(self, other: MoreComments) -> bool:
         """Provide a sort order on the :class:`.MoreComments` object."""
         # To work with heapq a "smaller" item is the one with the most comments. We are
         # intentionally making the biggest element the smallest element to turn the
@@ -40,7 +42,7 @@ class MoreComments(AsyncPRAWBase):
             children[-1] = "..."
         return f"<{self.__class__.__name__} count={self.count}, children={children!r}>"
 
-    async def _continue_comments(self, update):
+    async def _continue_comments(self, update: bool):
         assert not self.children, "Please file a bug report with Async PRAW."
         parent = await self._load_comment(self.parent_id.split("_", 1)[1])
         self._comments = parent.replies
@@ -49,7 +51,7 @@ class MoreComments(AsyncPRAWBase):
                 comment.submission = self.submission
         return self._comments
 
-    async def _load_comment(self, comment_id):
+    async def _load_comment(self, comment_id: str):
         path = f"{API_PATH['submission'].format(id=self.submission.id)}_/{comment_id}"
         _, comments = await self._reddit.get(
             path,
@@ -62,9 +64,7 @@ class MoreComments(AsyncPRAWBase):
         return comments.children[0]
 
     @_deprecate_args("update")
-    async def comments(
-        self, *, update: bool = True
-    ) -> List["asyncpraw.models.Comment"]:
+    async def comments(self, *, update: bool = True) -> list[asyncpraw.models.Comment]:
         """Fetch and return the comments for a single :class:`.MoreComments` object."""
         if self._comments is None:
             if self.count == 0:  # Handle "continue this thread"

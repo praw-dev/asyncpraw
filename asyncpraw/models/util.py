@@ -1,19 +1,21 @@
 """Provide helper classes used by other models."""
+from __future__ import annotations
+
 import asyncio
 import random
 from collections import OrderedDict
 from functools import wraps
-from typing import Any, AsyncGenerator, Callable, List, Optional, Set, Union
+from typing import Any, AsyncGenerator, Callable
 from warnings import warn
 
 from ..util import _deprecate_args
 
 
-def deprecate_lazy(func):  # noqa: D401
-    """A decorator used for deprecating the ``lazy`` keyword argument."""
+def deprecate_lazy(func: Callable) -> Callable[..., Any]:
+    """A decorator used for deprecating the ``lazy`` keyword argument."""  # noqa: D401
 
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any):
         if "lazy" in kwargs:
             kwargs.setdefault("fetch", not kwargs.pop("lazy"))
             warn(
@@ -30,7 +32,7 @@ def deprecate_lazy(func):  # noqa: D401
 
 @_deprecate_args("permissions", "known_permissions")
 def permissions_string(
-    *, known_permissions: Set[str], permissions: Optional[List[str]]
+    *, known_permissions: set[str], permissions: list[str] | None
 ) -> str:
     """Return a comma separated string of permission changes.
 
@@ -61,7 +63,7 @@ async def stream_generator(
     *,
     attribute_name: str = "fullname",
     exclude_before: bool = False,
-    pause_after: Optional[int] = None,
+    pause_after: int | None = None,
     skip_existing: bool = False,
     **function_kwargs: Any,
 ) -> AsyncGenerator[Any, None]:
@@ -229,10 +231,10 @@ class ExponentialCounter:
         self._base = 1
         self._max = max_counter
 
-    def counter(self) -> Union[int, float]:
+    def counter(self) -> int | float:
         """Increment the counter and return the current value with jitter."""
         max_jitter = self._base / 16.0
-        value = self._base + random.random() * max_jitter - max_jitter / 2
+        value = self._base + random.random() * max_jitter - max_jitter / 2  # noqa: S311
         self._base = min(self._base * 2, self._max)
         return value
 

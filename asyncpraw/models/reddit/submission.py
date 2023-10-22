@@ -1,7 +1,9 @@
 """Provide the Submission class."""
+from __future__ import annotations
+
 import re
 from json import dumps
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Generator
 from urllib.parse import urljoin
 from warnings import warn
 
@@ -35,7 +37,7 @@ MEDIA_TYPE_MAPPING = {
 class SubmissionFlair:
     """Provide a set of functions pertaining to :class:`.Submission` flair."""
 
-    def __init__(self, submission: "asyncpraw.models.Submission"):
+    def __init__(self, submission: asyncpraw.models.Submission):
         """Initialize a :class:`.SubmissionFlair` instance.
 
         :param submission: The :class:`.Submission` associated with the flair functions.
@@ -43,7 +45,7 @@ class SubmissionFlair:
         """
         self.submission = submission
 
-    async def choices(self) -> List[Dict[str, Union[bool, list, str]]]:
+    async def choices(self) -> list[dict[str, bool | list | str]]:
         """Return list of available flair choices.
 
         Choices are required in order to use :meth:`.select`.
@@ -64,7 +66,7 @@ class SubmissionFlair:
         return data["choices"]
 
     @_deprecate_args("flair_template_id", "text")
-    async def select(self, flair_template_id: str, *, text: Optional[str] = None):
+    async def select(self, flair_template_id: str, *, text: str | None = None):
         """Select flair for submission.
 
         :param flair_template_id: The flair template to select. The possible values can
@@ -107,7 +109,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
 
     REMOVAL_MESSAGE_API = "removal_link_message"
 
-    def __init__(self, submission: "asyncpraw.models.Submission"):
+    def __init__(self, submission: asyncpraw.models.Submission):
         """Initialize a :class:`.SubmissionModeration` instance.
 
         :param submission: The submission to moderate.
@@ -147,7 +149,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
         self,
         *,
         css_class: str = "",
-        flair_template_id: Optional[str] = None,
+        flair_template_id: str | None = None,
         text: str = "",
     ):
         """Set flair for the submission.
@@ -279,7 +281,9 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
         )
 
     @_deprecate_args("state", "bottom")
-    async def sticky(self, *, bottom: bool = True, state: bool = True):
+    async def sticky(
+        self, *, bottom: bool = True, state: bool = True
+    ) -> asyncpraw.models.Submission:
         """Set the submission's sticky state in its subreddit.
 
         :param bottom: When ``True``, set the submission as the bottom sticky. If no top
@@ -287,6 +291,8 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             (default: ``True``).
         :param state: ``True`` sets the sticky for the submission and ``False`` unsets
             (default: ``True``).
+
+        :returns: The stickied submission object.
 
         .. note::
 
@@ -556,10 +562,10 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        id: Optional[str] = None,  # pylint: disable=redefined-builtin
-        url: Optional[str] = None,
-        _data: Optional[Dict[str, Any]] = None,
+        reddit: asyncpraw.Reddit,
+        id: str | None = None,
+        url: str | None = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize a :class:`.Submission` instance.
 
@@ -571,7 +577,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
         """
         if (id, url, _data).count(None) != 2:
-            raise TypeError("Exactly one of 'id', 'url', or '_data' must be provided.")
+            msg = "Exactly one of 'id', 'url', or '_data' must be provided."
+            raise TypeError(msg)
         self.comment_limit = 2048
 
         # Specify the sort order for ``comments``
@@ -638,11 +645,17 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         ):
             warn(
                 "The comments for this submission have already been fetched, so the"
-                " updated comment_sort will not have any effect."
+                " updated comment_sort will not have any effect.",
+                stacklevel=2,
             )
         super().__setattr__(attribute, value)
 
-    def _chunk(self, *, chunk_size, other_submissions):
+    def _chunk(
+        self,
+        *,
+        chunk_size: int,
+        other_submissions: list[asyncpraw.models.Submission] | None,
+    ) -> Generator[str, None, None]:
         all_submissions = [self.fullname]
         if other_submissions:
             all_submissions += [x.fullname for x in other_submissions]
@@ -654,9 +667,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         self,
         body: str,
         *,
-        preserve_inline_media=False,
-        inline_media: Optional[Dict[str, "asyncpraw.models.InlineMedia"]] = None,
-    ) -> Union["asyncpraw.models.Submission"]:
+        preserve_inline_media: bool = False,
+        inline_media: dict[str, asyncpraw.models.InlineMedia] | None = None,
+    ) -> asyncpraw.models.Submission:
         """Replace the body of the object with ``body``.
 
         :param body: The Markdown formatted content for the updated object.
@@ -726,7 +739,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             self.__dict__.update(updated.__dict__)
         else:
             self.__dict__.update(updated)
-        return self  # type: ignore
+        return self
 
     async def _fetch(self):
         data = await self._fetch_data()
@@ -740,8 +753,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         submission.comments = CommentForest(self)
 
         self.__dict__.update(submission.__dict__)
-        self._fetched = True
         self.comments._update(comment_listing.children)
+        await super()._fetch()
 
     async def _fetch_data(self):
         name, fields, params = self._fetch_info()
@@ -813,7 +826,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
                 f"This {self.__class__.__name__.lower()} has already been fetched, so"
                 " adding additional fetch parameters will not have any effect."
                 f" Initialize the {self.__class__.__name__} instance with the parameter"
-                " `fetch=False` to use additional fetch parameters."
+                " `fetch=False` to use additional fetch parameters.",
+                stacklevel=2,
             )
         self._additional_fetch_params[key] = value
 
@@ -828,15 +842,15 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
     )
     async def crosspost(
         self,
-        subreddit: "asyncpraw.models.Subreddit",
+        subreddit: asyncpraw.models.Subreddit,
         *,
-        flair_id: Optional[str] = None,
-        flair_text: Optional[str] = None,
+        flair_id: str | None = None,
+        flair_text: str | None = None,
         nsfw: bool = False,
         send_replies: bool = True,
         spoiler: bool = False,
-        title: Optional[str] = None,
-    ) -> "asyncpraw.models.Submission":
+        title: str | None = None,
+    ) -> asyncpraw.models.Submission:
         """Crosspost the submission to a subreddit.
 
         .. note::
@@ -891,7 +905,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
     @_deprecate_args("other_submissions")
     async def hide(
-        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+        self, *, other_submissions: list[asyncpraw.models.Submission] | None = None
     ):
         """Hide :class:`.Submission`.
 
@@ -934,7 +948,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
     @_deprecate_args("other_submissions")
     async def unhide(
-        self, *, other_submissions: Optional[List["asyncpraw.models.Submission"]] = None
+        self, *, other_submissions: list[asyncpraw.models.Submission] | None = None
     ):
         """Unhide :class:`.Submission`.
 

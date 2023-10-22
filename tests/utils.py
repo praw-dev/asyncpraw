@@ -19,10 +19,8 @@ def ensure_environment_variables():
         "client_secret",
     ):
         if getattr(pytest.placeholders, key) == f"placeholder_{key}":
-            raise ValueError(
-                f"Environment variable 'prawtest_{key}' must be set for recording new"
-                " cassettes."
-            )
+            msg = f"Environment variable 'prawtest_{key}' must be set for recording new cassettes."
+            raise ValueError(msg)
     auth_set = False
     for auth_keys in [["refresh_token"], ["username", "password"]]:
         if all(
@@ -32,10 +30,8 @@ def ensure_environment_variables():
             auth_set = True
             break
     if not auth_set:
-        raise ValueError(
-            "Environment variables 'prawtest_refresh_token' or 'prawtest_username' and"
-            " 'prawtest_password' must be set for new cassette recording."
-        )
+        msg = "Environment variables 'prawtest_refresh_token' or 'prawtest_username' and 'prawtest_password' must be set for new cassette recording."
+        raise ValueError(msg)
 
 
 def ensure_integration_test(cassette):
@@ -115,7 +111,7 @@ class CustomPersister(FilesystemPersister):
 
 
 class CustomSerializer:
-    """Custom serializer to handle binary objects in dict."""
+    """Custom serializer to save in a prettified json format."""
 
     @staticmethod
     def _serialize_file(file_name):

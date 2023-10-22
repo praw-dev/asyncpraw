@@ -7,8 +7,10 @@ client side. Both of these classes extend :class:`.AsyncPRAWException`.
 All other exceptions are subclassed from :class:`.ClientException`.
 
 """
+from __future__ import annotations
+
 import sys
-from typing import List, Optional, Union
+from typing import Any
 from warnings import warn
 
 from .util import _deprecate_args
@@ -22,10 +24,10 @@ PRAWException = AsyncPRAWException
 
 
 # Adapted from https://stackoverflow.com/a/40546615
-class ExceptionWrapper(object):
+class ExceptionWrapper:
     """Wrapper to facilitate showing depreciation for PRAWException class rename."""
 
-    def __getattr__(self, attribute):
+    def __getattr__(self, attribute: str) -> Any:
         """Return the value of `attribute`."""
         if attribute == "PRAWException":
             warn(
@@ -36,7 +38,7 @@ class ExceptionWrapper(object):
             )
         return getattr(self.wrapped, attribute)
 
-    def __init__(self, wrapped):
+    def __init__(self, wrapped: Any):
         """Initialize Wrapper instance."""
         self.wrapped = wrapped
 
@@ -54,7 +56,7 @@ class RedditErrorItem:
             error_str += f" on field {self.field!r}"
         return error_str
 
-    def __eq__(self, other: Union["RedditErrorItem", List[str]]):
+    def __eq__(self, other: RedditErrorItem | list[str]) -> bool:
         """Check for equality."""
         if isinstance(other, RedditErrorItem):
             return (self.error_type, self.message, self.field) == (
@@ -69,8 +71,8 @@ class RedditErrorItem:
         self,
         error_type: str,
         *,
-        field: Optional[str] = None,
-        message: Optional[str] = None,
+        field: str | None = None,
+        message: str | None = None,
     ):
         """Initialize a :class:`.RedditErrorItem` instance.
 
@@ -90,7 +92,7 @@ class RedditErrorItem:
             f" message={self.message!r}, field={self.field!r})"
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Get the message returned from str(self)."""
         return self.error_message
 
@@ -194,7 +196,7 @@ class WebSocketException(ClientException):
     def original_exception(self):
         del self._original_exception
 
-    def __init__(self, message: str, exception: Optional[Exception]):
+    def __init__(self, message: str, exception: Exception | None):
         """Initialize a :class:`.WebSocketException` instance.
 
         :param message: The exception message.
@@ -233,7 +235,9 @@ class APIException(AsyncPRAWException):
     """
 
     @staticmethod
-    def parse_exception_list(exceptions: List[Union[RedditErrorItem, List[str]]]):
+    def parse_exception_list(
+        exceptions: list[RedditErrorItem | list[str]],
+    ) -> list[RedditErrorItem]:
         """Covert an exception list into a :class:`.RedditErrorItem` list."""
         return [
             exception
@@ -290,7 +294,7 @@ class APIException(AsyncPRAWException):
 
     def __init__(
         self,
-        items: Union[List[Union[RedditErrorItem, List[str], str]], str],
+        items: list[RedditErrorItem | list[str] | str] | str,
         *optional_args: str,
     ):
         """Initialize a :class:`.RedditAPIException` instance.
@@ -308,7 +312,7 @@ class APIException(AsyncPRAWException):
         self.items = self.parse_exception_list(items)
         super().__init__(*self.items)
 
-    def _get_old_attr(self, attrname):
+    def _get_old_attr(self, attrname: str) -> Any:
         warn(
             f"Accessing attribute '{attrname}' through APIException is deprecated."
             " This behavior will be removed in Async PRAW 8.0. Check out"

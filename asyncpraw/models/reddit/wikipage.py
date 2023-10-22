@@ -1,12 +1,11 @@
 """Provide the WikiPage class."""
+from __future__ import annotations
+
 from typing import (
     TYPE_CHECKING,
     Any,
     AsyncGenerator,
     AsyncIterator,
-    Dict,
-    Optional,
-    Union,
 )
 
 from ...const import API_PATH
@@ -23,7 +22,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class WikiPageModeration:
     """Provides a set of moderation functions for a :class:`.WikiPage`.
 
-    For example, to add ``spez`` as an editor on the wikipage ``praw_test`` try:
+    For example, to add u/spez as an editor on the wikipage ``"praw_test"`` try:
 
     .. code-block:: python
 
@@ -33,7 +32,7 @@ class WikiPageModeration:
 
     """
 
-    def __init__(self, wikipage: "WikiPage"):
+    def __init__(self, wikipage: WikiPage):
         """Initialize a :class:`.WikiPageModeration` instance.
 
         :param wikipage: The wikipage to moderate.
@@ -41,7 +40,7 @@ class WikiPageModeration:
         """
         self.wikipage = wikipage
 
-    async def add(self, redditor: "asyncpraw.models.Redditor"):
+    async def add(self, redditor: asyncpraw.models.Redditor):
         """Add an editor to this :class:`.WikiPage`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -61,7 +60,7 @@ class WikiPageModeration:
         )
         await self.wikipage._reddit.post(url, data=data)
 
-    async def remove(self, redditor: "asyncpraw.models.Redditor"):
+    async def remove(self, redditor: asyncpraw.models.Redditor):
         """Remove an editor from this :class:`.WikiPage`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -134,7 +133,7 @@ class WikiPageModeration:
             },
         )
 
-    async def settings(self) -> Dict[str, Any]:
+    async def settings(self) -> dict[str, Any]:
         """Return the settings for this :class:`.WikiPage`."""
         url = API_PATH["wiki_page_settings"].format(
             subreddit=self.wikipage.subreddit, page=self.wikipage.name
@@ -145,7 +144,7 @@ class WikiPageModeration:
     @_deprecate_args("listed", "permlevel")
     async def update(
         self, *, listed: bool, permlevel: int, **other_settings: Any
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Update the settings for this :class:`.WikiPage`.
 
         :param listed: Show this page on page list.
@@ -156,7 +155,7 @@ class WikiPageModeration:
 
         :returns: The updated WikiPage settings.
 
-        To set the wikipage ``praw_test`` in r/test to mod only and disable it from
+        To set the wikipage ``"praw_test"`` in r/test to mod only and disable it from
         showing in the page list, try:
 
         .. code-block:: python
@@ -202,12 +201,10 @@ class WikiPage(RedditBase):
     @staticmethod
     async def _revision_generator(
         *,
-        generator_kwargs: Dict[str, Any],
-        subreddit: "asyncpraw.models.Subreddit",
+        generator_kwargs: dict[str, Any],
+        subreddit: asyncpraw.models.Subreddit,
         url: str,
-    ) -> AsyncGenerator[
-        Dict[str, Optional[Union[Redditor, "WikiPage", str, int, bool]]], None
-    ]:
+    ) -> AsyncGenerator[dict[str, Redditor | WikiPage | str | int | bool | None], None]:
         async for revision in ListingGenerator(
             subreddit._reddit, url, **generator_kwargs
         ):
@@ -237,11 +234,11 @@ class WikiPage(RedditBase):
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        subreddit: "asyncpraw.models.Subreddit",
+        reddit: asyncpraw.Reddit,
+        subreddit: asyncpraw.models.Subreddit,
         name: str,
-        revision: Optional[str] = None,
-        _data: Optional[Dict[str, Any]] = None,
+        revision: str | None = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize a :class:`.WikiPage` instance.
 
@@ -273,7 +270,7 @@ class WikiPage(RedditBase):
                 self._reddit, _data=data["revision_by"]["data"]
             )
         self.__dict__.update(data)
-        self._fetched = True
+        await super()._fetch()
 
     def _fetch_info(self):
         return (
@@ -284,7 +281,7 @@ class WikiPage(RedditBase):
 
     def discussions(
         self, **generator_kwargs: Any
-    ) -> AsyncIterator["asyncpraw.models.Submission"]:
+    ) -> AsyncIterator[asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for discussions of a wiki page.
 
         Discussions are site-wide links to a wiki page.
@@ -312,7 +309,7 @@ class WikiPage(RedditBase):
 
     @_deprecate_args("content", "reason")
     async def edit(
-        self, *, content: str, reason: Optional[str] = None, **other_settings: Any
+        self, *, content: str, reason: str | None = None, **other_settings: Any
     ):
         """Edit this wiki page's contents.
 
@@ -335,7 +332,7 @@ class WikiPage(RedditBase):
             API_PATH["wiki_edit"].format(subreddit=self.subreddit), data=other_settings
         )
 
-    async def revision(self, revision: str):
+    async def revision(self, revision: str) -> WikiPage:
         """Return a specific version of this page by revision ID.
 
         To view revision ``"1234abc"`` of ``"praw_test"`` in r/test:
@@ -352,8 +349,8 @@ class WikiPage(RedditBase):
         return page
 
     def revisions(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["WikiPage", None]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncGenerator[WikiPage, None]:
         """Return a :class:`.ListingGenerator` for page revisions.
 
         Additional keyword arguments are passed in the initialization of

@@ -11,19 +11,27 @@ Async PRAW users will create their own token manager classes suitable for their 
     Tokens managers have been deprecated and will be removed in the near future.
 
 """
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
+from typing import TYPE_CHECKING
 
 import aiofiles
 
 from . import _deprecate_args
+
+if TYPE_CHECKING:  # pragma: no cover
+    import asyncprawcore
+
+    import asyncpraw
 
 
 class BaseTokenManager(ABC):
     """An abstract class for all token managers."""
 
     @abstractmethod
-    def post_refresh_callback(self, authorizer):
+    def post_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Handle callback that is invoked after a refresh token is used.
 
         :param authorizer: The ``asyncprawcore.Authorizer`` instance used containing
@@ -35,7 +43,7 @@ class BaseTokenManager(ABC):
         """
 
     @abstractmethod
-    def pre_refresh_callback(self, authorizer):
+    def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Handle callback that is invoked before refreshing PRAW's authorization.
 
         :param authorizer: The ``asyncprawcore.Authorizer`` instance used containing
@@ -47,16 +55,15 @@ class BaseTokenManager(ABC):
         """
 
     @property
-    def reddit(self):
+    def reddit(self) -> asyncpraw.Reddit:
         """Return the :class:`.Reddit` instance bound to the token manager."""
         return self._reddit
 
     @reddit.setter
-    def reddit(self, value):
+    def reddit(self, value: asyncpraw.Reddit):
         if self._reddit is not None:
-            raise RuntimeError(
-                "'reddit' can only be set once and is done automatically"
-            )
+            msg = "'reddit' can only be set once and is done automatically"
+            raise RuntimeError(msg)
         self._reddit = value
 
     def __init__(self):
@@ -79,7 +86,7 @@ class FileTokenManager(BaseTokenManager):
 
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename: str):
         """Initialize a :class:`.FileTokenManager` instance.
 
         :param filename: The file the contains the refresh token.
@@ -88,12 +95,14 @@ class FileTokenManager(BaseTokenManager):
         super().__init__()
         self._filename = filename
 
-    async def post_refresh_callback(self, authorizer):
+    async def post_refresh_callback(
+        self, authorizer: asyncprawcore.auth.BaseAuthorizer
+    ):
         """Update the saved copy of the refresh token."""
         async with aiofiles.open(self._filename, "w") as fp:
             await fp.write(authorizer.refresh_token)
 
-    async def pre_refresh_callback(self, authorizer):
+    async def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Load the refresh token from the file."""
         if authorizer.refresh_token is None:
             async with aiofiles.open(self._filename) as fp:
@@ -115,7 +124,7 @@ class SQLiteTokenManager(BaseTokenManager):
     """
 
     @_deprecate_args("database", "key")
-    def __init__(self, *, database, key):
+    def __init__(self, *, database: str, key: str):
         """Initialize a :class:`.SQLiteTokenManager` instance.
 
         :param database: The path to the SQLite database.
@@ -141,7 +150,7 @@ class SQLiteTokenManager(BaseTokenManager):
                 raise KeyError
         return result[0]
 
-    async def _set(self, refresh_token):
+    async def _set(self, refresh_token: str):
         """Set the refresh token in the database.
 
         This function will overwrite an existing value if the corresponding ``key``
@@ -177,7 +186,7 @@ class SQLiteTokenManager(BaseTokenManager):
             self._setup_ran = True
         yield self._connection
 
-    async def is_registered(self):
+    async def is_registered(self) -> bool:
         """Return whether ``key`` already has a ``refresh_token``."""
         async with self.connection() as conn:
             cursor = await conn.execute(
@@ -186,7 +195,9 @@ class SQLiteTokenManager(BaseTokenManager):
             result = await cursor.fetchone()
         return result is not None
 
-    async def post_refresh_callback(self, authorizer):
+    async def post_refresh_callback(
+        self, authorizer: asyncprawcore.auth.BaseAuthorizer
+    ):
         """Update the refresh token in the database."""
         await self._set(authorizer.refresh_token)
 
@@ -195,12 +206,12 @@ class SQLiteTokenManager(BaseTokenManager):
         # to always load the latest refresh_token from the database.
         authorizer.refresh_token = None
 
-    async def pre_refresh_callback(self, authorizer):
+    async def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Load the refresh token from the database."""
         assert authorizer.refresh_token is None
         authorizer.refresh_token = await self._get()
 
-    async def register(self, refresh_token):
+    async def register(self, refresh_token: str) -> bool:
         """Register the initial refresh token in the database.
 
         :returns: ``True`` if ``refresh_token`` is saved to the database, otherwise,

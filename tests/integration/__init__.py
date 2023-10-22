@@ -9,7 +9,7 @@ from vcr import VCR
 from asyncpraw import Reddit
 from tests import HelperMethodMixin
 
-from .utils import (
+from ..utils import (
     CustomPersister,
     CustomSerializer,
     ensure_environment_variables,

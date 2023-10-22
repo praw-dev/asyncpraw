@@ -1,6 +1,8 @@
 """Provide the Preferences class."""
+from __future__ import annotations
+
 from json import dumps
-from typing import TYPE_CHECKING, Dict, Union
+from typing import TYPE_CHECKING
 
 from ..const import API_PATH
 
@@ -16,7 +18,7 @@ class Preferences:
 
     """
 
-    async def __call__(self) -> Dict[str, Union[bool, int, str]]:
+    async def __call__(self) -> dict[str, bool | int | str]:
         """Return the preference settings of the authenticated user as a dict.
 
         This method is intended to be accessed as ``reddit.user.preferences()`` like so:
@@ -32,7 +34,7 @@ class Preferences:
         """
         return await self._reddit.get(API_PATH["preferences"])
 
-    def __init__(self, reddit: "asyncpraw.Reddit"):
+    def __init__(self, reddit: asyncpraw.Reddit):
         """Initialize a :class:`.Preferences` instance.
 
         :param reddit: The :class:`.Reddit` instance.
@@ -40,7 +42,9 @@ class Preferences:
         """
         self._reddit = reddit
 
-    async def update(self, **preferences: Union[bool, int, str]):
+    async def update(
+        self, **preferences: bool | int | str
+    ) -> dict[str, bool | int | str]:
         """Modify the specified settings.
 
         :param accept_pms: Who can send you personal messages (one of ``"everyone"`` or

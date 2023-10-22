@@ -1,3 +1,75 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.4,<4"]
+
+[project]
+authors = [{name = "Joel Payne", email = "lilspazjoekp@gmail.com"}]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Utilities"
+]
+dependencies = [
+  "aiofiles",
+  "aiohttp <4; python_version < '3.12'",
+  "aiohttp==3.9.0b0; python_version == '3.12'",
+  "aiosqlite <=0.17.0",
+  "asyncprawcore >=2.1, <3",
+  "update_checker >=0.18"
+]
+dynamic = ["version", "description"]
+keywords = ["reddit", "api", "wrapper", "asyncpraw", "praw", "async", "asynchronous"]
+license = {file = "LICENSE.txt"}
+maintainers = [{name = "Joel Payne", email = "lilspazjoekp@gmail.com"}]
+name = "asyncpraw"
+readme = "README.rst"
+requires-python = "~=3.7"
+
+[project.optional-dependencies]
+ci = ["coveralls"]
+dev = [
+  "packaging",
+  "asyncpraw[lint]",
+  "asyncpraw[test]"
+]
+lint = [
+  "asyncpraw[readthedocs]",
+  "pre-commit",
+  "ruff >=0.0.292"
+]
+readthedocs = [
+  "furo",
+  "sphinx",
+  "sphinxcontrib-trio"
+]
+test = [
+  "asynctest ==0.13.* ; python_version < '3.8'", # TODO: Remove me when support for 3.7 is dropped
+  "mock ==4.*",
+  "pytest ==7.*",
+  "pytest-asyncio ==0.18.*",
+  "pytest-vcr ==1.*",
+  "testfixtures ==6.*",
+  "urllib3 ==1.*",
+  "vcrpy ==4.2.1"
+]
+
+[project.urls]
+"Change Log" = "https://asyncpraw.readthedocs.io/en/latest/package_info/change_log.html"
+"Documentation" = "https://asyncpraw.readthedocs.io/"
+"Issue Tracker" = "https://github.com/praw-dev/asyncpraw/issues"
+"Source Code" = "https://github.com/praw-dev/asyncpraw"
+
 [tool.black]
 extend_exclude = '/(\.venv.*)/'
 line-length = 88
@@ -13,3 +85,75 @@ skip_glob = '.venv*'
 asyncio_mode = "auto"
 filterwarnings = "ignore::DeprecationWarning"
 testpaths = "tests"
+
+[tool.ruff]
+target-version = "py37"
+include = [
+  "asyncpraw/**/*.py"
+]
+ignore = [
+  "A002", # shadowing built-in
+  "ANN101", # missing type annotation for self in method
+  "ANN102", # missing type annotation for cls in classmethod
+  "ANN202", # missing return type for private method
+  "ANN401", # typing.Any usage
+  "D203", # 1 blank line required before class docstring
+  "D213", # Multi-line docstring summary should start at the second line
+  "E501", # line-length
+  "N818", # exception name should be named with an Error suffix
+  "PLR0913", # too many arguments
+  "PLR2004", # Magic value used in comparison,
+  "S101" # use of assert
+]
+select = [
+  "A", # flake8-builtins
+  "ANN", # flake8-annotations
+  "ASYNC", # flake8-async
+  "ARG", # flake8-unused-arguments
+  "B", # flake8-bugbear
+  "BLE", # flake8-blind-except
+  "C4", # flake8-comprehensions
+  "D", # pydocstyle
+  "DTZ", # flake8-datetimez
+  "E", # pycodestyle errors
+  "EM", # flake8-errmsg
+  "ERA", # eradicate
+  "EXE", # flake8-executable
+  "F", # pyflakes
+  "FA", # flake8-future-annotations
+  "FIX", # flake8-fix me
+  "FLY", # flynt
+  "G", # flake8-logging-format
+  "I", # isort
+  "INP", # flake8-no-pep420
+  "ISC", # flake8-implicit-str-concat
+  "N", # pep8-naming
+  "PIE", # flake8-pie
+  "PGH", # pygrep-hooks
+  "PL", # Pylint
+  "PT", # flake8-pytest-style
+  "PTH", # flake8-use-pathlib
+  "PYI", # flake8-pyi
+  "Q", # flake8-quotes
+  "RET", # flake8-return
+  "RSE", # flake8-raise
+  "S", # bandit
+  "SIM", # flake8-simplify
+  "T10", # flake8-debugger
+  "T20", # flake8-print
+  "TCH", # flake8-type-checking
+  "TD", # flake8-todos
+  "W", # pycodestyle warnings
+  "UP" # pyupgrade
+]
+ignore-init-module-imports = true
+
+[tool.ruff.flake8-annotations]
+allow-star-arg-any = true
+mypy-init-return = true
+suppress-dummy-args = true
+suppress-none-returning = true
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"asyncpraw/models/mod_notes.py" = ["FA100"]

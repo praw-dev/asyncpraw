@@ -1,7 +1,9 @@
 """Provide the Redditors class."""
+from __future__ import annotations
+
 from itertools import islice
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, AsyncIterator, Dict, Iterable, Union
+from typing import TYPE_CHECKING, AsyncIterator, Iterable
 
 import asyncprawcore
 
@@ -22,8 +24,8 @@ class Redditors(AsyncPRAWBase):
     """Redditors is a Listing class that provides various :class:`.Redditor` lists."""
 
     def new(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Return a :class:`.ListingGenerator` for new :class:`.Redditors`.
 
         :returns: :class:`.Redditor` profiles, which are a type of :class:`.Subreddit`.
@@ -67,8 +69,8 @@ class Redditors(AsyncPRAWBase):
                 yield PartialRedditor(fullname=fullname, **user_data)
 
     def popular(
-        self, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
+        self, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Return a :class:`.ListingGenerator` for popular :class:`.Redditors`.
 
         :returns: :class:`.Redditor` profiles, which are a type of :class:`.Subreddit`.
@@ -82,8 +84,8 @@ class Redditors(AsyncPRAWBase):
         )
 
     def search(
-        self, query: str, **generator_kwargs: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
+        self, query: str, **generator_kwargs: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         r"""Return a :class:`.ListingGenerator` of Redditors for ``query``.
 
         :param query: The query string to filter Redditors by.
@@ -100,8 +102,8 @@ class Redditors(AsyncPRAWBase):
         )
 
     def stream(
-        self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncIterator["asyncpraw.models.Subreddit"]:
+        self, **stream_options: str | int | dict[str, str]
+    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Yield new Redditors as they are created.
 
         Redditors are yielded oldest first. Up to 100 historical Redditors will

@@ -1,6 +1,8 @@
 """Provide the Redditor class."""
+from __future__ import annotations
+
 from json import dumps
-from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, AsyncGenerator
 
 from ...const import API_PATH
 from ...util import _deprecate_args
@@ -74,14 +76,16 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     STR_FIELD = "name"
 
     @classmethod
-    def from_data(cls, reddit, data):
+    def from_data(
+        cls, reddit: asyncpraw.Reddit, data: dict[str, Any]
+    ) -> Redditor | None:
         """Return an instance of :class:`.Redditor`, or ``None`` from ``data``."""
         if data == "[deleted]":
             return None
         return cls(reddit, data)
 
     @cachedproperty
-    def notes(self) -> "asyncpraw.models.RedditorModNotes":
+    def notes(self) -> asyncpraw.models.RedditorModNotes:
         """Provide an instance of :class:`.RedditorModNotes`.
 
         This provides an interface for managing moderator notes for a redditor.
@@ -105,7 +109,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         return RedditorModNotes(self._reddit, self)
 
     @cachedproperty
-    def stream(self) -> "asyncpraw.models.reddit.redditor.RedditorStream":
+    def stream(self) -> asyncpraw.models.reddit.redditor.RedditorStream:
         """Provide an instance of :class:`.RedditorStream`.
 
         Streams can be used to indefinitely retrieve new comments made by a redditor,
@@ -140,10 +144,10 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        name: Optional[str] = None,
-        fullname: Optional[str] = None,
-        _data: Optional[Dict[str, Any]] = None,
+        reddit: asyncpraw.Reddit,
+        name: str | None = None,
+        fullname: str | None = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize a :class:`.Redditor` instance.
 
@@ -155,11 +159,10 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         """
         if (name, fullname, _data).count(None) != 2:
-            raise TypeError(
-                "Exactly one of 'name', 'fullname', or '_data' must be provided."
-            )
+            msg = "Exactly one of 'name', 'fullname', or '_data' must be provided."
+            raise TypeError(msg)
         if _data:
-            assert (
+            assert (  # noqa: PT018
                 isinstance(_data, dict) and "name" in _data
             ), "Please file a bug with Async PRAW."
         self._listing_use_sort = True
@@ -184,18 +187,18 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
-        self._fetched = True
+        await super()._fetch()
 
     def _fetch_info(self):
         return "user_about", {"user": self.name}, None
 
-    async def _fetch_username(self, fullname):
+    async def _fetch_username(self, fullname: str):
         response = await self._reddit.get(
             API_PATH["user_by_fullname"], params={"ids": fullname}
         )
         return response[fullname]["name"]
 
-    async def _friend(self, *, data, method):
+    async def _friend(self, *, data: dict[str:Any], method: str):
         url = API_PATH["friend_v1"].format(user=self)
         await self._reddit.request(data=dumps(data), method=method, path=url)
 
@@ -265,7 +268,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         """
         await self._friend(data={"note": note} if note else {}, method="PUT")
 
-    async def friend_info(self) -> "asyncpraw.models.Redditor":
+    async def friend_info(self) -> asyncpraw.models.Redditor:
         """Return a :class:`.Redditor` instance with specific friend-related attributes.
 
         :returns: A :class:`.Redditor` instance with fields ``date``, ``id``, and
@@ -297,12 +300,13 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         """
         if months < 1 or months > 36:
-            raise TypeError("months must be between 1 and 36")
+            msg = "months must be between 1 and 36"
+            raise TypeError(msg)
         await self._reddit.post(
             API_PATH["gild_user"].format(username=self), data={"months": months}
         )
 
-    async def moderated(self) -> List["asyncpraw.models.Subreddit"]:
+    async def moderated(self) -> list[asyncpraw.models.Subreddit]:
         """Return a list of the redditor's moderated subreddits.
 
         :returns: A list of :class:`.Subreddit` objects. Return ``[]`` if the redditor
@@ -352,7 +356,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         """
         return await self._reddit.get(API_PATH["moderated"].format(user=self)) or []
 
-    async def multireddits(self) -> List["asyncpraw.models.Multireddit"]:
+    async def multireddits(self) -> list[asyncpraw.models.Multireddit]:
         """Return a list of the redditor's public multireddits.
 
         For example, to to get :class:`.Redditor` u/spez's multireddits:
@@ -365,7 +369,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         """
         return await self._reddit.get(API_PATH["multireddit_user"].format(user=self))
 
-    async def trophies(self) -> List["asyncpraw.models.Trophy"]:
+    async def trophies(self) -> list[asyncpraw.models.Trophy]:
         """Return a list of the redditor's trophies.
 
         :returns: A list of :class:`.Trophy` objects. Return ``[]`` if the redditor has
@@ -462,7 +466,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 class RedditorStream:
     """Provides submission and comment streams."""
 
-    def __init__(self, redditor: "asyncpraw.models.Redditor"):
+    def __init__(self, redditor: asyncpraw.models.Redditor):
         """Initialize a :class:`.RedditorStream` instance.
 
         :param redditor: The redditor associated with the streams.
@@ -471,8 +475,8 @@ class RedditorStream:
         self.redditor = redditor
 
     def comments(
-        self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["asyncpraw.models.Comment", None]:
+        self, **stream_options: str | int | dict[str, str]
+    ) -> AsyncGenerator[asyncpraw.models.Comment, None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially
@@ -492,8 +496,8 @@ class RedditorStream:
         return stream_generator(self.redditor.comments.new, **stream_options)
 
     def submissions(
-        self, **stream_options: Union[str, int, Dict[str, str]]
-    ) -> AsyncGenerator["asyncpraw.models.Submission", None]:
+        self, **stream_options: str | int | dict[str, str]
+    ) -> AsyncGenerator[asyncpraw.models.Submission, None]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions will

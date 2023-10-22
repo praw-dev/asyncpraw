@@ -26,7 +26,7 @@ class TestComment(IntegrationTest):
                 gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
             )
         exception = excinfo.value
-        assert "INSUFFICIENT_COINS_WITH_AMOUNT" == exception.error_type
+        assert exception.error_type == "INSUFFICIENT_COINS_WITH_AMOUNT"
 
     async def test_award__self_gild(self, reddit):
         reddit.read_only = False
@@ -35,7 +35,7 @@ class TestComment(IntegrationTest):
                 gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
             )
         exception = excinfo.value
-        assert "SELF_GILDING_NOT_ALLOWED" == exception.error_type
+        assert exception.error_type == "SELF_GILDING_NOT_ALLOWED"
 
     async def test_block(self, reddit):
         reddit.read_only = False
@@ -44,7 +44,8 @@ class TestComment(IntegrationTest):
                 comment = item
                 break
         else:
-            assert False, "no comment found"
+            msg = "no comment found"
+            raise AssertionError(msg)
         await comment.block()
 
     async def test_clear_vote(self, reddit):
@@ -161,23 +162,23 @@ class TestComment(IntegrationTest):
     async def test_refresh__deleted_comment(self, reddit):
         with pytest.raises(ClientException) as excinfo:
             await Comment(reddit, "d7ltvl0").refresh()
-        assert (
+        assert excinfo.value.args == (
             "This comment does not appear to be in the comment tree",
-        ) == excinfo.value.args
+        )
 
     async def test_refresh__raises_exception(self, reddit):
         with pytest.raises(ClientException) as excinfo:
             await Comment(reddit, "fx1tgzm").refresh()
-        assert (
+        assert excinfo.value.args == (
             "This comment does not appear to be in the comment tree",
-        ) == excinfo.value.args
+        )
 
     async def test_refresh__removed_comment(self, reddit):
         with pytest.raises(ClientException) as excinfo:
             await Comment(reddit, "fx1hmwb").refresh()
-        assert (
+        assert excinfo.value.args == (
             "This comment does not appear to be in the comment tree",
-        ) == excinfo.value.args
+        )
 
     async def test_refresh__twice(self, reddit):
         comment = await Comment(reddit, "d81vwef").refresh()
@@ -193,7 +194,8 @@ class TestComment(IntegrationTest):
         for reply in replies:
             if isinstance(reply, Comment):
                 if reply.created_utc > last_created:
-                    assert False, "sort order incorrect"
+                    msg = "sort order incorrect"
+                    raise AssertionError(msg)
                 last_created = reply.created_utc
         assert len(comment.replies) == 3
 
@@ -303,8 +305,8 @@ class TestCommentModeration(IntegrationTest):
         with pytest.raises(RedditAPIException) as excinfo:
             await comment.mod.send_removal_message(message="message", title="a" * 51)
         exception = excinfo.value
-        assert "title" == exception.field
-        assert "TOO_LONG" == exception.error_type
+        assert exception.field == "title"
+        assert exception.error_type == "TOO_LONG"
 
     async def test_show(self, reddit):
         reddit.read_only = False

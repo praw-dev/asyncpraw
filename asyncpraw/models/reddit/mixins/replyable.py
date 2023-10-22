@@ -1,5 +1,7 @@
 """Provide the ReplyableMixin class."""
-from typing import TYPE_CHECKING, Optional, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from ....const import API_PATH
 
@@ -12,7 +14,7 @@ class ReplyableMixin:
 
     async def reply(
         self, body: str
-    ) -> Optional[Union["asyncpraw.models.Comment", "asyncpraw.models.Message"]]:
+    ) -> asyncpraw.models.Comment | asyncpraw.models.Message | None:
         """Reply to the object.
 
         :param body: The Markdown formatted content for a comment.
@@ -24,10 +26,9 @@ class ReplyableMixin:
             items, such as locked submissions/comments or non-replyable messages.
 
         A ``None`` value can be returned if the target is a comment or submission in a
-        quarantined subreddit and the authenticated user has not opt-ed in to viewing
-        the content. When this happens the comment will be successfully created on
-        Reddit and can be retried by drawing the comment from the user's comment
-        history.
+        quarantined subreddit and the authenticated user has not opt-ed into viewing the
+        content. When this happens the comment will be successfully created on Reddit
+        and can be retried by drawing the comment from the user's comment history.
 
         Example usage:
 

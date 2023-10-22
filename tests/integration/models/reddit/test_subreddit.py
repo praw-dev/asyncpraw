@@ -2,17 +2,19 @@
 import socket
 import sys
 from asyncio import TimeoutError
-from unittest.mock import AsyncMock, MagicMock
 
+import aiofiles
 import pytest
 from aiohttp import ClientResponse
 from aiohttp.http_websocket import WebSocketError
 from asyncprawcore import BadRequest, Forbidden, NotFound, TooLarge
 
 if sys.version_info < (3, 8):
-    from asynctest import mock
+    from asynctest import CoroutineMock as AsyncMock
+    from asynctest import MagicMock, mock
 else:
     from unittest import mock
+    from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw.const import PNG_HEADER
 from asyncpraw.exceptions import (
@@ -1639,8 +1641,8 @@ class TestSubreddit(IntegrationTest):
         reddit._core._requestor._http.post = patch_request
 
         fake_png = PNG_HEADER + b"\x1a" * 10  # Normally 1024 ** 2 * 20 (20 MB)
-        with open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
-            tempfile.write(fake_png)
+        async with aiofiles.open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
+            await tempfile.write(fake_png)
         with pytest.raises(TooLargeMediaException):
             subreddit = await reddit.subreddit("test")
             await subreddit.submit_image("test", tempfile.name)

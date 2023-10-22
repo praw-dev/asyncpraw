@@ -21,6 +21,7 @@ master_doc = "index"
 nitpick_ignore = [
     ("py:class", "IO"),
     ("py:class", "asyncprawcore.requestor.Requestor"),
+    ("py:class", "asyncprawcore.auth.BaseAuthorizer"),
     ("py:class", "asyncpraw.models.redditors.PartialRedditor"),
 ]
 nitpicky = True

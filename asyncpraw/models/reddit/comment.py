@@ -1,5 +1,7 @@
 """Provide the Comment class."""
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...exceptions import ClientException, InvalidURL
@@ -68,14 +70,14 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         try:
             comment_index = parts.index("comments")
         except ValueError:
-            raise InvalidURL(url)
+            raise InvalidURL(url) from None
 
         if len(parts) - 4 != comment_index:
             raise InvalidURL(url)
         return parts[-1]
 
     @cachedproperty
-    def mod(self) -> "asyncpraw.models.reddit.comment.CommentModeration":
+    def mod(self) -> asyncpraw.models.reddit.comment.CommentModeration:
         """Provide an instance of :class:`.CommentModeration`.
 
         Example usage:
@@ -89,7 +91,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         return CommentModeration(self)
 
     @property
-    def _kind(self) -> str:
+    def _kind(self):
         """Return the class's kind."""
         return self._reddit.config.kinds["comment"]
 
@@ -131,7 +133,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         return self._replies
 
     @property
-    def submission(self) -> "asyncpraw.models.Submission":
+    def submission(self) -> asyncpraw.models.Submission:
         """Return the :class:`.Submission` object this comment belongs to.
 
         :raises: :py:class:`AttributeError` if the comment is not fetched.
@@ -144,24 +146,24 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         return self._submission
 
     @submission.setter
-    def submission(self, submission: "asyncpraw.models.Submission"):
+    def submission(self, submission: asyncpraw.models.Submission):
         """Update the :class:`.Submission` associated with the :class:`.Comment`."""
         submission._comments_by_id[self.fullname] = self
         self._submission = submission
-        # pylint: disable=not-an-iterable
         for reply in self.replies:
             reply.submission = submission
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
-        id: Optional[str] = None,  # pylint: disable=redefined-builtin
-        url: Optional[str] = None,
-        _data: Optional[Dict[str, Any]] = None,
+        reddit: asyncpraw.Reddit,
+        id: str | None = None,
+        url: str | None = None,
+        _data: dict[str, Any] | None = None,
     ):
         """Initialize a :class:`.Comment` instance."""
         if (id, url, _data).count(None) != 2:
-            raise TypeError("Exactly one of 'id', 'url', or '_data' must be provided.")
+            msg = "Exactly one of 'id', 'url', or '_data' must be provided."
+            raise TypeError(msg)
         fetched = False
         self._replies = []
         self._submission = None
@@ -176,7 +178,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
     def __setattr__(
         self,
         attribute: str,
-        value: Union[str, Redditor, CommentForest, "asyncpraw.models.Subreddit"],
+        value: str | Redditor | CommentForest | asyncpraw.models.Subreddit,
     ):
         """Objectify author, replies, and subreddit."""
         if attribute == "author":
@@ -187,9 +189,8 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             else:
                 value = self._reddit._objector.objectify(value).children
             attribute = "_replies"
-        elif attribute == "subreddit":
-            if isinstance(value, str):
-                value = Subreddit(self._reddit, display_name=value)
+        elif attribute == "subreddit" and isinstance(value, str):
+            value = Subreddit(self._reddit, display_name=value)
         super().__setattr__(attribute, value)
 
     def _extract_submission_id(self):
@@ -202,19 +203,20 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         data = data["data"]
 
         if not data["children"]:
-            raise ClientException(f"No data returned for comment {self.fullname}")
+            msg = f"No data returned for comment {self.fullname}"
+            raise ClientException(msg)
 
         comment_data = data["children"][0]["data"]
         other = type(self)(self._reddit, _data=comment_data)
         self.__dict__.update(other.__dict__)
-        self._fetched = True
+        await super()._fetch()
 
     def _fetch_info(self):
         return "info", {}, {"id": self.fullname}
 
     async def parent(
         self,
-    ) -> Union["Comment", "asyncpraw.models.Submission"]:
+    ) -> Comment | asyncpraw.models.Submission:
         """Return the parent of the comment.
 
         The returned parent will be an instance of either :class:`.Comment`, or
@@ -263,8 +265,6 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         to :meth:`.refresh` it would make at least 31 network requests.
 
         """
-        # pylint: disable=no-member
-
         if not self._fetched:
             await self._fetch()
 
@@ -274,13 +274,12 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         if self.parent_id in self.submission._comments_by_id:
             # The Comment already exists, so simply return it
             return self.submission._comments_by_id[self.parent_id]
-        # pylint: enable=no-member
 
         parent = Comment(self._reddit, self.parent_id.split("_", 1)[1])
         parent._submission = self.submission
         return parent
 
-    async def refresh(self):
+    async def refresh(self) -> Comment:
         """Refresh the comment's attributes.
 
         If using :meth:`.Reddit.comment` with ``fetch=False``, this method must be
@@ -346,7 +345,7 @@ class CommentModeration(ThingModerationMixin):
 
     REMOVAL_MESSAGE_API = "removal_comment_message"
 
-    def __init__(self, comment: "asyncpraw.models.Comment"):
+    def __init__(self, comment: asyncpraw.models.Comment):
         """Initialize a :class:`.CommentModeration` instance.
 
         :param comment: The comment to moderate.

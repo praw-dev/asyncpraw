@@ -82,7 +82,7 @@ The output should contain the same name as you entered for ``username``.
     that the username and password you are using are for the same user with which the
     application is associated:
 
-    .. code-block:: text
+    .. code-block::
 
         OAuthException: invalid_grant error processing request
 

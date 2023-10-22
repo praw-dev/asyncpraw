@@ -1,4 +1,6 @@
 """Provide the Reddit class."""
+from __future__ import annotations
+
 import asyncio
 import configparser
 import os
@@ -11,12 +13,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     AsyncGenerator,
-    Dict,
     Iterable,
-    List,
-    Optional,
-    Type,
-    Union,
 )
 from warnings import warn
 
@@ -44,7 +41,6 @@ from .exceptions import (
 from .models.util import deprecate_lazy
 from .objector import Objector
 from .util import _deprecate_args
-from .util.token_manager import BaseTokenManager
 
 try:
     from update_checker import update_check
@@ -54,7 +50,12 @@ except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
 if TYPE_CHECKING:  # pragma: no cover
+    import asyncprawcore
+
     import asyncpraw
+    import asyncpraw.models
+
+    from .util.token_manager import BaseTokenManager
 
 Comment = models.Comment
 Redditor = models.Redditor
@@ -95,7 +96,7 @@ class Reddit:
 
     @property
     def read_only(self) -> bool:
-        """Return ``True`` when using the ReadOnlyAuthorizer."""
+        """Return ``True`` when using the ``ReadOnlyAuthorizer``."""
         return self._core == self._read_only_core
 
     @read_only.setter
@@ -109,9 +110,10 @@ class Reddit:
         if value:
             self._core = self._read_only_core
         elif self._authorized_core is None:
-            raise ClientException(
+            msg = (
                 "read_only cannot be unset as only the ReadOnlyAuthorizer is available."
             )
+            raise ClientException(msg)
         else:
             self._core = self._authorized_core
 
@@ -140,24 +142,26 @@ class Reddit:
     def validate_on_submit(self, val: bool):
         self._validate_on_submit = val
 
-    async def __aenter__(self):
+    async def __aenter__(self):  # noqa: ANN204
         """Handle the context manager open."""
         return self
 
-    async def __aexit__(self, *_args):
+    async def __aexit__(self, *_: object):
         """Handle the context manager close."""
         await self.close()
 
-    def __deepcopy__(self, memodict={}):
+    def __deepcopy__(self, memodict: dict[str, Any] | None = None) -> Reddit:
         """Shallow copy on deepcopy.
 
         A shallow copied is performed on deepcopy as
         :py:class:`asyncio.AbstractEventLoop` cannot be deepcopied.
 
         """
+        if memodict is None:
+            memodict = {}  # pragma: no cover
         return copy(self)
 
-    def __enter__(self):
+    def __enter__(self):  # noqa: ANN204
         """Handle the context manager open.
 
         .. deprecated:: 7.1.1
@@ -176,7 +180,7 @@ class Reddit:
         )
         return self  # pragma: no cover
 
-    def __exit__(self, *_args):
+    def __exit__(self, *_args: object):
         """Handle the context manager close."""
 
     @_deprecate_args(
@@ -188,14 +192,14 @@ class Reddit:
     )
     def __init__(
         self,
-        site_name: Optional[str] = None,
+        site_name: str | None = None,
         *,
-        config_interpolation: Optional[str] = None,
-        requestor_class: Optional[Type[Requestor]] = None,
-        requestor_kwargs: Optional[Dict[str, Any]] = None,
-        token_manager: Optional[BaseTokenManager] = None,
-        **config_settings: Optional[Union[str, bool, int]],
-    ):  # noqa: D207, D301
+        config_interpolation: str | None = None,
+        requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,
+        requestor_kwargs: dict[str, Any] | None = None,
+        token_manager: BaseTokenManager | None = None,
+        **config_settings: str | bool | int | None,
+    ):
         """Initialize a :class:`.Reddit` instance.
 
         :param site_name: The name of a section in your ``praw.ini`` file from which to
@@ -284,7 +288,9 @@ class Reddit:
         self._validate_on_submit = False
 
         try:
-            config_section = site_name or os.getenv("praw_site") or "DEFAULT"
+            config_section = (
+                site_name or os.getenv("praw_site") or "DEFAULT"  # noqa: SIM112
+            )
             self.config = Config(
                 config_section, config_interpolation, **config_settings
             )
@@ -311,11 +317,8 @@ class Reddit:
                     required_message.format(attribute)
                 )
         if self.config.client_secret is self.config.CONFIG_NOT_SET:
-            raise MissingRequiredAttributeException(
-                f"{required_message.format('client_secret')}\nFor installed"
-                " applications this value must be set to None via a keyword argument"
-                " to the Reddit class constructor."
-            )
+            msg = f"{required_message.format('client_secret')}\nFor installed applications this value must be set to None via a keyword argument to the Reddit class constructor."
+            raise MissingRequiredAttributeException(msg)
         self._check_for_update()
         self._prepare_objector()
         self.requestor = self._prepare_asyncprawcore(
@@ -521,9 +524,7 @@ class Reddit:
             update_check(__package__, __version__)
             Reddit.update_checked = True
 
-    def _handle_rate_limit(
-        self, exception: RedditAPIException
-    ) -> Optional[Union[int, float]]:
+    def _handle_rate_limit(self, exception: RedditAPIException) -> int | float | None:
         for item in exception.items:
             if item.error_type == "RATELIMIT":
                 amount_search = self._ratelimit_regex.search(item.message)
@@ -535,18 +536,17 @@ class Reddit:
                 elif amount_search.group(2).startswith("millisecond"):
                     seconds = 0
                 if seconds <= int(self.config.ratelimit_seconds):
-                    sleep_seconds = seconds + 1
-                    return sleep_seconds
+                    return seconds + 1
         return None
 
     async def _objectify_request(
         self,
         *,
-        data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
-        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
+        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        files: dict[str, IO] | None = None,
+        json: dict[Any, Any] | list[Any] | None = None,
         method: str = "",
-        params: Optional[Union[str, Dict[str, str]]] = None,
+        params: str | dict[str, str] | None = None,
         path: str = "",
     ) -> Any:
         """Run a request through the ``Objector``.
@@ -575,7 +575,12 @@ class Reddit:
             )
         )
 
-    def _prepare_asyncprawcore(self, *, requestor_class=None, requestor_kwargs=None):
+    def _prepare_asyncprawcore(
+        self,
+        *,
+        requestor_class: type[Requestor] = None,
+        requestor_kwargs: Any | None = None,
+    ) -> Requestor:
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
 
@@ -593,7 +598,9 @@ class Reddit:
 
         return requestor
 
-    def _prepare_common_authorizer(self, authenticator):
+    def _prepare_common_authorizer(
+        self, authenticator: asyncprawcore.auth.BaseAuthenticator
+    ):
         if self._token_manager is not None:
             warn(
                 "Token managers have been deprecated and will be removed in the near"
@@ -603,10 +610,8 @@ class Reddit:
                 stacklevel=2,
             )
             if self.config.refresh_token:
-                raise TypeError(
-                    "'refresh_token' setting cannot be provided when providing"
-                    " 'token_manager'"
-                )
+                msg = "'refresh_token' setting cannot be provided when providing 'token_manager'"
+                raise TypeError(msg)
 
             self._token_manager.reddit = self
             authorizer = Authorizer(
@@ -671,7 +676,7 @@ class Reddit:
         }
         self._objector = Objector(self, mappings)
 
-    def _prepare_trusted_asyncprawcore(self, requestor):
+    def _prepare_trusted_asyncprawcore(self, requestor: Requestor):
         authenticator = TrustedAuthenticator(
             requestor,
             self.config.client_id,
@@ -689,7 +694,7 @@ class Reddit:
         else:
             self._prepare_common_authorizer(authenticator)
 
-    def _prepare_untrusted_asyncprawcore(self, requestor):
+    def _prepare_untrusted_asyncprawcore(self, requestor: Requestor):
         authenticator = UntrustedAuthenticator(
             requestor, self.config.client_id, self.config.redirect_uri
         )
@@ -704,13 +709,13 @@ class Reddit:
     @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
     async def comment(
-        self,  # pylint: disable=invalid-name
-        id: Optional[str] = None,  # pylint: disable=redefined-builtin
+        self,
+        id: str | None = None,
         *,
         fetch: bool = True,
-        url: Optional[str] = None,
-        **kwargs,
-    ):
+        url: str | None = None,
+        **_,
+    ) -> models.Comment:
         """Return an instance of :class:`.Comment`.
 
         :param id: The ID of the comment.
@@ -743,9 +748,9 @@ class Reddit:
         self,
         path: str,
         *,
-        data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
-        params: Optional[Union[str, Dict[str, str]]] = None,
+        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        json: dict[Any, Any] | list[Any] | None = None,
+        params: str | dict[str, str] | None = None,
     ) -> Any:
         """Return parsed objects returned from a DELETE request to ``path``.
 
@@ -762,7 +767,7 @@ class Reddit:
             data=data, json=json, method="DELETE", params=params, path=path
         )
 
-    def domain(self, domain: str):
+    def domain(self, domain: str) -> models.DomainListing:
         """Return an instance of :class:`.DomainListing`.
 
         :param domain: The domain to obtain submission listings for.
@@ -775,8 +780,8 @@ class Reddit:
         self,
         path: str,
         *,
-        params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
-    ):
+        params: str | dict[str, str | int] | None = None,
+    ) -> Any:
         """Return parsed objects returned from a GET request to ``path``.
 
         :param path: The path to fetch.
@@ -789,15 +794,13 @@ class Reddit:
     def info(
         self,
         *,
-        fullnames: Optional[Iterable[str]] = None,
-        subreddits: Optional[Iterable[Union["asyncpraw.models.Subreddit", str]]] = None,
-        url: Optional[str] = None,
+        fullnames: Iterable[str] | None = None,
+        subreddits: Iterable[asyncpraw.models.Subreddit | str] | None = None,
+        url: str | None = None,
     ) -> AsyncGenerator[
-        Union[
-            "asyncpraw.models.Subreddit",
-            "asyncpraw.models.Comment",
-            "asyncpraw.models.Submission",
-        ],
+        asyncpraw.models.Subreddit
+        | asyncpraw.models.Comment
+        | asyncpraw.models.Submission,
         None,
     ]:
         """Fetch information about each item in ``fullnames``, ``url``, or ``subreddits``.
@@ -828,22 +831,20 @@ class Reddit:
         """
         none_count = (fullnames, url, subreddits).count(None)
         if none_count != 2:
-            raise TypeError(
-                "Either 'fullnames', 'url', or 'subreddits' must be provided."
-            )
+            msg = "Either 'fullnames', 'url', or 'subreddits' must be provided."
+            raise TypeError(msg)
 
         is_using_fullnames = fullnames is not None
         ids_or_names = fullnames if is_using_fullnames else subreddits
 
         if ids_or_names is not None:
             if isinstance(ids_or_names, str):
-                raise TypeError(
-                    "'fullnames' and 'subreddits' must be a non-str iterable."
-                )
+                msg = "'fullnames' and 'subreddits' must be a non-str iterable."
+                raise TypeError(msg)
 
             api_parameter_name = "id" if is_using_fullnames else "sr_name"
 
-            async def generator(names):
+            async def generator(names: Iterable[str | asyncpraw.models.Subreddit]):
                 if is_using_fullnames:
                     iterable = iter(names)
                 else:
@@ -858,8 +859,8 @@ class Reddit:
 
             return generator(ids_or_names)
 
-        async def generator(url):
-            params = {"url": url}
+        async def generator(_url: str):
+            params = {"url": _url}
             for result in await self.get(API_PATH["info"], params=params):
                 yield result
 
@@ -870,9 +871,9 @@ class Reddit:
         self,
         path: str,
         *,
-        data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
-        params: Optional[Union[str, Dict[str, str]]] = None,
+        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        json: dict[Any, Any] | list[Any] | None = None,
+        params: str | dict[str, str] | None = None,
     ) -> Any:
         """Return parsed objects returned from a PATCH request to ``path``.
 
@@ -894,10 +895,10 @@ class Reddit:
         self,
         path: str,
         *,
-        data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
-        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
-        params: Optional[Union[str, Dict[str, str]]] = None,
+        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        files: dict[str, IO] | None = None,
+        json: dict[Any, Any] | list[Any] | None = None,
+        params: str | dict[str, str] | None = None,
     ) -> Any:
         """Return parsed objects returned from a POST request to ``path``.
 
@@ -934,7 +935,9 @@ class Reddit:
                 if seconds is None:
                     break
                 second_string = "second" if seconds == 1 else "seconds"
-                logger.debug(f"Rate limit hit, sleeping for {seconds} {second_string}")
+                logger.debug(
+                    "Rate limit hit, sleeping for %d %s", seconds, second_string
+                )
                 await asyncio.sleep(seconds)
         raise last_exception
 
@@ -943,9 +946,9 @@ class Reddit:
         self,
         path: str,
         *,
-        data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
-    ):
+        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        json: dict[Any, Any] | list[Any] | None = None,
+    ) -> Any:
         """Return parsed objects returned from a PUT request to ``path``.
 
         :param path: The path to fetch.
@@ -963,7 +966,7 @@ class Reddit:
     @_deprecate_args("nsfw")
     async def random_subreddit(
         self, *, nsfw: bool = False
-    ) -> "asyncpraw.models.Subreddit":
+    ) -> asyncpraw.models.Subreddit:
         """Return a random instance of :class:`.Subreddit`.
 
         :param nsfw: Return a random NSFW (not safe for work) subreddit (default:
@@ -983,11 +986,11 @@ class Reddit:
     @_deprecate_args("name", "fullname", "fetch")
     async def redditor(
         self,
-        name: Optional[str] = None,
+        name: str | None = None,
         *,
         fetch: bool = False,
-        fullname: Optional[str] = None,
-    ) -> "asyncpraw.models.Redditor":
+        fullname: str | None = None,
+    ) -> asyncpraw.models.Redditor:
         """Return an instance of :class:`.Redditor`.
 
         :param name: The name of the redditor.
@@ -1007,11 +1010,11 @@ class Reddit:
     async def request(
         self,
         *,
-        data: Optional[Union[Dict[str, Union[str, Any]], bytes, IO, str]] = None,
-        files: Optional[Dict[str, IO]] = None,
-        json: Optional[Union[Dict[Any, Any], List[Any]]] = None,
+        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        files: dict[str, IO] | None = None,
+        json: dict[Any, Any] | list[Any] | None = None,
         method: str,
-        params: Optional[Union[str, Dict[str, Union[str, int]]]] = None,
+        params: str | dict[str, str | int] | None = None,
         path: str,
     ) -> Any:
         """Return the parsed JSON data returned from a request to URL.
@@ -1030,7 +1033,8 @@ class Reddit:
 
         """
         if data and json:
-            raise ClientException("At most one of 'data' or 'json' is supported.")
+            msg = "At most one of 'data' or 'json' is supported."
+            raise ClientException(msg)
         try:
             return await self._core.request(
                 data=data,
@@ -1048,7 +1052,7 @@ class Reddit:
                 if text:
                     data = {"reason": text}
                 else:
-                    raise exception
+                    raise exception from None
             if set(data) == {"error", "message"}:
                 raise
             explanation = data.get("explanation")
@@ -1063,14 +1067,14 @@ class Reddit:
 
     @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
-    async def submission(  # pylint: disable=invalid-name,redefined-builtin
+    async def submission(
         self,
-        id: Optional[str] = None,
+        id: str | None = None,
         *,
         fetch: bool = True,
-        url: Optional[str] = None,
-        **kwargs,
-    ) -> "asyncpraw.models.Submission":
+        url: str | None = None,
+        **_,
+    ) -> asyncpraw.models.Submission:
         """Return an instance of :class:`.Submission`.
 
         :param id: A Reddit base36 submission ID, e.g., ``2gmzqe``.

@@ -1,5 +1,7 @@
 """Provide the EditableMixin class."""
-from typing import TYPE_CHECKING, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from ....const import API_PATH
 
@@ -28,7 +30,7 @@ class EditableMixin:
 
     async def edit(
         self, body: str
-    ) -> Union["asyncpraw.models.Comment", "asyncpraw.models.Submission"]:
+    ) -> asyncpraw.models.Comment | asyncpraw.models.Submission:
         """Replace the body of the object with ``body``.
 
         :param body: The Markdown formatted content for the updated object.

@@ -165,12 +165,10 @@ class TestUser(IntegrationTest):
         async for post in (await reddit.user.me()).new(limit=4):
             await reddit.user.pin(post, state=False)
             unpinned_posts.add(post.title)
-        new_posts = set(
-            [
-                submission.title
-                async for submission in (await reddit.user.me()).new(limit=4)
-            ]
-        )
+        new_posts = {
+            submission.title
+            async for submission in (await reddit.user.me()).new(limit=4)
+        }
         assert unpinned_posts != new_posts
 
     async def test_pin__remove_num(self, reddit):
