@@ -6,12 +6,8 @@ import pytest
 from asyncprawcore import Requestor
 from asyncprawcore.exceptions import BadRequest
 
-if sys.version_info < (3, 8):
-    from asynctest import CoroutineMock as AsyncMock
-    from asynctest import MagicMock, mock
-else:
-    from unittest import mock
-    from unittest.mock import AsyncMock, MagicMock
+from unittest import mock
+from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config

@@ -2,11 +2,7 @@
 
 import sys
 
-if sys.version_info < (3, 8):
-    from asynctest import CoroutineMock as AsyncMock
-    from asynctest import patch
-else:
-    from unittest.mock import patch, AsyncMock
+from unittest.mock import patch, AsyncMock
 
 from .. import UnitTest
 
