@@ -19,7 +19,7 @@ from .savable import SavableMixin
 from .votable import VotableMixin
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class ThingModerationMixin(ModNoteMixin):

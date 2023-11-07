@@ -17,7 +17,7 @@ from .reddit.redditor import Redditor
 from .reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class User(AsyncPRAWBase):

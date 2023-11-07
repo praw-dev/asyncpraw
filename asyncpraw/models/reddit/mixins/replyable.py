@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from ....const import API_PATH
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class ReplyableMixin:

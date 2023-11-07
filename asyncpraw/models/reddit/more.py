@@ -8,7 +8,7 @@ from ...util import _deprecate_args
 from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class MoreComments(AsyncPRAWBase):

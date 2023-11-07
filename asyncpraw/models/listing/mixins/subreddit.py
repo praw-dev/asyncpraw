@@ -12,7 +12,7 @@ from .gilded import GildedListingMixin
 from .rising import RisingListingMixin
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class CommentHelper(AsyncPRAWBase):

@@ -10,7 +10,7 @@ from .reddit.redditor import Redditor
 from .reddit.submission import Submission
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 RedditorType = Union[Redditor, str]
 SubredditType = Union["asyncpraw.models.Subreddit", str]
