@@ -32,6 +32,7 @@ Unreleased
 
 - :func:`.stream_generator` now accepts the ``continue_after_id`` parameter, which
   starts the stream after a given item ID.
+- Support for new share URL format created from Reddit's mobile apps.
 
 **Changed**
 

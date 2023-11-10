@@ -1,6 +1,6 @@
 import pytest
 
-from asyncpraw.exceptions import RedditAPIException
+from asyncpraw.exceptions import RedditAPIException, ClientException
 from asyncpraw.models import Comment, InlineGif, InlineImage, InlineVideo, Submission
 
 from ... import IntegrationTest
@@ -305,6 +305,15 @@ class TestSubmission(IntegrationTest):
     async def test_report(self, reddit):
         reddit.read_only = False
         await Submission(reddit, "hmkbt8").report("praw")
+
+    async def test_resolve_from_share_url(self, reddit):
+        url = "https://www.reddit.com/r/redditdev/s/WNauetbiNG"
+        assert await reddit.submission(url=url) == "2gmzqe", url
+
+    async def test_resolve_from_share_url__invalid_url(self, reddit):
+        url = "https://reddit.com/r/space/s/"
+        with pytest.raises(ClientException):
+            await reddit.submission(url=url)
 
     async def test_save(self, reddit):
         reddit.read_only = False
