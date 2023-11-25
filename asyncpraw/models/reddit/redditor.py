@@ -198,7 +198,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         )
         return response[fullname]["name"]
 
-    async def _friend(self, *, data: dict[str:Any], method: str):
+    async def _friend(self, *, data: dict[str, Any], method: str):
         url = API_PATH["friend_v1"].format(user=self)
         await self._reddit.request(data=dumps(data), method=method, path=url)
 
