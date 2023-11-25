@@ -5,8 +5,6 @@ from json import JSONEncoder, dumps
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
-import aiofiles
-
 from ...const import API_PATH
 from ...util import _deprecate_args
 from ...util.cache import cachedproperty
@@ -1900,7 +1898,7 @@ class SubredditWidgetsModeration:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        async with aiofiles.open(file_path, "rb") as image:
+        with file.open("rb") as image:
             upload_data["file"] = image
             response = await self._reddit._core._requestor._http.post(
                 upload_url, data=upload_data

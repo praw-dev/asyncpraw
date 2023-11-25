@@ -19,7 +19,6 @@ from urllib.parse import urljoin
 from warnings import warn
 from xml.etree.ElementTree import XML
 
-import aiofiles
 from aiohttp.http_exceptions import HttpProcessingError
 from aiohttp.web_ws import WebSocketError
 from asyncprawcore import Redirect
@@ -1813,9 +1812,10 @@ class SubredditStylesheet:
     async def _upload_image(
         self, *, data: dict[str, str | Any], image_path: str
     ) -> dict[str, Any]:
-        async with aiofiles.open(image_path, "rb") as image:
-            header = await image.read(len(JPEG_HEADER))
-            await image.seek(0)
+        file = Path(image_path)
+        with file.open("rb") as image:
+            header = image.read(len(JPEG_HEADER))
+            image.seek(0)
             data["img_type"] = "jpg" if header == JPEG_HEADER else "png"
             url = API_PATH["upload_image"].format(subreddit=self.subreddit)
             response = await self.subreddit._reddit.post(
@@ -1844,7 +1844,7 @@ class SubredditStylesheet:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        async with aiofiles.open(image_path, "rb") as image:
+        with file.open("rb") as image:
             upload_data["file"] = image
             response = await self.subreddit._reddit._core._requestor._http.post(
                 upload_url, data=upload_data
@@ -3274,31 +3274,31 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             )
 
     async def _read_and_post_media(
-        self, media_path: str, upload_url: str, upload_data: dict[str, Any]
+        self, file: Path, upload_url: str, upload_data: dict[str, Any]
     ) -> ClientResponse:
-        async with aiofiles.open(media_path, "rb") as media:
+        with file.open("rb") as media:
             upload_data["file"] = media
             return await self._reddit._core._requestor._http.post(
                 upload_url, data=upload_data
             )
 
     async def _submit_media(
-        self, *, data: dict[Any, Any], timeout: int, websocket_url: str | None = None
-    ):
+        self, *, data: dict[Any, Any], timeout: int, without_websockets: bool
+    ) -> asyncpraw.models.Submission | None:
         """Submit and return an ``image``, ``video``, or ``videogif``.
 
         This is a helper method for submitting posts that are not link posts or self
         posts.
 
         """
-        if websocket_url is None:
-            await self._reddit.post(API_PATH["submit"], data=data)
+        response = await self._reddit.post(API_PATH["submit"], data=data)
+        websocket_url = response["json"]["data"]["websocket_url"]
+        if websocket_url is None or without_websockets:
             return None
         try:
             async with self._reddit._core._requestor._http.ws_connect(
                 websocket_url, timeout=timeout
             ) as websocket:
-                await self._reddit.post(API_PATH["submit"], data=data)
                 try:
                     ws_update = await websocket.receive_json()
                 except (
@@ -3330,7 +3330,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         """
         self._validate_inline_media(inline_media)
-        inline_media.media_id, _ = await self._upload_media(
+        inline_media.media_id = await self._upload_media(
             media_path=inline_media.path, upload_type="selfpost"
         )
         return inline_media
@@ -3387,7 +3387,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         upload_url = f"https:{upload_lease['action']}"
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
 
-        response = await self._read_and_post_media(media_path, upload_url, upload_data)
+        response = await self._read_and_post_media(file, upload_url, upload_data)
         if response.status != 201:
             await self._parse_xml_response(response)
         try:
@@ -3395,11 +3395,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         except HttpProcessingError:
             raise ServerError(response=response) from None
 
-        websocket_url = upload_response["asset"]["websocket_url"]
-
         if upload_type == "link":
-            return f"{upload_url}/{upload_data['key']}", websocket_url
-        return upload_response["asset"]["asset_id"], websocket_url
+            return f"{upload_url}/{upload_data['key']}"
+        return upload_response["asset"]["asset_id"]
 
     async def post_requirements(self) -> dict[str, str | int | bool]:
         """Get the post requirements for a subreddit.
@@ -3941,14 +3939,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             if value is not None:
                 data[key] = value
 
-        image_url, websocket_url = await self._upload_media(
+        image_url = await self._upload_media(
             expected_mime_prefix="image", media_path=image_path
         )
         data.update(kind="image", url=image_url)
-        if without_websockets:
-            websocket_url = None
         return await self._submit_media(
-            data=data, timeout=timeout, websocket_url=websocket_url
+            data=data, timeout=timeout, without_websockets=without_websockets
         )
 
     @_deprecate_args(
@@ -4166,20 +4162,18 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             if value is not None:
                 data[key] = value
 
-        video_url, websocket_url = await self._upload_media(
+        video_url = await self._upload_media(
             expected_mime_prefix="video", media_path=video_path
         )
-        video_poster_url, _ = await self._upload_media(media_path=thumbnail_path)
+        video_poster_url = await self._upload_media(media_path=thumbnail_path)
         data.update(
             kind="videogif" if videogif else "video",
             url=video_url,
             # if thumbnail_path is None, it uploads the PRAW logo
             video_poster_url=video_poster_url,
         )
-        if without_websockets:
-            websocket_url = None
         return await self._submit_media(
-            data=data, timeout=timeout, websocket_url=websocket_url
+            data=data, timeout=timeout, without_websockets=without_websockets
         )
 
     @_deprecate_args("other_subreddits")

@@ -1,9 +1,7 @@
 """Test asyncpraw.models.subreddit."""
 import socket
-import sys
 from asyncio import TimeoutError
 
-import aiofiles
 import pytest
 from aiohttp import ClientResponse
 from aiohttp.http_websocket import WebSocketError
@@ -1564,7 +1562,7 @@ class TestSubreddit(IntegrationTest):
         "aiohttp.client.ClientSession.ws_connect",
         new=MagicMock(
             return_value=WebsocketMock(
-                "l6eqw6", "l6er3r", "l6erfu"  # update with cassette
+                "183v4jy", "183v4sr", "183v4xv"  # update with cassette
             ),
         ),
     )
@@ -1637,8 +1635,8 @@ class TestSubreddit(IntegrationTest):
         reddit._core._requestor._http.post = patch_request
 
         fake_png = PNG_HEADER + b"\x1a" * 10  # Normally 1024 ** 2 * 20 (20 MB)
-        async with aiofiles.open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
-            await tempfile.write(fake_png)
+        with open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
+            tempfile.write(fake_png)
         with pytest.raises(TooLargeMediaException):
             subreddit = await reddit.subreddit("test")
             await subreddit.submit_image("test", tempfile.name)
@@ -1647,6 +1645,7 @@ class TestSubreddit(IntegrationTest):
         "aiohttp.client.ClientSession.ws_connect",
         new=MagicMock(side_effect=BlockingIOError),
     )  # happens with timeout=0
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
     async def test_submit_image__timeout_1(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1661,6 +1660,7 @@ class TestSubreddit(IntegrationTest):
             # happens with timeout=0.00001
         ),
     )
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
     async def test_submit_image__timeout_2(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1675,6 +1675,7 @@ class TestSubreddit(IntegrationTest):
             # could happen but Async PRAW should handle it
         ),
     )
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
     async def test_submit_image__timeout_3(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1689,6 +1690,7 @@ class TestSubreddit(IntegrationTest):
             # could happen but Async PRAW should handle it
         ),
     )
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
     async def test_submit_image__timeout_4(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1791,7 +1793,7 @@ class TestSubreddit(IntegrationTest):
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
         new=MagicMock(
-            return_value=WebsocketMock("l6g58s", "l6g5al"),  # update with cassette
+            return_value=WebsocketMock("183vns9", "183vnt2"),  # update with cassette
         ),
     )
     async def test_submit_video(self, image_path, reddit):
@@ -1863,6 +1865,7 @@ class TestSubreddit(IntegrationTest):
         "aiohttp.client.ClientSession.ws_connect",
         new=MagicMock(side_effect=BlockingIOError),
     )  # happens with timeout=0
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
     async def test_submit_video__timeout_1(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1877,6 +1880,7 @@ class TestSubreddit(IntegrationTest):
             # happens with timeout=0.00001
         ),
     )
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
     async def test_submit_video__timeout_2(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1891,6 +1895,7 @@ class TestSubreddit(IntegrationTest):
             # could happen, and Async PRAW should handle it
         ),
     )
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
     async def test_submit_video__timeout_3(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1905,6 +1910,7 @@ class TestSubreddit(IntegrationTest):
             # could happen, and Async PRAW should handle it
         ),
     )
+    @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
     async def test_submit_video__timeout_4(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
