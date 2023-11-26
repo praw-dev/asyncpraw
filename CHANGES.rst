@@ -32,14 +32,15 @@ Unreleased
 
 - :func:`.stream_generator` now accepts the ``continue_after_id`` parameter, which
   starts the stream after a given item ID.
-
-**Fixed**
-
-- XML parsing error when media uploads fail.
+- Support for new share URL format created from Reddit's mobile apps.
 
 **Changed**
 
 - Drop support for Python 3.7, which is end-of-life on 2023-06-27.
+
+**Fixed**
+
+- XML parsing error when media uploads fail.
 
 7.7.1 (2023/07/11)
 ------------------
@@ -149,6 +150,8 @@ Unreleased
 - Ability to use :class:`.CommentForest` as an asynchronous iterator.
 - :meth:`.CommentForest.list` no longer needs to be awaited.
 - :attr:`.Submission.comments` no longer needs to be awaited and is now a property.
+- The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
+  argument used to explicitly perform a fetch when initializing an object.
 
 **Fixed**
 
@@ -156,11 +159,6 @@ Unreleased
   helper classes.
 - An import error when using Async PRAW in environments where ``libsqlite3-dev`` is
   needed to utilize ``aiosqlite`` package which depends on the ``sqlite3`` builtin.
-
-**Deprecated**
-
-- The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
-  argument used to explicitly perform a fetch when initializing an object.
 
 7.4.0 (2021/07/30)
 ------------------

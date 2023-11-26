@@ -218,6 +218,15 @@ class TestComment(IntegrationTest):
         reddit.read_only = False
         await Comment(reddit, "fx1it87").report("custom")
 
+    async def test_resolve_from_share_url(self, reddit):
+        url = "https://www.reddit.com/r/redditdev/s/nGnQE1QkLC"
+        assert await reddit.comment(url=url) == "cklhv0f", url
+
+    async def test_resolve_from_share_url__invalid_url(self, reddit):
+        url = "https://www.reddit.com/r/redditdev/s/WNauetbiNG"
+        with pytest.raises(ClientException):
+            await reddit.comment(url=url)
+
     async def test_save(self, reddit):
         reddit.read_only = False
         await Comment(reddit, "fx19hsi").save(category="foo")

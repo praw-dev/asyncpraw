@@ -15,6 +15,7 @@ from typing import (
     AsyncGenerator,
     Iterable,
 )
+from urllib.parse import urlparse
 from warnings import warn
 
 from asyncprawcore import (
@@ -706,6 +707,16 @@ class Reddit:
         """Close the requestor."""
         await self.requestor.close()
 
+    async def _resolve_share_url(self, url: str) -> str:
+        """Return the canonical URL for a given share URL."""
+        parts = urlparse(url).path.rstrip("/").split("/")
+        if "s" in parts:  # handling new share urls from mobile apps
+            try:
+                await self.get(url)
+            except Redirect as e:
+                return e.response.headers.get("location")
+        return url
+
     @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy
     async def comment(
@@ -738,6 +749,8 @@ class Reddit:
             :meth:`~.Comment.refresh` on the returned :class:`.Comment`.
 
         """
+        if url:
+            url = await self._resolve_share_url(url)
         comment = models.Comment(self, id=id, url=url)
         if fetch:
             await comment._fetch()
@@ -1093,6 +1106,8 @@ class Reddit:
             await submission.mod.remove()
 
         """
+        if url:
+            url = await self._resolve_share_url(url)
         submission = models.Submission(self, id=id, url=url)
         if fetch:
             await submission._fetch()
