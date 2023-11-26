@@ -49,7 +49,7 @@ from .wikipage import WikiPage
 if TYPE_CHECKING:  # pragma: no cover
     from aiohttp import ClientResponse
 
-    import asyncpraw
+    import asyncpraw.models
 
 
 class Modmail:

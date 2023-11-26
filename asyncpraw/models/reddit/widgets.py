@@ -12,7 +12,7 @@ from ..base import AsyncPRAWBase
 from ..list.base import BaseList
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 WidgetType: TypeVar = TypeVar("WidgetType", bound="Widget")
 

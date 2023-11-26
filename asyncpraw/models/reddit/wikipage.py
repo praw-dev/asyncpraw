@@ -16,7 +16,7 @@ from .base import RedditBase
 from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class WikiPageModeration:

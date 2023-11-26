@@ -7,7 +7,7 @@ from .base import AsyncPRAWBase
 from .reddit.redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class ModAction(AsyncPRAWBase):

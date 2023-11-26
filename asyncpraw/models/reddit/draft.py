@@ -10,7 +10,7 @@ from .subreddit import Subreddit
 from .user_subreddit import UserSubreddit
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncpraw
+    import asyncpraw.models
 
 
 class Draft(RedditBase):
