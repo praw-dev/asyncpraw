@@ -947,6 +947,18 @@ class TestSubredditStreams(IntegrationTest):
         for i in range(400):
             assert isinstance(await self.async_next(generator), Comment)
 
+    async def test_comments__with_continue_after_id(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        initial_stream = subreddit.stream.comments()
+        first_ten = []
+        for _ in range(10):
+            first_ten.append(await self.async_next(initial_stream))
+        generator = subreddit.stream.comments(continue_after_id=first_ten[4].fullname)
+        for i in range(5):
+            comment = await self.async_next(generator)
+            assert isinstance(comment, Comment)
+            assert comment.fullname == first_ten[i + 5].fullname
+
     async def test_comments__with_pause(self, reddit):
         subreddit = await reddit.subreddit("askreddit")
         comment_stream = subreddit.stream.comments(pause_after=0)

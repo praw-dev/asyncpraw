@@ -30,6 +30,9 @@ Unreleased
     fix for an issue that occurs when editing a post with inline media would cause the
     media to lose their inline appearance.
 
+- :func:`.stream_generator` now accepts the ``continue_after_id`` parameter, which
+  starts the stream after a given item ID.
+
 **Fixed**
 
 - XML parsing error when media uploads fail.

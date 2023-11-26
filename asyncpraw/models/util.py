@@ -56,12 +56,18 @@ def permissions_string(
 
 
 @_deprecate_args(
-    "function", "pause_after", "skip_existing", "attribute_name", "exclude_before"
+    "function",
+    "pause_after",
+    "skip_existing",
+    "attribute_name",
+    "exclude_before",
+    "continue_after_id",
 )
 async def stream_generator(
     function: Callable,
     *,
     attribute_name: str = "fullname",
+    continue_after_id: str | None = None,
     exclude_before: bool = False,
     pause_after: int | None = None,
     skip_existing: bool = False,
@@ -83,6 +89,9 @@ async def stream_generator(
     :param skip_existing: When ``True``, this does not yield any results from the first
         request thereby skipping any items that existed in the stream prior to starting
         the stream (default: ``False``).
+    :param continue_after_id: The initial item ID value to use for ``before`` in
+        ``params``. The stream will continue from the item following this one (default:
+        ``None``).
 
     Additional keyword arguments will be passed to ``function``.
 
@@ -143,7 +152,7 @@ async def stream_generator(
             print(comment)
 
     """
-    before_attribute = None
+    before_attribute = continue_after_id
     exponential_counter = ExponentialCounter(max_counter=16)
     seen_attributes = BoundedSet(301)
     without_before_counter = 0
