@@ -13,21 +13,21 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
     :alt: PyPI - Downloads - Monthly
     :target: https://pypi.python.org/pypi/asyncpraw
 
-.. image:: https://github.com/asyncpraw-dev/asyncpraw/actions/workflows/ci.yml/badge.svg?event=push
+.. image:: https://github.com/praw-dev/asyncpraw/actions/workflows/ci.yml/badge.svg?event=push
     :alt: GitHub Actions Status
-    :target: https://github.com/asyncpraw-dev/asyncpraw/actions/workflows/ci.yml
+    :target: https://github.com/praw-dev/asyncpraw/actions/workflows/ci.yml
 
-.. image:: https://coveralls.io/repos/github/asyncpraw-dev/asyncpraw/badge.svg
+.. image:: https://coveralls.io/repos/github/praw-dev/asyncpraw/badge.svg
     :alt: Coveralls Coverage
-    :target: https://coveralls.io/github/asyncpraw-dev/asyncpraw?branch=master
+    :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=master
 
-.. image:: https://api.securityscorecards.dev/projects/github.com/asyncpraw-dev/asyncpraw/badge
+.. image:: https://api.securityscorecards.dev/projects/github.com/praw-dev/asyncpraw/badge
     :alt: OpenSSF Scorecard
-    :target: https://api.securityscorecards.dev/projects/github.com/asyncpraw-dev/asyncpraw
+    :target: https://api.securityscorecards.dev/projects/github.com/praw-dev/asyncpraw
 
 .. image:: https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg
     :alt: Contributor Covenant
-    :target: https://github.com/asyncpraw-dev/.github/blob/main/CODE_OF_CONDUCT.md
+    :target: https://github.com/praw-dev/.github/blob/main/CODE_OF_CONDUCT.md
 
 .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
     :alt: pre-commit
