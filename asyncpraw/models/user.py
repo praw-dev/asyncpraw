@@ -242,7 +242,6 @@ class User(AsyncPRAWBase):
 
         :raises: ``asyncprawcore.BadRequest`` when pinning a removed or deleted
             submission.
-
         :raises: ``asyncprawcore.Forbidden`` when pinning a submission the authenticated
             user is not the author of.
 
