@@ -1,3 +1,4 @@
 include CHANGES.rst LICENSE.txt README.rst praw_license.txt
 include asyncpraw/praw.ini
 include "asyncpraw/images/PRAW logo.png"
+include asyncpraw/py.typed

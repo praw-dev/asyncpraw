@@ -93,4 +93,5 @@ Source Contributors
 - zacc `@zacc <https://github.com/zacc>`_
 - Arkadiy Illarionov `@qarkai <https://github.com/qarkai>`_
 - c0d3rman `@c0d3rman <https://github.com/c0d3rman>`
+- Tim Harding <tim@timharding.co> `@tim-harding <https://github.com/tim-harding>`_
 - Add "Name <email (optional)> and github profile link" above this line.
