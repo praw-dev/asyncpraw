@@ -1,4 +1,5 @@
 """Test asyncpraw.models.auth."""
+
 import pytest
 from asyncprawcore import InvalidToken
 

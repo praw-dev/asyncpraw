@@ -1,4 +1,5 @@
 """Provide the Subreddit class."""
+
 from __future__ import annotations
 
 import contextlib
@@ -2317,9 +2318,7 @@ class SubredditWiki:
             await wikipage._fetch()
         return wikipage
 
-    def revisions(
-        self, **generator_kwargs: Any
-    ) -> AsyncGenerator[
+    def revisions(self, **generator_kwargs: Any) -> AsyncGenerator[
         dict[str, asyncpraw.models.Redditor | WikiPage | str | int | bool | None],
         None,
     ]:

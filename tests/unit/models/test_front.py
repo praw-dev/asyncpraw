@@ -1,4 +1,5 @@
 """Test asyncpraw.models.front."""
+
 import pytest
 
 from .. import UnitTest

@@ -1,4 +1,5 @@
 """Test asyncpraw.models.subreddit."""
+
 import socket
 from asyncio import TimeoutError
 

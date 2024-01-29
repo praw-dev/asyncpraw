@@ -1,4 +1,5 @@
 """Async PRAW Unit test suite."""
+
 from tests import HelperMethodMixin
 
 

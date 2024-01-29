@@ -1,4 +1,5 @@
 """Provide the draft class."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -55,9 +56,9 @@ class Draft(RedditBase):
         selftext: str | None = None,
         send_replies: bool | None = None,
         spoiler: bool | None = None,
-        subreddit: asyncpraw.models.Subreddit
-        | asyncpraw.models.UserSubreddit
-        | None = None,
+        subreddit: (
+            asyncpraw.models.Subreddit | asyncpraw.models.UserSubreddit | None
+        ) = None,
         title: str | None = None,
         url: str | None = None,
         **draft_kwargs: Any,
@@ -80,9 +81,11 @@ class Draft(RedditBase):
             data.update(
                 {
                     "subreddit": subreddit.fullname,
-                    "target": "profile"
-                    if subreddit.display_name.startswith("u_")
-                    else "subreddit",
+                    "target": (
+                        "profile"
+                        if subreddit.display_name.startswith("u_")
+                        else "subreddit"
+                    ),
                 }
             )
         data.update(draft_kwargs)
@@ -151,10 +154,9 @@ class Draft(RedditBase):
         nsfw: bool | None = None,
         selftext: str | None = None,
         spoiler: bool | None = None,
-        subreddit: str
-        | asyncpraw.models.Subreddit
-        | asyncpraw.models.UserSubreddit
-        | None = None,
+        subreddit: (
+            str | asyncpraw.models.Subreddit | asyncpraw.models.UserSubreddit | None
+        ) = None,
         title: str | None = None,
         url: str | None = None,
         **submit_kwargs: Any,
@@ -245,10 +247,9 @@ class Draft(RedditBase):
         selftext: str | None = None,
         send_replies: bool | None = None,
         spoiler: bool | None = None,
-        subreddit: str
-        | asyncpraw.models.Subreddit
-        | asyncpraw.models.UserSubreddit
-        | None = None,
+        subreddit: (
+            str | asyncpraw.models.Subreddit | asyncpraw.models.UserSubreddit | None
+        ) = None,
         title: str | None = None,
         url: str | None = None,
         **draft_kwargs: Any,

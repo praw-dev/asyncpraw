@@ -1,4 +1,5 @@
 """Async PRAW Integration test suite."""
+
 import asyncio
 import os
 

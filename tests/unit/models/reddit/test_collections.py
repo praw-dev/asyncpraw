@@ -1,4 +1,5 @@
 """Test classes from collections.py."""
+
 import pytest
 
 from asyncpraw.models import Collection

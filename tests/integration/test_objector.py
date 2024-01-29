@@ -1,4 +1,5 @@
 """Test asyncpraw.objector."""
+
 import pytest
 
 from asyncpraw.exceptions import RedditAPIException

@@ -1,4 +1,5 @@
 """Test asyncpraw.models.listing.generator."""
+
 from ... import IntegrationTest
 
 

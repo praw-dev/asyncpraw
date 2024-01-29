@@ -1,4 +1,5 @@
 """Test asyncpraw.models.preferences."""
+
 from asyncpraw.models import Preferences
 
 from .. import UnitTest

@@ -1,4 +1,5 @@
 """Prepare pytest."""
+
 import asyncio
 import os
 from base64 import b64encode

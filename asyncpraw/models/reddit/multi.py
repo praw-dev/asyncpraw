@@ -1,4 +1,5 @@
 """Provide the Multireddit class."""
+
 from __future__ import annotations
 
 import re
@@ -215,8 +216,9 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
     async def update(
         self,
-        **updated_settings: str
-        | list[str | asyncpraw.models.Subreddit | dict[str, str]],
+        **updated_settings: (
+            str | list[str | asyncpraw.models.Subreddit | dict[str, str]]
+        ),
     ):
         """Update this multireddit.
 

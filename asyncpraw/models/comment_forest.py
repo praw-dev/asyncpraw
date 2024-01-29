@@ -1,4 +1,5 @@
 """Provide CommentForest for submission comments."""
+
 from __future__ import annotations
 
 import inspect

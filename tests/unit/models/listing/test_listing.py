@@ -1,4 +1,5 @@
 """Test asyncpraw.models.listing.listing."""
+
 from asyncpraw.models.listing.listing import ModmailConversationsListing, ModNoteListing
 
 from ... import UnitTest
