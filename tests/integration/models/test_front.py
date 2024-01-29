@@ -1,4 +1,5 @@
 """Test asyncpraw.models.front."""
+
 from .. import IntegrationTest
 
 

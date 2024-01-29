@@ -1,4 +1,5 @@
 """Test asyncpraw.models.Trophy."""
+
 import pytest
 
 from asyncpraw.models.trophy import Trophy

@@ -1,4 +1,5 @@
 """Test asyncpraw.util.refresh_token_manager."""
+
 import sys
 from tempfile import NamedTemporaryFile
 

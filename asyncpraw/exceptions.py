@@ -7,6 +7,7 @@ client side. Both of these classes extend :class:`.AsyncPRAWException`.
 All other exceptions are subclassed from :class:`.ClientException`.
 
 """
+
 from __future__ import annotations
 
 import sys
@@ -240,12 +241,14 @@ class APIException(AsyncPRAWException):
     ) -> list[RedditErrorItem]:
         """Covert an exception list into a :class:`.RedditErrorItem` list."""
         return [
-            exception
-            if isinstance(exception, RedditErrorItem)
-            else RedditErrorItem(
-                error_type=exception[0],
-                field=exception[2] if bool(exception[2]) else "",
-                message=exception[1] if bool(exception[1]) else "",
+            (
+                exception
+                if isinstance(exception, RedditErrorItem)
+                else RedditErrorItem(
+                    error_type=exception[0],
+                    field=exception[2] if bool(exception[2]) else "",
+                    message=exception[1] if bool(exception[1]) else "",
+                )
             )
             for exception in exceptions
         ]

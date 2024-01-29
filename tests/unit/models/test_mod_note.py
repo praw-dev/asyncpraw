@@ -1,4 +1,5 @@
 """Test asyncpraw.models.ModNote."""
+
 from asyncpraw.models.mod_note import ModNote
 
 from .. import UnitTest

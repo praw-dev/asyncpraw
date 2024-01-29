@@ -1,4 +1,5 @@
 """Test asyncpraw.models.listing.generator."""
+
 import pytest
 
 from asyncpraw.models.listing.generator import ListingGenerator

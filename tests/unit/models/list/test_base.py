@@ -1,4 +1,5 @@
 """Test asyncpraw.models.list.base."""
+
 import pytest
 
 from asyncpraw.models.list.base import BaseList

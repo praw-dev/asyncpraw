@@ -1,4 +1,5 @@
 """Provide the Rule class."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, AsyncIterator
@@ -423,9 +424,9 @@ class SubredditRulesModeration:
             "description": description,
             "kind": kind,
             "short_name": short_name,
-            "violation_reason": short_name
-            if violation_reason is None
-            else violation_reason,
+            "violation_reason": (
+                short_name if violation_reason is None else violation_reason
+            ),
         }
         response = await self.subreddit_rules._reddit.post(
             API_PATH["add_subreddit_rule"], data=data

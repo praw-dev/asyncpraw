@@ -1,4 +1,5 @@
 """Test asyncpraw.models.subreddits."""
+
 import pytest
 
 from .. import UnitTest

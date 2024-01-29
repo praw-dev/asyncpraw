@@ -1,4 +1,5 @@
 """Test asyncpraw.models.util."""
+
 from collections import namedtuple
 
 from asyncpraw.models.util import (
