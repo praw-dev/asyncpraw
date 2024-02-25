@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Generator
+from typing import TYPE_CHECKING, Any, Iterator
 
 from ...const import API_PATH
 from ...exceptions import ClientException
@@ -516,7 +516,7 @@ class Collection(RedditBase):
             "include_links": True,
         }
 
-    def __iter__(self) -> Generator[Any, None, None]:
+    def __iter__(self) -> Iterator[Any, None, None]:
         """Provide a way to iterate over the posts in this :class:`.Collection`.
 
         Example usage:

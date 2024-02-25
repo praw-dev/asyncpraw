@@ -1899,7 +1899,8 @@ class SubredditWidgetsModeration:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        with file.open("rb") as image:
+        # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
+        with file.open("rb") as image:  # noqa: ASYNC101
             upload_data["file"] = image
             response = await self._reddit._core._requestor._http.post(
                 upload_url, data=upload_data
