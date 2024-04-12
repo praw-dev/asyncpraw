@@ -1814,7 +1814,8 @@ class SubredditStylesheet:
         self, *, data: dict[str, str | Any], image_path: str
     ) -> dict[str, Any]:
         file = Path(image_path)
-        with file.open("rb") as image:
+        # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
+        with file.open("rb") as image:  # noqa: ASYNC101
             header = image.read(len(JPEG_HEADER))
             image.seek(0)
             data["img_type"] = "jpg" if header == JPEG_HEADER else "png"
@@ -1845,7 +1846,8 @@ class SubredditStylesheet:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        with file.open("rb") as image:
+        # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
+        with file.open("rb") as image:  # noqa: ASYNC101
             upload_data["file"] = image
             response = await self.subreddit._reddit._core._requestor._http.post(
                 upload_url, data=upload_data
