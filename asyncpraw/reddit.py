@@ -704,10 +704,6 @@ class Reddit:
         self._read_only_core = session(read_only_authorizer)
         self._prepare_common_authorizer(authenticator)
 
-    async def close(self):
-        """Close the requestor."""
-        await self.requestor.close()
-
     async def _resolve_share_url(self, url: str) -> str:
         """Return the canonical URL for a given share URL."""
         parts = urlparse(url).path.rstrip("/").split("/")
@@ -717,6 +713,10 @@ class Reddit:
             except Redirect as e:
                 return e.response.headers.get("location")
         return url
+
+    async def close(self):
+        """Close the requestor."""
+        await self.requestor.close()
 
     @_deprecate_args("id", "url", "fetch")
     @deprecate_lazy

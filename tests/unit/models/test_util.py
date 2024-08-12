@@ -105,30 +105,6 @@ class TestPermissionsString(UnitTest):
 
 
 class TestStream(UnitTest):
-    async def test_stream(self):
-        Thing = namedtuple("Thing", ["fullname"])
-        initial_things = [Thing(n) for n in reversed(range(100))]
-        counter = 99
-
-        async def generate(limit, **kwargs):
-            nonlocal counter
-            counter += 1
-            if counter % 2 == 0:
-                things = initial_things
-            else:
-                things = [Thing(counter)] + initial_things[:-1]
-            for thing in things:
-                yield thing
-
-        stream = stream_generator(generate)
-        seen = set()
-        async for thing in stream:
-            assert thing not in seen
-            seen.add(thing)
-            counter += 1
-            if counter == 400:
-                break
-
     async def test_comments__with_continue_after_id(
         self,
     ):
@@ -161,3 +137,27 @@ class TestStream(UnitTest):
             thing = await self.async_next(stream)
             assert thing.fullname == expected_fullname, thing
             expected_fullname += 1
+
+    async def test_stream(self):
+        Thing = namedtuple("Thing", ["fullname"])
+        initial_things = [Thing(n) for n in reversed(range(100))]
+        counter = 99
+
+        async def generate(limit, **kwargs):
+            nonlocal counter
+            counter += 1
+            if counter % 2 == 0:
+                things = initial_things
+            else:
+                things = [Thing(counter)] + initial_things[:-1]
+            for thing in things:
+                yield thing
+
+        stream = stream_generator(generate)
+        seen = set()
+        async for thing in stream:
+            assert thing not in seen
+            seen.add(thing)
+            counter += 1
+            if counter == 400:
+                break
