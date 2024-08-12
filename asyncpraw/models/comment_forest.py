@@ -22,28 +22,6 @@ class CommentForest:
 
     """
 
-    @staticmethod
-    def _gather_more_comments(
-        tree: list[asyncpraw.models.MoreComments],
-        *,
-        parent_tree: list[asyncpraw.models.MoreComments] | None = None,
-    ) -> list[MoreComments]:
-        """Return a list of :class:`.MoreComments` objects obtained from tree."""
-        more_comments = []
-        queue = [(None, x) for x in tree]
-        while queue:
-            parent, comment = queue.pop(0)
-            if isinstance(comment, MoreComments):
-                heappush(more_comments, comment)
-                if parent:
-                    comment._remove_from = parent.replies._comments
-                else:
-                    comment._remove_from = parent_tree or tree
-            else:
-                for item in comment.replies:
-                    queue.append((comment, item))
-        return more_comments
-
     async def __aiter__(self) -> AsyncIterator[asyncpraw.models.Comment]:
         """Allow CommentForest to be used as an AsyncIterator.
 
@@ -123,11 +101,6 @@ class CommentForest:
             parent = self._submission._comments_by_id[comment.parent_id]
             parent.replies._comments.append(comment)
 
-    def _update(self, comments: list[asyncpraw.models.Comment]):
-        self._comments = comments
-        for comment in comments:
-            comment.submission = self._submission
-
     def list(  # noqa: A003
         self,
     ) -> (
@@ -170,6 +143,28 @@ class CommentForest:
             return async_func()
         return comments
 
+    @staticmethod
+    def _gather_more_comments(
+        tree: list[asyncpraw.models.MoreComments],
+        *,
+        parent_tree: list[asyncpraw.models.MoreComments] | None = None,
+    ) -> list[MoreComments]:
+        """Return a list of :class:`.MoreComments` objects obtained from tree."""
+        more_comments = []
+        queue = [(None, x) for x in tree]
+        while queue:
+            parent, comment = queue.pop(0)
+            if isinstance(comment, MoreComments):
+                heappush(more_comments, comment)
+                if parent:
+                    comment._remove_from = parent.replies._comments
+                else:
+                    comment._remove_from = parent_tree or tree
+            else:
+                for item in comment.replies:
+                    queue.append((comment, item))
+        return more_comments
+
     def __init__(
         self,
         submission: asyncpraw.models.Submission,
@@ -185,6 +180,11 @@ class CommentForest:
         """
         self._comments = comments
         self._submission = submission
+
+    def _update(self, comments: list[asyncpraw.models.Comment]):
+        self._comments = comments
+        for comment in comments:
+            comment.submission = self._submission
 
     @_deprecate_args("limit", "threshold")
     async def replace_more(
