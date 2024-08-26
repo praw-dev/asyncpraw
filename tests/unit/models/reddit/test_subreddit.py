@@ -6,6 +6,8 @@ import pytest
 from unittest import mock
 from unittest.mock import AsyncMock, MagicMock
 
+from aiohttp import ClientResponse
+
 from asyncpraw.exceptions import ClientException, MediaPostFailed
 from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
@@ -97,12 +99,12 @@ class TestSubreddit(UnitTest):
         from aiohttp.http_exceptions import HttpProcessingError
         from asyncprawcore.exceptions import ServerError
 
-        response = MagicMock()
-        response.status = 201
+        response = MagicMock(spec=ClientResponse)
         response.raise_for_status = MagicMock(
             side_effect=HttpProcessingError(code=500, message="")
         )
-        mock_method.return_value = response
+        response.status = 201
+        mock_method.return_value.__aenter__.return_value = response
         with pytest.raises(ServerError):
             await Subreddit(reddit, display_name="test").submit_image(
                 "Test", "/dev/null"
