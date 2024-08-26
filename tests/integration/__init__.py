@@ -90,14 +90,14 @@ class IntegrationTest(HelperMethodMixin):
         return marker.args[0]
 
     @pytest.fixture
-    async def reddit(self, vcr, event_loop: asyncio.AbstractEventLoop):
+    async def reddit(self, vcr):
         """Configure Reddit."""
         reddit_kwargs = {
             "client_id": pytest.placeholders.client_id,
             "client_secret": pytest.placeholders.client_secret,
             "requestor_kwargs": {
                 "session": aiohttp.ClientSession(
-                    loop=event_loop, headers={"Accept-Encoding": "identity"}
+                    headers={"Accept-Encoding": "identity"}
                 )
             },
             "user_agent": pytest.placeholders.user_agent,

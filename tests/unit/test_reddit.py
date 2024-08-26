@@ -1,5 +1,4 @@
 import configparser
-import sys
 import types
 
 import pytest
@@ -15,6 +14,15 @@ from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.models import Comment
 
 from . import UnitTest
+
+
+class MockClientSession:
+    def __init__(self, *args, **kwargs):
+        self.closed = False
+        self.headers = {}
+
+    async def close(self):
+        self.closed = True
 
 
 class TestReddit(UnitTest):
@@ -37,8 +45,10 @@ class TestReddit(UnitTest):
         assert not mock_update_check.called
 
     async def test_close_session(self):
-        temp_reddit = Reddit(**self.REQUIRED_DUMMY_SETTINGS)
-        assert not temp_reddit.requestor._http.closed
+        temp_reddit = Reddit(
+            **self.REQUIRED_DUMMY_SETTINGS,
+            requestor_kwargs={"session": MockClientSession()},
+        )
         async with temp_reddit as reddit:
             pass
         assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
@@ -47,7 +57,10 @@ class TestReddit(UnitTest):
         assert Comment(reddit, id="cklfmye").id == "cklfmye"
 
     async def test_context_manager(self):
-        async with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
+        async with Reddit(
+            **self.REQUIRED_DUMMY_SETTINGS,
+            requestor_kwargs={"session": MockClientSession()},
+        ) as reddit:
             assert not reddit.requestor._http.closed
         assert reddit.requestor._http.closed
 

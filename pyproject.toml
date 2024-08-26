@@ -24,7 +24,7 @@ dependencies = [
   "aiofiles",
   "aiohttp <4",
   "aiosqlite <=0.17.0",
-  "asyncprawcore >=2.4, <3",
+  "asyncprawcore >=3.0.1, <4",
   "defusedxml ==0.7.1",
   "update_checker >=0.18"
 ]
@@ -54,7 +54,6 @@ readthedocs = [
   "sphinxcontrib-trio"
 ]
 test = [
-  "mock ==4.*",
   "pytest ==7.*",
   "pytest-asyncio ==0.18.*",
   "pytest-vcr ==1.*",
