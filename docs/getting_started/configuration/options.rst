@@ -96,6 +96,7 @@ PRAW.
     before throwing an exception.
 :warn_comment_sort: When ``true``, log a warning when the ``comment_sort`` attribute of
     a submission is updated after ``_fetch()`` has been called (default: ``true``).
+:window_size: The number of seconds between rate limit resets (default: 600).
 
 .. _custom_options:
 
