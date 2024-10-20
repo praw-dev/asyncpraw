@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 from asyncio import TimeoutError
+from contextlib import asynccontextmanager
 from copy import deepcopy
 from csv import writer
 from io import StringIO
@@ -12,8 +13,10 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
+    AsyncContextManager,
     AsyncGenerator,
     AsyncIterator,
+    Callable,
     Iterator,
 )
 from urllib.parse import urljoin
@@ -3266,14 +3269,16 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 actual=int(actual), maximum_size=int(maximum_size)
             )
 
+    @asynccontextmanager
     async def _read_and_post_media(
         self, file: Path, upload_url: str, upload_data: dict[str, Any]
-    ) -> ClientResponse:
+    ) -> Callable[..., AsyncContextManager[ClientResponse]]:
         with file.open("rb") as media:
             upload_data["file"] = media
-            return await self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data
-            )
+            async with self._reddit._core._requestor.request(
+                "POST", upload_url, data=upload_data
+            ) as response:
+                yield response
 
     async def _submit_media(
         self, *, data: dict[Any, Any], timeout: int, without_websockets: bool
@@ -3380,13 +3385,13 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         upload_url = f"https:{upload_lease['action']}"
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
 
-        response = await self._read_and_post_media(file, upload_url, upload_data)
-        if response.status != 201:
-            await self._parse_xml_response(response)
-        try:
-            response.raise_for_status()
-        except HttpProcessingError:
-            raise ServerError(response=response) from None
+        async with self._read_and_post_media(file, upload_url, upload_data) as response:
+            if response.status != 201:
+                await self._parse_xml_response(response)
+            try:
+                response.raise_for_status()
+            except HttpProcessingError:
+                raise ServerError(response=response) from None
 
         if upload_type == "link":
             return f"{upload_url}/{upload_data['key']}"
