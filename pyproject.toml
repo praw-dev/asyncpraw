@@ -54,11 +54,9 @@ readthedocs = [
 ]
 test = [
   "mock ==4.*",
-  "pytest ==7.*",
-  "pytest-asyncio ==0.18.*",
-  "pytest-vcr ==1.*",
-  "urllib3 ==1.*",
-  "vcrpy ==4.2.1"
+  "pytest ==8.*",
+  "pytest-asyncio>=0.20,<0.25",
+  "betamax >=0.8, <0.9"
 ]
 
 [project.urls]
@@ -79,6 +77,10 @@ profile = 'black'
 skip_glob = '.venv*'
 
 [tool.pytest.ini_options]
+# this avoids pytest loading betamax+Requests at boot.
+# this allows us to patch betamax and makes it use Niquests instead.
+addopts = "-p no:pytest-betamax"
+asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 filterwarnings = "ignore::DeprecationWarning"
 testpaths = "tests"

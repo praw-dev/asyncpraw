@@ -1,7 +1,7 @@
 """Test asyncpraw.models.auth."""
 
 import pytest
-from asyncprawcore import InvalidToken
+from prawcore import InvalidToken
 
 from asyncpraw import Reddit
 

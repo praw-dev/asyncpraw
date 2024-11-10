@@ -3,8 +3,42 @@
 import asyncio
 import os
 from base64 import b64encode
+from sys import modules
+
+import requests
+import niquests
+import urllib3
+from prawcore import Requestor
+
+# betamax is tied to Requests
+# and Niquests is almost entirely compatible with it.
+# we can fool it without effort.
+modules["requests"] = niquests
+modules["requests.adapters"] = niquests.adapters
+modules["requests.models"] = niquests.models
+modules["requests.exceptions"] = niquests.exceptions
+modules["requests.packages.urllib3"] = urllib3
+
+# niquests no longer have a compat submodule
+# but betamax need it. no worries, as betamax
+# explicitly need requests, we'll give it to him.
+modules["requests.compat"] = requests.compat
+
+# doing the import now will make betamax working with Niquests!
+# no extra effort.
+import betamax
+
+# the base mock does not implement close(), which is required
+# for our HTTP client. No biggy.
+betamax.mock_response.MockHTTPResponse.close = lambda _: None
 
 import pytest
+
+
+@pytest.fixture
+def requestor():
+    """Return path to image."""
+    return Requestor("prawcore:test (by /u/bboe)")
 
 
 @pytest.fixture(autouse=True)

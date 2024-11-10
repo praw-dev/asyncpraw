@@ -1,15 +1,16 @@
 """Test asyncpraw.models.subreddit."""
 
+import json
 import socket
 from asyncio import TimeoutError
 
 import pytest
-from aiohttp import ClientResponse
-from aiohttp.http_websocket import WebSocketError
-from asyncprawcore import BadRequest, Forbidden, NotFound, TooLarge
+from niquests import Response
+from niquests.exceptions import HTTPError
+from prawcore import BadRequest, Forbidden, NotFound, TooLarge
 
 from unittest import mock
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import MagicMock, PropertyMock, AsyncMock
 
 from asyncpraw.const import PNG_HEADER
 from asyncpraw.exceptions import (
@@ -1260,8 +1261,15 @@ class WebsocketMock:
     POST_URL = "https://reddit.com/r/<TEST_SUBREDDIT>/comments/{}/test_title/"
 
     @classmethod
-    def make_dict(cls, post_id):
-        return {"payload": {"redirect": cls.POST_URL.format(post_id)}}
+    def make_payload(cls, post_id):
+        return json.dumps({"payload": {"redirect": cls.POST_URL.format(post_id)}})
+
+    @property
+    def closed(self) -> bool:
+        return False
+
+    def close(self) -> None:
+        pass
 
     async def __aenter__(self):
         return self
@@ -1273,12 +1281,22 @@ class WebsocketMock:
         self.post_ids = post_ids
         self.i = -1
 
-    async def receive_json(self):
+    async def next_payload(self):
         if not self.post_ids:
-            raise WebSocketError(0, "")
+            raise HTTPError()
         assert 0 <= self.i + 1 < len(self.post_ids)
         self.i += 1
-        return self.make_dict(self.post_ids[self.i])
+        return self.make_payload(self.post_ids[self.i])
+
+
+class ResponseWithWebSocketExtMock:
+
+    def __init__(self, fake_extension: WebsocketMock):
+        self.extension = fake_extension
+
+    @property
+    def status_code(self) -> int:
+        return 101
 
 
 class TestSubreddit(IntegrationTest):
@@ -1572,10 +1590,10 @@ class TestSubreddit(IntegrationTest):
         assert submission.link_flair_text == flair_text
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock(
-                "183v4jy", "183v4sr", "183v4xv"  # update with cassette
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(
+                WebsocketMock("183v4jy", "183v4sr", "183v4xv")  # update with cassette
             ),
         ),
     )
@@ -1592,8 +1610,10 @@ class TestSubreddit(IntegrationTest):
 
     @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock()),
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(WebsocketMock()),
+        ),
     )
     async def test_submit_image__bad_websocket(self, image_path, reddit):
         reddit.read_only = False
@@ -1604,8 +1624,10 @@ class TestSubreddit(IntegrationTest):
                 await subreddit.submit_image("Test Title", image)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6evpd")),
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(WebsocketMock("l6evpd")),
+        ),
     )  # update with cassette
     async def test_submit_image__flair(self, image_path, reddit):
         flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
@@ -1639,9 +1661,7 @@ class TestSubreddit(IntegrationTest):
         async def patch_request(url, *args, **kwargs):
             """Patch requests to return mock data on specific url."""
             if "https://reddit-uploaded-media.s3-accelerate.amazonaws.com" in url:
-                response = ClientResponse
-                response.text = AsyncMock(return_value=mock_data)
-                response.status = 400
+                response = MagicMock(status_code=400, text=mock_data)
                 return response
             return await _post(url, *args, **kwargs)
 
@@ -1655,7 +1675,7 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_image("test", tempfile.name)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(side_effect=BlockingIOError),
     )  # happens with timeout=0
     @pytest.mark.cassette_name("TestSubreddit.test_submit_image")
@@ -1667,7 +1687,7 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_image("Test Title", image)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(
             side_effect=socket.timeout
             # happens with timeout=0.00001
@@ -1682,7 +1702,7 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_image("Test Title", image)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(
             side_effect=TimeoutError,
             # could happen but Async PRAW should handle it
@@ -1697,9 +1717,9 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_image("Test Title", image)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(
-            side_effect=WebSocketError(None, None),
+            side_effect=HTTPError(),
             # could happen but Async PRAW should handle it
         ),
     )
@@ -1722,8 +1742,10 @@ class TestSubreddit(IntegrationTest):
             assert submission is None
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6ey7j")),
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(WebsocketMock("l6ey7j")),
+        ),
     )  # update with cassette
     async def test_submit_image_chat(self, image_path, reddit):
         reddit.read_only = False
@@ -1804,9 +1826,11 @@ class TestSubreddit(IntegrationTest):
         assert submission.discussion_type == "CHAT"
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock("183vns9", "183vnt2"),  # update with cassette
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(
+                WebsocketMock("183vns9", "183vnt2")
+            ),
         ),
     )
     async def test_submit_video(self, image_path, reddit):
@@ -1823,8 +1847,10 @@ class TestSubreddit(IntegrationTest):
 
     @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock()),
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(WebsocketMock()),
+        ),
     )
     async def test_submit_video__bad_websocket(self, image_path, reddit):
         reddit.read_only = False
@@ -1835,8 +1861,10 @@ class TestSubreddit(IntegrationTest):
                 await subreddit.submit_video("Test Title", video)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6g771")),
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(WebsocketMock("l6g771")),
+        ),
     )  # update with cassette
     async def test_submit_video__flair(self, image_path, reddit):
         flair_id = "6fc213da-cae7-11ea-9274-0e2407099e45"
@@ -1852,9 +1880,11 @@ class TestSubreddit(IntegrationTest):
         assert submission.link_flair_text == flair_text
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock("l6gvvi", "l6gvx7"),  # update with cassette
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(
+                WebsocketMock("l6gvvi", "l6gvx7")
+            ),
         ),
     )
     async def test_submit_video__thumbnail(self, image_path, reddit):
@@ -1875,7 +1905,7 @@ class TestSubreddit(IntegrationTest):
             assert submission.title == "Test Title"
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(side_effect=BlockingIOError),
     )  # happens with timeout=0
     @pytest.mark.cassette_name("TestSubreddit.test_submit_video")
@@ -1887,7 +1917,7 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_video("Test Title", video)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(
             side_effect=socket.timeout
             # happens with timeout=0.00001
@@ -1902,7 +1932,7 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_video("Test Title", video)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(
             side_effect=TimeoutError,
             # could happen, and Async PRAW should handle it
@@ -1917,9 +1947,9 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_video("Test Title", video)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
+        "niquests.AsyncSession.get",
         new=MagicMock(
-            side_effect=WebSocketError(None, None),
+            side_effect=HTTPError(),
             # could happen, and Async PRAW should handle it
         ),
     )
@@ -1932,9 +1962,11 @@ class TestSubreddit(IntegrationTest):
             await subreddit.submit_video("Test Title", video)
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(
-            return_value=WebsocketMock("l6gtwa", "l6gty1"),  # update with cassette
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(
+                WebsocketMock("l6gtwa", "l6gty1")
+            ),
         ),
     )
     async def test_submit_video__videogif(self, image_path, reddit):
@@ -1960,8 +1992,10 @@ class TestSubreddit(IntegrationTest):
             assert submission is None
 
     @mock.patch(
-        "aiohttp.client.ClientSession.ws_connect",
-        new=MagicMock(return_value=WebsocketMock("l6gocy")),
+        "niquests.AsyncSession.get",
+        new=AsyncMock(
+            return_value=ResponseWithWebSocketExtMock(WebsocketMock("l6gocy")),
+        ),
     )  # update with cassette
     async def test_submit_video_chat(self, image_path, reddit):
         reddit.read_only = False
