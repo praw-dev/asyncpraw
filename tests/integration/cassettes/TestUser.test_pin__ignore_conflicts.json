@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -94,28 +89,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2021-12-22T17:53:51"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "id",
-            "t3_rmi79w"
-          ],
-          [
-            "state",
-            "true"
-          ],
-          [
-            "to_profile",
-            "true"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -131,11 +109,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/set_subreddit_sticky/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/set_subreddit_sticky/?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"id\", \"t3_rmi79w\"], [\"state\", \"true\"], [\"to_profile\", \"true\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"message\": \"Conflict\", \"error\": 409}"
+          "string": "{\"message\": \"Conflict\", \"error\": 409}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -208,28 +190,11 @@
           "message": "Conflict"
         },
         "url": "https://oauth.reddit.com/api/set_subreddit_sticky/?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-12-22T17:53:51"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "id",
-            "t3_rmi79w"
-          ],
-          [
-            "state",
-            "true"
-          ],
-          [
-            "to_profile",
-            "true"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -245,11 +210,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/set_subreddit_sticky/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/set_subreddit_sticky/?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"id\", \"t3_rmi79w\"], [\"state\", \"true\"], [\"to_profile\", \"true\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"message\": \"Conflict\", \"error\": 409}"
+          "string": "{\"message\": \"Conflict\", \"error\": 409}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -320,9 +289,8 @@
           "message": "Conflict"
         },
         "url": "https://oauth.reddit.com/api/set_subreddit_sticky/?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-12-22T17:53:51"
     }
-  ],
-  "recorded_at": "2021-12-22T17:53:51",
-  "version": 1
+  ]
 }

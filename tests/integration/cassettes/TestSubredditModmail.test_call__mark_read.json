@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-10T19:22:03"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/mod/conversations/fccdg?markRead=true&raw_json=1"
+        "uri": "https://oauth.reddit.com/api/mod/conversations/fccdg?markRead=true&raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"conversation\": {\"isAuto\": true, \"objIds\": [{\"id\": \"o4g0y\", \"key\": \"messages\"}], \"isRepliable\": true, \"lastUserUpdate\": \"2020-07-08T01:25:28.771010+00:00\", \"isInternal\": false, \"lastModUpdate\": null, \"lastUpdated\": \"2020-07-08T01:25:28.771010+00:00\", \"authors\": [{\"isMod\": false, \"isAdmin\": true, \"name\": \"reddit\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 81524, \"isDeleted\": false}], \"owner\": {\"displayName\": \"PRAW_iavynavff2\", \"type\": \"subreddit\", \"id\": \"t5_2u7jes\"}, \"id\": \"fccdg\", \"isHighlighted\": false, \"subject\": \"r/PRAW_iavynavff2 is now enrolled in the New Modmail\", \"participant\": {}, \"state\": 0, \"lastUnread\": null, \"numMessages\": 1}, \"messages\": {\"o4g0y\": {\"body\": \"<!-- SC_OFF --><div class=\\\"md\\\"><p>Please read the <a href=\\\"https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail\\\">help document</a> to familiarize yourself with the new features. Now that you have finished reading this message, click the archive button and it will be moved to the Archived folder and keep your main inbox nice and clean.</p>\\n</div><!-- SC_ON -->\", \"author\": {\"isMod\": false, \"isAdmin\": true, \"name\": \"reddit\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 81524, \"isDeleted\": false}, \"isInternal\": false, \"date\": \"2020-07-08T01:25:28.771010+00:00\", \"bodyMarkdown\": \"Please read the [help document](https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail) to familiarize yourself with the new features. Now that you have finished reading this message, click the archive button and it will be moved to the Archived folder and keep your main inbox nice and clean.\", \"id\": \"o4g0y\"}}, \"user\": {\"recentComments\": {}, \"muteStatus\": {\"isMuted\": false, \"endDate\": null, \"reason\": \"\"}, \"name\": \"reddit\", \"created\": \"2005-12-09T05:00:00+00:00\", \"banStatus\": {\"endDate\": null, \"reason\": \"\", \"isBanned\": false, \"isPermanent\": false}, \"isSuspended\": false, \"isShadowBanned\": false, \"recentPosts\": {}, \"recentConvos\": {\"fccdg\": {\"date\": \"2020-07-08T01:25:28.771010+00:00\", \"permalink\": \"https://mod.reddit.com/mail/perma/fccdg\", \"id\": \"fccdg\", \"subject\": \"r/PRAW_iavynavff2 is now enrolled in the New Modmail\"}}, \"id\": \"t2_1qwk\"}, \"modActions\": {}}"
+          "string": "{\"conversation\": {\"isAuto\": true, \"objIds\": [{\"id\": \"o4g0y\", \"key\": \"messages\"}], \"isRepliable\": true, \"lastUserUpdate\": \"2020-07-08T01:25:28.771010+00:00\", \"isInternal\": false, \"lastModUpdate\": null, \"lastUpdated\": \"2020-07-08T01:25:28.771010+00:00\", \"authors\": [{\"isMod\": false, \"isAdmin\": true, \"name\": \"reddit\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 81524, \"isDeleted\": false}], \"owner\": {\"displayName\": \"PRAW_iavynavff2\", \"type\": \"subreddit\", \"id\": \"t5_2u7jes\"}, \"id\": \"fccdg\", \"isHighlighted\": false, \"subject\": \"r/PRAW_iavynavff2 is now enrolled in the New Modmail\", \"participant\": {}, \"state\": 0, \"lastUnread\": null, \"numMessages\": 1}, \"messages\": {\"o4g0y\": {\"body\": \"<!-- SC_OFF --><div class=\\\"md\\\"><p>Please read the <a href=\\\"https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail\\\">help document</a> to familiarize yourself with the new features. Now that you have finished reading this message, click the archive button and it will be moved to the Archived folder and keep your main inbox nice and clean.</p>\\n</div><!-- SC_ON -->\", \"author\": {\"isMod\": false, \"isAdmin\": true, \"name\": \"reddit\", \"isOp\": true, \"isParticipant\": false, \"isHidden\": false, \"id\": 81524, \"isDeleted\": false}, \"isInternal\": false, \"date\": \"2020-07-08T01:25:28.771010+00:00\", \"bodyMarkdown\": \"Please read the [help document](https://www.reddithelp.com/en/categories/reddit-101/moderators/modmail) to familiarize yourself with the new features. Now that you have finished reading this message, click the archive button and it will be moved to the Archived folder and keep your main inbox nice and clean.\", \"id\": \"o4g0y\"}}, \"user\": {\"recentComments\": {}, \"muteStatus\": {\"isMuted\": false, \"endDate\": null, \"reason\": \"\"}, \"name\": \"reddit\", \"created\": \"2005-12-09T05:00:00+00:00\", \"banStatus\": {\"endDate\": null, \"reason\": \"\", \"isBanned\": false, \"isPermanent\": false}, \"isSuspended\": false, \"isShadowBanned\": false, \"recentPosts\": {}, \"recentConvos\": {\"fccdg\": {\"date\": \"2020-07-08T01:25:28.771010+00:00\", \"permalink\": \"https://mod.reddit.com/mail/perma/fccdg\", \"id\": \"fccdg\", \"subject\": \"r/PRAW_iavynavff2 is now enrolled in the New Modmail\"}}, \"id\": \"t2_1qwk\"}, \"modActions\": {}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -111,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/mod/conversations/fccdg?markRead=true&raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-10T19:22:03"
     }
-  ],
-  "recorded_at": "2020-07-10T19:22:03",
-  "version": 1
+  ]
 }

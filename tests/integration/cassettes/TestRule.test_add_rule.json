@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,36 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T19:09:40"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "description",
-            "Test by Async PRAW"
-          ],
-          [
-            "kind",
-            "all"
-          ],
-          [
-            "r",
-            "<TEST_SUBREDDIT>"
-          ],
-          [
-            "short_name",
-            "PRAW Test"
-          ],
-          [
-            "violation_reason",
-            "PTest"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -100,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/add_subreddit_rule?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/add_subreddit_rule?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"description\", \"Test by Async PRAW\"], [\"kind\", \"all\"], [\"r\", \"<TEST_SUBREDDIT>\"], [\"short_name\", \"PRAW Test\"], [\"violation_reason\", \"PTest\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": [], \"data\": {\"rules\": \"[{\\\"kind\\\": \\\"all\\\", \\\"description\\\": \\\"Test by Async PRAW\\\", \\\"short_name\\\": \\\"PRAW Test\\\", \\\"violation_reason\\\": \\\"PTest\\\", \\\"created_utc\\\": 1594109380.0, \\\"priority\\\": 6, \\\"description_html\\\": \\\"\\u003C!-- SC_OFF --\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\\\n\\u003C!-- SC_ON --\\u003E\\\"}]\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\n\\u003C!-- SC_ON --\\u003E\"}}}"
+          "string": "{\"json\": {\"errors\": [], \"data\": {\"rules\": \"[{\\\"kind\\\": \\\"all\\\", \\\"description\\\": \\\"Test by Async PRAW\\\", \\\"short_name\\\": \\\"PRAW Test\\\", \\\"violation_reason\\\": \\\"PTest\\\", \\\"created_utc\\\": 1594109380.0, \\\"priority\\\": 6, \\\"description_html\\\": \\\"\\u003C!-- SC_OFF --\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\\\n\\u003C!-- SC_ON --\\u003E\\\"}]\", \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\n\\u003C!-- SC_ON --\\u003E\"}}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -136,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/add_subreddit_rule?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T19:09:40"
     }
-  ],
-  "recorded_at": "2020-07-06T19:09:40",
-  "version": 1
+  ]
 }

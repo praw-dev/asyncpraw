@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,148 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-09T16:16:17"
     },
     {
       "request": {
-        "body": [
-          [
-            "allow_images",
-            null
-          ],
-          [
-            "allow_post_crossposts",
-            null
-          ],
-          [
-            "allow_top",
-            null
-          ],
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "collapse_deleted_comments",
-            null
-          ],
-          [
-            "comment_score_hide_mins",
-            0
-          ],
-          [
-            "description",
-            null
-          ],
-          [
-            "domain",
-            null
-          ],
-          [
-            "exclude_banned_modqueue",
-            null
-          ],
-          [
-            "header-title",
-            null
-          ],
-          [
-            "hide_ads",
-            null
-          ],
-          [
-            "key_color",
-            null
-          ],
-          [
-            "lang",
-            null
-          ],
-          [
-            "link_type",
-            "any"
-          ],
-          [
-            "name",
-            "PRAW_iavynavff3"
-          ],
-          [
-            "over_18",
-            null
-          ],
-          [
-            "public_description",
-            null
-          ],
-          [
-            "public_traffic",
-            null
-          ],
-          [
-            "show_media",
-            null
-          ],
-          [
-            "show_media_preview",
-            null
-          ],
-          [
-            "spam_comments",
-            null
-          ],
-          [
-            "spam_links",
-            null
-          ],
-          [
-            "spam_selfposts",
-            null
-          ],
-          [
-            "spoilers_enabled",
-            null
-          ],
-          [
-            "sr",
-            null
-          ],
-          [
-            "submit_link_label",
-            null
-          ],
-          [
-            "submit_text",
-            null
-          ],
-          [
-            "submit_text_label",
-            null
-          ],
-          [
-            "suggested_comment_sort",
-            null
-          ],
-          [
-            "title",
-            "PRAW_iavynavff3"
-          ],
-          [
-            "type",
-            "public"
-          ],
-          [
-            "wiki_edit_age",
-            null
-          ],
-          [
-            "wiki_edit_karma",
-            0
-          ],
-          [
-            "wikimode",
-            "disabled"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -212,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/site_admin/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/site_admin/?raw_json=1",
+        "body": {
+          "string": "[[\"allow_images\", null], [\"allow_post_crossposts\", null], [\"allow_top\", null], [\"api_type\", \"json\"], [\"collapse_deleted_comments\", null], [\"comment_score_hide_mins\", 0], [\"description\", null], [\"domain\", null], [\"exclude_banned_modqueue\", null], [\"header-title\", null], [\"hide_ads\", null], [\"key_color\", null], [\"lang\", null], [\"link_type\", \"any\"], [\"name\", \"PRAW_iavynavff3\"], [\"over_18\", null], [\"public_description\", null], [\"public_traffic\", null], [\"show_media\", null], [\"show_media_preview\", null], [\"spam_comments\", null], [\"spam_links\", null], [\"spam_selfposts\", null], [\"spoilers_enabled\", null], [\"sr\", null], [\"submit_link_label\", null], [\"submit_text\", null], [\"submit_text_label\", null], [\"suggested_comment_sort\", null], [\"title\", \"PRAW_iavynavff3\"], [\"type\", \"public\"], [\"wiki_edit_age\", null], [\"wiki_edit_karma\", 0], [\"wikimode\", \"disabled\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": [[\"BAD_NUMBER\", \"that number isn't in the right range (0 to 36600)\", \"wiki_edit_age\"]]}}"
+          "string": "{\"json\": {\"errors\": [[\"BAD_NUMBER\", \"that number isn't in the right range (0 to 36600)\", \"wiki_edit_age\"]]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -248,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/site_admin/?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-09T16:16:17"
     }
-  ],
-  "recorded_at": "2020-07-09T16:16:17",
-  "version": 1
+  ]
 }

@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-04T20:19:48"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/v1/me?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v1/me?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"is_employee\": false, \"seen_layout_switch\": true, \"has_visited_new_profile\": false, \"pref_no_profanity\": false, \"has_external_account\": false, \"pref_geopopular\": \"GLOBAL\", \"seen_redesign_modal\": true, \"pref_show_trending\": false, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": false, \"banner_img\": \"\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"#94E044\", \"user_is_muted\": false, \"display_name\": \"u_Lil_SpazJoekp\", \"header_img\": null, \"title\": \"\", \"coins\": 0, \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 23, \"submit_text_label\": \"\", \"is_default_icon\": true, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/Lil_SpazJoekp\", \"key_color\": \"\", \"name\": \"t5_1kfmld\", \"is_default_banner\": true, \"url\": \"/user/Lil_SpazJoekp/\", \"banner_size\": null, \"user_is_moderator\": true, \"public_description\": \"\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": false}, \"is_sponsor\": false, \"gold_expiration\": 1608796962, \"has_gold_subscription\": true, \"num_friends\": 6, \"features\": {\"promoted_trend_blanks\": true, \"show_amp_link\": true, \"chat\": true, \"mweb_link_tab\": {\"owner\": \"growth\", \"variant\": \"control_1\", \"experiment_id\": 404}, \"reports_double_write_to_report_service_for_spam\": true, \"twitter_embed\": true, \"is_email_permission_required\": false, \"mod_awards\": true, \"expensive_coins_package\": true, \"mweb_xpromo_revamp_v2\": {\"owner\": \"growth\", \"variant\": \"treatment_2\", \"experiment_id\": 457}, \"awards_on_streams\": true, \"webhook_config\": true, \"mweb_xpromo_modal_listing_click_daily_dismissible_ios\": true, \"reports_double_write_to_report_service_for_som\": true, \"live_orangereds\": true, \"modlog_copyright_removal\": true, \"do_not_track\": true, \"chat_user_settings\": true, \"custom_feeds\": true, \"mweb_xpromo_interstitial_comments_ios\": true, \"chat_subreddit\": true, \"mweb_xpromo_modal_listing_click_daily_dismissible_android\": true, \"premium_subscriptions_table\": true, \"mweb_xpromo_interstitial_comments_android\": true, \"stream_as_a_post_type\": true, \"mweb_sharing_web_share_api\": {\"owner\": \"growth\", \"variant\": \"control_2\", \"experiment_id\": 314}, \"chat_group_rollout\": true, \"resized_styles_images\": true, \"spez_modal\": true, \"noreferrer_to_noopener\": true}, \"has_android_subscription\": false, \"verified\": true, \"new_modmail_exists\": true, \"pref_autoplay\": false, \"coins\": 3600, \"has_paypal_subscription\": true, \"has_subscribed_to_premium\": false, \"id\": \"o77bz\", \"has_stripe_subscription\": false, \"seen_premium_adblock_modal\": false, \"can_create_subreddit\": true, \"over_18\": true, \"is_gold\": true, \"is_mod\": true, \"suspension_expiration_utc\": null, \"has_verified_email\": true, \"is_suspended\": false, \"pref_video_autoplay\": false, \"in_chat\": true, \"can_edit_name\": false, \"in_redesign_beta\": false, \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"has_mod_mail\": true, \"pref_nightmode\": true, \"oauth_client_id\": \"<CLIENT_ID>\", \"hide_from_robots\": true, \"password_set\": true, \"link_karma\": 103854, \"accept_chats\": false, \"force_password_reset\": false, \"seen_give_award_tooltip\": false, \"inbox_count\": 0, \"pref_top_karma_subreddits\": false, \"has_mail\": false, \"pref_show_snoovatar\": true, \"name\": \"Lil_SpazJoekp\", \"pref_clickgadget\": 5, \"created\": 1434698170.0, \"gold_creddits\": 0, \"created_utc\": 1434669370.0, \"has_ios_subscription\": false, \"pref_show_twitter\": false, \"in_beta\": true, \"comment_karma\": 14445, \"has_subscribed\": true, \"seen_subreddit_chat_ftux\": true, \"linked_identities\": [], \"accept_pms\": true}"
+          "string": "{\"is_employee\": false, \"seen_layout_switch\": true, \"has_visited_new_profile\": false, \"pref_no_profanity\": false, \"has_external_account\": false, \"pref_geopopular\": \"GLOBAL\", \"seen_redesign_modal\": true, \"pref_show_trending\": false, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": false, \"banner_img\": \"\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"#94E044\", \"user_is_muted\": false, \"display_name\": \"u_Lil_SpazJoekp\", \"header_img\": null, \"title\": \"\", \"coins\": 0, \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 23, \"submit_text_label\": \"\", \"is_default_icon\": true, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/Lil_SpazJoekp\", \"key_color\": \"\", \"name\": \"t5_1kfmld\", \"is_default_banner\": true, \"url\": \"/user/Lil_SpazJoekp/\", \"banner_size\": null, \"user_is_moderator\": true, \"public_description\": \"\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": false}, \"is_sponsor\": false, \"gold_expiration\": 1608796962, \"has_gold_subscription\": true, \"num_friends\": 6, \"features\": {\"promoted_trend_blanks\": true, \"show_amp_link\": true, \"chat\": true, \"mweb_link_tab\": {\"owner\": \"growth\", \"variant\": \"control_1\", \"experiment_id\": 404}, \"reports_double_write_to_report_service_for_spam\": true, \"twitter_embed\": true, \"is_email_permission_required\": false, \"mod_awards\": true, \"expensive_coins_package\": true, \"mweb_xpromo_revamp_v2\": {\"owner\": \"growth\", \"variant\": \"treatment_2\", \"experiment_id\": 457}, \"awards_on_streams\": true, \"webhook_config\": true, \"mweb_xpromo_modal_listing_click_daily_dismissible_ios\": true, \"reports_double_write_to_report_service_for_som\": true, \"live_orangereds\": true, \"modlog_copyright_removal\": true, \"do_not_track\": true, \"chat_user_settings\": true, \"custom_feeds\": true, \"mweb_xpromo_interstitial_comments_ios\": true, \"chat_subreddit\": true, \"mweb_xpromo_modal_listing_click_daily_dismissible_android\": true, \"premium_subscriptions_table\": true, \"mweb_xpromo_interstitial_comments_android\": true, \"stream_as_a_post_type\": true, \"mweb_sharing_web_share_api\": {\"owner\": \"growth\", \"variant\": \"control_2\", \"experiment_id\": 314}, \"chat_group_rollout\": true, \"resized_styles_images\": true, \"spez_modal\": true, \"noreferrer_to_noopener\": true}, \"has_android_subscription\": false, \"verified\": true, \"new_modmail_exists\": true, \"pref_autoplay\": false, \"coins\": 3600, \"has_paypal_subscription\": true, \"has_subscribed_to_premium\": false, \"id\": \"o77bz\", \"has_stripe_subscription\": false, \"seen_premium_adblock_modal\": false, \"can_create_subreddit\": true, \"over_18\": true, \"is_gold\": true, \"is_mod\": true, \"suspension_expiration_utc\": null, \"has_verified_email\": true, \"is_suspended\": false, \"pref_video_autoplay\": false, \"in_chat\": true, \"can_edit_name\": false, \"in_redesign_beta\": false, \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"has_mod_mail\": true, \"pref_nightmode\": true, \"oauth_client_id\": \"<CLIENT_ID>\", \"hide_from_robots\": true, \"password_set\": true, \"link_karma\": 103854, \"accept_chats\": false, \"force_password_reset\": false, \"seen_give_award_tooltip\": false, \"inbox_count\": 0, \"pref_top_karma_subreddits\": false, \"has_mail\": false, \"pref_show_snoovatar\": true, \"name\": \"Lil_SpazJoekp\", \"pref_clickgadget\": 5, \"created\": 1434698170.0, \"gold_creddits\": 0, \"created_utc\": 1434669370.0, \"has_ios_subscription\": false, \"pref_show_twitter\": false, \"in_beta\": true, \"comment_karma\": 14445, \"has_subscribed\": true, \"seen_subreddit_chat_ftux\": true, \"linked_identities\": [], \"accept_pms\": true}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -112,11 +111,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/v1/me?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T20:19:48"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -129,11 +128,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/v1/user/Lil_SpazJoekp/trophies?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v1/user/Lil_SpazJoekp/trophies?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"TrophyList\", \"data\": {\"trophies\": [{\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/5_year_club-70.png\", \"name\": \"Five-Year Club\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/5_year_club-40.png\", \"award_id\": null, \"id\": null, \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-70.png\", \"name\": \"Undead | Zombie\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-40.png\", \"award_id\": \"2u\", \"id\": \"2bm8z5\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/xbox-70.png\", \"name\": \"Xbox Live\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/xbox-40.png\", \"award_id\": \"2t\", \"id\": \"2aw5tv\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/sequence_editor-70.png\", \"name\": \"Sequence | Editor\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/sequence_editor-40.png\", \"award_id\": \"2l\", \"id\": \"21h6wr\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/gilding_8-70.png\", \"name\": \"Gilding VIII\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/gilding_8-40.png\", \"award_id\": \"1u\", \"id\": \"1z0ysv\", \"description\": \"gilding heavyweight\"}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/thanos_banned-70.png\", \"name\": \"Snapped\", \"url\": \"https://www.reddit.com/r/inthesoulstone/\", \"icon_40\": \"https://www.redditstatic.com/awards2/thanos_banned-40.png\", \"award_id\": \"2a\", \"id\": \"1w9lck\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/verified_email-70.png\", \"name\": \"Verified Email\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/verified_email-40.png\", \"award_id\": \"o\", \"id\": \"1rgo9h\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/reddit_gold-70.png\", \"name\": \"Reddit Premium\", \"url\": \"/gold/about\", \"icon_40\": \"https://www.redditstatic.com/awards2/reddit_gold-40.png\", \"award_id\": \"v\", \"id\": \"1re9af\", \"description\": \"Since June 2017\"}}]}}"
+          "string": "{\"kind\": \"TrophyList\", \"data\": {\"trophies\": [{\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/5_year_club-70.png\", \"name\": \"Five-Year Club\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/5_year_club-40.png\", \"award_id\": null, \"id\": null, \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-70.png\", \"name\": \"Undead | Zombie\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-40.png\", \"award_id\": \"2u\", \"id\": \"2bm8z5\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/xbox-70.png\", \"name\": \"Xbox Live\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/xbox-40.png\", \"award_id\": \"2t\", \"id\": \"2aw5tv\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/sequence_editor-70.png\", \"name\": \"Sequence | Editor\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/sequence_editor-40.png\", \"award_id\": \"2l\", \"id\": \"21h6wr\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/gilding_8-70.png\", \"name\": \"Gilding VIII\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/gilding_8-40.png\", \"award_id\": \"1u\", \"id\": \"1z0ysv\", \"description\": \"gilding heavyweight\"}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/thanos_banned-70.png\", \"name\": \"Snapped\", \"url\": \"https://www.reddit.com/r/inthesoulstone/\", \"icon_40\": \"https://www.redditstatic.com/awards2/thanos_banned-40.png\", \"award_id\": \"2a\", \"id\": \"1w9lck\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/verified_email-70.png\", \"name\": \"Verified Email\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/verified_email-40.png\", \"award_id\": \"o\", \"id\": \"1rgo9h\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/reddit_gold-70.png\", \"name\": \"Reddit Premium\", \"url\": \"/gold/about\", \"icon_40\": \"https://www.redditstatic.com/awards2/reddit_gold-40.png\", \"award_id\": \"v\", \"id\": \"1re9af\", \"description\": \"Since June 2017\"}}]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -165,11 +168,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/v1/user/Lil_SpazJoekp/trophies?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T20:19:48"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -182,11 +185,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/v1/user/Lil_SpazJoekp/trophies?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v1/user/Lil_SpazJoekp/trophies?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"TrophyList\", \"data\": {\"trophies\": [{\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/5_year_club-70.png\", \"name\": \"Five-Year Club\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/5_year_club-40.png\", \"award_id\": null, \"id\": null, \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-70.png\", \"name\": \"Undead | Zombie\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-40.png\", \"award_id\": \"2u\", \"id\": \"2bm8z5\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/xbox-70.png\", \"name\": \"Xbox Live\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/xbox-40.png\", \"award_id\": \"2t\", \"id\": \"2aw5tv\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/sequence_editor-70.png\", \"name\": \"Sequence | Editor\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/sequence_editor-40.png\", \"award_id\": \"2l\", \"id\": \"21h6wr\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/gilding_8-70.png\", \"name\": \"Gilding VIII\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/gilding_8-40.png\", \"award_id\": \"1u\", \"id\": \"1z0ysv\", \"description\": \"gilding heavyweight\"}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/thanos_banned-70.png\", \"name\": \"Snapped\", \"url\": \"https://www.reddit.com/r/inthesoulstone/\", \"icon_40\": \"https://www.redditstatic.com/awards2/thanos_banned-40.png\", \"award_id\": \"2a\", \"id\": \"1w9lck\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/verified_email-70.png\", \"name\": \"Verified Email\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/verified_email-40.png\", \"award_id\": \"o\", \"id\": \"1rgo9h\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/reddit_gold-70.png\", \"name\": \"Reddit Premium\", \"url\": \"/gold/about\", \"icon_40\": \"https://www.redditstatic.com/awards2/reddit_gold-40.png\", \"award_id\": \"v\", \"id\": \"1re9af\", \"description\": \"Since June 2017\"}}]}}"
+          "string": "{\"kind\": \"TrophyList\", \"data\": {\"trophies\": [{\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/5_year_club-70.png\", \"name\": \"Five-Year Club\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/5_year_club-40.png\", \"award_id\": null, \"id\": null, \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-70.png\", \"name\": \"Undead | Zombie\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/participant_zombie_challenge-40.png\", \"award_id\": \"2u\", \"id\": \"2bm8z5\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/xbox-70.png\", \"name\": \"Xbox Live\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/xbox-40.png\", \"award_id\": \"2t\", \"id\": \"2aw5tv\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/sequence_editor-70.png\", \"name\": \"Sequence | Editor\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/sequence_editor-40.png\", \"award_id\": \"2l\", \"id\": \"21h6wr\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/gilding_8-70.png\", \"name\": \"Gilding VIII\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/gilding_8-40.png\", \"award_id\": \"1u\", \"id\": \"1z0ysv\", \"description\": \"gilding heavyweight\"}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/thanos_banned-70.png\", \"name\": \"Snapped\", \"url\": \"https://www.reddit.com/r/inthesoulstone/\", \"icon_40\": \"https://www.redditstatic.com/awards2/thanos_banned-40.png\", \"award_id\": \"2a\", \"id\": \"1w9lck\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/verified_email-70.png\", \"name\": \"Verified Email\", \"url\": null, \"icon_40\": \"https://www.redditstatic.com/awards2/verified_email-40.png\", \"award_id\": \"o\", \"id\": \"1rgo9h\", \"description\": null}}, {\"kind\": \"t6\", \"data\": {\"icon_70\": \"https://www.redditstatic.com/awards2/reddit_gold-70.png\", \"name\": \"Reddit Premium\", \"url\": \"/gold/about\", \"icon_40\": \"https://www.redditstatic.com/awards2/reddit_gold-40.png\", \"award_id\": \"v\", \"id\": \"1re9af\", \"description\": \"Since June 2017\"}}]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -218,9 +225,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/v1/user/Lil_SpazJoekp/trophies?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T20:19:48"
     }
-  ],
-  "recorded_at": "2020-07-04T20:19:48",
-  "version": 1
+  ]
 }

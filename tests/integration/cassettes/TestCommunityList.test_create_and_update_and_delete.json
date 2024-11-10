@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,20 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T23:16:30"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "json",
-            "{\"data\": [\"learnpython\", \"redditdev\"], \"kind\": \"community-list\", \"shortName\": \"My fav subs\", \"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"description\": \"\"}"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -84,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"json\", \"{\\\"data\\\": [\\\"learnpython\\\", \\\"redditdev\\\"], \\\"kind\\\": \\\"community-list\\\", \\\"shortName\\\": \\\"My fav subs\\\", \\\"styles\\\": {\\\"headerColor\\\": \\\"#123456\\\", \\\"backgroundColor\\\": \\\"#bb0e00\\\"}, \\\"description\\\": \\\"\\\"}\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"community-list\", \"data\": [{\"iconUrl\": \"\", \"name\": \"learnpython\", \"subscribers\": 389012, \"primaryColor\": \"#0079d3\", \"isSubscribed\": false, \"type\": \"subreddit\", \"communityIcon\": \"\", \"isNSFW\": false}, {\"iconUrl\": \"https://b.thumbs.redditmedia.com/7GVLmrH9CdZeqXceSEWkmL8_DSUKRGUfwMxnUNh8D8A.png\", \"name\": \"redditdev\", \"subscribers\": 39076, \"primaryColor\": \"#666666\", \"isSubscribed\": false, \"type\": \"subreddit\", \"communityIcon\": \"\", \"isNSFW\": false}], \"shortName\": \"My fav subs\", \"id\": \"widget_159d2ihqkojcm\"}"
+          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"community-list\", \"data\": [{\"iconUrl\": \"\", \"name\": \"learnpython\", \"subscribers\": 389012, \"primaryColor\": \"#0079d3\", \"isSubscribed\": false, \"type\": \"subreddit\", \"communityIcon\": \"\", \"isNSFW\": false}, {\"iconUrl\": \"https://b.thumbs.redditmedia.com/7GVLmrH9CdZeqXceSEWkmL8_DSUKRGUfwMxnUNh8D8A.png\", \"name\": \"redditdev\", \"subscribers\": 39076, \"primaryColor\": \"#666666\", \"isSubscribed\": false, \"type\": \"subreddit\", \"communityIcon\": \"\", \"isNSFW\": false}], \"shortName\": \"My fav subs\", \"id\": \"widget_159d2ihqkojcm\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -119,20 +109,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T23:16:30"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "json",
-            "{\"id\": \"widget_159d2ihqkojcm\", \"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"community-list\", \"data\": [\"redesign\"], \"shortName\": \"My least fav subs :(\"}"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -145,11 +126,15 @@
           ]
         },
         "method": "PUT",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d2ihqkojcm?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d2ihqkojcm?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"json\", \"{\\\"id\\\": \\\"widget_159d2ihqkojcm\\\", \\\"styles\\\": {\\\"headerColor\\\": \\\"#123456\\\", \\\"backgroundColor\\\": \\\"#bb0e00\\\"}, \\\"kind\\\": \\\"community-list\\\", \\\"data\\\": [\\\"redesign\\\"], \\\"shortName\\\": \\\"My least fav subs :(\\\"}\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"community-list\", \"data\": [\"redesign\"], \"shortName\": \"My least fav subs :(\", \"id\": \"widget_159d2ihqkojcm\"}"
+          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"community-list\", \"data\": [\"redesign\"], \"shortName\": \"My least fav subs :(\", \"id\": \"widget_159d2ihqkojcm\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -180,11 +165,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d2ihqkojcm?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T23:16:30"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -197,11 +182,15 @@
           ]
         },
         "method": "DELETE",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d2ihqkojcm?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d2ihqkojcm?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": ""
+          "string": "",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -232,9 +221,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d2ihqkojcm?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T23:16:30"
     }
-  ],
-  "recorded_at": "2020-07-06T23:16:30",
-  "version": 1
+  ]
 }

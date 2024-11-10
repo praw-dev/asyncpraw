@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T18:51:34"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/v1/<TEST_SUBREDDIT>/removal_reasons?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v1/<TEST_SUBREDDIT>/removal_reasons?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"data\": {\"157qev8rc5109\": {\"message\": \"new\", \"id\": \"157qev8rc5109\", \"title\": \"new\"}, \"157l6b2gdsz84\": {\"message\": \"title\", \"id\": \"157l6b2gdsz84\", \"title\": \"test\"}, \"157l8b23bg2ww\": {\"message\": \"title\", \"id\": \"157l8b23bg2ww\", \"title\": \"test\"}, \"157l7gt5pnw1c\": {\"message\": \"title\", \"id\": \"157l7gt5pnw1c\", \"title\": \"test\"}, \"159bqhvme3rxe\": {\"message\": \"New Message\", \"id\": \"159bqhvme3rxe\", \"title\": \"New Title\"}, \"157l6k4g6s365\": {\"message\": \"title\", \"id\": \"157l6k4g6s365\", \"title\": \"test\"}, \"159br6itukx4h\": {\"message\": \"test\", \"id\": \"159br6itukx4h\", \"title\": \"Test\"}, \"157l5z8solj8j\": {\"message\": \"title\", \"id\": \"157l5z8solj8j\", \"title\": \"test\"}, \"157l7q0o5buzq\": {\"message\": \"title\", \"id\": \"157l7q0o5buzq\", \"title\": \"test\"}, \"157l8y33vkwkc\": {\"message\": \"test\", \"id\": \"157l8y33vkwkc\", \"title\": \"test\"}, \"157l87scy3s0g\": {\"message\": \"title\", \"id\": \"157l87scy3s0g\", \"title\": \"test\"}}, \"order\": [\"157l5z8solj8j\", \"157l6b2gdsz84\", \"157l6k4g6s365\", \"157l7gt5pnw1c\", \"157l7q0o5buzq\", \"157l87scy3s0g\", \"157l8b23bg2ww\", \"157l8y33vkwkc\", \"157qev8rc5109\", \"159bqhvme3rxe\", \"159br6itukx4h\"]}"
+          "string": "{\"data\": {\"157qev8rc5109\": {\"message\": \"new\", \"id\": \"157qev8rc5109\", \"title\": \"new\"}, \"157l6b2gdsz84\": {\"message\": \"title\", \"id\": \"157l6b2gdsz84\", \"title\": \"test\"}, \"157l8b23bg2ww\": {\"message\": \"title\", \"id\": \"157l8b23bg2ww\", \"title\": \"test\"}, \"157l7gt5pnw1c\": {\"message\": \"title\", \"id\": \"157l7gt5pnw1c\", \"title\": \"test\"}, \"159bqhvme3rxe\": {\"message\": \"New Message\", \"id\": \"159bqhvme3rxe\", \"title\": \"New Title\"}, \"157l6k4g6s365\": {\"message\": \"title\", \"id\": \"157l6k4g6s365\", \"title\": \"test\"}, \"159br6itukx4h\": {\"message\": \"test\", \"id\": \"159br6itukx4h\", \"title\": \"Test\"}, \"157l5z8solj8j\": {\"message\": \"title\", \"id\": \"157l5z8solj8j\", \"title\": \"test\"}, \"157l7q0o5buzq\": {\"message\": \"title\", \"id\": \"157l7q0o5buzq\", \"title\": \"test\"}, \"157l8y33vkwkc\": {\"message\": \"test\", \"id\": \"157l8y33vkwkc\", \"title\": \"test\"}, \"157l87scy3s0g\": {\"message\": \"title\", \"id\": \"157l87scy3s0g\", \"title\": \"test\"}}, \"order\": [\"157l5z8solj8j\", \"157l6b2gdsz84\", \"157l6k4g6s365\", \"157l7gt5pnw1c\", \"157l7q0o5buzq\", \"157l87scy3s0g\", \"157l8b23bg2ww\", \"157l8y33vkwkc\", \"157qev8rc5109\", \"159bqhvme3rxe\", \"159br6itukx4h\"]}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -111,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/v1/<TEST_SUBREDDIT>/removal_reasons?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T18:51:34"
     }
-  ],
-  "recorded_at": "2020-07-06T18:51:34",
-  "version": 1
+  ]
 }

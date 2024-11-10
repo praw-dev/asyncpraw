@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T18:33:57"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/user/spez/about/?raw_json=1"
+        "uri": "https://oauth.reddit.com/user/spez/about/?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"t2\", \"data\": {\"is_employee\": true, \"accept_chats\": false, \"icon_img\": \"https://b.thumbs.redditmedia.com/d7Sw-O_AOlxEtKEeMTrH0xcy9LbLOy0j_KrWGbOFB9w.png\", \"pref_show_snoovatar\": false, \"name\": \"spez\", \"is_friend\": false, \"created\": 1118059200.0, \"awardee_karma\": 0, \"hide_from_robots\": false, \"verified\": true, \"created_utc\": 1118030400.0, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": false, \"banner_img\": \"https://b.thumbs.redditmedia.com/KWeEpVxXOGLoloMbM0IxGt9EiKPXizpwFgcSeWqtpZM.png\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"\", \"user_is_muted\": false, \"display_name\": \"u_spez\", \"header_img\": null, \"title\": \"spez\", \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://b.thumbs.redditmedia.com/d7Sw-O_AOlxEtKEeMTrH0xcy9LbLOy0j_KrWGbOFB9w.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 0, \"submit_text_label\": \"\", \"is_default_icon\": false, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/spez\", \"key_color\": \"\", \"name\": \"t5_3k30p\", \"is_default_banner\": false, \"url\": \"/user/spez/\", \"banner_size\": [1280, 384], \"user_is_moderator\": false, \"public_description\": \"Reddit CEO\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": false}, \"comment_karma\": 743796, \"is_gold\": true, \"is_mod\": true, \"has_subscribed\": true, \"awarder_karma\": 0, \"link_karma\": 138874, \"has_verified_email\": true, \"id\": \"1w72\", \"accept_pms\": true}}"
+          "string": "{\"kind\": \"t2\", \"data\": {\"is_employee\": true, \"accept_chats\": false, \"icon_img\": \"https://b.thumbs.redditmedia.com/d7Sw-O_AOlxEtKEeMTrH0xcy9LbLOy0j_KrWGbOFB9w.png\", \"pref_show_snoovatar\": false, \"name\": \"spez\", \"is_friend\": false, \"created\": 1118059200.0, \"awardee_karma\": 0, \"hide_from_robots\": false, \"verified\": true, \"created_utc\": 1118030400.0, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": false, \"banner_img\": \"https://b.thumbs.redditmedia.com/KWeEpVxXOGLoloMbM0IxGt9EiKPXizpwFgcSeWqtpZM.png\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"\", \"user_is_muted\": false, \"display_name\": \"u_spez\", \"header_img\": null, \"title\": \"spez\", \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://b.thumbs.redditmedia.com/d7Sw-O_AOlxEtKEeMTrH0xcy9LbLOy0j_KrWGbOFB9w.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 0, \"submit_text_label\": \"\", \"is_default_icon\": false, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/spez\", \"key_color\": \"\", \"name\": \"t5_3k30p\", \"is_default_banner\": false, \"url\": \"/user/spez/\", \"banner_size\": [1280, 384], \"user_is_moderator\": false, \"public_description\": \"Reddit CEO\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": false}, \"comment_karma\": 743796, \"is_gold\": true, \"is_mod\": true, \"has_subscribed\": true, \"awarder_karma\": 0, \"link_karma\": 138874, \"has_verified_email\": true, \"id\": \"1w72\", \"accept_pms\": true}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -112,11 +111,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/user/spez/about/?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T18:33:57"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -129,11 +128,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/user/spez/gilded/given?limit=100&raw_json=1"
+        "uri": "https://oauth.reddit.com/user/spez/gilded/given?limit=100&raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"message\": \"Forbidden\", \"error\": 403}"
+          "string": "{\"message\": \"Forbidden\", \"error\": 403}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -167,9 +170,8 @@
           "message": "Forbidden"
         },
         "url": "https://oauth.reddit.com/user/spez/gilded/given?limit=100&raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T18:33:57"
     }
-  ],
-  "recorded_at": "2020-07-06T18:33:57",
-  "version": 1
+  ]
 }

@@ -1,13 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "client_credentials"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -23,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"client_credentials\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 86400, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 86400, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -87,11 +86,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2023-11-26T00:05:44"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -107,11 +106,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://www.reddit.com/r/redditdev/s/WNauetbiNG?raw_json=1"
+        "uri": "https://www.reddit.com/r/redditdev/s/WNauetbiNG?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "<a href=\"https://www.reddit.com/r/redditdev/comments/2gmzqe/praw_https_enabled_praw_testing_needed/?share_id=oqqXWtvgcCuonkcpck8yD&amp;utm_content=1&amp;utm_medium=ios_app&amp;utm_name=ioscss&amp;utm_source=share&amp;utm_term=1\">Moved Permanently</a>.\n\n"
+          "string": "<a href=\"https://www.reddit.com/r/redditdev/comments/2gmzqe/praw_https_enabled_praw_testing_needed/?share_id=oqqXWtvgcCuonkcpck8yD&amp;utm_content=1&amp;utm_medium=ios_app&amp;utm_name=ioscss&amp;utm_source=share&amp;utm_term=1\">Moved Permanently</a>.\n\n",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -171,9 +174,8 @@
           "message": "Moved Permanently"
         },
         "url": "https://www.reddit.com/r/redditdev/s/WNauetbiNG?raw_json=1"
-      }
+      },
+      "recorded_at": "2023-11-26T00:05:44"
     }
-  ],
-  "recorded_at": "2023-11-26T00:05:44",
-  "version": 1
+  ]
 }

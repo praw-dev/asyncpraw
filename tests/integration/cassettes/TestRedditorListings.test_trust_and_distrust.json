@@ -1,21 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "password"
-          ],
-          [
-            "password",
-            "<PASSWORD>"
-          ],
-          [
-            "username",
-            "<USERNAME>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -31,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"password\"], [\"password\", \"<PASSWORD>\"], [\"username\", \"<USERNAME>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -62,20 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2021-06-16T18:11:01"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "name",
-            "PyAPITestUser3"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -88,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/add_whitelisted?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/add_whitelisted?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"name\", \"PyAPITestUser3\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": []}}"
+          "string": "{\"json\": {\"errors\": []}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -121,11 +107,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/add_whitelisted?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-06-16T18:11:01"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -138,11 +124,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/prefs/trusted?raw_json=1"
+        "uri": "https://oauth.reddit.com/prefs/trusted?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"UserList\", \"data\": {\"children\": [{\"date\": 1623885061.0, \"rel_id\": \"r9_2no6bp\", \"name\": \"PyAPITestUser3\", \"id\": \"t2_6c1xj\"}]}}"
+          "string": "{\"kind\": \"UserList\", \"data\": {\"children\": [{\"date\": 1623885061.0, \"rel_id\": \"r9_2no6bp\", \"name\": \"PyAPITestUser3\", \"id\": \"t2_6c1xj\"}]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -171,20 +161,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/prefs/trusted?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-06-16T18:11:01"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "name",
-            "PyAPITestUser3"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -197,11 +178,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/remove_whitelisted?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/remove_whitelisted?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"name\", \"PyAPITestUser3\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{}"
+          "string": "{}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -230,9 +215,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/remove_whitelisted?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-06-16T18:11:01"
     }
-  ],
-  "recorded_at": "2021-06-16T18:11:01",
-  "version": 1
+  ]
 }

@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-04T19:21:05"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/user_data_by_account_ids?ids=t2_1w72,t2_4x25quk&raw_json=1"
+        "uri": "https://oauth.reddit.com/api/user_data_by_account_ids?ids=t2_1w72,t2_4x25quk&raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"t2_1w72\": {\"name\": \"spez\", \"created_utc\": 1118030400.0, \"link_karma\": 138858, \"comment_karma\": 743795, \"profile_img\": \"https://b.thumbs.redditmedia.com/d7Sw-O_AOlxEtKEeMTrH0xcy9LbLOy0j_KrWGbOFB9w.png\", \"profile_color\": \"\", \"profile_over_18\": false}, \"t2_4x25quk\": {\"name\": \"Pyprohly\", \"created_utc\": 1498231550.0, \"link_karma\": 55, \"comment_karma\": 753, \"profile_img\": \"https://www.redditstatic.com/avatars/avatar_default_01_A5A4A4.png\", \"profile_color\": \"\", \"profile_over_18\": false}}"
+          "string": "{\"t2_1w72\": {\"name\": \"spez\", \"created_utc\": 1118030400.0, \"link_karma\": 138858, \"comment_karma\": 743795, \"profile_img\": \"https://b.thumbs.redditmedia.com/d7Sw-O_AOlxEtKEeMTrH0xcy9LbLOy0j_KrWGbOFB9w.png\", \"profile_color\": \"\", \"profile_over_18\": false}, \"t2_4x25quk\": {\"name\": \"Pyprohly\", \"created_utc\": 1498231550.0, \"link_karma\": 55, \"comment_karma\": 753, \"profile_img\": \"https://www.redditstatic.com/avatars/avatar_default_01_A5A4A4.png\", \"profile_color\": \"\", \"profile_over_18\": false}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -111,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/user_data_by_account_ids?ids=t2_1w72,t2_4x25quk&raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T19:21:05"
     }
-  ],
-  "recorded_at": "2020-07-04T19:21:05",
-  "version": 1
+  ]
 }

@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,20 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T23:07:24"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "json",
-            "{\"shortName\": \"Upcoming Events\", \"googleCalendarId\": \"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\", \"requiresSync\": true, \"configuration\": {\"numEvents\": 10, \"showDate\": true, \"showDescription\": false, \"showLocation\": false, \"showTime\": true, \"showTitle\": true}, \"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"calendar\"}"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -84,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"json\", \"{\\\"shortName\\\": \\\"Upcoming Events\\\", \\\"googleCalendarId\\\": \\\"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\\\", \\\"requiresSync\\\": true, \\\"configuration\\\": {\\\"numEvents\\\": 10, \\\"showDate\\\": true, \\\"showDescription\\\": false, \\\"showLocation\\\": false, \\\"showTime\\\": true, \\\"showTitle\\\": true}, \\\"styles\\\": {\\\"headerColor\\\": \\\"#123456\\\", \\\"backgroundColor\\\": \\\"#bb0e00\\\"}, \\\"kind\\\": \\\"calendar\\\"}\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"calendar\", \"googleCalendarId\": \"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\", \"requiresSync\": true, \"shortName\": \"Upcoming Events\", \"configuration\": {\"showDescription\": false, \"numEvents\": 10, \"showTime\": true, \"showLocation\": false, \"showTitle\": true, \"showDate\": true}, \"data\": [], \"id\": \"widget_159d0w1cgyv96\"}"
+          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"calendar\", \"googleCalendarId\": \"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\", \"requiresSync\": true, \"shortName\": \"Upcoming Events\", \"configuration\": {\"showDescription\": false, \"numEvents\": 10, \"showTime\": true, \"showLocation\": false, \"showTitle\": true, \"showDate\": true}, \"data\": [], \"id\": \"widget_159d0w1cgyv96\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -119,20 +109,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T23:07:24"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "json",
-            "{\"id\": \"widget_159d0w1cgyv96\", \"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"calendar\", \"googleCalendarId\": \"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\", \"requiresSync\": true, \"shortName\": \"Past Events :(\", \"configuration\": {\"showDescription\": false, \"numEvents\": 10, \"showTime\": true, \"showLocation\": false, \"showTitle\": true, \"showDate\": true}, \"data\": []}"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -145,11 +126,15 @@
           ]
         },
         "method": "PUT",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d0w1cgyv96?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d0w1cgyv96?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"json\", \"{\\\"id\\\": \\\"widget_159d0w1cgyv96\\\", \\\"styles\\\": {\\\"headerColor\\\": \\\"#123456\\\", \\\"backgroundColor\\\": \\\"#bb0e00\\\"}, \\\"kind\\\": \\\"calendar\\\", \\\"googleCalendarId\\\": \\\"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\\\", \\\"requiresSync\\\": true, \\\"shortName\\\": \\\"Past Events :(\\\", \\\"configuration\\\": {\\\"showDescription\\\": false, \\\"numEvents\\\": 10, \\\"showTime\\\": true, \\\"showLocation\\\": false, \\\"showTitle\\\": true, \\\"showDate\\\": true}, \\\"data\\\": []}\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"calendar\", \"googleCalendarId\": \"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\", \"requiresSync\": true, \"shortName\": \"Past Events :(\", \"configuration\": {\"showDescription\": false, \"numEvents\": 10, \"showTime\": true, \"showLocation\": false, \"showTitle\": true, \"showDate\": true}, \"id\": \"widget_159d0w1cgyv96\"}"
+          "string": "{\"styles\": {\"headerColor\": \"#123456\", \"backgroundColor\": \"#bb0e00\"}, \"kind\": \"calendar\", \"googleCalendarId\": \"ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com\", \"requiresSync\": true, \"shortName\": \"Past Events :(\", \"configuration\": {\"showDescription\": false, \"numEvents\": 10, \"showTime\": true, \"showLocation\": false, \"showTitle\": true, \"showDate\": true}, \"id\": \"widget_159d0w1cgyv96\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -180,11 +165,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d0w1cgyv96?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T23:07:24"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -197,11 +182,15 @@
           ]
         },
         "method": "DELETE",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d0w1cgyv96?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d0w1cgyv96?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": ""
+          "string": "",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -232,9 +221,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159d0w1cgyv96?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T23:07:24"
     }
-  ],
-  "recorded_at": "2020-07-06T23:07:24",
-  "version": 1
+  ]
 }
