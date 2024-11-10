@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import json
 from asyncio import TimeoutError
 from copy import deepcopy
 from csv import writer
@@ -20,10 +21,9 @@ from urllib.parse import urljoin
 from warnings import warn
 from xml.etree.ElementTree import XML
 
-from aiohttp.http_exceptions import HttpProcessingError
-from aiohttp.web_ws import WebSocketError
-from asyncprawcore import Redirect
-from asyncprawcore.exceptions import ServerError
+from niquests.exceptions import HTTPError
+from prawcore import Redirect
+from prawcore.exceptions import ServerError
 
 from ...const import API_PATH, JPEG_HEADER
 from ...exceptions import (
@@ -48,7 +48,7 @@ from .widgets import SubredditWidgets, WidgetEncoder
 from .wikipage import WikiPage
 
 if TYPE_CHECKING:  # pragma: no cover
-    from aiohttp import ClientResponse
+    from niquests import Response
 
     import asyncpraw.models
 
@@ -400,7 +400,7 @@ class SubredditFilters:
 
             await reddit.subreddit("all-redditdev-learnpython")
 
-        :raises: ``asyncprawcore.NotFound`` when calling on a non-special subreddit.
+        :raises: ``prawcore.NotFound`` when calling on a non-special subreddit.
 
         """
         user = await self.subreddit._reddit.user.me()
@@ -418,7 +418,7 @@ class SubredditFilters:
 
         :param subreddit: The subreddit to remove from the filter list.
 
-        :raises: ``asyncprawcore.NotFound`` when calling on a non-special subreddit.
+        :raises: ``prawcore.NotFound`` when calling on a non-special subreddit.
 
         """
         user = await self.subreddit._reddit.user.me()
@@ -1586,7 +1586,7 @@ class SubredditQuarantine:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("QUESTIONABLE")
-            async for submission in subreddit.hot():  # Raises asyncprawcore.Forbidden
+            async for submission in subreddit.hot():  # Raises prawcore.Forbidden
                 print(submission)
 
             await subreddit.quaran.opt_in()
@@ -1610,7 +1610,7 @@ class SubredditQuarantine:
                 print(submission)  # Returns Submission
 
             await subreddit.quaran.opt_out()
-            async for submission in subreddit.hot():  # Raises asyncprawcore.Forbidden
+            async for submission in subreddit.hot():  # Raises prawcore.Forbidden
                 print(submission)
 
         """
@@ -2015,7 +2015,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under the key
             ``img_src``.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -2038,7 +2038,7 @@ class SubredditStylesheet:
 
         :param image_path: A path to a jpeg or png image.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -2071,7 +2071,7 @@ class SubredditStylesheet:
         :param align: Either ``"left"``, ``"centered"``, or ``"right"``. (default:
             ``"left"``).
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -2108,7 +2108,7 @@ class SubredditStylesheet:
 
         Fails if the :class:`.Subreddit` does not have an additional image defined.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -2136,7 +2136,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under the key
             ``img_src``.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -2189,7 +2189,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under the key
             ``img_src``.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -2215,7 +2215,7 @@ class SubredditStylesheet:
         :returns: A dictionary containing a link to the uploaded image under the key
             ``img_src``.
 
-        :raises: ``asyncprawcore.TooLarge`` if the overall request body is too large.
+        :raises: ``prawcore.TooLarge`` if the overall request body is too large.
         :raises: :class:`.RedditAPIException` if there are other issues with the
             uploaded image. Unfortunately the exception info might not be very specific,
             so try through the website with the same image to see what the problem
@@ -3254,9 +3254,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def _fetch_info(self):
         return "subreddit_about", {"subreddit": self}, None
 
-    async def _parse_xml_response(self, response: ClientResponse):
+    async def _parse_xml_response(self, response: Response):
         """Parse the XML from a response and raise any errors found."""
-        xml = await response.text()
+        xml = response.text
         root = XML(xml)
         tags = [element.tag for element in root]
         if tags[:4] == ["Code", "Message", "ProposedSize", "MaxSizeAllowed"]:
@@ -3268,7 +3268,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
     async def _read_and_post_media(
         self, file: Path, upload_url: str, upload_data: dict[str, Any]
-    ) -> ClientResponse:
+    ) -> Response:
         with file.open("rb") as media:
             upload_data["file"] = media
             return await self._reddit._core._requestor._http.post(
@@ -3289,23 +3289,26 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if websocket_url is None or without_websockets:
             return None
         try:
-            async with self._reddit._core._requestor._http.ws_connect(
+            resp = await self._reddit._core._requestor._http.get(
                 websocket_url, timeout=timeout
-            ) as websocket:
-                try:
-                    ws_update = await websocket.receive_json()
-                except (
-                    OSError,
-                    BlockingIOError,
-                    TimeoutError,
-                    WebSocketError,
-                ) as ws_exception:
-                    msg = "Websocket error. Check your media file. Your post may still have been created."
-                    raise WebSocketException(
-                        msg,
-                        ws_exception,
-                    ) from None
-        except (OSError, BlockingIOError, TimeoutError, WebSocketError) as ws_exception:
+            )
+            try:
+                ws_update = json.loads(await resp.extension.next_payload())
+            except (
+                OSError,
+                BlockingIOError,
+                TimeoutError,
+                HTTPError,
+            ) as ws_exception:
+                msg = "Websocket error. Check your media file. Your post may still have been created."
+                raise WebSocketException(
+                    msg,
+                    ws_exception,
+                ) from None
+            finally:
+                if resp.extension is not None and resp.extension.closed is False:
+                    resp.extension.close()
+        except (OSError, BlockingIOError, TimeoutError, HTTPError) as ws_exception:
             msg = "Error establishing websocket connection."
             raise WebSocketException(
                 msg,
@@ -3381,11 +3384,11 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
 
         response = await self._read_and_post_media(file, upload_url, upload_data)
-        if response.status != 201:
+        if response.status_code != 201:
             await self._parse_xml_response(response)
         try:
             response.raise_for_status()
-        except HttpProcessingError:
+        except HTTPError:
             raise ServerError(response=response) from None
 
         if upload_type == "link":
@@ -3513,7 +3516,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param number: Specify which sticky to return. 1 appears at the top (default:
             ``1``).
 
-        :raises: ``asyncprawcore.NotFound`` if the sticky does not exist.
+        :raises: ``prawcore.NotFound`` if the sticky does not exist.
 
         For example, to get the stickied post on r/test:
 
@@ -4198,9 +4201,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     async def traffic(self) -> dict[str, list[list[int]]]:
         """Return a dictionary of the :class:`.Subreddit`'s traffic statistics.
 
-        :raises: ``asyncprawcore.NotFound`` when the traffic stats aren't available to
-            the authenticated user, that is, they are not public and the authenticated
-            user is not a moderator of the subreddit.
+        :raises: ``prawcore.NotFound`` when the traffic stats aren't available to the
+            authenticated user, that is, they are not public and the authenticated user
+            is not a moderator of the subreddit.
 
         The traffic method returns a dict with three keys. The keys are ``day``,
         ``hour`` and ``month``. Each key contains a list of lists with 3 or 4 values.

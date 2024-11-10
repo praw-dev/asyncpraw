@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 86400, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"creddits modnote modcontributors modmail modconfig subscribe structuredstyles vote wikiedit mysubreddits submit modlog modposts modflair save modothers adsconversions read privatemessages report identity livemanage account modtraffic wikiread edit modwiki modself flair history\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 86400, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"creddits modnote modcontributors modmail modconfig subscribe structuredstyles vote wikiedit mysubreddits submit modlog modposts modflair save modothers adsconversions read privatemessages report identity livemanage account modtraffic wikiread edit modwiki modself flair history\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -97,24 +92,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2022-12-24T14:24:15"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "content",
-            "<CONTENT>"
-          ],
-          [
-            "page",
-            "usernotes"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -130,11 +112,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/wiki/edit?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/wiki/edit?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"content\", \"<CONTENT>\"], [\"page\", \"usernotes\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{}"
+          "string": "{}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": [
@@ -207,9 +193,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/wiki/edit?raw_json=1"
-      }
+      },
+      "recorded_at": "2022-12-24T14:24:15"
     }
-  ],
-  "recorded_at": "2022-12-24T14:24:15",
-  "version": 1
+  ]
 }

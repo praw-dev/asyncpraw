@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"refresh_token\": \"<REFRESH_TOKEN>\", \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2021-07-27T20:10:43"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/message/inbox/?limit=2&raw_json=1"
+        "uri": "https://oauth.reddit.com/message/inbox/?limit=2&raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"Listing\", \"data\": {\"after\": \"t4_13le9c1\", \"dist\": 2, \"modhash\": null, \"geo_filter\": \"\", \"children\": [{\"kind\": \"t4\", \"data\": {\"first_message\": null, \"first_message_name\": null, \"subreddit\": \"BotParty\", \"likes\": null, \"replies\": \"\", \"author_fullname\": null, \"id\": \"13lecoj\", \"subject\": \"<USERNAME> is\", \"associated_awarding_id\": null, \"score\": 0, \"author\": null, \"num_comments\": null, \"parent_id\": null, \"subreddit_name_prefixed\": \"r/BotParty\", \"new\": true, \"type\": \"unknown\", \"body\": \"Gey\", \"dest\": \"<USERNAME>\", \"was_comment\": false, \"body_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EGey\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"name\": \"t4_13lecoj\", \"created\": 1627463367.0, \"created_utc\": 1627434567.0, \"context\": \"\", \"distinguished\": \"moderator\"}}, {\"kind\": \"t4\", \"data\": {\"first_message\": null, \"first_message_name\": null, \"subreddit\": \"BotParty\", \"likes\": null, \"replies\": \"\", \"author_fullname\": \"t2_efoyf\", \"id\": \"13le9c1\", \"subject\": \"Uhm\", \"associated_awarding_id\": null, \"score\": 0, \"author\": \"ELFAHBEHT_SOOP\", \"num_comments\": null, \"parent_id\": null, \"subreddit_name_prefixed\": \"r/BotParty\", \"new\": true, \"type\": \"unknown\", \"body\": \"No\", \"dest\": \"<USERNAME>\", \"was_comment\": false, \"body_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ENo\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"name\": \"t4_13le9c1\", \"created\": 1627463142.0, \"created_utc\": 1627434342.0, \"context\": \"\", \"distinguished\": \"moderator\"}}], \"before\": null}}"
+          "string": "{\"kind\": \"Listing\", \"data\": {\"after\": \"t4_13le9c1\", \"dist\": 2, \"modhash\": null, \"geo_filter\": \"\", \"children\": [{\"kind\": \"t4\", \"data\": {\"first_message\": null, \"first_message_name\": null, \"subreddit\": \"BotParty\", \"likes\": null, \"replies\": \"\", \"author_fullname\": null, \"id\": \"13lecoj\", \"subject\": \"<USERNAME> is\", \"associated_awarding_id\": null, \"score\": 0, \"author\": null, \"num_comments\": null, \"parent_id\": null, \"subreddit_name_prefixed\": \"r/BotParty\", \"new\": true, \"type\": \"unknown\", \"body\": \"Gey\", \"dest\": \"<USERNAME>\", \"was_comment\": false, \"body_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EGey\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"name\": \"t4_13lecoj\", \"created\": 1627463367.0, \"created_utc\": 1627434567.0, \"context\": \"\", \"distinguished\": \"moderator\"}}, {\"kind\": \"t4\", \"data\": {\"first_message\": null, \"first_message_name\": null, \"subreddit\": \"BotParty\", \"likes\": null, \"replies\": \"\", \"author_fullname\": \"t2_efoyf\", \"id\": \"13le9c1\", \"subject\": \"Uhm\", \"associated_awarding_id\": null, \"score\": 0, \"author\": \"ELFAHBEHT_SOOP\", \"num_comments\": null, \"parent_id\": null, \"subreddit_name_prefixed\": \"r/BotParty\", \"new\": true, \"type\": \"unknown\", \"body\": \"No\", \"dest\": \"<USERNAME>\", \"was_comment\": false, \"body_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ENo\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\", \"name\": \"t4_13le9c1\", \"created\": 1627463142.0, \"created_utc\": 1627434342.0, \"context\": \"\", \"distinguished\": \"moderator\"}}], \"before\": null}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -109,20 +108,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/message/inbox/?limit=2&raw_json=1"
-      }
+      },
+      "recorded_at": "2021-07-27T20:10:43"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "id",
-            "t4_13lecoj,t4_13le9c1"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -135,11 +125,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/unread_message/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/unread_message/?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"id\", \"t4_13lecoj,t4_13le9c1\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{}"
+          "string": "{}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -168,16 +162,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/unread_message/?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-07-27T20:10:43"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -190,11 +179,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/read_all_messages?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/read_all_messages?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{}"
+          "string": "{}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -223,11 +216,11 @@
           "message": "Accepted"
         },
         "url": "https://oauth.reddit.com/api/read_all_messages?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-07-27T20:10:43"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -240,11 +233,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/message/unread/?mark=false&limit=100&raw_json=1"
+        "uri": "https://oauth.reddit.com/message/unread/?mark=false&limit=100&raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"Listing\", \"data\": {\"after\": null, \"dist\": 0, \"modhash\": null, \"geo_filter\": \"\", \"children\": [], \"before\": null}}"
+          "string": "{\"kind\": \"Listing\", \"data\": {\"after\": null, \"dist\": 0, \"modhash\": null, \"geo_filter\": \"\", \"children\": [], \"before\": null}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -273,9 +270,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/message/unread/?mark=false&limit=100&raw_json=1"
-      }
+      },
+      "recorded_at": "2021-07-27T20:10:43"
     }
-  ],
-  "recorded_at": "2021-07-27T20:10:43",
-  "version": 1
+  ]
 }

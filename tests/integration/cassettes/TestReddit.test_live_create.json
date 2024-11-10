@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,32 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-04T18:07:03"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "description",
-            null
-          ],
-          [
-            "nsfw",
-            false
-          ],
-          [
-            "resources",
-            null
-          ],
-          [
-            "title",
-            "PRAW Create Test"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -96,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/live/create?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/live/create?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"description\", null], [\"nsfw\", false], [\"resources\", null], [\"title\", \"PRAW Create Test\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": [], \"data\": {\"id\": \"158x9hgekxwya\"}}}"
+          "string": "{\"json\": {\"errors\": [], \"data\": {\"id\": \"158x9hgekxwya\"}}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -132,11 +110,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/live/create?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T18:07:03"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -149,11 +127,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/live/158x9hgekxwya/about/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/live/158x9hgekxwya/about/?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"LiveUpdateEvent\", \"data\": {\"total_views\": null, \"description\": \"None\", \"description_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ENone\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"created\": 1593932823.0, \"title\": \"PRAW Create Test\", \"created_utc\": 1593904023.0, \"button_cta\": \"\", \"websocket_url\": \"wss://ws-0c77c1e9cd565dd0f.wss.redditmedia.com/live/158x9hgekxwya?m=AQAAF10CXwkuLyW980uH6VQQa7pCasdkOg8jabE2G178XgH-vOLr\", \"name\": \"LiveUpdateEvent_158x9hgekxwya\", \"is_announcement\": false, \"state\": \"live\", \"announcement_url\": \"\", \"nsfw\": false, \"viewer_count\": 0, \"num_times_dismissable\": 1, \"viewer_count_fuzzed\": true, \"resources_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ENone\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"id\": \"158x9hgekxwya\", \"resources\": \"None\", \"icon\": \"\"}}"
+          "string": "{\"kind\": \"LiveUpdateEvent\", \"data\": {\"total_views\": null, \"description\": \"None\", \"description_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ENone\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"created\": 1593932823.0, \"title\": \"PRAW Create Test\", \"created_utc\": 1593904023.0, \"button_cta\": \"\", \"websocket_url\": \"wss://ws-0c77c1e9cd565dd0f.wss.redditmedia.com/live/158x9hgekxwya?m=AQAAF10CXwkuLyW980uH6VQQa7pCasdkOg8jabE2G178XgH-vOLr\", \"name\": \"LiveUpdateEvent_158x9hgekxwya\", \"is_announcement\": false, \"state\": \"live\", \"announcement_url\": \"\", \"nsfw\": false, \"viewer_count\": 0, \"num_times_dismissable\": 1, \"viewer_count_fuzzed\": true, \"resources_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ENone\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"id\": \"158x9hgekxwya\", \"resources\": \"None\", \"icon\": \"\"}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -185,9 +167,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/live/158x9hgekxwya/about/?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T18:07:03"
     }
-  ],
-  "recorded_at": "2020-07-04T18:07:03",
-  "version": 1
+  ]
 }

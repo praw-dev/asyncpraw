@@ -1,15 +1,10 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
         "method": "POST",
         "uri": "https://www.reddit.com/api/v1/access_token",
-        "body": [
-          [
-            "grant_type",
-            "client_credentials"
-          ]
-        ],
         "headers": {
           "User-Agent": [
             "<USER_AGENT> Async PRAW/7.1.1.dev0 asyncprawcore/1.4.0.post1"
@@ -23,6 +18,9 @@
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
           ]
+        },
+        "body": {
+          "string": "[[\"grant_type\", \"client_credentials\"]]"
         }
       },
       "response": {
@@ -52,12 +50,12 @@
           "Server": "snooserv"
         },
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-04T18:07:23"
     }
-  ],
-  "recorded_at": "2020-07-04T18:07:23",
-  "version": 1
+  ]
 }

@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-05T21:04:35"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/live/1595195m6j9zw/about/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/live/1595195m6j9zw/about/?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"LiveUpdateEvent\", \"data\": {\"total_views\": null, \"description\": \"## new description 2\", \"description_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Ch2\\u003Enew description 2\\u003C/h2\\u003E\\n\\u003C/div\\u003E\", \"created\": 1594026910.0, \"title\": \"new title 2\", \"created_utc\": 1593998110.0, \"button_cta\": \"\", \"websocket_url\": \"wss://ws-00bd5facfce0b76ac.wss.redditmedia.com/live/1595195m6j9zw?m=AQAAMtgDX9ElimoG3vH4k8EVA6FQr5sxqygLwMnkIUoec9V3Br-S\", \"name\": \"LiveUpdateEvent_1595195m6j9zw\", \"is_announcement\": false, \"state\": \"live\", \"announcement_url\": \"\", \"nsfw\": true, \"viewer_count\": 2, \"num_times_dismissable\": 1, \"viewer_count_fuzzed\": true, \"resources_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Ch2\\u003Enew resources 2\\u003C/h2\\u003E\\n\\u003C/div\\u003E\", \"id\": \"1595195m6j9zw\", \"resources\": \"## new resources 2\", \"icon\": \"\"}}"
+          "string": "{\"kind\": \"LiveUpdateEvent\", \"data\": {\"total_views\": null, \"description\": \"## new description 2\", \"description_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Ch2\\u003Enew description 2\\u003C/h2\\u003E\\n\\u003C/div\\u003E\", \"created\": 1594026910.0, \"title\": \"new title 2\", \"created_utc\": 1593998110.0, \"button_cta\": \"\", \"websocket_url\": \"wss://ws-00bd5facfce0b76ac.wss.redditmedia.com/live/1595195m6j9zw?m=AQAAMtgDX9ElimoG3vH4k8EVA6FQr5sxqygLwMnkIUoec9V3Br-S\", \"name\": \"LiveUpdateEvent_1595195m6j9zw\", \"is_announcement\": false, \"state\": \"live\", \"announcement_url\": \"\", \"nsfw\": true, \"viewer_count\": 2, \"num_times_dismissable\": 1, \"viewer_count_fuzzed\": true, \"resources_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Ch2\\u003Enew resources 2\\u003C/h2\\u003E\\n\\u003C/div\\u003E\", \"id\": \"1595195m6j9zw\", \"resources\": \"## new resources 2\", \"icon\": \"\"}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -112,40 +111,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/live/1595195m6j9zw/about/?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-05T21:04:35"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "description",
-            "## new description 2"
-          ],
-          [
-            "nsfw",
-            true
-          ],
-          [
-            "other1",
-            "other 1"
-          ],
-          [
-            "other2",
-            "other 2"
-          ],
-          [
-            "resources",
-            "## new resources 2"
-          ],
-          [
-            "title",
-            "new title"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -158,11 +128,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/live/1595195m6j9zw/edit?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/live/1595195m6j9zw/edit?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"description\", \"## new description 2\"], [\"nsfw\", true], [\"other1\", \"other 1\"], [\"other2\", \"other 2\"], [\"resources\", \"## new resources 2\"], [\"title\", \"new title\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": []}}"
+          "string": "{\"json\": {\"errors\": []}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -194,9 +168,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/live/1595195m6j9zw/edit?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-05T21:04:35"
     }
-  ],
-  "recorded_at": "2020-07-05T21:04:35",
-  "version": 1
+  ]
 }

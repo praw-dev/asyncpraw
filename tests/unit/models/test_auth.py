@@ -1,5 +1,7 @@
 """Test asyncpraw.models.auth."""
 
+from urllib.parse import urlencode, quote, quote_plus
+
 import pytest
 
 from asyncpraw import Reddit
@@ -78,7 +80,7 @@ class TestAuth(UnitTest):
         url = installed_app.auth.url(scopes=["dummy scope"], state="dummy state")
         assert "client_id=dummy+client" in url
         assert "duration=permanent" in url
-        assert "redirect_uri=https://dummy.tld/" in url
+        assert ("redirect_uri=" + quote_plus("https://dummy.tld/")) in url
         assert "response_type=code" in url
         assert "scope=dummy+scope" in url
         assert "state=dummy+state" in url
@@ -89,7 +91,7 @@ class TestAuth(UnitTest):
         )
         assert "client_id=dummy+client" in url
         assert "duration=temporary" in url
-        assert "redirect_uri=https://dummy.tld/" in url
+        assert ("redirect_uri=" + quote_plus("https://dummy.tld/")) in url
         assert "response_type=token" in url
         assert "scope=dummy+scope" in url
         assert "state=dummy+state" in url
@@ -98,7 +100,7 @@ class TestAuth(UnitTest):
         url = web_app.auth.url(scopes=["dummy scope"], state="dummy state")
         assert "client_id=dummy+client" in url
         assert "secret" not in url
-        assert "redirect_uri=https://dummy.tld/" in url
+        assert ("redirect_uri=" + quote_plus("https://dummy.tld/")) in url
         assert "response_type=code" in url
         assert "scope=dummy+scope" in url
         assert "state=dummy+state" in url

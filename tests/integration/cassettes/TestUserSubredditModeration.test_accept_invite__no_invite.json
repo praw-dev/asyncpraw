@@ -1,21 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "password"
-          ],
-          [
-            "password",
-            "<PASSWORD>"
-          ],
-          [
-            "username",
-            "<USERNAME>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -31,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"password\"], [\"password\", \"<PASSWORD>\"], [\"username\", \"<USERNAME>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -62,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2021-06-15T19:49:27"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -79,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/user/Lil_SpazJoekp/about/?raw_json=1"
+        "uri": "https://oauth.reddit.com/user/Lil_SpazJoekp/about/?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"t2\", \"data\": {\"is_employee\": false, \"is_friend\": false, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": false, \"banner_img\": \"\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"#94E044\", \"user_is_muted\": false, \"display_name\": \"u_Lil_SpazJoekp\", \"header_img\": null, \"title\": \"\", \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 0, \"submit_text_label\": \"\", \"is_default_icon\": true, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/Lil_SpazJoekp\", \"key_color\": \"\", \"name\": \"t5_1kfmld\", \"is_default_banner\": true, \"url\": \"/user/Lil_SpazJoekp/\", \"quarantine\": false, \"banner_size\": null, \"user_is_moderator\": false, \"public_description\": \"\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": false}, \"snoovatar_size\": null, \"awardee_karma\": 437, \"id\": \"o77bz\", \"verified\": true, \"is_gold\": true, \"is_mod\": true, \"awarder_karma\": 2716, \"has_verified_email\": true, \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"hide_from_robots\": true, \"link_karma\": 103916, \"pref_show_snoovatar\": true, \"total_karma\": 123264, \"accept_chats\": false, \"name\": \"Lil_SpazJoekp\", \"created\": 1434698170.0, \"created_utc\": 1434669370.0, \"snoovatar_img\": \"\", \"comment_karma\": 16195, \"has_subscribed\": true, \"accept_pms\": true}}"
+          "string": "{\"kind\": \"t2\", \"data\": {\"is_employee\": false, \"is_friend\": false, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": false, \"banner_img\": \"\", \"restrict_posting\": true, \"user_is_banned\": false, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"#94E044\", \"user_is_muted\": false, \"display_name\": \"u_Lil_SpazJoekp\", \"header_img\": null, \"title\": \"\", \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 0, \"submit_text_label\": \"\", \"is_default_icon\": true, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/Lil_SpazJoekp\", \"key_color\": \"\", \"name\": \"t5_1kfmld\", \"is_default_banner\": true, \"url\": \"/user/Lil_SpazJoekp/\", \"quarantine\": false, \"banner_size\": null, \"user_is_moderator\": false, \"public_description\": \"\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": false}, \"snoovatar_size\": null, \"awardee_karma\": 437, \"id\": \"o77bz\", \"verified\": true, \"is_gold\": true, \"is_mod\": true, \"awarder_karma\": 2716, \"has_verified_email\": true, \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_20_94E044.png\", \"hide_from_robots\": true, \"link_karma\": 103916, \"pref_show_snoovatar\": true, \"total_karma\": 123264, \"accept_chats\": false, \"name\": \"Lil_SpazJoekp\", \"created\": 1434698170.0, \"created_utc\": 1434669370.0, \"snoovatar_img\": \"\", \"comment_karma\": 16195, \"has_subscribed\": true, \"accept_pms\": true}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -114,16 +109,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/user/Lil_SpazJoekp/about/?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-06-15T19:49:27"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -136,11 +126,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/r/u_Lil_SpazJoekp/api/accept_moderator_invite?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/u_Lil_SpazJoekp/api/accept_moderator_invite?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": [[\"NO_INVITE_FOUND\", \"there is no pending invite for that subreddit\", null]]}}"
+          "string": "{\"json\": {\"errors\": [[\"NO_INVITE_FOUND\", \"there is no pending invite for that subreddit\", null]]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -169,9 +163,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/u_Lil_SpazJoekp/api/accept_moderator_invite?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-06-15T19:49:27"
     }
-  ],
-  "recorded_at": "2021-06-15T19:49:27",
-  "version": 1
+  ]
 }

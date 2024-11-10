@@ -1,21 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "password"
-          ],
-          [
-            "password",
-            "<PASSWORD>"
-          ],
-          [
-            "username",
-            "<USERNAME>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -31,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"password\"], [\"password\", \"<PASSWORD>\"], [\"username\", \"<USERNAME>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -62,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2021-06-16T17:31:09"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -79,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/prefs/blocked/?raw_json=1"
+        "uri": "https://oauth.reddit.com/prefs/blocked/?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"UserList\", \"data\": {\"children\": [{\"date\": 1623882641.0, \"rel_id\": \"r9_2no2hn\", \"name\": \"Lil_SpazJoekp\", \"id\": \"t2_o77bz\"}]}}"
+          "string": "{\"kind\": \"UserList\", \"data\": {\"children\": [{\"date\": 1623882641.0, \"rel_id\": \"r9_2no2hn\", \"name\": \"Lil_SpazJoekp\", \"id\": \"t2_o77bz\"}]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -112,9 +107,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/prefs/blocked/?raw_json=1"
-      }
+      },
+      "recorded_at": "2021-06-16T17:31:09"
     }
-  ],
-  "recorded_at": "2021-06-16T17:31:09",
-  "version": 1
+  ]
 }

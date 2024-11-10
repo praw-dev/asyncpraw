@@ -1,6 +1,6 @@
-import sys
+import json
 
-import aiohttp
+import niquests
 import pytest
 
 from unittest import mock
@@ -65,16 +65,17 @@ class TestSubreddit(UnitTest):
             return_value=("fake_media_url", "fake_websocket_url"),
         ),
     )
-    @mock.patch("aiohttp.client.ClientSession.ws_connect")
+    @mock.patch("niquests.AsyncSession.get")
     async def test_invalid_media(self, connection_mock, reddit):
-        reddit._core._requestor._http = aiohttp.ClientSession()
-        recv_mock = MagicMock()
-        recv_mock.receive_json = AsyncMock(
-            return_value={"payload": {}, "type": "failed"}
+        reddit._core._requestor._http = niquests.AsyncSession()
+        connection_mock.return_value = AsyncMock(
+            status_code=101,
+            extension=MagicMock(
+                next_payload=AsyncMock(
+                    return_value=json.dumps({"payload": {}, "type": "failed"})
+                )
+            ),
         )
-        context_manager = MagicMock()
-        context_manager.__aenter__.return_value = recv_mock
-        connection_mock.return_value = context_manager
 
         with pytest.raises(MediaPostFailed):
             await Subreddit(reddit, display_name="test").submit_image(
@@ -82,7 +83,7 @@ class TestSubreddit(UnitTest):
             )
         await reddit._core._requestor._http.close()
 
-    @mock.patch("aiohttp.client.ClientSession.ws_connect", new=AsyncMock())
+    @mock.patch("niquests.AsyncSession.get", new=AsyncMock())
     @mock.patch(
         "asyncpraw.Reddit.post",
         new=AsyncMock(
@@ -94,13 +95,13 @@ class TestSubreddit(UnitTest):
     )
     @mock.patch("asyncpraw.models.Subreddit._read_and_post_media")
     async def test_media_upload_500(self, mock_method, reddit):
-        from aiohttp.http_exceptions import HttpProcessingError
-        from asyncprawcore.exceptions import ServerError
+        from prawcore.exceptions import ServerError
+        from niquests.exceptions import HTTPError
 
         response = MagicMock()
-        response.status = 201
+        response.status_code = 201
         response.raise_for_status = MagicMock(
-            side_effect=HttpProcessingError(code=500, message="")
+            side_effect=HTTPError(f"Server Error", response=response)
         )
         mock_method.return_value = response
         with pytest.raises(ServerError):

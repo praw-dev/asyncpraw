@@ -98,7 +98,7 @@ class WikiPageModeration:
             When you attempt to revert the page ``config/stylesheet``, Reddit checks to
             see if the revision being reverted to passes the CSS filter. If the check
             fails, then the revision attempt will also fail, and a
-            ``asyncprawcore.Forbidden`` exception will be raised. For example, you can't
+            ``prawcore.Forbidden`` exception will be raised. For example, you can't
             revert to a revision that contains a link to ``url(%%PRAW%%)`` if there is
             no image named ``PRAW`` on the current stylesheet.
 
@@ -106,7 +106,7 @@ class WikiPageModeration:
 
             .. code-block:: python
 
-                from asyncprawcore.exceptions import Forbidden
+                from prawcore.exceptions import Forbidden
 
                 try:
                     subreddit = await reddit.subreddit("test")

@@ -3,7 +3,7 @@
 from base64 import urlsafe_b64encode
 
 import pytest
-from asyncprawcore.exceptions import BadRequest, ServerError
+from prawcore.exceptions import BadRequest, ServerError
 
 from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import LiveThread

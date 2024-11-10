@@ -1,7 +1,7 @@
 from base64 import urlsafe_b64encode
 
 import pytest
-from asyncprawcore import Forbidden, NotFound
+from prawcore import Forbidden, NotFound
 
 from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import Redditor, WikiPage
@@ -53,7 +53,7 @@ class TestWikiPageModeration(IntegrationTest):
         with pytest.raises(Forbidden) as exc:
             revision = await page.revision(revision_id)
             await revision.mod.revert()
-        assert await exc.value.response.json() == {
+        assert exc.value.response.json() == {
             "reason": "INVALID_CSS",
             "message": "Forbidden",
             "explanation": "%(css_error)s",

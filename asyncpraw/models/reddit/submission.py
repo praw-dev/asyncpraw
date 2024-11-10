@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Generator
 from urllib.parse import urljoin
 from warnings import warn
 
-from asyncprawcore import Conflict
+from prawcore import Conflict
 
 from ...const import API_PATH
 from ...exceptions import InvalidURL
@@ -298,8 +298,8 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
         .. note::
 
             When a submission is stickied two or more times, the Reddit API responds
-            with a 409 error that is raised as a ``Conflict`` by asyncprawcore. This
-            method suppresses these ``Conflict`` errors.
+            with a 409 error that is raised as a ``Conflict`` by prawcore. This method
+            suppresses these ``Conflict`` errors.
 
         This submission will replace the second stickied submission if one exists.
 

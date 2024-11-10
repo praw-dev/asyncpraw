@@ -20,9 +20,8 @@ intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 master_doc = "index"
 nitpick_ignore = [
     ("py:class", "IO"),
-    ("py:class", "asyncprawcore.requestor.Requestor"),
-    ("py:class", "asyncprawcore.auth.BaseAuthorizer"),
-    ("py:class", "asyncpraw.models.redditors.PartialRedditor"),
+    ("py:class", "prawcore._async.auth.AsyncBaseAuthorizer"),
+    ("py:class", "prawcore.AsyncRequestor"),
 ]
 nitpicky = True
 project = "Async PRAW"

@@ -1,13 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "client_credentials"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -23,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"client_credentials\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -55,11 +54,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-05T20:11:31"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -72,11 +71,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/live/ukaeu1ik4sw5/updates/7827987a-c998-11e4-a0b9-22000b6a88d2?raw_json=1"
+        "uri": "https://oauth.reddit.com/live/ukaeu1ik4sw5/updates/7827987a-c998-11e4-a0b9-22000b6a88d2?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": \"\", \"dist\": null, \"children\": [{\"kind\": \"LiveUpdate\", \"data\": {\"body\": \"Small change: Piloting a live thread of reddit updates!\", \"name\": \"LiveUpdate_7827987a-c998-11e4-a0b9-22000b6a88d2\", \"mobile_embeds\": [], \"author\": \"umbrae\", \"embeds\": [], \"created\": 1426290541.0, \"created_utc\": 1426261741.0, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ESmall change: Piloting a live thread of reddit updates!\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"stricken\": false, \"id\": \"7827987a-c998-11e4-a0b9-22000b6a88d2\"}}], \"after\": null, \"before\": null}}"
+          "string": "{\"kind\": \"Listing\", \"data\": {\"modhash\": \"\", \"dist\": null, \"children\": [{\"kind\": \"LiveUpdate\", \"data\": {\"body\": \"Small change: Piloting a live thread of reddit updates!\", \"name\": \"LiveUpdate_7827987a-c998-11e4-a0b9-22000b6a88d2\", \"mobile_embeds\": [], \"author\": \"umbrae\", \"embeds\": [], \"created\": 1426290541.0, \"created_utc\": 1426261741.0, \"body_html\": \"\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ESmall change: Piloting a live thread of reddit updates!\\u003C/p\\u003E\\n\\u003C/div\\u003E\", \"stricken\": false, \"id\": \"7827987a-c998-11e4-a0b9-22000b6a88d2\"}}], \"after\": null, \"before\": null}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -106,9 +109,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/live/ukaeu1ik4sw5/updates/7827987a-c998-11e4-a0b9-22000b6a88d2?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-05T20:11:31"
     }
-  ],
-  "recorded_at": "2020-07-05T20:11:31",
-  "version": 1
+  ]
 }

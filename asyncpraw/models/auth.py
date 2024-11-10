@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
-from asyncprawcore import (
-    Authorizer,
-    ImplicitAuthorizer,
-    UntrustedAuthenticator,
-    session,
+from prawcore import (
+    AsyncAuthorizer as Authorizer,
+)
+from prawcore import (
+    AsyncImplicitAuthorizer as ImplicitAuthorizer,
+)
+from prawcore import (
+    AsyncUntrustedAuthenticator as UntrustedAuthenticator,
+)
+from prawcore import (
+    async_session as session,
 )
 
 from ..exceptions import InvalidImplicitAuth, MissingRequiredAttributeException

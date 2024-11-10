@@ -1,13 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "client_credentials"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -23,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"client_credentials\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -55,11 +54,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T18:37:48"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -72,11 +71,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/user/<USERNAME>/about/?raw_json=1"
+        "uri": "https://oauth.reddit.com/user/<USERNAME>/about/?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"t2\", \"data\": {\"is_employee\": false, \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_09_EA0027.png\", \"pref_show_snoovatar\": false, \"name\": \"<USERNAME>\", \"is_friend\": false, \"created\": 1409099733.0, \"has_subscribed\": true, \"hide_from_robots\": false, \"verified\": true, \"created_utc\": 1409070933.0, \"link_karma\": 1, \"comment_karma\": 0, \"is_gold\": false, \"is_mod\": false, \"awardee_karma\": 0, \"awarder_karma\": 0, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": null, \"banner_img\": \"\", \"restrict_posting\": true, \"user_is_banned\": null, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"#EA0027\", \"user_is_muted\": null, \"display_name\": \"u_<USERNAME>\", \"header_img\": null, \"title\": \"\", \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_09_EA0027.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 0, \"submit_text_label\": \"\", \"is_default_icon\": true, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/<USERNAME>\", \"key_color\": \"\", \"name\": \"t5_1pho2c\", \"is_default_banner\": true, \"url\": \"/user/<USERNAME>/\", \"banner_size\": null, \"user_is_moderator\": null, \"public_description\": \"\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": null}, \"has_verified_email\": false, \"id\": \"i26lg\"}}"
+          "string": "{\"kind\": \"t2\", \"data\": {\"is_employee\": false, \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_09_EA0027.png\", \"pref_show_snoovatar\": false, \"name\": \"<USERNAME>\", \"is_friend\": false, \"created\": 1409099733.0, \"has_subscribed\": true, \"hide_from_robots\": false, \"verified\": true, \"created_utc\": 1409070933.0, \"link_karma\": 1, \"comment_karma\": 0, \"is_gold\": false, \"is_mod\": false, \"awardee_karma\": 0, \"awarder_karma\": 0, \"subreddit\": {\"default_set\": true, \"user_is_contributor\": null, \"banner_img\": \"\", \"restrict_posting\": true, \"user_is_banned\": null, \"free_form_reports\": true, \"community_icon\": null, \"show_media\": true, \"icon_color\": \"#EA0027\", \"user_is_muted\": null, \"display_name\": \"u_<USERNAME>\", \"header_img\": null, \"title\": \"\", \"previous_names\": [], \"over_18\": false, \"icon_size\": [256, 256], \"primary_color\": \"\", \"icon_img\": \"https://www.redditstatic.com/avatars/avatar_default_09_EA0027.png\", \"description\": \"\", \"submit_link_label\": \"\", \"header_size\": null, \"restrict_commenting\": false, \"subscribers\": 0, \"submit_text_label\": \"\", \"is_default_icon\": true, \"link_flair_position\": \"\", \"display_name_prefixed\": \"u/<USERNAME>\", \"key_color\": \"\", \"name\": \"t5_1pho2c\", \"is_default_banner\": true, \"url\": \"/user/<USERNAME>/\", \"banner_size\": null, \"user_is_moderator\": null, \"public_description\": \"\", \"link_flair_enabled\": false, \"disable_contributor_requests\": false, \"subreddit_type\": \"user\", \"user_is_subscriber\": null}, \"has_verified_email\": false, \"id\": \"i26lg\"}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -107,11 +110,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/user/<USERNAME>/about/?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T18:37:48"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -124,11 +127,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/user/<USERNAME>/saved?limit=100&raw_json=1"
+        "uri": "https://oauth.reddit.com/user/<USERNAME>/saved?limit=100&raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"message\": \"Forbidden\", \"error\": 403}"
+          "string": "{\"message\": \"Forbidden\", \"error\": 403}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -158,9 +165,8 @@
           "message": "Forbidden"
         },
         "url": "https://oauth.reddit.com/user/<USERNAME>/saved?limit=100&raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T18:37:48"
     }
-  ],
-  "recorded_at": "2020-07-06T18:37:48",
-  "version": 1
+  ]
 }

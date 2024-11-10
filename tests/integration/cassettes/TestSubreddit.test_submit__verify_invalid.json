@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,52 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-13T17:24:43"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "kind",
-            "link"
-          ],
-          [
-            "nsfw",
-            false
-          ],
-          [
-            "resubmit",
-            true
-          ],
-          [
-            "sendreplies",
-            true
-          ],
-          [
-            "spoiler",
-            false
-          ],
-          [
-            "sr",
-            "<TEST_SUBREDDIT>"
-          ],
-          [
-            "title",
-            "dfgfdgfdgdf"
-          ],
-          [
-            "url",
-            "https://www.google.com"
-          ],
-          [
-            "validate_on_submit",
-            true
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -116,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/submit/?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"kind\", \"link\"], [\"nsfw\", false], [\"resubmit\", true], [\"sendreplies\", true], [\"spoiler\", false], [\"sr\", \"<TEST_SUBREDDIT>\"], [\"title\", \"dfgfdgfdgdf\"], [\"url\", \"https://www.google.com\"], [\"validate_on_submit\", true]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"json\": {\"errors\": [[\"SUBMIT_VALIDATION_TITLE_BLACKLISTED_STRING\", \"You may not have \\\"dfgfdgfdgdf\\\" in your title.\", \"title\"], [\"SUBMIT_VALIDATION_TITLE_REGEX_REQUIREMENT\", \"Your title does not meet the requirements for this community. See the rules for more details.\", \"title\"]]}}"
+          "string": "{\"json\": {\"errors\": [[\"SUBMIT_VALIDATION_TITLE_BLACKLISTED_STRING\", \"You may not have \\\"dfgfdgfdgdf\\\" in your title.\", \"title\"], [\"SUBMIT_VALIDATION_TITLE_REGEX_REQUIREMENT\", \"Your title does not meet the requirements for this community. See the rules for more details.\", \"title\"]]}}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -152,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/submit/?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-13T17:24:43"
     }
-  ],
-  "recorded_at": "2020-07-13T17:24:43",
-  "version": 1
+  ]
 }

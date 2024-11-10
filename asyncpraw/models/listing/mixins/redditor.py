@@ -73,7 +73,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
             :class:`.Submission` objects the user has downvoted.
 
-        :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
+        :raises: ``prawcore.Forbidden`` if the user is not authorized to access the
             list.
 
             .. note::
@@ -106,7 +106,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
             :class:`.Submission` objects the user has gilded.
 
-        :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
+        :raises: ``prawcore.Forbidden`` if the user is not authorized to access the
             list.
 
             .. note::
@@ -139,7 +139,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
             :class:`.Submission` objects the user has hid.
 
-        :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
+        :raises: ``prawcore.Forbidden`` if the user is not authorized to access the
             list.
 
             .. note::
@@ -172,7 +172,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
             :class:`.Submission` objects the user has saved.
 
-        :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
+        :raises: ``prawcore.Forbidden`` if the user is not authorized to access the
             list.
 
             .. note::
@@ -205,7 +205,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
         :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
             :class:`.Submission` objects the user has upvoted.
 
-        :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
+        :raises: ``prawcore.Forbidden`` if the user is not authorized to access the
             list.
 
             .. note::

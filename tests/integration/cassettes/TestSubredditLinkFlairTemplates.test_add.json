@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,52 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-09T19:47:20"
     },
     {
       "request": {
-        "body": [
-          [
-            "allowable_content",
-            null
-          ],
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "background_color",
-            null
-          ],
-          [
-            "css_class",
-            "myCSS"
-          ],
-          [
-            "flair_type",
-            "LINK_FLAIR"
-          ],
-          [
-            "max_emojis",
-            null
-          ],
-          [
-            "mod_only",
-            false
-          ],
-          [
-            "text",
-            "PRAW"
-          ],
-          [
-            "text_color",
-            "light"
-          ],
-          [
-            "text_editable",
-            false
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -116,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/flairtemplate_v2?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/flairtemplate_v2?raw_json=1",
+        "body": {
+          "string": "[[\"allowable_content\", null], [\"api_type\", \"json\"], [\"background_color\", null], [\"css_class\", \"myCSS\"], [\"flair_type\", \"LINK_FLAIR\"], [\"max_emojis\", null], [\"mod_only\", false], [\"text\", \"PRAW\"], [\"text_color\", \"light\"], [\"text_editable\", false]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"text\": \"PRAW\", \"allowableContent\": \"all\", \"modOnly\": false, \"cssClass\": \"myCSS\", \"id\": \"e8bff742-c246-11ea-962c-0e803a066d31\", \"textEditable\": false, \"overrideCss\": false, \"richtext\": [{\"e\": \"text\", \"t\": \"PRAW\"}], \"maxEmojis\": null, \"flairType\": \"LINK_FLAIR\", \"backgroundColor\": \"\", \"textColor\": \"light\", \"type\": \"richtext\"}"
+          "string": "{\"text\": \"PRAW\", \"allowableContent\": \"all\", \"modOnly\": false, \"cssClass\": \"myCSS\", \"id\": \"e8bff742-c246-11ea-962c-0e803a066d31\", \"textEditable\": false, \"overrideCss\": false, \"richtext\": [{\"e\": \"text\", \"t\": \"PRAW\"}], \"maxEmojis\": null, \"flairType\": \"LINK_FLAIR\", \"backgroundColor\": \"\", \"textColor\": \"light\", \"type\": \"richtext\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -152,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/flairtemplate_v2?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-09T19:47:20"
     }
-  ],
-  "recorded_at": "2020-07-09T19:47:20",
-  "version": 1
+  ]
 }

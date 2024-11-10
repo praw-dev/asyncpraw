@@ -1,7 +1,7 @@
 """Test asyncpraw.models.redditor."""
 
 import pytest
-from asyncprawcore import Forbidden
+from prawcore import Forbidden
 
 from asyncpraw.exceptions import RedditAPIException
 from asyncpraw.models import Comment, Redditor, Submission

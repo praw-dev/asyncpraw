@@ -3,11 +3,11 @@ import sys
 import types
 
 import pytest
-from asyncprawcore import Requestor
-from asyncprawcore.exceptions import BadRequest
+from prawcore import AsyncRequestor as Requestor
+from prawcore.exceptions import BadRequest
 
 from unittest import mock
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, PropertyMock
 
 from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config
@@ -46,11 +46,8 @@ class TestReddit(UnitTest):
         assert not mock_update_check.called
 
     async def test_close_session(self):
-        temp_reddit = Reddit(**self.REQUIRED_DUMMY_SETTINGS)
-        assert not temp_reddit.requestor._http.closed
-        async with temp_reddit as reddit:
+        async with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
             pass
-        assert reddit.requestor._http.closed and temp_reddit.requestor._http.closed
 
     def test_comment(self, reddit):
         assert Comment(reddit, id="cklfmye").id == "cklfmye"
@@ -71,8 +68,6 @@ class TestReddit(UnitTest):
     async def test_context_manager(self):
         async with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
             assert not reddit._validate_on_submit
-            assert not reddit.requestor._http.closed
-        assert reddit.requestor._http.closed
 
     def test_info__invalid_param(self, reddit):
         with pytest.raises(TypeError) as excinfo:
@@ -455,13 +450,15 @@ class TestReddit(UnitTest):
             Reddit("bad_site_name")
         assert "asyncpraw.readthedocs.io" in excinfo.value.message
 
-    @mock.patch("asyncprawcore.sessions.Session")
+    @mock.patch("prawcore._async.sessions.AsyncSession")
     async def test_request__badrequest_with_no_json_body(self, mock_session):
-        response = MagicMock(status=400, text=AsyncMock(return_value=""))
+        response = MagicMock(status_code=400, text="")
         response.json.side_effect = ValueError
-        mock_session.return_value.request = MagicMock(
-            side_effect=BadRequest(response=response)
-        )
+
+        async def fake_return(*args, **kwargs):
+            raise BadRequest(response=response)
+
+        mock_session.return_value.request = fake_return
 
         async with Reddit(
             client_id="dummy", client_secret="dummy", user_agent="dummy"

@@ -1,13 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "client_credentials"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -23,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"client_credentials\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"*\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -55,11 +54,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-06T19:20:35"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -72,11 +71,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/rules?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/rules?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"rules\": [{\"kind\": \"all\", \"description\": \"Do not spam. Spam bad\", \"short_name\": \"Test post 12\", \"violation_reason\": \"No spa5\", \"created_utc\": 1593594899.0, \"priority\": 0, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"all\", \"description\": \"Do not spam. Spam bad\", \"short_name\": \"No spa2\", \"violation_reason\": \"No spa2\", \"created_utc\": 1593594883.0, \"priority\": 1, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"all\", \"description\": \"Do not spam. Spam bad\", \"short_name\": \"No spa6\", \"violation_reason\": \"No spa6\", \"created_utc\": 1593594903.0, \"priority\": 2, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"comment\", \"description\": \"Updated rule\", \"short_name\": \"PRAW Update\", \"violation_reason\": \"PUpdate\", \"created_utc\": 1594108751.0, \"priority\": 3, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EUpdated rule\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"all\", \"description\": \"Test by Async PRAW\", \"short_name\": \"PRAW Test\", \"violation_reason\": \"PTest\", \"created_utc\": 1594109380.0, \"priority\": 4, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}], \"site_rules\": [\"Spam\", \"Personal and confidential information\", \"Threatening, harassing, or inciting violence\"], \"site_rules_flow\": [{\"reasonTextToShow\": \"This is spam\", \"reasonText\": \"This is spam\"}, {\"reasonTextToShow\": \"This is misinformation\", \"reasonText\": \"This is misinformation\"}, {\"nextStepHeader\": \"In what way?\", \"reasonTextToShow\": \"This is abusive or harassing\", \"nextStepReasons\": [{\"nextStepHeader\": \"Who is the harassment targeted at?\", \"reasonTextToShow\": \"It's targeted harassment\", \"nextStepReasons\": [{\"reasonTextToShow\": \"At me\", \"reasonText\": \"It's targeted harassment at me\"}, {\"reasonTextToShow\": \"At someone else\", \"reasonText\": \"It's targeted harassment at someone else\"}], \"reasonText\": \"\"}, {\"nextStepHeader\": \"Who is the threat directed at?\", \"reasonTextToShow\": \"It threatens violence or physical harm\", \"nextStepReasons\": [{\"reasonTextToShow\": \"At me\", \"reasonText\": \"It threatens violence or physical harm at me\"}, {\"reasonTextToShow\": \"At someone else\", \"reasonText\": \"It threatens violence or physical harm at someone else\"}], \"reasonText\": \"\"}, {\"reasonTextToShow\": \"It's rude, vulgar or offensive\", \"reasonText\": \"It's rude, vulgar or offensive\"}, {\"reasonTextToShow\": \"It's abusing the report button\", \"canWriteNotes\": true, \"isAbuseOfReportButton\": true, \"notesInputTitle\": \"Additional information (optional)\", \"reasonText\": \"It's abusing the report button\"}], \"reasonText\": \"\"}, {\"nextStepHeader\": \"What issue?\", \"reasonTextToShow\": \"Other issues\", \"nextStepReasons\": [{\"complaintButtonText\": \"File a complaint\", \"complaintUrl\": \"https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s\\u0026reason_code=COPYRIGHT\", \"complaintPageTitle\": \"File a complaint?\", \"reasonText\": \"It infringes my copyright\", \"reasonTextToShow\": \"It infringes my copyright\", \"fileComplaint\": true, \"complaintPrompt\": \"If you think content on Reddit violates your intellectual property, please file a complaint at the link below:\"}, {\"complaintButtonText\": \"File a complaint\", \"complaintUrl\": \"https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s\\u0026reason_code=TRADEMARK\", \"complaintPageTitle\": \"File a complaint?\", \"reasonText\": \"It infringes my trademark rights\", \"reasonTextToShow\": \"It infringes my trademark rights\", \"fileComplaint\": true, \"complaintPrompt\": \"If you think content on Reddit violates your intellectual property, please file a complaint at the link below:\"}, {\"reasonTextToShow\": \"It's personal and confidential information\", \"reasonText\": \"It's personal and confidential information\"}, {\"reasonTextToShow\": \"It's sexual or suggestive content involving minors\", \"reasonText\": \"It's sexual or suggestive content involving minors\"}, {\"nextStepHeader\": \"Do you appear in the image?\", \"reasonTextToShow\": \"It's involuntary pornography\", \"nextStepReasons\": [{\"reasonTextToShow\": \"I appear in the image\", \"reasonText\": \"It's involuntary pornography and i appear in it\"}, {\"reasonTextToShow\": \"I do not appear in the image\", \"reasonText\": \"It's involuntary pornography and i do not appear in it\"}], \"reasonText\": \"\"}, {\"reasonTextToShow\": \"It's a transaction for prohibited goods or services\", \"reasonText\": \"It's a transaction for prohibited goods or services\"}, {\"complaintButtonText\": \"File a complaint\", \"complaintUrl\": \"https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s\\u0026reason_code=NETZDG\", \"complaintPageTitle\": \"File a complaint?\", \"reasonText\": \"Report this content under NetzDG\", \"reasonTextToShow\": \"Report this content under NetzDG\", \"fileComplaint\": true, \"complaintPrompt\": \"This reporting procedure is only available for people in Germany. If you are in Germany and would like to report this content under the German Netzwerkdurchsetzungsgesetz (NetzDG) law you may file a complaint by clicking the link below.\"}, {\"usernamesInputTitle\": \"Username\", \"reasonTextToShow\": \"Someone is considering suicide or serious self-harm.\", \"canSpecifyUsernames\": true, \"reasonText\": \"Someone is considering suicide or serious self-harm.\", \"requestCrisisSupport\": true, \"oneUsername\": true}], \"reasonText\": \"\"}]}"
+          "string": "{\"rules\": [{\"kind\": \"all\", \"description\": \"Do not spam. Spam bad\", \"short_name\": \"Test post 12\", \"violation_reason\": \"No spa5\", \"created_utc\": 1593594899.0, \"priority\": 0, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"all\", \"description\": \"Do not spam. Spam bad\", \"short_name\": \"No spa2\", \"violation_reason\": \"No spa2\", \"created_utc\": 1593594883.0, \"priority\": 1, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"all\", \"description\": \"Do not spam. Spam bad\", \"short_name\": \"No spa6\", \"violation_reason\": \"No spa6\", \"created_utc\": 1593594903.0, \"priority\": 2, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EDo not spam. Spam bad\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"comment\", \"description\": \"Updated rule\", \"short_name\": \"PRAW Update\", \"violation_reason\": \"PUpdate\", \"created_utc\": 1594108751.0, \"priority\": 3, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003EUpdated rule\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}, {\"kind\": \"all\", \"description\": \"Test by Async PRAW\", \"short_name\": \"PRAW Test\", \"violation_reason\": \"PTest\", \"created_utc\": 1594109380.0, \"priority\": 4, \"description_html\": \"\\u003C!-- SC_OFF --\\u003E\\u003Cdiv class=\\\"md\\\"\\u003E\\u003Cp\\u003ETest by Async PRAW\\u003C/p\\u003E\\n\\u003C/div\\u003E\\u003C!-- SC_ON --\\u003E\"}], \"site_rules\": [\"Spam\", \"Personal and confidential information\", \"Threatening, harassing, or inciting violence\"], \"site_rules_flow\": [{\"reasonTextToShow\": \"This is spam\", \"reasonText\": \"This is spam\"}, {\"reasonTextToShow\": \"This is misinformation\", \"reasonText\": \"This is misinformation\"}, {\"nextStepHeader\": \"In what way?\", \"reasonTextToShow\": \"This is abusive or harassing\", \"nextStepReasons\": [{\"nextStepHeader\": \"Who is the harassment targeted at?\", \"reasonTextToShow\": \"It's targeted harassment\", \"nextStepReasons\": [{\"reasonTextToShow\": \"At me\", \"reasonText\": \"It's targeted harassment at me\"}, {\"reasonTextToShow\": \"At someone else\", \"reasonText\": \"It's targeted harassment at someone else\"}], \"reasonText\": \"\"}, {\"nextStepHeader\": \"Who is the threat directed at?\", \"reasonTextToShow\": \"It threatens violence or physical harm\", \"nextStepReasons\": [{\"reasonTextToShow\": \"At me\", \"reasonText\": \"It threatens violence or physical harm at me\"}, {\"reasonTextToShow\": \"At someone else\", \"reasonText\": \"It threatens violence or physical harm at someone else\"}], \"reasonText\": \"\"}, {\"reasonTextToShow\": \"It's rude, vulgar or offensive\", \"reasonText\": \"It's rude, vulgar or offensive\"}, {\"reasonTextToShow\": \"It's abusing the report button\", \"canWriteNotes\": true, \"isAbuseOfReportButton\": true, \"notesInputTitle\": \"Additional information (optional)\", \"reasonText\": \"It's abusing the report button\"}], \"reasonText\": \"\"}, {\"nextStepHeader\": \"What issue?\", \"reasonTextToShow\": \"Other issues\", \"nextStepReasons\": [{\"complaintButtonText\": \"File a complaint\", \"complaintUrl\": \"https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s\\u0026reason_code=COPYRIGHT\", \"complaintPageTitle\": \"File a complaint?\", \"reasonText\": \"It infringes my copyright\", \"reasonTextToShow\": \"It infringes my copyright\", \"fileComplaint\": true, \"complaintPrompt\": \"If you think content on Reddit violates your intellectual property, please file a complaint at the link below:\"}, {\"complaintButtonText\": \"File a complaint\", \"complaintUrl\": \"https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s\\u0026reason_code=TRADEMARK\", \"complaintPageTitle\": \"File a complaint?\", \"reasonText\": \"It infringes my trademark rights\", \"reasonTextToShow\": \"It infringes my trademark rights\", \"fileComplaint\": true, \"complaintPrompt\": \"If you think content on Reddit violates your intellectual property, please file a complaint at the link below:\"}, {\"reasonTextToShow\": \"It's personal and confidential information\", \"reasonText\": \"It's personal and confidential information\"}, {\"reasonTextToShow\": \"It's sexual or suggestive content involving minors\", \"reasonText\": \"It's sexual or suggestive content involving minors\"}, {\"nextStepHeader\": \"Do you appear in the image?\", \"reasonTextToShow\": \"It's involuntary pornography\", \"nextStepReasons\": [{\"reasonTextToShow\": \"I appear in the image\", \"reasonText\": \"It's involuntary pornography and i appear in it\"}, {\"reasonTextToShow\": \"I do not appear in the image\", \"reasonText\": \"It's involuntary pornography and i do not appear in it\"}], \"reasonText\": \"\"}, {\"reasonTextToShow\": \"It's a transaction for prohibited goods or services\", \"reasonText\": \"It's a transaction for prohibited goods or services\"}, {\"complaintButtonText\": \"File a complaint\", \"complaintUrl\": \"https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s\\u0026reason_code=NETZDG\", \"complaintPageTitle\": \"File a complaint?\", \"reasonText\": \"Report this content under NetzDG\", \"reasonTextToShow\": \"Report this content under NetzDG\", \"fileComplaint\": true, \"complaintPrompt\": \"This reporting procedure is only available for people in Germany. If you are in Germany and would like to report this content under the German Netzwerkdurchsetzungsgesetz (NetzDG) law you may file a complaint by clicking the link below.\"}, {\"usernamesInputTitle\": \"Username\", \"reasonTextToShow\": \"Someone is considering suicide or serious self-harm.\", \"canSpecifyUsernames\": true, \"reasonText\": \"Someone is considering suicide or serious self-harm.\", \"requestCrisisSupport\": true, \"oneUsername\": true}], \"reasonText\": \"\"}]}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -107,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/about/rules?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-06T19:20:35"
     }
-  ],
-  "recorded_at": "2020-07-06T19:20:35",
-  "version": 1
+  ]
 }

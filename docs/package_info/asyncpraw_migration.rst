@@ -9,12 +9,12 @@ Network Requests
 
 .. _network_requests:
 
-Async PRAW utilizes `aiohttp <https://docs.aiohttp.org/>`_ to make network requests to
-Reddit's API. Since aiohttp can only be used in an asynchronous environment, all network
-requests need to be awaited. Due to this, most Async PRAW methods need to be awaited as
-well. You can tell if a method needs awaited by looking at the docs. For example,
-:meth:`.me` has the word ``await`` before ``me(use_cache: bool = True)`` in the header
-for that method since that method makes a network request.
+Async PRAW utilizes `niquests <https://niquests.readthedocs.io/en/latest/>`_ to make
+network requests to Reddit's API. We bound Async PRAW to the async part of Niquests, so
+all network requests need to be awaited. Due to this, most Async PRAW methods need to be
+awaited as well. You can tell if a method needs awaited by looking at the docs. For
+example, :meth:`.me` has the word ``await`` before ``me(use_cache: bool = True)`` in the
+header for that method since that method makes a network request.
 
 Lazy Loading
 ------------

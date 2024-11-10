@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,20 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-07T16:04:19"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "json",
-            "{\"data\": [{\"text\": \"My homepage\", \"url\": \"https://example.com\"}, {\"text\": \"Python packages\", \"children\": [{\"text\": \"PRAW\", \"url\": \"https://asyncpraw.readthedocs.io/\"}, {\"text\": \"requests\", \"url\": \"http://python-requests.org\"}]}, {\"text\": \"Reddit homepage\", \"url\": \"https://reddit.com\"}], \"kind\": \"menu\"}"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -84,11 +70,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"json\", \"{\\\"data\\\": [{\\\"text\\\": \\\"My homepage\\\", \\\"url\\\": \\\"https://example.com\\\"}, {\\\"text\\\": \\\"Python packages\\\", \\\"children\\\": [{\\\"text\\\": \\\"PRAW\\\", \\\"url\\\": \\\"https://asyncpraw.readthedocs.io/\\\"}, {\\\"text\\\": \\\"requests\\\", \\\"url\\\": \\\"http://python-requests.org\\\"}]}, {\\\"text\\\": \\\"Reddit homepage\\\", \\\"url\\\": \\\"https://reddit.com\\\"}], \\\"kind\\\": \\\"menu\\\"}\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"menu\", \"data\": [{\"url\": \"https://example.com\", \"text\": \"My homepage\"}, {\"text\": \"Python packages\", \"children\": [{\"url\": \"https://asyncpraw.readthedocs.io/\", \"text\": \"PRAW\"}, {\"url\": \"http://python-requests.org\", \"text\": \"requests\"}]}, {\"url\": \"https://reddit.com\", \"text\": \"Reddit homepage\"}], \"id\": \"widget_159i2bgvd861y\"}"
+          "string": "{\"kind\": \"menu\", \"data\": [{\"url\": \"https://example.com\", \"text\": \"My homepage\"}, {\"text\": \"Python packages\", \"children\": [{\"url\": \"https://asyncpraw.readthedocs.io/\", \"text\": \"PRAW\"}, {\"url\": \"http://python-requests.org\", \"text\": \"requests\"}]}, {\"url\": \"https://reddit.com\", \"text\": \"Reddit homepage\"}], \"id\": \"widget_159i2bgvd861y\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -119,20 +109,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-07T16:04:19"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ],
-          [
-            "json",
-            "{\"id\": \"widget_159i2bgvd861y\", \"kind\": \"menu\", \"data\": [{\"text\": \"Reddit homepage\", \"url\": \"https://reddit.com\"}, {\"text\": \"Python packages\", \"children\": [{\"text\": \"PRAW\", \"url\": \"https://asyncpraw.readthedocs.io/\"}, {\"text\": \"requests\", \"url\": \"http://python-requests.org\"}]}, {\"text\": \"My homepage\", \"url\": \"https://example.com\"}]}"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -145,11 +126,15 @@
           ]
         },
         "method": "PUT",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159i2bgvd861y?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159i2bgvd861y?raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"], [\"json\", \"{\\\"id\\\": \\\"widget_159i2bgvd861y\\\", \\\"kind\\\": \\\"menu\\\", \\\"data\\\": [{\\\"text\\\": \\\"Reddit homepage\\\", \\\"url\\\": \\\"https://reddit.com\\\"}, {\\\"text\\\": \\\"Python packages\\\", \\\"children\\\": [{\\\"text\\\": \\\"PRAW\\\", \\\"url\\\": \\\"https://asyncpraw.readthedocs.io/\\\"}, {\\\"text\\\": \\\"requests\\\", \\\"url\\\": \\\"http://python-requests.org\\\"}]}, {\\\"text\\\": \\\"My homepage\\\", \\\"url\\\": \\\"https://example.com\\\"}]}\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"kind\": \"menu\", \"data\": [{\"url\": \"https://reddit.com\", \"text\": \"Reddit homepage\"}, {\"text\": \"Python packages\", \"children\": [{\"url\": \"https://asyncpraw.readthedocs.io/\", \"text\": \"PRAW\"}, {\"url\": \"http://python-requests.org\", \"text\": \"requests\"}]}, {\"url\": \"https://example.com\", \"text\": \"My homepage\"}], \"id\": \"widget_159i2bgvd861y\"}"
+          "string": "{\"kind\": \"menu\", \"data\": [{\"url\": \"https://reddit.com\", \"text\": \"Reddit homepage\"}, {\"text\": \"Python packages\", \"children\": [{\"url\": \"https://asyncpraw.readthedocs.io/\", \"text\": \"PRAW\"}, {\"url\": \"http://python-requests.org\", \"text\": \"requests\"}]}, {\"url\": \"https://example.com\", \"text\": \"My homepage\"}], \"id\": \"widget_159i2bgvd861y\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -180,11 +165,11 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159i2bgvd861y?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-07T16:04:19"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -197,11 +182,15 @@
           ]
         },
         "method": "DELETE",
-        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159i2bgvd861y?raw_json=1"
+        "uri": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159i2bgvd861y?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": ""
+          "string": "",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -232,9 +221,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/r/<TEST_SUBREDDIT>/api/widget/widget_159i2bgvd861y?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-07T16:04:19"
     }
-  ],
-  "recorded_at": "2020-07-07T16:04:19",
-  "version": 1
+  ]
 }

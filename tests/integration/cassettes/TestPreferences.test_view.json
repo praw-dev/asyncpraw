@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -58,11 +53,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2020-07-04T18:19:40"
     },
     {
       "request": {
-        "body": null,
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -75,11 +70,15 @@
           ]
         },
         "method": "GET",
-        "uri": "https://oauth.reddit.com/api/v1/me/prefs?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v1/me/prefs?raw_json=1",
+        "body": {
+          "string": "null"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"default_theme_sr\": null, \"threaded_messages\": true, \"hide_downs\": false, \"label_nsfw\": true, \"activity_relevant_ads\": true, \"email_messages\": true, \"profile_opt_out\": false, \"video_autoplay\": true, \"third_party_site_data_personalized_content\": true, \"show_link_flair\": true, \"show_trending\": true, \"private_feeds\": true, \"monitor_mentions\": true, \"public_server_seconds\": false, \"research\": false, \"ignore_suggested_sort\": false, \"send_crosspost_messages\": true, \"email_digests\": false, \"layout\": 0, \"num_comments\": 200, \"clickgadget\": true, \"use_global_defaults\": false, \"show_snoovatar\": false, \"over_18\": false, \"show_stylesheets\": true, \"live_orangereds\": true, \"enable_default_themes\": false, \"legacy_search\": false, \"domain_details\": false, \"collapse_left_bar\": true, \"lang\": \"en\", \"hide_ups\": false, \"third_party_data_personalized_ads\": true, \"allow_clicktracking\": true, \"hide_from_robots\": false, \"show_twitter\": false, \"compress\": false, \"store_visits\": false, \"threaded_modmail\": false, \"design_beta\": false, \"min_link_score\": -4, \"media_preview\": \"subreddit\", \"show_location_based_recommendations\": true, \"nightmode\": false, \"highlight_controversial\": false, \"geopopular\": \"GLOBAL\", \"third_party_site_data_personalized_ads\": true, \"survey_last_seen_time\": null, \"min_comment_score\": -4, \"public_votes\": false, \"collapse_read_messages\": false, \"show_flair\": true, \"mark_messages_read\": true, \"search_include_over_18\": false, \"no_profanity\": true, \"hide_ads\": false, \"beta\": false, \"top_karma_subreddits\": true, \"newwindow\": false, \"numsites\": 25, \"media\": \"subreddit\", \"send_welcome_messages\": true, \"show_gold_expiration\": false, \"highlight_new_comments\": true, \"email_unsubscribe_all\": false, \"default_comment_sort\": \"confidence\", \"accept_pms\": \"everyone\"}"
+          "string": "{\"default_theme_sr\": null, \"threaded_messages\": true, \"hide_downs\": false, \"label_nsfw\": true, \"activity_relevant_ads\": true, \"email_messages\": true, \"profile_opt_out\": false, \"video_autoplay\": true, \"third_party_site_data_personalized_content\": true, \"show_link_flair\": true, \"show_trending\": true, \"private_feeds\": true, \"monitor_mentions\": true, \"public_server_seconds\": false, \"research\": false, \"ignore_suggested_sort\": false, \"send_crosspost_messages\": true, \"email_digests\": false, \"layout\": 0, \"num_comments\": 200, \"clickgadget\": true, \"use_global_defaults\": false, \"show_snoovatar\": false, \"over_18\": false, \"show_stylesheets\": true, \"live_orangereds\": true, \"enable_default_themes\": false, \"legacy_search\": false, \"domain_details\": false, \"collapse_left_bar\": true, \"lang\": \"en\", \"hide_ups\": false, \"third_party_data_personalized_ads\": true, \"allow_clicktracking\": true, \"hide_from_robots\": false, \"show_twitter\": false, \"compress\": false, \"store_visits\": false, \"threaded_modmail\": false, \"design_beta\": false, \"min_link_score\": -4, \"media_preview\": \"subreddit\", \"show_location_based_recommendations\": true, \"nightmode\": false, \"highlight_controversial\": false, \"geopopular\": \"GLOBAL\", \"third_party_site_data_personalized_ads\": true, \"survey_last_seen_time\": null, \"min_comment_score\": -4, \"public_votes\": false, \"collapse_read_messages\": false, \"show_flair\": true, \"mark_messages_read\": true, \"search_include_over_18\": false, \"no_profanity\": true, \"hide_ads\": false, \"beta\": false, \"top_karma_subreddits\": true, \"newwindow\": false, \"numsites\": 25, \"media\": \"subreddit\", \"send_welcome_messages\": true, \"show_gold_expiration\": false, \"highlight_new_comments\": true, \"email_unsubscribe_all\": false, \"default_comment_sort\": \"confidence\", \"accept_pms\": \"everyone\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -111,9 +110,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/v1/me/prefs?raw_json=1"
-      }
+      },
+      "recorded_at": "2020-07-04T18:19:40"
     }
-  ],
-  "recorded_at": "2020-07-04T18:19:40",
-  "version": 1
+  ]
 }

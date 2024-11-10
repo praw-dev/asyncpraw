@@ -203,7 +203,7 @@ class CommentForest:
 
         :returns: A list of :class:`.MoreComments` instances that were not replaced.
 
-        :raises: ``asyncprawcore.TooManyRequests`` when used concurrently.
+        :raises: ``prawcore.TooManyRequests`` when used concurrently.
 
         For example, to replace up to 32 :class:`.MoreComments` instances of a
         submission try:

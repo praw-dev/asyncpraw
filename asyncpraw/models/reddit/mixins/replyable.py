@@ -23,7 +23,7 @@ class ReplyableMixin:
         :returns: A :class:`.Comment` or :class:`.Message` object for the newly created
             comment or message or ``None`` if Reddit doesn't provide one.
 
-        :raises: ``asyncprawcore.exceptions.Forbidden`` when attempting to reply to some
+        :raises: ``prawcore.exceptions.Forbidden`` when attempting to reply to some
             items, such as locked submissions/comments or non-replyable messages.
 
         A ``None`` value can be returned if the target is a comment or submission in a

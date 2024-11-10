@@ -23,7 +23,7 @@ import aiofiles
 from . import _deprecate_args
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncprawcore
+    import prawcore
 
     import asyncpraw
 
@@ -32,10 +32,12 @@ class BaseTokenManager(ABC):
     """An abstract class for all token managers."""
 
     @abstractmethod
-    def post_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
+    def post_refresh_callback(
+        self, authorizer: prawcore._async.auth.AsyncBaseAuthorizer
+    ):
         """Handle callback that is invoked after a refresh token is used.
 
-        :param authorizer: The ``asyncprawcore.Authorizer`` instance used containing
+        :param authorizer: The ``prawcore.AsyncAuthorizer`` instance used containing
             ``access_token`` and ``refresh_token`` attributes.
 
         This function will be called after refreshing the access and refresh tokens.
@@ -44,14 +46,16 @@ class BaseTokenManager(ABC):
         """
 
     @abstractmethod
-    def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
+    def pre_refresh_callback(
+        self, authorizer: prawcore._async.auth.AsyncBaseAuthorizer
+    ):
         """Handle callback that is invoked before refreshing PRAW's authorization.
 
-        :param authorizer: The ``asyncprawcore.Authorizer`` instance used containing
+        :param authorizer: The ``prawcore.AsyncAuthorizer`` instance used containing
             ``access_token`` and ``refresh_token`` attributes.
 
         This callback can be used to inspect and modify the attributes of the
-        ``asyncprawcore.Authorizer`` instance, such as setting the ``refresh_token``.
+        ``prawcore.AsyncAuthorizer`` instance, such as setting the ``refresh_token``.
 
         """
 
@@ -97,13 +101,15 @@ class FileTokenManager(BaseTokenManager):
         self._filename = filename
 
     async def post_refresh_callback(
-        self, authorizer: asyncprawcore.auth.BaseAuthorizer
+        self, authorizer: prawcore._async.auth.AsyncBaseAuthorizer
     ):
         """Update the saved copy of the refresh token."""
         async with aiofiles.open(self._filename, "w") as fp:
             await fp.write(authorizer.refresh_token)
 
-    async def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
+    async def pre_refresh_callback(
+        self, authorizer: prawcore._async.auth.AsyncBaseAuthorizer
+    ):
         """Load the refresh token from the file."""
         if authorizer.refresh_token is None:
             async with aiofiles.open(self._filename) as fp:
@@ -197,7 +203,7 @@ class SQLiteTokenManager(BaseTokenManager):
         return result is not None
 
     async def post_refresh_callback(
-        self, authorizer: asyncprawcore.auth.BaseAuthorizer
+        self, authorizer: prawcore._async.auth.AsyncBaseAuthorizer
     ):
         """Update the refresh token in the database."""
         await self._set(authorizer.refresh_token)
@@ -207,7 +213,9 @@ class SQLiteTokenManager(BaseTokenManager):
         # to always load the latest refresh_token from the database.
         authorizer.refresh_token = None
 
-    async def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
+    async def pre_refresh_callback(
+        self, authorizer: prawcore._async.auth.AsyncBaseAuthorizer
+    ):
         """Load the refresh token from the database."""
         assert authorizer.refresh_token is None
         authorizer.refresh_token = await self._get()

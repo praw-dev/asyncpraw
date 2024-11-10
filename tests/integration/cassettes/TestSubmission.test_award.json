@@ -1,17 +1,8 @@
 {
-  "interactions": [
+  "version": 1,
+  "http_interactions": [
     {
       "request": {
-        "body": [
-          [
-            "grant_type",
-            "refresh_token"
-          ],
-          [
-            "refresh_token",
-            "<REFRESH_TOKEN>"
-          ]
-        ],
         "headers": {
           "AUTHORIZATION": [
             "Basic <BASIC_AUTH>"
@@ -27,11 +18,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://www.reddit.com/api/v1/access_token"
+        "uri": "https://www.reddit.com/api/v1/access_token",
+        "body": {
+          "string": "[[\"grant_type\", \"refresh_token\"], [\"refresh_token\", \"<REFRESH_TOKEN>\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}"
+          "string": "{\"access_token\": \"<ACCESS_TOKEN>\", \"token_type\": \"bearer\", \"expires_in\": 3600, \"scope\": \"account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modmail modothers modposts modself modtraffic modwiki mysubreddits privatemessages read report save structuredstyles submit subscribe vote wikiedit wikiread\"}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -54,16 +49,11 @@
           "message": "OK"
         },
         "url": "https://www.reddit.com/api/v1/access_token"
-      }
+      },
+      "recorded_at": "2021-01-19T16:22:43"
     },
     {
       "request": {
-        "body": [
-          [
-            "api_type",
-            "json"
-          ]
-        ],
         "headers": {
           "Accept-Encoding": [
             "identity"
@@ -76,11 +66,15 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=gid_2&is_anonymous=true&thing_id=t3_j3kyoo&raw_json=1"
+        "uri": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=gid_2&is_anonymous=true&thing_id=t3_j3kyoo&raw_json=1",
+        "body": {
+          "string": "[[\"api_type\", \"json\"]]"
+        }
       },
       "response": {
         "body": {
-          "string": "{\"subreddit_balance\": 0, \"treatment_tags\": [], \"coins\": 9290, \"gildings\": {\"gid_1\": 0, \"gid_2\": 2, \"gid_3\": 0}, \"awarder_karma_received\": 39, \"all_awardings\": [{\"giver_coin_reward\": null, \"subreddit_id\": null, \"is_new\": false, \"days_of_drip_extension\": 0, \"coin_price\": 500, \"id\": \"gid_2\", \"penny_donate\": null, \"coin_reward\": 100, \"icon_url\": \"https://www.redditstatic.com/gold/awards/icon/gold_512.png\", \"days_of_premium\": 7, \"icon_height\": 512, \"tiers_by_required_awardings\": null, \"icon_width\": 512, \"static_icon_width\": 512, \"start_date\": null, \"is_enabled\": true, \"awardings_required_to_grant_benefits\": null, \"description\": \"Gives 100 Reddit Coins and a week of r/lounge access and ad-free browsing.\", \"end_date\": null, \"subreddit_coin_reward\": 0, \"count\": 2, \"static_icon_height\": 512, \"name\": \"Gold\", \"icon_format\": null, \"award_sub_type\": \"GLOBAL\", \"penny_price\": null, \"award_type\": \"global\", \"static_icon_url\": \"https://www.redditstatic.com/gold/awards/icon/gold_512.png\"}]}"
+          "string": "{\"subreddit_balance\": 0, \"treatment_tags\": [], \"coins\": 9290, \"gildings\": {\"gid_1\": 0, \"gid_2\": 2, \"gid_3\": 0}, \"awarder_karma_received\": 39, \"all_awardings\": [{\"giver_coin_reward\": null, \"subreddit_id\": null, \"is_new\": false, \"days_of_drip_extension\": 0, \"coin_price\": 500, \"id\": \"gid_2\", \"penny_donate\": null, \"coin_reward\": 100, \"icon_url\": \"https://www.redditstatic.com/gold/awards/icon/gold_512.png\", \"days_of_premium\": 7, \"icon_height\": 512, \"tiers_by_required_awardings\": null, \"icon_width\": 512, \"static_icon_width\": 512, \"start_date\": null, \"is_enabled\": true, \"awardings_required_to_grant_benefits\": null, \"description\": \"Gives 100 Reddit Coins and a week of r/lounge access and ad-free browsing.\", \"end_date\": null, \"subreddit_coin_reward\": 0, \"count\": 2, \"static_icon_height\": 512, \"name\": \"Gold\", \"icon_format\": null, \"award_sub_type\": \"GLOBAL\", \"penny_price\": null, \"award_type\": \"global\", \"static_icon_url\": \"https://www.redditstatic.com/gold/awards/icon/gold_512.png\"}]}",
+          "encoding": "utf-8"
         },
         "headers": {
           "Accept-Ranges": "bytes",
@@ -109,9 +103,8 @@
           "message": "OK"
         },
         "url": "https://oauth.reddit.com/api/v2/gold/gild?api_type=json&gild_type=gid_2&is_anonymous=true&thing_id=t3_j3kyoo&raw_json=1"
-      }
+      },
+      "recorded_at": "2021-01-19T16:22:43"
     }
-  ],
-  "recorded_at": "2021-01-19T16:22:43",
-  "version": 1
+  ]
 }

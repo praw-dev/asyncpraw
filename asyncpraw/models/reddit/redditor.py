@@ -313,8 +313,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         :returns: A list of :class:`.Subreddit` objects. Return ``[]`` if the redditor
             has no moderated subreddits.
 
-        :raises: ``asyncprawcore.ServerError`` in certain circumstances. See the note
-            below.
+        :raises: ``prawcore.ServerError`` in certain circumstances. See the note below.
 
         .. note::
 
@@ -332,8 +331,8 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
 
         .. note::
 
-            A ``asyncprawcore.ServerError`` exception may be raised if the redditor
-            moderates a large number of subreddits. If that happens, try switching to
+            A ``prawcore.ServerError`` exception may be raised if the redditor moderates
+            a large number of subreddits. If that happens, try switching to
             :ref:`read-only mode <read_only_application>`. For example,
 
             .. code-block:: python
@@ -344,7 +343,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
                     print(str(subreddit))
 
             It is possible that requests made in read-only mode will also raise a
-            ``asyncprawcore.ServerError`` exception.
+            ``prawcore.ServerError`` exception.
 
             When used in read-only mode, this method does not retrieve information about
             subreddits that require certain special permissions to access, e.g., private

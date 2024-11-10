@@ -1,6 +1,6 @@
 """Test asyncpraw.models.user."""
 
-import asyncprawcore.exceptions
+import prawcore.exceptions
 import pytest
 
 from asyncpraw.exceptions import RedditAPIException
@@ -112,7 +112,7 @@ class TestUser(IntegrationTest):
 
     async def test_pin__deleted_submission(self, reddit):
         reddit.read_only = False
-        with pytest.raises(asyncprawcore.exceptions.BadRequest):
+        with pytest.raises(prawcore.exceptions.BadRequest):
             await reddit.user.pin(Submission(reddit, "rmhl6m"))
 
     async def test_pin__empty_slot(self, reddit):
@@ -180,7 +180,7 @@ class TestUser(IntegrationTest):
 
     async def test_pin__removed_submission(self, reddit):
         reddit.read_only = False
-        with pytest.raises(asyncprawcore.exceptions.BadRequest):
+        with pytest.raises(prawcore.exceptions.BadRequest):
             await reddit.user.pin(Submission(reddit, "rmi7ab"))
 
     async def test_pin__replace_slot(self, reddit):
