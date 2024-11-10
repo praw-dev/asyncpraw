@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, AsyncIterator
 from warnings import warn
 
-from asyncprawcore import Conflict
+from prawcore import Conflict
 
 from ..const import API_PATH
 from ..exceptions import ReadOnlyException
@@ -241,10 +241,9 @@ class User(AsyncPRAWBase):
 
         :returns: The pinned submission.
 
-        :raises: ``asyncprawcore.BadRequest`` when pinning a removed or deleted
-            submission.
-        :raises: ``asyncprawcore.Forbidden`` when pinning a submission the authenticated
-            user is not the author of.
+        :raises: ``prawcore.BadRequest`` when pinning a removed or deleted submission.
+        :raises: ``prawcore.Forbidden`` when pinning a submission the authenticated user
+            is not the author of.
 
         .. code-block:: python
 

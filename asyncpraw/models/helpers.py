@@ -222,7 +222,7 @@ class LiveHelper(AsyncPRAWBase):
 
         :returns: A generator that yields :class:`.LiveThread` instances.
 
-        :raises: ``asyncprawcore.ServerError`` if invalid live threads are requested.
+        :raises: ``prawcore.ServerError`` if invalid live threads are requested.
 
         Requests will be issued in batches for each 100 IDs.
 

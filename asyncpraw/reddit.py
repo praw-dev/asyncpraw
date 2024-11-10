@@ -19,18 +19,34 @@ from typing import (
 from urllib.parse import urlparse
 from warnings import warn
 
-from asyncprawcore import (
-    Authorizer,
-    DeviceIDAuthorizer,
-    ReadOnlyAuthorizer,
-    Redirect,
-    Requestor,
-    ScriptAuthorizer,
-    TrustedAuthenticator,
-    UntrustedAuthenticator,
-    session,
+from prawcore import (
+    AsyncAuthorizer as Authorizer,
 )
-from asyncprawcore.exceptions import BadRequest
+from prawcore import (
+    AsyncDeviceIDAuthorizer as DeviceIDAuthorizer,
+)
+from prawcore import (
+    AsyncReadOnlyAuthorizer as ReadOnlyAuthorizer,
+)
+from prawcore import (
+    AsyncRequestor as Requestor,
+)
+from prawcore import (
+    AsyncScriptAuthorizer as ScriptAuthorizer,
+)
+from prawcore import (
+    AsyncTrustedAuthenticator as TrustedAuthenticator,
+)
+from prawcore import (
+    AsyncUntrustedAuthenticator as UntrustedAuthenticator,
+)
+from prawcore import (
+    Redirect,
+)
+from prawcore import (
+    async_session as session,
+)
+from prawcore.exceptions import BadRequest
 
 from . import models
 from .config import Config
@@ -52,7 +68,7 @@ except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
 if TYPE_CHECKING:  # pragma: no cover
-    import asyncprawcore
+    import prawcore
 
     import asyncpraw
     import asyncpraw.models
@@ -197,7 +213,7 @@ class Reddit:
         site_name: str | None = None,
         *,
         config_interpolation: str | None = None,
-        requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,
+        requestor_class: type[prawcore.AsyncRequestor] | None = None,
         requestor_kwargs: dict[str, Any] | None = None,
         token_manager: BaseTokenManager | None = None,
         **config_settings: str | bool | int | None,
@@ -214,7 +230,7 @@ class Reddit:
         :param config_interpolation: Config parser interpolation type that will be
             passed to :class:`.Config` (default: ``None``).
         :param requestor_class: A class that will be used to create a requestor. If not
-            set, use ``asyncprawcore.Requestor`` (default: ``None``).
+            set, use ``prawcore.AsyncRequestor`` (default: ``None``).
         :param requestor_kwargs: Dictionary with additional keyword arguments used to
             initialize the requestor (default: ``None``).
         :param token_manager: When provided, the passed instance, a subclass of
@@ -240,26 +256,26 @@ class Reddit:
 
         .. |ClientSession| replace:: ``ClientSession``
 
-        .. _clientsession: https://docs.aiohttp.org/en/stable/client_advanced.html
+        .. _clientsession: https://niquests.readthedocs.io/en/latest/user/quickstart.html#async-session
 
         .. code-block:: python
 
             import json
 
-            import aiohttp
-            from asyncprawcore import Requestor
+            import niquests
+            from prawcore import AsyncRequestor
 
             from asyncpraw import Reddit
 
 
-            class JSONDebugRequestor(Requestor):
+            class JSONDebugRequestor(AsyncRequestor):
                 async def request(self, *args, **kwargs):
                     response = await super().request(*args, **kwargs)
                     print(json.dumps(await response.json(), indent=4))
                     return response
 
 
-            my_session = aiohttp.ClientSession(trust_env=True)
+            my_session = niquests.AsyncSession()
             reddit = Reddit(
                 ..., requestor_class=JSONDebugRequestor, requestor_kwargs={"session": my_session}
             )
@@ -601,7 +617,7 @@ class Reddit:
         return requestor
 
     def _prepare_common_authorizer(
-        self, authenticator: asyncprawcore.auth.BaseAuthenticator
+        self, authenticator: prawcore._async.auth.AsyncBaseAuthenticator
     ):
         if self._token_manager is not None:
             warn(
@@ -1068,9 +1084,9 @@ class Reddit:
             )
         except BadRequest as exception:
             try:
-                data = await exception.response.json(content_type=None)
+                data = exception.response.json()
             except ValueError:
-                text = await exception.response.text()
+                text = exception.response.text
                 if text:
                     data = {"reason": text}
                 else:

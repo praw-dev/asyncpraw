@@ -6,7 +6,7 @@ from itertools import islice
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, AsyncIterator, Iterable
 
-import asyncprawcore
+import prawcore
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase
@@ -62,7 +62,7 @@ class Redditors(AsyncPRAWBase):
                 results = await self._reddit.get(
                     API_PATH["user_by_fullname"], params=params
                 )
-            except asyncprawcore.exceptions.NotFound:
+            except prawcore.exceptions.NotFound:
                 # None of the given IDs matched any Redditor.
                 continue
 
