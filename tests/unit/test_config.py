@@ -22,10 +22,10 @@ class TestConfig:
                 del os.environ[env_name]
         os.environ[environment] = "/MOCK"
 
-        module_dir = Path(sys.modules["asyncpraw"].__file__).parent
-        environ_path = Path("/MOCK") / (".config" if environment == "HOME" else "") / "praw.ini"
+        environ_path = (
+            Path("/MOCK") / (".config" if environment == "HOME" else "") / "praw.ini"
+        )
         locations = [
-            str(module_dir / "praw.ini"),
             str(environ_path),
             "praw.ini",
         ]
@@ -82,8 +82,7 @@ class TestConfig:
                 prev_environment[key] = os.environ[key]
                 del os.environ[key]
 
-        module_dir = os.path.dirname(sys.modules["asyncpraw"].__file__)
-        locations = [os.path.join(module_dir, "praw.ini"), "praw.ini"]
+        locations = ["praw.ini"]
 
         try:
             Config._load_config()
