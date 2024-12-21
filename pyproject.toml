@@ -91,9 +91,8 @@ include = [
 
 [tool.ruff.lint]
 ignore = [
-  "A002", # shadowing built-in
-  "ANN101", # missing type annotation for self in method
-  "ANN102", # missing type annotation for cls in classmethod
+  "A002", # shadowing built-in name
+  "A004", # shadowing built-in
   "ANN202", # missing return type for private method
   "ANN401", # typing.Any usage
   "ASYNC109", # Async function definition with a `timeout` parameter
