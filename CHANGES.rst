@@ -9,6 +9,10 @@ Unreleased
 7.8.1 (2024/12/21)
 ------------------
 
+**Changed**
+
+- Bump asyncprawcore minimum version.
+
 7.8.0 (2024/10/20)
 ------------------
 
