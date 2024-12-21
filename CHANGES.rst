@@ -3,6 +3,9 @@ Change Log
 
 Async PRAW follows `semantic versioning <https://semver.org/>`_.
 
+Unreleased
+----------
+
 7.8.1 (2024/12/21)
 ------------------
 
