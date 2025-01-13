@@ -157,3 +157,4 @@ suppress-none-returning = true
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "asyncpraw/models/mod_notes.py" = ["FA100"]
+"asyncpraw/models/reddit/collections.py" = ["A005"]
