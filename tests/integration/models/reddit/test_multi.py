@@ -102,11 +102,6 @@ class TestMultiredditListings(IntegrationTest):
         submissions = await self.async_list(multi.new())
         assert len(submissions) == 100
 
-    async def test_random_rising(self, reddit):
-        multi = await reddit.multireddit(redditor="kjoneslol", name="sfwpornnetwork")
-        submissions = await self.async_list(multi.random_rising())
-        assert len(submissions) > 0
-
     async def test_rising(self, reddit):
         multi = await reddit.multireddit(redditor="kjoneslol", name="sfwpornnetwork")
         submissions = await self.async_list(multi.rising())

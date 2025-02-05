@@ -370,12 +370,6 @@ class SubredditHelper(AsyncPRAWBase):
             print(subreddit.subscribers)
 
         """
-        lower_name = display_name.lower()
-
-        if lower_name == "random":
-            return await self._reddit.random_subreddit()
-        if lower_name == "randnsfw":
-            return await self._reddit.random_subreddit(nsfw=True)
         subreddit = Subreddit(self._reddit, display_name=display_name)
         if fetch:
             await subreddit._fetch()

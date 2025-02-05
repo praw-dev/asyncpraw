@@ -852,23 +852,6 @@ class Reddit:
         """
         return await self._objectify_request(data=data, json=json, method="PUT", path=path)
 
-    async def random_subreddit(self, *, nsfw: bool = False) -> asyncpraw.models.Subreddit:
-        """Return a random instance of :class:`.Subreddit`.
-
-        :param nsfw: Return a random NSFW (not safe for work) subreddit (default:
-            ``False``).
-
-        """
-        url = API_PATH["subreddit"].format(subreddit="randnsfw" if nsfw else "random")
-        path = None
-        try:
-            await self.get(url, params={"unique": self._next_unique})
-        except Redirect as redirect:
-            path = redirect.path
-        subreddit = models.Subreddit(self, path.split("/")[2])
-        await subreddit._fetch()
-        return subreddit
-
     async def redditor(
         self,
         name: str | None = None,

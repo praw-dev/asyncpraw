@@ -24,6 +24,8 @@ Unreleased
 
 **Removed**
 
+- Remove ``Reddit.random_subreddit``, ``Subreddit.random``, and
+  ``Subreddit.random_rising``.
 - Remove ``APIException`` class.
 - Remove ``PRAWException`` class rename handler.
 - Remove ``Comment.award`` and ``Submission.award`` methods.

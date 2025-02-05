@@ -420,11 +420,6 @@ class TestSubredditListings(IntegrationTest):
         submissions = await self.async_list(subreddit.new())
         assert len(submissions) == 100
 
-    async def test_random_rising(self, reddit):
-        subreddit = await reddit.subreddit("askreddit")
-        submissions = await self.async_list(subreddit.random_rising())
-        assert len(submissions) == 91
-
     async def test_rising(self, reddit):
         subreddit = await reddit.subreddit("askreddit")
         submissions = await self.async_list(subreddit.rising())
@@ -1363,20 +1358,6 @@ class TestSubreddit(IntegrationTest):
             "guidelines_display_policy",
         ]
         assert list(data) == tags
-
-    async def test_random(self, reddit):
-        subreddit = await reddit.subreddit("pics")
-        submissions = [
-            await subreddit.random(),
-            await subreddit.random(),
-            await subreddit.random(),
-            await subreddit.random(),
-        ]
-        assert len(submissions) == len(set(submissions))
-
-    async def test_random__returns_none(self, reddit):
-        subreddit = await reddit.subreddit("wallpapers")
-        assert await subreddit.random() is None
 
     async def test_search(self, reddit):
         subreddit = await reddit.subreddit("all")
