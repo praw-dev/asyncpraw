@@ -81,12 +81,6 @@ class TestComment(IntegrationTest):
         comment = Comment(reddit, "fwxxs5d")
         await comment.enable_inbox_replies()
 
-    @pytest.mark.cassette_name("TestComment.test_award")
-    async def test_gild(self, reddit):
-        reddit.read_only = False
-        award_data = await Comment(reddit, "g7cmlgc").gild()
-        assert award_data["gildings"]["gid_2"] == 2
-
     async def test_invalid(self, reddit):
         with pytest.raises(AsyncPRAWException) as excinfo:
             await reddit.comment("0")

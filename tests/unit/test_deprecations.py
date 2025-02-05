@@ -33,15 +33,6 @@ class TestDeprecation(UnitTest):
             subreddit = await reddit.subreddit("all")
             subreddit.modmail.conversations(after="after")
 
-    async def test_gild_method(self, reddit):
-        with pytest.deprecated_call() as warning_info:
-            submission = await reddit.submission("1234", fetch=False)
-            await submission.gild()
-            assert (
-                str(warning_info.list[0].message)
-                == "'.gild' has been renamed to '.award'."
-            )
-
     async def test_lazy_argument_rename(self, reddit):
         with pytest.deprecated_call() as warning_info:
             await reddit.submission("1234", lazy=True)
