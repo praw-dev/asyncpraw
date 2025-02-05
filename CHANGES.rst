@@ -23,6 +23,7 @@ Unreleased
   managers.
 - Remove ``Reddit.validate_on_submit`` configuration attribute.
 - Remove ``WebSocketException.original_exception`` method.
+- Remove the ``after`` argument for :meth:`.conversations`.
 
 7.8.1 (2024/12/21)
 ------------------

@@ -27,11 +27,6 @@ class TestDeprecation(UnitTest):
         with pytest.deprecated_call():
             await submission.comments.list()
 
-    async def test_conversations_after_argument(self, reddit):
-        with pytest.deprecated_call():
-            subreddit = await reddit.subreddit("all")
-            subreddit.modmail.conversations(after="after")
-
     async def test_lazy_argument_rename(self, reddit):
         with pytest.deprecated_call() as warning_info:
             await reddit.submission("1234", lazy=True)
@@ -46,18 +41,6 @@ class TestDeprecation(UnitTest):
         submission._fetched = True
         with pytest.deprecated_call():
             await submission.comments()
-
-    async def test_subreddit_rules_call(self, reddit):
-        with pytest.deprecated_call() as warning_info:
-            subreddit = Subreddit(reddit, display_name="test")
-            await subreddit.rules()
-        assert (
-            str(warning_info.list[0].message)
-            == "Calling SubredditRules to get a list of rules is deprecated. Remove the"
-            " parentheses to use the iterator. View the Async PRAW documentation on how"
-            " to change the code in order to use the iterator"
-            " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__)."
-        )
 
     async def test_synchronous_context_manager(self, reddit):
         with pytest.deprecated_call() as warning_info:

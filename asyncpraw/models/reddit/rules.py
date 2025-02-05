@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
-from warnings import warn
 
 from ...const import API_PATH
 from ...exceptions import ClientException
@@ -264,33 +263,6 @@ class SubredditRules:
         rules = await self._rule_list()
         for rule in rules:
             yield rule
-
-    async def __call__(self) -> list[asyncpraw.models.Rule]:
-        r"""Return a list of :class:`.Rule`\ s (Deprecated).
-
-        :returns: A list of instances of :class:`.Rule`.
-
-        .. deprecated:: 7.1
-
-            Use the iterator by removing the call to :class:`.SubredditRules`. For
-            example, in order to use the iterator:
-
-            .. code-block:: python
-
-                subreddit = await reddit.subreddit("test")
-                async for rule in subreddit.rules:
-                    print(rule)
-
-        """
-        warn(
-            "Calling SubredditRules to get a list of rules is deprecated. Remove the"
-            " parentheses to use the iterator. View the Async PRAW documentation on how"
-            " to change the code in order to use the iterator"
-            " (https://asyncpraw.readthedocs.io/en/latest/code_overview/other/subredditrules.html#asyncpraw.models.reddit.rules.SubredditRules.__call__).",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return await self._reddit.request(method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit))
 
     def __init__(self, subreddit: asyncpraw.models.Subreddit):
         """Initialize a :class:`.SubredditRules` instance.
