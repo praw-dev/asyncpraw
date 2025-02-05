@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 

@@ -6,10 +6,13 @@ import asyncio
 import random
 from collections import OrderedDict
 from functools import wraps
-from typing import Any, AsyncGenerator, Callable
+from typing import TYPE_CHECKING, Any, Callable
 from warnings import warn
 
 from ..util import _deprecate_args
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 
 def deprecate_lazy(func: Callable) -> Callable[..., Any]:

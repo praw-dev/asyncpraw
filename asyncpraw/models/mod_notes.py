@@ -1,7 +1,9 @@
 """Provides classes for interacting with moderator notes."""
 
+from __future__ import annotations
+
 from itertools import islice
-from typing import TYPE_CHECKING, Any, AsyncGenerator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase
@@ -11,6 +13,8 @@ from .reddit.redditor import Redditor
 from .reddit.submission import Submission
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncGenerator
+
     import asyncpraw.models
 
 RedditorType = Union[Redditor, str]
@@ -23,7 +27,7 @@ class BaseModNotes:
 
     def __init__(
         self,
-        reddit: "asyncpraw.Reddit",
+        reddit: asyncpraw.Reddit,
     ):
         """Initialize a :class:`.BaseModNotes` instance.
 
@@ -47,8 +51,8 @@ class BaseModNotes:
         return ListingGenerator(self._reddit, API_PATH["mod_notes"], **generator_kwargs)
 
     async def _bulk_generator(
-        self, redditors: List[RedditorType], subreddits: List[SubredditType]
-    ) -> AsyncGenerator["asyncpraw.models.ModNote", None]:
+        self, redditors: list[RedditorType], subreddits: list[SubredditType]
+    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         subreddits_iter = iter(subreddits)
         redditors_iter = iter(redditors)
         while True:
@@ -74,10 +78,10 @@ class BaseModNotes:
     async def _notes(
         self,
         all_notes: bool,
-        redditors: List[RedditorType],
-        subreddits: List[SubredditType],
+        redditors: list[RedditorType],
+        subreddits: list[SubredditType],
         **generator_kwargs: Any,
-    ) -> AsyncGenerator["asyncpraw.models.ModNote", None]:
+    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         if all_notes:
             for subreddit in subreddits:
                 for redditor in redditors:
@@ -92,13 +96,13 @@ class BaseModNotes:
     async def create(
         self,
         *,
-        label: Optional[str] = None,
+        label: str | None = None,
         note: str,
-        redditor: Optional[RedditorType] = None,
-        subreddit: Optional[SubredditType] = None,
-        thing: Optional[Union[Comment, Submission, str]] = None,
+        redditor: RedditorType | None = None,
+        subreddit: SubredditType | None = None,
+        thing: Comment | Submission | str | None = None,
         **other_settings: Any,
-    ) -> "asyncpraw.models.ModNote":
+    ) -> asyncpraw.models.ModNote:
         """Create a :class:`.ModNote` for a redditor in the specified subreddit.
 
         :param label: The label for the note. As of this writing, this can be one of the
@@ -193,9 +197,9 @@ class BaseModNotes:
         self,
         *,
         delete_all: bool = False,
-        note_id: Optional[str] = None,
-        redditor: Optional[RedditorType] = None,
-        subreddit: Optional[SubredditType] = None,
+        note_id: str | None = None,
+        redditor: RedditorType | None = None,
+        subreddit: SubredditType | None = None,
     ):
         """Delete note(s) for a redditor.
 
@@ -302,7 +306,7 @@ class RedditorModNotes(BaseModNotes):
 
     """
 
-    def __init__(self, reddit: "asyncpraw.Reddit", redditor: RedditorType):
+    def __init__(self, reddit: asyncpraw.Reddit, redditor: RedditorType):
         """Initialize a :class:`.RedditorModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -315,9 +319,9 @@ class RedditorModNotes(BaseModNotes):
     def subreddits(
         self,
         *subreddits: SubredditType,
-        all_notes: Optional[bool] = None,
+        all_notes: bool | None = None,
         **generator_kwargs: Any,
-    ) -> AsyncGenerator["asyncpraw.models.ModNote", None]:
+    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         """Return notes for this :class:`.Redditor` from one or more subreddits.
 
         :param subreddits: One or more subreddits to retrieve the notes from. Must be
@@ -398,7 +402,7 @@ class SubredditModNotes(BaseModNotes):
 
     """
 
-    def __init__(self, reddit: "asyncpraw.Reddit", subreddit: SubredditType):
+    def __init__(self, reddit: asyncpraw.Reddit, subreddit: SubredditType):
         """Initialize a :class:`.SubredditModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -411,9 +415,9 @@ class SubredditModNotes(BaseModNotes):
     def redditors(
         self,
         *redditors: RedditorType,
-        all_notes: Optional[bool] = None,
+        all_notes: bool | None = None,
         **generator_kwargs: Any,
-    ) -> AsyncGenerator["asyncpraw.models.ModNote", None]:
+    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         """Return notes from this :class:`.Subreddit` for one or more redditors.
 
         :param redditors: One or more redditors to retrieve notes for. Must be either a
@@ -502,12 +506,12 @@ class RedditModNotes(BaseModNotes):
         self,
         *,
         all_notes: bool = False,
-        pairs: Optional[List[Tuple[SubredditType, RedditorType]]] = None,
-        redditors: Optional[List[RedditorType]] = None,
-        subreddits: Optional[List[SubredditType]] = None,
-        things: Optional[List[ThingType]] = None,
+        pairs: list[tuple[SubredditType, RedditorType]] | None = None,
+        redditors: list[RedditorType] | None = None,
+        subreddits: list[SubredditType] | None = None,
+        things: list[ThingType] | None = None,
         **generator_kwargs: Any,
-    ) -> AsyncGenerator["asyncpraw.models.ModNote", None]:
+    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         """Get note(s) for each subreddit/user pair, or ``None`` if they don't have any.
 
         :param all_notes: Whether to return all notes or only the latest note for each
@@ -644,7 +648,7 @@ class RedditModNotes(BaseModNotes):
             if isinstance(item, (Comment, Submission)):
                 merged_redditors.append(item.author.name)
                 merged_subreddits.append(item.subreddit.display_name)
-            elif isinstance(item, Tuple):
+            elif isinstance(item, tuple):
                 subreddit, redditor = item
                 merged_redditors.append(redditor)
                 merged_subreddits.append(subreddit)
@@ -658,9 +662,9 @@ class RedditModNotes(BaseModNotes):
     def things(
         self,
         *things: ThingType,
-        all_notes: Optional[bool] = None,
+        all_notes: bool | None = None,
         **generator_kwargs: Any,
-    ) -> AsyncGenerator["asyncpraw.models.ModNote", None]:
+    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         """Return notes associated with the author of a :class:`.Comment` or :class:`.Submission`.
 
         :param things: One or more things to return notes on. Must be a

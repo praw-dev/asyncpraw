@@ -9,6 +9,8 @@ from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 

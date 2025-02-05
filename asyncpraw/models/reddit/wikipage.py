@@ -2,12 +2,7 @@
 
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    AsyncGenerator,
-    AsyncIterator,
-)
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...util import _deprecate_args
@@ -17,6 +12,8 @@ from .base import RedditBase
 from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncGenerator, AsyncIterator
+
     import asyncpraw.models
 
 

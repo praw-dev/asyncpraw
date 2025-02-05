@@ -13,7 +13,7 @@ async def reddit():
     ) as reddit:
         # Unit tests should never issue requests
         reddit._core.request = dummy_request
-        yield reddit
+    return reddit
 
 
 async def dummy_request(*args, **kwargs):

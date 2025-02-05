@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING
 from warnings import warn
 
 from asyncprawcore import Conflict
@@ -18,6 +18,8 @@ from .reddit.redditor import Redditor
 from .reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 

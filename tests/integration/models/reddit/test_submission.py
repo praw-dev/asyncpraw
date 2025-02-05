@@ -1,6 +1,6 @@
 import pytest
 
-from asyncpraw.exceptions import RedditAPIException, ClientException
+from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.models import Comment, InlineGif, InlineImage, InlineVideo, Submission
 
 from ... import IntegrationTest

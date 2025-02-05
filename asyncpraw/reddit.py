@@ -9,13 +9,7 @@ import re
 from copy import copy
 from itertools import islice
 from logging import getLogger
-from typing import (
-    IO,
-    TYPE_CHECKING,
-    Any,
-    AsyncGenerator,
-    Iterable,
-)
+from typing import IO, TYPE_CHECKING, Any
 from urllib.parse import urlparse
 from warnings import warn
 
@@ -52,6 +46,8 @@ except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncGenerator, Iterable
+
     import asyncprawcore
 
     import asyncpraw

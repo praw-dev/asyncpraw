@@ -67,16 +67,8 @@ test = [
 "Issue Tracker" = "https://github.com/praw-dev/asyncpraw/issues"
 "Source Code" = "https://github.com/praw-dev/asyncpraw"
 
-[tool.black]
-extend_exclude = '/(\.venv.*)/'
-line-length = 88
-
 [tool.docstrfmt]
 extend_exclude = ['./docs/examples/']
-
-[tool.isort]
-profile = 'black'
-skip_glob = '.venv*'
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -84,15 +76,13 @@ filterwarnings = "ignore::DeprecationWarning"
 testpaths = "tests"
 
 [tool.ruff]
-target-version = "py38"
 include = [
   "asyncpraw/**/*.py"
 ]
 
 [tool.ruff.lint]
 ignore = [
-  "A002", # shadowing built-in name
-  "A004", # shadowing built-in
+  "A002", # shadowing built-in
   "ANN202", # missing return type for private method
   "ANN401", # typing.Any usage
   "ASYNC109", # Async function definition with a `timeout` parameter
@@ -154,7 +144,11 @@ mypy-init-return = true
 suppress-dummy-args = true
 suppress-none-returning = true
 
+[tool.ruff.lint.flake8-builtins]
+builtins-ignorelist = ["id"]
+
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "asyncpraw/models/mod_notes.py" = ["FA100"]
 "asyncpraw/models/reddit/collections.py" = ["A005"]
+"tests/*.py" = ["SLF001"]

@@ -55,13 +55,14 @@ async def main():
         scopes = await reddit.auth.scopes()
         if scopes == {"*"}:
             print(f"{await reddit.user.me()} is authenticated with all scopes")
-        elif "identity" in scopes:
+        if "identity" in scopes:
             print(
                 f"{await reddit.user.me()} is authenticated with the following scopes:"
                 f" {scopes}"
             )
-        else:
-            print(f"You are authenticated with the following scopes: {scopes}")
+            return None
+    print(f"You are authenticated with the following scopes: {scopes}")
+    return None
 
 
 if __name__ == "__main__":
