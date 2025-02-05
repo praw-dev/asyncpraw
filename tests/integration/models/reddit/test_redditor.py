@@ -45,13 +45,6 @@ class TestRedditor(IntegrationTest):
         redditor = await reddit.redditor(fetch=True, fullname=self.FRIEND_FULLNAME)
         assert redditor.name == self.FRIEND
 
-    async def test_gild__no_creddits(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            redditor = await reddit.redditor("subreddit_stats")
-            await redditor.gild()
-        assert "INSUFFICIENT_COINS" == excinfo.value.items[0].error_type
-
     async def test_message(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor("subreddit_stats")

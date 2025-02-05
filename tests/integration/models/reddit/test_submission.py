@@ -26,29 +26,6 @@ class TestSubmission(IntegrationTest):
             return submission, submission.rtjson
         return submission
 
-    async def test_award(self, reddit):
-        reddit.read_only = False
-        award_data = await Submission(reddit, "j3kyoo").award()
-        assert award_data["gildings"]["gid_2"] == 2
-
-    async def test_award__not_enough_coins(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await Submission(reddit, "j3kyoo").award(
-                gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
-            )
-        exception = excinfo.value
-        assert "INSUFFICIENT_COINS_WITH_AMOUNT" == exception.items[0].error_type
-
-    async def test_award__self_gild(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await Submission(reddit, "j3fkiw").award(
-                gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
-            )
-        exception = excinfo.value
-        assert "SELF_GILDING_NOT_ALLOWED" == exception.items[0].error_type
-
     async def test_clear_vote(self, reddit):
         reddit.read_only = False
         await Submission(reddit, "hmkbt8").clear_vote()

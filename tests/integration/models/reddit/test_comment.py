@@ -14,29 +14,6 @@ class TestComment(IntegrationTest):
         assert not comment.is_root
         assert comment.submission == "2gmzqe"
 
-    async def test_award(self, reddit):
-        reddit.read_only = False
-        award_data = await Comment(reddit, "g7cmlgc").award()
-        assert award_data["gildings"]["gid_2"] == 2
-
-    async def test_award__not_enough_coins(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await Comment(reddit, "g7cmlgc").award(
-                gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
-            )
-        exception = excinfo.value
-        assert exception.items[0].error_type == "INSUFFICIENT_COINS_WITH_AMOUNT"
-
-    async def test_award__self_gild(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await Comment(reddit, "g7cn9xb").award(
-                gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
-            )
-        exception = excinfo.value
-        assert exception.items[0].error_type == "SELF_GILDING_NOT_ALLOWED"
-
     async def test_block(self, reddit):
         reddit.read_only = False
         async for item in reddit.inbox.submission_replies():

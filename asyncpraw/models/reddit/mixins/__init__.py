@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Optional
 from ....const import API_PATH
 from .editable import EditableMixin
 from .fullname import FullnameMixin
-from .gildable import GildableMixin
 from .inboxable import InboxableMixin
 from .inboxtoggleable import InboxToggleableMixin
 from .messageable import MessageableMixin
@@ -301,7 +300,6 @@ class ThingModerationMixin(ModNoteMixin):
 
 class UserContentMixin(
     EditableMixin,
-    GildableMixin,
     InboxToggleableMixin,
     ReplyableMixin,
     ReportableMixin,
