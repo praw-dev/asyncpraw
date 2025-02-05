@@ -10,14 +10,6 @@ class TestSubreddits(IntegrationTest):
         subreddits = await self.async_list(reddit.subreddits.default(limit=None))
         assert 0 < len(subreddits) < 100
 
-    async def test_gold__with_gold(self, reddit):  # ensure backwards compatibility
-        subreddits = await self.async_list(reddit.subreddits.gold())
-        assert len(subreddits) == 100
-
-    async def test_gold__without_gold(self, reddit):  # ensure backwards compatibility
-        subreddits = await self.async_list(reddit.subreddits.gold())
-        assert len(subreddits) == 0
-
     async def test_new(self, reddit):
         subreddits = await self.async_list(reddit.subreddits.new(limit=300))
         assert len(subreddits) == 300

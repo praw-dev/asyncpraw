@@ -10,8 +10,9 @@ Unreleased
 
 - Remove ``APIException`` class.
 - Remove ``PRAWException`` class rename handler.
-- Remove ``WebSocketException.original_exception`` method.
+- Remove ``Subreddits.gold`` method.
 - Remove ``Reddit.validate_on_submit`` configuration attribute.
+- Remove ``WebSocketException.original_exception`` method.
 
 7.8.1 (2024/12/21)
 ------------------
@@ -313,7 +314,7 @@ Unreleased
 
 **Deprecated**
 
-- :meth:`.Subreddits.gold` is superseded by :meth:`.Subreddits.premium`.
+- ``Subreddits.gold`` is superseded by :meth:`.Subreddits.premium`.
 - :meth:`.Submission.gild` is superseded by :meth:`.Submission.award`.
 - :meth:`.Comment.gild` is superseded by :meth:`.Comment.award`.
 - ``PRAWException`` is superseded by :class:`.AsyncPRAWException`.

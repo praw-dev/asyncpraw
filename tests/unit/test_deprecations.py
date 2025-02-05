@@ -42,14 +42,6 @@ class TestDeprecation(UnitTest):
                 == "'.gild' has been renamed to '.award'."
             )
 
-    def test_gold_method(self, reddit):
-        with pytest.deprecated_call() as warning_info:
-            reddit.subreddits.gold()
-            assert (
-                str(warning_info.list[0].message)
-                == "'subreddits.gold' has be renamed to 'subreddits.premium'."
-            )
-
     async def test_lazy_argument_rename(self, reddit):
         with pytest.deprecated_call() as warning_info:
             await reddit.submission("1234", lazy=True)
