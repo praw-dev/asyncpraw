@@ -194,10 +194,7 @@ class RedditAPIException(AsyncPRAWException):
             for exception in exceptions
         ]
 
-    def __init__(
-        self,
-        items: list[RedditErrorItem | list[str] | str]
-    ):
+    def __init__(self, items: list[RedditErrorItem | list[str] | str]):
         """Initialize a :class:`.RedditAPIException` instance.
 
         :param items: Either a list of instances of :class:`.RedditErrorItem` or a list
