@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 from itertools import islice
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 from ..const import API_PATH
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .reddit.comment import Comment
-from .reddit.redditor import Redditor
 from .reddit.submission import Submission
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -17,9 +16,8 @@ if TYPE_CHECKING:  # pragma: no cover
 
     import asyncpraw.models
 
-RedditorType = Union[Redditor, str]
-SubredditType = Union["asyncpraw.models.Subreddit", str]
-ThingType = Union[Comment, Submission]
+    from .reddit.redditor import Redditor
+    from .reddit.subreddit import Subreddit
 
 
 class BaseModNotes:
@@ -38,8 +36,8 @@ class BaseModNotes:
 
     def _all_generator(
         self,
-        redditor: RedditorType,
-        subreddit: SubredditType,
+        redditor: Redditor | str,
+        subreddit: Subreddit | str,
         **generator_kwargs: Any,
     ):
         AsyncPRAWBase._safely_add_arguments(
@@ -51,7 +49,7 @@ class BaseModNotes:
         return ListingGenerator(self._reddit, API_PATH["mod_notes"], **generator_kwargs)
 
     async def _bulk_generator(
-        self, redditors: list[RedditorType], subreddits: list[SubredditType]
+        self, redditors: list[Redditor | str], subreddits: list[Subreddit | str]
     ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         subreddits_iter = iter(subreddits)
         redditors_iter = iter(redditors)
@@ -78,8 +76,8 @@ class BaseModNotes:
     async def _notes(
         self,
         all_notes: bool,
-        redditors: list[RedditorType],
-        subreddits: list[SubredditType],
+        redditors: list[Redditor | str],
+        subreddits: list[Subreddit | str],
         **generator_kwargs: Any,
     ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         if all_notes:
@@ -96,8 +94,8 @@ class BaseModNotes:
         *,
         label: str | None = None,
         note: str,
-        redditor: RedditorType | None = None,
-        subreddit: SubredditType | None = None,
+        redditor: Redditor | str | None = None,
+        subreddit: Subreddit | str | None = None,
         thing: Comment | Submission | str | None = None,
         **other_settings: Any,
     ) -> asyncpraw.models.ModNote:
@@ -191,8 +189,8 @@ class BaseModNotes:
         *,
         delete_all: bool = False,
         note_id: str | None = None,
-        redditor: RedditorType | None = None,
-        subreddit: SubredditType | None = None,
+        redditor: Redditor | str | None = None,
+        subreddit: Subreddit | str | None = None,
     ):
         """Delete note(s) for a redditor.
 
@@ -299,7 +297,7 @@ class RedditorModNotes(BaseModNotes):
 
     """
 
-    def __init__(self, reddit: asyncpraw.Reddit, redditor: RedditorType):
+    def __init__(self, reddit: asyncpraw.Reddit, redditor: Redditor | str):
         """Initialize a :class:`.RedditorModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -311,7 +309,7 @@ class RedditorModNotes(BaseModNotes):
 
     def subreddits(
         self,
-        *subreddits: SubredditType,
+        *subreddits: Subreddit | str,
         all_notes: bool | None = None,
         **generator_kwargs: Any,
     ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
@@ -395,7 +393,7 @@ class SubredditModNotes(BaseModNotes):
 
     """
 
-    def __init__(self, reddit: asyncpraw.Reddit, subreddit: SubredditType):
+    def __init__(self, reddit: asyncpraw.Reddit, subreddit: Subreddit | str):
         """Initialize a :class:`.SubredditModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -407,7 +405,7 @@ class SubredditModNotes(BaseModNotes):
 
     def redditors(
         self,
-        *redditors: RedditorType,
+        *redditors: Redditor | str,
         all_notes: bool | None = None,
         **generator_kwargs: Any,
     ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
@@ -499,10 +497,10 @@ class RedditModNotes(BaseModNotes):
         self,
         *,
         all_notes: bool = False,
-        pairs: list[tuple[SubredditType, RedditorType]] | None = None,
-        redditors: list[RedditorType] | None = None,
-        subreddits: list[SubredditType] | None = None,
-        things: list[ThingType] | None = None,
+        pairs: list[tuple[Subreddit | str, Redditor | str]] | None = None,
+        redditors: list[Redditor | str] | None = None,
+        subreddits: list[Subreddit | str] | None = None,
+        things: list[Comment | Submission] | None = None,
         **generator_kwargs: Any,
     ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         """Get note(s) for each subreddit/user pair, or ``None`` if they don't have any.
@@ -641,7 +639,7 @@ class RedditModNotes(BaseModNotes):
 
     def things(
         self,
-        *things: ThingType,
+        *things: Comment | Submission,
         all_notes: bool | None = None,
         **generator_kwargs: Any,
     ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
