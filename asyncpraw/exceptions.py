@@ -151,11 +151,6 @@ class WebSocketException(ClientException):
         """Initialize a :class:`.WebSocketException` instance.
 
         :param message: The exception message.
-        :param exception: The exception thrown by the websocket library.
-
-            .. note::
-
-                This parameter is deprecated. It will be removed in Async PRAW 8.0.
 
         """
         super().__init__(message)

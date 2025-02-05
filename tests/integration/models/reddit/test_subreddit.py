@@ -466,15 +466,6 @@ class TestSubredditModeration(IntegrationTest):
             count += 1
         assert count > 0
 
-    async def test_inbox(self, reddit):
-        reddit.read_only = False
-        count = 0
-        subreddit = await reddit.subreddit("all")
-        async for item in subreddit.mod.inbox():
-            assert isinstance(item, SubredditMessage)
-            count += 1
-        assert count == 100
-
     async def test_log(self, reddit):
         reddit.read_only = False
         count = 0
@@ -610,15 +601,6 @@ class TestSubredditModeration(IntegrationTest):
             count += 1
         assert count > 0
 
-    async def test_unread(self, reddit):
-        reddit.read_only = False
-        count = 0
-        subreddit = await reddit.subreddit("all")
-        async for item in subreddit.mod.unread():
-            assert isinstance(item, SubredditMessage)
-            count += 1
-        assert count > 0
-
     async def test_update(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -688,13 +670,6 @@ class TestSubredditModerationStreams(IntegrationTest):
         generator = subreddit.mod.stream.unmoderated()
         for i in range(101):
             assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_unread(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.unread()
-        for i in range(2):
-            assert isinstance(await self.async_next(generator), SubredditMessage)
 
 
 class TestSubredditModmail(IntegrationTest):

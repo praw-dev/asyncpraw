@@ -11,7 +11,6 @@ from json import dumps
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin
-from warnings import warn
 
 from aiohttp.http_exceptions import HttpProcessingError
 from aiohttp.web_ws import WebSocketError
@@ -912,46 +911,6 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    def inbox(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.SubredditMessage]:
-        """Return a :class:`.ListingGenerator` for moderator messages.
-
-        .. warning::
-
-            Legacy modmail is being deprecated in June 2021. Please see
-            https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/
-            for more info.
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        .. seealso::
-
-            :meth:`.unread` for unread moderator messages.
-
-        To print the last 5 moderator mail messages and their replies, try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("mod")
-            async for message in subreddit.mod.inbox(limit=5):
-                print("From: {}, Body: {}".format(message.author, message.body))
-                for reply in message.replies:
-                    print("From: {}, Body: {}".format(reply.author, reply.body))
-
-        """
-        warn(
-            "Legacy modmail is being deprecated in June 2021. Please see"
-            " https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/"
-            " for more info.",
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-        return ListingGenerator(
-            self.subreddit._reddit,
-            API_PATH["moderator_messages"].format(subreddit=self.subreddit),
-            **generator_kwargs,
-        )
-
     def log(
         self,
         *,
@@ -1091,44 +1050,6 @@ class SubredditModeration:
         return ListingGenerator(
             self.subreddit._reddit,
             API_PATH["about_unmoderated"].format(subreddit=self.subreddit),
-            **generator_kwargs,
-        )
-
-    def unread(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.SubredditMessage]:
-        """Return a :class:`.ListingGenerator` for unread moderator messages.
-
-        .. warning::
-
-            Legacy modmail is being deprecated in June 2021. Please see
-            https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/
-            for more info.
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        .. seealso::
-
-            :meth:`.inbox` for all messages.
-
-        To print the mail in the unread modmail queue try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("mod")
-            async for message in subreddit.mod.unread():
-                print("From: {}, To: {}".format(message.author, message.dest))
-
-        """
-        warn(
-            "Legacy modmail is being deprecated in June 2021. Please see"
-            " https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/"
-            " for more info.",
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-        return ListingGenerator(
-            self.subreddit._reddit,
-            API_PATH["moderator_unread"].format(subreddit=self.subreddit),
             **generator_kwargs,
         )
 
@@ -1430,26 +1351,6 @@ class SubredditModerationStream:
 
         """
         return stream_generator(self.subreddit.mod.unmoderated, **stream_options)
-
-    def unread(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.SubredditMessage, None]:
-        """Yield unread old modmail messages as they become available.
-
-        Keyword arguments are passed to :func:`.stream_generator`.
-
-        .. seealso::
-
-            :meth:`.SubredditModeration.inbox` for all messages.
-
-        To print new mail in the unread modmail queue try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("mod")
-            async for message in subreddit.mod.stream.unread():
-                print("From: {}, To: {}".format(message.author, message.dest))
-
-        """
-        return stream_generator(self.subreddit.mod.unread, **stream_options)
 
 
 class SubredditQuarantine:
