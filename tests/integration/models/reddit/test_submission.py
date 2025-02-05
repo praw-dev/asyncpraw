@@ -38,7 +38,7 @@ class TestSubmission(IntegrationTest):
                 gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
             )
         exception = excinfo.value
-        assert "INSUFFICIENT_COINS_WITH_AMOUNT" == exception.error_type
+        assert "INSUFFICIENT_COINS_WITH_AMOUNT" == exception.items[0].error_type
 
     async def test_award__self_gild(self, reddit):
         reddit.read_only = False
@@ -47,7 +47,7 @@ class TestSubmission(IntegrationTest):
                 gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
             )
         exception = excinfo.value
-        assert "SELF_GILDING_NOT_ALLOWED" == exception.error_type
+        assert "SELF_GILDING_NOT_ALLOWED" == exception.items[0].error_type
 
     async def test_clear_vote(self, reddit):
         reddit.read_only = False

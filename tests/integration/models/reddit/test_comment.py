@@ -26,7 +26,7 @@ class TestComment(IntegrationTest):
                 gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
             )
         exception = excinfo.value
-        assert exception.error_type == "INSUFFICIENT_COINS_WITH_AMOUNT"
+        assert exception.items[0].error_type == "INSUFFICIENT_COINS_WITH_AMOUNT"
 
     async def test_award__self_gild(self, reddit):
         reddit.read_only = False
@@ -35,7 +35,7 @@ class TestComment(IntegrationTest):
                 gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
             )
         exception = excinfo.value
-        assert exception.error_type == "SELF_GILDING_NOT_ALLOWED"
+        assert exception.items[0].error_type == "SELF_GILDING_NOT_ALLOWED"
 
     async def test_block(self, reddit):
         reddit.read_only = False
@@ -314,8 +314,8 @@ class TestCommentModeration(IntegrationTest):
         with pytest.raises(RedditAPIException) as excinfo:
             await comment.mod.send_removal_message(message="message", title="a" * 51)
         exception = excinfo.value
-        assert exception.field == "title"
-        assert exception.error_type == "TOO_LONG"
+        assert exception.items[0].field == "title"
+        assert exception.items[0].error_type == "TOO_LONG"
 
     async def test_show(self, reddit):
         reddit.read_only = False

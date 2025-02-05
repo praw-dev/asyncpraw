@@ -6,6 +6,11 @@ Async PRAW follows `semantic versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+**Removed**
+
+- Removed ``APIException`` class.
+- Removed ``PRAWException`` class rename handler.
+
 7.8.1 (2024/12/21)
 ------------------
 

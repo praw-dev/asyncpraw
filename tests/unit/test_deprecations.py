@@ -3,8 +3,8 @@
 import pytest
 
 from asyncpraw import Reddit
-from asyncpraw.exceptions import APIException, AsyncPRAWException, WebSocketException
 from asyncpraw.models import Comment, Subreddit
+from asyncpraw.exceptions import WebSocketException
 from asyncpraw.models.reddit.user_subreddit import UserSubreddit
 from asyncpraw.util.token_manager import FileTokenManager
 
@@ -13,15 +13,6 @@ from . import UnitTest
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
 class TestDeprecation(UnitTest):
-    def test_api_exception(self):
-        exc = APIException(["test", "testing", "test"])
-        with pytest.deprecated_call():
-            exc.error_type
-        with pytest.deprecated_call():
-            exc.message
-        with pytest.deprecated_call():
-            exc.field
-
     async def test_comment_forest_async_iterator(self, reddit):
         submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
@@ -67,23 +58,6 @@ class TestDeprecation(UnitTest):
             == "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
             " the ``lazy`` parameter will be removed in a future version of Async PRAW."
         )
-
-    def test_praw_exception_rename(self):
-        with pytest.raises(AsyncPRAWException):
-            Reddit()
-
-        with pytest.deprecated_call():
-            import asyncpraw
-
-            asyncpraw.exceptions.PRAWException
-
-        with pytest.deprecated_call():
-            from asyncpraw import exceptions
-
-            exceptions.PRAWException
-
-        with pytest.deprecated_call():
-            from asyncpraw.exceptions import PRAWException  # noqa: F401
 
     async def test_reddit_token_manager(self):
         with pytest.deprecated_call():

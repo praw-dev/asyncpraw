@@ -1,7 +1,6 @@
 import pytest
 
 from asyncpraw.exceptions import (
-    APIException,
     AsyncPRAWException,
     ClientException,
     DuplicateReplaceException,
@@ -14,13 +13,6 @@ from asyncpraw.exceptions import (
     RedditErrorItem,
     WebSocketException,
 )
-
-
-class TestAPIException:
-    def test_catch(self):
-        exc = RedditAPIException([["test", "testing", "test"]])
-        with pytest.raises(APIException):
-            raise exc
 
 
 class TestAsyncPRAWException:
@@ -118,15 +110,6 @@ class TestMissingRequiredAttributeException:
 
 
 class TestRedditAPIException:
-    @pytest.mark.filterwarnings("ignore", category=DeprecationWarning)
-    def test_apiexception_value(self):
-        exc = RedditAPIException("test", "testing", "test")
-        assert exc.error_type == "test"
-        exc2 = RedditAPIException(["test", "testing", "test"])
-        assert exc2.message == "testing"
-        exc3 = RedditAPIException([["test", "testing", "test"]])
-        assert exc3.field == "test"
-
     def test_inheritance(self):
         assert issubclass(RedditAPIException, AsyncPRAWException)
 

@@ -31,7 +31,9 @@ class IntegrationTest(HelperMethodMixin):
         """Track cassettes to ensure unused cassettes are not uploaded."""
         global existing_cassettes
         for cassette in os.listdir(CASSETTES_PATH):
-            existing_cassettes.add(cassette[: cassette.rindex(".")])
+            name = cassette[: cassette.rindex(".")]
+            if name:
+                existing_cassettes.add(name)
         yield
         unused_cassettes = existing_cassettes - used_cassettes
         if unused_cassettes and os.getenv("ENSURE_NO_UNUSED_CASSETTES", "0") == "1":
