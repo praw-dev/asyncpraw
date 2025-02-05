@@ -3200,18 +3200,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                     BlockingIOError,
                     AsyncTimeoutError,
                     WebSocketError,
-                ) as ws_exception:
+                ):
                     msg = "Websocket error. Check your media file. Your post may still have been created."
-                    raise WebSocketException(
-                        msg,
-                        ws_exception,
-                    ) from None
-        except (OSError, BlockingIOError, AsyncTimeoutError, WebSocketError) as ws_exception:
+                    raise WebSocketException(msg) from None
+        except (OSError, BlockingIOError, AsyncTimeoutError, WebSocketError):
             msg = "Error establishing websocket connection."
-            raise WebSocketException(
-                msg,
-                ws_exception,
-            ) from None
+            raise WebSocketException(msg) from None
         if ws_update.get("type") == "failed":
             raise MediaPostFailed
         url = ws_update["payload"]["redirect"]
