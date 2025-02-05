@@ -70,7 +70,6 @@ class TestReddit(UnitTest):
 
     async def test_context_manager(self):
         async with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
-            assert not reddit._validate_on_submit
             assert not reddit.requestor._http.closed
         assert reddit.requestor._http.closed
 

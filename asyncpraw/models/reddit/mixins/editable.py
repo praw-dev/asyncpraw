@@ -51,7 +51,7 @@ class EditableMixin:
         data = {
             "text": body,
             "thing_id": self.fullname,
-            "validate_on_submit": self._reddit.validate_on_submit,
+            "validate_on_submit": True,
         }
         response = await self._reddit.post(API_PATH["edit"], data=data)
         updated = response[0]

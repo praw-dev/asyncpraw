@@ -3553,7 +3553,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "title": title,
             "nsfw": bool(nsfw),
             "spoiler": bool(spoiler),
-            "validate_on_submit": self._reddit.validate_on_submit,
+            "validate_on_submit": True,
         }
         for key, value in (
             ("flair_id", flair_id),
@@ -3669,7 +3669,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "spoiler": bool(spoiler),
             "sr": str(self),
             "title": title,
-            "validate_on_submit": self._reddit.validate_on_submit,
+            "validate_on_submit": True,
         }
         for key, value in (
             ("flair_id", flair_id),
@@ -3796,7 +3796,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "title": title,
             "nsfw": bool(nsfw),
             "spoiler": bool(spoiler),
-            "validate_on_submit": self._reddit.validate_on_submit,
+            "validate_on_submit": True,
         }
         for key, value in (
             ("flair_id", flair_id),
@@ -3894,7 +3894,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "title": title,
             "nsfw": bool(nsfw),
             "spoiler": bool(spoiler),
-            "validate_on_submit": self._reddit.validate_on_submit,
+            "validate_on_submit": True,
         }
         for key, value in (
             ("flair_id", flair_id),
@@ -4015,7 +4015,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             "title": title,
             "nsfw": bool(nsfw),
             "spoiler": bool(spoiler),
-            "validate_on_submit": self._reddit.validate_on_submit,
+            "validate_on_submit": True,
         }
         for key, value in (
             ("flair_id", flair_id),

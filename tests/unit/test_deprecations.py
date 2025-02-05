@@ -121,12 +121,3 @@ class TestDeprecation(UnitTest):
                 " UserSubreddit object. Using 'keys' is deprecated and will be removed"
                 " in Async PRAW 8."
             )
-
-    def test_validate_on_submit(self, reddit):
-        with pytest.deprecated_call():
-            reddit.validate_on_submit
-        reddit.validate_on_submit = True
-        assert reddit.validate_on_submit
-        reddit.validate_on_submit = False
-        with pytest.deprecated_call():
-            reddit.validate_on_submit
