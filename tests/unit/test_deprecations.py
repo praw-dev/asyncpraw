@@ -6,7 +6,6 @@ from asyncpraw import Reddit
 from asyncpraw.models import Comment, Subreddit
 from asyncpraw.exceptions import WebSocketException
 from asyncpraw.models.reddit.user_subreddit import UserSubreddit
-from asyncpraw.util.token_manager import FileTokenManager
 
 from . import UnitTest
 
@@ -41,17 +40,6 @@ class TestDeprecation(UnitTest):
             == "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
             " the ``lazy`` parameter will be removed in a future version of Async PRAW."
         )
-
-    async def test_reddit_token_manager(self):
-        with pytest.deprecated_call():
-            async with Reddit(
-                token_manager=FileTokenManager("name"),
-                client_id="dummy",
-                client_secret=None,
-                redirect_uri="dummy",
-                user_agent="dummy",
-            ):
-                pass
 
     async def test_submission_comments_async(self, reddit):
         submission = await reddit.submission("1234", fetch=False)

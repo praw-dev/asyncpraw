@@ -13,17 +13,8 @@ from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.models import Comment
-from asyncpraw.util.token_manager import BaseTokenManager
 
 from . import UnitTest
-
-
-class DummyTokenManager(BaseTokenManager):
-    def post_refresh_callback(self, authorizer):
-        pass
-
-    def pre_refresh_callback(self, authorizer):
-        pass
 
 
 class TestReddit(UnitTest):
@@ -54,19 +45,6 @@ class TestReddit(UnitTest):
 
     def test_comment(self, reddit):
         assert Comment(reddit, id="cklfmye").id == "cklfmye"
-
-    def test_conflicting_settings(self):
-        with pytest.raises(TypeError) as excinfo:
-            Reddit(
-                token_manager="dummy",
-                refresh_token="dummy",
-                **self.REQUIRED_DUMMY_SETTINGS,
-            )
-        assert (
-            str(excinfo.value)
-            == "'refresh_token' setting cannot be provided when providing"
-            " 'token_manager'"
-        )
 
     async def test_context_manager(self):
         async with Reddit(**self.REQUIRED_DUMMY_SETTINGS) as reddit:
@@ -337,21 +315,8 @@ class TestReddit(UnitTest):
         )
         mock_sleep.assert_has_calls([mock.call(6), mock.call(4), mock.call(2)])
 
-    async def test_read_only__with_authenticated_core(self):
+    async def test_read_only__with_authenticated_core__legacy_refresh_token(self):
         async with Reddit(
-            token_manager=DummyTokenManager(),
-            password=None,
-            username=None,
-            **self.REQUIRED_DUMMY_SETTINGS,
-        ) as reddit:
-            assert not reddit.read_only
-            reddit.read_only = True
-            assert reddit.read_only
-            reddit.read_only = False
-            assert not reddit.read_only
-
-    def test_read_only__with_authenticated_core__legacy_refresh_token(self):
-        with Reddit(
             password=None,
             refresh_token="refresh",
             username=None,
@@ -363,24 +328,10 @@ class TestReddit(UnitTest):
             reddit.read_only = False
             assert not reddit.read_only
 
-    async def test_read_only__with_authenticated_core__non_confidential(self):
-        async with Reddit(
-            token_manager=DummyTokenManager(),
-            client_id="dummy",
-            client_secret=None,
-            redirect_uri="dummy",
-            user_agent="dummy",
-        ) as reddit:
-            assert not reddit.read_only
-            reddit.read_only = True
-            assert reddit.read_only
-            reddit.read_only = False
-            assert not reddit.read_only
-
-    def test_read_only__with_authenticated_core__non_confidential__legacy_refresh_token(
+    async def test_read_only__with_authenticated_core__non_confidential__legacy_refresh_token(
         self,
     ):
-        with Reddit(
+        async with Reddit(
             client_id="dummy",
             client_secret=None,
             redirect_uri="dummy",

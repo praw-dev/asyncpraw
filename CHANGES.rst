@@ -19,6 +19,8 @@ Unreleased
 - Remove ``PRAWException`` class rename handler.
 - Remove ``Comment.gild`` and ``Submission.gild`` methods.
 - Remove ``Subreddits.gold`` method.
+- Remove :class:`.Reddit` keyword argument ``token_manager`` and all associated token
+  managers.
 - Remove ``Reddit.validate_on_submit`` configuration attribute.
 - Remove ``WebSocketException.original_exception`` method.
 
@@ -242,7 +244,7 @@ Unreleased
 - :meth:`.trusted` to retrieve a :class:`.RedditorList` of trusted users.
 - :meth:`.trust` to add a user to the trusted list.
 - :meth:`.distrust` to remove a user from the trusted list.
-- :class:`.SQLiteTokenManager` (may not work on Windows).
+- ``SQLiteTokenManager`` (may not work on Windows).
 
 **Changed**
 
@@ -278,7 +280,7 @@ Unreleased
 **Added**
 
 - :class:`.Reddit` keyword argument ``token_manager``.
-- :class:`.FileTokenManager` and its parent abstract class :class:`.BaseTokenManager`.
+- ``FileTokenManager`` and its parent abstract class ``BaseTokenManager``.
 
 **Deprecated**
 
