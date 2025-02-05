@@ -27,6 +27,8 @@ Unreleased
 - Remove ``APIException`` class.
 - Remove ``PRAWException`` class rename handler.
 - Remove ``Comment.gild`` and ``Submission.gild`` methods.
+- Remove ``Redditor.gilded`` and ``Subreddit.gilded`` methods.
+- Remove ``Redditor.gildings`` method.
 - Remove ``Subreddits.gold`` method.
 - Remove :class:`.Reddit` keyword argument ``token_manager`` and all associated token
   managers.

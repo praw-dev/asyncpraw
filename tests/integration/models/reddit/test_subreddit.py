@@ -410,11 +410,6 @@ class TestSubredditListings(IntegrationTest):
         submissions = await self.async_list(subreddit.controversial())
         assert len(submissions) == 100
 
-    async def test_gilded(self, reddit):
-        subreddit = await reddit.subreddit("askreddit")
-        submissions = await self.async_list(subreddit.gilded())
-        assert len(submissions) >= 50
-
     async def test_hot(self, reddit):
         subreddit = await reddit.subreddit("askreddit")
         submissions = await self.async_list(subreddit.hot())

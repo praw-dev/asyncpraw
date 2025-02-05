@@ -178,28 +178,6 @@ class TestRedditorListings(IntegrationTest):
         with pytest.raises(Forbidden):
             await self.async_list(redditor.downvoted())
 
-    async def test_gilded(self, reddit):
-        redditor = await reddit.redditor("spez")
-        items = await self.async_list(redditor.gilded(limit=50))
-        assert len(items) == 50
-
-    async def test_gildings(self, reddit):
-        reddit.read_only = False
-        redditor = await reddit.redditor(pytest.placeholders.username)
-        items = await self.async_list(redditor.gildings())
-        assert isinstance(items, list)
-
-    async def test_gildings__in_read_only_mode(self, reddit):
-        redditor = await reddit.redditor(pytest.placeholders.username)
-        with pytest.raises(Forbidden):
-            await self.async_list(redditor.gildings())
-
-    async def test_gildings__other_user(self, reddit):
-        reddit.read_only = False
-        redditor = await reddit.redditor("spez")
-        with pytest.raises(Forbidden):
-            await self.async_list(redditor.gildings())
-
     async def test_hidden(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor(pytest.placeholders.username)

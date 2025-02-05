@@ -85,11 +85,6 @@ class TestMultiredditListings(IntegrationTest):
         submissions = await self.async_list(multi.controversial())
         assert len(submissions) == 100
 
-    async def test_gilded(self, reddit):
-        multi = await reddit.multireddit(redditor="kjoneslol", name="sfwpornnetwork")
-        submissions = await self.async_list(multi.gilded())
-        assert len(submissions) == 100
-
     async def test_hot(self, reddit):
         multi = await reddit.multireddit(redditor="kjoneslol", name="sfwpornnetwork")
         submissions = await self.async_list(multi.hot())

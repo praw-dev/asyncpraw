@@ -8,7 +8,6 @@ from urllib.parse import urljoin
 from ....util.cache import cachedproperty
 from ..generator import ListingGenerator
 from .base import BaseListingMixin
-from .gilded import GildedListingMixin
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator
@@ -33,7 +32,7 @@ class SubListing(BaseListingMixin):
         self._path = urljoin(base_path, subpath)
 
 
-class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
+class RedditorListingMixin(BaseListingMixin):
     """Adds additional methods pertaining to :class:`.Redditor` instances."""
 
     @cachedproperty
@@ -97,37 +96,6 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
 
         """
         return ListingGenerator(self._reddit, urljoin(self._path, "downvoted"), **generator_kwargs)
-
-    def gildings(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
-        """Return a :class:`.ListingGenerator` for items the user has gilded.
-
-        :returns: A :class:`.ListingGenerator` object which yields :class:`.Comment` or
-            :class:`.Submission` objects the user has gilded.
-
-        :raises: ``asyncprawcore.Forbidden`` if the user is not authorized to access the
-            list.
-
-            .. note::
-
-                Since this function returns a :class:`.ListingGenerator` the exception
-                may not occur until sometime after this function has returned.
-
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        For example, to get all gilded items of the authenticated user:
-
-        .. code-block:: python
-
-            current_user = await reddit.user.me()
-            async for item in current_user.gildings():
-                print(item.id)
-
-        """
-        return ListingGenerator(self._reddit, urljoin(self._path, "gilded/given"), **generator_kwargs)
 
     def hidden(
         self, **generator_kwargs: str | int | dict[str, str]

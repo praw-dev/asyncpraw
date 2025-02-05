@@ -238,10 +238,6 @@ class TestSubmission(IntegrationTest):
         submission = Submission(reddit, "hmkbt8")
         await submission.enable_inbox_replies()
 
-    async def test_gilded(self, reddit):
-        submission = await reddit.submission("2gmzqe")
-        assert 1 == submission.gilded
-
     async def test_hide(self, reddit):
         reddit.read_only = False
         await Submission(reddit, "hmkbt8").hide()
