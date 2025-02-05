@@ -53,10 +53,6 @@ class TestDeprecation(UnitTest):
             ):
                 pass
 
-    async def test_reddit_user_me_read_only(self, reddit):
-        with pytest.deprecated_call():
-            await reddit.user.me()
-
     async def test_submission_comments_async(self, reddit):
         submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
