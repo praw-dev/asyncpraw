@@ -19,7 +19,7 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
 
 .. image:: https://coveralls.io/repos/github/praw-dev/asyncpraw/badge.svg
     :alt: Coveralls Coverage
-    :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=master
+    :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=main
 
 .. image:: https://api.securityscorecards.dev/projects/github.com/praw-dev/asyncpraw/badge
     :alt: OpenSSF Scorecard
@@ -60,7 +60,7 @@ To install the latest development version of Async PRAW run the following instea
 
 .. code-block:: bash
 
-    pip install --upgrade https://github.com/praw-dev/asyncpraw/archive/master.zip
+    pip install --upgrade https://github.com/praw-dev/asyncpraw/archive/main.zip
 
 For instructions on installing Python and pip see "The Hitchhiker's Guide to Python"
 `Installation Guides <https://docs.python-guide.org/en/latest/starting/installation/>`_.
