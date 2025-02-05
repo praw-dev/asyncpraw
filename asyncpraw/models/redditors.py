@@ -14,7 +14,7 @@ from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterable, AsyncIterator
+    from collections.abc import AsyncIterator, Iterable
 
     import asyncpraw.models
 

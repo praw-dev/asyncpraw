@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import contextlib
-from asyncio import TimeoutError
+from asyncio import TimeoutError as AsyncTimeoutError
 from copy import deepcopy
 from csv import writer
 from io import StringIO
@@ -12,12 +12,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin
 from warnings import warn
-from xml.etree.ElementTree import XML
 
 from aiohttp.http_exceptions import HttpProcessingError
 from aiohttp.web_ws import WebSocketError
 from asyncprawcore import Redirect
 from asyncprawcore.exceptions import ServerError
+from defusedxml import ElementTree
 
 from ...const import API_PATH, JPEG_HEADER
 from ...exceptions import (
@@ -42,7 +42,7 @@ from .widgets import SubredditWidgets, WidgetEncoder
 from .wikipage import WikiPage
 
 if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import AsyncGenerator, AsyncIterator
+    from collections.abc import AsyncGenerator, AsyncIterator, Iterator
 
     from aiohttp import ClientResponse
 
@@ -626,13 +626,11 @@ class SubredditFlair:
         temp_lines = StringIO()
         for item in flair_list:
             if isinstance(item, dict):
-                writer(temp_lines).writerow(
-                    [
-                        str(item["user"]),
-                        item.get("flair_text", text),
-                        item.get("flair_css_class", css_class),
-                    ]
-                )
+                writer(temp_lines).writerow([
+                    str(item["user"]),
+                    item.get("flair_text", text),
+                    item.get("flair_css_class", css_class),
+                ])
             else:
                 writer(temp_lines).writerow([str(item), text, css_class])
 
@@ -865,7 +863,7 @@ class SubredditModeration:
                 print(f"{note.label}: {note.note}")
 
         """
-        from ..mod_notes import SubredditModNotes
+        from ..mod_notes import SubredditModNotes  # noqa: PLC0415
 
         return SubredditModNotes(self.subreddit._reddit, subreddit=self.subreddit)
 
@@ -1762,10 +1760,10 @@ class SubredditStylesheet:
             if response["errors"]:
                 error_type = response["errors"][0]
                 error_value = response.get("errors_values", [""])[0]
-                assert error_type in [
+                assert error_type in {
                     "BAD_CSS_NAME",
                     "IMAGE_ERROR",
-                ], "Please file a bug with Async PRAW."
+                }, "Please file a bug with Async PRAW."
                 raise RedditAPIException([[error_type, error_value, None]])
             return response
 
@@ -2739,6 +2737,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         await _reddit.post(API_PATH["site_admin"], data=model)
 
     @staticmethod
+    async def _parse_xml_response(response: ClientResponse):
+        """Parse the XML from a response and raise any errors found."""
+        xml = await response.text()
+        root = ElementTree.fromstring(xml)
+        tags = [element.tag for element in root]
+        if tags[:4] == ["Code", "Message", "ProposedSize", "MaxSizeAllowed"]:
+            # Returned if image is too big
+            _code, _message, actual, maximum_size = (element.text for element in root[:4])
+            raise TooLargeMediaException(actual=int(actual), maximum_size=int(maximum_size))
+
+    @staticmethod
     def _subreddit_list(
         *,
         other_subreddits: list[str | asyncpraw.models.Subreddit],
@@ -3164,16 +3173,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     def _fetch_info(self):
         return "subreddit_about", {"subreddit": self}, None
 
-    async def _parse_xml_response(self, response: ClientResponse):
-        """Parse the XML from a response and raise any errors found."""
-        xml = await response.text()
-        root = XML(xml)
-        tags = [element.tag for element in root]
-        if tags[:4] == ["Code", "Message", "ProposedSize", "MaxSizeAllowed"]:
-            # Returned if image is too big
-            code, message, actual, maximum_size = (element.text for element in root[:4])
-            raise TooLargeMediaException(actual=int(actual), maximum_size=int(maximum_size))
-
     async def _read_and_post_media(self, file: Path, upload_url: str, upload_data: dict[str, Any]) -> ClientResponse:
         with file.open("rb") as media:
             upload_data["file"] = media
@@ -3199,7 +3198,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 except (
                     OSError,
                     BlockingIOError,
-                    TimeoutError,
+                    AsyncTimeoutError,
                     WebSocketError,
                 ) as ws_exception:
                     msg = "Websocket error. Check your media file. Your post may still have been created."
@@ -3207,7 +3206,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                         msg,
                         ws_exception,
                     ) from None
-        except (OSError, BlockingIOError, TimeoutError, WebSocketError) as ws_exception:
+        except (OSError, BlockingIOError, AsyncTimeoutError, WebSocketError) as ws_exception:
             msg = "Error establishing websocket connection."
             raise WebSocketException(
                 msg,
@@ -3549,7 +3548,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             - :meth:`~.Subreddit.submit_video` to submit videos and videogifs
 
         """
-        if (bool(selftext) or selftext == "") == bool(url):
+        if (bool(selftext) or selftext == "") == bool(url):  # noqa: PLC1901
             msg = "Either 'selftext' or 'url' must be provided."
             raise TypeError(msg)
 
@@ -3574,12 +3573,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         if selftext is not None:
             data.update(kind="self")
             if inline_media:
-                body = selftext.format(
-                    **{
-                        placeholder: await self._upload_inline_media(media)
-                        for placeholder, media in inline_media.items()
-                    }
-                )
+                body = selftext.format(**{
+                    placeholder: await self._upload_inline_media(media) for placeholder, media in inline_media.items()
+                })
                 converted = await self._convert_to_fancypants(body)
                 data.update(richtext_json=dumps(converted))
             else:
@@ -3690,19 +3686,17 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             if value is not None:
                 data[key] = value
         for image in images:
-            data["items"].append(
-                {
-                    "caption": image.get("caption", ""),
-                    "outbound_url": image.get("outbound_url", ""),
-                    "media_id": (
-                        await self._upload_media(
-                            expected_mime_prefix="image",
-                            media_path=image["image_path"],
-                            upload_type="gallery",
-                        )
-                    )[0],
-                }
-            )
+            data["items"].append({
+                "caption": image.get("caption", ""),
+                "outbound_url": image.get("outbound_url", ""),
+                "media_id": (
+                    await self._upload_media(
+                        expected_mime_prefix="image",
+                        media_path=image["image_path"],
+                        upload_type="gallery",
+                    )
+                )[0],
+            })
         response = await self._reddit.request(json=data, method="POST", path=API_PATH["submit_gallery_post"])
         response = response["json"]
         if response["errors"]:

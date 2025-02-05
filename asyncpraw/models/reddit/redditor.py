@@ -105,7 +105,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
                 print(f"{note.label}: {note.note}")
 
         """
-        from ..mod_notes import RedditorModNotes
+        from asyncpraw.models.mod_notes import RedditorModNotes  # noqa: PLC0415
 
         return RedditorModNotes(self._reddit, self)
 
@@ -176,7 +176,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     def __setattr__(self, name: str, value: Any):
         """Objectify the subreddit attribute."""
         if name == "subreddit" and value:
-            from .user_subreddit import UserSubreddit
+            from .user_subreddit import UserSubreddit  # noqa: PLC0415
 
             value = UserSubreddit(reddit=self._reddit, _data=value)
         super().__setattr__(name, value)

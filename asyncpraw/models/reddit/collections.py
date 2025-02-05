@@ -602,6 +602,7 @@ class Collection(RedditBase):
             fullnames=[self.subreddit_id]
         ):
             return subreddit
+        return None
 
     async def unfollow(self):
         """Unfollow this :class:`.Collection`.

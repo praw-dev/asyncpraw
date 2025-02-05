@@ -98,7 +98,7 @@ class FileTokenManager(BaseTokenManager):
 
     async def post_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Update the saved copy of the refresh token."""
-        async with aiofiles.open(self._filename, "w") as fp:
+        async with aiofiles.open(self._filename, "w", encoding="utf-8") as fp:
             await fp.write(authorizer.refresh_token)
 
     async def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
@@ -169,7 +169,7 @@ class SQLiteTokenManager(BaseTokenManager):
     async def connection(self):
         """Asynchronously setup and provide the sqlite3 connection."""
         if self._connection is None:
-            import aiosqlite
+            import aiosqlite  # noqa: PLC0415
 
             self._connection = await aiosqlite.connect(self._database)
         if not self._setup_ran:

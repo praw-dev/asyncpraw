@@ -68,7 +68,7 @@ class TestFileTokenManager(UnitTest):
                 "mock/dummy_path",
                 mode="w",
                 buffering=-1,
-                encoding=None,
+                encoding="utf-8",
                 errors=None,
                 newline=None,
                 closefd=True,

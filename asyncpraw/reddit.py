@@ -306,7 +306,7 @@ class Reddit:
             " constructor, or as an environment variable."
         )
         for attribute in ("client_id", "user_agent"):
-            if getattr(self.config, attribute) in (self.config.CONFIG_NOT_SET, None):
+            if getattr(self.config, attribute) in {self.config.CONFIG_NOT_SET, None}:
                 raise MissingRequiredAttributeException(required_message.format(attribute))
         if self.config.client_secret is self.config.CONFIG_NOT_SET:
             msg = f"{required_message.format('client_secret')}\nFor installed applications this value must be set to None via a keyword argument to the Reddit class constructor."
@@ -837,10 +837,7 @@ class Reddit:
             api_parameter_name = "id" if is_using_fullnames else "sr_name"
 
             async def generator(names: Iterable[str | asyncpraw.models.Subreddit]):
-                if is_using_fullnames:
-                    iterable = iter(names)
-                else:
-                    iterable = iter([str(item) for item in names])
+                iterable = iter(names) if is_using_fullnames else iter([str(item) for item in names])
                 while True:
                     chunk = list(islice(iterable, 100))
                     if not chunk:

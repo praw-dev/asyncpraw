@@ -89,9 +89,9 @@ class Objector:
             for conversation_id in data["conversationIds"]:
                 conversation = data["conversations"][conversation_id]
                 # set if the numMessages is same as number of messages in objIds
-                if conversation["numMessages"] == len(
-                    [obj for obj in conversation["objIds"] if obj["key"] == "messages"]
-                ):
+                if conversation["numMessages"] == len([
+                    obj for obj in conversation["objIds"] if obj["key"] == "messages"
+                ]):
                     conversation["messages"] = [
                         self.objectify(data["messages"][obj_id["id"]]) for obj_id in conversation["objIds"]
                     ]
@@ -133,10 +133,8 @@ class Objector:
         }.issubset(data):
             parser = self.parsers[self._reddit.config.kinds["redditor"]]
         elif {"text", "url"}.issubset(data):
-            if "color" in data or "linkUrl" in data:
-                parser = self.parsers["Button"]
-            else:
-                parser = self.parsers["MenuLink"]
+            key = "Button" if "color" in data or "linkUrl" in data else "MenuLink"
+            parser = self.parsers[key]
         elif {"children", "text"}.issubset(data):
             parser = self.parsers["Submenu"]
         elif {"height", "url", "width"}.issubset(data):
@@ -231,7 +229,7 @@ class Objector:
             errors = data["json"]["errors"]
             if len(errors) > 0:
                 raise RedditAPIException(errors)
-        if "kind" in data and ("shortName" in data or data["kind"] in ("menu", "moderators")):
+        if "kind" in data and ("shortName" in data or data["kind"] in {"menu", "moderators"}):
             # This is a widget
             parser = self.parsers.get(data["kind"], self.parsers["widget"])
             return parser.parse(data, self._reddit)

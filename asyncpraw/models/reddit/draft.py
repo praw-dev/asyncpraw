@@ -76,12 +76,10 @@ class Draft(RedditBase):
         if subreddit:
             if not subreddit._fetched:
                 await subreddit.load()
-            data.update(
-                {
-                    "subreddit": subreddit.fullname,
-                    "target": ("profile" if subreddit.display_name.startswith("u_") else "subreddit"),
-                }
-            )
+            data.update({
+                "subreddit": subreddit.fullname,
+                "target": ("profile" if subreddit.display_name.startswith("u_") else "subreddit"),
+            })
         data.update(draft_kwargs)
         return data
 
@@ -99,7 +97,7 @@ class Draft(RedditBase):
         if id:
             self.id = id
         elif len(_data) > 1:
-            if _data["kind"] in ["markdown", "richtext"]:
+            if _data["kind"] in {"markdown", "richtext"}:
                 _data["selftext"] = _data.pop("body")
             elif _data["kind"] == "link":
                 _data["url"] = _data.pop("body")

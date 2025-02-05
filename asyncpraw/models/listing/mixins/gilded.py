@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, AsyncIterator
+from typing import Any, AsyncIterator
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 
 class GildedListingMixin(AsyncPRAWBase):
