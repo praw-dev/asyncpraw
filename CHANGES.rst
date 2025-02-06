@@ -34,6 +34,7 @@ Unreleased
 - Remove ``Redditor.gildings`` method.
 - Remove ``Subreddit.mod.inbox``, ``Subreddit.mod.unread``, and
   ``Subreddit.mod.stream.unread`` methods.
+- Remove ``Subreddits.search_by_topic`` method.
 - Remove ``Subreddits.gold`` method.
 - Remove :class:`.Reddit` keyword argument ``token_manager`` and all associated token
   managers.

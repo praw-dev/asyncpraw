@@ -60,13 +60,6 @@ class TestSubreddits(IntegrationTest):
             found = True
         assert found
 
-    # async def test_search_by_topic(self, reddit): # FIXME: endpoint does not exist anymore
-    #     found = False
-    #     async for subreddit in reddit.subreddits.search_by_topic("sports"):
-    #         assert isinstance(subreddit, Subreddit)
-    #         found = True
-    #     assert found
-
     async def test_search_by_name(self, reddit):
         subreddits = await self.async_list(reddit.subreddits.search_by_name("reddit"))
         assert isinstance(subreddits, list)

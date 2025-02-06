@@ -124,22 +124,6 @@ class Subreddits(AsyncPRAWBase):
         for result in results["names"]:
             yield await self._reddit.subreddit(result)
 
-    async def search_by_topic(
-        self, query: str
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:  # pragma: no cover; TODO: not currently working
-        """Return list of Subreddits whose topics match ``query``.
-
-        :param query: Search for subreddits relevant to the search topic.
-
-        .. note::
-
-            As of 09/01/2020, this endpoint always returns 404.
-
-        """
-        results = await self._reddit.get(API_PATH["subreddits_by_topic"], params={"query": query})
-        for result in results:
-            subreddit = await self._reddit.subreddit(result["name"])
-            yield subreddit
 
     def stream(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Yield new subreddits as they are created.
