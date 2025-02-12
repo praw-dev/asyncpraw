@@ -11,6 +11,7 @@ from asyncpraw.models.listing.listing import FlairListing, ModNoteListing
 
 if TYPE_CHECKING:
     import asyncpraw
+    from asyncpraw.models.reddit.base import RedditBase
 
 
 class ListingGenerator(AsyncPRAWBase, AsyncIterator):
@@ -25,11 +26,11 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
     """
 
-    def __aiter__(self) -> Any:
+    def __aiter__(self) -> ListingGenerator:
         """Permit :class:`.ListingGenerator` to operate as an async iterator."""
         return self
 
-    async def __anext__(self) -> Any:
+    async def __anext__(self) -> RedditBase:
         """Permit :class:`.ListingGenerator` to operate as a async generator."""
         if self.limit is not None and self.yielded >= self.limit:
             raise StopAsyncIteration
@@ -63,7 +64,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         super().__init__(reddit, _data=None)
         self._exhausted = False
         self._listing = None
-        self._list_index = None
+        self._list_index: int
         self.limit = limit
         self.params = deepcopy(params) if params else {}
         self.params["limit"] = limit or 1024
