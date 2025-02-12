@@ -28,7 +28,7 @@ class DraftHelper(AsyncPRAWBase):
 
     """
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncGenerator[asyncpraw.models.Draft, None]:
         r"""Iterate through all the :class:`.Draft`\ s.
 
         :returns: An asynchronous iterator containing all the currently authenticated
@@ -245,7 +245,7 @@ class LiveHelper(AsyncPRAWBase):
             msg = "ids must be a list"
             raise TypeError(msg)
 
-        async def generator():
+        async def generator() -> AsyncGenerator[asyncpraw.models.LiveThread, None, None]:
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))

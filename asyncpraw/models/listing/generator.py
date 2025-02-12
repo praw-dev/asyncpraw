@@ -71,7 +71,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         self.url = url
         self.yielded = 0
 
-    def _extract_sublist(self, listing: dict[str, Any] | list[Any]):
+    def _extract_sublist(self, listing: dict[str, Any] | list[Any] | Any) -> Any:
         if isinstance(listing, list):
             return listing[1]  # for submission duplicates
         if isinstance(listing, dict):

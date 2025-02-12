@@ -1,4 +1,4 @@
-"""Test praw.models.mod_notes."""
+"""Test asyncpraw.models.mod_notes."""
 
 import pytest
 
@@ -26,7 +26,7 @@ class TestBaseModNotes(UnitTest):
 
 class TestRedditModNotes(UnitTest):
     def test__call__invalid_thing_type(self, reddit):
-        with pytest.raises(ValueError) as excinfo:
+        with pytest.raises(TypeError) as excinfo:
             reddit.notes(things=[1])
         assert (
             excinfo.value.args[0]

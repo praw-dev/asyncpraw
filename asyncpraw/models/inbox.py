@@ -300,7 +300,7 @@ class Inbox(AsyncPRAWBase):
         self,
         *,
         mark_read: bool = False,
-        **generator_kwargs: str | int | dict[str, str],
+        **generator_kwargs: str | int | dict[str, str] | None,
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Message]:
         """Return a :class:`.ListingGenerator` for unread comments and messages.
 

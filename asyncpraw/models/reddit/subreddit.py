@@ -64,7 +64,7 @@ class Modmail:
 
     """
 
-    async def __call__(self, id: str | None = None, mark_read: bool = False, fetch: bool = True) -> ModmailConversation:
+    async def __call__(self, id: str | None = None, *, mark_read: bool = False, fetch: bool = True) -> ModmailConversation:
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``"2gmz"``.
@@ -129,7 +129,7 @@ class Modmail:
         """Initialize a :class:`.Modmail` instance."""
         self.subreddit = subreddit
 
-    def _build_subreddit_list(self, other_subreddits: list[asyncpraw.models.Subreddit] | None):
+    def _build_subreddit_list(self, other_subreddits: list[asyncpraw.models.Subreddit] | None) -> str:
         """Return a comma-separated list of subreddit display names."""
         subreddits = [self.subreddit] + (other_subreddits or [])
         return ",".join(str(subreddit) for subreddit in subreddits)
@@ -622,11 +622,11 @@ class SubredditFlairTemplates:
     """Provide functions to interact with a :class:`.Subreddit`'s flair templates."""
 
     @staticmethod
-    def flair_type(is_link: bool) -> str:
+    def flair_type(*, is_link: bool) -> str:
         """Return ``"LINK_FLAIR"`` or ``"USER_FLAIR"`` depending on ``is_link`` value."""
         return "LINK_FLAIR" if is_link else "USER_FLAIR"
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncGenerator[None, None, None]:
         """Abstract method to return flair templates."""
         raise NotImplementedError
 
@@ -673,7 +673,7 @@ class SubredditFlairTemplates:
             "allowable_content": allowable_content,
             "background_color": background_color,
             "css_class": css_class,
-            "flair_type": self.flair_type(is_link),
+            "flair_type": self.flair_type(is_link=is_link),
             "max_emojis": max_emojis,
             "mod_only": bool(mod_only),
             "text": text,
@@ -684,14 +684,14 @@ class SubredditFlairTemplates:
 
     async def _clear(self, *, is_link: bool | None = None) -> None:
         url = API_PATH["flairtemplateclear"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.post(url, data={"flair_type": self.flair_type(is_link)})
+        await self.subreddit._reddit.post(url, data={"flair_type": self.flair_type(is_link=is_link)})
 
     async def _reorder(self, flair_list: list, *, is_link: bool | None = None) -> None:
         url = API_PATH["flairtemplatereorder"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.patch(
             url,
             params={
-                "flair_type": self.flair_type(is_link),
+                "flair_type": self.flair_type(is_link=is_link),
                 "subreddit": self.subreddit.display_name,
             },
             json=flair_list,
@@ -2143,7 +2143,7 @@ class ModeratorRelationship(SubredditRelationship):
 
     """
 
-    PERMISSIONS = {
+    PERMISSIONS = frozenset({
         "access",
         "chat_config",
         "chat_operator",
@@ -2152,7 +2152,7 @@ class ModeratorRelationship(SubredditRelationship):
         "mail",
         "posts",
         "wiki",
-    }
+    })
 
     @staticmethod
     def _handle_permissions(
@@ -2166,7 +2166,7 @@ class ModeratorRelationship(SubredditRelationship):
         )
         return other_settings
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncGenerator[asyncpraw.models.Redditor, None]:
         """Asynchronously iterate through Redditors who are moderators.
 
         For example, to list the moderators along with their permissions try:
@@ -2497,6 +2497,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     """
 
     STR_FIELD = "display_name"
+    MAX_CAPTION_LENGTH = 180
     MESSAGE_PREFIX = "#"
 
     @staticmethod
@@ -2610,7 +2611,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             else:
                 msg = "'image_path' is required."
                 raise TypeError(msg)
-            if not len(image.get("caption", "")) <= 180:
+            if not len(image.get("caption", "")) <= Subreddit.MAX_CAPTION_LENGTH:
                 msg = "Caption must be 180 characters or less."
                 raise TypeError(msg)
 
@@ -3012,7 +3013,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         self.__dict__.update(other.__dict__)
         await super()._fetch()
 
-    def _fetch_info(self):
+    def _fetch_info(self) -> tuple[str, dict[str, RedditBase], None]:
         return "subreddit_about", {"subreddit": self}, None
 
     @asynccontextmanager
@@ -3024,9 +3025,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data) as response:
                 yield response
 
-    async def _submit_media(
-        self, *, data: dict[Any, Any], timeout: int, without_websockets: bool
-    ) -> asyncpraw.models.Submission | None:
+    async def _submit_media(self, *, data: dict[Any, Any], timeout: int, without_websockets: bool) -> asyncpraw.models.Submission | None:
         """Submit and return an ``image``, ``video``, or ``videogif``.
 
         This is a helper method for submitting posts that are not link posts or self
@@ -3057,7 +3056,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         url = ws_update["payload"]["redirect"]
         return await self._reddit.submission(url=url)
 
-    async def _upload_inline_media(self, inline_media: asyncpraw.models.InlineMedia):
+    async def _upload_inline_media(self, inline_media: asyncpraw.models.InlineMedia) -> asyncpraw.models.InlineMedia:
         """Upload media for use in self posts and return ``inline_media``.
 
         :param inline_media: An :class:`.InlineMedia` object to validate and upload.
@@ -3073,7 +3072,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         expected_mime_prefix: str | None = None,
         media_path: str,
         upload_type: str = "link",
-    ):
+    ) -> str:
         """Upload media and return its URL and a websocket (Undocumented endpoint).
 
         :param expected_mime_prefix: If provided, enforce that the media has a mime type
@@ -3081,9 +3080,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param upload_type: One of ``"link"``, ``"gallery"'', or ``"selfpost"``
             (default: ``"link"``).
 
-        :returns: A tuple containing ``(media_url, websocket_url)`` for the piece of
-            media. The websocket URL can be used to determine when media processing is
-            finished, or it can be ignored.
+        :returns: The link to the uploaded media.
 
         """
         if media_path is None:
@@ -3121,7 +3118,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 response.raise_for_status()
             except HttpProcessingError:
                 raise ServerError(response=response) from None
-
         if upload_type == "link":
             return f"{upload_url}/{upload_data['key']}"
         return upload_response["asset"]["asset_id"]

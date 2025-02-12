@@ -189,7 +189,7 @@ class ThingModerationMixin(ModNoteMixin):
         *,
         message: str,
         title: str = "ignored",
-        type: str = "public",
+        type: str = "public",  # noqa: A002
     ) -> asyncpraw.models.Comment | None:
         """Send a removal message for a :class:`.Comment` or :class:`.Submission`.
 

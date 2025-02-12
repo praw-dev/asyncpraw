@@ -246,7 +246,7 @@ class WikiPage(RedditBase):
         self.__dict__.update(data)
         await super()._fetch()
 
-    def _fetch_info(self):
+    def _fetch_info(self) -> tuple[str, dict[str, str], dict[str, str] | None]:
         return (
             "wiki_page",
             {"subreddit": self.subreddit, "page": self.name},

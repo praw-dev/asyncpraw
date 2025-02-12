@@ -322,7 +322,7 @@ class SubredditWidgets(AsyncPRAWBase):
             self._items = {}
             for item_name, data in self._raw_items.items():
                 data["subreddit"] = self.subreddit
-                self._items[item_name] = self._reddit._objector.objectify(data)
+                self._items[item_name] = self._reddit._objector.objectify(data=data)
         return self._items
 
     async def moderators_widget(self) -> asyncpraw.models.ModeratorsWidget:

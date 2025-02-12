@@ -39,7 +39,7 @@ class BaseList(AsyncPRAWBase):
 
         child_list = getattr(self, self.CHILD_ATTRIBUTE)
         for index, item in enumerate(child_list):
-            child_list[index] = reddit._objector.objectify(item)
+            child_list[index] = reddit._objector.objectify(data=item)
 
     def __iter__(self) -> Iterator[Any]:
         """Return an iterator to the list."""

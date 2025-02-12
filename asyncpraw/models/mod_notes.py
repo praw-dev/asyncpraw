@@ -40,7 +40,7 @@ class BaseModNotes:
         redditor: Redditor | str,
         subreddit: Subreddit | str,
         **generator_kwargs: Any,
-    ):
+    ) -> ListingGenerator:
         AsyncPRAWBase._safely_add_arguments(
             arguments=generator_kwargs,
             key="params",
@@ -65,7 +65,7 @@ class BaseModNotes:
             }
             response = await self._reddit.get(API_PATH["mod_notes_bulk"], params=params)
             for note_dict in response["mod_notes"]:
-                yield self._reddit._objector.objectify(note_dict)
+                yield self._reddit._objector.objectify(data=note_dict)
 
     def _ensure_attribute(self, error_message: str, **attributes: Any) -> Any:
         attribute, value_ = attributes.popitem()
@@ -76,6 +76,7 @@ class BaseModNotes:
 
     async def _notes(
         self,
+        *,
         all_notes: bool,
         redditors: list[Redditor | str],
         subreddits: list[Subreddit | str],
@@ -269,7 +270,7 @@ class BaseModNotes:
             msg = "Either 'note_id' or 'delete_all' must be provided."
             raise TypeError(msg)
         if delete_all:
-            async for note in self._notes(True, [redditor], [subreddit]):
+            async for note in self._notes(all_notes=True, redditors=[redditor], subreddits=[subreddit]):
                 await note.delete()
         else:
             params = {
@@ -369,9 +370,9 @@ class RedditorModNotes(BaseModNotes):
         if all_notes is None:
             all_notes = len(subreddits) == 1
         return self._notes(
-            all_notes,
-            [self.redditor] * len(subreddits),
-            list(subreddits),
+            all_notes=all_notes,
+            redditors=[self.redditor] * len(subreddits),
+            subreddits=list(subreddits),
             **generator_kwargs,
         )
 
@@ -465,9 +466,9 @@ class SubredditModNotes(BaseModNotes):
         if all_notes is None:
             all_notes = len(redditors) == 1
         return self._notes(
-            all_notes,
-            list(redditors),
-            [self.subreddit] * len(redditors),
+            all_notes=all_notes,
+            redditors=list(redditors),
+            subreddits=[self.subreddit] * len(redditors),
             **generator_kwargs,
         )
 
@@ -635,8 +636,10 @@ class RedditModNotes(BaseModNotes):
                 merged_subreddits.append(subreddit)
             else:
                 msg = f"Cannot get subreddit and author fields from type {type(item)}"
-                raise ValueError(msg)
-        return self._notes(all_notes, merged_redditors, merged_subreddits, **generator_kwargs)
+                raise TypeError(msg)
+        return self._notes(
+            all_notes=all_notes, redditors=merged_redditors, subreddits=merged_subreddits, **generator_kwargs
+        )
 
     def things(
         self,
@@ -688,4 +691,4 @@ class RedditModNotes(BaseModNotes):
             redditors.append(thing.author)
         if all_notes is None:
             all_notes = len(things) == 1
-        return self._notes(all_notes, redditors, subreddits, **generator_kwargs)
+        return self._notes(all_notes=all_notes, redditors=redditors, subreddits=subreddits, **generator_kwargs)

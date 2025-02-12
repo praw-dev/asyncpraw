@@ -41,7 +41,7 @@ class LiveContributorRelationship:
 
         """
 
-        async def generator():
+        async def generator() -> AsyncIterator[asyncpraw.models.Redditor]:
             url = API_PATH["live_contributors"].format(id=self.thread.id)
             temp = await self.thread._reddit.get(url)
             redditor_list = temp if isinstance(temp, RedditorList) else temp[0]
@@ -386,7 +386,7 @@ class LiveThread(RedditBase):
         self.__dict__.update(other.__dict__)
         await super()._fetch()
 
-    def _fetch_info(self):
+    def _fetch_info(self) -> tuple[str, dict[str, str], None]:
         return "liveabout", {"id": self.id}, None
 
     def discussions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
@@ -452,7 +452,7 @@ class LiveThread(RedditBase):
             await update._fetch()
         return update
 
-    async def report(self, type: str) -> None:
+    async def report(self, type: str) -> None:  # noqa: A002
         """Report the thread violating the Reddit rules.
 
         :param type: One of ``"spam"``, ``"vote-manipulation"``,

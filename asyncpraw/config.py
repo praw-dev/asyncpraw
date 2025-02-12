@@ -7,6 +7,7 @@ import os
 import sys
 from pathlib import Path
 from threading import Lock
+from types import MappingProxyType
 from typing import Any
 
 from .exceptions import ClientException
@@ -28,13 +29,13 @@ class Config:
     CONFIG = None
     CONFIG_NOT_SET = _NotSet()  # Represents a config value that is not set.
     LOCK = Lock()
-    INTERPOLATION_LEVEL = {
+    INTERPOLATION_LEVEL = MappingProxyType({
         "basic": configparser.BasicInterpolation,
         "extended": configparser.ExtendedInterpolation,
-    }
+    })
 
     @staticmethod
-    def _config_boolean(item: bool | str) -> bool:
+    def _config_boolean(*, item: bool | str) -> bool:
         if isinstance(item, bool):
             return item
         return item.lower() in {"1", "yes", "true", "on"}
@@ -121,10 +122,10 @@ class Config:
 
     def _initialize_attributes(self) -> None:
         self._short_url = self._fetch_default("short_url") or self.CONFIG_NOT_SET
-        self.check_for_updates = self._config_boolean(self._fetch_or_not_set("check_for_updates"))
-        self.warn_comment_sort = self._config_boolean(self._fetch_default("warn_comment_sort", default=True))
+        self.check_for_updates = self._config_boolean(item=self._fetch_or_not_set("check_for_updates"))
+        self.warn_comment_sort = self._config_boolean(item=self._fetch_default("warn_comment_sort", default=True))
         self.warn_additional_fetch_params = self._config_boolean(
-            self._fetch_default("warn_additional_fetch_params", default=True)
+            item=self._fetch_default("warn_additional_fetch_params", default=True)
         )
         self.window_size = self._fetch_default("window_size", default=600)
         self.kinds = {

@@ -93,7 +93,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         return CommentModeration(self)
 
     @property
-    def _kind(self):
+    def _kind(self) -> str:
         """Return the class's kind."""
         return self._reddit.config.kinds["comment"]
 
@@ -161,7 +161,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         _data: dict[str, Any] | None = None,
     ) -> None:
         """Initialize a :class:`.Comment` instance."""
-        if (id, url, _data).count(None) != 2:
+        if sum(1 for value in (id, url, _data) if value is not None) != 1:
             msg = "Exactly one of 'id', 'url', or '_data' must be provided."
             raise TypeError(msg)
         fetched = False
@@ -190,7 +190,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             value = Subreddit(self._reddit, display_name=value)
         super().__setattr__(attribute, value)
 
-    def _extract_submission_id(self):
+    def _extract_submission_id(self) -> str:
         if "context" in self.__dict__:
             return self.context.rsplit("/", 4)[1]
         return self.link_id.split("_", 1)[1]
@@ -208,7 +208,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         self.__dict__.update(other.__dict__)
         await super()._fetch()
 
-    def _fetch_info(self):
+    def _fetch_info(self) -> tuple[str, dict, dict[str, str]]:
         return "info", {}, {"id": self.fullname}
 
     async def parent(
