@@ -12,7 +12,7 @@ from asyncpraw.models.reddit.live import LiveThread
 from asyncpraw.models.reddit.multi import Multireddit, Subreddit
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator
+    from collections.abc import AsyncIterator
 
     import asyncpraw.models
 
@@ -27,7 +27,7 @@ class DraftHelper(AsyncPRAWBase):
 
     """
 
-    async def __aiter__(self) -> AsyncGenerator[asyncpraw.models.Draft, None]:
+    async def __aiter__(self) -> AsyncIterator[asyncpraw.models.Draft]:
         r"""Iterate through all the :class:`.Draft`\ s.
 
         :returns: An asynchronous iterator containing all the currently authenticated
@@ -211,7 +211,7 @@ class LiveHelper(AsyncPRAWBase):
             },
         )
 
-    def info(self, ids: list[str]) -> AsyncGenerator[asyncpraw.models.LiveThread, None]:
+    def info(self, ids: list[str]) -> AsyncIterator[asyncpraw.models.LiveThread]:
         """Fetch information about each live thread in ``ids``.
 
         :param ids: A list of IDs for a live thread.
@@ -244,7 +244,7 @@ class LiveHelper(AsyncPRAWBase):
             msg = "ids must be a list"
             raise TypeError(msg)
 
-        async def generator() -> AsyncGenerator[asyncpraw.models.LiveThread, None, None]:
+        async def generator() -> AsyncIterator[asyncpraw.models.LiveThread]:
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))

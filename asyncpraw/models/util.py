@@ -8,7 +8,7 @@ from collections import OrderedDict
 from typing import TYPE_CHECKING, Any, Callable
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator
+    from collections.abc import AsyncIterator
 
 
 def permissions_string(*, known_permissions: set[str], permissions: list[str] | None) -> str:
@@ -42,7 +42,7 @@ async def stream_generator(
     pause_after: int | None = None,
     skip_existing: bool = False,
     **function_kwargs: Any,
-) -> AsyncGenerator[Any, None]:
+) -> AsyncIterator[Any]:
     """Yield new items from ``function`` as they become available.
 
     :param function: A callable that returns a :class:`.ListingGenerator`, e.g.,

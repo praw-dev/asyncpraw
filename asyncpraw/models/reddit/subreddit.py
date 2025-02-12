@@ -251,7 +251,7 @@ class Modmail:
 
     async def subreddits(
         self,
-    ) -> AsyncGenerator[asyncpraw.models.Subreddit, None]:
+    ) -> AsyncGenerator[asyncpraw.models.Subreddit]:
         """Yield subreddits using the new modmail that the user moderates.
 
         For example:
@@ -306,7 +306,7 @@ class SubredditFilters:
 
     async def __aiter__(
         self,
-    ) -> AsyncGenerator[asyncpraw.models.Subreddit, None]:
+    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Iterate through the special :class:`.Subreddit`'s filters.
 
         This method should be invoked as:
@@ -625,7 +625,7 @@ class SubredditFlairTemplates:
         """Return ``"LINK_FLAIR"`` or ``"USER_FLAIR"`` depending on ``is_link`` value."""
         return "LINK_FLAIR" if is_link else "USER_FLAIR"
 
-    async def __aiter__(self) -> AsyncGenerator[None, None, None]:
+    async def __aiter__(self) -> AsyncIterator[None]:
         """Abstract method to return flair templates."""
         raise NotImplementedError
 
@@ -1181,7 +1181,7 @@ class SubredditModerationStream:
 
     def edited(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Yield edited comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1207,7 +1207,7 @@ class SubredditModerationStream:
         action: str | None = None,
         mod: str | asyncpraw.models.Redditor | None = None,
         **stream_options: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModAction, None]:
+    ) -> AsyncIterator[asyncpraw.models.ModAction]:
         """Yield moderator log entries as they become available.
 
         :param action: If given, only return log entries for the specified action.
@@ -1239,7 +1239,7 @@ class SubredditModerationStream:
         sort: str | None = None,
         state: str | None = None,
         **stream_options: Any,
-    ) -> AsyncGenerator[ModmailConversation, None]:
+    ) -> AsyncIterator[ModmailConversation]:
         """Yield new-modmail conversations as they become available.
 
         :param other_subreddits: A list of :class:`.Subreddit` instances for which to
@@ -1277,7 +1277,7 @@ class SubredditModerationStream:
 
     def modqueue(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         r"""Yield :class:`.Comment`\ s and :class:`.Submission`\ s in the modqueue as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1298,7 +1298,7 @@ class SubredditModerationStream:
 
     def reports(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         r"""Yield reported :class:`.Comment`\ s and :class:`.Submission`\ s as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1319,7 +1319,7 @@ class SubredditModerationStream:
 
     def spam(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         r"""Yield spam :class:`.Comment`\ s and :class:`.Submission`\ s as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1338,7 +1338,7 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.spam, only=only, **stream_options)
 
-    def unmoderated(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.Submission, None]:
+    def unmoderated(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Submission]:
         r"""Yield unmoderated :class:`.Submission`\ s as they become available.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -1494,7 +1494,7 @@ class SubredditStream:
         """
         self.subreddit = subreddit
 
-    def comments(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.Comment, None]:
+    def comments(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Comment]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially
@@ -1527,7 +1527,7 @@ class SubredditStream:
         """
         return stream_generator(self.subreddit.comments, **stream_options)
 
-    def submissions(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.Submission, None]:
+    def submissions(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Submission]:
         r"""Yield new :class:`.Submission`\ s as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions will
@@ -2001,7 +2001,7 @@ class SubredditStylesheet:
 class SubredditWiki:
     """Provides a set of wiki functions to a :class:`.Subreddit`."""
 
-    async def __aiter__(self) -> AsyncGenerator[WikiPage, None]:
+    async def __aiter__(self) -> AsyncIterator[WikiPage]:
         """Iterate through the pages of the wiki.
 
         This method is to be used to discover all wikipages for a subreddit:
@@ -3857,7 +3857,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
     async def __aiter__(
         self,
-    ) -> AsyncGenerator[dict[str, str | int | bool | list[dict[str, str]]], None]:
+    ) -> AsyncIterator[dict[str, str | int | bool | list[dict[str, str]]]]:
         """Iterate through the link flair templates as a moderator.
 
         For example:
@@ -3959,7 +3959,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
     async def user_selectable(
         self,
-    ) -> AsyncGenerator[dict[str, str | bool], None]:
+    ) -> AsyncIterator[dict[str, str | bool]]:
         """Iterate through the link flair templates as a regular user.
 
         For example:
@@ -3981,7 +3981,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
     async def __aiter__(
         self,
-    ) -> AsyncGenerator[dict[str, str | int | bool | list[dict[str, str]]], None]:
+    ) -> AsyncIterator[dict[str, str | int | bool | list[dict[str, str]]]]:
         """Iterate through the user flair templates.
 
         For example:

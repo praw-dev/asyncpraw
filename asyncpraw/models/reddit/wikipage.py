@@ -11,7 +11,7 @@ from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator, AsyncIterator
+    from collections.abc import AsyncIterator
 
     import asyncpraw.models
 
@@ -188,7 +188,7 @@ class WikiPage(RedditBase):
         generator_kwargs: dict[str, Any],
         subreddit: asyncpraw.models.Subreddit,
         url: str,
-    ) -> AsyncGenerator[dict[str, Redditor | WikiPage | str | int | bool | None], None]:
+    ) -> AsyncIterator[dict[str, Redditor | WikiPage | str | int | bool | None]]:
         async for revision in ListingGenerator(subreddit._reddit, url, **generator_kwargs):
             if revision["author"] is not None:
                 revision["author"] = Redditor(subreddit._reddit, _data=revision["author"]["data"])
@@ -312,7 +312,7 @@ class WikiPage(RedditBase):
         await page._fetch()
         return page
 
-    def revisions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncGenerator[WikiPage, None]:
+    def revisions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[WikiPage]:
         """Return a :class:`.ListingGenerator` for page revisions.
 
         Additional keyword arguments are passed in the initialization of

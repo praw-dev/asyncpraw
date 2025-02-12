@@ -14,7 +14,7 @@ from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator, Iterator
+    from collections.abc import Iterator
 
     import asyncpraw.models
 

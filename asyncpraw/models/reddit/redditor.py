@@ -13,7 +13,7 @@ from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator
+    from collections.abc import AsyncIterator
 
     import asyncpraw.models
 
@@ -437,7 +437,7 @@ class RedditorStream:
         """
         self.redditor = redditor
 
-    def comments(self, **stream_options: str | int | dict[str, str]) -> AsyncGenerator[asyncpraw.models.Comment, None]:
+    def comments(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Comment]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially
@@ -458,7 +458,7 @@ class RedditorStream:
 
     def submissions(
         self, **stream_options: str | int | dict[str, str]
-    ) -> AsyncGenerator[asyncpraw.models.Submission, None]:
+    ) -> AsyncIterator[asyncpraw.models.Submission]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions will
