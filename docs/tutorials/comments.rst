@@ -72,7 +72,7 @@ could ignore :class:`.MoreComments` in our code, like so:
 
     from asyncpraw.models import MoreComments
 
-    comments - await submission.comments()
+    comments = await submission.comments()
     for top_level_comment in comments:
         if isinstance(top_level_comment, MoreComments):
             continue
