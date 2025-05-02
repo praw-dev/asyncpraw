@@ -157,6 +157,25 @@ to read-only mode whenever you want:
     If you are uncomfortable hard-coding your credentials into your program, there are
     some options available to you. Please see: :ref:`configuration`.
 
+Close Connections in :class:`.Reddit`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The asynchronous context requires closing your session when you finish using Reddit:
+
+.. code-block:: python
+
+    reddit = asyncpraw.Reddit(...)
+    await reddit.close()
+
+Or, you can use an asynchronous context manager:
+
+.. code-block:: python
+
+    async with asyncpraw.Reddit(...) as reddit:
+        # do stuff with `reddit`
+        print(await reddit.user.me())
+    # connection is closed
+
 Obtain a :class:`.Subreddit`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
