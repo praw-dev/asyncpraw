@@ -84,7 +84,7 @@ class TestSubredditFilters(IntegrationTest):
         subreddit = await reddit.subreddit("mod")
         await subreddit.filters.remove(await reddit.subreddit("redditdev"))
 
-    # async def test_remove__non_special(self, reddit):  # FIXME: no longer rases not found; same with praw
+    # async def test_remove__non_special(self, reddit):  # FIXME: no longer raises not found; same with praw
     #     reddit.read_only = False
     #     with pytest.raises(NotFound):
     #         subreddit = await reddit.subreddit("redditdev")
@@ -1367,6 +1367,18 @@ class TestSubreddit(IntegrationTest):
         assert submission.url == url
         assert submission.title == "Test Title"
 
+    async def test_submit__url_selftext(self, reddit):
+        url = "https://asyncpraw.readthedocs.org/en/stable/"
+        selftext = "Testing **Async PRAW** link submission *with markdown selftext*."
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        submission = await subreddit.submit("Test Title", url=url, selftext=selftext)
+        await submission.load()
+        assert submission.selftext == selftext
+        assert submission.author == pytest.placeholders.username
+        assert submission.url == url
+        assert submission.title == "Test Title"
+
     async def test_submit__verify_invalid(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -1446,6 +1458,45 @@ class TestSubreddit(IntegrationTest):
         submission = await subreddit.submit_gallery("Test Title", images, flair_id=flair_id, flair_text=flair_text)
         assert submission.link_flair_css_class == flair_class
         assert submission.link_flair_text == flair_text
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock("1o1h8pq")),
+    )  # update with cassette
+    async def test_submit_gallery__selftext(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        images = [
+            {"image_path": image_path("test.png")},
+            {
+                "image_path": image_path("test.jpg"),
+                "caption": "A JPG image.",
+            },
+            {
+                "image_path": image_path("test.gif"),
+                "outbound_url": "https://example.com",
+            },
+            {
+                "image_path": image_path("test.png"),
+                "caption": "A PNG image.",
+                "outbound_url": "https://example.com",
+            },
+        ]
+        selftext = "Testing **Async PRAW** gallery submission *with markdown selftext*."
+        title = "Testing Async PRAW Gallery with Selftext"
+        submission = await subreddit.submit_gallery(title, images, selftext=selftext)
+        assert submission.author == pytest.placeholders.username
+        assert submission.is_gallery
+        assert submission.title == title
+        assert submission.selftext == selftext
+        items = submission.gallery_data["items"]
+        assert isinstance(submission.gallery_data["items"], list)
+        for i, item in enumerate(items):
+            test_data = images[i]
+            test_data.pop("image_path")
+            item.pop("id")
+            item.pop("media_id")
+            assert item == test_data
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1529,6 +1580,21 @@ class TestSubreddit(IntegrationTest):
         with pytest.raises(TooLargeMediaException):
             subreddit = await reddit.subreddit("test")
             await subreddit.submit_image("test", tempfile.name)
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(return_value=WebsocketMock("1o1hb24")),
+    )  # update with cassette
+    async def test_submit_image__selftext(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        image = image_path("test.png")
+        selftext = "Testing **Async PRAW** image submission *with markdown selftext*."
+        title = "Testing Async PRAW image submission with selftext"
+        submission = await subreddit.submit_image(title, image, selftext=selftext)
+        assert submission.selftext == selftext
+        assert submission.is_reddit_media_domain
+        assert submission.title == title
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1712,6 +1778,25 @@ class TestSubreddit(IntegrationTest):
         submission = await subreddit.submit_video("Test Title", video, flair_id=flair_id, flair_text=flair_text)
         assert submission.link_flair_css_class == flair_class
         assert submission.link_flair_text == flair_text
+
+    @mock.patch(
+        "aiohttp.client.ClientSession.ws_connect",
+        new=MagicMock(
+            return_value=WebsocketMock("1o1hekp", "1o1help"),  # update with cassette
+        ),
+    )
+    async def test_submit_video__selftext(self, image_path, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for i, file_name in enumerate(("test.mov", "test.mp4")):
+            title = f"Test Title {i}"
+            selftext = f"Testing **Async PRAW** video submission *with markdown selftext*."
+            video = image_path(file_name)
+            submission = await subreddit.submit_video(title, video, selftext=selftext)
+            assert submission.author == pytest.placeholders.username
+            assert submission.is_video
+            assert submission.title == title
+            assert submission.selftext == selftext
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",

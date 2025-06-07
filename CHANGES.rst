@@ -9,6 +9,8 @@ Unreleased
 **Added**
 
 - Add support for Python 3.13.
+- Add support for optional Markdown-formatted ``selftext`` when submitting link, image,
+  gallery and video posts.
 - Support delayed session creation in asyncprawcore 2.5.0+.
 - Add parameter ``fetch`` to :meth:`.get_rule` to control whether to fetch the rule data
   when initializing the rule object.
@@ -26,6 +28,14 @@ Unreleased
   must now be passed by keyword.
 - The ``flair_type`` argument to :class:`.SubredditFlairTemplates` must be passed by
   keyword.
+- The ``selftext`` and ``url`` arguments to :meth:`.Subreddit.submit` are no longer
+  mutually exclusive. When ``url`` is provided ``selftext`` will be used as optional
+  body text to accompany the link submission. An exception is raised when trying to use
+  ``inline_media`` with ``selftext`` for a ``url`` submission because Reddit does not
+  support inline media in body text for link submissions.
+- :meth:`.Subreddit.submit_video`, :meth:`.Subreddit.submit_gallery`, and
+  :meth:`.Subreddit.submit_image` now accept an optional Markdown-formatted ``selftext``
+  parameter.
 - :meth:`.CommentForest.list` no longer needs to be awaited.
 - The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
   argument used to explicitly perform a fetch when initializing an object.
