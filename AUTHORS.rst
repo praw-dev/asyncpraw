@@ -31,6 +31,7 @@ Documentation Contributors
 - Johanna Rührig `@TheRealVira <https://github.com/TheRealVira>`_
 - Sam Snarr `@sss-ng <https://github.com/sss-ng>`_
 - Moshe Dicker `@dickermoshe <https://github.com/dickermoshe>`_
+- Andrew Chen Wang `@Andrew-Chen-Wang <https://github.com/Andrew-Chen-Wang>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
 PRAW Author
