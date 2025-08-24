@@ -10,6 +10,13 @@ class TestComment(UnitTest):
         assert more == more2
         assert more != 5
 
+    def test_hash(self):
+        more = MoreComments(None, {"children": ["a", "b", "c", "d"], "count": 4})
+        more2 = MoreComments(None, {"children": ["a", "b", "c", "d"], "count": 4})
+        more3 = MoreComments(None, {"children": ["a", "b", "c", "d", "e"], "count": 5})
+        assert hash(more) == hash(more2)
+        assert hash(more) != hash(more3)
+
     def test_repr(self, reddit):
         more = MoreComments(reddit, {"children": ["a", "b", "c", "d", "e"], "count": 5})
         assert repr(more) == "<MoreComments count=5, children=['a', 'b', 'c', '...']>"
