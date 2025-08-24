@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING
 from warnings import warn
 
 from asyncprawcore import Conflict
@@ -18,6 +18,8 @@ from .reddit.redditor import Redditor
 from .reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 
@@ -84,9 +86,7 @@ class User(AsyncPRAWBase):
                 print(str(subreddit))
 
         """
-        return ListingGenerator(
-            self._reddit, API_PATH["my_contributor"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["my_contributor"], **generator_kwargs)
 
     @_deprecate_args("user")
     async def friends(
@@ -105,11 +105,7 @@ class User(AsyncPRAWBase):
             the specified :class:`.Redditor`.
 
         """
-        endpoint = (
-            API_PATH["friends"]
-            if user is None
-            else API_PATH["friend_v1"].format(user=str(user))
-        )
+        endpoint = API_PATH["friends"] if user is None else API_PATH["friend_v1"].format(user=str(user))
         return await self._reddit.get(endpoint)
 
     async def karma(self) -> dict[asyncpraw.models.Subreddit, dict[str, int]]:
@@ -192,9 +188,7 @@ class User(AsyncPRAWBase):
             :meth:`.Redditor.moderated`
 
         """
-        return ListingGenerator(
-            self._reddit, API_PATH["my_moderator"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["my_moderator"], **generator_kwargs)
 
     async def multireddits(self) -> list[asyncpraw.models.Multireddit]:
         r"""Return a list of :class:`.Multireddit`\ s belonging to the user."""
@@ -265,9 +259,7 @@ class User(AsyncPRAWBase):
         except Conflict:
             pass
 
-    def subreddits(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def subreddits(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         r"""Return a :class:`.ListingGenerator` of :class:`.Subreddit`\ s the user is subscribed to.
 
         Additional keyword arguments are passed in the initialization of
@@ -281,9 +273,7 @@ class User(AsyncPRAWBase):
                 print(str(subreddit))
 
         """
-        return ListingGenerator(
-            self._reddit, API_PATH["my_subreddits"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["my_subreddits"], **generator_kwargs)
 
     async def trusted(self) -> list[asyncpraw.models.Redditor]:
         r"""Return a :class:`.RedditorList` of trusted :class:`.Redditor`\ s.

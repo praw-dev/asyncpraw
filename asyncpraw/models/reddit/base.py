@@ -27,10 +27,7 @@ class RedditBase(AsyncPRAWBase):
         """Return whether the other instance equals the current."""
         if isinstance(other, str):
             return other.lower() == str(self).lower()
-        return (
-            isinstance(other, self.__class__)
-            and str(self).lower() == str(other).lower()
-        )
+        return isinstance(other, self.__class__) and str(self).lower() == str(other).lower()
 
     def __getattr__(self, attribute: str) -> Any:
         """Return the value of ``attribute``."""
@@ -64,10 +61,7 @@ class RedditBase(AsyncPRAWBase):
         super().__init__(reddit, _data=_data)
         self._fetched = _fetched
         if _str_field and self.STR_FIELD not in self.__dict__:
-            if (
-                _extra_attribute_to_check is not None
-                and _extra_attribute_to_check in self.__dict__
-            ):
+            if _extra_attribute_to_check is not None and _extra_attribute_to_check in self.__dict__:
                 return
             msg = f"An invalid value was specified for {self.STR_FIELD}. Check that the argument for the {self.STR_FIELD} parameter is not empty."
             raise ValueError(msg)

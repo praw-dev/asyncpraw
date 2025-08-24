@@ -141,9 +141,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         """
         if not self._submission:  # Comment not from submission
-            self._submission = Submission(
-                self._reddit, id=self._extract_submission_id()
-            )
+            self._submission = Submission(self._reddit, id=self._extract_submission_id())
         return self._submission
 
     @submission.setter
@@ -185,10 +183,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         if attribute == "author":
             value = Redditor.from_data(self._reddit, value)
         elif attribute == "replies":
-            if value == "":
-                value = []
-            else:
-                value = self._reddit._objector.objectify(value).children
+            value = [] if value == "" else self._reddit._objector.objectify(data=value).children  # noqa: PLC1901
             attribute = "_replies"
         elif attribute == "subreddit" and isinstance(value, str):
             value = Subreddit(self._reddit, display_name=value)

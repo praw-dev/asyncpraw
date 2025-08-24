@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from itertools import islice
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, AsyncIterator, Iterable
+from typing import TYPE_CHECKING
 
 import asyncprawcore
 
@@ -14,6 +14,8 @@ from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator, Iterable
+
     import asyncpraw.models
 
 
@@ -24,9 +26,7 @@ class PartialRedditor(SimpleNamespace):
 class Redditors(AsyncPRAWBase):
     """Redditors is a Listing class that provides various :class:`.Redditor` lists."""
 
-    def new(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def new(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Return a :class:`.ListingGenerator` for new :class:`.Redditors`.
 
         :returns: :class:`.Redditor` profiles, which are a type of :class:`.Subreddit`.
@@ -37,9 +37,7 @@ class Redditors(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["users_new"], **generator_kwargs)
 
-    async def partial_redditors(
-        self, ids: Iterable[str]
-    ) -> AsyncIterator[PartialRedditor]:
+    async def partial_redditors(self, ids: Iterable[str]) -> AsyncIterator[PartialRedditor]:
         """Get user summary data by redditor IDs.
 
         :param ids: An iterable of redditor fullname IDs.
@@ -59,9 +57,7 @@ class Redditors(AsyncPRAWBase):
 
             params = {"ids": ",".join(chunk)}
             try:
-                results = await self._reddit.get(
-                    API_PATH["user_by_fullname"], params=params
-                )
+                results = await self._reddit.get(API_PATH["user_by_fullname"], params=params)
             except asyncprawcore.exceptions.NotFound:
                 # None of the given IDs matched any Redditor.
                 continue
@@ -69,9 +65,7 @@ class Redditors(AsyncPRAWBase):
             for fullname, user_data in results.items():
                 yield PartialRedditor(fullname=fullname, **user_data)
 
-    def popular(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def popular(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Return a :class:`.ListingGenerator` for popular :class:`.Redditors`.
 
         :returns: :class:`.Redditor` profiles, which are a type of :class:`.Subreddit`.
@@ -80,9 +74,7 @@ class Redditors(AsyncPRAWBase):
         :class:`.ListingGenerator`.
 
         """
-        return ListingGenerator(
-            self._reddit, API_PATH["users_popular"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["users_popular"], **generator_kwargs)
 
     def search(
         self, query: str, **generator_kwargs: str | int | dict[str, str]
@@ -98,13 +90,9 @@ class Redditors(AsyncPRAWBase):
 
         """
         self._safely_add_arguments(arguments=generator_kwargs, key="params", q=query)
-        return ListingGenerator(
-            self._reddit, API_PATH["users_search"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["users_search"], **generator_kwargs)
 
-    def stream(
-        self, **stream_options: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def stream(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Yield new Redditors as they are created.
 
         Redditors are yielded oldest first. Up to 100 historical Redditors will

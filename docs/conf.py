@@ -7,11 +7,13 @@ sys.path.insert(1, "..")
 
 from asyncpraw import __version__  # noqa: E402
 
+autodoc_typehints = "description"
 copyright = datetime.today().strftime("%Y, Joel Payne")
 exclude_patterns = ["_build"]
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx_autodoc_typehints",
     "sphinxcontrib_trio",
 ]
 html_theme = "furo"

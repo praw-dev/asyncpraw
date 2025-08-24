@@ -13,9 +13,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class ReplyableMixin:
     """Interface for :class:`.RedditBase` classes that can be replied to."""
 
-    async def reply(
-        self, body: str
-    ) -> asyncpraw.models.Comment | asyncpraw.models.Message | None:
+    async def reply(self, body: str) -> asyncpraw.models.Comment | asyncpraw.models.Message | None:
         """Reply to the object.
 
         :param body: The Markdown formatted content for a comment.
@@ -46,7 +44,5 @@ class ReplyableMixin:
         comments = await self._reddit.post(API_PATH["comment"], data=data)
         try:
             return comments[0]
-        except (
-            IndexError
-        ):  # pragma: no cover; I haven't been able to make this happen again
+        except IndexError:  # pragma: no cover; I haven't been able to make this happen again
             return None

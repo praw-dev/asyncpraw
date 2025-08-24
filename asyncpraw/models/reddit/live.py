@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, AsyncIterator, Iterable
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...util import _deprecate_args
@@ -15,6 +15,8 @@ from .mixins import FullnameMixin
 from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator, Iterable
+
     import asyncpraw.models
 
 
@@ -390,9 +392,7 @@ class LiveThread(RedditBase):
     def _fetch_info(self):
         return "liveabout", {"id": self.id}, None
 
-    def discussions(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Submission]:
+    def discussions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
         """Get submissions linking to the thread.
 
         :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
@@ -417,9 +417,7 @@ class LiveThread(RedditBase):
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
     @deprecate_lazy
-    async def get_update(
-        self, update_id: str, fetch: bool = True, **_: Any
-    ) -> asyncpraw.models.LiveUpdate:
+    async def get_update(self, update_id: str, fetch: bool = True, **_: Any) -> asyncpraw.models.LiveUpdate:
         """Return a :class:`.LiveUpdate` instance.
 
         :param update_id: A live update ID, e.g.,
@@ -605,10 +603,7 @@ class LiveThreadContribution:
         # get settings from Reddit (not cache)
         thread = LiveThread(self.thread._reddit, self.thread.id)
         await thread._fetch()
-        data = {
-            key: getattr(thread, key) if value is None else value
-            for key, value in settings.items()
-        }
+        data = {key: getattr(thread, key) if value is None else value for key, value in settings.items()}
 
         url = API_PATH["live_update_thread"].format(id=self.thread.id)
         await self.thread._reddit.post(url, data=data.copy())
@@ -635,9 +630,7 @@ class LiveThreadStream:
         """
         self.live_thread = live_thread
 
-    def updates(
-        self, **stream_options: dict[str, Any]
-    ) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
+    def updates(self, **stream_options: dict[str, Any]) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created after the

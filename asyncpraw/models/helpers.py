@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from json import dumps
-from typing import TYPE_CHECKING, Any, AsyncGenerator
+from typing import TYPE_CHECKING, Any
 
 from ..const import API_PATH
 from ..util import _deprecate_args
@@ -13,6 +13,8 @@ from .reddit.live import LiveThread
 from .reddit.multi import Multireddit, Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncGenerator
+
     import asyncpraw.models
 
 
@@ -90,9 +92,7 @@ class DraftHelper(AsyncPRAWBase):
         selftext: str | None = None,
         send_replies: bool = True,
         spoiler: bool = False,
-        subreddit: (
-            str | asyncpraw.models.Subreddit | asyncpraw.models.UserSubreddit | None
-        ) = None,
+        subreddit: (str | asyncpraw.models.Subreddit | asyncpraw.models.UserSubreddit | None) = None,
         title: str | None = None,
         url: str | None = None,
         **draft_kwargs: Any,
@@ -155,9 +155,7 @@ class DraftHelper(AsyncPRAWBase):
 class LiveHelper(AsyncPRAWBase):
     r"""Provide a set of functions to interact with :class:`.LiveThread`\ s."""
 
-    async def __call__(
-        self, id: str, fetch: bool = False
-    ) -> asyncpraw.models.LiveThread:
+    async def __call__(self, id: str, fetch: bool = False) -> asyncpraw.models.LiveThread:
         """Return a new instance of :class:`.LiveThread`.
 
         This method is intended to be used as:
@@ -362,17 +360,13 @@ class MultiredditHelper(AsyncPRAWBase):
             "visibility": visibility,
             "weighting_scheme": weighting_scheme,
         }
-        return await self._reddit.post(
-            API_PATH["multireddit_base"], data={"model": dumps(model)}
-        )
+        return await self._reddit.post(API_PATH["multireddit_base"], data={"model": dumps(model)})
 
 
 class SubredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    async def __call__(
-        self, display_name: str, fetch: bool = False
-    ) -> asyncpraw.models.Subreddit:
+    async def __call__(self, display_name: str, fetch: bool = False) -> asyncpraw.models.Subreddit:
         """Return an instance of :class:`.Subreddit`.
 
         :param display_name: The name of the subreddit.

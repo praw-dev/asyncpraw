@@ -719,9 +719,7 @@ class CustomWidget(Widget):
 
     def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
         """Initialize a :class:`.CustomWidget` instance."""
-        _data["imageData"] = [
-            ImageData(reddit, data) for data in _data.pop("imageData")
-        ]
+        _data["imageData"] = [ImageData(reddit, data) for data in _data.pop("imageData")]
         super().__init__(reddit, _data=_data)
 
 
@@ -1173,9 +1171,7 @@ class WidgetModeration:
             await widget.mod.delete()
 
         """
-        path = API_PATH["widget_modify"].format(
-            widget_id=self.widget.id, subreddit=self._subreddit
-        )
+        path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
         await self._reddit.delete(path)
 
     async def update(self, **kwargs: Any) -> Widget:
@@ -1199,21 +1195,13 @@ class WidgetModeration:
             check the Reddit documentation linked above.
 
         """
-        path = API_PATH["widget_modify"].format(
-            widget_id=self.widget.id, subreddit=self._subreddit
-        )
-        payload = {
-            key: value
-            for key, value in vars(self.widget).items()
-            if not key.startswith("_")
-        }
+        path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
+        payload = {key: value for key, value in vars(self.widget).items() if not key.startswith("_")}
         del payload["subreddit"]  # not JSON serializable
         if "mod" in payload:
             del payload["mod"]
         payload.update(kwargs)
-        widget = await self._reddit.put(
-            path, data={"json": dumps(payload, cls=WidgetEncoder)}
-        )
+        widget = await self._reddit.put(path, data={"json": dumps(payload, cls=WidgetEncoder)})
         widget.subreddit = self._subreddit
         return widget
 
@@ -1247,9 +1235,7 @@ class SubredditWidgetsModeration:
 
     async def _create_widget(self, payload: dict[str, Any]) -> WidgetType:
         path = API_PATH["widget_create"].format(subreddit=self._subreddit)
-        widget = await self._reddit.post(
-            path, data={"json": dumps(payload, cls=WidgetEncoder)}
-        )
+        widget = await self._reddit.post(path, data={"json": dumps(payload, cls=WidgetEncoder)})
         widget.subreddit = self._subreddit
         return widget
 
@@ -1394,9 +1380,7 @@ class SubredditWidgetsModeration:
         button_widget.update(other_settings)
         return await self._create_widget(button_widget)
 
-    @_deprecate_args(
-        "short_name", "google_calendar_id", "requires_sync", "configuration", "styles"
-    )
+    @_deprecate_args("short_name", "google_calendar_id", "requires_sync", "configuration", "styles")
     async def add_calendar(
         self,
         *,
@@ -1856,12 +1840,8 @@ class SubredditWidgetsModeration:
             await widgets.mod.reorder(order)
 
         """
-        order = [
-            thing.id if isinstance(thing, Widget) else str(thing) for thing in new_order
-        ]
-        path = API_PATH["widget_order"].format(
-            subreddit=self._subreddit, section=section
-        )
+        order = [thing.id if isinstance(thing, Widget) else str(thing) for thing in new_order]
+        path = API_PATH["widget_order"].format(subreddit=self._subreddit, section=section)
         await self._reddit.patch(path, data={"json": dumps(order), "section": section})
 
     async def upload_image(self, file_path: str) -> str:
@@ -1906,9 +1886,7 @@ class SubredditWidgetsModeration:
         # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
         with file.open("rb") as image:  # noqa: ASYNC230
             upload_data["file"] = image
-            response = await self._reddit._core._requestor._http.post(
-                upload_url, data=upload_data
-            )
+            response = await self._reddit._core._requestor._http.post(upload_url, data=upload_data)
         response.raise_for_status()
 
         return f"{upload_url}/{upload_data['key']}"

@@ -9,15 +9,15 @@ from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 
 class SubmissionListingMixin(AsyncPRAWBase):
     """Adds additional methods pertaining to :class:`.Submission` instances."""
 
-    def duplicates(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Submission]:
+    def duplicates(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for the submission's duplicates.
 
         Additional keyword arguments are passed in the initialization of

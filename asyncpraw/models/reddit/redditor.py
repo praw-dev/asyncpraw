@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from json import dumps
-from typing import TYPE_CHECKING, Any, AsyncGenerator
+from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
 from ...util import _deprecate_args
@@ -14,6 +14,8 @@ from .base import RedditBase
 from .mixins import FullnameMixin, MessageableMixin
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncGenerator
+
     import asyncpraw.models
 
 
@@ -77,9 +79,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     STR_FIELD = "name"
 
     @classmethod
-    def from_data(
-        cls, reddit: asyncpraw.Reddit, data: dict[str, Any]
-    ) -> Redditor | None:
+    def from_data(cls, reddit: asyncpraw.Reddit, data: dict[str, Any]) -> Redditor | None:
         """Return an instance of :class:`.Redditor`, or ``None`` from ``data``."""
         if data == "[deleted]":
             return None
@@ -105,7 +105,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
                 print(f"{note.label}: {note.note}")
 
         """
-        from ..mod_notes import RedditorModNotes
+        from asyncpraw.models.mod_notes import RedditorModNotes  # noqa: PLC0415
 
         return RedditorModNotes(self._reddit, self)
 
@@ -176,7 +176,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     def __setattr__(self, name: str, value: Any):
         """Objectify the subreddit attribute."""
         if name == "subreddit" and value:
-            from .user_subreddit import UserSubreddit
+            from .user_subreddit import UserSubreddit  # noqa: PLC0415
 
             value = UserSubreddit(reddit=self._reddit, _data=value)
         super().__setattr__(name, value)
@@ -194,9 +194,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         return "user_about", {"user": self.name}, None
 
     async def _fetch_username(self, fullname: str):
-        response = await self._reddit.get(
-            API_PATH["user_by_fullname"], params={"ids": fullname}
-        )
+        response = await self._reddit.get(API_PATH["user_by_fullname"], params={"ids": fullname})
         return response[fullname]["name"]
 
     async def _friend(self, *, data: dict[str, Any], method: str):
@@ -239,9 +237,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             :meth:`.trust`
 
         """
-        await self._reddit.post(
-            API_PATH["remove_whitelisted"], data={"name": self.name}
-        )
+        await self._reddit.post(API_PATH["remove_whitelisted"], data={"name": self.name})
 
     @_deprecate_args("note")
     async def friend(self, *, note: str = None):
@@ -303,9 +299,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         if months < 1 or months > 36:
             msg = "months must be between 1 and 36"
             raise TypeError(msg)
-        await self._reddit.post(
-            API_PATH["gild_user"].format(username=self), data={"months": months}
-        )
+        await self._reddit.post(API_PATH["gild_user"].format(username=self), data={"months": months})
 
     async def moderated(self) -> list[asyncpraw.models.Subreddit]:
         """Return a list of the redditor's moderated subreddits.
@@ -475,9 +469,7 @@ class RedditorStream:
         """
         self.redditor = redditor
 
-    def comments(
-        self, **stream_options: str | int | dict[str, str]
-    ) -> AsyncGenerator[asyncpraw.models.Comment, None]:
+    def comments(self, **stream_options: str | int | dict[str, str]) -> AsyncGenerator[asyncpraw.models.Comment, None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially

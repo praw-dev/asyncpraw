@@ -32,6 +32,21 @@ class TestInlineMedia(UnitTest):
         assert hash(media2) != hash(media3)
         assert hash(media1) != hash(media3)
 
+
+    def test_hash(self):
+        media1 = InlineMedia(path="path1", caption="caption1")
+        media1.media_id = "media_id1"
+        media2 = InlineMedia(path="path1", caption="caption1")
+        media2.media_id = "media_id1"
+        media3 = InlineMedia(path="path2", caption="caption2")
+        media3.media_id = "media_id2"
+        assert hash(media1) == hash(media1)
+        assert hash(media2) == hash(media2)
+        assert hash(media3) == hash(media3)
+        assert hash(media1) == hash(media2)
+        assert hash(media2) != hash(media3)
+        assert hash(media1) != hash(media3)
+
     def test_repr(self):
         media = InlineMedia(path="path1", caption="caption1")
         no_caption = InlineMedia(path="path1")

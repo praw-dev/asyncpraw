@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING
 
 from ..const import API_PATH
 from ..util import _deprecate_args
@@ -11,6 +11,8 @@ from .listing.generator import ListingGenerator
 from .util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 
@@ -80,9 +82,7 @@ class Inbox(AsyncPRAWBase):
                 print(reply.author)
 
         """
-        return ListingGenerator(
-            self._reddit, API_PATH["comment_replies"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["comment_replies"], **generator_kwargs)
 
     async def mark_all_read(self):
         """Mark all messages as read with just one API call.
@@ -101,9 +101,7 @@ class Inbox(AsyncPRAWBase):
         """
         await self._reddit.post(API_PATH["read_all_messages"])
 
-    async def mark_read(
-        self, items: list[asyncpraw.models.Comment | asyncpraw.models.Message]
-    ):
+    async def mark_read(self, items: list[asyncpraw.models.Comment | asyncpraw.models.Message]):
         """Mark Comments or Messages as read.
 
         :param items: A list containing instances of :class:`.Comment` and/or
@@ -135,9 +133,7 @@ class Inbox(AsyncPRAWBase):
             await self._reddit.post(API_PATH["read_message"], data=data)
             items = items[25:]
 
-    async def mark_unread(
-        self, items: list[asyncpraw.models.Comment | asyncpraw.models.Message]
-    ):
+    async def mark_unread(self, items: list[asyncpraw.models.Comment | asyncpraw.models.Message]):
         """Unmark Comments or Messages as read.
 
         :param items: A list containing instances of :class:`.Comment` and/or
@@ -164,9 +160,7 @@ class Inbox(AsyncPRAWBase):
             await self._reddit.post(API_PATH["unread_message"], data=data)
             items = items[25:]
 
-    def mentions(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Comment]:
+    def mentions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Comment]:
         r"""Return a :class:`.ListingGenerator` for mentions.
 
         A mention is :class:`.Comment` in which the authorized redditor is named in its
@@ -198,16 +192,12 @@ class Inbox(AsyncPRAWBase):
 
         """
         listing = await self._reddit.get(API_PATH["message"].format(id=message_id))
-        messages = {
-            message.fullname: message for message in [listing[0]] + listing[0].replies
-        }
+        messages = {message.fullname: message for message in [listing[0]] + listing[0].replies}
         for _fullname, message in messages.items():
             message.parent = messages.get(message.parent_id, None)
         return messages[f"t4_{message_id.lower()}"]
 
-    def messages(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Message]:
+    def messages(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Message]:
         """Return a :class:`.ListingGenerator` for inbox messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -223,9 +213,7 @@ class Inbox(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["messages"], **generator_kwargs)
 
-    def sent(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Message]:
+    def sent(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Message]:
         """Return a :class:`.ListingGenerator` for sent messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -277,9 +265,7 @@ class Inbox(AsyncPRAWBase):
                 print(reply.author)
 
         """
-        return ListingGenerator(
-            self._reddit, API_PATH["submission_replies"], **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, API_PATH["submission_replies"], **generator_kwargs)
 
     async def uncollapse(self, items: list[asyncpraw.models.Message]):
         """Mark an inbox message as uncollapsed.
@@ -340,7 +326,5 @@ class Inbox(AsyncPRAWBase):
                     print(item.author)
 
         """
-        self._safely_add_arguments(
-            arguments=generator_kwargs, key="params", mark=mark_read
-        )
+        self._safely_add_arguments(arguments=generator_kwargs, key="params", mark=mark_read)
         return ListingGenerator(self._reddit, API_PATH["unread"], **generator_kwargs)

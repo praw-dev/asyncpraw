@@ -96,11 +96,9 @@ class FileTokenManager(BaseTokenManager):
         super().__init__()
         self._filename = filename
 
-    async def post_refresh_callback(
-        self, authorizer: asyncprawcore.auth.BaseAuthorizer
-    ):
+    async def post_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Update the saved copy of the refresh token."""
-        async with aiofiles.open(self._filename, "w") as fp:
+        async with aiofiles.open(self._filename, "w", encoding="utf-8") as fp:
             await fp.write(authorizer.refresh_token)
 
     async def pre_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
@@ -143,9 +141,7 @@ class SQLiteTokenManager(BaseTokenManager):
 
     async def _get(self):
         async with self.connection() as conn:
-            cursor = await conn.execute(
-                "SELECT refresh_token FROM tokens WHERE id=?", (self.key,)
-            )
+            cursor = await conn.execute("SELECT refresh_token FROM tokens WHERE id=?", (self.key,))
             result = await cursor.fetchone()
             if result is None:
                 raise KeyError
@@ -173,16 +169,12 @@ class SQLiteTokenManager(BaseTokenManager):
     async def connection(self):
         """Asynchronously setup and provide the sqlite3 connection."""
         if self._connection is None:
-            import aiosqlite
+            import aiosqlite  # noqa: PLC0415
 
             self._connection = await aiosqlite.connect(self._database)
         if not self._setup_ran:
-            await self._connection.execute(
-                "CREATE TABLE IF NOT EXISTS tokens (id, refresh_token, updated_at)"
-            )
-            await self._connection.execute(
-                "CREATE UNIQUE INDEX IF NOT EXISTS ux_tokens_id on tokens(id)"
-            )
+            await self._connection.execute("CREATE TABLE IF NOT EXISTS tokens (id, refresh_token, updated_at)")
+            await self._connection.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_tokens_id on tokens(id)")
             await self._connection.commit()
             self._setup_ran = True
         yield self._connection
@@ -190,15 +182,11 @@ class SQLiteTokenManager(BaseTokenManager):
     async def is_registered(self) -> bool:
         """Return whether ``key`` already has a ``refresh_token``."""
         async with self.connection() as conn:
-            cursor = await conn.execute(
-                "SELECT refresh_token FROM tokens WHERE id=?", (self.key,)
-            )
+            cursor = await conn.execute("SELECT refresh_token FROM tokens WHERE id=?", (self.key,))
             result = await cursor.fetchone()
         return result is not None
 
-    async def post_refresh_callback(
-        self, authorizer: asyncprawcore.auth.BaseAuthorizer
-    ):
+    async def post_refresh_callback(self, authorizer: asyncprawcore.auth.BaseAuthorizer):
         """Update the refresh token in the database."""
         await self._set(authorizer.refresh_token)
 

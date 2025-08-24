@@ -175,9 +175,9 @@ Linting_:
 Testing
 -------
 
-Contributions to Async PRAW requires 100% test coverage as reported by Coveralls_. If
-you know how to add a feature, but aren't sure how to write the necessary tests, please
-open a pull request anyway so we can work with you to write the necessary tests.
+Contributions to Async PRAW requires 100% test coverage. If you know how to add a
+feature, but aren't sure how to write the necessary tests, please open a pull request
+anyway so we can work with you to write the necessary tests.
 
 Running the Test Suite
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -303,8 +303,6 @@ Please also read the `Contributing Guidelines`_
 .. _commit 280525c16ba28cdd69cdbb272a0e2764b1c7e6a0: https://github.com/praw-dev/praw/commit/280525c16ba28cdd69cdbb272a0e2764b1c7e6a0
 
 .. _contributing guidelines: https://github.com/praw-dev/asyncpraw/blob/main/.github/CONTRIBUTING.rst
-
-.. _coveralls: https://coveralls.io/github/praw-dev/asyncpraw
 
 .. _github actions: https://github.com/praw-dev/asyncpraw/actions
 

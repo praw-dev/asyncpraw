@@ -43,9 +43,7 @@ class Preferences:
         """
         self._reddit = reddit
 
-    async def update(
-        self, **preferences: bool | int | str
-    ) -> dict[str, bool | int | str]:
+    async def update(self, **preferences: bool | int | str) -> dict[str, bool | int | str]:
         """Modify the specified settings.
 
         :param accept_pms: Who can send you personal messages (one of ``"everyone"`` or
@@ -205,6 +203,4 @@ class Preferences:
             await reddit.user.preferences.update(**{"third_party_data_personalized_ads": False})
 
         """
-        return await self._reddit.patch(
-            API_PATH["preferences"], data={"json": dumps(preferences)}
-        )
+        return await self._reddit.patch(API_PATH["preferences"], data={"json": dumps(preferences)})

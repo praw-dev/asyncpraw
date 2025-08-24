@@ -25,6 +25,7 @@ dependencies = [
   "aiohttp <4",
   "aiosqlite <=0.17.0",
   "asyncprawcore >=2.4, <3",
+  "defusedxml ==0.7.1",
   "update_checker >=0.18"
 ]
 dynamic = ["version", "description"]
@@ -36,7 +37,6 @@ readme = "README.rst"
 requires-python = "~=3.8"
 
 [project.optional-dependencies]
-ci = ["coveralls"]
 dev = [
   "packaging",
   "asyncpraw[lint]",
@@ -50,6 +50,7 @@ lint = [
 readthedocs = [
   "furo",
   "sphinx",
+  "sphinx-autodoc-typehints",
   "sphinxcontrib-trio"
 ]
 test = [
@@ -67,16 +68,8 @@ test = [
 "Issue Tracker" = "https://github.com/praw-dev/asyncpraw/issues"
 "Source Code" = "https://github.com/praw-dev/asyncpraw"
 
-[tool.black]
-extend_exclude = '/(\.venv.*)/'
-line-length = 88
-
 [tool.docstrfmt]
 extend_exclude = ['./docs/examples/']
-
-[tool.isort]
-profile = 'black'
-skip_glob = '.venv*'
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -84,15 +77,15 @@ filterwarnings = "ignore::DeprecationWarning"
 testpaths = "tests"
 
 [tool.ruff]
-target-version = "py38"
 include = [
   "asyncpraw/**/*.py"
 ]
+line-length = 120
+preview = true
 
 [tool.ruff.lint]
 ignore = [
-  "A002", # shadowing built-in name
-  "A004", # shadowing built-in
+  "A002", # shadowing built-in
   "ANN202", # missing return type for private method
   "ANN401", # typing.Any usage
   "ASYNC109", # Async function definition with a `timeout` parameter
@@ -100,6 +93,7 @@ ignore = [
   "D213", # Multi-line docstring summary should start at the second line
   "E501", # line-length
   "N818", # exception name should be named with an Error suffix
+  "PLR0904", # too many public methods
   "PLR0913", # too many arguments
   "PLR2004", # Magic value used in comparison,
   "S101", # use of assert
@@ -154,7 +148,11 @@ mypy-init-return = true
 suppress-dummy-args = true
 suppress-none-returning = true
 
+[tool.ruff.lint.flake8-builtins]
+builtins-ignorelist = ["id"]
+
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "asyncpraw/models/mod_notes.py" = ["FA100"]
 "asyncpraw/models/reddit/collections.py" = ["A005"]
+"tests/*.py" = ["SLF001"]

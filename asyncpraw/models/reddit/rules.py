@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, AsyncIterator
+from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 from warnings import warn
 
@@ -12,6 +12,8 @@ from ...util import _deprecate_args, cachedproperty
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 
@@ -187,9 +189,7 @@ class RuleModeration:
             "violation_reason": violation_reason,
         }.items():
             data[name] = getattr(self.rule, name) if value is None else value
-        response = await self.rule._reddit.post(
-            API_PATH["update_subreddit_rule"], data=data
-        )
+        response = await self.rule._reddit.post(API_PATH["update_subreddit_rule"], data=data)
         updated_rule = response[0]
         updated_rule.subreddit = self.rule.subreddit
         return updated_rule
@@ -290,9 +290,7 @@ class SubredditRules:
             category=DeprecationWarning,
             stacklevel=2,
         )
-        return await self._reddit.request(
-            method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit)
-        )
+        return await self._reddit.request(method="GET", path=API_PATH["rules"].format(subreddit=self.subreddit))
 
     def __init__(self, subreddit: asyncpraw.models.Subreddit):
         """Initialize a :class:`.SubredditRules` instance.
@@ -309,9 +307,7 @@ class SubredditRules:
         :returns: A list of instances of :class:`.Rule`.
 
         """
-        rule_list = await self._reddit.get(
-            API_PATH["rules"].format(subreddit=self.subreddit)
-        )
+        rule_list = await self._reddit.get(API_PATH["rules"].format(subreddit=self.subreddit))
         for rule in rule_list:
             rule.subreddit = self.subreddit
         return rule_list
@@ -424,20 +420,14 @@ class SubredditRulesModeration:
             "description": description,
             "kind": kind,
             "short_name": short_name,
-            "violation_reason": (
-                short_name if violation_reason is None else violation_reason
-            ),
+            "violation_reason": (short_name if violation_reason is None else violation_reason),
         }
-        response = await self.subreddit_rules._reddit.post(
-            API_PATH["add_subreddit_rule"], data=data
-        )
+        response = await self.subreddit_rules._reddit.post(API_PATH["add_subreddit_rule"], data=data)
         new_rule = response[0]
         new_rule.subreddit = self.subreddit_rules.subreddit
         return new_rule
 
-    async def reorder(
-        self, rule_list: list[asyncpraw.models.Rule]
-    ) -> list[asyncpraw.models.Rule]:
+    async def reorder(self, rule_list: list[asyncpraw.models.Rule]) -> list[asyncpraw.models.Rule]:
         """Reorder the rules of a subreddit.
 
         :param rule_list: The list of rules, in the wanted order. Each index of the list
@@ -457,16 +447,12 @@ class SubredditRulesModeration:
             new_rule_list = await subreddit.rules.mod.reorder(new_rules)
 
         """
-        order_string = quote(
-            ",".join([rule.short_name for rule in rule_list]), safe=","
-        )
+        order_string = quote(",".join([rule.short_name for rule in rule_list]), safe=",")
         data = {
             "r": str(self.subreddit_rules.subreddit),
             "new_rule_order": order_string,
         }
-        response = await self.subreddit_rules._reddit.post(
-            API_PATH["reorder_subreddit_rules"], data=data
-        )
+        response = await self.subreddit_rules._reddit.post(API_PATH["reorder_subreddit_rules"], data=data)
         for rule in response:
             rule.subreddit = self.subreddit_rules.subreddit
         return response

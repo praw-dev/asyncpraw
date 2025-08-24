@@ -25,6 +25,4 @@ class ReportableMixin:
             await comment.report("report reason")
 
         """
-        await self._reddit.post(
-            API_PATH["report"], data={"id": self.fullname, "reason": reason}
-        )
+        await self._reddit.post(API_PATH["report"], data={"id": self.fullname, "reason": reason})

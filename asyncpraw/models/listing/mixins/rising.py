@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING
 from urllib.parse import urljoin
 
 from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 
@@ -32,13 +34,9 @@ class RisingListingMixin(AsyncPRAWBase):
                 print(submission.title)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "randomrising"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "randomrising"), **generator_kwargs)
 
-    def rising(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Submission]:
+    def rising(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for rising submissions.
 
         Additional keyword arguments are passed in the initialization of
@@ -53,6 +51,4 @@ class RisingListingMixin(AsyncPRAWBase):
                 print(submission.title)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "rising"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "rising"), **generator_kwargs)

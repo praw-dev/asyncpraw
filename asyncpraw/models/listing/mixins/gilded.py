@@ -12,9 +12,7 @@ from ..generator import ListingGenerator
 class GildedListingMixin(AsyncPRAWBase):
     """Mixes in the gilded method."""
 
-    def gilded(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[Any]:
+    def gilded(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for gilded items.
 
         Additional keyword arguments are passed in the initialization of
@@ -29,6 +27,4 @@ class GildedListingMixin(AsyncPRAWBase):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "gilded"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "gilded"), **generator_kwargs)

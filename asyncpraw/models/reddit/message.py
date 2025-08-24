@@ -41,9 +41,7 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
     STR_FIELD = "id"
 
     @classmethod
-    def parse(
-        cls, data: dict[str, Any], reddit: asyncpraw.Reddit
-    ) -> Message | SubredditMessage:
+    def parse(cls, data: dict[str, Any], reddit: asyncpraw.Reddit) -> Message | SubredditMessage:
         """Return an instance of :class:`.Message` or :class:`.SubredditMessage` from ``data``.
 
         :param data: The structured data.
@@ -97,9 +95,7 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
                 msg = "Message must be fetched with `.load()` before accessing the parent."
                 raise AttributeError(msg)
             if self.parent_id:
-                self._parent = Message(
-                    self._reddit, {"id": self.parent_id.split("_")[1]}
-                )
+                self._parent = Message(self._reddit, {"id": self.parent_id.split("_")[1]})
                 self._parent._fetched = False
         return self._parent
 

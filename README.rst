@@ -17,10 +17,6 @@ Async PRAW: The Asynchronous Python Reddit API Wrapper
     :alt: GitHub Actions Status
     :target: https://github.com/praw-dev/asyncpraw/actions/workflows/ci.yml
 
-.. image:: https://coveralls.io/repos/github/praw-dev/asyncpraw/badge.svg
-    :alt: Coveralls Coverage
-    :target: https://coveralls.io/github/praw-dev/asyncpraw?branch=main
-
 .. image:: https://api.securityscorecards.dev/projects/github.com/praw-dev/asyncpraw/badge
     :alt: OpenSSF Scorecard
     :target: https://api.securityscorecards.dev/projects/github.com/praw-dev/asyncpraw

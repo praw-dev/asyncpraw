@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING
 from urllib.parse import urljoin
 
 from ....util.cache import cachedproperty
@@ -11,6 +11,8 @@ from .base import BaseListingMixin
 from .gilded import GildedListingMixin
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
 
@@ -94,9 +96,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "downvoted"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "downvoted"), **generator_kwargs)
 
     def gildings(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -127,9 +127,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "gilded/given"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "gilded/given"), **generator_kwargs)
 
     def hidden(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -160,9 +158,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "hidden"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "hidden"), **generator_kwargs)
 
     def saved(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -193,9 +189,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "saved"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "saved"), **generator_kwargs)
 
     def upvoted(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -226,6 +220,4 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "upvoted"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "upvoted"), **generator_kwargs)

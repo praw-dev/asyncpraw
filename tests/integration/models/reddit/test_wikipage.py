@@ -65,7 +65,7 @@ class TestWikiPageModeration(IntegrationTest):
         reddit.read_only = False
         page = await subreddit.wiki.get_page("index")
         settings = await page.mod.settings()
-        assert {"editors": [], "listed": True, "permlevel": 0} == settings
+        assert settings == {"editors": [], "listed": True, "permlevel": 0}
 
     async def test_update(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -73,7 +73,7 @@ class TestWikiPageModeration(IntegrationTest):
         reddit.read_only = False
         page = await subreddit.wiki.get_page("index")
         updated = await page.mod.update(listed=False, permlevel=1)
-        assert {"editors": [], "listed": False, "permlevel": 1} == updated
+        assert updated == {"editors": [], "listed": False, "permlevel": 1}
 
 
 class TestWikiPage(IntegrationTest):
