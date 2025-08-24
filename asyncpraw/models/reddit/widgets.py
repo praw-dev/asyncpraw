@@ -383,6 +383,10 @@ class Widget(AsyncPRAWBase):
             return self.id.lower() == other.id.lower()
         return str(other).lower() == self.id.lower()
 
+    def __hash__(self) -> int:
+        """Return the hash of the current instance."""
+        return hash(self.__class__.__name__) ^ hash(self.id.lower())
+
     def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
         """Initialize a :class:`.Widget` instance."""
         self.subreddit = ""  # in case it isn't in _data
