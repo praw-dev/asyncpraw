@@ -586,7 +586,7 @@ class Collection(RedditBase):
             data={"collection_id": self.collection_id, "follow": True},
         )
 
-    async def subreddit(self) -> asyncpraw.models.Subreddit:
+    async def subreddit(self) -> asyncpraw.models.Subreddit:  # noqa: RET503
         """Get the subreddit that this collection belongs to.
 
         For example:
@@ -598,11 +598,10 @@ class Collection(RedditBase):
             print(await collection.subreddit())
 
         """
-        async for subreddit in self._reddit.info(  # noqa: RET503
+        async for subreddit in self._reddit.info(
             fullnames=[self.subreddit_id]
         ):
             return subreddit
-        return None
 
     async def unfollow(self):
         """Unfollow this :class:`.Collection`.
