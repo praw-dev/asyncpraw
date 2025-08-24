@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.models import Redditor
@@ -67,6 +69,12 @@ class TestRedditor(UnitTest):
         assert hash(redditor1) == hash(redditor2)
         assert hash(redditor2) != hash(redditor3)
         assert hash(redditor1) != hash(redditor3)
+
+    def test_pickle(self, reddit):
+        redditor = Redditor(reddit, _data={"name": "name", "id": "dummy"})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(redditor, protocol=level))
+            assert redditor == other
 
     def test_repr(self, reddit):
         redditor = Redditor(reddit, name="RedditorName")

@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.models import LiveThread, LiveUpdate, Redditor
@@ -78,6 +80,12 @@ class TestLiveThread(UnitTest):
         assert hash(thread1) != hash(thread2)
         assert hash(thread2) != hash(thread3)
         assert hash(thread1) != hash(thread3)
+
+    def test_pickle(self, reddit):
+        thread = LiveThread(reddit, id="dummy")
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(thread, protocol=level))
+            assert thread == other
 
     def test_repr(self, reddit):
         thread = LiveThread(reddit, id="dummy")

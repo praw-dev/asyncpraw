@@ -1,3 +1,5 @@
+import pickle
+
 from asyncpraw.models import MoreComments
 
 from ... import UnitTest
@@ -16,6 +18,12 @@ class TestComment(UnitTest):
         more3 = MoreComments(None, {"children": ["a", "b", "c", "d", "e"], "count": 5})
         assert hash(more) == hash(more2)
         assert hash(more) != hash(more3)
+
+    def test_pickle(self, reddit):
+        more = MoreComments(reddit, {"children": ["a", "b"], "count": 4})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(more, protocol=level))
+            assert more == other
 
     def test_repr(self, reddit):
         more = MoreComments(reddit, {"children": ["a", "b", "c", "d", "e"], "count": 5})

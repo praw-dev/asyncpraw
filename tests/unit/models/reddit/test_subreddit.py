@@ -1,3 +1,4 @@
+import pickle
 import sys
 
 import aiohttp
@@ -109,6 +110,12 @@ class TestSubreddit(UnitTest):
             "Either the 'redditor' parameter must be provided or this method must be"
             " called from a Redditor instance (e.g., 'redditor.notes')."
         )
+
+    def test_pickle(self, reddit):
+        subreddit = Subreddit(reddit, _data={"display_name": "name", "id": "dummy"})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(subreddit, protocol=level))
+            assert subreddit == other
 
     def test_repr(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")

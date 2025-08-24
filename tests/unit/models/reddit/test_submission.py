@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.exceptions import ClientException
@@ -140,6 +142,12 @@ class TestSubmission(UnitTest):
         for url in urls:
             with pytest.raises(ClientException):
                 Submission.id_from_url(url)
+
+    def test_pickle(self, reddit):
+        submission = Submission(reddit, _data={"id": "dummy"})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(submission, protocol=level))
+            assert submission == other
 
     def test_repr(self, reddit):
         submission = Submission(reddit, id="2gmzqe")

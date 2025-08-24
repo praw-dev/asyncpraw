@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.models import Message, SubredditMessage
@@ -37,6 +39,12 @@ class TestMessage(UnitTest):
         assert hash(message1) == hash(message2)
         assert hash(message2) != hash(message3)
         assert hash(message1) != hash(message3)
+
+    def test_pickle(self, reddit):
+        message = Message(reddit, _data={"id": "dummy"})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(message, protocol=level))
+            assert message == other
 
     def test_repr(self, reddit):
         message = Message(reddit, _data={"id": "dummy"})

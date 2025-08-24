@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.models import Draft, Subreddit
@@ -68,6 +70,12 @@ class TestDraft(UnitTest):
         assert hash(draft1) == hash(draft2)
         assert hash(draft2) != hash(draft3)
         assert hash(draft1) != hash(draft3)
+
+    def test_pickle(self, reddit):
+        draft = Draft(reddit, _data={"id": "dummy"})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(draft, protocol=level))
+            assert draft == other
 
     def test_repr(self, reddit):
         draft = Draft(reddit, id="draft_id")

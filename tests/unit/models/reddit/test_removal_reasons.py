@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.models import RemovalReason, Subreddit
@@ -67,6 +69,14 @@ class TestRemovalReason(UnitTest):
         assert hash(reason1) != hash(reason3)
         assert hash(reason1) == hash(reason4)
         assert hash(reason1) != hash(reason5)
+
+    def test_pickle(self, reddit):
+        reason = RemovalReason(
+            reddit, subreddit=Subreddit(reddit, display_name="a"), id="x"
+        )
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(reason, protocol=level))
+            assert reason == other
 
     def test_repr(self, reddit):
         reason = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="x")
