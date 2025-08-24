@@ -141,9 +141,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
 
         """
         if not self._submission:  # Comment not from submission
-            self._submission = Submission(
-                self._reddit, id=self._extract_submission_id()
-            )
+            self._submission = Submission(self._reddit, id=self._extract_submission_id())
         return self._submission
 
     @submission.setter

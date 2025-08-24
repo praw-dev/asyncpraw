@@ -22,15 +22,11 @@ class Front(SubredditListingMixin):
         super().__init__(reddit, _data=None)
         self._path = "/"
 
-    def best(
-        self, **generator_kwargs: str | int
-    ) -> AsyncIterator[asyncpraw.models.Submission]:
+    def best(self, **generator_kwargs: str | int) -> AsyncIterator[asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for best items.
 
         Additional keyword arguments are passed in the initialization of
         :class:`.ListingGenerator`.
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "best"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "best"), **generator_kwargs)

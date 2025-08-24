@@ -31,9 +31,7 @@ class SavableMixin:
             :meth:`.unsave`
 
         """
-        await self._reddit.post(
-            API_PATH["save"], data={"category": category, "id": self.fullname}
-        )
+        await self._reddit.post(API_PATH["save"], data={"category": category, "id": self.fullname})
 
     async def unsave(self):
         """Unsave the object.

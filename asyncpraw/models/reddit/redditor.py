@@ -79,9 +79,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     STR_FIELD = "name"
 
     @classmethod
-    def from_data(
-        cls, reddit: asyncpraw.Reddit, data: dict[str, Any]
-    ) -> Redditor | None:
+    def from_data(cls, reddit: asyncpraw.Reddit, data: dict[str, Any]) -> Redditor | None:
         """Return an instance of :class:`.Redditor`, or ``None`` from ``data``."""
         if data == "[deleted]":
             return None
@@ -196,9 +194,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         return "user_about", {"user": self.name}, None
 
     async def _fetch_username(self, fullname: str):
-        response = await self._reddit.get(
-            API_PATH["user_by_fullname"], params={"ids": fullname}
-        )
+        response = await self._reddit.get(API_PATH["user_by_fullname"], params={"ids": fullname})
         return response[fullname]["name"]
 
     async def _friend(self, *, data: dict[str, Any], method: str):
@@ -241,9 +237,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
             :meth:`.trust`
 
         """
-        await self._reddit.post(
-            API_PATH["remove_whitelisted"], data={"name": self.name}
-        )
+        await self._reddit.post(API_PATH["remove_whitelisted"], data={"name": self.name})
 
     @_deprecate_args("note")
     async def friend(self, *, note: str = None):
@@ -305,9 +299,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
         if months < 1 or months > 36:
             msg = "months must be between 1 and 36"
             raise TypeError(msg)
-        await self._reddit.post(
-            API_PATH["gild_user"].format(username=self), data={"months": months}
-        )
+        await self._reddit.post(API_PATH["gild_user"].format(username=self), data={"months": months})
 
     async def moderated(self) -> list[asyncpraw.models.Subreddit]:
         """Return a list of the redditor's moderated subreddits.
@@ -477,9 +469,7 @@ class RedditorStream:
         """
         self.redditor = redditor
 
-    def comments(
-        self, **stream_options: str | int | dict[str, str]
-    ) -> AsyncGenerator[asyncpraw.models.Comment, None]:
+    def comments(self, **stream_options: str | int | dict[str, str]) -> AsyncGenerator[asyncpraw.models.Comment, None]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially

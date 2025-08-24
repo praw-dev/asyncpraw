@@ -9,9 +9,7 @@ class VotableMixin:
     """Interface for :class:`.RedditBase` classes that can be voted on."""
 
     async def _vote(self, direction: int):
-        await self._reddit.post(
-            API_PATH["vote"], data={"dir": str(direction), "id": self.fullname}
-        )
+        await self._reddit.post(API_PATH["vote"], data={"dir": str(direction), "id": self.fullname})
 
     async def clear_vote(self):
         """Clear the authenticated user's vote on the object.

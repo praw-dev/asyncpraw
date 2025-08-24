@@ -63,9 +63,7 @@ class SubmissionFlair:
         if not self.submission._fetched:
             await self.submission._fetch()
         url = API_PATH["flairselector"].format(subreddit=self.submission.subreddit)
-        data = await self.submission._reddit.post(
-            url, data={"link": self.submission.fullname}
-        )
+        data = await self.submission._reddit.post(url, data={"link": self.submission.fullname})
         return data["choices"]
 
     @_deprecate_args("flair_template_id", "text")
@@ -143,9 +141,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             await submission.mod.contest_mode()
 
         """
-        await self.thing._reddit.post(
-            API_PATH["contest_mode"], data={"id": self.thing.fullname, "state": state}
-        )
+        await self.thing._reddit.post(API_PATH["contest_mode"], data={"id": self.thing.fullname, "state": state})
 
     @_deprecate_args("text", "css_class", "flair_template_id")
     async def flair(
@@ -206,9 +202,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             :meth:`.sfw`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["marknsfw"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["marknsfw"], data={"id": self.thing.fullname})
 
     async def set_original_content(self):
         """Mark as original content.
@@ -257,9 +251,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             :meth:`.nsfw`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["unmarknsfw"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["unmarknsfw"], data={"id": self.thing.fullname})
 
     async def spoiler(self):
         """Indicate that the submission contains spoilers.
@@ -279,14 +271,10 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             :meth:`.unspoiler`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["spoiler"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["spoiler"], data={"id": self.thing.fullname})
 
     @_deprecate_args("state", "bottom")
-    async def sticky(
-        self, *, bottom: bool = True, state: bool = True
-    ) -> asyncpraw.models.Submission:
+    async def sticky(self, *, bottom: bool = True, state: bool = True) -> asyncpraw.models.Submission:
         """Set the submission's sticky state in its subreddit.
 
         :param bottom: When ``True``, set the submission as the bottom sticky. If no top
@@ -317,9 +305,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
         if not bottom:
             data["num"] = 1
         try:
-            return await self.thing._reddit.post(
-                API_PATH["sticky_submission"], data=data
-            )
+            return await self.thing._reddit.post(API_PATH["sticky_submission"], data=data)
         except Conflict:
             pass
 
@@ -332,9 +318,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             (default: ``"blank"``).
 
         """
-        await self.thing._reddit.post(
-            API_PATH["suggested_sort"], data={"id": self.thing.fullname, "sort": sort}
-        )
+        await self.thing._reddit.post(API_PATH["suggested_sort"], data={"id": self.thing.fullname, "sort": sort})
 
     async def unset_original_content(self):
         """Indicate that the submission is not original content.
@@ -384,9 +368,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
             :meth:`.spoiler`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["unspoiler"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["unspoiler"], data={"id": self.thing.fullname})
 
     async def update_crowd_control_level(self, level: int):
         """Change the Crowd Control level of the submission.
@@ -498,9 +480,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         if "comments" not in parts and "gallery" not in parts:
             submission_id = parts[-1]
             if "r" in parts:
-                raise InvalidURL(
-                    url, message="Invalid URL (subreddit, not submission): {}"
-                )
+                raise InvalidURL(url, message="Invalid URL (subreddit, not submission): {}")
 
         elif "gallery" in parts:
             submission_id = parts[parts.index("gallery") + 1]
@@ -774,16 +754,14 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
 
     def _replace_richtext_links(self, richtext_json: dict):
         parsed_media_types = {
-            media_id: MEDIA_TYPE_MAPPING[value["e"]]
-            for media_id, value in self.media_metadata.items()
+            media_id: MEDIA_TYPE_MAPPING[value["e"]] for media_id, value in self.media_metadata.items()
         }
 
         for index, element in enumerate(richtext_json["document"][:]):
             element_items = element.get("c")
             if isinstance(element_items, str):
                 assert element.get("e") in ["gif", "img", "video"], (
-                    "Unexpected richtext JSON schema. Please file a bug report with"
-                    " Async PRAW."
+                    "Unexpected richtext JSON schema. Please file a bug report with Async PRAW."
                 )  # make sure this is an inline element
                 continue  # pragma: no cover
             for item in element.get("c"):
@@ -907,9 +885,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         return await self._reddit.post(API_PATH["submit"], data=data)
 
     @_deprecate_args("other_submissions")
-    async def hide(
-        self, *, other_submissions: list[asyncpraw.models.Submission] | None = None
-    ):
+    async def hide(self, *, other_submissions: list[asyncpraw.models.Submission] | None = None):
         """Hide :class:`.Submission`.
 
         :param other_submissions: When provided, additionally hide this list of
@@ -928,9 +904,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             :meth:`.unhide`
 
         """
-        for submissions in self._chunk(
-            chunk_size=50, other_submissions=other_submissions
-        ):
+        for submissions in self._chunk(chunk_size=50, other_submissions=other_submissions):
             await self._reddit.post(API_PATH["hide"], data={"id": submissions})
 
     async def mark_visited(self):
@@ -950,9 +924,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
         await self._reddit.post(API_PATH["store_visits"], data=data)
 
     @_deprecate_args("other_submissions")
-    async def unhide(
-        self, *, other_submissions: list[asyncpraw.models.Submission] | None = None
-    ):
+    async def unhide(self, *, other_submissions: list[asyncpraw.models.Submission] | None = None):
         """Unhide :class:`.Submission`.
 
         :param other_submissions: When provided, additionally unhide this list of
@@ -971,9 +943,7 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Reddit
             :meth:`.hide`
 
         """
-        for submissions in self._chunk(
-            chunk_size=50, other_submissions=other_submissions
-        ):
+        for submissions in self._chunk(chunk_size=50, other_submissions=other_submissions):
             await self._reddit.post(API_PATH["unhide"], data={"id": submissions})
 
 

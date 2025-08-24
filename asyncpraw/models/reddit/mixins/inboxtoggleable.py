@@ -28,9 +28,7 @@ class InboxToggleableMixin:
             :meth:`.enable_inbox_replies`
 
         """
-        await self._reddit.post(
-            API_PATH["sendreplies"], data={"id": self.fullname, "state": False}
-        )
+        await self._reddit.post(API_PATH["sendreplies"], data={"id": self.fullname, "state": False})
 
     async def enable_inbox_replies(self):
         """Enable inbox replies for the item.
@@ -54,6 +52,4 @@ class InboxToggleableMixin:
             :meth:`.disable_inbox_replies`
 
         """
-        await self._reddit.post(
-            API_PATH["sendreplies"], data={"id": self.fullname, "state": True}
-        )
+        await self._reddit.post(API_PATH["sendreplies"], data={"id": self.fullname, "state": True})

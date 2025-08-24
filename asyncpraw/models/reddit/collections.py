@@ -103,9 +103,7 @@ class CollectionModeration(AsyncPRAWBase):
             :meth:`~.SubredditCollectionsModeration.create`
 
         """
-        await self._reddit.post(
-            API_PATH["collection_delete"], data={"collection_id": self.collection_id}
-        )
+        await self._reddit.post(API_PATH["collection_delete"], data={"collection_id": self.collection_id})
 
     async def remove_post(self, submission: asyncpraw.models.Submission):
         """Remove a post from the collection.
@@ -252,9 +250,7 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         self.subreddit = subreddit
 
     @_deprecate_args("title", "description", "display_layout")
-    async def create(
-        self, *, description: str, display_layout: str | None = None, title: str
-    ) -> Collection:
+    async def create(self, *, description: str, display_layout: str | None = None, title: str) -> Collection:
         """Create a new :class:`.Collection`.
 
         The authenticated account must have appropriate moderator permissions in the
@@ -402,9 +398,7 @@ class SubredditCollections(AsyncPRAWBase):
         if (collection_id is None) == (permalink is None):
             msg = "Exactly one of 'collection_id' or 'permalink' must be provided."
             raise TypeError(msg)
-        collection = Collection(
-            self._reddit, collection_id=collection_id, permalink=permalink
-        )
+        collection = Collection(self._reddit, collection_id=collection_id, permalink=permalink)
         if fetch:
             await collection._fetch()
         return collection

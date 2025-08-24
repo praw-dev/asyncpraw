@@ -85,9 +85,7 @@ class BaseModNotes:
         if all_notes:
             for subreddit in subreddits:
                 for redditor in redditors:
-                    async for note in self._all_generator(
-                        redditor, subreddit, **generator_kwargs
-                    ):
+                    async for note in self._all_generator(redditor, subreddit, **generator_kwargs):
                         yield note
         else:
             async for note in self._bulk_generator(redditors, subreddits):
@@ -158,14 +156,9 @@ class BaseModNotes:
             if isinstance(thing, str):
                 reddit_id = thing
                 # this is to minimize the number of requests
-                if not (
-                    getattr(self, "redditor", redditor)
-                    and getattr(self, "subreddit", subreddit)
-                ):
+                if not (getattr(self, "redditor", redditor) and getattr(self, "subreddit", subreddit)):
                     # only fetch if we are missing either redditor or subreddit
-                    thing = [
-                        thing async for thing in self._reddit.info(fullnames=[thing])
-                    ][0]
+                    thing = [thing async for thing in self._reddit.info(fullnames=[thing])][0]
             else:
                 reddit_id = thing.fullname
             redditor = getattr(self, "redditor", redditor) or thing.author
@@ -622,10 +615,7 @@ class RedditModNotes(BaseModNotes):
         if not (pairs + redditors + subreddits + things):
             msg = "Either the 'pairs', 'redditors', 'subreddits', or 'things' parameters must be provided."
             raise TypeError(msg)
-        if (
-            len(redditors) * len(subreddits) == 0
-            and len(redditors) + len(subreddits) > 0
-        ):
+        if len(redditors) * len(subreddits) == 0 and len(redditors) + len(subreddits) > 0:
             raise TypeError(
                 "'redditors' must be non-empty if 'subreddits' is not empty."
                 if len(subreddits) > 0
@@ -634,15 +624,7 @@ class RedditModNotes(BaseModNotes):
 
         merged_redditors = []
         merged_subreddits = []
-        items = (
-            pairs
-            + [
-                (subreddit, redditor)
-                for redditor in set(redditors)
-                for subreddit in set(subreddits)
-            ]
-            + things
-        )
+        items = pairs + [(subreddit, redditor) for redditor in set(redditors) for subreddit in set(subreddits)] + things
 
         for item in items:
             if isinstance(item, (Comment, Submission)):
@@ -655,9 +637,7 @@ class RedditModNotes(BaseModNotes):
             else:
                 msg = f"Cannot get subreddit and author fields from type {type(item)}"
                 raise ValueError(msg)
-        return self._notes(
-            all_notes, merged_redditors, merged_subreddits, **generator_kwargs
-        )
+        return self._notes(all_notes, merged_redditors, merged_subreddits, **generator_kwargs)
 
     def things(
         self,

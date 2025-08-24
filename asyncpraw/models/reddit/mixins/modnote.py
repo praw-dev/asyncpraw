@@ -13,9 +13,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class ModNoteMixin:
     """Interface for classes that can have a moderator note set on them."""
 
-    def author_notes(
-        self, **generator_kwargs: Any
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
+    def author_notes(self, **generator_kwargs: Any) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
         """Get the moderator notes for the author of this object in the subreddit it's posted in.
 
         :param generator_kwargs: Additional keyword arguments are passed in the
@@ -31,9 +29,7 @@ class ModNoteMixin:
                 print(f"{note.label}: {note.note}")
 
         """
-        return self.thing.subreddit.mod.notes.redditors(
-            self.thing.author, **generator_kwargs
-        )
+        return self.thing.subreddit.mod.notes.redditors(self.thing.author, **generator_kwargs)
 
     async def create_note(
         self, *, label: str | None = None, note: str, **other_settings: Any
@@ -59,6 +55,4 @@ class ModNoteMixin:
             await submission.mod.create_note(label="HELPFUL_USER", note="Test note")
 
         """
-        return await self.thing.subreddit.mod.notes.create(
-            label=label, note=note, thing=self.thing, **other_settings
-        )
+        return await self.thing.subreddit.mod.notes.create(label=label, note=note, thing=self.thing, **other_settings)

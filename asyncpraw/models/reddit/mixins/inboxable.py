@@ -128,9 +128,7 @@ class InboxableMixin:
                         subs.add(str(item.subreddit))
 
         """
-        await self._reddit.post(
-            API_PATH["unblock_subreddit"], data={"id": self.fullname}
-        )
+        await self._reddit.post(API_PATH["unblock_subreddit"], data={"id": self.fullname})
 
     async def uncollapse(self):
         """Mark the item as uncollapsed.

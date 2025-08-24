@@ -143,9 +143,7 @@ class UserSubredditModeration(SubredditModeration):
 
     """
 
-    async def update(
-        self, **settings: str | (int | bool)
-    ) -> dict[str, str | (int | bool)]:
+    async def update(self, **settings: str | (int | bool)) -> dict[str, str | (int | bool)]:
         """Update the :class:`.Subreddit`'s settings.
 
         :param all_original_content: Mandate all submissions to be original content
@@ -251,6 +249,4 @@ class UserSubredditModeration(SubredditModeration):
             current_settings[new] = current_settings.pop(old)
 
         current_settings.update(settings)
-        return await UserSubreddit._create_or_update(
-            _reddit=self.subreddit._reddit, **current_settings
-        )
+        return await UserSubreddit._create_or_update(_reddit=self.subreddit._reddit, **current_settings)

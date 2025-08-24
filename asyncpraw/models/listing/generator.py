@@ -80,7 +80,9 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
                 if listing_type.CHILD_ATTRIBUTE in listing:
                     return listing_type(self._reddit, listing)
             else:  # noqa: PLW0120
-                msg = "The generator returned a dictionary Async PRAW didn't recognize. File a bug report at Async PRAW."
+                msg = (
+                    "The generator returned a dictionary Async PRAW didn't recognize. File a bug report at Async PRAW."
+                )
                 raise ValueError(msg)
         return listing
 
@@ -95,9 +97,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         if not self._listing:
             raise StopAsyncIteration
 
-        if self._listing.after and self._listing.after != self.params.get(
-            self._listing.AFTER_PARAM
-        ):
+        if self._listing.after and self._listing.after != self.params.get(self._listing.AFTER_PARAM):
             self.params[self._listing.AFTER_PARAM] = self._listing.after
         else:
             self._exhausted = True

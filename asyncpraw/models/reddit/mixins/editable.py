@@ -29,9 +29,7 @@ class EditableMixin:
         """
         await self._reddit.post(API_PATH["del"], data={"id": self.fullname})
 
-    async def edit(
-        self, body: str
-    ) -> asyncpraw.models.Comment | asyncpraw.models.Submission:
+    async def edit(self, body: str) -> asyncpraw.models.Comment | asyncpraw.models.Submission:
         """Replace the body of the object with ``body``.
 
         :param body: The Markdown formatted content for the updated object.

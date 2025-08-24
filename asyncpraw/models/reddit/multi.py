@@ -137,16 +137,12 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         """
         await self._ensure_author_fetched()
-        url = API_PATH["multireddit_update"].format(
-            multi=self.name, user=self._author, subreddit=subreddit
-        )
+        url = API_PATH["multireddit_update"].format(multi=self.name, user=self._author, subreddit=subreddit)
         await self._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
     @_deprecate_args("display_name")
-    async def copy(
-        self, *, display_name: str | None = None
-    ) -> asyncpraw.models.Multireddit:
+    async def copy(self, *, display_name: str | None = None) -> asyncpraw.models.Multireddit:
         """Copy this multireddit and return the new multireddit.
 
         :param display_name: The display name for the copied multireddit. Reddit will
@@ -170,9 +166,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         data = {
             "display_name": display_name,
             "from": self.path,
-            "to": API_PATH["multireddit"].format(
-                multi=name, user=await self._reddit.user.me()
-            ),
+            "to": API_PATH["multireddit"].format(multi=name, user=await self._reddit.user.me()),
         }
         return await self._reddit.post(API_PATH["multireddit_copy"], data=data)
 
@@ -188,9 +182,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         """
         await self._ensure_author_fetched()
-        path = API_PATH["multireddit_api"].format(
-            multi=self.name, user=self._author.name
-        )
+        path = API_PATH["multireddit_api"].format(multi=self.name, user=self._author.name)
         await self._reddit.delete(path)
 
     async def remove(self, subreddit: asyncpraw.models.Subreddit):
@@ -208,17 +200,13 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         """
         await self._ensure_author_fetched()
-        url = API_PATH["multireddit_update"].format(
-            multi=self.name, user=self._author, subreddit=subreddit
-        )
+        url = API_PATH["multireddit_update"].format(multi=self.name, user=self._author, subreddit=subreddit)
         await self._reddit.delete(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
     async def update(
         self,
-        **updated_settings: (
-            str | list[str | asyncpraw.models.Subreddit | dict[str, str]]
-        ),
+        **updated_settings: (str | list[str | asyncpraw.models.Subreddit | dict[str, str]]),
     ):
         """Update this multireddit.
 
@@ -249,12 +237,8 @@ class Multireddit(SubredditListingMixin, RedditBase):
 
         """
         if "subreddits" in updated_settings:
-            updated_settings["subreddits"] = [
-                {"name": str(sub)} for sub in updated_settings["subreddits"]
-            ]
+            updated_settings["subreddits"] = [{"name": str(sub)} for sub in updated_settings["subreddits"]]
         await self._ensure_author_fetched()
-        path = API_PATH["multireddit_api"].format(
-            multi=self.name, user=self._author.name
-        )
+        path = API_PATH["multireddit_api"].format(multi=self.name, user=self._author.name)
         new = await self._reddit.put(path, data={"model": dumps(updated_settings)})
         self.__dict__.update(new.__dict__)

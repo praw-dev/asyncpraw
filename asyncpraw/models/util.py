@@ -35,9 +35,7 @@ def deprecate_lazy(func: Callable) -> Callable[..., Any]:
 
 
 @_deprecate_args("permissions", "known_permissions")
-def permissions_string(
-    *, known_permissions: set[str], permissions: list[str] | None
-) -> str:
+def permissions_string(*, known_permissions: set[str], permissions: list[str] | None) -> str:
     """Return a comma separated string of permission changes.
 
     :param known_permissions: A set of strings representing the available permissions.
@@ -171,9 +169,7 @@ async def stream_generator(
             without_before_counter = (without_before_counter + 1) % 30
         if not exclude_before:
             function_kwargs["params"] = {"before": before_attribute}
-        for item in reversed(
-            [result async for result in function(limit=limit, **function_kwargs)]
-        ):
+        for item in reversed([result async for result in function(limit=limit, **function_kwargs)]):
             attribute = getattr(item, attribute_name)
             if attribute in seen_attributes:
                 continue

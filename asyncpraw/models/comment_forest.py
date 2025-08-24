@@ -95,8 +95,7 @@ class CommentForest:
             self._comments.append(comment)
         else:
             assert comment.parent_id in self._submission._comments_by_id, (
-                "Async PRAW Error occurred. Please file a bug report and include the"
-                " code that caused the error."
+                "Async PRAW Error occurred. Please file a bug report and include the code that caused the error."
             )
             parent = self._submission._comments_by_id[comment.parent_id]
             parent.replies._comments.append(comment)
@@ -105,9 +104,7 @@ class CommentForest:
         self,
     ) -> (
         list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]
-        | Coroutine[
-            Any, Any, list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]
-        ]
+        | Coroutine[Any, Any, list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]]
     ):
         """Return a flattened list of all comments.
 
@@ -124,12 +121,7 @@ class CommentForest:
                 queue.extend(comment.replies)
         # check if this got called with await
         # I'm so sorry this is really gross
-        if any(
-            "await" in context
-            for context in inspect.getframeinfo(
-                inspect.currentframe().f_back
-            ).code_context
-        ):
+        if any("await" in context for context in inspect.getframeinfo(inspect.currentframe().f_back).code_context):
 
             async def async_func():
                 warn(
@@ -187,9 +179,7 @@ class CommentForest:
             comment.submission = self._submission
 
     @_deprecate_args("limit", "threshold")
-    async def replace_more(
-        self, *, limit: int | None = 32, threshold: int = 0
-    ) -> list[asyncpraw.models.MoreComments]:
+    async def replace_more(self, *, limit: int | None = 32, threshold: int = 0) -> list[asyncpraw.models.MoreComments]:
         """Update the comment forest by resolving instances of :class:`.MoreComments`.
 
         :param limit: The maximum number of :class:`.MoreComments` instances to replace.
@@ -261,9 +251,7 @@ class CommentForest:
                 remaining -= 1
 
             # Add new MoreComment objects to the heap of more_comments
-            for more in self._gather_more_comments(
-                new_comments, parent_tree=self._comments
-            ):
+            for more in self._gather_more_comments(new_comments, parent_tree=self._comments):
                 more.submission = self._submission
                 heappush(more_comments, more)
             # Insert all items into the tree

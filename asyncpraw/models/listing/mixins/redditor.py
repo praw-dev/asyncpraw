@@ -96,9 +96,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "downvoted"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "downvoted"), **generator_kwargs)
 
     def gildings(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -129,9 +127,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "gilded/given"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "gilded/given"), **generator_kwargs)
 
     def hidden(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -162,9 +158,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "hidden"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "hidden"), **generator_kwargs)
 
     def saved(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -195,9 +189,7 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "saved"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "saved"), **generator_kwargs)
 
     def upvoted(
         self, **generator_kwargs: str | int | dict[str, str]
@@ -228,6 +220,4 @@ class RedditorListingMixin(BaseListingMixin, GildedListingMixin):
                 print(item.id)
 
         """
-        return ListingGenerator(
-            self._reddit, urljoin(self._path, "upvoted"), **generator_kwargs
-        )
+        return ListingGenerator(self._reddit, urljoin(self._path, "upvoted"), **generator_kwargs)

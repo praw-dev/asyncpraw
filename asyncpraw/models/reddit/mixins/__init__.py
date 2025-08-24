@@ -28,9 +28,7 @@ class ThingModerationMixin(ModNoteMixin):
 
     REMOVAL_MESSAGE_API = None
 
-    async def _add_removal_reason(
-        self, *, mod_note: str = "", reason_id: str | None = None
-    ):
+    async def _add_removal_reason(self, *, mod_note: str = "", reason_id: str | None = None):
         """Add a removal reason for a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -51,9 +49,7 @@ class ThingModerationMixin(ModNoteMixin):
             "mod_note": mod_note,
             "reason_id": reason_id,
         }
-        await self.thing._reddit.post(
-            API_PATH["removal_reasons"], data={"json": dumps(data)}
-        )
+        await self.thing._reddit.post(API_PATH["removal_reasons"], data={"json": dumps(data)})
 
     async def approve(self):
         """Approve a :class:`.Comment` or :class:`.Submission`.
@@ -74,9 +70,7 @@ class ThingModerationMixin(ModNoteMixin):
             await submission.mod.approve()
 
         """
-        await self.thing._reddit.post(
-            API_PATH["approve"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["approve"], data={"id": self.thing.fullname})
 
     @_deprecate_args("how", "sticky")
     async def distinguish(self, *, how: str = "yes", sticky: bool = False):
@@ -136,9 +130,7 @@ class ThingModerationMixin(ModNoteMixin):
             :meth:`.unignore_reports`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["ignore_reports"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["ignore_reports"], data={"id": self.thing.fullname})
 
     async def lock(self):
         """Lock a :class:`.Comment` or :class:`.Submission`.
@@ -159,14 +151,10 @@ class ThingModerationMixin(ModNoteMixin):
             :meth:`.unlock`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["lock"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["lock"], data={"id": self.thing.fullname})
 
     @_deprecate_args("spam", "mod_note", "reason_id")
-    async def remove(
-        self, *, mod_note: str = "", spam: bool = False, reason_id: str | None = None
-    ):
+    async def remove(self, *, mod_note: str = "", spam: bool = False, reason_id: str | None = None):
         """Remove a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -291,9 +279,7 @@ class ThingModerationMixin(ModNoteMixin):
             :meth:`.ignore_reports`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["unignore_reports"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["unignore_reports"], data={"id": self.thing.fullname})
 
     async def unlock(self):
         """Unlock a :class:`.Comment` or :class:`.Submission`.
@@ -314,9 +300,7 @@ class ThingModerationMixin(ModNoteMixin):
             :meth:`.lock`
 
         """
-        await self.thing._reddit.post(
-            API_PATH["unlock"], data={"id": self.thing.fullname}
-        )
+        await self.thing._reddit.post(API_PATH["unlock"], data={"id": self.thing.fullname})
 
 
 class UserContentMixin(

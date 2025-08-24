@@ -79,6 +79,7 @@ testpaths = "tests"
 include = [
   "asyncpraw/**/*.py"
 ]
+line-length = 120
 
 [tool.ruff.lint]
 ignore = [
