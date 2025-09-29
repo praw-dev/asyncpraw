@@ -22,27 +22,6 @@ class CommentForest:
 
     """
 
-    async def __aiter__(self) -> AsyncIterator[asyncpraw.models.Comment]:
-        """Allow CommentForest to be used as an AsyncIterator.
-
-        This method enables one to iterate over all top_level comments, like so:
-
-        .. code-block:: python
-
-            comments = submission.comments
-            async for comment in comments:
-                print(comment.body)
-
-        """
-        warn(
-            "Using CommentForest as an asynchronous iterator has been deprecated and"
-            " will be removed in a future version.",
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-        for comment in self:
-            yield comment
-
     async def __call__(self) -> CommentForest:
         """Return the instance.
 

@@ -12,14 +12,6 @@ from . import UnitTest
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
 class TestDeprecation(UnitTest):
-    async def test_comment_forest_async_iterator(self, reddit):
-        submission = await reddit.submission("1234", fetch=False)
-        submission._fetched = True
-        submission.comments._comments = [Comment(None, id="1234")]
-        with pytest.deprecated_call():
-            async for comment in submission.comments:
-                assert isinstance(comment, Comment)
-
     async def test_comment_forest_list_async(self, reddit):
         submission = await reddit.submission("1234", fetch=False)
         submission._fetched = True
