@@ -59,14 +59,6 @@ class TestSubmission(IntegrationTest):
         assert isinstance(submission.comments[0], Comment)
         assert isinstance(submission.comments[0].replies[0], Comment)
 
-    async def test_comments__fetch_async_call(self, reddit):
-        reddit.read_only = False
-        submission = await reddit.submission("2gmzqe", fetch=False)
-        with pytest.deprecated_call():
-            await submission.comments()
-            assert submission._fetched
-            assert submission.comments
-
     async def test_crosspost(self, reddit):
         reddit.read_only = False
         subreddit = pytest.placeholders.test_subreddit

@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import inspect
 from heapq import heappop, heappush
-from typing import TYPE_CHECKING, Any, AsyncIterator, Coroutine
-from warnings import warn
+from typing import TYPE_CHECKING, Any, AsyncIterator
 
 from ..exceptions import DuplicateReplaceException
 from ..util import _deprecate_args
@@ -21,23 +20,6 @@ class CommentForest:
     Each of these comments can be a tree of replies.
 
     """
-
-    async def __call__(self) -> CommentForest:
-        """Return the instance.
-
-        This method is deprecated and will be removed in a future version.
-
-        """
-        warn(
-            "`Submission.comments` is now a property and no longer needs to be awaited. This"
-            " will raise an error in a future version of Async PRAW.",
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-        if not self._submission._fetched:
-            await self._submission._fetch()
-        self._comments = self._submission.comments._comments
-        return self
 
     def __getitem__(self, index: int) -> asyncpraw.models.Comment:
         """Return the comment at position ``index`` in the list.
@@ -81,10 +63,7 @@ class CommentForest:
 
     def list(  # noqa: A003
         self,
-    ) -> (
-        list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]
-        | Coroutine[Any, Any, list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]]
-    ):
+    ) -> list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]:
         """Return a flattened list of all comments.
 
         This list may contain :class:`.MoreComments` instances if :meth:`.replace_more`
@@ -98,20 +77,6 @@ class CommentForest:
             comments.append(comment)
             if not isinstance(comment, MoreComments):
                 queue.extend(comment.replies)
-        # check if this got called with await
-        # I'm so sorry this is really gross
-        if any("await" in context for context in inspect.getframeinfo(inspect.currentframe().f_back).code_context):
-
-            async def async_func():
-                warn(
-                    "`CommentForest.list()` no longer needs to be awaited and this"
-                    " will raise an error in a future version of Async PRAW.",
-                    category=DeprecationWarning,
-                    stacklevel=3,
-                )
-                return comments
-
-            return async_func()
         return comments
 
     @staticmethod

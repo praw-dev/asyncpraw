@@ -12,13 +12,6 @@ from . import UnitTest
 
 @pytest.mark.filterwarnings("error", category=DeprecationWarning)
 class TestDeprecation(UnitTest):
-    async def test_comment_forest_list_async(self, reddit):
-        submission = await reddit.submission("1234", fetch=False)
-        submission._fetched = True
-        submission.comments._comments = []
-        with pytest.deprecated_call():
-            await submission.comments.list()
-
     async def test_lazy_argument_rename(self, reddit):
         with pytest.deprecated_call() as warning_info:
             await reddit.submission("1234", lazy=True)
@@ -27,12 +20,6 @@ class TestDeprecation(UnitTest):
             == "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
             " the ``lazy`` parameter will be removed in a future version of Async PRAW."
         )
-
-    async def test_submission_comments_async(self, reddit):
-        submission = await reddit.submission("1234", fetch=False)
-        submission._fetched = True
-        with pytest.deprecated_call():
-            await submission.comments()
 
     async def test_synchronous_context_manager(self, reddit):
         with pytest.deprecated_call() as warning_info:

@@ -12,6 +12,7 @@ Unreleased
   :attr:`.read_only` mode.
 - The ``subreddit`` attribute of :class:`.Redditor` is a :class:`.UserSubreddit`
   instance.
+- :meth:`.CommentForest.list` no longer needs to be awaited.
 
 **Removed**
 
