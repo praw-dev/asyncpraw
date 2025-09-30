@@ -213,8 +213,9 @@ class SubredditEmoji:
         # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
         with file.open("rb") as image:  # noqa: ASYNC230
             upload_data["file"] = image
-            response = await self._reddit._core._requestor._http.post(upload_url, data=upload_data)
-        response.raise_for_status()
+            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data
+            ) as response:
+                response.raise_for_status()
 
         data = {
             "mod_flair_only": mod_flair_only,

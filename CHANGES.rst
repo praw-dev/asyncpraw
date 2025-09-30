@@ -9,6 +9,7 @@ Unreleased
 **Added**
 
 - Add support for Python 3.13.
+- Support delayed session creation in asyncprawcore 2.5.0+.
 
 **Changed**
 
