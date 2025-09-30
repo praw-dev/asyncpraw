@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..const import API_PATH
-from ..util import _deprecate_args
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator
@@ -296,7 +295,6 @@ class Inbox(AsyncPRAWBase):
             await self._reddit.post(API_PATH["uncollapse"], data=data)
             items = items[25:]
 
-    @_deprecate_args("mark_read")
     def unread(
         self,
         *,

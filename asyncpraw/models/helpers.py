@@ -6,7 +6,6 @@ from json import dumps
 from typing import TYPE_CHECKING, Any
 
 from ..const import API_PATH
-from ..util import _deprecate_args
 from .base import AsyncPRAWBase
 from .reddit.draft import Draft
 from .reddit.live import LiveThread
@@ -182,7 +181,6 @@ class LiveHelper(AsyncPRAWBase):
             await live_thread._fetch()
         return live_thread
 
-    @_deprecate_args("title", "description", "nsfw", "resources")
     async def create(
         self,
         title: str,
@@ -275,7 +273,6 @@ class LiveHelper(AsyncPRAWBase):
 class MultiredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with multireddits."""
 
-    @_deprecate_args("redditor", "name")
     async def __call__(
         self,
         *,
@@ -308,15 +305,6 @@ class MultiredditHelper(AsyncPRAWBase):
             await multireddit._fetch()
         return multireddit
 
-    @_deprecate_args(
-        "display_name",
-        "subreddits",
-        "description_md",
-        "icon_name",
-        "key_color",
-        "visibility",
-        "weighting_scheme",
-    )
     async def create(
         self,
         *,
@@ -393,7 +381,6 @@ class SubredditHelper(AsyncPRAWBase):
             await subreddit._fetch()
         return subreddit
 
-    @_deprecate_args("name", "title", "link_type", "subreddit_type", "wikimode")
     async def create(
         self,
         name: str,

@@ -7,7 +7,6 @@ from heapq import heappop, heappush
 from typing import TYPE_CHECKING, Any, AsyncIterator
 
 from ..exceptions import DuplicateReplaceException
-from ..util import _deprecate_args
 from .reddit.more import MoreComments
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -122,7 +121,6 @@ class CommentForest:
         for comment in comments:
             comment.submission = self._submission
 
-    @_deprecate_args("limit", "threshold")
     async def replace_more(self, *, limit: int | None = 32, threshold: int = 0) -> list[asyncpraw.models.MoreComments]:
         """Update the comment forest by resolving instances of :class:`.MoreComments`.
 

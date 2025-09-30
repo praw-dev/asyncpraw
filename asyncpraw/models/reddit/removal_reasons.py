@@ -7,7 +7,6 @@ from warnings import warn
 
 from ...const import API_PATH
 from ...exceptions import ClientException
-from ...util import _deprecate_args
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -115,7 +114,6 @@ class RemovalReason(RedditBase):
         url = API_PATH["removal_reason"].format(subreddit=self.subreddit, id=self.id)
         await self._reddit.delete(url)
 
-    @_deprecate_args("message", "title")
     async def update(self, *, message: str | None = None, title: str | None = None):
         """Update the removal reason from this subreddit.
 
@@ -182,7 +180,6 @@ class SubredditRemovalReasons:
             for reason_id in response["order"]
         ]
 
-    @_deprecate_args("message", "title")
     async def add(self, *, message: str, title: str) -> RemovalReason:
         """Add a removal reason to this subreddit.
 

@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any, Iterator
 
 from ...const import API_PATH
 from ...exceptions import ClientException
-from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
 from .base import RedditBase
@@ -248,7 +247,6 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
-    @_deprecate_args("title", "description", "display_layout")
     async def create(self, *, description: str, display_layout: str | None = None, title: str) -> Collection:
         """Create a new :class:`.Collection`.
 

@@ -9,14 +9,12 @@ from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable
 from warnings import warn
 
-from ..util import _deprecate_args
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
 
 
-@_deprecate_args("permissions", "known_permissions")
 def permissions_string(*, known_permissions: set[str], permissions: list[str] | None) -> str:
     """Return a comma separated string of permission changes.
 
@@ -39,14 +37,6 @@ def permissions_string(*, known_permissions: set[str], permissions: list[str] | 
     return ",".join(to_set)
 
 
-@_deprecate_args(
-    "function",
-    "pause_after",
-    "skip_existing",
-    "attribute_name",
-    "exclude_before",
-    "continue_after_id",
-)
 async def stream_generator(
     function: Callable,
     *,

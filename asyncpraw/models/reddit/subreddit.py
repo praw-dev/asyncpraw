@@ -28,7 +28,7 @@ from ...exceptions import (
     TooLargeMediaException,
     WebSocketException,
 )
-from ...util import _deprecate_args, cachedproperty
+from ...util import cachedproperty
 from ..listing.generator import ListingGenerator
 from ..listing.mixins import SubredditListingMixin
 from ..util import permissions_string, stream_generator
@@ -132,7 +132,6 @@ class Modmail:
         subreddits = [self.subreddit] + (other_subreddits or [])
         return ",".join(str(subreddit) for subreddit in subreddits)
 
-    @_deprecate_args("other_subreddits", "state")
     async def bulk_read(
         self,
         *,
@@ -213,7 +212,6 @@ class Modmail:
             **generator_kwargs,
         )
 
-    @_deprecate_args("subject", "body", "recipient", "author_hidden")
     async def create(
         self,
         *,
@@ -456,7 +454,6 @@ class SubredditFlair:
         """
         self.subreddit = subreddit
 
-    @_deprecate_args("position", "self_assign", "link_position", "link_self_assign")
     async def configure(
         self,
         *,
@@ -519,7 +516,6 @@ class SubredditFlair:
         all_flairs = [x["user"] async for x in self()]
         return await self.update(all_flairs)
 
-    @_deprecate_args("redditor", "text", "css_class", "flair_template_id")
     async def set(  # noqa: A003
         self,
         redditor: asyncpraw.models.Redditor | str,
@@ -564,7 +560,6 @@ class SubredditFlair:
             url = API_PATH["flair"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    @_deprecate_args("flair_list", "text", "css_class")
     async def update(
         self,
         flair_list: Iterator[str | asyncpraw.models.Redditor | dict[str, str | asyncpraw.models.Redditor]],
@@ -715,18 +710,6 @@ class SubredditFlairTemplates:
         url = API_PATH["flairtemplatedelete"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data={"flair_template_id": template_id})
 
-    @_deprecate_args(
-        "template_id",
-        "text",
-        "css_class",
-        "text_editable",
-        "background_color",
-        "text_color",
-        "mod_only",
-        "allowable_content",
-        "max_emojis",
-        "fetch",
-    )
     async def update(
         self,
         template_id: str,
@@ -902,7 +885,6 @@ class SubredditModeration:
         url = API_PATH["accept_mod_invite"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
-    @_deprecate_args("only")
     def edited(
         self, *, only: str | None = None, **generator_kwargs: Any
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
@@ -970,7 +952,6 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    @_deprecate_args("action", "mod")
     def log(
         self,
         *,
@@ -1004,7 +985,6 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    @_deprecate_args("only")
     def modqueue(
         self, *, only: str | None = None, **generator_kwargs: Any
     ) -> AsyncIterator[asyncpraw.models.Submission | asyncpraw.models.Comment]:
@@ -1032,7 +1012,6 @@ class SubredditModeration:
             **generator_kwargs,
         )
 
-    @_deprecate_args("only")
     def reports(
         self, *, only: str | None = None, **generator_kwargs: Any
     ) -> AsyncIterator[asyncpraw.models.Submission | asyncpraw.models.Comment]:
@@ -1067,7 +1046,6 @@ class SubredditModeration:
         response = await self.subreddit._reddit.get(url)
         return response["data"]
 
-    @_deprecate_args("only")
     def spam(
         self, *, only: str | None = None, **generator_kwargs: Any
     ) -> AsyncIterator[asyncpraw.models.Submission | asyncpraw.models.Comment]:
@@ -1278,7 +1256,6 @@ class SubredditModerationStream:
         """
         self.subreddit = subreddit
 
-    @_deprecate_args("only")
     def edited(
         self, *, only: str | None = None, **stream_options: Any
     ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
@@ -1301,7 +1278,6 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.edited, only=only, **stream_options)
 
-    @_deprecate_args("action", "mod")
     def log(
         self,
         *,
@@ -1333,7 +1309,6 @@ class SubredditModerationStream:
             **stream_options,
         )
 
-    @_deprecate_args("other_subreddits", "sort", "state")
     def modmail_conversations(
         self,
         *,
@@ -1377,7 +1352,6 @@ class SubredditModerationStream:
             **stream_options,
         )
 
-    @_deprecate_args("only")
     def modqueue(
         self, *, only: str | None = None, **stream_options: Any
     ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
@@ -1399,7 +1373,6 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.modqueue, only=only, **stream_options)
 
-    @_deprecate_args("only")
     def reports(
         self, *, only: str | None = None, **stream_options: Any
     ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
@@ -1421,7 +1394,6 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.reports, only=only, **stream_options)
 
-    @_deprecate_args("only")
     def spam(
         self, *, only: str | None = None, **stream_options: Any
     ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
@@ -1893,7 +1865,6 @@ class SubredditStylesheet:
         url = API_PATH["delete_sr_icon"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
-    @_deprecate_args("stylesheet", "reason")
     async def update(self, stylesheet: str, *, reason: str | None = None):
         """Update the :class:`.Subreddit`'s stylesheet.
 
@@ -1912,7 +1883,6 @@ class SubredditStylesheet:
         url = API_PATH["subreddit_stylesheet"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    @_deprecate_args("name", "image_path")
     async def upload(self, *, image_path: str, name: str) -> dict[str, str]:
         """Upload an image to the :class:`.Subreddit`.
 
@@ -1962,7 +1932,6 @@ class SubredditStylesheet:
         image_url = await self._upload_style_asset(image_path=image_path, image_type=image_type)
         await self._update_structured_styles({image_type: image_url})
 
-    @_deprecate_args("image_path", "align")
     async def upload_banner_additional_image(
         self,
         image_path: str,
@@ -2158,7 +2127,6 @@ class SubredditWiki:
         self.contributor = SubredditRelationship(subreddit, "wikicontributor")
         self.subreddit = subreddit
 
-    @_deprecate_args("name", "content", "reason")
     async def create(
         self,
         *,
@@ -2356,7 +2324,6 @@ class ModeratorRelationship(SubredditRelationship):
         url = API_PATH[f"list_{self.relationship}"].format(subreddit=self.subreddit)
         return await self.subreddit._reddit.get(url, params=params)
 
-    @_deprecate_args("redditor", "permissions")
     async def add(
         self,
         redditor: str | asyncpraw.models.Redditor,
@@ -2386,7 +2353,6 @@ class ModeratorRelationship(SubredditRelationship):
         other_settings = self._handle_permissions(other_settings=other_settings, permissions=permissions)
         await super().add(redditor, **other_settings)
 
-    @_deprecate_args("redditor", "permissions")
     async def invite(
         self,
         redditor: str | asyncpraw.models.Redditor,
@@ -2416,7 +2382,6 @@ class ModeratorRelationship(SubredditRelationship):
         url = API_PATH["friend"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    @_deprecate_args("redditor")
     def invited(
         self,
         *,
@@ -2482,7 +2447,6 @@ class ModeratorRelationship(SubredditRelationship):
         url = API_PATH["unfriend"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    @_deprecate_args("redditor", "permissions")
     async def update(
         self,
         redditor: str | asyncpraw.models.Redditor,
@@ -2517,7 +2481,6 @@ class ModeratorRelationship(SubredditRelationship):
         )
         await self.subreddit._reddit.post(url, data=data)
 
-    @_deprecate_args("redditor", "permissions")
     async def update_invite(
         self,
         redditor: str | asyncpraw.models.Redditor,
@@ -3319,7 +3282,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         except ClientException:
             return None
 
-    @_deprecate_args("query", "sort", "syntax", "time_filter")
     def search(
         self,
         query: str,
@@ -3365,7 +3327,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         url = API_PATH["search"].format(subreddit=self)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    @_deprecate_args("number")
     async def sticky(self, *, number: int = 1) -> asyncpraw.models.Submission:
         """Return a :class:`.Submission` object for a sticky of the subreddit.
 
@@ -3391,21 +3352,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         await submission._fetch()
         return submission
 
-    @_deprecate_args(
-        "title",
-        "selftext",
-        "url",
-        "flair_id",
-        "flair_text",
-        "resubmit",
-        "send_replies",
-        "nsfw",
-        "spoiler",
-        "collection_id",
-        "discussion_type",
-        "inline_media",
-        "draft_id",
-    )
     async def submit(
         self,
         title: str,
@@ -3554,17 +3500,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         return await self._reddit.post(API_PATH["submit"], data=data)
 
-    @_deprecate_args(
-        "title",
-        "images",
-        "collection_id",
-        "discussion_type",
-        "flair_id",
-        "flair_text",
-        "nsfw",
-        "send_replies",
-        "spoiler",
-    )
     async def submit_gallery(
         self,
         title: str,
@@ -3672,20 +3607,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             raise RedditAPIException(response["errors"])
         return await self._reddit.submission(url=response["data"]["url"])
 
-    @_deprecate_args(
-        "title",
-        "image_path",
-        "flair_id",
-        "flair_text",
-        "resubmit",
-        "send_replies",
-        "nsfw",
-        "spoiler",
-        "timeout",
-        "collection_id",
-        "without_websockets",
-        "discussion_type",
-    )
     async def submit_image(
         self,
         title: str,
@@ -3786,20 +3707,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         data.update(kind="image", url=image_url)
         return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
 
-    @_deprecate_args(
-        "title",
-        "selftext",
-        "options",
-        "duration",
-        "flair_id",
-        "flair_text",
-        "resubmit",
-        "send_replies",
-        "nsfw",
-        "spoiler",
-        "collection_id",
-        "discussion_type",
-    )
     async def submit_poll(
         self,
         title: str,
@@ -3882,22 +3789,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
 
         return await self._reddit.post(API_PATH["submit_poll_post"], json=data)
 
-    @_deprecate_args(
-        "title",
-        "video_path",
-        "videogif",
-        "thumbnail_path",
-        "flair_id",
-        "flair_text",
-        "resubmit",
-        "send_replies",
-        "nsfw",
-        "spoiler",
-        "timeout",
-        "collection_id",
-        "without_websockets",
-        "discussion_type",
-    )
     async def submit_video(
         self,
         title: str,
@@ -4011,7 +3902,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         )
         return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
 
-    @_deprecate_args("other_subreddits")
     async def subscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None):
         """Subscribe to the subreddit.
 
@@ -4062,7 +3952,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """
         return await self._reddit.get(API_PATH["about_traffic"].format(subreddit=self))
 
-    @_deprecate_args("other_subreddits")
     async def unsubscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None):
         """Unsubscribe from the subreddit.
 
@@ -4109,16 +3998,6 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         for template in results:
             yield template
 
-    @_deprecate_args(
-        "text",
-        "css_class",
-        "text_editable",
-        "background_color",
-        "text_color",
-        "mod_only",
-        "allowable_content",
-        "max_emojis",
-    )
     async def add(
         self,
         text: str,
@@ -4244,16 +4123,6 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
         for template in results:
             yield template
 
-    @_deprecate_args(
-        "text",
-        "css_class",
-        "text_editable",
-        "background_color",
-        "text_color",
-        "mod_only",
-        "allowable_content",
-        "max_emojis",
-    )
     async def add(
         self,
         text: str,

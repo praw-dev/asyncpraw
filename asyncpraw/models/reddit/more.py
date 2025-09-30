@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
-from ...util import _deprecate_args
 from ..base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -68,7 +67,6 @@ class MoreComments(AsyncPRAWBase):
         assert len(comments.children) == 1, "Please file a bug report with Async PRAW."
         return comments.children[0]
 
-    @_deprecate_args("update")
     async def comments(self, *, update: bool = True) -> list[asyncpraw.models.Comment]:
         """Fetch and return the comments for a single :class:`.MoreComments` object."""
         if self._comments is None:

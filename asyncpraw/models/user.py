@@ -9,7 +9,6 @@ from asyncprawcore import Conflict
 from ..const import API_PATH
 from ..exceptions import ReadOnlyException
 from ..models import Preferences
-from ..util import _deprecate_args
 from ..util.cache import cachedproperty
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
@@ -87,7 +86,6 @@ class User(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["my_contributor"], **generator_kwargs)
 
-    @_deprecate_args("user")
     async def friends(
         self, *, user: str | asyncpraw.models.Redditor | None = None
     ) -> list[asyncpraw.models.Redditor] | asyncpraw.models.Redditor:

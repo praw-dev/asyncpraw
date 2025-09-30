@@ -31,7 +31,6 @@ from .config import Config
 from .const import API_PATH, USER_AGENT_FORMAT, __version__
 from .exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
 from .objector import Objector
-from .util import _deprecate_args
 
 try:
     from update_checker import update_check
@@ -614,7 +613,6 @@ class Reddit:
         """Close the requestor."""
         await self.requestor.close()
 
-    @_deprecate_args("id", "url", "fetch")
 
     async def comment(
         self,
@@ -653,7 +651,6 @@ class Reddit:
             await comment._fetch()
         return comment
 
-    @_deprecate_args("path", "data", "json", "params")
     async def delete(
         self,
         path: str,
@@ -683,7 +680,6 @@ class Reddit:
         """
         return models.DomainListing(self, domain)
 
-    @_deprecate_args("path", "params")
     async def get(
         self,
         path: str,
@@ -698,7 +694,6 @@ class Reddit:
         """
         return await self._objectify_request(method="GET", params=params, path=path)
 
-    @_deprecate_args("fullnames", "url", "subreddits")
     def info(
         self,
         *,
@@ -769,7 +764,6 @@ class Reddit:
 
         return generator(url)
 
-    @_deprecate_args("path", "data", "json")
     async def patch(
         self,
         path: str,
@@ -791,7 +785,6 @@ class Reddit:
         """
         return await self._objectify_request(data=data, json=json, method="PATCH", params=params, path=path)
 
-    @_deprecate_args("path", "data", "files", "params", "json")
     async def post(
         self,
         path: str,
@@ -840,7 +833,6 @@ class Reddit:
                 await asyncio.sleep(seconds)
         raise last_exception
 
-    @_deprecate_args("path", "data", "json")
     async def put(
         self,
         path: str,
@@ -860,7 +852,6 @@ class Reddit:
         """
         return await self._objectify_request(data=data, json=json, method="PUT", path=path)
 
-    @_deprecate_args("nsfw")
     async def random_subreddit(self, *, nsfw: bool = False) -> asyncpraw.models.Subreddit:
         """Return a random instance of :class:`.Subreddit`.
 
@@ -878,7 +869,6 @@ class Reddit:
         await subreddit._fetch()
         return subreddit
 
-    @_deprecate_args("name", "fullname", "fetch")
     async def redditor(
         self,
         name: str | None = None,
@@ -901,7 +891,6 @@ class Reddit:
             await redditor._fetch()
         return redditor
 
-    @_deprecate_args("method", "path", "params", "data", "files", "json")
     async def request(
         self,
         *,
@@ -958,7 +947,6 @@ class Reddit:
                 field = None
             raise RedditAPIException([data["reason"], explanation, field]) from exception
 
-    @_deprecate_args("id", "url", "fetch")
 
     async def submission(
         self,
