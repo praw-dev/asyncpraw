@@ -125,28 +125,6 @@ class Reddit:
             memodict = {}  # pragma: no cover
         return copy(self)
 
-    def __enter__(self):  # noqa: ANN204
-        """Handle the context manager open.
-
-        .. deprecated:: 7.1.1
-
-            Using this class as a synchronous context manager is deprecated and will be
-            removed in the next release. Use this class as an asynchronous context
-            manager instead.
-
-        """
-        warn(
-            "Using this class as a synchronous context manager is deprecated and will"
-            " be removed in the next release. Use this class as an asynchronous context"
-            " manager instead.",
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-        return self  # pragma: no cover
-
-    def __exit__(self, *_args: object):
-        """Handle the context manager close."""
-
     def __init__(
         self,
         site_name: str | None = None,

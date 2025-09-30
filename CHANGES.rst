@@ -28,6 +28,7 @@ Unreleased
 - Remove ``WebSocketException.original_exception`` method.
 - Remove the ``after`` argument for :meth:`.conversations`.
 - Remove ability to use :class:`.CommentForest` as an asynchronous iterator.
+- Remove ability to use :class:`.Reddit` as an synchronous context manager.
 
 7.8.1 (2024/12/21)
 ------------------
