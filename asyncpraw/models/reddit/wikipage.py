@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ...util.cache import cachedproperty
-from ..listing.generator import ListingGenerator
+from asyncpraw.const import API_PATH
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.util.cache import cachedproperty
+
 from .base import RedditBase
 from .redditor import Redditor
 
@@ -29,7 +30,7 @@ class WikiPageModeration:
 
     """
 
-    def __init__(self, wikipage: WikiPage):
+    def __init__(self, wikipage: WikiPage) -> None:
         """Initialize a :class:`.WikiPageModeration` instance.
 
         :param wikipage: The wikipage to moderate.
@@ -37,7 +38,7 @@ class WikiPageModeration:
         """
         self.wikipage = wikipage
 
-    async def add(self, redditor: asyncpraw.models.Redditor):
+    async def add(self, redditor: asyncpraw.models.Redditor) -> None:
         """Add an editor to this :class:`.WikiPage`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -55,7 +56,7 @@ class WikiPageModeration:
         url = API_PATH["wiki_page_editor"].format(subreddit=self.wikipage.subreddit, method="add")
         await self.wikipage._reddit.post(url, data=data)
 
-    async def remove(self, redditor: asyncpraw.models.Redditor):
+    async def remove(self, redditor: asyncpraw.models.Redditor) -> None:
         """Remove an editor from this :class:`.WikiPage`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -73,7 +74,7 @@ class WikiPageModeration:
         url = API_PATH["wiki_page_editor"].format(subreddit=self.wikipage.subreddit, method="del")
         await self.wikipage._reddit.post(url, data=data)
 
-    async def revert(self):
+    async def revert(self) -> None:
         """Revert a wikipage back to a specific revision.
 
         To revert the page ``"praw_test"`` in r/test to revision ``"1234abc"``, try
@@ -217,7 +218,7 @@ class WikiPage(RedditBase):
         name: str,
         revision: str | None = None,
         _data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.WikiPage` instance.
 
         :param revision: A specific revision ID to fetch. By default, fetches the most
@@ -237,7 +238,7 @@ class WikiPage(RedditBase):
         """Return a string representation of the instance."""
         return f"{self.subreddit}/{self.name}"
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         data = await self._fetch_data()
         data = data["data"]
         if data["revision_by"] is not None:
@@ -276,7 +277,7 @@ class WikiPage(RedditBase):
             **generator_kwargs,
         )
 
-    async def edit(self, *, content: str, reason: str | None = None, **other_settings: Any):
+    async def edit(self, *, content: str, reason: str | None = None, **other_settings: Any) -> None:
         """Edit this wiki page's contents.
 
         :param content: The updated Markdown content of the page.

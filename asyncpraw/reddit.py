@@ -11,7 +11,6 @@ from itertools import islice
 from logging import getLogger
 from typing import IO, TYPE_CHECKING, Any
 from urllib.parse import urlparse
-from warnings import warn
 
 from asyncprawcore import (
     Authorizer,
@@ -132,7 +131,7 @@ class Reddit:
         requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,
         requestor_kwargs: dict[str, Any] | None = None,
         **config_settings: str | bool | int | None,
-    ):
+    ) -> None:
         """Initialize a :class:`.Reddit` instance.
 
         :param site_name: The name of a section in your ``praw.ini`` file from which to
@@ -438,7 +437,7 @@ class Reddit:
 
         """
 
-    def _check_for_update(self):
+    def _check_for_update(self) -> None:
         if UPDATE_CHECKER_MISSING:
             return
         if not Reddit.update_checked and self.config.check_for_updates:
@@ -499,7 +498,7 @@ class Reddit:
     def _prepare_asyncprawcore(
         self,
         *,
-        requestor_class: type[Requestor] = None,
+        requestor_class: type[Requestor] | None = None,
         requestor_kwargs: Any | None = None,
     ) -> Requestor:
         requestor_class = requestor_class or Requestor
@@ -519,7 +518,7 @@ class Reddit:
 
         return requestor
 
-    def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator):
+    def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator) -> None:
         if self.config.refresh_token:
             authorizer = Authorizer(authenticator, refresh_token=self.config.refresh_token)
         else:
@@ -527,7 +526,7 @@ class Reddit:
             return
         self._core = self._authorized_core = session(authorizer=authorizer, window_size=self.config.window_size)
 
-    def _prepare_objector(self):
+    def _prepare_objector(self) -> None:
         mappings = {
             self.config.kinds["comment"]: models.Comment,
             self.config.kinds["message"]: models.Message,
@@ -575,7 +574,7 @@ class Reddit:
         }
         self._objector = Objector(self, mappings)
 
-    def _prepare_trusted_asyncprawcore(self, requestor: Requestor):
+    def _prepare_trusted_asyncprawcore(self, requestor: Requestor) -> None:
         authenticator = TrustedAuthenticator(
             requestor,
             self.config.client_id,
@@ -593,7 +592,7 @@ class Reddit:
         else:
             self._prepare_common_authorizer(authenticator)
 
-    def _prepare_untrusted_asyncprawcore(self, requestor: Requestor):
+    def _prepare_untrusted_asyncprawcore(self, requestor: Requestor) -> None:
         authenticator = UntrustedAuthenticator(requestor, self.config.client_id, self.config.redirect_uri)
         read_only_authorizer = DeviceIDAuthorizer(authenticator)
         self._read_only_core = session(authorizer=read_only_authorizer, window_size=self.config.window_size)
@@ -609,10 +608,9 @@ class Reddit:
                 return e.response.headers.get("location")
         return url
 
-    async def close(self):
+    async def close(self) -> None:
         """Close the requestor."""
         await self.requestor.close()
-
 
     async def comment(
         self,
@@ -929,7 +927,6 @@ class Reddit:
             else:
                 field = None
             raise RedditAPIException([data["reason"], explanation, field]) from exception
-
 
     async def submission(
         self,

@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ...exceptions import ClientException, InvalidURL
-from ...util.cache import cachedproperty
-from ..comment_forest import CommentForest
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import ClientException, InvalidURL
+from asyncpraw.models.comment_forest import CommentForest
+from asyncpraw.util.cache import cachedproperty
+
 from .base import RedditBase
 from .mixins import (
     FullnameMixin,
@@ -145,7 +146,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         return self._submission
 
     @submission.setter
-    def submission(self, submission: asyncpraw.models.Submission):
+    def submission(self, submission: asyncpraw.models.Submission) -> None:
         """Update the :class:`.Submission` associated with the :class:`.Comment`."""
         submission._comments_by_id[self.fullname] = self
         self._submission = submission
@@ -158,7 +159,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         id: str | None = None,
         url: str | None = None,
         _data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.Comment` instance."""
         if (id, url, _data).count(None) != 2:
             msg = "Exactly one of 'id', 'url', or '_data' must be provided."
@@ -178,7 +179,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
         self,
         attribute: str,
         value: str | Redditor | CommentForest | asyncpraw.models.Subreddit,
-    ):
+    ) -> None:
         """Objectify author, replies, and subreddit."""
         if attribute == "author":
             value = Redditor.from_data(self._reddit, value)
@@ -194,7 +195,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
             return self.context.rsplit("/", 4)[1]
         return self.link_id.split("_", 1)[1]
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         data = await self._fetch_data()
         data = data["data"]
 
@@ -341,7 +342,7 @@ class CommentModeration(ThingModerationMixin):
 
     REMOVAL_MESSAGE_API = "removal_comment_message"
 
-    def __init__(self, comment: asyncpraw.models.Comment):
+    def __init__(self, comment: asyncpraw.models.Comment) -> None:
         """Initialize a :class:`.CommentModeration` instance.
 
         :param comment: The comment to moderate.
@@ -349,7 +350,7 @@ class CommentModeration(ThingModerationMixin):
         """
         self.thing = comment
 
-    async def show(self):
+    async def show(self) -> None:
         """Uncollapse a :class:`.Comment` that has been collapsed by Crowd Control.
 
         Example usage:

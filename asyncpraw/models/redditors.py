@@ -8,7 +8,8 @@ from typing import TYPE_CHECKING
 
 import asyncprawcore
 
-from ..const import API_PATH
+from asyncpraw.const import API_PATH
+
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .util import stream_generator

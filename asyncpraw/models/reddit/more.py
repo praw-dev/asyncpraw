@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ..base import AsyncPRAWBase
+from asyncpraw.const import API_PATH
+from asyncpraw.models.base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models
@@ -24,7 +24,7 @@ class MoreComments(AsyncPRAWBase):
         """Return the hash of the current instance."""
         return hash(self.__class__.__name__) ^ hash(str(self))
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.MoreComments` instance."""
         self.count = self.parent_id = None
         self.children = []

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ...exceptions import ClientException
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import ClientException
+
 from .base import RedditBase
 from .subreddit import Subreddit
 from .user_subreddit import UserSubreddit
@@ -87,8 +88,8 @@ class Draft(RedditBase):
         self,
         reddit: asyncpraw.Reddit,
         id: str | None = None,
-        _data: dict[str, Any] = None,
-    ):
+        _data: dict[str, Any] | None = None,
+    ) -> None:
         """Initialize a :class:`.Draft` instance."""
         if (id, _data).count(None) != 1:
             msg = "Exactly one of 'id' or '_data' must be provided."
@@ -112,7 +113,7 @@ class Draft(RedditBase):
             return f"{self.__class__.__name__}(id={self.id!r}{subreddit}{title})"
         return f"{self.__class__.__name__}(id={self.id!r})"
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         async for draft in self._reddit.drafts:
             if draft.id == self.id:
                 self.__dict__.update(draft.__dict__)
@@ -121,7 +122,7 @@ class Draft(RedditBase):
         msg = f"The currently authenticated user not have a draft with an ID of {self.id}"
         raise ClientException(msg)
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete the :class:`.Draft`.
 
         Example usage:
@@ -215,12 +216,12 @@ class Draft(RedditBase):
             if value is not None:
                 submit_kwargs[key] = value
         if isinstance(subreddit, str):
-            _subreddit = await self._reddit.subreddit(subreddit)
+            subreddit_ = await self._reddit.subreddit(subreddit)
         elif isinstance(subreddit, (Subreddit, UserSubreddit)):
-            _subreddit = subreddit
+            subreddit_ = subreddit
         else:
-            _subreddit = self.subreddit
-        return await _subreddit.submit(**submit_kwargs)
+            subreddit_ = self.subreddit
+        return await subreddit_.submit(**submit_kwargs)
 
     async def update(
         self,
@@ -237,7 +238,7 @@ class Draft(RedditBase):
         title: str | None = None,
         url: str | None = None,
         **draft_kwargs: Any,
-    ):
+    ) -> None:
         """Update the :class:`.Draft`.
 
         .. note::
@@ -294,6 +295,6 @@ class Draft(RedditBase):
             **draft_kwargs,
         )
         data["id"] = self.id
-        _new_draft = await self._reddit.put(API_PATH["draft"], data=data)
-        await _new_draft._fetch()
-        self.__dict__.update(_new_draft.__dict__)
+        new_draft = await self._reddit.put(API_PATH["draft"], data=data)
+        await new_draft._fetch()
+        self.__dict__.update(new_draft.__dict__)

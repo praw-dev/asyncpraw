@@ -20,5 +20,5 @@ class ModAction(AsyncPRAWBase):
         return Redditor(self._reddit, name=self._mod)
 
     @mod.setter
-    def mod(self, value: str | asyncpraw.models.Redditor):
+    def mod(self, value: str | asyncpraw.models.Redditor) -> None:
         self._mod = value

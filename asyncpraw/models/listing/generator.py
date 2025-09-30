@@ -6,7 +6,8 @@ from collections.abc import AsyncIterator
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any
 
-from ..base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase
+
 from .listing import FlairListing, ModNoteListing
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -47,7 +48,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         url: str,
         limit: int = 100,
         params: dict[str, str | int] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.ListingGenerator` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -86,7 +87,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
                 raise ValueError(msg)
         return listing
 
-    async def _next_batch(self):
+    async def _next_batch(self) -> None:
         if self._exhausted:
             raise StopAsyncIteration
 

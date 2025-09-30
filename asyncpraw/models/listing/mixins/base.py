@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any, AsyncIterator
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin
 
-from ...base import AsyncPRAWBase
-from ..generator import ListingGenerator
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
 
 
 class BaseListingMixin(AsyncPRAWBase):
@@ -15,7 +18,7 @@ class BaseListingMixin(AsyncPRAWBase):
     VALID_TIME_FILTERS = {"all", "day", "hour", "month", "week", "year"}
 
     @staticmethod
-    def _validate_time_filter(time_filter: str):
+    def _validate_time_filter(time_filter: str) -> None:
         """Validate ``time_filter``.
 
         :raises: :py:class:`ValueError` if ``time_filter`` is not valid.

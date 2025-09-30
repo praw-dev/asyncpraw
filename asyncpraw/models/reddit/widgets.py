@@ -6,10 +6,10 @@ from json import JSONEncoder, dumps
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from ...const import API_PATH
-from ...util.cache import cachedproperty
-from ..base import AsyncPRAWBase
-from ..list.base import BaseList
+from asyncpraw.const import API_PATH
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.list.base import BaseList
+from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models
@@ -279,7 +279,7 @@ class SubredditWidgets(AsyncPRAWBase):
         msg = f"{self.__class__.__name__!r} object has no attribute {attr!r}, did you forget to run '.refresh()'?"  # pragma: no cover
         raise AttributeError(msg)  # pragma: no cover
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditWidgets` instance.
 
         :param subreddit: The :class:`.Subreddit` the widgets belong to.
@@ -297,7 +297,7 @@ class SubredditWidgets(AsyncPRAWBase):
         """Return an object initialization representation of the instance."""
         return f"SubredditWidgets(subreddit={self.subreddit!r})"
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         data = await self._reddit.get(
             API_PATH["widgets"].format(subreddit=self.subreddit),
             params={"progressive_images": self.progressive_images},
@@ -330,7 +330,7 @@ class SubredditWidgets(AsyncPRAWBase):
         items = await self.items()
         return items[self.layout["moderatorWidget"]]
 
-    async def refresh(self):
+    async def refresh(self) -> None:
         """Refresh the :class:`.Subreddit`'s widgets.
 
         By default, Async PRAW will not request progressively loading images from
@@ -386,7 +386,7 @@ class Widget(AsyncPRAWBase):
         """Return the hash of the current instance."""
         return hash(self.__class__.__name__) ^ hash(self.id.lower())
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.Widget` instance."""
         self.subreddit = ""  # in case it isn't in _data
         self.id = ""  # in case it isn't in _data
@@ -716,7 +716,7 @@ class CustomWidget(Widget):
 
     """
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.CustomWidget` instance."""
         _data["imageData"] = [ImageData(reddit, data) for data in _data.pop("imageData")]
         super().__init__(reddit, _data=_data)
@@ -947,7 +947,7 @@ class ModeratorsWidget(Widget, BaseList):
 
     CHILD_ATTRIBUTE = "mods"
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.ModeratorsWidget` instance."""
         if self.CHILD_ATTRIBUTE not in _data:
             # .mod.update() sometimes returns payload without "mods" field
@@ -1067,7 +1067,7 @@ class RulesWidget(Widget, BaseList):
 
     CHILD_ATTRIBUTE = "data"
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.RulesWidget` instance."""
         if self.CHILD_ATTRIBUTE not in _data:
             # .mod.update() sometimes returns payload without "data" field
@@ -1154,13 +1154,13 @@ class WidgetModeration:
         widget: asyncpraw.models.Widget,
         subreddit: asyncpraw.models.Subreddit | str,
         reddit: asyncpraw.Reddit,
-    ):
+    ) -> None:
         """Initialize a :class:`.WidgetModeration` instance."""
         self.widget = widget
         self._reddit = reddit
         self._subreddit = subreddit
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete the widget.
 
         Example usage:
@@ -1197,8 +1197,7 @@ class WidgetModeration:
         path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
         payload = {key: value for key, value in vars(self.widget).items() if not key.startswith("_")}
         del payload["subreddit"]  # not JSON serializable
-        if "mod" in payload:
-            del payload["mod"]
+        payload.pop("mod", None)
         payload.update(kwargs)
         widget = await self._reddit.put(path, data={"json": dumps(payload, cls=WidgetEncoder)})
         widget.subreddit = self._subreddit
@@ -1227,7 +1226,7 @@ class SubredditWidgetsModeration:
 
     """
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit, reddit: asyncpraw.Reddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit, reddit: asyncpraw.Reddit) -> None:
         """Initialize a :class:`.SubredditWidgetsModeration` instance."""
         self._subreddit = subreddit
         self._reddit = reddit
@@ -1811,7 +1810,7 @@ class SubredditWidgetsModeration:
         text_area.update(other_settings)
         return await self._create_widget(text_area)
 
-    async def reorder(self, new_order: list[Widget | str], *, section: str = "sidebar"):
+    async def reorder(self, new_order: list[Widget | str], *, section: str = "sidebar") -> None:
         """Reorder the widgets.
 
         :param new_order: A list of widgets. Represented as a list that contains
@@ -1876,8 +1875,7 @@ class SubredditWidgetsModeration:
         # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
         with file.open("rb") as image:  # noqa: ASYNC230
             upload_data["file"] = image
-            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data
-            ) as response:
+            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data) as response:
                 response.raise_for_status()
 
         return f"{upload_url}/{upload_data['key']}"

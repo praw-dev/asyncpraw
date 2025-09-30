@@ -6,9 +6,10 @@ import re
 from json import dumps
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ...util.cache import cachedproperty
-from ..listing.mixins import SubredditListingMixin
+from asyncpraw.const import API_PATH
+from asyncpraw.models.listing.mixins import SubredditListingMixin
+from asyncpraw.util.cache import cachedproperty
+
 from .base import RedditBase
 from .redditor import Redditor
 from .subreddit import Subreddit, SubredditStream
@@ -92,7 +93,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         """
         return SubredditStream(self)
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.Multireddit` instance."""
         self.path = None
         super().__init__(reddit, _data=_data)
@@ -102,11 +103,11 @@ class Multireddit(SubredditListingMixin, RedditBase):
         if "subreddits" in self.__dict__:
             self.subreddits = [Subreddit(reddit, x["name"]) for x in self.subreddits]
 
-    async def _ensure_author_fetched(self):
+    async def _ensure_author_fetched(self) -> None:
         if not self._author._fetched:
             await self._author._fetch()
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         await self._ensure_author_fetched()
         data = await self._fetch_data()
         data = data["data"]
@@ -121,7 +122,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
             None,
         )
 
-    async def add(self, subreddit: asyncpraw.models.Subreddit):
+    async def add(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Add a subreddit to this multireddit.
 
         :param subreddit: The subreddit to add to this multi.
@@ -168,7 +169,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         }
         return await self._reddit.post(API_PATH["multireddit_copy"], data=data)
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete this multireddit.
 
         For example, to delete multireddit ``bboe/test``:
@@ -183,7 +184,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
         path = API_PATH["multireddit_api"].format(multi=self.name, user=self._author.name)
         await self._reddit.delete(path)
 
-    async def remove(self, subreddit: asyncpraw.models.Subreddit):
+    async def remove(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Remove a subreddit from this multireddit.
 
         :param subreddit: The subreddit to remove from this multi.
@@ -205,7 +206,7 @@ class Multireddit(SubredditListingMixin, RedditBase):
     async def update(
         self,
         **updated_settings: (str | list[str | asyncpraw.models.Subreddit | dict[str, str]]),
-    ):
+    ) -> None:
         """Update this multireddit.
 
         Keyword arguments are passed for settings that should be updated. They can any

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..const import API_PATH
+from asyncpraw.const import API_PATH
+
 from . import Subreddit
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
@@ -123,7 +124,6 @@ class Subreddits(AsyncPRAWBase):
         )
         for result in results["names"]:
             yield await self._reddit.subreddit(result)
-
 
     def stream(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Yield new subreddits as they are created.

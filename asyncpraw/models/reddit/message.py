@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
+from asyncpraw.const import API_PATH
+
 from .base import RedditBase
 from .mixins import FullnameMixin, InboxableMixin, ReplyableMixin
 from .redditor import Redditor
@@ -100,10 +101,10 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
         return self._parent
 
     @parent.setter
-    def parent(self, value: asyncpraw.models.Message | None):
+    def parent(self, value: asyncpraw.models.Message | None) -> None:
         self._parent = value
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.Message` instance."""
         super().__init__(reddit, _data=_data, _fetched=True)
         self._parent = None
@@ -111,12 +112,12 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
             if reply.parent_id == self.fullname:
                 reply.parent = self
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         message = await self._reddit.inbox.message(self.id)
         self.__dict__.update(message.__dict__)
         await super()._fetch()
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete the message.
 
         .. note::
@@ -162,7 +163,7 @@ class SubredditMessage(Message):
 
     """
 
-    async def mute(self):
+    async def mute(self) -> None:
         """Mute the sender of this :class:`.SubredditMessage`.
 
         For example, to mute the sender of the first :class:`.SubredditMessage` in the
@@ -180,7 +181,7 @@ class SubredditMessage(Message):
         """
         await self._reddit.post(API_PATH["mute_sender"], data={"id": self.fullname})
 
-    async def unmute(self):
+    async def unmute(self) -> None:
         """Unmute the sender of this :class:`.SubredditMessage`.
 
         For example, to unmute the sender of the first :class:`.SubredditMessage` in the

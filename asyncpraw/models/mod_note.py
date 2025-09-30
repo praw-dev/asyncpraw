@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from ..endpoints import API_PATH
+from asyncpraw.endpoints import API_PATH
+
 from .base import AsyncPRAWBase
 
 
@@ -57,7 +58,7 @@ class ModNote(AsyncPRAWBase):
         """Return the hash of the current instance."""
         return hash(self.__class__.__name__) ^ hash(self.id)
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete this note.
 
         For example, to delete the last note for u/spez from r/test, try:

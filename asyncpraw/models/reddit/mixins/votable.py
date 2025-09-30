@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
 
 
 class VotableMixin:
     """Interface for :class:`.RedditBase` classes that can be voted on."""
 
-    async def _vote(self, direction: int):
+    async def _vote(self, direction: int) -> None:
         await self._reddit.post(API_PATH["vote"], data={"dir": str(direction), "id": self.fullname})
 
-    async def clear_vote(self):
+    async def clear_vote(self) -> None:
         """Clear the authenticated user's vote on the object.
 
         .. note::
@@ -35,7 +35,7 @@ class VotableMixin:
         """
         await self._vote(direction=0)
 
-    async def downvote(self):
+    async def downvote(self) -> None:
         """Downvote the object.
 
         .. note::
@@ -63,7 +63,7 @@ class VotableMixin:
         """
         await self._vote(direction=-1)
 
-    async def upvote(self):
+    async def upvote(self) -> None:
         """Upvote the object.
 
         .. note::

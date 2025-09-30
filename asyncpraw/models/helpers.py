@@ -5,7 +5,8 @@ from __future__ import annotations
 from json import dumps
 from typing import TYPE_CHECKING, Any
 
-from ..const import API_PATH
+from asyncpraw.const import API_PATH
+
 from .base import AsyncPRAWBase
 from .reddit.draft import Draft
 from .reddit.live import LiveThread
@@ -187,7 +188,7 @@ class LiveHelper(AsyncPRAWBase):
         *,
         description: str | None = None,
         nsfw: bool = False,
-        resources: str = None,
+        resources: str | None = None,
     ) -> asyncpraw.models.LiveThread:
         """Create a new :class:`.LiveThread`.
 

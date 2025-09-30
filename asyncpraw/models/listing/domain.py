@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ...const import API_PATH
+from asyncpraw.const import API_PATH
+
 from .mixins import BaseListingMixin, RisingListingMixin
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -14,7 +15,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class DomainListing(BaseListingMixin, RisingListingMixin):
     """Provide a set of functions to interact with domain listings."""
 
-    def __init__(self, reddit: asyncpraw.Reddit, domain: str):
+    def __init__(self, reddit: asyncpraw.Reddit, domain: str) -> None:
         """Initialize a :class:`.DomainListing` instance.
 
         :param reddit: An instance of :class:`.Reddit`.

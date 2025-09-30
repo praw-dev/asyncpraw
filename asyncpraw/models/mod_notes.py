@@ -5,7 +5,8 @@ from __future__ import annotations
 from itertools import islice
 from typing import TYPE_CHECKING, Any
 
-from ..const import API_PATH
+from asyncpraw.const import API_PATH
+
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
 from .reddit.comment import Comment
@@ -26,7 +27,7 @@ class BaseModNotes:
     def __init__(
         self,
         reddit: asyncpraw.Reddit,
-    ):
+    ) -> None:
         """Initialize a :class:`.BaseModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -67,8 +68,8 @@ class BaseModNotes:
                 yield self._reddit._objector.objectify(note_dict)
 
     def _ensure_attribute(self, error_message: str, **attributes: Any) -> Any:
-        attribute, _value = attributes.popitem()
-        value = _value or getattr(self, attribute, None)
+        attribute, value_ = attributes.popitem()
+        value = value_ or getattr(self, attribute, None)
         if value is None:
             raise TypeError(error_message)
         return value
@@ -156,7 +157,7 @@ class BaseModNotes:
                 # this is to minimize the number of requests
                 if not (getattr(self, "redditor", redditor) and getattr(self, "subreddit", subreddit)):
                     # only fetch if we are missing either redditor or subreddit
-                    thing = [thing async for thing in self._reddit.info(fullnames=[thing])][0]
+                    thing = [thing async for thing in self._reddit.info(fullnames=[thing])][0]  # noqa: RUF015
             else:
                 reddit_id = thing.fullname
             redditor = getattr(self, "redditor", redditor) or thing.author
@@ -191,7 +192,7 @@ class BaseModNotes:
         note_id: str | None = None,
         redditor: Redditor | str | None = None,
         subreddit: Subreddit | str | None = None,
-    ):
+    ) -> None:
         """Delete note(s) for a redditor.
 
         :param delete_all: When ``True``, delete all notes for the specified redditor in
@@ -297,7 +298,7 @@ class RedditorModNotes(BaseModNotes):
 
     """
 
-    def __init__(self, reddit: asyncpraw.Reddit, redditor: Redditor | str):
+    def __init__(self, reddit: asyncpraw.Reddit, redditor: Redditor | str) -> None:
         """Initialize a :class:`.RedditorModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -393,7 +394,7 @@ class SubredditModNotes(BaseModNotes):
 
     """
 
-    def __init__(self, reddit: asyncpraw.Reddit, subreddit: Subreddit | str):
+    def __init__(self, reddit: asyncpraw.Reddit, subreddit: Subreddit | str) -> None:
         """Initialize a :class:`.SubredditModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.

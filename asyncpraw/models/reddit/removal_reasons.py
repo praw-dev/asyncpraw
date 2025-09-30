@@ -5,8 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from warnings import warn
 
-from ...const import API_PATH
-from ...exceptions import ClientException
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import ClientException
+
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -70,7 +71,7 @@ class RemovalReason(RedditBase):
         id: str | None = None,
         reason_id: str | None = None,
         _data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.RemovalReason` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -90,7 +91,7 @@ class RemovalReason(RedditBase):
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         async for removal_reason in self.subreddit.mod.removal_reasons:
             if removal_reason.id == self.id:
                 self.__dict__.update(removal_reason.__dict__)
@@ -99,7 +100,7 @@ class RemovalReason(RedditBase):
         msg = f"Subreddit {self.subreddit} does not have the removal reason {self.id}"
         raise ClientException(msg)
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete a removal reason from this subreddit.
 
         To delete ``"141vv5c16py7d"`` from r/test try:
@@ -114,7 +115,7 @@ class RemovalReason(RedditBase):
         url = API_PATH["removal_reason"].format(subreddit=self.subreddit, id=self.id)
         await self._reddit.delete(url)
 
-    async def update(self, *, message: str | None = None, title: str | None = None):
+    async def update(self, *, message: str | None = None, title: str | None = None) -> None:
         """Update the removal reason from this subreddit.
 
         .. note::
@@ -159,7 +160,7 @@ class SubredditRemovalReasons:
         for reason in await self._removal_reason_list():
             yield reason
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditRemovalReasons` instance.
 
         :param subreddit: The subreddit whose removal reasons to work with.

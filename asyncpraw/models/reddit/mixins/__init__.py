@@ -5,7 +5,8 @@ from __future__ import annotations
 from json import dumps
 from typing import TYPE_CHECKING, Optional
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
+
 from .editable import EditableMixin
 from .fullname import FullnameMixin
 from .inboxable import InboxableMixin
@@ -26,7 +27,7 @@ class ThingModerationMixin(ModNoteMixin):
 
     REMOVAL_MESSAGE_API = None
 
-    async def _add_removal_reason(self, *, mod_note: str = "", reason_id: str | None = None):
+    async def _add_removal_reason(self, *, mod_note: str = "", reason_id: str | None = None) -> None:
         """Add a removal reason for a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -49,7 +50,7 @@ class ThingModerationMixin(ModNoteMixin):
         }
         await self.thing._reddit.post(API_PATH["removal_reasons"], data={"json": dumps(data)})
 
-    async def approve(self):
+    async def approve(self) -> None:
         """Approve a :class:`.Comment` or :class:`.Submission`.
 
         Approving a comment or submission reverts a removal, resets the report counter,
@@ -70,7 +71,7 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["approve"], data={"id": self.thing.fullname})
 
-    async def distinguish(self, *, how: str = "yes", sticky: bool = False):
+    async def distinguish(self, *, how: str = "yes", sticky: bool = False) -> None:
         """Distinguish a :class:`.Comment` or :class:`.Submission`.
 
         :param how: One of ``"yes"``, ``"no"``, ``"admin"``, or ``"special"``. ``"yes"``
@@ -103,7 +104,7 @@ class ThingModerationMixin(ModNoteMixin):
             data["sticky"] = True
         await self.thing._reddit.post(API_PATH["distinguish"], data=data)
 
-    async def ignore_reports(self):
+    async def ignore_reports(self) -> None:
         """Ignore future reports on a :class:`.Comment` or :class:`.Submission`.
 
         Calling this method will prevent future reports on this :class:`.Comment` or
@@ -129,7 +130,7 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["ignore_reports"], data={"id": self.thing.fullname})
 
-    async def lock(self):
+    async def lock(self) -> None:
         """Lock a :class:`.Comment` or :class:`.Submission`.
 
         Example usage:
@@ -150,7 +151,7 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["lock"], data={"id": self.thing.fullname})
 
-    async def remove(self, *, mod_note: str = "", spam: bool = False, reason_id: str | None = None):
+    async def remove(self, *, mod_note: str = "", spam: bool = False, reason_id: str | None = None) -> None:
         """Remove a :class:`.Comment` or :class:`.Submission`.
 
         :param mod_note: A message for the other moderators.
@@ -229,7 +230,7 @@ class ThingModerationMixin(ModNoteMixin):
 
         return await self.thing._reddit.post(url, data={"json": dumps(data)}) or None
 
-    async def undistinguish(self):
+    async def undistinguish(self) -> None:
         """Remove mod, admin, or special distinguishing from an object.
 
         Also unstickies the object if applicable.
@@ -252,7 +253,7 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.distinguish(how="no")
 
-    async def unignore_reports(self):
+    async def unignore_reports(self) -> None:
         """Resume receiving future reports on a :class:`.Comment` or :class:`.Submission`.
 
         Future reports on this :class:`.Comment` or :class:`.Submission` will cause
@@ -276,7 +277,7 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["unignore_reports"], data={"id": self.thing.fullname})
 
-    async def unlock(self):
+    async def unlock(self) -> None:
         """Unlock a :class:`.Comment` or :class:`.Submission`.
 
         Example usage:

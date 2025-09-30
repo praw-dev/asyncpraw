@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase
 
 
 class Listing(AsyncPRAWBase):

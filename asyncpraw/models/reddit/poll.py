@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...util import cachedproperty
-from ..base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.util import cachedproperty
 
 
 class PollOption(AsyncPRAWBase):

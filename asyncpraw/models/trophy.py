@@ -41,7 +41,7 @@ class Trophy(AsyncPRAWBase):
         """Return the hash of the current instance."""
         return hash(self.__class__.__name__) ^ hash(self.name)
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.Trophy` instance.
 
         :param reddit: An instance of :class:`.Reddit`.

@@ -5,9 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from ...const import API_PATH
-from ...exceptions import ClientException
-from ...util import cachedproperty
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import ClientException
+from asyncpraw.util import cachedproperty
+
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -79,7 +80,7 @@ class Rule(RedditBase):
         subreddit: asyncpraw.models.Subreddit | None = None,
         short_name: str | None = None,
         _data: dict[str, str] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.Rule` instance."""
         if (short_name, _data).count(None) != 1:
             msg = "Either short_name or _data needs to be given."
@@ -92,7 +93,7 @@ class Rule(RedditBase):
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         async for rule in self.subreddit.rules:
             if rule.short_name == self.short_name:
                 self.__dict__.update(rule.__dict__)
@@ -123,11 +124,11 @@ class RuleModeration:
 
     """
 
-    def __init__(self, rule: asyncpraw.models.Rule):
+    def __init__(self, rule: asyncpraw.models.Rule) -> None:
         """Initialize a :class:`.RuleModeration` instance."""
         self.rule = rule
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete a rule from this subreddit.
 
         To delete ``"No spam"`` from r/test try:
@@ -263,7 +264,7 @@ class SubredditRules:
         for rule in rules:
             yield rule
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditRules` instance.
 
         :param subreddit: The subreddit whose rules to work with.
@@ -351,7 +352,7 @@ class SubredditRulesModeration:
 
     """
 
-    def __init__(self, subreddit_rules: SubredditRules):
+    def __init__(self, subreddit_rules: SubredditRules) -> None:
         """Initialize a :class:`.SubredditRulesModeration` instance."""
         self.subreddit_rules = subreddit_rules
 

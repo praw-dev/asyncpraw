@@ -1,12 +1,12 @@
 """Provide the InboxToggleableMixin class."""
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
 
 
 class InboxToggleableMixin:
     """Interface for classes that can optionally receive inbox replies."""
 
-    async def disable_inbox_replies(self):
+    async def disable_inbox_replies(self) -> None:
         """Disable inbox replies for the item.
 
         .. note::
@@ -30,7 +30,7 @@ class InboxToggleableMixin:
         """
         await self._reddit.post(API_PATH["sendreplies"], data={"id": self.fullname, "state": False})
 
-    async def enable_inbox_replies(self):
+    async def enable_inbox_replies(self) -> None:
         """Enable inbox replies for the item.
 
         .. note::
