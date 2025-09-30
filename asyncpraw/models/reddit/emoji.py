@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Any
 from ...const import API_PATH
 from ...exceptions import ClientException
 from ...util import _deprecate_args
-from ..util import deprecate_lazy
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -230,7 +229,6 @@ class SubredditEmoji:
         await self._reddit.post(url, data=data)
         return Emoji(self._reddit, self.subreddit, name)
 
-    @deprecate_lazy
     async def get_emoji(self, name: str, fetch: bool = True, **_: Any) -> Emoji:
         """Return the :class:`.Emoji` for the subreddit named ``name``.
 

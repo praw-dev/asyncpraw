@@ -8,7 +8,6 @@ from warnings import warn
 from ...const import API_PATH
 from ...exceptions import ClientException
 from ...util import _deprecate_args
-from ..util import deprecate_lazy
 from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -207,7 +206,6 @@ class SubredditRemovalReasons:
         reason_id = await self._reddit.post(url, data=data)
         return RemovalReason(self._reddit, self.subreddit, reason_id["id"])
 
-    @deprecate_lazy
     async def get_reason(
         self,
         reason_id: str | (int | slice),

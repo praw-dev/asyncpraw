@@ -31,7 +31,7 @@ from ...exceptions import (
 from ...util import _deprecate_args, cachedproperty
 from ..listing.generator import ListingGenerator
 from ..listing.mixins import SubredditListingMixin
-from ..util import deprecate_lazy, permissions_string, stream_generator
+from ..util import permissions_string, stream_generator
 from .base import RedditBase
 from .emoji import SubredditEmoji
 from .mixins import FullnameMixin, MessageableMixin
@@ -2190,7 +2190,6 @@ class SubredditWiki:
         await new.edit(content=content, reason=reason, **other_settings)
         return new
 
-    @deprecate_lazy
     async def get_page(self, page_name: str, fetch: bool = True, **_: Any) -> WikiPage:
         """Return the :class:`.WikiPage` for the :class:`.Subreddit` named ``page_name``.
 

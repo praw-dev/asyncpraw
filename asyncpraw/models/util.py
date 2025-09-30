@@ -15,24 +15,6 @@ if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
 
-def deprecate_lazy(func: Callable) -> Callable[..., Any]:
-    """A decorator used for deprecating the ``lazy`` keyword argument."""  # noqa: D401
-
-    @wraps(func)
-    def wrapper(*args: Any, **kwargs: Any):
-        if "lazy" in kwargs:
-            kwargs.setdefault("fetch", not kwargs.pop("lazy"))
-            warn(
-                "The parameter ``lazy`` has been renamed to ``fetch`` and support for"
-                " the ``lazy`` parameter will be removed in a future version of Async"
-                " PRAW.",
-                category=DeprecationWarning,
-                stacklevel=3,
-            )
-        return func(*args, **kwargs)
-
-    return wrapper
-
 
 @_deprecate_args("permissions", "known_permissions")
 def permissions_string(*, known_permissions: set[str], permissions: list[str] | None) -> str:

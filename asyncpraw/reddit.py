@@ -30,7 +30,6 @@ from . import models
 from .config import Config
 from .const import API_PATH, USER_AGENT_FORMAT, __version__
 from .exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
-from .models.util import deprecate_lazy
 from .objector import Objector
 from .util import _deprecate_args
 
@@ -638,7 +637,7 @@ class Reddit:
         await self.requestor.close()
 
     @_deprecate_args("id", "url", "fetch")
-    @deprecate_lazy
+
     async def comment(
         self,
         id: str | None = None,
@@ -982,7 +981,7 @@ class Reddit:
             raise RedditAPIException([data["reason"], explanation, field]) from exception
 
     @_deprecate_args("id", "url", "fetch")
-    @deprecate_lazy
+
     async def submission(
         self,
         id: str | None = None,

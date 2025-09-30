@@ -9,7 +9,6 @@ from ...exceptions import ClientException
 from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
-from ..util import deprecate_lazy
 from .base import RedditBase
 from .redditor import Redditor
 from .submission import Submission
@@ -350,7 +349,6 @@ class SubredditCollections(AsyncPRAWBase):
         for collection in request:
             yield collection
 
-    @deprecate_lazy
     async def __call__(
         self,
         collection_id: str | None = None,

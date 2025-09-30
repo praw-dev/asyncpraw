@@ -13,6 +13,8 @@ Unreleased
 - The ``subreddit`` attribute of :class:`.Redditor` is a :class:`.UserSubreddit`
   instance.
 - :meth:`.CommentForest.list` no longer needs to be awaited.
+- The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
+  argument used to explicitly perform a fetch when initializing an object.
 
 **Removed**
 

@@ -9,7 +9,7 @@ from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..list.redditor import RedditorList
 from ..listing.generator import ListingGenerator
-from ..util import deprecate_lazy, stream_generator
+from ..util import stream_generator
 from .base import RedditBase
 from .mixins import FullnameMixin
 from .redditor import Redditor
@@ -416,7 +416,6 @@ class LiveThread(RedditBase):
         url = API_PATH["live_discussions"].format(id=self.id)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    @deprecate_lazy
     async def get_update(self, update_id: str, fetch: bool = True, **_: Any) -> asyncpraw.models.LiveUpdate:
         """Return a :class:`.LiveUpdate` instance.
 
