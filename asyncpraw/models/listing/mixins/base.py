@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any, AsyncIterator
 from urllib.parse import urljoin
 
-from ....util import _deprecate_args
 from ...base import AsyncPRAWBase
 from ..generator import ListingGenerator
 
@@ -34,7 +33,6 @@ class BaseListingMixin(AsyncPRAWBase):
             return self._path
         return urljoin(self._path, sort)
 
-    @_deprecate_args("time_filter")
     def controversial(
         self,
         *,
@@ -142,7 +140,6 @@ class BaseListingMixin(AsyncPRAWBase):
         url = self._prepare(arguments=generator_kwargs, sort="new")
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    @_deprecate_args("time_filter")
     def top(
         self,
         *,

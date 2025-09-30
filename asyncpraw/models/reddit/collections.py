@@ -6,10 +6,8 @@ from typing import TYPE_CHECKING, Any, Iterator
 
 from ...const import API_PATH
 from ...exceptions import ClientException
-from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..base import AsyncPRAWBase
-from ..util import deprecate_lazy
 from .base import RedditBase
 from .redditor import Redditor
 from .submission import Submission
@@ -249,7 +247,6 @@ class SubredditCollectionsModeration(AsyncPRAWBase):
         super().__init__(reddit, _data)
         self.subreddit = subreddit
 
-    @_deprecate_args("title", "description", "display_layout")
     async def create(self, *, description: str, display_layout: str | None = None, title: str) -> Collection:
         """Create a new :class:`.Collection`.
 
@@ -350,7 +347,6 @@ class SubredditCollections(AsyncPRAWBase):
         for collection in request:
             yield collection
 
-    @deprecate_lazy
     async def __call__(
         self,
         collection_id: str | None = None,

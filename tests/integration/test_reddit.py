@@ -39,12 +39,6 @@ class TestDomainListing(IntegrationTest):
         submissions = await self.async_list(reddit.domain("youtube.com").new())
         assert len(submissions) == 100
 
-    async def test_random_rising(self, reddit):
-        submissions = await self.async_list(
-            reddit.domain("youtube.com").random_rising()
-        )
-        assert len(submissions) == 100
-
     async def test_rising(self, reddit):
         await self.async_list(reddit.domain("youtube.com").rising())
 
@@ -201,23 +195,7 @@ class TestReddit(IntegrationTest):
         assert len(notes) == 9
         assert notes[0].user == thing.author
 
-    async def test_random_subreddit(self, reddit):
-        names = set()
-        for i in range(3):
-            sub = await reddit.random_subreddit()
-            names.add(sub.display_name)
-        assert len(names) == 3
-
-    async def test_subreddit_with_randnsfw(self, reddit):
-        subreddit = await reddit.subreddit("randnsfw")
-        assert subreddit.display_name != "randnsfw"
-        assert subreddit.over18
-
-    async def test_subreddit_with_random(self, reddit):
-        subreddit = await reddit.subreddit("random")
-        assert subreddit.display_name != "random"
-
-    @pytest.mark.add_placeholder(available_name="prawtestuserabcd1234")
+    @pytest.mark.add_placeholder(AVAILABLE_NAME="prawtestuserabcd1234")
     async def test_username_available__available(self, reddit):
         assert await reddit.username_available("prawtestuserabcd1234")
 

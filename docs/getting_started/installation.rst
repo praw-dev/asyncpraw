@@ -1,7 +1,7 @@
 Installing Async PRAW
 =====================
 
-Async PRAW supports Python 3.8+. The recommended way to install Async PRAW is via
+Async PRAW supports Python 3.9+. The recommended way to install Async PRAW is via
 ``pip``.
 
 .. code-block:: bash

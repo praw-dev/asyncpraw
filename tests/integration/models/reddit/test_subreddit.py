@@ -410,11 +410,6 @@ class TestSubredditListings(IntegrationTest):
         submissions = await self.async_list(subreddit.controversial())
         assert len(submissions) == 100
 
-    async def test_gilded(self, reddit):
-        subreddit = await reddit.subreddit("askreddit")
-        submissions = await self.async_list(subreddit.gilded())
-        assert len(submissions) >= 50
-
     async def test_hot(self, reddit):
         subreddit = await reddit.subreddit("askreddit")
         submissions = await self.async_list(subreddit.hot())
@@ -424,11 +419,6 @@ class TestSubredditListings(IntegrationTest):
         subreddit = await reddit.subreddit("askreddit")
         submissions = await self.async_list(subreddit.new())
         assert len(submissions) == 100
-
-    async def test_random_rising(self, reddit):
-        subreddit = await reddit.subreddit("askreddit")
-        submissions = await self.async_list(subreddit.random_rising())
-        assert len(submissions) == 91
 
     async def test_rising(self, reddit):
         subreddit = await reddit.subreddit("askreddit")
@@ -475,15 +465,6 @@ class TestSubredditModeration(IntegrationTest):
             assert isinstance(item, Submission)
             count += 1
         assert count > 0
-
-    async def test_inbox(self, reddit):
-        reddit.read_only = False
-        count = 0
-        subreddit = await reddit.subreddit("all")
-        async for item in subreddit.mod.inbox():
-            assert isinstance(item, SubredditMessage)
-            count += 1
-        assert count == 100
 
     async def test_log(self, reddit):
         reddit.read_only = False
@@ -620,15 +601,6 @@ class TestSubredditModeration(IntegrationTest):
             count += 1
         assert count > 0
 
-    async def test_unread(self, reddit):
-        reddit.read_only = False
-        count = 0
-        subreddit = await reddit.subreddit("all")
-        async for item in subreddit.mod.unread():
-            assert isinstance(item, SubredditMessage)
-            count += 1
-        assert count > 0
-
     async def test_update(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -698,13 +670,6 @@ class TestSubredditModerationStreams(IntegrationTest):
         generator = subreddit.mod.stream.unmoderated()
         for i in range(101):
             assert isinstance(await self.async_next(generator), (Comment, Submission))
-
-    async def test_unread(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        generator = subreddit.mod.stream.unread()
-        for i in range(2):
-            assert isinstance(await self.async_next(generator), SubredditMessage)
 
 
 class TestSubredditModmail(IntegrationTest):
@@ -1369,20 +1334,6 @@ class TestSubreddit(IntegrationTest):
         ]
         assert list(data) == tags
 
-    async def test_random(self, reddit):
-        subreddit = await reddit.subreddit("pics")
-        submissions = [
-            await subreddit.random(),
-            await subreddit.random(),
-            await subreddit.random(),
-            await subreddit.random(),
-        ]
-        assert len(submissions) == len(set(submissions))
-
-    async def test_random__returns_none(self, reddit):
-        subreddit = await reddit.subreddit("wallpapers")
-        assert await subreddit.random() is None
-
     async def test_search(self, reddit):
         subreddit = await reddit.subreddit("all")
         async for item in subreddit.search(
@@ -1446,9 +1397,9 @@ class TestSubreddit(IntegrationTest):
     async def test_submit__selftext_inline_media(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        gif = InlineGif(image_path("test.gif"), "optional caption")
-        image = InlineImage(image_path("test.png"), "optional caption")
-        video = InlineVideo(image_path("test.mp4"), "optional caption")
+        gif = InlineGif(caption="optional caption", path=image_path("test.gif"))
+        image = InlineImage(caption="optional caption", path=image_path("test.png"))
+        video = InlineVideo(caption="optional caption", path=image_path("test.mp4"))
         selftext = (
             "Text with a gif {gif1} an image {image1} and a video {video1} inline"
         )

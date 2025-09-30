@@ -10,7 +10,6 @@ from asyncprawcore import (
 )
 
 from ..exceptions import InvalidImplicitAuth, MissingRequiredAttributeException
-from ..util import _deprecate_args
 from .base import AsyncPRAWBase
 
 
@@ -25,23 +24,15 @@ class Auth(AsyncPRAWBase):
 
         :remaining: The number of requests remaining to be made in the current rate
             limit window.
-        :reset_timestamp: A unix timestamp providing an upper bound on when the rate
-            limit counters will reset.
         :used: The number of requests made in the current rate limit window.
 
         All values are initially ``None`` as these values are set in response to issued
         requests.
 
-        The ``reset_timestamp`` value is an upper bound as the real timestamp is
-        computed on Reddit's end in preparation for sending the response. This value may
-        change slightly within a given window due to slight changes in response times
-        and rounding.
-
         """
         data = self._reddit._core._rate_limiter
         return {
             "remaining": data.remaining,
-            "reset_timestamp": data.reset_timestamp,
             "used": data.used,
         }
 
@@ -62,7 +53,6 @@ class Auth(AsyncPRAWBase):
         self._reddit._core = self._reddit._authorized_core = authorized_session
         return authorizer.refresh_token
 
-    @_deprecate_args("access_token", "expires_in", "scope")
     def implicit(self, *, access_token: str, expires_in: int, scope: str) -> None:
         """Set the active authorization to be an implicit authorization.
 
@@ -99,7 +89,6 @@ class Auth(AsyncPRAWBase):
             await authorizer.refresh()
         return authorizer.scopes
 
-    @_deprecate_args("scopes", "state", "duration", "implicit")
     def url(
         self,
         *,

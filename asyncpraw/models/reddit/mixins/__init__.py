@@ -6,10 +6,8 @@ from json import dumps
 from typing import TYPE_CHECKING, Optional
 
 from ....const import API_PATH
-from ....util import _deprecate_args
 from .editable import EditableMixin
 from .fullname import FullnameMixin
-from .gildable import GildableMixin
 from .inboxable import InboxableMixin
 from .inboxtoggleable import InboxToggleableMixin
 from .messageable import MessageableMixin
@@ -72,7 +70,6 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["approve"], data={"id": self.thing.fullname})
 
-    @_deprecate_args("how", "sticky")
     async def distinguish(self, *, how: str = "yes", sticky: bool = False):
         """Distinguish a :class:`.Comment` or :class:`.Submission`.
 
@@ -153,7 +150,6 @@ class ThingModerationMixin(ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["lock"], data={"id": self.thing.fullname})
 
-    @_deprecate_args("spam", "mod_note", "reason_id")
     async def remove(self, *, mod_note: str = "", spam: bool = False, reason_id: str | None = None):
         """Remove a :class:`.Comment` or :class:`.Submission`.
 
@@ -187,7 +183,6 @@ class ThingModerationMixin(ModNoteMixin):
         if any([reason_id, mod_note]):
             await self._add_removal_reason(mod_note=mod_note, reason_id=reason_id)
 
-    @_deprecate_args("message", "title", "type")
     async def send_removal_message(
         self,
         *,
@@ -305,7 +300,6 @@ class ThingModerationMixin(ModNoteMixin):
 
 class UserContentMixin(
     EditableMixin,
-    GildableMixin,
     InboxToggleableMixin,
     ReplyableMixin,
     ReportableMixin,

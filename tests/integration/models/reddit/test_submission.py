@@ -9,9 +9,9 @@ from ... import IntegrationTest
 class TestSubmission(IntegrationTest):
     @staticmethod
     def _inline_media(image_path):
-        gif = InlineGif(image_path("test.gif"), "optional caption")
-        image = InlineImage(image_path("test.png"), "optional caption")
-        video = InlineVideo(image_path("test.mp4"), "optional caption")
+        gif = InlineGif(caption="optional caption", path=image_path("test.gif"))
+        image = InlineImage(caption="optional caption", path=image_path("test.png"))
+        video = InlineVideo(caption="optional caption", path=image_path("test.mp4"))
         return {"gif1": gif, "image1": image, "video1": video}
 
     @staticmethod
@@ -26,29 +26,6 @@ class TestSubmission(IntegrationTest):
             return submission, submission.rtjson
         return submission
 
-    async def test_award(self, reddit):
-        reddit.read_only = False
-        award_data = await Submission(reddit, "j3kyoo").award()
-        assert award_data["gildings"]["gid_2"] == 2
-
-    async def test_award__not_enough_coins(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await Submission(reddit, "j3kyoo").award(
-                gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
-            )
-        exception = excinfo.value
-        assert "INSUFFICIENT_COINS_WITH_AMOUNT" == exception.error_type
-
-    async def test_award__self_gild(self, reddit):
-        reddit.read_only = False
-        with pytest.raises(RedditAPIException) as excinfo:
-            await Submission(reddit, "j3fkiw").award(
-                gild_type="award_2385c499-a1fb-44ec-b9b7-d260f3dc55de"
-            )
-        exception = excinfo.value
-        assert "SELF_GILDING_NOT_ALLOWED" == exception.error_type
-
     async def test_clear_vote(self, reddit):
         reddit.read_only = False
         await Submission(reddit, "hmkbt8").clear_vote()
@@ -58,14 +35,6 @@ class TestSubmission(IntegrationTest):
         assert len(submission.comments) == 1
         assert isinstance(submission.comments[0], Comment)
         assert isinstance(submission.comments[0].replies[0], Comment)
-
-    async def test_comments__fetch_async_call(self, reddit):
-        reddit.read_only = False
-        submission = await reddit.submission("2gmzqe", fetch=False)
-        with pytest.deprecated_call():
-            await submission.comments()
-            assert submission._fetched
-            assert submission.comments
 
     async def test_crosspost(self, reddit):
         reddit.read_only = False
@@ -245,16 +214,6 @@ class TestSubmission(IntegrationTest):
         reddit.read_only = False
         submission = Submission(reddit, "hmkbt8")
         await submission.enable_inbox_replies()
-
-    @pytest.mark.cassette_name("TestSubmission.test_award")
-    async def test_gild(self, reddit):
-        reddit.read_only = False
-        award_data = await Submission(reddit, "j3kyoo").gild()
-        assert award_data["gildings"]["gid_2"] == 2
-
-    async def test_gilded(self, reddit):
-        submission = await reddit.submission("2gmzqe")
-        assert 1 == submission.gilded
 
     async def test_hide(self, reddit):
         reddit.read_only = False

@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import inspect
-from typing import TYPE_CHECKING, Any, Callable
-from warnings import warn
+from typing import TYPE_CHECKING, Any
 
 from ...util.cache import cachedproperty
 from .subreddit import Subreddit, SubredditModeration
@@ -53,22 +51,6 @@ class UserSubreddit(Subreddit):
 
     """
 
-    @staticmethod
-    def _dict_deprecated_wrapper(func: Callable) -> Callable:
-        """Show deprecation notice for dict only methods."""
-
-        def wrapper(*args: Any, **kwargs: Any):
-            warn(
-                "'Redditor.subreddit' is no longer a dict and is now an UserSubreddit"
-                f" object. Using '{func.__name__}' is deprecated and will be removed in"
-                " Async PRAW 8.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            return func(*args, **kwargs)
-
-        return wrapper
-
     @cachedproperty
     def mod(self) -> asyncpraw.models.reddit.user_subreddit.UserSubredditModeration:
         """Provide an instance of :class:`.UserSubredditModeration`.
@@ -82,16 +64,6 @@ class UserSubreddit(Subreddit):
 
         """
         return UserSubredditModeration(self)
-
-    def __getitem__(self, item: str) -> Any:
-        """Show deprecation notice for dict method ``__getitem__``."""
-        warn(
-            "'Redditor.subreddit' is no longer a dict and is now an UserSubreddit"
-            " object. Accessing attributes using string indices is deprecated.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return getattr(self, item)
 
     def __init__(self, reddit: asyncpraw.Reddit, *args: Any, **kwargs: Any):
         """Initialize an :class:`.UserSubreddit` instance.
@@ -114,19 +86,6 @@ class UserSubreddit(Subreddit):
                 redditor.subreddit
 
         """
-
-        def predicate(item: str):
-            name = getattr(item, "__name__", None)
-            return name not in dir(object) + dir(Subreddit) and name in dir(dict)
-
-        for name, _member in inspect.getmembers(dict, predicate=predicate):
-            if name != "__getitem__":
-                setattr(
-                    self,
-                    name,
-                    self._dict_deprecated_wrapper(getattr(self.__dict__, name)),
-                )
-
         super().__init__(reddit, *args, **kwargs)
 
 

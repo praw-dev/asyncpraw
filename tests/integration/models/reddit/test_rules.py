@@ -30,12 +30,6 @@ class TestRule(IntegrationTest):
         assert rule.description == ""
         assert rule.violation_reason == "PRAW Test 2"
 
-    @pytest.mark.filterwarnings("ignore", category=DeprecationWarning)
-    async def test_aiter_call(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        rules = await subreddit.rules()
-        assert rules["rules"][0]["short_name"] == "Test post 12"
-
     async def test_aiter_rules(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         async for rule in subreddit.rules:

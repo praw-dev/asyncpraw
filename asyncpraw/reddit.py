@@ -29,14 +29,8 @@ from asyncprawcore.exceptions import BadRequest
 from . import models
 from .config import Config
 from .const import API_PATH, USER_AGENT_FORMAT, __version__
-from .exceptions import (
-    ClientException,
-    MissingRequiredAttributeException,
-    RedditAPIException,
-)
-from .models.util import deprecate_lazy
+from .exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
 from .objector import Objector
-from .util import _deprecate_args
 
 try:
     from update_checker import update_check
@@ -52,8 +46,6 @@ if TYPE_CHECKING:  # pragma: no cover
 
     import asyncpraw
     import asyncpraw.models
-
-    from .util.token_manager import BaseTokenManager
 
 Comment = models.Comment
 Redditor = models.Redditor
@@ -113,31 +105,6 @@ class Reddit:
         else:
             self._core = self._authorized_core
 
-    @property
-    def validate_on_submit(self) -> bool:
-        """Get validate_on_submit.
-
-        .. deprecated:: 7.0
-
-            If property :attr:`.validate_on_submit` is set to ``False``, the behavior is
-            deprecated by Reddit. This attribute will be removed around May-June 2020.
-
-        """
-        value = self._validate_on_submit
-        if value is False:
-            warn(
-                "Reddit will check for validation on all posts around May-June 2020. It"
-                " is recommended to check for validation by setting"
-                " reddit.validate_on_submit to True.",
-                category=DeprecationWarning,
-                stacklevel=3,
-            )
-        return value
-
-    @validate_on_submit.setter
-    def validate_on_submit(self, val: bool):
-        self._validate_on_submit = val
-
     async def __aenter__(self):  # noqa: ANN204
         """Handle the context manager open."""
         return self
@@ -157,35 +124,6 @@ class Reddit:
             memodict = {}  # pragma: no cover
         return copy(self)
 
-    def __enter__(self):  # noqa: ANN204
-        """Handle the context manager open.
-
-        .. deprecated:: 7.1.1
-
-            Using this class as a synchronous context manager is deprecated and will be
-            removed in the next release. Use this class as an asynchronous context
-            manager instead.
-
-        """
-        warn(
-            "Using this class as a synchronous context manager is deprecated and will"
-            " be removed in the next release. Use this class as an asynchronous context"
-            " manager instead.",
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-        return self  # pragma: no cover
-
-    def __exit__(self, *_args: object):
-        """Handle the context manager close."""
-
-    @_deprecate_args(
-        "site_name",
-        "config_interpolation",
-        "requestor_class",
-        "requestor_kwargs",
-        "token_manager",
-    )
     def __init__(
         self,
         site_name: str | None = None,
@@ -193,7 +131,6 @@ class Reddit:
         config_interpolation: str | None = None,
         requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,
         requestor_kwargs: dict[str, Any] | None = None,
-        token_manager: BaseTokenManager | None = None,
         **config_settings: str | bool | int | None,
     ):
         """Initialize a :class:`.Reddit` instance.
@@ -211,10 +148,6 @@ class Reddit:
             set, use ``asyncprawcore.Requestor`` (default: ``None``).
         :param requestor_kwargs: Dictionary with additional keyword arguments used to
             initialize the requestor (default: ``None``).
-        :param token_manager: When provided, the passed instance, a subclass of
-            :class:`.BaseTokenManager`, will manage tokens via two callback functions.
-            This parameter must be provided in order to work with refresh tokens
-            (default: ``None``).
 
         Additional keyword arguments will be used to initialize the :class:`.Config`
         object. This can be used to specify configuration settings during instantiation
@@ -279,9 +212,7 @@ class Reddit:
         """
         self._core = self._authorized_core = self._read_only_core = None
         self._objector = None
-        self._token_manager = token_manager
         self._unique_counter = 0
-        self._validate_on_submit = False
 
         try:
             config_section = (
@@ -589,25 +520,7 @@ class Reddit:
         return requestor
 
     def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator):
-        if self._token_manager is not None:
-            warn(
-                "Token managers have been deprecated and will be removed in the near"
-                " future. See https://www.reddit.com/r/redditdev/comments/olk5e6/"
-                "followup_oauth2_api_changes_regarding_refresh/ for more details.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            if self.config.refresh_token:
-                msg = "'refresh_token' setting cannot be provided when providing 'token_manager'"
-                raise TypeError(msg)
-
-            self._token_manager.reddit = self
-            authorizer = Authorizer(
-                authenticator,
-                post_refresh_callback=self._token_manager.post_refresh_callback,
-                pre_refresh_callback=self._token_manager.pre_refresh_callback,
-            )
-        elif self.config.refresh_token:
+        if self.config.refresh_token:
             authorizer = Authorizer(authenticator, refresh_token=self.config.refresh_token)
         else:
             self._core = self._read_only_core
@@ -700,8 +613,7 @@ class Reddit:
         """Close the requestor."""
         await self.requestor.close()
 
-    @_deprecate_args("id", "url", "fetch")
-    @deprecate_lazy
+
     async def comment(
         self,
         id: str | None = None,
@@ -739,7 +651,6 @@ class Reddit:
             await comment._fetch()
         return comment
 
-    @_deprecate_args("path", "data", "json", "params")
     async def delete(
         self,
         path: str,
@@ -769,7 +680,6 @@ class Reddit:
         """
         return models.DomainListing(self, domain)
 
-    @_deprecate_args("path", "params")
     async def get(
         self,
         path: str,
@@ -784,7 +694,6 @@ class Reddit:
         """
         return await self._objectify_request(method="GET", params=params, path=path)
 
-    @_deprecate_args("fullnames", "url", "subreddits")
     def info(
         self,
         *,
@@ -855,7 +764,6 @@ class Reddit:
 
         return generator(url)
 
-    @_deprecate_args("path", "data", "json")
     async def patch(
         self,
         path: str,
@@ -877,7 +785,6 @@ class Reddit:
         """
         return await self._objectify_request(data=data, json=json, method="PATCH", params=params, path=path)
 
-    @_deprecate_args("path", "data", "files", "params", "json")
     async def post(
         self,
         path: str,
@@ -926,7 +833,6 @@ class Reddit:
                 await asyncio.sleep(seconds)
         raise last_exception
 
-    @_deprecate_args("path", "data", "json")
     async def put(
         self,
         path: str,
@@ -946,25 +852,6 @@ class Reddit:
         """
         return await self._objectify_request(data=data, json=json, method="PUT", path=path)
 
-    @_deprecate_args("nsfw")
-    async def random_subreddit(self, *, nsfw: bool = False) -> asyncpraw.models.Subreddit:
-        """Return a random instance of :class:`.Subreddit`.
-
-        :param nsfw: Return a random NSFW (not safe for work) subreddit (default:
-            ``False``).
-
-        """
-        url = API_PATH["subreddit"].format(subreddit="randnsfw" if nsfw else "random")
-        path = None
-        try:
-            await self.get(url, params={"unique": self._next_unique})
-        except Redirect as redirect:
-            path = redirect.path
-        subreddit = models.Subreddit(self, path.split("/")[2])
-        await subreddit._fetch()
-        return subreddit
-
-    @_deprecate_args("name", "fullname", "fetch")
     async def redditor(
         self,
         name: str | None = None,
@@ -987,7 +874,6 @@ class Reddit:
             await redditor._fetch()
         return redditor
 
-    @_deprecate_args("method", "path", "params", "data", "files", "json")
     async def request(
         self,
         *,
@@ -1044,8 +930,7 @@ class Reddit:
                 field = None
             raise RedditAPIException([data["reason"], explanation, field]) from exception
 
-    @_deprecate_args("id", "url", "fetch")
-    @deprecate_lazy
+
     async def submission(
         self,
         id: str | None = None,

@@ -6,6 +6,45 @@ Async PRAW follows `semantic versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+**Added**
+
+- Add support for Python 3.13.
+
+**Changed**
+
+- Bumped prawcore to 3.0.1.
+- Drop support for Python 3.8, which was end-of-life on 2024-10-07.
+- Change ``Reddit.user.me`` to raise :class:`.ReadOnlyException` when called in
+  :attr:`.read_only` mode.
+- The ``subreddit`` attribute of :class:`.Redditor` is a :class:`.UserSubreddit`
+  instance.
+- :meth:`.CommentForest.list` no longer needs to be awaited.
+- The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
+  argument used to explicitly perform a fetch when initializing an object.
+
+**Removed**
+
+- Remove ``Reddit.random_subreddit``, ``Subreddit.random``, and
+  ``Subreddit.random_rising``.
+- Remove ``APIException`` class.
+- Remove ``PRAWException`` class rename handler.
+- Remove ``Comment.award`` and ``Submission.award`` methods.
+- Remove ``Comment.gild``, ``Redditor.gild``, and ``Submission.gild`` methods.
+- Remove ``Redditor.gilded`` and ``Subreddit.gilded`` methods.
+- Remove ``Redditor.gildings`` method.
+- Remove ``Subreddit.mod.inbox``, ``Subreddit.mod.unread``, and
+  ``Subreddit.mod.stream.unread`` methods.
+- Remove ``Subreddits.search_by_topic`` method.
+- Remove ``Subreddits.gold`` method.
+- Remove :class:`.Reddit` keyword argument ``token_manager`` and all associated token
+  managers.
+- Remove ``Reddit.validate_on_submit`` configuration attribute.
+- Remove ``WebSocketException.original_exception`` method.
+- Remove the ``after`` argument for :meth:`.conversations`.
+- Remove ability to use :class:`.CommentForest` as an asynchronous iterator.
+- Remove ability to use :class:`.Reddit` as an synchronous context manager.
+- Remove key ``reset_timestamp`` from :meth:`.limits`.
+
 7.8.1 (2024/12/21)
 ------------------
 
@@ -226,7 +265,7 @@ Unreleased
 - :meth:`.trusted` to retrieve a :class:`.RedditorList` of trusted users.
 - :meth:`.trust` to add a user to the trusted list.
 - :meth:`.distrust` to remove a user from the trusted list.
-- :class:`.SQLiteTokenManager` (may not work on Windows).
+- ``SQLiteTokenManager`` (may not work on Windows).
 
 **Changed**
 
@@ -237,7 +276,8 @@ Unreleased
 
 **Deprecated**
 
-- The ``subreddit`` attribute of :class:`.Redditor` is no longer a dict.
+- The ``subreddit`` attribute of :class:`.Redditor` will no longer function as a
+  ``dict``.
 - Legacy modmail is slated for deprecation by Reddit in June 2021. See
   https://www.reddit.com/r/modnews/comments/mar9ha/even_more_modmail_improvements/ for
   more info.
@@ -261,7 +301,7 @@ Unreleased
 **Added**
 
 - :class:`.Reddit` keyword argument ``token_manager``.
-- :class:`.FileTokenManager` and its parent abstract class :class:`.BaseTokenManager`.
+- ``FileTokenManager`` and its parent abstract class ``BaseTokenManager``.
 
 **Deprecated**
 
@@ -272,10 +312,10 @@ Unreleased
   variable. To be prepared for Async PRAW 8, use the new :class:`.Reddit` keyword
   argument ``token_manager``. See :ref:`refresh_token` in Async PRAW's documentation for
   an example.
-- :meth:`.me` will no longer return ``None`` when called in :attr:`.read_only` mode
-  starting in Async PRAW 8. A :py:class:`DeprecationWarning` will be issued. To switch
-  forward to the Async PRAW 8 behavior set ``praw8_raise_exception_on_me=True`` in your
-  ``asyncpraw.Reddit(...)`` call.
+- ``Reddit.user.me`` will no longer return ``None`` when called in :attr:`.read_only`
+  mode starting in Async PRAW 8. A :py:class:`DeprecationWarning` will be issued. To
+  switch forward to the Async PRAW 8 behavior set ``praw8_raise_exception_on_me=True``
+  in your ``asyncpraw.Reddit(...)`` call.
 
 7.1.1 (2021/02/11)
 ------------------
@@ -288,8 +328,8 @@ Unreleased
 - Ability to specify modmail mute duration.
 - Add method :meth:`.invited` to get invited moderators of a subreddit.
 - Ability to submit text/self posts with inline media.
-- Add method :meth:`.Submission.award` and :meth:`.Comment.award` with the ability to
-  specify type of award, anonymity, and message when awarding a submission or comment.
+- Add method ``Submission.award`` and ``Comment.award`` with the ability to specify type
+  of award, anonymity, and message when awarding a submission or comment.
 - Ability to specify subreddits by name using the `subreddits` parameter in
   :meth:`.Reddit.info`.
 - Added :meth:`.Reddit.close` to close the requestor session.
@@ -306,9 +346,9 @@ Unreleased
 
 **Deprecated**
 
-- :meth:`.Subreddits.gold` is superseded by :meth:`.Subreddits.premium`.
-- :meth:`.Submission.gild` is superseded by :meth:`.Submission.award`.
-- :meth:`.Comment.gild` is superseded by :meth:`.Comment.award`.
+- ``Subreddits.gold`` is superseded by :meth:`.Subreddits.premium`.
+- ``Submission.gild`` is superseded by ``Submission.award``.
+- ``Comment.gild`` is superseded by ``Comment.award``.
 - ``PRAWException`` is superseded by :class:`.AsyncPRAWException`.
 
 **Fixed**

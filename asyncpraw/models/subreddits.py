@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
-from warnings import warn
+from typing import TYPE_CHECKING
 
 from ..const import API_PATH
-from ..util import _deprecate_args
 from . import Subreddit
 from .base import AsyncPRAWBase
 from .listing.generator import ListingGenerator
@@ -34,15 +32,6 @@ class Subreddits(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["subreddits_default"], **generator_kwargs)
 
-    def gold(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Subreddit]:
-        """Alias for :meth:`.premium` to maintain backwards compatibility."""
-        warn(
-            "'subreddits.gold' has be renamed to 'subreddits.premium'.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.premium(**generator_kwargs)
-
     def new(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Return a :class:`.ListingGenerator` for new subreddits.
 
@@ -68,7 +57,7 @@ class Subreddits(AsyncPRAWBase):
         :class:`.ListingGenerator`.
 
         """
-        return ListingGenerator(self._reddit, API_PATH["subreddits_gold"], **generator_kwargs)
+        return ListingGenerator(self._reddit, API_PATH["subreddits_premium"], **generator_kwargs)
 
     async def recommended(
         self,
@@ -114,7 +103,6 @@ class Subreddits(AsyncPRAWBase):
         self._safely_add_arguments(arguments=generator_kwargs, key="params", q=query)
         return ListingGenerator(self._reddit, API_PATH["subreddits_search"], **generator_kwargs)
 
-    @_deprecate_args("query", "include_nsfw", "exact")
     async def search_by_name(
         self,
         query: str,
@@ -136,22 +124,6 @@ class Subreddits(AsyncPRAWBase):
         for result in results["names"]:
             yield await self._reddit.subreddit(result)
 
-    async def search_by_topic(
-        self, query: str
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:  # pragma: no cover; TODO: not currently working
-        """Return list of Subreddits whose topics match ``query``.
-
-        :param query: Search for subreddits relevant to the search topic.
-
-        .. note::
-
-            As of 09/01/2020, this endpoint always returns 404.
-
-        """
-        results = await self._reddit.get(API_PATH["subreddits_by_topic"], params={"query": query})
-        for result in results:
-            subreddit = await self._reddit.subreddit(result["name"])
-            yield subreddit
 
     def stream(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Yield new subreddits as they are created.

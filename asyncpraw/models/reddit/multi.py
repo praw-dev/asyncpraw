@@ -7,7 +7,6 @@ from json import dumps
 from typing import TYPE_CHECKING, Any
 
 from ...const import API_PATH
-from ...util import _deprecate_args
 from ...util.cache import cachedproperty
 from ..listing.mixins import SubredditListingMixin
 from .base import RedditBase
@@ -141,7 +140,6 @@ class Multireddit(SubredditListingMixin, RedditBase):
         await self._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
         self._reset_attributes("subreddits")
 
-    @_deprecate_args("display_name")
     async def copy(self, *, display_name: str | None = None) -> asyncpraw.models.Multireddit:
         """Copy this multireddit and return the new multireddit.
 
