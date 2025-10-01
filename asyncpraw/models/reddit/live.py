@@ -413,10 +413,16 @@ class LiveThread(RedditBase):
         url = API_PATH["live_discussions"].format(id=self.id)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    async def get_update(self, update_id: str, fetch: bool = True, **_: Any) -> asyncpraw.models.LiveUpdate:
+    async def get_update(
+        self,
+        /,
+        id: str,
+        *,
+        fetch: bool = True
+    ) -> asyncpraw.models.LiveUpdate:
         """Return a :class:`.LiveUpdate` instance.
 
-        :param update_id: A live update ID, e.g.,
+        :param id: A live update ID, e.g.,
             ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
@@ -441,7 +447,7 @@ class LiveThread(RedditBase):
             update.contrib  # LiveUpdateContribution instance
 
         """
-        update = LiveUpdate(self._reddit, self.id, update_id)
+        update = LiveUpdate(self._reddit, self.id, id)
         if fetch:
             await update._fetch()
         return update

@@ -9,9 +9,7 @@ from ... import UnitTest
 class TestRemovalReason(UnitTest):
     async def test__get(self, reddit):
         subreddit = Subreddit(reddit, display_name="a")
-        removal_reason = await subreddit.mod.removal_reasons.get_reason(
-            "a", fetch=False
-        )
+        removal_reason = await subreddit.mod.removal_reasons.get_reason("a", fetch=False)
         assert isinstance(removal_reason, RemovalReason)
 
     def test_equality(self, reddit):
@@ -30,7 +28,7 @@ class TestRemovalReason(UnitTest):
         reason5 = RemovalReason(
             reddit,
             subreddit=Subreddit(reddit, display_name="a"),
-            reason_id="X",
+            id="X",
         )
         assert reason1 == reason1
         assert reason1 == "x"
@@ -57,7 +55,7 @@ class TestRemovalReason(UnitTest):
             RemovalReason(
                 reddit,
                 subreddit=Subreddit(reddit, display_name="a"),
-                reason_id="",
+                id="",
             )
 
     def test_hash(self, reddit):
@@ -76,7 +74,7 @@ class TestRemovalReason(UnitTest):
         reason5 = RemovalReason(
             reddit,
             subreddit=Subreddit(reddit, display_name="a"),
-            reason_id="X",
+            id="X",
         )
         assert hash(reason1) == hash(reason1)
         assert hash(reason2) == hash(reason2)

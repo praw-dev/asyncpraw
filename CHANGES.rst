@@ -10,6 +10,8 @@ Unreleased
 
 - Add support for Python 3.13.
 - Support delayed session creation in asyncprawcore 2.5.0+.
+- Add parameter ``fetch`` to :meth:`.get_rule` to control whether to fetch the rule data
+  when initializing the rule object.
 
 **Changed**
 
@@ -22,6 +24,25 @@ Unreleased
 - :meth:`.CommentForest.list` no longer needs to be awaited.
 - The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
   argument used to explicitly perform a fetch when initializing an object.
+- The argument ``reason_id`` in :meth:`.RemovalReason.__init__` has been replaced with
+  ``id`` and is now a positional-only argument.
+- The ``name`` argument in :meth:`.get_emoji` is now a positional-only argument.
+- The ``reason_id`` argument in :meth:`.get_reason` has been replaced with ``id`` and is
+  now a positional-only argument.
+- The ``short_name`` argument in :meth:`.get_rule` is now a positional-only argument.
+- The ``update_id`` argument in :meth:`.get_update` has been replaced with ``id`` and is
+  now a positional-only argument.
+- The ``page_name`` argument in :meth:`.get_page` is now a positional-only argument.
+- The ``fetch`` argument in the following methods is now a keyword-only argument:
+
+  - :meth:`.get_emoji`
+  - :meth:`.get_reason`
+  - :meth:`.get_update`
+  - :meth:`.DraftHelper.__call__`
+  - :meth:`.LiveHelper.__call__`
+  - :meth:`.Modmail.__call__`
+  - :meth:`.SubredditCollections.__call__`
+  - :meth:`.SubredditHelper.__call__`
 
 **Removed**
 

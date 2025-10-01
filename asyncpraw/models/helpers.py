@@ -45,7 +45,7 @@ class DraftHelper(AsyncPRAWBase):
             yield draft
 
     async def __call__(
-        self, draft_id: str | None = None, fetch: bool = True
+        self, draft_id: str | None = None, *, fetch: bool = True
     ) -> list[asyncpraw.models.Draft] | asyncpraw.models.Draft:
         """Return a list of :class:`.Draft` instances.
 
@@ -155,7 +155,7 @@ class DraftHelper(AsyncPRAWBase):
 class LiveHelper(AsyncPRAWBase):
     r"""Provide a set of functions to interact with :class:`.LiveThread`\ s."""
 
-    async def __call__(self, id: str, fetch: bool = False) -> asyncpraw.models.LiveThread:
+    async def __call__(self, id: str, *, fetch: bool = False) -> asyncpraw.models.LiveThread:
         """Return a new instance of :class:`.LiveThread`.
 
         This method is intended to be used as:
@@ -355,7 +355,7 @@ class MultiredditHelper(AsyncPRAWBase):
 class SubredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    async def __call__(self, display_name: str, fetch: bool = False) -> asyncpraw.models.Subreddit:
+    async def __call__(self, display_name: str, *, fetch: bool = False) -> asyncpraw.models.Subreddit:
         """Return an instance of :class:`.Subreddit`.
 
         :param display_name: The name of the subreddit.

@@ -228,7 +228,7 @@ class SubredditEmoji:
         await self._reddit.post(url, data=data)
         return Emoji(self._reddit, self.subreddit, name)
 
-    async def get_emoji(self, name: str, fetch: bool = True, **_: Any) -> Emoji:
+    async def get_emoji(self, /, name: str, *, fetch: bool = True) -> Emoji:
         """Return the :class:`.Emoji` for the subreddit named ``name``.
 
         :param name: The name of the emoji.

@@ -354,8 +354,8 @@ class SubredditCollections(AsyncPRAWBase):
         self,
         collection_id: str | None = None,
         permalink: str | None = None,
+        *,
         fetch: bool = True,
-        **_,
     ) -> Collection:
         """Return the :class:`.Collection` with the specified ID.
 

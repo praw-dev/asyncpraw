@@ -618,7 +618,6 @@ class Reddit:
         *,
         fetch: bool = True,
         url: str | None = None,
-        **_,
     ) -> models.Comment:
         """Return an instance of :class:`.Comment`.
 
@@ -934,7 +933,6 @@ class Reddit:
         *,
         fetch: bool = True,
         url: str | None = None,
-        **_,
     ) -> asyncpraw.models.Submission:
         """Return an instance of :class:`.Submission`.
 

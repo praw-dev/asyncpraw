@@ -2062,7 +2062,7 @@ class SubredditWiki:
         await new.edit(content=content, reason=reason, **other_settings)
         return new
 
-    async def get_page(self, page_name: str, fetch: bool = True, **_: Any) -> WikiPage:
+    async def get_page(self, /, page_name: str, *, fetch: bool = True) -> WikiPage:
         """Return the :class:`.WikiPage` for the :class:`.Subreddit` named ``page_name``.
 
         :param page_name: Name of the wikipage.

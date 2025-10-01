@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
-from warnings import warn
+from typing import TYPE_CHECKING, Any, SupportsIndex
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
@@ -33,27 +32,6 @@ class RemovalReason(RedditBase):
 
     STR_FIELD = "id"
 
-    @staticmethod
-    def _warn_reason_id(*, id_value: str | None, reason_id_value: str | None) -> str | None:
-        """Reason ID param is deprecated. Warns if it's used.
-
-        :param id_value: Returns the actual value of parameter ``id`` is parameter
-            ``reason_id`` is not used.
-        :param reason_id_value: The value passed as parameter ``reason_id``.
-
-        """
-        if reason_id_value is not None:
-            warn(
-                "Parameter 'reason_id' is deprecated. Either use positional arguments"
-                ' (e.g., reason_id="x" -> "x") or change the parameter name to \'id\''
-                ' (e.g., reason_id="x" -> id="x"). This parameter will be removed in'
-                " Async PRAW 8.",
-                category=DeprecationWarning,
-                stacklevel=3,
-            )
-            return reason_id_value
-        return id_value
-
     def __eq__(self, other: str | RemovalReason) -> bool:
         """Return whether the other instance equals the current."""
         if isinstance(other, str):
@@ -69,7 +47,6 @@ class RemovalReason(RedditBase):
         reddit: asyncpraw.Reddit,
         subreddit: asyncpraw.models.Subreddit,
         id: str | None = None,
-        reason_id: str | None = None,
         _data: dict[str, Any] | None = None,
     ) -> None:
         """Initialize a :class:`.RemovalReason` instance.
@@ -77,17 +54,14 @@ class RemovalReason(RedditBase):
         :param reddit: An instance of :class:`.Reddit`.
         :param subreddit: An instance of :class:`.Subreddit`.
         :param id: The ID of the removal reason.
-        :param reason_id: The original name of the ``id`` parameter. Used for backwards
-            compatibility. This parameter should not be used.
 
         """
-        reason_id = self._warn_reason_id(id_value=id, reason_id_value=reason_id)
-        if (reason_id, _data).count(None) != 1:
+        if (id, _data).count(None) != 1:
             msg = "Either id or _data needs to be given."
             raise ValueError(msg)
 
-        if reason_id:
-            self.id = reason_id
+        if id:
+            self.id = id
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
@@ -206,13 +180,14 @@ class SubredditRemovalReasons:
 
     async def get_reason(
         self,
-        reason_id: str | (int | slice),
+        /,
+        id: SupportsIndex,
+        *,
         fetch: bool = True,
-        **_,
     ) -> RemovalReason:
-        """Return the Removal Reason with the ID/number/slice ``reason_id``.
+        """Return the Removal Reason with the ID/number/slice ``id``.
 
-        :param reason_id: The ID or index of the removal reason.
+        :param id: The ID or index of the removal reason.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
 
@@ -263,10 +238,10 @@ class SubredditRemovalReasons:
             await reason.delete()
 
         """
-        if not isinstance(reason_id, str):
+        if not isinstance(id, str):
             reasons = await self._removal_reason_list()
-            return reasons[reason_id]
-        reason = RemovalReason(self._reddit, self.subreddit, reason_id)
+            return reasons[id]
+        reason = RemovalReason(self._reddit, self.subreddit, id)
         if fetch:
             await reason._fetch()
         return reason
