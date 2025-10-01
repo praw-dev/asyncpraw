@@ -279,6 +279,235 @@ class BaseModNotes:
             await self._reddit.delete(API_PATH["mod_notes"], params=params)
 
 
+class RedditModNotes(BaseModNotes):
+    """Provides methods to interact with moderator notes at a global level.
+
+    .. note::
+
+        The authenticated user must be a moderator of the provided subreddit(s).
+
+    For example, the latest note for u/spez in r/redditdev and r/test, and for u/bboe in
+    r/redditdev can be iterated through like so:
+
+    .. code-block:: python
+
+        redditor = await reddit.redditor("bboe")
+        subreddit = await reddit.subreddit("redditdev")
+
+        pairs = [(subreddit, "spez"), ("test", "spez"), (subreddit, redditor)]
+
+        async for note in reddit.notes(pairs=pairs):
+            print(f"{note.label}: {note.note}")
+
+    """
+
+    def __call__(
+        self,
+        *,
+        all_notes: bool = False,
+        pairs: list[tuple[Subreddit | str, Redditor | str]] | None = None,
+        redditors: list[Redditor | str] | None = None,
+        subreddits: list[Subreddit | str] | None = None,
+        things: list[Comment | Submission] | None = None,
+        **generator_kwargs: Any,
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
+        """Get note(s) for each subreddit/user pair, or ``None`` if they don't have any.
+
+        :param all_notes: Whether to return all notes or only the latest note for each
+            subreddit/redditor pair (default: ``False``).
+
+            .. note::
+
+                Setting this to ``True`` will result in a request for each unique
+                subreddit/redditor pair. If ``subreddits`` and ``redditors`` are
+                provided, this will make a request equivalent to number of redditors
+                multiplied by the number of subreddits.
+
+        :param pairs: A list of subreddit/redditor tuples.
+
+            .. note::
+
+                Required if ``subreddits``, ``redditors``, nor ``things`` are provided.
+
+        :param redditors: A list of redditors to return notes for. This parameter is
+            used in tandem with ``subreddits`` to get notes from multiple subreddits for
+            each of the provided redditors.
+
+            .. note::
+
+                Required if ``items`` or ``things`` is not provided or if ``subreddits``
+                **is** provided.
+
+        :param subreddits: A list of subreddits to return notes for. This parameter is
+            used in tandem with ``redditors`` to get notes for multiple redditors from
+            each of the provided subreddits.
+
+            .. note::
+
+                Required if ``items`` or ``things`` is not provided or if ``redditors``
+                **is** provided.
+
+        :param things: A list of comments and/or submissions to return notes for.
+        :param generator_kwargs: Additional keyword arguments passed to the generator.
+            This parameter is ignored when ``all_notes`` is ``False``.
+
+        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
+            if the user doesn't have any notes) per entry in their relative order. If
+            ``all_notes`` is ``True``, this will yield all notes for each entry.
+
+        .. note::
+
+            This method will merge the subreddits and redditors provided from ``pairs``,
+            ``redditors``, ``subreddits``, and ``things``.
+
+        .. note::
+
+            This method accepts :class:`.Redditor` instances or redditor names and
+            :class:`.Subreddit` instances or subreddit names where applicable.
+
+        For example, the latest note for u/spez in r/redditdev and r/test, and for
+        u/bboe in r/redditdev can be iterated through like so:
+
+        .. code-block:: python
+
+            redditor = await reddit.redditor("bboe")
+            subreddit = await reddit.subreddit("redditdev")
+
+            pairs = [(subreddit, "spez"), ("test", "spez"), (subreddit, redditor)]
+
+            async for note in reddit.notes(pairs=pairs):
+                print(f"{note.label}: {note.note}")
+
+        For example, **all** the notes for u/spez and u/bboe in r/announcements,
+        r/redditdev, and r/test can be iterated through like so:
+
+        .. code-block:: python
+
+            redditor = await reddit.redditor("bboe")
+            subreddit = await reddit.subreddit("redditdev")
+
+            async for note in reddit.notes(
+                redditors=["spez", redditor],
+                subreddits=["announcements", subreddit, "test"],
+                all_notes=True,
+            ):
+                print(f"{note.label}: {note.note}")
+
+        For example, the latest note for the authors of the last 5 comments and
+        submissions from r/test can be iterated through like so:
+
+        .. code-block:: python
+
+            submissions = [submission async for submission in reddit.subreddit("test").new(limit=5)]
+            comments = [comment async for comment in reddit.subreddit("test").comments(limit=5)]
+
+            async for note in reddit.notes(things=submissions + comments):
+                print(f"{note.label}: {note.note}")
+
+        .. note::
+
+            Setting ``all_notes`` to ``True`` will make a request for each redditor and
+            subreddit combination. The previous example will make 6 requests.
+
+        """
+        if pairs is None:
+            pairs = []
+        if redditors is None:
+            redditors = []
+        if subreddits is None:
+            subreddits = []
+        if things is None:
+            things = []
+        if not (pairs + redditors + subreddits + things):
+            msg = "Either the 'pairs', 'redditors', 'subreddits', or 'things' parameters must be provided."
+            raise TypeError(msg)
+        if len(redditors) * len(subreddits) == 0 and len(redditors) + len(subreddits) > 0:
+            raise TypeError(
+                "'redditors' must be non-empty if 'subreddits' is not empty."
+                if len(subreddits) > 0
+                else "'subreddits' must be non-empty if 'redditors' is not empty."
+            )
+
+        merged_redditors = []
+        merged_subreddits = []
+        items = pairs + [(subreddit, redditor) for redditor in set(redditors) for subreddit in set(subreddits)] + things
+
+        for item in items:
+            if isinstance(item, (Comment, Submission)):
+                merged_redditors.append(item.author.name)
+                merged_subreddits.append(item.subreddit.display_name)
+            elif isinstance(item, tuple):
+                subreddit, redditor = item
+                merged_redditors.append(redditor)
+                merged_subreddits.append(subreddit)
+            else:
+                msg = f"Cannot get subreddit and author fields from type {type(item)}"
+                raise TypeError(msg)
+        return self._notes(
+            all_notes=all_notes,
+            redditors=merged_redditors,
+            subreddits=merged_subreddits,
+            **generator_kwargs,
+        )
+
+    def things(
+        self,
+        *things: Comment | Submission,
+        all_notes: bool | None = None,
+        **generator_kwargs: Any,
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
+        """Return notes associated with the author of a :class:`.Comment` or :class:`.Submission`.
+
+        :param things: One or more things to return notes on. Must be a
+            :class:`.Comment` or :class:`.Submission`.
+        :param all_notes: Whether to return all notes, or only the latest (default:
+            ``True`` if only one thing is provided otherwise ``False``).
+
+            .. note::
+
+                Setting this to ``True`` will result in a request for each thing.
+
+
+        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
+            if the user doesn't have any notes) per entry in their relative order. If
+            ``all_notes`` is ``True``, this will yield all notes for each entry.
+
+        For example, to get the latest note for the authors of the top 25 submissions in
+        r/test:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            submissions = [submission async for submission in subreddit.top(limit=25)]
+            async for note in reddit.notes.things(*submissions):
+                print(f"{note.label}: {note.note}")
+
+        For example, to get the latest note for the authors of the last 25 comments in
+        r/test:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            comments = [comment async for comment in subreddit.comments(limit=25)]
+            async for note in reddit.notes.things(*comments):
+                print(f"{note.label}: {note.note}")
+
+        """
+        subreddits = []
+        redditors = []
+        for thing in things:
+            subreddits.append(thing.subreddit)
+            redditors.append(thing.author)
+        if all_notes is None:
+            all_notes = len(things) == 1
+        return self._notes(
+            all_notes=all_notes,
+            redditors=redditors,
+            subreddits=subreddits,
+            **generator_kwargs,
+        )
+
+
 class RedditorModNotes(BaseModNotes):
     """Provides methods to interact with moderator notes at the redditor level.
 
@@ -469,224 +698,3 @@ class SubredditModNotes(BaseModNotes):
             subreddits=[self.subreddit] * len(redditors),
             **generator_kwargs,
         )
-
-
-class RedditModNotes(BaseModNotes):
-    """Provides methods to interact with moderator notes at a global level.
-
-    .. note::
-
-        The authenticated user must be a moderator of the provided subreddit(s).
-
-    For example, the latest note for u/spez in r/redditdev and r/test, and for u/bboe in
-    r/redditdev can be iterated through like so:
-
-    .. code-block:: python
-
-        redditor = await reddit.redditor("bboe")
-        subreddit = await reddit.subreddit("redditdev")
-
-        pairs = [(subreddit, "spez"), ("test", "spez"), (subreddit, redditor)]
-
-        async for note in reddit.notes(pairs=pairs):
-            print(f"{note.label}: {note.note}")
-
-    """
-
-    def __call__(
-        self,
-        *,
-        all_notes: bool = False,
-        pairs: list[tuple[Subreddit | str, Redditor | str]] | None = None,
-        redditors: list[Redditor | str] | None = None,
-        subreddits: list[Subreddit | str] | None = None,
-        things: list[Comment | Submission] | None = None,
-        **generator_kwargs: Any,
-    ) -> AsyncIterator[asyncpraw.models.ModNote]:
-        """Get note(s) for each subreddit/user pair, or ``None`` if they don't have any.
-
-        :param all_notes: Whether to return all notes or only the latest note for each
-            subreddit/redditor pair (default: ``False``).
-
-            .. note::
-
-                Setting this to ``True`` will result in a request for each unique
-                subreddit/redditor pair. If ``subreddits`` and ``redditors`` are
-                provided, this will make a request equivalent to number of redditors
-                multiplied by the number of subreddits.
-
-        :param pairs: A list of subreddit/redditor tuples.
-
-            .. note::
-
-                Required if ``subreddits``, ``redditors``, nor ``things`` are provided.
-
-        :param redditors: A list of redditors to return notes for. This parameter is
-            used in tandem with ``subreddits`` to get notes from multiple subreddits for
-            each of the provided redditors.
-
-            .. note::
-
-                Required if ``items`` or ``things`` is not provided or if ``subreddits``
-                **is** provided.
-
-        :param subreddits: A list of subreddits to return notes for. This parameter is
-            used in tandem with ``redditors`` to get notes for multiple redditors from
-            each of the provided subreddits.
-
-            .. note::
-
-                Required if ``items`` or ``things`` is not provided or if ``redditors``
-                **is** provided.
-
-        :param things: A list of comments and/or submissions to return notes for.
-        :param generator_kwargs: Additional keyword arguments passed to the generator.
-            This parameter is ignored when ``all_notes`` is ``False``.
-
-        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
-            if the user doesn't have any notes) per entry in their relative order. If
-            ``all_notes`` is ``True``, this will yield all notes for each entry.
-
-        .. note::
-
-            This method will merge the subreddits and redditors provided from ``pairs``,
-            ``redditors``, ``subreddits``, and ``things``.
-
-        .. note::
-
-            This method accepts :class:`.Redditor` instances or redditor names and
-            :class:`.Subreddit` instances or subreddit names where applicable.
-
-        For example, the latest note for u/spez in r/redditdev and r/test, and for
-        u/bboe in r/redditdev can be iterated through like so:
-
-        .. code-block:: python
-
-            redditor = await reddit.redditor("bboe")
-            subreddit = await reddit.subreddit("redditdev")
-
-            pairs = [(subreddit, "spez"), ("test", "spez"), (subreddit, redditor)]
-
-            async for note in reddit.notes(pairs=pairs):
-                print(f"{note.label}: {note.note}")
-
-        For example, **all** the notes for u/spez and u/bboe in r/announcements,
-        r/redditdev, and r/test can be iterated through like so:
-
-        .. code-block:: python
-
-            redditor = await reddit.redditor("bboe")
-            subreddit = await reddit.subreddit("redditdev")
-
-            async for note in reddit.notes(
-                redditors=["spez", redditor],
-                subreddits=["announcements", subreddit, "test"],
-                all_notes=True,
-            ):
-                print(f"{note.label}: {note.note}")
-
-        For example, the latest note for the authors of the last 5 comments and
-        submissions from r/test can be iterated through like so:
-
-        .. code-block:: python
-
-            submissions = [submission async for submission in reddit.subreddit("test").new(limit=5)]
-            comments = [comment async for comment in reddit.subreddit("test").comments(limit=5)]
-
-            async for note in reddit.notes(things=submissions + comments):
-                print(f"{note.label}: {note.note}")
-
-        .. note::
-
-            Setting ``all_notes`` to ``True`` will make a request for each redditor and
-            subreddit combination. The previous example will make 6 requests.
-
-        """
-        if pairs is None:
-            pairs = []
-        if redditors is None:
-            redditors = []
-        if subreddits is None:
-            subreddits = []
-        if things is None:
-            things = []
-        if not (pairs + redditors + subreddits + things):
-            msg = "Either the 'pairs', 'redditors', 'subreddits', or 'things' parameters must be provided."
-            raise TypeError(msg)
-        if len(redditors) * len(subreddits) == 0 and len(redditors) + len(subreddits) > 0:
-            raise TypeError(
-                "'redditors' must be non-empty if 'subreddits' is not empty."
-                if len(subreddits) > 0
-                else "'subreddits' must be non-empty if 'redditors' is not empty."
-            )
-
-        merged_redditors = []
-        merged_subreddits = []
-        items = pairs + [(subreddit, redditor) for redditor in set(redditors) for subreddit in set(subreddits)] + things
-
-        for item in items:
-            if isinstance(item, (Comment, Submission)):
-                merged_redditors.append(item.author.name)
-                merged_subreddits.append(item.subreddit.display_name)
-            elif isinstance(item, tuple):
-                subreddit, redditor = item
-                merged_redditors.append(redditor)
-                merged_subreddits.append(subreddit)
-            else:
-                msg = f"Cannot get subreddit and author fields from type {type(item)}"
-                raise TypeError(msg)
-        return self._notes(
-            all_notes=all_notes, redditors=merged_redditors, subreddits=merged_subreddits, **generator_kwargs
-        )
-
-    def things(
-        self,
-        *things: Comment | Submission,
-        all_notes: bool | None = None,
-        **generator_kwargs: Any,
-    ) -> AsyncIterator[asyncpraw.models.ModNote]:
-        """Return notes associated with the author of a :class:`.Comment` or :class:`.Submission`.
-
-        :param things: One or more things to return notes on. Must be a
-            :class:`.Comment` or :class:`.Submission`.
-        :param all_notes: Whether to return all notes, or only the latest (default:
-            ``True`` if only one thing is provided otherwise ``False``).
-
-            .. note::
-
-                Setting this to ``True`` will result in a request for each thing.
-
-
-        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
-            if the user doesn't have any notes) per entry in their relative order. If
-            ``all_notes`` is ``True``, this will yield all notes for each entry.
-
-        For example, to get the latest note for the authors of the top 25 submissions in
-        r/test:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            submissions = [submission async for submission in subreddit.top(limit=25)]
-            async for note in reddit.notes.things(*submissions):
-                print(f"{note.label}: {note.note}")
-
-        For example, to get the latest note for the authors of the last 25 comments in
-        r/test:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            comments = [comment async for comment in subreddit.comments(limit=25)]
-            async for note in reddit.notes.things(*comments):
-                print(f"{note.label}: {note.note}")
-
-        """
-        subreddits = []
-        redditors = []
-        for thing in things:
-            subreddits.append(thing.subreddit)
-            redditors.append(thing.author)
-        if all_notes is None:
-            all_notes = len(things) == 1
-        return self._notes(all_notes=all_notes, redditors=redditors, subreddits=subreddits, **generator_kwargs)
