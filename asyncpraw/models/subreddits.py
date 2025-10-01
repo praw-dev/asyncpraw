@@ -5,11 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from asyncpraw.const import API_PATH
-
-from . import Subreddit
-from .base import AsyncPRAWBase
-from .listing.generator import ListingGenerator
-from .util import stream_generator
+from asyncpraw.models import Subreddit
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.util import stream_generator
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

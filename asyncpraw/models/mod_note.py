@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from asyncpraw.endpoints import API_PATH
-
-from .base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase
 
 
 class ModNote(AsyncPRAWBase):

@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from asyncpraw.models.reddit.subreddit import Subreddit, SubredditModeration
 from asyncpraw.util.cache import cachedproperty
-
-from .subreddit import Subreddit, SubredditModeration
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

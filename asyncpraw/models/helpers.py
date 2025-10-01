@@ -6,11 +6,10 @@ from json import dumps
 from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
-
-from .base import AsyncPRAWBase
-from .reddit.draft import Draft
-from .reddit.live import LiveThread
-from .reddit.multi import Multireddit, Subreddit
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.draft import Draft
+from asyncpraw.models.reddit.live import LiveThread
+from asyncpraw.models.reddit.multi import Multireddit, Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncGenerator

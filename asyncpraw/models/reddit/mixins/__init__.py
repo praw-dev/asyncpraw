@@ -6,17 +6,16 @@ from json import dumps
 from typing import TYPE_CHECKING, Optional
 
 from asyncpraw.const import API_PATH
-
-from .editable import EditableMixin
-from .fullname import FullnameMixin
-from .inboxable import InboxableMixin
-from .inboxtoggleable import InboxToggleableMixin
-from .messageable import MessageableMixin
-from .modnote import ModNoteMixin
-from .replyable import ReplyableMixin
-from .reportable import ReportableMixin
-from .savable import SavableMixin
-from .votable import VotableMixin
+from asyncpraw.models.reddit.mixins.editable import EditableMixin
+from asyncpraw.models.reddit.mixins.fullname import FullnameMixin
+from asyncpraw.models.reddit.mixins.inboxable import InboxableMixin
+from asyncpraw.models.reddit.mixins.inboxtoggleable import InboxToggleableMixin
+from asyncpraw.models.reddit.mixins.messageable import MessageableMixin
+from asyncpraw.models.reddit.mixins.modnote import ModNoteMixin
+from asyncpraw.models.reddit.mixins.replyable import ReplyableMixin
+from asyncpraw.models.reddit.mixins.reportable import ReportableMixin
+from asyncpraw.models.reddit.mixins.savable import SavableMixin
+from asyncpraw.models.reddit.mixins.votable import VotableMixin
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

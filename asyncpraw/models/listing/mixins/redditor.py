@@ -6,9 +6,8 @@ from typing import TYPE_CHECKING
 from urllib.parse import urljoin
 
 from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.listing.mixins.base import BaseListingMixin
 from asyncpraw.util.cache import cachedproperty
-
-from .base import BaseListingMixin
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .base import AsyncPRAWBase
-from .reddit.redditor import Redditor
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

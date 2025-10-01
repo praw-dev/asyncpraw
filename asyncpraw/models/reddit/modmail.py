@@ -5,9 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
+from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.util import snake_case_keys
-
-from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw

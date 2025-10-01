@@ -1,38 +1,38 @@
 """Provide the Async PRAW models."""
 
-from .auth import Auth
-from .front import Front
-from .helpers import DraftHelper, LiveHelper, MultiredditHelper, SubredditHelper
-from .inbox import Inbox
-from .list.draft import DraftList
-from .list.moderated import ModeratedList
-from .list.redditor import RedditorList
-from .list.trophy import TrophyList
-from .listing.domain import DomainListing
-from .listing.generator import ListingGenerator
-from .listing.listing import Listing, ModeratorListing, ModmailConversationsListing
-from .mod_action import ModAction
-from .mod_note import ModNote
-from .mod_notes import RedditModNotes, RedditorModNotes, SubredditModNotes
-from .preferences import Preferences
-from .reddit.collections import Collection
-from .reddit.comment import Comment
-from .reddit.draft import Draft
-from .reddit.emoji import Emoji
-from .reddit.inline_media import InlineGif, InlineImage, InlineMedia, InlineVideo
-from .reddit.live import LiveThread, LiveUpdate
-from .reddit.message import Message, SubredditMessage
-from .reddit.modmail import ModmailAction, ModmailConversation, ModmailMessage
-from .reddit.more import MoreComments
-from .reddit.multi import Multireddit
-from .reddit.poll import PollData, PollOption
-from .reddit.redditor import Redditor
-from .reddit.removal_reasons import RemovalReason
-from .reddit.rules import Rule
-from .reddit.submission import Submission
-from .reddit.subreddit import Subreddit
-from .reddit.user_subreddit import UserSubreddit
-from .reddit.widgets import (
+from asyncpraw.models.auth import Auth
+from asyncpraw.models.front import Front
+from asyncpraw.models.helpers import DraftHelper, LiveHelper, MultiredditHelper, SubredditHelper
+from asyncpraw.models.inbox import Inbox
+from asyncpraw.models.list.draft import DraftList
+from asyncpraw.models.list.moderated import ModeratedList
+from asyncpraw.models.list.redditor import RedditorList
+from asyncpraw.models.list.trophy import TrophyList
+from asyncpraw.models.listing.domain import DomainListing
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.listing.listing import Listing, ModeratorListing, ModmailConversationsListing
+from asyncpraw.models.mod_action import ModAction
+from asyncpraw.models.mod_note import ModNote
+from asyncpraw.models.mod_notes import RedditModNotes, RedditorModNotes, SubredditModNotes
+from asyncpraw.models.preferences import Preferences
+from asyncpraw.models.reddit.collections import Collection
+from asyncpraw.models.reddit.comment import Comment
+from asyncpraw.models.reddit.draft import Draft
+from asyncpraw.models.reddit.emoji import Emoji
+from asyncpraw.models.reddit.inline_media import InlineGif, InlineImage, InlineMedia, InlineVideo
+from asyncpraw.models.reddit.live import LiveThread, LiveUpdate
+from asyncpraw.models.reddit.message import Message, SubredditMessage
+from asyncpraw.models.reddit.modmail import ModmailAction, ModmailConversation, ModmailMessage
+from asyncpraw.models.reddit.more import MoreComments
+from asyncpraw.models.reddit.multi import Multireddit
+from asyncpraw.models.reddit.poll import PollData, PollOption
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.removal_reasons import RemovalReason
+from asyncpraw.models.reddit.rules import Rule
+from asyncpraw.models.reddit.submission import Submission
+from asyncpraw.models.reddit.subreddit import Subreddit
+from asyncpraw.models.reddit.user_subreddit import UserSubreddit
+from asyncpraw.models.reddit.widgets import (
     Button,
     ButtonWidget,
     Calendar,
@@ -57,9 +57,9 @@ from .reddit.widgets import (
     Widget,
     WidgetModeration,
 )
-from .reddit.wikipage import WikiPage
-from .redditors import Redditors
-from .stylesheet import Stylesheet
-from .subreddits import Subreddits
-from .trophy import Trophy
-from .user import User
+from asyncpraw.models.reddit.wikipage import WikiPage
+from asyncpraw.models.redditors import Redditors
+from asyncpraw.models.stylesheet import Stylesheet
+from asyncpraw.models.subreddits import Subreddits
+from asyncpraw.models.trophy import Trophy
+from asyncpraw.models.user import User

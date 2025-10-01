@@ -6,13 +6,12 @@ from datetime import datetime
 from json import loads
 from typing import TYPE_CHECKING, Any
 
-from .exceptions import ClientException, RedditAPIException
-from .util import snake_case_keys
+from asyncpraw.exceptions import ClientException, RedditAPIException
+from asyncpraw.util import snake_case_keys
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
-
-    from .models.reddit.base import RedditBase
+    from asyncpraw.models.reddit.base import RedditBase
 
 
 class Objector:

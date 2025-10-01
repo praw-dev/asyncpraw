@@ -7,9 +7,8 @@ from urllib.parse import quote
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
+from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.util import cachedproperty
-
-from .base import RedditBase
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

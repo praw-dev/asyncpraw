@@ -1,6 +1,6 @@
 """Provide the RedditorList class."""
 
-from .base import BaseList
+from asyncpraw.models.list.base import BaseList
 
 
 class RedditorList(BaseList):

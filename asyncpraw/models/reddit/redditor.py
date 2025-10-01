@@ -7,11 +7,10 @@ from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.listing.mixins import RedditorListingMixin
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import FullnameMixin, MessageableMixin
 from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
-
-from .base import RedditBase
-from .mixins import FullnameMixin, MessageableMixin
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncGenerator
@@ -165,7 +164,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase
     def __setattr__(self, name: str, value: Any) -> None:
         """Objectify the subreddit attribute."""
         if name == "subreddit" and value:
-            from .user_subreddit import UserSubreddit  # noqa: PLC0415
+            from asyncpraw.models.reddit.user_subreddit import UserSubreddit  # noqa: PLC0415
 
             value = UserSubreddit(reddit=self._reddit, _data=value)
         super().__setattr__(name, value)

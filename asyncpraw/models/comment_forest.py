@@ -6,8 +6,7 @@ from heapq import heappop, heappush
 from typing import TYPE_CHECKING
 
 from asyncpraw.exceptions import DuplicateReplaceException
-
-from .reddit.more import MoreComments
+from asyncpraw.models.reddit.more import MoreComments
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

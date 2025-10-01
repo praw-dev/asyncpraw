@@ -9,12 +9,11 @@ from asyncprawcore import Conflict
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ReadOnlyException
 from asyncpraw.models import Preferences
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util.cache import cachedproperty
-
-from .base import AsyncPRAWBase
-from .listing.generator import ListingGenerator
-from .reddit.redditor import Redditor
-from .reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

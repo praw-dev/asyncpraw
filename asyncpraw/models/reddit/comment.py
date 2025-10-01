@@ -7,18 +7,12 @@ from typing import TYPE_CHECKING, Any
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException, InvalidURL
 from asyncpraw.models.comment_forest import CommentForest
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import FullnameMixin, InboxableMixin, ThingModerationMixin, UserContentMixin
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.submission import Submission
+from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util.cache import cachedproperty
-
-from .base import RedditBase
-from .mixins import (
-    FullnameMixin,
-    InboxableMixin,
-    ThingModerationMixin,
-    UserContentMixin,
-)
-from .redditor import Redditor
-from .submission import Submission
-from .subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

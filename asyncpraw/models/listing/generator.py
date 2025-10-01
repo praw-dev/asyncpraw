@@ -7,8 +7,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Any
 
 from asyncpraw.models.base import AsyncPRAWBase
-
-from .listing import FlairListing, ModNoteListing
+from asyncpraw.models.listing.listing import FlairListing, ModNoteListing
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw

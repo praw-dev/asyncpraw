@@ -2,20 +2,19 @@
 
 from __future__ import annotations
 
-from typing import AsyncGenerator, TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.submission import Submission
+from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util.cache import cachedproperty
 
-from .base import RedditBase
-from .redditor import Redditor
-from .submission import Submission
-from .subreddit import Subreddit
-
 if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterator
+    from collections.abc import AsyncGenerator, Iterator
 
     import asyncpraw.models
 

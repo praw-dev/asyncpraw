@@ -7,12 +7,11 @@ from typing import TYPE_CHECKING, Any
 from asyncpraw.const import API_PATH
 from asyncpraw.models.list.redditor import RedditorList
 from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import FullnameMixin
+from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
-
-from .base import RedditBase
-from .mixins import FullnameMixin
-from .redditor import Redditor
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator, Iterable

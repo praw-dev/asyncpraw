@@ -6,19 +6,17 @@ from itertools import islice
 from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
-
-from .base import AsyncPRAWBase
-from .listing.generator import ListingGenerator
-from .reddit.comment import Comment
-from .reddit.submission import Submission
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.reddit.comment import Comment
+from asyncpraw.models.reddit.submission import Submission
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncGenerator
 
     import asyncpraw.models
-
-    from .reddit.redditor import Redditor
-    from .reddit.subreddit import Subreddit
+    from asyncpraw.models.reddit.redditor import Redditor
+    from asyncpraw.models.reddit.subreddit import Subreddit
 
 
 class BaseModNotes:

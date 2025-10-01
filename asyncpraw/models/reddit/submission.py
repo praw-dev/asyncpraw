@@ -15,13 +15,12 @@ from asyncpraw.exceptions import InvalidURL
 from asyncpraw.models.comment_forest import CommentForest
 from asyncpraw.models.listing.listing import Listing
 from asyncpraw.models.listing.mixins import SubmissionListingMixin
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import FullnameMixin, ModNoteMixin, ThingModerationMixin, UserContentMixin
+from asyncpraw.models.reddit.poll import PollData
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util import cachedproperty
-
-from .base import RedditBase
-from .mixins import FullnameMixin, ModNoteMixin, ThingModerationMixin, UserContentMixin
-from .poll import PollData
-from .redditor import Redditor
-from .subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Generator

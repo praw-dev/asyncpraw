@@ -5,11 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
-
-from .base import RedditBase
-from .mixins import FullnameMixin, InboxableMixin, ReplyableMixin
-from .redditor import Redditor
-from .subreddit import Subreddit
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import FullnameMixin, InboxableMixin, ReplyableMixin
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.subreddit import Subreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

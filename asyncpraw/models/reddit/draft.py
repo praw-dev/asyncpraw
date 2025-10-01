@@ -6,10 +6,9 @@ from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
-
-from .base import RedditBase
-from .subreddit import Subreddit
-from .user_subreddit import UserSubreddit
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.subreddit import Subreddit
+from asyncpraw.models.reddit.user_subreddit import UserSubreddit
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

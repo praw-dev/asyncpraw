@@ -7,10 +7,9 @@ from urllib.parse import urljoin
 
 from asyncpraw.models.base import AsyncPRAWBase
 from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.listing.mixins.base import BaseListingMixin
+from asyncpraw.models.listing.mixins.rising import RisingListingMixin
 from asyncpraw.util.cache import cachedproperty
-
-from .base import BaseListingMixin
-from .rising import RisingListingMixin
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

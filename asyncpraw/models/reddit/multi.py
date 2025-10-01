@@ -8,11 +8,10 @@ from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.listing.mixins import SubredditListingMixin
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.subreddit import Subreddit, SubredditStream
 from asyncpraw.util.cache import cachedproperty
-
-from .base import RedditBase
-from .redditor import Redditor
-from .subreddit import Subreddit, SubredditStream
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models

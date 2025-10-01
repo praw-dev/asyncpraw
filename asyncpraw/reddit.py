@@ -25,11 +25,11 @@ from asyncprawcore import (
 )
 from asyncprawcore.exceptions import BadRequest
 
-from . import models
-from .config import Config
-from .const import API_PATH, USER_AGENT_FORMAT, __version__
-from .exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
-from .objector import Objector
+from asyncpraw import models
+from asyncpraw.config import Config
+from asyncpraw.const import API_PATH, USER_AGENT_FORMAT, __version__
+from asyncpraw.exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
+from asyncpraw.objector import Objector
 
 try:
     from update_checker import update_check

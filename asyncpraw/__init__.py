@@ -10,5 +10,5 @@ More information about Async PRAW can be found at https://github.com/praw-dev/as
 
 """
 
-from .const import __version__
-from .reddit import Reddit
+from asyncpraw.const import __version__
+from asyncpraw.reddit import Reddit
