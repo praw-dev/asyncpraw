@@ -22,7 +22,7 @@ from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Generator
 
     import asyncpraw.models

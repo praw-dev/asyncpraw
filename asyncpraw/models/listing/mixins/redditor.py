@@ -9,7 +9,7 @@ from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.listing.mixins.base import BaseListingMixin
 from asyncpraw.util.cache import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw.models

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from asyncpraw.models.base import AsyncPRAWBase
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw
 
 

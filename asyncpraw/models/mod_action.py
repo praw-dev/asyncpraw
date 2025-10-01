@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from asyncpraw.models.base import AsyncPRAWBase
 from asyncpraw.models.reddit.redditor import Redditor
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw.models
 
 

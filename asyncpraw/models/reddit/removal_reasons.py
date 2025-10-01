@@ -8,7 +8,7 @@ from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models.reddit.base import RedditBase
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw

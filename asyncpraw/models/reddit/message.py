@@ -10,7 +10,7 @@ from asyncpraw.models.reddit.mixins import FullnameMixin, InboxableMixin, Replya
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.reddit.subreddit import Subreddit
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw.models
 
 

@@ -10,7 +10,7 @@ from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.util.cache import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator
 
     import asyncpraw.models

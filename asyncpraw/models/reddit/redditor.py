@@ -12,7 +12,7 @@ from asyncpraw.models.reddit.mixins import FullnameMixin, MessageableMixin
 from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
     import asyncpraw.models

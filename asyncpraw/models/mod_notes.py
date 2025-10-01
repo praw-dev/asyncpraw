@@ -11,7 +11,7 @@ from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.reddit.comment import Comment
 from asyncpraw.models.reddit.submission import Submission
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
     import asyncpraw.models

@@ -13,7 +13,7 @@ from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator, Iterable
 
     import asyncpraw.models

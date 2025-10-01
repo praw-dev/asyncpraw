@@ -42,7 +42,7 @@ from asyncpraw.models.reddit.wikipage import WikiPage
 from asyncpraw.models.util import permissions_string, stream_generator
 from asyncpraw.util import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator, Iterator
 
     from aiohttp import ClientResponse

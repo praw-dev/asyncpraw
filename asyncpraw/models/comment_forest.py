@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from asyncpraw.exceptions import DuplicateReplaceException
 from asyncpraw.models.reddit.more import MoreComments
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw.models
 
 

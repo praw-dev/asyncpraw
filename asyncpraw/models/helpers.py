@@ -11,7 +11,7 @@ from asyncpraw.models.reddit.draft import Draft
 from asyncpraw.models.reddit.live import LiveThread
 from asyncpraw.models.reddit.multi import Multireddit, Subreddit
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
     import asyncpraw.models

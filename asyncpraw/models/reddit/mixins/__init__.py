@@ -17,7 +17,7 @@ from asyncpraw.models.reddit.mixins.reportable import ReportableMixin
 from asyncpraw.models.reddit.mixins.savable import SavableMixin
 from asyncpraw.models.reddit.mixins.votable import VotableMixin
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw.models
 
 

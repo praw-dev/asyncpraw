@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from asyncpraw.exceptions import ClientException, RedditAPIException
 from asyncpraw.util import snake_case_keys
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw
     from asyncpraw.models.reddit.base import RedditBase
 

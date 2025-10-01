@@ -38,7 +38,7 @@ try:
 except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Iterable
 
     import asyncprawcore

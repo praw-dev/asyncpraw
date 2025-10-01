@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from asyncpraw.models.base import AsyncPRAWBase
 from asyncpraw.models.listing.listing import FlairListing, ModNoteListing
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw
 
 

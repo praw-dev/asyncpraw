@@ -8,7 +8,7 @@ from asyncpraw.const import API_PATH
 from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.util import snake_case_keys
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw
 
 

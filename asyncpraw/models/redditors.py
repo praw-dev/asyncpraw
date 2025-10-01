@@ -13,7 +13,7 @@ from asyncpraw.models.base import AsyncPRAWBase
 from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.util import stream_generator
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator, Iterable
 
     import asyncpraw.models
