@@ -169,6 +169,4 @@ class TestWikiPage(IntegrationTest):
     async def test_revisions__author_deleted(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         page = await subreddit.wiki.get_page("config/submit_text")
-        assert any(
-            [revision["author"] is None async for revision in page.revisions(limit=10)]
-        )
+        assert any([revision["author"] is None async for revision in page.revisions(limit=10)])

@@ -26,9 +26,7 @@ def junk_data():
 
 class TestDomainListing(IntegrationTest):
     async def test_controversial(self, reddit):
-        submissions = await self.async_list(
-            reddit.domain("youtube.com").controversial()
-        )
+        submissions = await self.async_list(reddit.domain("youtube.com").controversial())
         assert len(submissions) == 100
 
     async def test_hot(self, reddit):

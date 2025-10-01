@@ -456,9 +456,7 @@ class RedditorStream:
         """
         return stream_generator(self.redditor.comments.new, **stream_options)
 
-    def submissions(
-        self, **stream_options: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Submission]:
+    def submissions(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions will

@@ -133,23 +133,17 @@ class TestComment(IntegrationTest):
     async def test_refresh__deleted_comment(self, reddit):
         with pytest.raises(ClientException) as excinfo:
             await Comment(reddit, "d7ltvl0").refresh()
-        assert excinfo.value.args == (
-            "This comment does not appear to be in the comment tree",
-        )
+        assert excinfo.value.args == ("This comment does not appear to be in the comment tree",)
 
     async def test_refresh__raises_exception(self, reddit):
         with pytest.raises(ClientException) as excinfo:
             await Comment(reddit, "fx1tgzm").refresh()
-        assert excinfo.value.args == (
-            "This comment does not appear to be in the comment tree",
-        )
+        assert excinfo.value.args == ("This comment does not appear to be in the comment tree",)
 
     async def test_refresh__removed_comment(self, reddit):
         with pytest.raises(ClientException) as excinfo:
             await Comment(reddit, "fx1hmwb").refresh()
-        assert excinfo.value.args == (
-            "This comment does not appear to be in the comment tree",
-        )
+        assert excinfo.value.args == ("This comment does not appear to be in the comment tree",)
 
     async def test_refresh__twice(self, reddit):
         comment = await Comment(reddit, "d81vwef").refresh()
@@ -216,9 +210,7 @@ class TestCommentModeration(IntegrationTest):
         reddit.read_only = False
         comment = await reddit.comment("fx1jgsp")
         await comment.mod.remove()
-        await comment.mod._add_removal_reason(
-            mod_note="Blah", reason_id="157l6k4g6s365"
-        )
+        await comment.mod._add_removal_reason(mod_note="Blah", reason_id="157l6k4g6s365")
 
     async def test_add_removal_reason_without_id(self, reddit):
         reddit.read_only = False

@@ -52,13 +52,9 @@ class TestAuth(UnitTest):
 
     def test_implicit__from_script_app(self, script_app, script_app_with_password):
         with pytest.raises(ClientException):
-            script_app.auth.implicit(
-                access_token="dummy token", expires_in=10, scope=""
-            )
+            script_app.auth.implicit(access_token="dummy token", expires_in=10, scope="")
         with pytest.raises(ClientException):
-            script_app_with_password.auth.implicit(
-                access_token="dummy token", expires_in=10, scope=""
-            )
+            script_app_with_password.auth.implicit(access_token="dummy token", expires_in=10, scope="")
 
     def test_implicit__from_web_app(self, web_app):
         with pytest.raises(ClientException):
@@ -84,9 +80,7 @@ class TestAuth(UnitTest):
         assert "state=dummy+state" in url
 
     async def test_url__installed_app__implicit(self, installed_app):
-        url = installed_app.auth.url(
-            implicit=True, scopes=["dummy scope"], state="dummy state"
-        )
+        url = installed_app.auth.url(implicit=True, scopes=["dummy scope"], state="dummy state")
         assert "client_id=dummy+client" in url
         assert "duration=temporary" in url
         assert "redirect_uri=https://dummy.tld/" in url
@@ -108,8 +102,6 @@ class TestAuth(UnitTest):
             web_app.auth.url(implicit=True, scopes=["dummy scope"], state="dummy state")
 
     async def test_url__web_app_without_redirect_uri(self):
-        async with Reddit(
-            client_id="dummy client", client_secret="dummy secret", user_agent="dummy"
-        ) as reddit:
+        async with Reddit(client_id="dummy client", client_secret="dummy secret", user_agent="dummy") as reddit:
             with pytest.raises(ClientException):
                 reddit.auth.url(scopes=["dummy scope"], state="dummy state")

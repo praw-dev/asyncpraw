@@ -211,10 +211,7 @@ class TestCalendar(IntegrationTest):
 
         assert isinstance(widget, Calendar)
         assert widget.shortName == "Upcoming Events"
-        assert (
-            widget.googleCalendarId
-            == "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
-        )
+        assert widget.googleCalendarId == "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
         assert widget.configuration == config
         assert widget.styles == styles
 
@@ -222,10 +219,7 @@ class TestCalendar(IntegrationTest):
 
         assert isinstance(widget, Calendar)
         assert widget.shortName == "Past Events :("
-        assert (
-            widget.googleCalendarId
-            == "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
-        )
+        assert widget.googleCalendarId == "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
         assert widget.configuration == config
         assert widget.styles == styles
 
@@ -427,9 +421,7 @@ class TestImageWidget(IntegrationTest):
         ]
 
         styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-        widget = await widgets.mod.add_image_widget(
-            short_name="My new pics!", data=image_data, styles=styles
-        )
+        widget = await widgets.mod.add_image_widget(short_name="My new pics!", data=image_data, styles=styles)
 
         assert isinstance(widget, ImageWidget)
         assert widget.shortName == "My new pics!"
@@ -437,9 +429,7 @@ class TestImageWidget(IntegrationTest):
         assert len(widget) == 2
         assert all(isinstance(img, Image) for img in widget)
 
-        widget = await widget.mod.update(
-            shortName="My old pics :(", data=image_data[:1]
-        )
+        widget = await widget.mod.update(shortName="My old pics :(", data=image_data[:1])
 
         assert isinstance(widget, ImageWidget)
         assert widget.shortName == "My old pics :("
@@ -494,11 +484,7 @@ class TestMenu(IntegrationTest):
         assert isinstance(widget, Menu)
         assert len(widget) == 3
         assert all(isinstance(item, (Submenu, MenuLink)) for item in widget)
-        assert all(
-            all(isinstance(item, MenuLink) for item in subm)
-            for subm in widget
-            if isinstance(subm, Submenu)
-        )
+        assert all(all(isinstance(item, MenuLink) for item in subm) for subm in widget if isinstance(subm, Submenu))
 
         assert widget[0].text == "My homepage"
         assert widget[0].url == "https://example.com"
@@ -517,11 +503,7 @@ class TestMenu(IntegrationTest):
         assert isinstance(widget, Menu)
         assert len(widget) == 3
         assert all(isinstance(item, (Submenu, MenuLink)) for item in widget)
-        assert all(
-            all(isinstance(item, MenuLink) for item in subm)
-            for subm in widget
-            if isinstance(subm, Submenu)
-        )
+        assert all(all(isinstance(item, MenuLink) for item in subm) for subm in widget if isinstance(subm, Submenu))
 
         assert widget[0].text == "Reddit homepage"
         assert widget[0].url == "https://reddit.com"
@@ -759,10 +741,7 @@ class TestSubredditWidgets(IntegrationTest):
     async def test_sidebar(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        sidebar = [
-            isinstance(widget, Widget) and type(widget) is not Widget
-            async for widget in widgets.sidebar()
-        ]
+        sidebar = [isinstance(widget, Widget) and type(widget) is not Widget async for widget in widgets.sidebar()]
         assert all(sidebar)
 
     async def test_specials(self, reddit):
@@ -775,12 +754,7 @@ class TestSubredditWidgets(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         assert 1 <= len(await self.async_list(widgets.topbar()))
-        assert all(
-            [
-                isinstance(widget, Widget) and type(widget) is not Widget
-                async for widget in widgets.topbar()
-            ]
-        )
+        assert all([isinstance(widget, Widget) and type(widget) is not Widget async for widget in widgets.topbar()])
 
 
 class TestSubredditWidgetsModeration(IntegrationTest):
@@ -804,9 +778,7 @@ class TestSubredditWidgetsModeration(IntegrationTest):
         order = await self.async_list(widgets.sidebar())
         assert order == new_order
 
-        mixed_types = [
-            thing if i % 2 == 0 else thing.id for i, thing in enumerate(new_order)
-        ]
+        mixed_types = [thing if i % 2 == 0 else thing.id for i, thing in enumerate(new_order)]
         # mixed_types has some str and some Widget.
         assert any(isinstance(thing, str) for thing in mixed_types)
         assert any(isinstance(thing, Widget) for thing in mixed_types)
@@ -832,9 +804,7 @@ class TestTextArea(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-        widget = await widgets.mod.add_text_area(
-            short_name="My new widget!", text="Hello world!", styles=styles
-        )
+        widget = await widgets.mod.add_text_area(short_name="My new widget!", text="Hello world!", styles=styles)
 
         assert isinstance(widget, TextArea)
         assert widget.shortName == "My new widget!"

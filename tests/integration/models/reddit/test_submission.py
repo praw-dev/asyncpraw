@@ -15,9 +15,7 @@ class TestSubmission(IntegrationTest):
         return {"gif1": gif, "image1": image, "video1": video}
 
     @staticmethod
-    async def _new_submission_instance(
-        reddit, submission_id, return_rtjson=False, fetch=True
-    ):
+    async def _new_submission_instance(reddit, submission_id, return_rtjson=False, fetch=True):
         submission = Submission(reddit, submission_id)
         submission.add_fetch_param("rtj", "all")
         if fetch:
@@ -66,9 +64,7 @@ class TestSubmission(IntegrationTest):
         subreddit = pytest.placeholders.test_subreddit
         crosspost_parent = await reddit.submission("6vx01b")
 
-        submission = await crosspost_parent.crosspost(
-            subreddit, flair_id=flair_id, flair_text=flair_text
-        )
+        submission = await crosspost_parent.crosspost(subreddit, flair_id=flair_id, flair_text=flair_text)
         await submission.load()
         assert submission.link_flair_css_class == flair_class
         assert submission.link_flair_text == flair_text
@@ -137,38 +133,25 @@ class TestSubmission(IntegrationTest):
         # 4th
         reddit.read_only = False
         inline_media = self._inline_media(image_path)
-        submission, original_rtjson = await self._new_submission_instance(
-            reddit, "mcqjl8", True
-        )
+        submission, original_rtjson = await self._new_submission_instance(reddit, "mcqjl8", True)
         submission2 = await self._new_submission_instance(reddit, "mcqjl8", fetch=False)
-        new_selftext = (
-            "\n\nNew text with a gif {gif1} an image {image1} and a video {video1}"
-            " inline"
-        )
+        new_selftext = "\n\nNew text with a gif {gif1} an image {image1} and a video {video1} inline"
         await submission._edit_experimental(
             submission.selftext + new_selftext,
             inline_media=inline_media,
             preserve_inline_media=True,
         )
         await submission2.load()
-        added_rtjson = await submission2.subreddit._convert_to_fancypants(
-            new_selftext.format(**inline_media)
-        )
-        assert (
-            original_rtjson["document"] + added_rtjson["document"]
-        ) == submission2.rtjson["document"]
+        added_rtjson = await submission2.subreddit._convert_to_fancypants(new_selftext.format(**inline_media))
+        assert (original_rtjson["document"] + added_rtjson["document"]) == submission2.rtjson["document"]
 
     async def test_edit__existing_inline_media(self, reddit):
         # 3rd
         reddit.read_only = False
-        submission, original_rtjson = await self._new_submission_instance(
-            reddit, "mcqjl8", True
-        )
+        submission, original_rtjson = await self._new_submission_instance(reddit, "mcqjl8", True)
         submission2 = await self._new_submission_instance(reddit, "mcqjl8", fetch=False)
         assert not submission2._fetched
-        await submission._edit_experimental(
-            submission.selftext, preserve_inline_media=True
-        )
+        await submission._edit_experimental(submission.selftext, preserve_inline_media=True)
         await submission2.load()
         assert original_rtjson == submission2.rtjson
 
@@ -183,25 +166,16 @@ class TestSubmission(IntegrationTest):
         # 2nd
         reddit.read_only = False
         inline_media = self._inline_media(image_path)
-        submission, original_rtjson = await self._new_submission_instance(
-            reddit, "mcqjl8", True
-        )
+        submission, original_rtjson = await self._new_submission_instance(reddit, "mcqjl8", True)
         submission2 = await self._new_submission_instance(reddit, "mcqjl8", fetch=False)
-        additional_selftext = (
-            "\n\nNew Text with a gif {gif1} an image {image1} and a video {video1}"
-            " inline"
-        )
+        additional_selftext = "\n\nNew Text with a gif {gif1} an image {image1} and a video {video1} inline"
         await submission._edit_experimental(
             submission.selftext + additional_selftext,
             inline_media=inline_media,
         )
         await submission2.load()
-        added_rtjson = await submission2.subreddit._convert_to_fancypants(
-            additional_selftext.format(**inline_media)
-        )
-        assert (
-            original_rtjson["document"] + added_rtjson["document"]
-        ) == submission2.rtjson["document"]
+        added_rtjson = await submission2.subreddit._convert_to_fancypants(additional_selftext.format(**inline_media))
+        assert (original_rtjson["document"] + added_rtjson["document"]) == submission2.rtjson["document"]
 
     async def test_edit_invalid(self, reddit):
         reddit.read_only = False
@@ -238,10 +212,7 @@ class TestSubmission(IntegrationTest):
         with pytest.raises(AttributeError) as excinfo:
             submission = await reddit.submission("2gmzqe")
             submission.invalid_attribute
-        assert (
-            excinfo.value.args[0]
-            == "'Submission' object has no attribute 'invalid_attribute'"
-        )
+        assert excinfo.value.args[0] == "'Submission' object has no attribute 'invalid_attribute'"
 
     async def test_mark_visited(self, reddit):
         reddit.read_only = False
@@ -333,9 +304,7 @@ class TestSubmissionModeration(IntegrationTest):
         reddit.read_only = False
         submission = Submission(reddit, "hmkbt8")
         await submission.mod.remove()
-        await submission.mod._add_removal_reason(
-            mod_note="Foobar", reason_id="159bqhvme3rxe"
-        )
+        await submission.mod._add_removal_reason(mod_note="Foobar", reason_id="159bqhvme3rxe")
 
     async def test_add_removal_reason_without_id(self, reddit):
         reddit.read_only = False
@@ -385,9 +354,7 @@ class TestSubmissionModeration(IntegrationTest):
 
     async def test_flair_just_template_id(self, reddit):
         reddit.read_only = False
-        await Submission(reddit, "hmkbt8").mod.flair(
-            flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256"
-        )
+        await Submission(reddit, "hmkbt8").mod.flair(flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256")
 
     async def test_flair_template_id(self, reddit):
         reddit.read_only = False
@@ -398,9 +365,7 @@ class TestSubmissionModeration(IntegrationTest):
 
     async def test_flair_text_and_css_class(self, reddit):
         reddit.read_only = False
-        await Submission(reddit, "hmkbt8").mod.flair(
-            text="submission flair", css_class="submission flair"
-        )
+        await Submission(reddit, "hmkbt8").mod.flair(text="submission flair", css_class="submission flair")
 
     async def test_flair_text_only(self, reddit):
         reddit.read_only = False
@@ -520,11 +485,7 @@ class TestSubmissionModeration(IntegrationTest):
         reddit.read_only = False
         submission = await reddit.submission("ol4d5w")
         await submission.mod.update_crowd_control_level(2)
-        modlog = await self.async_next(
-            submission.subreddit.mod.log(
-                action="adjust_post_crowd_control_level", limit=1
-            )
-        )
+        modlog = await self.async_next(submission.subreddit.mod.log(action="adjust_post_crowd_control_level", limit=1))
         assert modlog.action == "adjust_post_crowd_control_level"
         assert modlog.details == "medium"
         assert modlog.target_fullname == submission.fullname

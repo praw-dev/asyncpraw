@@ -8,6 +8,4 @@ from .... import UnitTest
 class TestThingModerationMixin(UnitTest):
     async def test_must_be_extended(self):
         with pytest.raises(NotImplementedError):
-            await ThingModerationMixin().send_removal_message(
-                message="public", title="title", type="message"
-            )
+            await ThingModerationMixin().send_removal_message(message="public", title="title", type="message")

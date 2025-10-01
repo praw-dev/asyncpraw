@@ -33,9 +33,7 @@ class TestEmoji(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         emoji = await subreddit.emoji.get_emoji("test_png")
-        await emoji.update(
-            mod_flair_only=False, post_flair_allowed=True, user_flair_allowed=True
-        )
+        await emoji.update(mod_flair_only=False, post_flair_allowed=True, user_flair_allowed=True)
 
     async def test_update__with_preexisting_values(self, reddit):
         reddit.read_only = False

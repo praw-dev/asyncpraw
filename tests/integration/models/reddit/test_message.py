@@ -18,9 +18,7 @@ class TestMessage(IntegrationTest):
                 assert message.author is None or isinstance(message.author, Redditor)
                 assert isinstance(message.dest, (Redditor, Subreddit))
                 assert isinstance(message.replies, list)
-                assert message.subreddit is None or isinstance(
-                    message.subreddit, Subreddit
-                )
+                assert message.subreddit is None or isinstance(message.subreddit, Subreddit)
             except Exception:
                 import pprint
 
@@ -88,11 +86,7 @@ class TestMessage(IntegrationTest):
         assert not parent._fetched
         with pytest.raises(AttributeError) as excinfo:
             _ = parent.parent
-            assert (
-                excinfo.value.args[0]
-                == "Message must be fetched with `.load()` before accessing the"
-                " parent."
-            )
+            assert excinfo.value.args[0] == "Message must be fetched with `.load()` before accessing the parent."
         await parent.load()
         assert isinstance(parent.parent, Message)
         assert parent.body

@@ -32,7 +32,6 @@ class TestInlineMedia(UnitTest):
         assert hash(media2) != hash(media3)
         assert hash(media1) != hash(media3)
 
-
     def test_hash(self):
         media1 = InlineMedia(path="path1", caption="caption1")
         media1.media_id = "media_id1"

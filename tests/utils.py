@@ -23,10 +23,7 @@ def ensure_environment_variables():
             raise ValueError(msg)
     auth_set = False
     for auth_keys in [["refresh_token"], ["username", "password"]]:
-        if all(
-            getattr(pytest.placeholders, key) != f"placeholder_{key}"
-            for key in auth_keys
-        ):
+        if all(getattr(pytest.placeholders, key) != f"placeholder_{key}" for key in auth_keys):
             auth_set = True
             break
     if not auth_set:
@@ -54,9 +51,7 @@ def filter_access_token(response):
     body = response["body"]["string"].decode()
     try:
         token = json.loads(body)["access_token"]
-        response["body"]["string"] = response["body"]["string"].replace(
-            token.encode("utf-8"), b"<ACCESS_TOKEN>"
-        )
+        response["body"]["string"] = response["body"]["string"].replace(token.encode("utf-8"), b"<ACCESS_TOKEN>")
         _placeholders["access_token"] = token
     except (KeyError, TypeError, ValueError):
         pass
@@ -87,8 +82,7 @@ class CustomPersister(FilesystemPersister):
         except OSError:
             raise ValueError("Cassette not found.")
         for replacement, value in [
-            (v, f"<{k.upper()}>")
-            for k, v in {**cls.additional_placeholders, **_placeholders}.items()
+            (v, f"<{k.upper()}>") for k, v in {**cls.additional_placeholders, **_placeholders}.items()
         ]:
             cassette_content = cassette_content.replace(value, replacement)
         cassette = deserialize(cassette_content, serializer)
@@ -99,8 +93,7 @@ class CustomPersister(FilesystemPersister):
         """Save cassette."""
         data = serialize(cassette_dict, serializer)
         for replacement, value in [
-            (f"<{k.upper()}>", v)
-            for k, v in {**cls.additional_placeholders, **_placeholders}.items()
+            (f"<{k.upper()}>", v) for k, v in {**cls.additional_placeholders, **_placeholders}.items()
         ]:
             data = data.replace(value, replacement)
         dirname, filename = os.path.split(cassette_path)

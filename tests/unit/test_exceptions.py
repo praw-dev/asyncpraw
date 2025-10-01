@@ -39,8 +39,7 @@ class TestDuplicateReplaceException:
 
     def test_message(self):
         assert (
-            str(DuplicateReplaceException())
-            == "A duplicate comment has been detected. Are you attempting to call"
+            str(DuplicateReplaceException()) == "A duplicate comment has been detected. Are you attempting to call"
             " 'replace_more_comments' more than once?"
         )
 
@@ -62,27 +61,20 @@ class TestInvalidImplicitAuth:
         assert issubclass(InvalidImplicitAuth, ClientException)
 
     def test_message(self):
-        assert (
-            str(InvalidImplicitAuth())
-            == "Implicit authorization can only be used with installed apps."
-        )
+        assert str(InvalidImplicitAuth()) == "Implicit authorization can only be used with installed apps."
 
 
 class TestInvalidURL:
     def test_custom_message(self):
         assert (
-            str(InvalidURL("https://www.google.com", message="Test custom {}"))
-            == "Test custom https://www.google.com"
+            str(InvalidURL("https://www.google.com", message="Test custom {}")) == "Test custom https://www.google.com"
         )
 
     def test_inheritance(self):
         assert issubclass(InvalidURL, ClientException)
 
     def test_message(self):
-        assert (
-            str(InvalidURL("https://www.google.com"))
-            == "Invalid URL: https://www.google.com"
-        )
+        assert str(InvalidURL("https://www.google.com")) == "Invalid URL: https://www.google.com"
 
 
 class TestMediaPostFailed:
@@ -91,8 +83,7 @@ class TestMediaPostFailed:
 
     def test_message(self):
         assert (
-            str(MediaPostFailed())
-            == "The attempted media upload action has failed. Possible causes include"
+            str(MediaPostFailed()) == "The attempted media upload action has failed. Possible causes include"
             " the corruption of media files. Check that the media file can be opened"
             " on your local machine."
         )
@@ -104,9 +95,7 @@ class TestMissingRequiredAttributeException:
 
     def test_str(self):
         assert str(MissingRequiredAttributeException()) == ""
-        assert (
-            str(MissingRequiredAttributeException("error message")) == "error message"
-        )
+        assert str(MissingRequiredAttributeException("error message")) == "error message"
 
 
 class TestRedditAPIException:
@@ -114,14 +103,10 @@ class TestRedditAPIException:
         assert issubclass(RedditAPIException, AsyncPRAWException)
 
     def test_items(self):
-        container = RedditAPIException(
-            [
-                ["BAD_SOMETHING", "invalid something", "some_field"],
-                RedditErrorItem(
-                    "BAD_SOMETHING", field="some_field", message="invalid something"
-                ),
-            ]
-        )
+        container = RedditAPIException([
+            ["BAD_SOMETHING", "invalid something", "some_field"],
+            RedditErrorItem("BAD_SOMETHING", field="some_field", message="invalid something"),
+        ])
         for exception in container.items:
             assert isinstance(exception, RedditErrorItem)
 
@@ -149,28 +134,18 @@ class TestRedditErrorItem:
         assert hash(error) == hash(error2)
 
     def test_property(self):
-        error = RedditErrorItem(
-            "BAD_SOMETHING", field="some_field", message="invalid something"
-        )
-        assert (
-            error.error_message
-            == "BAD_SOMETHING: 'invalid something' on field 'some_field'"
-        )
+        error = RedditErrorItem("BAD_SOMETHING", field="some_field", message="invalid something")
+        assert error.error_message == "BAD_SOMETHING: 'invalid something' on field 'some_field'"
 
     def test_repr(self):
-        error = RedditErrorItem(
-            "BAD_SOMETHING", field="some_field", message="invalid something"
-        )
+        error = RedditErrorItem("BAD_SOMETHING", field="some_field", message="invalid something")
         assert (
-            repr(error)
-            == "RedditErrorItem(error_type='BAD_SOMETHING', message='invalid"
+            repr(error) == "RedditErrorItem(error_type='BAD_SOMETHING', message='invalid"
             " something', field='some_field')"
         )
 
     def test_str(self):
-        error = RedditErrorItem(
-            "BAD_SOMETHING", field="some_field", message="invalid something"
-        )
+        error = RedditErrorItem("BAD_SOMETHING", field="some_field", message="invalid something")
         assert str(error) == "BAD_SOMETHING: 'invalid something' on field 'some_field'"
 
 

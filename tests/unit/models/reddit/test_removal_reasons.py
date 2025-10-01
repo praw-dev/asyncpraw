@@ -13,18 +13,10 @@ class TestRemovalReason(UnitTest):
         assert isinstance(removal_reason, RemovalReason)
 
     def test_equality(self, reddit):
-        reason1 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="a"), id="x"
-        )
-        reason2 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="a"), id="2"
-        )
-        reason3 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="b"), id="1"
-        )
-        reason4 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="A"), id="x"
-        )
+        reason1 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="x")
+        reason2 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="2")
+        reason3 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="b"), id="1")
+        reason4 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="A"), id="x")
         reason5 = RemovalReason(
             reddit,
             subreddit=Subreddit(reddit, display_name="a"),
@@ -59,18 +51,10 @@ class TestRemovalReason(UnitTest):
             )
 
     def test_hash(self, reddit):
-        reason1 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="a"), id="x"
-        )
-        reason2 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="a"), id="2"
-        )
-        reason3 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="b"), id="1"
-        )
-        reason4 = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="A"), id="x"
-        )
+        reason1 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="x")
+        reason2 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="2")
+        reason3 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="b"), id="1")
+        reason4 = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="A"), id="x")
         reason5 = RemovalReason(
             reddit,
             subreddit=Subreddit(reddit, display_name="a"),
@@ -85,15 +69,11 @@ class TestRemovalReason(UnitTest):
         assert hash(reason1) != hash(reason5)
 
     def test_repr(self, reddit):
-        reason = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="a"), id="x"
-        )
+        reason = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="x")
         assert repr(reason) == "RemovalReason(id='x')"
 
     def test_str(self, reddit):
-        reason = RemovalReason(
-            reddit, subreddit=Subreddit(reddit, display_name="a"), id="x"
-        )
+        reason = RemovalReason(reddit, subreddit=Subreddit(reddit, display_name="a"), id="x")
         assert str(reason) == "x"
 
 

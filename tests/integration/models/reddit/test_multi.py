@@ -16,9 +16,7 @@ class TestMultireddit(IntegrationTest):
 
     async def test_copy(self, reddit):
         reddit.read_only = False
-        multi = await reddit.multireddit(
-            redditor="kjoneslol", name="sfwpornnetwork", fetch=True
-        )
+        multi = await reddit.multireddit(redditor="kjoneslol", name="sfwpornnetwork", fetch=True)
         new = await multi.copy()
         assert new.name == multi.name
         assert new.display_name == multi.display_name
@@ -35,9 +33,7 @@ class TestMultireddit(IntegrationTest):
 
     async def test_create(self, reddit):
         reddit.read_only = False
-        multireddit = await reddit.multireddit.create(
-            display_name="Async PRAW create test", subreddits=["redditdev"]
-        )
+        multireddit = await reddit.multireddit.create(display_name="Async PRAW create test", subreddits=["redditdev"])
         assert multireddit.display_name == "Async PRAW create test"
         assert multireddit.name == "async_praw_create_test"
 
@@ -56,9 +52,7 @@ class TestMultireddit(IntegrationTest):
         assert "redditdev" not in multi.subreddits
 
     async def test_subreddits(self, reddit):
-        multi = await reddit.multireddit(
-            redditor="kjoneslol", name="sfwpornnetwork", fetch=True
-        )
+        multi = await reddit.multireddit(redditor="kjoneslol", name="sfwpornnetwork", fetch=True)
         assert multi.subreddits
         assert all(isinstance(x, Subreddit) for x in multi.subreddits)
 

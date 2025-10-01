@@ -37,9 +37,7 @@ class IntegrationTest(HelperMethodMixin):
         yield
         unused_cassettes = existing_cassettes - used_cassettes
         if unused_cassettes and os.getenv("ENSURE_NO_UNUSED_CASSETTES", "0") == "1":
-            raise AssertionError(
-                f"The following cassettes are unused: {', '.join(unused_cassettes)}."
-            )
+            raise AssertionError(f"The following cassettes are unused: {', '.join(unused_cassettes)}.")
 
     @pytest.fixture(autouse=True)
     def cassette(self, request, recorder, cassette_name):
@@ -95,11 +93,7 @@ class IntegrationTest(HelperMethodMixin):
         reddit_kwargs = {
             "client_id": pytest.placeholders.client_id,
             "client_secret": pytest.placeholders.client_secret,
-            "requestor_kwargs": {
-                "session": aiohttp.ClientSession(
-                    headers={"Accept-Encoding": "identity"}
-                )
-            },
+            "requestor_kwargs": {"session": aiohttp.ClientSession(headers={"Accept-Encoding": "identity"})},
             "user_agent": pytest.placeholders.user_agent,
         }
 

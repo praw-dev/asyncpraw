@@ -63,7 +63,9 @@ class Modmail:
 
     """
 
-    async def __call__(self, id: str | None = None, *, mark_read: bool = False, fetch: bool = True) -> ModmailConversation:
+    async def __call__(
+        self, id: str | None = None, *, mark_read: bool = False, fetch: bool = True
+    ) -> ModmailConversation:
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``"2gmz"``.
@@ -3024,7 +3026,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data) as response:
                 yield response
 
-    async def _submit_media(self, *, data: dict[Any, Any], timeout: int, without_websockets: bool) -> asyncpraw.models.Submission | None:
+    async def _submit_media(
+        self, *, data: dict[Any, Any], timeout: int, without_websockets: bool
+    ) -> asyncpraw.models.Submission | None:
         """Submit and return an ``image``, ``video``, or ``videogif``.
 
         This is a helper method for submitting posts that are not link posts or self

@@ -89,16 +89,12 @@ class TestUser(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         submission_list = []
         for i in range(1, 5):
-            submission = await subreddit.submit(
-                title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}"
-            )
+            submission = await subreddit.submit(title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}")
             submission_list.append(submission)
             await reddit.user.pin(submission)
 
         for i in range(5, 9):
-            await subreddit.submit(
-                title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}"
-            )
+            await subreddit.submit(title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}")
         new_posts = await self.async_list((await reddit.user.me()).new(limit=4))
         new_posts.reverse()
         assert new_posts == submission_list
@@ -123,9 +119,7 @@ class TestUser(IntegrationTest):
         new_posts.reverse()
         for i in range(2, 4):
             await reddit.user.pin(new_posts[i], state=False)
-        submission = await subreddit.submit(
-            title="Async PRAW Test 5", selftext="Testing .pin method 5"
-        )
+        submission = await subreddit.submit(title="Async PRAW Test 5", selftext="Testing .pin method 5")
         await reddit.user.pin(submission, num=4)
         new_posts = await self.async_list((await reddit.user.me()).new(limit=4))
         new_posts.reverse()
@@ -148,9 +142,7 @@ class TestUser(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         submission_list = []
         for i in range(1, 5):
-            submission = await subreddit.submit(
-                title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}"
-            )
+            submission = await subreddit.submit(title=f"Async PRAW Test {i}", selftext=f"Testing .pin method {i}")
             submission_list.append(submission)
         submission_list.reverse()
         for num, submission in enumerate(submission_list, 1):
@@ -165,10 +157,7 @@ class TestUser(IntegrationTest):
         async for post in (await reddit.user.me()).new(limit=4):
             await reddit.user.pin(post, state=False)
             unpinned_posts.add(post.title)
-        new_posts = {
-            submission.title
-            async for submission in (await reddit.user.me()).new(limit=4)
-        }
+        new_posts = {submission.title async for submission in (await reddit.user.me()).new(limit=4)}
         assert unpinned_posts != new_posts
 
     async def test_pin__remove_num(self, reddit):
@@ -187,9 +176,7 @@ class TestUser(IntegrationTest):
         reddit.read_only = False
         reddit.validate_on_submit = True
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit(
-            title="Async PRAW Test replace slot 1", selftext="Testing .pin method 1"
-        )
+        submission = await subreddit.submit(title="Async PRAW Test replace slot 1", selftext="Testing .pin method 1")
         await reddit.user.pin(submission, num=1)
         new_posts = await self.async_list((await reddit.user.me()).new(limit=4))
         new_posts.reverse()

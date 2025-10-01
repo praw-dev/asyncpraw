@@ -23,9 +23,7 @@ class TestConfig:
         os.environ[environment] = "/MOCK"
 
         module_dir = Path(sys.modules["asyncpraw"].__file__).parent
-        environ_path = (
-            Path("/MOCK") / (".config" if environment == "HOME" else "") / "praw.ini"
-        )
+        environ_path = Path("/MOCK") / (".config" if environment == "HOME" else "") / "praw.ini"
         locations = [
             str(module_dir / "praw.ini"),
             str(environ_path),
