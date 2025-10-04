@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from urllib.parse import urljoin
 
-from ...base import AsyncPRAWBase
-from ..generator import ListingGenerator
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

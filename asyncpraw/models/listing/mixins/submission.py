@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import TYPE_CHECKING
 
-from ....const import API_PATH
-from ...base import AsyncPRAWBase
-from ..generator import ListingGenerator
+from asyncpraw.const import API_PATH
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator

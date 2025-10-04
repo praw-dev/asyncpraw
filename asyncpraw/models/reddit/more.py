@@ -4,15 +4,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ..base import AsyncPRAWBase
+from asyncpraw.const import API_PATH
+from asyncpraw.models.base import AsyncPRAWBase
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw.models
 
 
 class MoreComments(AsyncPRAWBase):
     """A class indicating there are more comments."""
+
+    MAX_COMMENTS_IN_REPR = 4
 
     def __eq__(self, other: str | MoreComments) -> bool:
         """Return ``True`` if these :class:`.MoreComments` instances are the same."""
@@ -24,7 +26,7 @@ class MoreComments(AsyncPRAWBase):
         """Return the hash of the current instance."""
         return hash(self.__class__.__name__) ^ hash(str(self))
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.MoreComments` instance."""
         self.count = self.parent_id = None
         self.children = []
@@ -41,12 +43,12 @@ class MoreComments(AsyncPRAWBase):
 
     def __repr__(self) -> str:
         """Return an object initialization representation of the instance."""
-        children = self.children[:4]
-        if len(self.children) > 4:
+        children = self.children[: self.MAX_COMMENTS_IN_REPR]
+        if len(self.children) > self.MAX_COMMENTS_IN_REPR:
             children[-1] = "..."
         return f"<{self.__class__.__name__} count={self.count}, children={children!r}>"
 
-    async def _continue_comments(self, update: bool):
+    async def _continue_comments(self, *, update: bool) -> list[asyncpraw.models.Comment]:
         assert not self.children, "Please file a bug report with Async PRAW."
         parent = await self._load_comment(self.parent_id.split("_", 1)[1])
         self._comments = parent.replies
@@ -55,7 +57,7 @@ class MoreComments(AsyncPRAWBase):
                 comment.submission = self.submission
         return self._comments
 
-    async def _load_comment(self, comment_id: str):
+    async def _load_comment(self, comment_id: str) -> asyncpraw.models.Comment:
         path = f"{API_PATH['submission'].format(id=self.submission.id)}_/{comment_id}"
         _, comments = await self._reddit.get(
             path,
@@ -71,7 +73,7 @@ class MoreComments(AsyncPRAWBase):
         """Fetch and return the comments for a single :class:`.MoreComments` object."""
         if self._comments is None:
             if self.count == 0:  # Handle "continue this thread"
-                return await self._continue_comments(update)
+                return await self._continue_comments(update=update)
             assert self.children, "Please file a bug report with Async PRAW."
             data = {
                 "children": ",".join(self.children),

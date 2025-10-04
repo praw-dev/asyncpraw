@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..const import API_PATH
-from . import Subreddit
-from .base import AsyncPRAWBase
-from .listing.generator import ListingGenerator
-from .util import stream_generator
+from asyncpraw.const import API_PATH
+from asyncpraw.models import Subreddit
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.util import stream_generator
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw.models
@@ -123,7 +123,6 @@ class Subreddits(AsyncPRAWBase):
         )
         for result in results["names"]:
             yield await self._reddit.subreddit(result)
-
 
     def stream(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Yield new subreddits as they are created.

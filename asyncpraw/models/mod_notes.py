@@ -5,19 +5,18 @@ from __future__ import annotations
 from itertools import islice
 from typing import TYPE_CHECKING, Any
 
-from ..const import API_PATH
-from .base import AsyncPRAWBase
-from .listing.generator import ListingGenerator
-from .reddit.comment import Comment
-from .reddit.submission import Submission
+from asyncpraw.const import API_PATH
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.reddit.comment import Comment
+from asyncpraw.models.reddit.submission import Submission
 
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import AsyncGenerator
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
 
     import asyncpraw.models
-
-    from .reddit.redditor import Redditor
-    from .reddit.subreddit import Subreddit
+    from asyncpraw.models.reddit.redditor import Redditor
+    from asyncpraw.models.reddit.subreddit import Subreddit
 
 
 class BaseModNotes:
@@ -26,7 +25,7 @@ class BaseModNotes:
     def __init__(
         self,
         reddit: asyncpraw.Reddit,
-    ):
+    ) -> None:
         """Initialize a :class:`.BaseModNotes` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -39,7 +38,7 @@ class BaseModNotes:
         redditor: Redditor | str,
         subreddit: Subreddit | str,
         **generator_kwargs: Any,
-    ):
+    ) -> ListingGenerator:
         AsyncPRAWBase._safely_add_arguments(
             arguments=generator_kwargs,
             key="params",
@@ -50,7 +49,7 @@ class BaseModNotes:
 
     async def _bulk_generator(
         self, redditors: list[Redditor | str], subreddits: list[Subreddit | str]
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
         subreddits_iter = iter(subreddits)
         redditors_iter = iter(redditors)
         while True:
@@ -64,22 +63,23 @@ class BaseModNotes:
             }
             response = await self._reddit.get(API_PATH["mod_notes_bulk"], params=params)
             for note_dict in response["mod_notes"]:
-                yield self._reddit._objector.objectify(note_dict)
+                yield self._reddit._objector.objectify(data=note_dict)
 
     def _ensure_attribute(self, error_message: str, **attributes: Any) -> Any:
-        attribute, _value = attributes.popitem()
-        value = _value or getattr(self, attribute, None)
+        attribute, value_ = attributes.popitem()
+        value = value_ or getattr(self, attribute, None)
         if value is None:
             raise TypeError(error_message)
         return value
 
     async def _notes(
         self,
+        *,
         all_notes: bool,
         redditors: list[Redditor | str],
         subreddits: list[Subreddit | str],
         **generator_kwargs: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
         if all_notes:
             for subreddit in subreddits:
                 for redditor in redditors:
@@ -156,7 +156,7 @@ class BaseModNotes:
                 # this is to minimize the number of requests
                 if not (getattr(self, "redditor", redditor) and getattr(self, "subreddit", subreddit)):
                     # only fetch if we are missing either redditor or subreddit
-                    thing = [thing async for thing in self._reddit.info(fullnames=[thing])][0]
+                    thing = [thing async for thing in self._reddit.info(fullnames=[thing])][0]  # noqa: RUF015
             else:
                 reddit_id = thing.fullname
             redditor = getattr(self, "redditor", redditor) or thing.author
@@ -191,7 +191,7 @@ class BaseModNotes:
         note_id: str | None = None,
         redditor: Redditor | str | None = None,
         subreddit: Subreddit | str | None = None,
-    ):
+    ) -> None:
         """Delete note(s) for a redditor.
 
         :param delete_all: When ``True``, delete all notes for the specified redditor in
@@ -268,7 +268,7 @@ class BaseModNotes:
             msg = "Either 'note_id' or 'delete_all' must be provided."
             raise TypeError(msg)
         if delete_all:
-            async for note in self._notes(True, [redditor], [subreddit]):
+            async for note in self._notes(all_notes=True, redditors=[redditor], subreddits=[subreddit]):
                 await note.delete()
         else:
             params = {
@@ -277,198 +277,6 @@ class BaseModNotes:
                 "note_id": note_id,
             }
             await self._reddit.delete(API_PATH["mod_notes"], params=params)
-
-
-class RedditorModNotes(BaseModNotes):
-    """Provides methods to interact with moderator notes at the redditor level.
-
-    .. note::
-
-        The authenticated user must be a moderator of the provided subreddit(s).
-
-    For example, all the notes for u/spez in r/test can be iterated through like so:
-
-    .. code-block:: python
-
-        redditor = await reddit.redditor("spez")
-
-        async for note in redditor.notes.subreddits("test"):
-            print(f"{note.label}: {note.note}")
-
-    """
-
-    def __init__(self, reddit: asyncpraw.Reddit, redditor: Redditor | str):
-        """Initialize a :class:`.RedditorModNotes` instance.
-
-        :param reddit: An instance of :class:`.Reddit`.
-        :param redditor: An instance of :class:`.Redditor`.
-
-        """
-        super().__init__(reddit)
-        self.redditor = redditor
-
-    def subreddits(
-        self,
-        *subreddits: Subreddit | str,
-        all_notes: bool | None = None,
-        **generator_kwargs: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
-        """Return notes for this :class:`.Redditor` from one or more subreddits.
-
-        :param subreddits: One or more subreddits to retrieve the notes from. Must be
-            either a :class:`.Subreddit` or a subreddit name.
-        :param all_notes: Whether to return all notes or only the latest note (default:
-            ``True`` if only one subreddit is provided otherwise ``False``).
-
-            .. note::
-
-                Setting this to ``True`` will result in a request for each subreddit.
-
-
-        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
-            if this redditor doesn't have any notes) per subreddit in their relative
-            order. If ``all_notes`` is ``True``, this will yield all notes or ``None``
-            from each subreddit for this redditor.
-
-        For example, all the notes for u/spez in r/test can be iterated through like so:
-
-        .. code-block:: python
-
-            redditor = await reddit.redditor("spez")
-
-            async for note in redditor.notes.subreddits("test"):
-                print(f"{note.label}: {note.note}")
-
-        For example, the latest note for u/spez from r/test and r/redditdev can be
-        iterated through like so:
-
-        .. code-block:: python
-
-            redditor = await reddit.redditor("spez")
-            subreddit = await reddit.subreddit("redditdev")
-
-            async for note in redditor.notes.subreddits("test", subreddit):
-                print(f"{note.label}: {note.note}")
-
-        For example, **all** the notes for u/spez in r/test and r/redditdev can be
-        iterated through like so:
-
-        .. code-block:: python
-
-            redditor = await reddit.redditor("spez")
-            subreddit = await reddit.subreddit("redditdev")
-
-            async for note in redditor.notes.subreddits("test", subreddit, all_notes=True):
-                print(f"{note.label}: {note.note}")
-
-        """
-        if len(subreddits) == 0:
-            msg = "At least 1 subreddit must be provided."
-            raise ValueError(msg)
-        if all_notes is None:
-            all_notes = len(subreddits) == 1
-        return self._notes(
-            all_notes,
-            [self.redditor] * len(subreddits),
-            list(subreddits),
-            **generator_kwargs,
-        )
-
-
-class SubredditModNotes(BaseModNotes):
-    """Provides methods to interact with moderator notes at the subreddit level.
-
-    .. note::
-
-        The authenticated user must be a moderator of this subreddit.
-
-    For example, all the notes for u/spez in r/test can be iterated through like so:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-
-        async for note in subreddit.mod.notes.redditors("spez"):
-            print(f"{note.label}: {note.note}")
-
-    """
-
-    def __init__(self, reddit: asyncpraw.Reddit, subreddit: Subreddit | str):
-        """Initialize a :class:`.SubredditModNotes` instance.
-
-        :param reddit: An instance of :class:`.Reddit`.
-        :param subreddit: An instance of :class:`.Subreddit`.
-
-        """
-        super().__init__(reddit)
-        self.subreddit = subreddit
-
-    def redditors(
-        self,
-        *redditors: Redditor | str,
-        all_notes: bool | None = None,
-        **generator_kwargs: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
-        """Return notes from this :class:`.Subreddit` for one or more redditors.
-
-        :param redditors: One or more redditors to retrieve notes for. Must be either a
-            :class:`.Redditor` or a redditor name.
-        :param all_notes: Whether to return all notes or only the latest note (default:
-            ``True`` if only one redditor is provided otherwise ``False``).
-
-            .. note::
-
-                Setting this to ``True`` will result in a request for each redditor.
-
-
-        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
-            if the user doesn't have any notes in this subreddit) per redditor in their
-            relative order. If ``all_notes`` is ``True``, this will yield all notes for
-            each redditor.
-
-        For example, all the notes for u/spez in r/test can be iterated through like so:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-
-            async for note in subreddit.mod.notes.redditors("spez"):
-                print(f"{note.label}: {note.note}")
-
-        For example, the latest note for u/spez and u/bboe from r/test can be iterated
-        through like so:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            redditor = await reddit.redditor("bboe")
-
-            async for note in subreddit.mod.notes.redditors("spez", redditor):
-                print(f"{note.label}: {note.note}")
-
-        For example, **all** the notes for both u/spez and u/bboe in r/test can be
-        iterated through like so:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            redditor = await reddit.redditor("bboe")
-
-            async for note in subreddit.mod.notes.redditors("spez", redditor, all_notes=True):
-                print(f"{note.label}: {note.note}")
-
-        """
-        if len(redditors) == 0:
-            msg = "At least 1 redditor must be provided."
-            raise ValueError(msg)
-        if all_notes is None:
-            all_notes = len(redditors) == 1
-        return self._notes(
-            all_notes,
-            list(redditors),
-            [self.subreddit] * len(redditors),
-            **generator_kwargs,
-        )
 
 
 class RedditModNotes(BaseModNotes):
@@ -502,7 +310,7 @@ class RedditModNotes(BaseModNotes):
         subreddits: list[Subreddit | str] | None = None,
         things: list[Comment | Submission] | None = None,
         **generator_kwargs: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
         """Get note(s) for each subreddit/user pair, or ``None`` if they don't have any.
 
         :param all_notes: Whether to return all notes or only the latest note for each
@@ -634,15 +442,20 @@ class RedditModNotes(BaseModNotes):
                 merged_subreddits.append(subreddit)
             else:
                 msg = f"Cannot get subreddit and author fields from type {type(item)}"
-                raise ValueError(msg)
-        return self._notes(all_notes, merged_redditors, merged_subreddits, **generator_kwargs)
+                raise TypeError(msg)
+        return self._notes(
+            all_notes=all_notes,
+            redditors=merged_redditors,
+            subreddits=merged_subreddits,
+            **generator_kwargs,
+        )
 
     def things(
         self,
         *things: Comment | Submission,
         all_notes: bool | None = None,
         **generator_kwargs: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModNote, None]:
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
         """Return notes associated with the author of a :class:`.Comment` or :class:`.Submission`.
 
         :param things: One or more things to return notes on. Must be a
@@ -687,4 +500,201 @@ class RedditModNotes(BaseModNotes):
             redditors.append(thing.author)
         if all_notes is None:
             all_notes = len(things) == 1
-        return self._notes(all_notes, redditors, subreddits, **generator_kwargs)
+        return self._notes(
+            all_notes=all_notes,
+            redditors=redditors,
+            subreddits=subreddits,
+            **generator_kwargs,
+        )
+
+
+class RedditorModNotes(BaseModNotes):
+    """Provides methods to interact with moderator notes at the redditor level.
+
+    .. note::
+
+        The authenticated user must be a moderator of the provided subreddit(s).
+
+    For example, all the notes for u/spez in r/test can be iterated through like so:
+
+    .. code-block:: python
+
+        redditor = await reddit.redditor("spez")
+
+        async for note in redditor.notes.subreddits("test"):
+            print(f"{note.label}: {note.note}")
+
+    """
+
+    def __init__(self, reddit: asyncpraw.Reddit, redditor: Redditor | str) -> None:
+        """Initialize a :class:`.RedditorModNotes` instance.
+
+        :param reddit: An instance of :class:`.Reddit`.
+        :param redditor: An instance of :class:`.Redditor`.
+
+        """
+        super().__init__(reddit)
+        self.redditor = redditor
+
+    def subreddits(
+        self,
+        *subreddits: Subreddit | str,
+        all_notes: bool | None = None,
+        **generator_kwargs: Any,
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
+        """Return notes for this :class:`.Redditor` from one or more subreddits.
+
+        :param subreddits: One or more subreddits to retrieve the notes from. Must be
+            either a :class:`.Subreddit` or a subreddit name.
+        :param all_notes: Whether to return all notes or only the latest note (default:
+            ``True`` if only one subreddit is provided otherwise ``False``).
+
+            .. note::
+
+                Setting this to ``True`` will result in a request for each subreddit.
+
+
+        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
+            if this redditor doesn't have any notes) per subreddit in their relative
+            order. If ``all_notes`` is ``True``, this will yield all notes or ``None``
+            from each subreddit for this redditor.
+
+        For example, all the notes for u/spez in r/test can be iterated through like so:
+
+        .. code-block:: python
+
+            redditor = await reddit.redditor("spez")
+
+            async for note in redditor.notes.subreddits("test"):
+                print(f"{note.label}: {note.note}")
+
+        For example, the latest note for u/spez from r/test and r/redditdev can be
+        iterated through like so:
+
+        .. code-block:: python
+
+            redditor = await reddit.redditor("spez")
+            subreddit = await reddit.subreddit("redditdev")
+
+            async for note in redditor.notes.subreddits("test", subreddit):
+                print(f"{note.label}: {note.note}")
+
+        For example, **all** the notes for u/spez in r/test and r/redditdev can be
+        iterated through like so:
+
+        .. code-block:: python
+
+            redditor = await reddit.redditor("spez")
+            subreddit = await reddit.subreddit("redditdev")
+
+            async for note in redditor.notes.subreddits("test", subreddit, all_notes=True):
+                print(f"{note.label}: {note.note}")
+
+        """
+        if len(subreddits) == 0:
+            msg = "At least 1 subreddit must be provided."
+            raise ValueError(msg)
+        if all_notes is None:
+            all_notes = len(subreddits) == 1
+        return self._notes(
+            all_notes=all_notes,
+            redditors=[self.redditor] * len(subreddits),
+            subreddits=list(subreddits),
+            **generator_kwargs,
+        )
+
+
+class SubredditModNotes(BaseModNotes):
+    """Provides methods to interact with moderator notes at the subreddit level.
+
+    .. note::
+
+        The authenticated user must be a moderator of this subreddit.
+
+    For example, all the notes for u/spez in r/test can be iterated through like so:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+
+        async for note in subreddit.mod.notes.redditors("spez"):
+            print(f"{note.label}: {note.note}")
+
+    """
+
+    def __init__(self, reddit: asyncpraw.Reddit, subreddit: Subreddit | str) -> None:
+        """Initialize a :class:`.SubredditModNotes` instance.
+
+        :param reddit: An instance of :class:`.Reddit`.
+        :param subreddit: An instance of :class:`.Subreddit`.
+
+        """
+        super().__init__(reddit)
+        self.subreddit = subreddit
+
+    def redditors(
+        self,
+        *redditors: Redditor | str,
+        all_notes: bool | None = None,
+        **generator_kwargs: Any,
+    ) -> AsyncIterator[asyncpraw.models.ModNote]:
+        """Return notes from this :class:`.Subreddit` for one or more redditors.
+
+        :param redditors: One or more redditors to retrieve notes for. Must be either a
+            :class:`.Redditor` or a redditor name.
+        :param all_notes: Whether to return all notes or only the latest note (default:
+            ``True`` if only one redditor is provided otherwise ``False``).
+
+            .. note::
+
+                Setting this to ``True`` will result in a request for each redditor.
+
+
+        :returns: A generator that yields the most recent :class:`.ModNote` (or ``None``
+            if the user doesn't have any notes in this subreddit) per redditor in their
+            relative order. If ``all_notes`` is ``True``, this will yield all notes for
+            each redditor.
+
+        For example, all the notes for u/spez in r/test can be iterated through like so:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+
+            async for note in subreddit.mod.notes.redditors("spez"):
+                print(f"{note.label}: {note.note}")
+
+        For example, the latest note for u/spez and u/bboe from r/test can be iterated
+        through like so:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            redditor = await reddit.redditor("bboe")
+
+            async for note in subreddit.mod.notes.redditors("spez", redditor):
+                print(f"{note.label}: {note.note}")
+
+        For example, **all** the notes for both u/spez and u/bboe in r/test can be
+        iterated through like so:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            redditor = await reddit.redditor("bboe")
+
+            async for note in subreddit.mod.notes.redditors("spez", redditor, all_notes=True):
+                print(f"{note.label}: {note.note}")
+
+        """
+        if len(redditors) == 0:
+            msg = "At least 1 redditor must be provided."
+            raise ValueError(msg)
+        if all_notes is None:
+            all_notes = len(redditors) == 1
+        return self._notes(
+            all_notes=all_notes,
+            redditors=list(redditors),
+            subreddits=[self.subreddit] * len(redditors),
+            **generator_kwargs,
+        )

@@ -1,6 +1,6 @@
 """Async PRAW constants."""
 
-from .endpoints import API_PATH  # noqa: F401
+from asyncpraw.endpoints import API_PATH  # noqa: F401
 
 __version__ = "7.8.2.dev0"
 

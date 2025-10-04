@@ -9,8 +9,8 @@ from asyncprawcore import (
     session,
 )
 
-from ..exceptions import InvalidImplicitAuth, MissingRequiredAttributeException
-from .base import AsyncPRAWBase
+from asyncpraw.exceptions import InvalidImplicitAuth, MissingRequiredAttributeException
+from asyncpraw.models.base import AsyncPRAWBase
 
 
 class Auth(AsyncPRAWBase):

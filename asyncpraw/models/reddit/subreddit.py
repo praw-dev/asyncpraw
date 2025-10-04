@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import contextlib
 from asyncio import TimeoutError as AsyncTimeoutError
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from copy import deepcopy
 from csv import writer
 from io import StringIO
 from json import dumps
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, AsyncGenerator
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin
 
 from aiohttp.http_exceptions import HttpProcessingError
@@ -19,8 +20,8 @@ from asyncprawcore import Redirect
 from asyncprawcore.exceptions import ServerError
 from defusedxml import ElementTree
 
-from ...const import API_PATH, JPEG_HEADER
-from ...exceptions import (
+from asyncpraw.const import API_PATH, JPEG_HEADER
+from asyncpraw.exceptions import (
     ClientException,
     InvalidFlairTemplateID,
     MediaPostFailed,
@@ -28,20 +29,20 @@ from ...exceptions import (
     TooLargeMediaException,
     WebSocketException,
 )
-from ...util import cachedproperty
-from ..listing.generator import ListingGenerator
-from ..listing.mixins import SubredditListingMixin
-from ..util import permissions_string, stream_generator
-from .base import RedditBase
-from .emoji import SubredditEmoji
-from .mixins import FullnameMixin, MessageableMixin
-from .modmail import ModmailConversation
-from .removal_reasons import SubredditRemovalReasons
-from .rules import SubredditRules
-from .widgets import SubredditWidgets, WidgetEncoder
-from .wikipage import WikiPage
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.listing.mixins import SubredditListingMixin
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.emoji import SubredditEmoji
+from asyncpraw.models.reddit.mixins import FullnameMixin, MessageableMixin
+from asyncpraw.models.reddit.modmail import ModmailConversation
+from asyncpraw.models.reddit.removal_reasons import SubredditRemovalReasons
+from asyncpraw.models.reddit.rules import SubredditRules
+from asyncpraw.models.reddit.widgets import SubredditWidgets, WidgetEncoder
+from asyncpraw.models.reddit.wikipage import WikiPage
+from asyncpraw.models.util import permissions_string, stream_generator
+from asyncpraw.util import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator, Iterator
 
     from aiohttp import ClientResponse
@@ -62,7 +63,9 @@ class Modmail:
 
     """
 
-    async def __call__(self, id: str | None = None, mark_read: bool = False, fetch: bool = True) -> ModmailConversation:
+    async def __call__(
+        self, id: str | None = None, *, mark_read: bool = False, fetch: bool = True
+    ) -> ModmailConversation:
         """Return an individual conversation.
 
         :param id: A reddit base36 conversation ID, e.g., ``"2gmz"``.
@@ -123,11 +126,11 @@ class Modmail:
             await modmail_conversation._fetch()
         return modmail_conversation
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.Modmail` instance."""
         self.subreddit = subreddit
 
-    def _build_subreddit_list(self, other_subreddits: list[asyncpraw.models.Subreddit] | None):
+    def _build_subreddit_list(self, other_subreddits: list[asyncpraw.models.Subreddit] | None) -> str:
         """Return a comma-separated list of subreddit display names."""
         subreddits = [self.subreddit] + (other_subreddits or [])
         return ",".join(str(subreddit) for subreddit in subreddits)
@@ -250,7 +253,7 @@ class Modmail:
 
     async def subreddits(
         self,
-    ) -> AsyncGenerator[asyncpraw.models.Subreddit, None]:
+    ) -> AsyncGenerator[asyncpraw.models.Subreddit]:
         """Yield subreddits using the new modmail that the user moderates.
 
         For example:
@@ -305,7 +308,7 @@ class SubredditFilters:
 
     async def __aiter__(
         self,
-    ) -> AsyncGenerator[asyncpraw.models.Subreddit, None]:
+    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Iterate through the special :class:`.Subreddit`'s filters.
 
         This method should be invoked as:
@@ -324,7 +327,7 @@ class SubredditFilters:
         for subreddit in response_data.subreddits:
             yield subreddit
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditFilters` instance.
 
         :param subreddit: The special subreddit whose filters to work with.
@@ -335,7 +338,7 @@ class SubredditFilters:
         """
         self.subreddit = subreddit
 
-    async def add(self, subreddit: asyncpraw.models.Subreddit | str):
+    async def add(self, subreddit: asyncpraw.models.Subreddit | str) -> None:
         """Add ``subreddit`` to the list of filtered subreddits.
 
         :param subreddit: The subreddit to add to the filter list.
@@ -361,7 +364,7 @@ class SubredditFilters:
         )
         await self.subreddit._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
 
-    async def remove(self, subreddit: asyncpraw.models.Subreddit | str):
+    async def remove(self, subreddit: asyncpraw.models.Subreddit | str) -> None:
         """Remove ``subreddit`` from the list of filtered subreddits.
 
         :param subreddit: The subreddit to remove from the filter list.
@@ -446,7 +449,7 @@ class SubredditFlair:
         url = API_PATH["flairlist"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditFlair` instance.
 
         :param subreddit: The subreddit whose flair to work with.
@@ -462,7 +465,7 @@ class SubredditFlair:
         position: str = "right",
         self_assign: bool = False,
         **settings: Any,
-    ):
+    ) -> None:
         """Update the :class:`.Subreddit`'s flair configuration.
 
         :param link_position: One of ``"left"``, ``"right"``, or ``False`` to disable
@@ -493,7 +496,7 @@ class SubredditFlair:
         url = API_PATH["flairconfig"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    async def delete(self, redditor: asyncpraw.models.Redditor | str):
+    async def delete(self, redditor: asyncpraw.models.Redditor | str) -> None:
         """Delete flair for a :class:`.Redditor`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -516,14 +519,14 @@ class SubredditFlair:
         all_flairs = [x["user"] async for x in self()]
         return await self.update(all_flairs)
 
-    async def set(  # noqa: A003
+    async def set(
         self,
         redditor: asyncpraw.models.Redditor | str,
         *,
         css_class: str = "",
         flair_template_id: str | None = None,
         text: str = "",
-    ):
+    ) -> None:
         """Set flair for a :class:`.Redditor`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -620,15 +623,15 @@ class SubredditFlairTemplates:
     """Provide functions to interact with a :class:`.Subreddit`'s flair templates."""
 
     @staticmethod
-    def flair_type(is_link: bool) -> str:
+    def flair_type(*, is_link: bool) -> str:
         """Return ``"LINK_FLAIR"`` or ``"USER_FLAIR"`` depending on ``is_link`` value."""
         return "LINK_FLAIR" if is_link else "USER_FLAIR"
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncIterator[None]:
         """Abstract method to return flair templates."""
         raise NotImplementedError
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditFlairTemplates` instance.
 
         :param subreddit: The subreddit whose flair templates to work with.
@@ -665,13 +668,13 @@ class SubredditFlairTemplates:
         text: str,
         text_color: str | None = None,
         text_editable: bool = False,
-    ):
+    ) -> None:
         url = API_PATH["flairtemplate_v2"].format(subreddit=self.subreddit)
         data = {
             "allowable_content": allowable_content,
             "background_color": background_color,
             "css_class": css_class,
-            "flair_type": self.flair_type(is_link),
+            "flair_type": self.flair_type(is_link=is_link),
             "max_emojis": max_emojis,
             "mod_only": bool(mod_only),
             "text": text,
@@ -680,22 +683,22 @@ class SubredditFlairTemplates:
         }
         await self.subreddit._reddit.post(url, data=data)
 
-    async def _clear(self, *, is_link: bool | None = None):
+    async def _clear(self, *, is_link: bool | None = None) -> None:
         url = API_PATH["flairtemplateclear"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.post(url, data={"flair_type": self.flair_type(is_link)})
+        await self.subreddit._reddit.post(url, data={"flair_type": self.flair_type(is_link=is_link)})
 
-    async def _reorder(self, flair_list: list, *, is_link: bool | None = None):
+    async def _reorder(self, flair_list: list, *, is_link: bool | None = None) -> None:
         url = API_PATH["flairtemplatereorder"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.patch(
             url,
             params={
-                "flair_type": self.flair_type(is_link),
+                "flair_type": self.flair_type(is_link=is_link),
                 "subreddit": self.subreddit.display_name,
             },
             json=flair_list,
         )
 
-    async def delete(self, template_id: str):
+    async def delete(self, template_id: str) -> None:
         """Remove a flair template provided by ``template_id``.
 
         For example, to delete the first :class:`.Redditor` flair template listed, try:
@@ -723,7 +726,7 @@ class SubredditFlairTemplates:
         text: str | None = None,
         text_color: str | None = None,
         text_editable: bool | None = None,
-    ):
+    ) -> None:
         """Update the flair template provided by ``template_id``.
 
         :param template_id: The flair template to update. If not valid then an exception
@@ -777,10 +780,10 @@ class SubredditFlairTemplates:
             "text_editable": text_editable,
         }
         if fetch:
-            _existing_data = [template async for template in self if template["id"] == template_id]
-            if len(_existing_data) != 1:
+            existing_data_ = [template async for template in self if template["id"] == template_id]
+            if len(existing_data_) != 1:
                 raise InvalidFlairTemplateID(template_id)
-            existing_data = _existing_data[0]
+            existing_data = existing_data_[0]
             for key, value in existing_data.items():
                 if data.get(key) is None:
                     data[key] = value
@@ -800,7 +803,7 @@ class SubredditModeration:
     """
 
     @staticmethod
-    def _handle_only(*, generator_kwargs: dict[str, Any], only: str | None):
+    def _handle_only(*, generator_kwargs: dict[str, Any], only: str | None) -> None:
         if only is not None:
             if only == "submissions":
                 only = "links"
@@ -822,7 +825,7 @@ class SubredditModeration:
                 print(f"{note.label}: {note.note}")
 
         """
-        from ..mod_notes import SubredditModNotes  # noqa: PLC0415
+        from asyncpraw.models.mod_notes import SubredditModNotes  # noqa: PLC0415
 
         return SubredditModNotes(self.subreddit._reddit, subreddit=self.subreddit)
 
@@ -871,7 +874,7 @@ class SubredditModeration:
         """
         return SubredditModerationStream(self.subreddit)
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditModeration` instance.
 
         :param subreddit: The subreddit to moderate.
@@ -880,7 +883,7 @@ class SubredditModeration:
         self.subreddit = subreddit
         self._stream = None
 
-    async def accept_invite(self):
+    async def accept_invite(self) -> None:
         """Accept an invitation as a moderator of the community."""
         url = API_PATH["accept_mod_invite"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
@@ -1170,7 +1173,7 @@ class SubredditModeration:
 class SubredditModerationStream:
     """Provides moderator streams."""
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditModerationStream` instance.
 
         :param subreddit: The moderated subreddit associated with the streams.
@@ -1180,7 +1183,7 @@ class SubredditModerationStream:
 
     def edited(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Yield edited comments and submissions as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1206,7 +1209,7 @@ class SubredditModerationStream:
         action: str | None = None,
         mod: str | asyncpraw.models.Redditor | None = None,
         **stream_options: Any,
-    ) -> AsyncGenerator[asyncpraw.models.ModAction, None]:
+    ) -> AsyncIterator[asyncpraw.models.ModAction]:
         """Yield moderator log entries as they become available.
 
         :param action: If given, only return log entries for the specified action.
@@ -1238,7 +1241,7 @@ class SubredditModerationStream:
         sort: str | None = None,
         state: str | None = None,
         **stream_options: Any,
-    ) -> AsyncGenerator[ModmailConversation, None]:
+    ) -> AsyncIterator[ModmailConversation]:
         """Yield new-modmail conversations as they become available.
 
         :param other_subreddits: A list of :class:`.Subreddit` instances for which to
@@ -1276,7 +1279,7 @@ class SubredditModerationStream:
 
     def modqueue(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         r"""Yield :class:`.Comment`\ s and :class:`.Submission`\ s in the modqueue as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1297,7 +1300,7 @@ class SubredditModerationStream:
 
     def reports(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         r"""Yield reported :class:`.Comment`\ s and :class:`.Submission`\ s as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1318,7 +1321,7 @@ class SubredditModerationStream:
 
     def spam(
         self, *, only: str | None = None, **stream_options: Any
-    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission, None]:
+    ) -> AsyncGenerator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         r"""Yield spam :class:`.Comment`\ s and :class:`.Submission`\ s as they become available.
 
         :param only: If specified, one of ``"comments"`` or ``"submissions"`` to yield
@@ -1337,7 +1340,7 @@ class SubredditModerationStream:
         """
         return stream_generator(self.subreddit.mod.spam, only=only, **stream_options)
 
-    def unmoderated(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.Submission, None]:
+    def unmoderated(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Submission]:
         r"""Yield unmoderated :class:`.Submission`\ s as they become available.
 
         Keyword arguments are passed to :func:`.stream_generator`.
@@ -1366,7 +1369,7 @@ class SubredditQuarantine:
 
     """
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditQuarantine` instance.
 
         :param subreddit: The :class:`.Subreddit` associated with the quarantine.
@@ -1374,7 +1377,7 @@ class SubredditQuarantine:
         """
         self.subreddit = subreddit
 
-    async def opt_in(self):
+    async def opt_in(self) -> None:
         """Permit your user access to the quarantined subreddit.
 
         Usage:
@@ -1394,7 +1397,7 @@ class SubredditQuarantine:
         with contextlib.suppress(Redirect):
             await self.subreddit._reddit.post(API_PATH["quarantine_opt_in"], data=data)
 
-    async def opt_out(self):
+    async def opt_out(self) -> None:
         """Remove access to the quarantined subreddit.
 
         Usage:
@@ -1450,7 +1453,7 @@ class SubredditRelationship:
         url = API_PATH[f"list_{self.relationship}"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit, relationship: str):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit, relationship: str) -> None:
         """Initialize a :class:`.SubredditRelationship` instance.
 
         :param subreddit: The :class:`.Subreddit` for the relationship.
@@ -1460,7 +1463,7 @@ class SubredditRelationship:
         self.relationship = relationship
         self.subreddit = subreddit
 
-    async def add(self, redditor: str | asyncpraw.models.Redditor, **other_settings: Any):
+    async def add(self, redditor: str | asyncpraw.models.Redditor, **other_settings: Any) -> None:
         """Add ``redditor`` to this relationship.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -1471,7 +1474,7 @@ class SubredditRelationship:
         url = API_PATH["friend"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data=data)
 
-    async def remove(self, redditor: str | asyncpraw.models.Redditor):
+    async def remove(self, redditor: str | asyncpraw.models.Redditor) -> None:
         """Remove ``redditor`` from this relationship.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -1485,7 +1488,7 @@ class SubredditRelationship:
 class SubredditStream:
     """Provides submission and comment streams."""
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditStream` instance.
 
         :param subreddit: The subreddit associated with the streams.
@@ -1493,7 +1496,7 @@ class SubredditStream:
         """
         self.subreddit = subreddit
 
-    def comments(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.Comment, None]:
+    def comments(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Comment]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially
@@ -1526,7 +1529,7 @@ class SubredditStream:
         """
         return stream_generator(self.subreddit.comments, **stream_options)
 
-    def submissions(self, **stream_options: Any) -> AsyncGenerator[asyncpraw.models.Submission, None]:
+    def submissions(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Submission]:
         r"""Yield new :class:`.Submission`\ s as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions will
@@ -1579,7 +1582,7 @@ class SubredditStylesheet:
         url = API_PATH["about_stylesheet"].format(subreddit=self.subreddit)
         return await self.subreddit._reddit.get(url)
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditStylesheet` instance.
 
         :param subreddit: The :class:`.Subreddit` associated with the stylesheet.
@@ -1594,7 +1597,7 @@ class SubredditStylesheet:
         """
         self.subreddit = subreddit
 
-    async def _update_structured_styles(self, style_data: dict[str, str | Any]):
+    async def _update_structured_styles(self, style_data: dict[str, str | Any]) -> None:
         url = API_PATH["structured_styles"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.patch(url, data=style_data)
 
@@ -1638,7 +1641,7 @@ class SubredditStylesheet:
 
         return f"{upload_url}/{upload_data['key']}"
 
-    async def delete_banner(self):
+    async def delete_banner(self) -> None:
         """Remove the current :class:`.Subreddit` (redesign) banner image.
 
         Succeeds even if there is no banner image.
@@ -1654,7 +1657,7 @@ class SubredditStylesheet:
         data = {"bannerBackgroundImage": ""}
         await self._update_structured_styles(data)
 
-    async def delete_banner_additional_image(self):
+    async def delete_banner_additional_image(self) -> None:
         """Remove the current :class:`.Subreddit` (redesign) banner additional image.
 
         Succeeds even if there is no additional image. Will also delete any configured
@@ -1671,7 +1674,7 @@ class SubredditStylesheet:
         data = {"bannerPositionedImage": "", "secondaryBannerPositionedImage": ""}
         await self._update_structured_styles(data)
 
-    async def delete_banner_hover_image(self):
+    async def delete_banner_hover_image(self) -> None:
         """Remove the current :class:`.Subreddit` (redesign) banner hover image.
 
         Succeeds even if there is no hover image.
@@ -1687,7 +1690,7 @@ class SubredditStylesheet:
         data = {"secondaryBannerPositionedImage": ""}
         await self._update_structured_styles(data)
 
-    async def delete_header(self):
+    async def delete_header(self) -> None:
         """Remove the current :class:`.Subreddit` header image.
 
         Succeeds even if there is no header image.
@@ -1703,7 +1706,7 @@ class SubredditStylesheet:
         url = API_PATH["delete_sr_header"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
-    async def delete_image(self, name: str):
+    async def delete_image(self, name: str) -> None:
         """Remove the named image from the :class:`.Subreddit`.
 
         Succeeds even if the named image does not exist.
@@ -1719,7 +1722,7 @@ class SubredditStylesheet:
         url = API_PATH["delete_sr_image"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url, data={"img_name": name})
 
-    async def delete_mobile_banner(self):
+    async def delete_mobile_banner(self) -> None:
         """Remove the current :class:`.Subreddit` (redesign) mobile banner.
 
         Succeeds even if there is no mobile banner.
@@ -1735,7 +1738,7 @@ class SubredditStylesheet:
         data = {"mobileBannerImage": ""}
         await self._update_structured_styles(data)
 
-    async def delete_mobile_header(self):
+    async def delete_mobile_header(self) -> None:
         """Remove the current :class:`.Subreddit` mobile header.
 
         Succeeds even if there is no mobile header.
@@ -1751,7 +1754,7 @@ class SubredditStylesheet:
         url = API_PATH["delete_sr_header"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
-    async def delete_mobile_icon(self):
+    async def delete_mobile_icon(self) -> None:
         """Remove the current :class:`.Subreddit` mobile icon.
 
         Succeeds even if there is no mobile icon.
@@ -1767,7 +1770,7 @@ class SubredditStylesheet:
         url = API_PATH["delete_sr_icon"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.post(url)
 
-    async def update(self, stylesheet: str, *, reason: str | None = None):
+    async def update(self, stylesheet: str, *, reason: str | None = None) -> None:
         """Update the :class:`.Subreddit`'s stylesheet.
 
         :param stylesheet: The CSS for the new stylesheet.
@@ -1811,7 +1814,7 @@ class SubredditStylesheet:
         """
         return await self._upload_image(data={"name": name, "upload_type": "img"}, image_path=image_path)
 
-    async def upload_banner(self, image_path: str):
+    async def upload_banner(self, image_path: str) -> None:
         """Upload an image for the :class:`.Subreddit`'s (redesign) banner image.
 
         :param image_path: A path to a jpeg or png image.
@@ -1839,7 +1842,7 @@ class SubredditStylesheet:
         image_path: str,
         *,
         align: str | None = None,
-    ):
+    ) -> None:
         """Upload an image for the :class:`.Subreddit`'s (redesign) additional image.
 
         :param image_path: A path to a jpeg or png image.
@@ -1874,7 +1877,7 @@ class SubredditStylesheet:
             style_data.update(alignment)
         await self._update_structured_styles(style_data)
 
-    async def upload_banner_hover_image(self, image_path: str):
+    async def upload_banner_hover_image(self, image_path: str) -> None:
         """Upload an image for the :class:`.Subreddit`'s (redesign) additional image.
 
         :param image_path: A path to a jpeg or png image.
@@ -1923,7 +1926,7 @@ class SubredditStylesheet:
         """
         return await self._upload_image(data={"upload_type": "header"}, image_path=image_path)
 
-    async def upload_mobile_banner(self, image_path: str):
+    async def upload_mobile_banner(self, image_path: str) -> None:
         """Upload an image for the :class:`.Subreddit`'s (redesign) mobile banner.
 
         :param image_path: A path to a JPEG or PNG image.
@@ -2000,7 +2003,7 @@ class SubredditStylesheet:
 class SubredditWiki:
     """Provides a set of wiki functions to a :class:`.Subreddit`."""
 
-    async def __aiter__(self) -> AsyncGenerator[WikiPage, None]:
+    async def __aiter__(self) -> AsyncIterator[WikiPage]:
         """Iterate through the pages of the wiki.
 
         This method is to be used to discover all wikipages for a subreddit:
@@ -2019,7 +2022,7 @@ class SubredditWiki:
         for page_name in response["data"]:
             yield WikiPage(self.subreddit._reddit, self.subreddit, page_name)
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditWiki` instance.
 
         :param subreddit: The subreddit whose wiki to work with.
@@ -2060,7 +2063,7 @@ class SubredditWiki:
         await new.edit(content=content, reason=reason, **other_settings)
         return new
 
-    async def get_page(self, page_name: str, fetch: bool = True, **_: Any) -> WikiPage:
+    async def get_page(self, /, page_name: str, *, fetch: bool = True) -> WikiPage:
         """Return the :class:`.WikiPage` for the :class:`.Subreddit` named ``page_name``.
 
         :param page_name: Name of the wikipage.
@@ -2121,7 +2124,7 @@ class ContributorRelationship(SubredditRelationship):
 
     """
 
-    async def leave(self):
+    async def leave(self) -> None:
         """Abdicate the contributor position."""
         if not self.subreddit._fetched:
             await self.subreddit._fetch()
@@ -2141,7 +2144,7 @@ class ModeratorRelationship(SubredditRelationship):
 
     """
 
-    PERMISSIONS = {
+    PERMISSIONS = frozenset({
         "access",
         "chat_config",
         "chat_operator",
@@ -2150,7 +2153,7 @@ class ModeratorRelationship(SubredditRelationship):
         "mail",
         "posts",
         "wiki",
-    }
+    })
 
     @staticmethod
     def _handle_permissions(
@@ -2164,7 +2167,7 @@ class ModeratorRelationship(SubredditRelationship):
         )
         return other_settings
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncGenerator[asyncpraw.models.Redditor, None]:
         """Asynchronously iterate through Redditors who are moderators.
 
         For example, to list the moderators along with their permissions try:
@@ -2232,7 +2235,7 @@ class ModeratorRelationship(SubredditRelationship):
         *,
         permissions: list[str] | None = None,
         **other_settings: Any,
-    ):
+    ) -> None:
         """Add or invite ``redditor`` to be a moderator of the :class:`.Subreddit`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -2261,7 +2264,7 @@ class ModeratorRelationship(SubredditRelationship):
         *,
         permissions: list[str] | None = None,
         **other_settings: Any,
-    ):
+    ) -> None:
         """Invite ``redditor`` to be a moderator of the :class:`.Subreddit`.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -2319,7 +2322,7 @@ class ModeratorRelationship(SubredditRelationship):
         url = API_PATH["list_invited_moderator"].format(subreddit=self.subreddit)
         return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
 
-    async def leave(self):
+    async def leave(self) -> None:
         """Abdicate the moderator position (use with care).
 
         For example:
@@ -2332,7 +2335,7 @@ class ModeratorRelationship(SubredditRelationship):
         """
         await self.remove(self.subreddit._reddit.config.username or self.subreddit._reddit.user.me())
 
-    async def remove_invite(self, redditor: str | asyncpraw.models.Redditor):
+    async def remove_invite(self, redditor: str | asyncpraw.models.Redditor) -> None:
         """Remove the moderator invite for ``redditor``.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -2354,7 +2357,7 @@ class ModeratorRelationship(SubredditRelationship):
         redditor: str | asyncpraw.models.Redditor,
         *,
         permissions: list[str] | None = None,
-    ):
+    ) -> None:
         """Update the moderator permissions for ``redditor``.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -2388,7 +2391,7 @@ class ModeratorRelationship(SubredditRelationship):
         redditor: str | asyncpraw.models.Redditor,
         *,
         permissions: list[str] | None = None,
-    ):
+    ) -> None:
         """Update the moderator invite permissions for ``redditor``.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -2495,6 +2498,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     """
 
     STR_FIELD = "display_name"
+    MAX_CAPTION_LENGTH = 180
     MESSAGE_PREFIX = "#"
 
     @staticmethod
@@ -2535,7 +2539,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         wiki_edit_karma: int | None = None,
         wikimode: str | None = None,
         **other_settings: Any,
-    ):
+    ) -> None:
         model = {
             "allow_images": allow_images,
             "allow_post_crossposts": allow_post_crossposts,
@@ -2577,7 +2581,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         await _reddit.post(API_PATH["site_admin"], data=model)
 
     @staticmethod
-    async def _parse_xml_response(response: ClientResponse):
+    async def _parse_xml_response(response: ClientResponse) -> None:
         """Parse the XML from a response and raise any errors found."""
         xml = await response.text()
         root = ElementTree.fromstring(xml)
@@ -2598,7 +2602,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         return str(subreddit)
 
     @staticmethod
-    def _validate_gallery(images: list[dict[str, str]]):
+    def _validate_gallery(images: list[dict[str, str]]) -> None:
         for image in images:
             image_path = image.get("image_path", "")
             if image_path:
@@ -2608,12 +2612,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
             else:
                 msg = "'image_path' is required."
                 raise TypeError(msg)
-            if not len(image.get("caption", "")) <= 180:
+            if not len(image.get("caption", "")) <= Subreddit.MAX_CAPTION_LENGTH:
                 msg = "Caption must be 180 characters or less."
                 raise TypeError(msg)
 
     @staticmethod
-    def _validate_inline_media(inline_media: asyncpraw.models.InlineMedia):
+    def _validate_inline_media(inline_media: asyncpraw.models.InlineMedia) -> None:
         if not Path(inline_media.path).is_file():
             msg = f"{inline_media.path!r} is not a valid file path."
             raise ValueError(msg)
@@ -2963,7 +2967,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         reddit: asyncpraw.Reddit,
         display_name: str | None = None,
         _data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.Subreddit` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -3003,14 +3007,14 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         rte_body = await self._reddit.post(API_PATH["convert_rte_body"], data=text_data)
         return rte_body["output"]
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
         await super()._fetch()
 
-    def _fetch_info(self):
+    def _fetch_info(self) -> tuple[str, dict[str, RedditBase], None]:
         return "subreddit_about", {"subreddit": self}, None
 
     @asynccontextmanager
@@ -3019,8 +3023,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
     ) -> AsyncGenerator[ClientResponse]:
         with file.open("rb") as media:
             upload_data["file"] = media
-            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data
-            ) as response:
+            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data) as response:
                 yield response
 
     async def _submit_media(
@@ -3056,7 +3059,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         url = ws_update["payload"]["redirect"]
         return await self._reddit.submission(url=url)
 
-    async def _upload_inline_media(self, inline_media: asyncpraw.models.InlineMedia):
+    async def _upload_inline_media(self, inline_media: asyncpraw.models.InlineMedia) -> asyncpraw.models.InlineMedia:
         """Upload media for use in self posts and return ``inline_media``.
 
         :param inline_media: An :class:`.InlineMedia` object to validate and upload.
@@ -3072,7 +3075,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         expected_mime_prefix: str | None = None,
         media_path: str,
         upload_type: str = "link",
-    ):
+    ) -> str:
         """Upload media and return its URL and a websocket (Undocumented endpoint).
 
         :param expected_mime_prefix: If provided, enforce that the media has a mime type
@@ -3080,9 +3083,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         :param upload_type: One of ``"link"``, ``"gallery"'', or ``"selfpost"``
             (default: ``"link"``).
 
-        :returns: A tuple containing ``(media_url, websocket_url)`` for the piece of
-            media. The websocket URL can be used to determine when media processing is
-            finished, or it can be ignored.
+        :returns: The link to the uploaded media.
 
         """
         if media_path is None:
@@ -3120,7 +3121,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                 response.raise_for_status()
             except HttpProcessingError:
                 raise ServerError(response=response) from None
-
         if upload_type == "link":
             return f"{upload_url}/{upload_data['key']}"
         return upload_response["asset"]["asset_id"]
@@ -3782,7 +3782,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         )
         return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
 
-    async def subscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None):
+    async def subscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None) -> None:
         """Subscribe to the subreddit.
 
         :param other_subreddits: When provided, also subscribe to the provided list of
@@ -3832,7 +3832,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
         """
         return await self._reddit.get(API_PATH["about_traffic"].format(subreddit=self))
 
-    async def unsubscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None):
+    async def unsubscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None) -> None:
         """Unsubscribe from the subreddit.
 
         :param other_subreddits: When provided, also unsubscribe from the provided list
@@ -3861,7 +3861,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
     async def __aiter__(
         self,
-    ) -> AsyncGenerator[dict[str, str | int | bool | list[dict[str, str]]], None]:
+    ) -> AsyncIterator[dict[str, str | int | bool | list[dict[str, str]]]]:
         """Iterate through the link flair templates as a moderator.
 
         For example:
@@ -3889,7 +3889,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         mod_only: bool | None = None,
         text_color: str | None = None,
         text_editable: bool = False,
-    ):
+    ) -> None:
         """Add a link flair template to the associated subreddit.
 
         :param text: The flair template's text.
@@ -3932,7 +3932,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
             text_editable=text_editable,
         )
 
-    async def clear(self):
+    async def clear(self) -> None:
         """Remove all link flair templates from the subreddit.
 
         For example:
@@ -3945,7 +3945,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
         """
         await self._clear(is_link=True)
 
-    async def reorder(self, flair_list: list[str]):
+    async def reorder(self, flair_list: list[str]) -> None:
         """Reorder a list of flairs.
 
         :param flair_list: A list of flair IDs.
@@ -3963,7 +3963,7 @@ class SubredditLinkFlairTemplates(SubredditFlairTemplates):
 
     async def user_selectable(
         self,
-    ) -> AsyncGenerator[dict[str, str | bool], None]:
+    ) -> AsyncIterator[dict[str, str | bool]]:
         """Iterate through the link flair templates as a regular user.
 
         For example:
@@ -3985,7 +3985,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
     async def __aiter__(
         self,
-    ) -> AsyncGenerator[dict[str, str | int | bool | list[dict[str, str]]], None]:
+    ) -> AsyncIterator[dict[str, str | int | bool | list[dict[str, str]]]]:
         """Iterate through the user flair templates.
 
         For example:
@@ -4014,7 +4014,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
         mod_only: bool | None = None,
         text_color: str | None = None,
         text_editable: bool = False,
-    ):
+    ) -> None:
         """Add a redditor flair template to the associated subreddit.
 
         :param text: The flair template's text.
@@ -4057,7 +4057,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
             text_editable=text_editable,
         )
 
-    async def clear(self):
+    async def clear(self) -> None:
         """Remove all :class:`.Redditor` flair templates from the subreddit.
 
         For example:
@@ -4070,7 +4070,7 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
         """
         await self._clear(is_link=False)
 
-    async def reorder(self, flair_list: list[str]):
+    async def reorder(self, flair_list: list[str]) -> None:
         """Reorder a list of flairs.
 
         :param flair_list: A list of flair IDs.

@@ -1,3 +1,5 @@
+import pickle
+
 from asyncpraw.models import Subreddit, WikiPage
 
 from ... import UnitTest
@@ -31,6 +33,12 @@ class TestWikiPage(UnitTest):
         assert hash(page1) != hash(page3)
         assert hash(page1) == hash(page4)
         assert hash(page1) == hash(page5)
+
+    def test_pickle(self, reddit):
+        page = WikiPage(reddit, subreddit=Subreddit(reddit, "a"), name="x")
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(page, protocol=level))
+            assert page == other
 
     def test_repr(self, reddit):
         page = WikiPage(reddit, subreddit=Subreddit(reddit, "a"), name="x")

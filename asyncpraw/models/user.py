@@ -6,16 +6,16 @@ from typing import TYPE_CHECKING
 
 from asyncprawcore import Conflict
 
-from ..const import API_PATH
-from ..exceptions import ReadOnlyException
-from ..models import Preferences
-from ..util.cache import cachedproperty
-from .base import AsyncPRAWBase
-from .listing.generator import ListingGenerator
-from .reddit.redditor import Redditor
-from .reddit.subreddit import Subreddit
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import ReadOnlyException
+from asyncpraw.models import Preferences
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.reddit.subreddit import Subreddit
+from asyncpraw.util.cache import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw.models
@@ -54,7 +54,7 @@ class User(AsyncPRAWBase):
         """
         return Preferences(self._reddit)
 
-    def __init__(self, reddit: asyncpraw.Reddit):
+    def __init__(self, reddit: asyncpraw.Reddit) -> None:
         """Initialize an :class:`.User` instance.
 
         This class is intended to be interfaced with through ``reddit.user``.
@@ -178,7 +178,7 @@ class User(AsyncPRAWBase):
         self,
         submission: asyncpraw.models.Submission,
         *,
-        num: int = None,
+        num: int | None = None,
         state: bool = True,
     ) -> asyncpraw.models.Submission:
         """Set the pin state of a submission on the authenticated user's profile.

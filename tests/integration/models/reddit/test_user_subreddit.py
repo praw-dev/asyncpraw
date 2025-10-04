@@ -17,11 +17,7 @@ class TestUserSubredditModeration(IntegrationTest):
         authenticated_user = await reddit.user.me()
         before_settings = await authenticated_user.subreddit.mod.settings()
         new_title = f"{before_settings['title']}x"
-        new_title = (
-            "x"
-            if (len(new_title) >= 20 and "placeholder" not in new_title)
-            else new_title
-        )
+        new_title = "x" if (len(new_title) >= 20 and "placeholder" not in new_title) else new_title
         await authenticated_user.subreddit.mod.update(title=new_title)
         authenticated_user = await reddit.user.me(use_cache=False)
         assert authenticated_user.subreddit.title == new_title

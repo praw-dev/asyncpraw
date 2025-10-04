@@ -6,11 +6,12 @@ from collections.abc import AsyncIterator
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any
 
-from ..base import AsyncPRAWBase
-from .listing import FlairListing, ModNoteListing
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.listing import FlairListing, ModNoteListing
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw
+    from asyncpraw.models.reddit.base import RedditBase
 
 
 class ListingGenerator(AsyncPRAWBase, AsyncIterator):
@@ -25,11 +26,11 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
     """
 
-    def __aiter__(self) -> Any:
+    def __aiter__(self) -> ListingGenerator:
         """Permit :class:`.ListingGenerator` to operate as an async iterator."""
         return self
 
-    async def __anext__(self) -> Any:
+    async def __anext__(self) -> RedditBase:
         """Permit :class:`.ListingGenerator` to operate as a async generator."""
         if self.limit is not None and self.yielded >= self.limit:
             raise StopAsyncIteration
@@ -47,7 +48,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         url: str,
         limit: int = 100,
         params: dict[str, str | int] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.ListingGenerator` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -63,14 +64,14 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         super().__init__(reddit, _data=None)
         self._exhausted = False
         self._listing = None
-        self._list_index = None
+        self._list_index: int
         self.limit = limit
         self.params = deepcopy(params) if params else {}
         self.params["limit"] = limit or 1024
         self.url = url
         self.yielded = 0
 
-    def _extract_sublist(self, listing: dict[str, Any] | list[Any]):
+    def _extract_sublist(self, listing: dict[str, Any] | list[Any] | Any) -> Any:
         if isinstance(listing, list):
             return listing[1]  # for submission duplicates
         if isinstance(listing, dict):
@@ -86,7 +87,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
                 raise ValueError(msg)
         return listing
 
-    async def _next_batch(self):
+    async def _next_batch(self) -> None:
         if self._exhausted:
             raise StopAsyncIteration
 

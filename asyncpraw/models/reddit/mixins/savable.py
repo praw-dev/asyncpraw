@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
 
 
 class SavableMixin:
     """Interface for :class:`.RedditBase` classes that can be saved."""
 
-    async def save(self, *, category: str | None = None):
+    async def save(self, *, category: str | None = None) -> None:
         """Save the object.
 
         :param category: The category to save to. If the authenticated user does not
@@ -31,7 +31,7 @@ class SavableMixin:
         """
         await self._reddit.post(API_PATH["save"], data={"category": category, "id": self.fullname})
 
-    async def unsave(self):
+    async def unsave(self) -> None:
         """Unsave the object.
 
         Example usage:

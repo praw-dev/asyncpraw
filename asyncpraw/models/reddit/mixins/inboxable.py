@@ -1,12 +1,12 @@
 """Provide the InboxableMixin class."""
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
 
 
 class InboxableMixin:
     """Interface for :class:`.RedditBase` subclasses that originate from the inbox."""
 
-    async def block(self):
+    async def block(self) -> None:
         """Block the user who sent the item.
 
         .. note::
@@ -27,7 +27,7 @@ class InboxableMixin:
         """
         await self._reddit.post(API_PATH["block"], data={"id": self.fullname})
 
-    async def collapse(self):
+    async def collapse(self) -> None:
         """Mark the item as collapsed.
 
         .. note::
@@ -52,7 +52,7 @@ class InboxableMixin:
         """
         await self._reddit.inbox.collapse([self])
 
-    async def mark_read(self):
+    async def mark_read(self) -> None:
         """Mark a single inbox item as read.
 
         .. note::
@@ -79,7 +79,7 @@ class InboxableMixin:
         """
         await self._reddit.inbox.mark_read([self])
 
-    async def mark_unread(self):
+    async def mark_unread(self) -> None:
         """Mark the item as unread.
 
         .. note::
@@ -103,7 +103,7 @@ class InboxableMixin:
         """
         await self._reddit.inbox.mark_unread([self])
 
-    async def unblock_subreddit(self):
+    async def unblock_subreddit(self) -> None:
         """Unblock a subreddit.
 
         .. note::
@@ -130,7 +130,7 @@ class InboxableMixin:
         """
         await self._reddit.post(API_PATH["unblock_subreddit"], data={"id": self.fullname})
 
-    async def uncollapse(self):
+    async def uncollapse(self) -> None:
         """Mark the item as uncollapsed.
 
         .. note::

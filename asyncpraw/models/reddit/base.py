@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
-from ...endpoints import API_PATH
-from ...exceptions import InvalidURL
-from ..base import AsyncPRAWBase
+from asyncpraw.endpoints import API_PATH
+from asyncpraw.exceptions import InvalidURL
+from asyncpraw.models.base import AsyncPRAWBase
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
@@ -49,10 +49,11 @@ class RedditBase(AsyncPRAWBase):
         self,
         reddit: asyncpraw.Reddit,
         _data: dict[str, Any] | None,
+        *,
         _extra_attribute_to_check: str | None = None,
         _fetched: bool = False,
         _str_field: bool = True,
-    ):
+    ) -> None:
         """Initialize a :class:`.RedditBase` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -78,21 +79,21 @@ class RedditBase(AsyncPRAWBase):
         """Return a string representation of the instance."""
         return getattr(self, self.STR_FIELD)
 
-    async def _fetch(self):  # pragma: no cover
+    async def _fetch(self) -> None:
         self._fetched = True
 
-    async def _fetch_data(self):
+    async def _fetch_data(self) -> Any:
         name, fields, params = self._fetch_info()
         path = API_PATH[name].format(**fields)
         return await self._reddit.request(method="GET", params=params, path=path)
 
-    def _reset_attributes(self, *attributes: str):
+    def _reset_attributes(self, *attributes: str) -> None:
         for attribute in attributes:
             if attribute in self.__dict__:
                 del self.__dict__[attribute]
         self._fetched = False
 
-    async def load(self):
+    async def load(self) -> None:
         """Re-fetches the object.
 
         This is used to explicitly fetch or re-fetch the object from reddit. This method

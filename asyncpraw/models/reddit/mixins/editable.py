@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw.models
@@ -13,7 +13,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class EditableMixin:
     """Interface for classes that can be edited and deleted."""
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete the object.
 
         Example usage:

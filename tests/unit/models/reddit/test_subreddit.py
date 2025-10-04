@@ -1,3 +1,4 @@
+import pickle
 import sys
 
 import aiohttp
@@ -71,17 +72,13 @@ class TestSubreddit(UnitTest):
     async def test_invalid_media(self, connection_mock, reddit):
         reddit._core._requestor._http = aiohttp.ClientSession()
         recv_mock = MagicMock()
-        recv_mock.receive_json = AsyncMock(
-            return_value={"payload": {}, "type": "failed"}
-        )
+        recv_mock.receive_json = AsyncMock(return_value={"payload": {}, "type": "failed"})
         context_manager = MagicMock()
         context_manager.__aenter__.return_value = recv_mock
         connection_mock.return_value = context_manager
 
         with pytest.raises(MediaPostFailed):
-            await Subreddit(reddit, display_name="test").submit_image(
-                "Test", "dummy path"
-            )
+            await Subreddit(reddit, display_name="test").submit_image("Test", "dummy path")
         await reddit._core._requestor._http.close()
 
     @mock.patch("aiohttp.client.ClientSession.ws_connect", new=AsyncMock())
@@ -100,15 +97,11 @@ class TestSubreddit(UnitTest):
         from asyncprawcore.exceptions import ServerError
 
         response = MagicMock(spec=ClientResponse)
-        response.raise_for_status = MagicMock(
-            side_effect=HttpProcessingError(code=500, message="")
-        )
+        response.raise_for_status = MagicMock(side_effect=HttpProcessingError(code=500, message=""))
         response.status = 201
         mock_method.return_value.__aenter__.return_value = response
         with pytest.raises(ServerError):
-            await Subreddit(reddit, display_name="test").submit_image(
-                "Test", "/dev/null"
-            )
+            await Subreddit(reddit, display_name="test").submit_image("Test", "/dev/null")
 
     async def test_notes_delete__invalid_args(self):
         with pytest.raises(TypeError) as excinfo:
@@ -117,6 +110,12 @@ class TestSubreddit(UnitTest):
             "Either the 'redditor' parameter must be provided or this method must be"
             " called from a Redditor instance (e.g., 'redditor.notes')."
         )
+
+    def test_pickle(self, reddit):
+        subreddit = Subreddit(reddit, _data={"display_name": "name", "id": "dummy"})
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(subreddit, protocol=level))
+            assert subreddit == other
 
     def test_repr(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")
@@ -154,9 +153,7 @@ class TestSubreddit(UnitTest):
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery(
-                "Cool title", [{"image_path": "invalid_image_path"}]
-            )
+            await subreddit.submit_gallery("Cool title", [{"image_path": "invalid_image_path"}])
         assert str(excinfo.value) == message
 
     async def test_submit_gallery__missing_path(self, reddit):
@@ -164,9 +161,7 @@ class TestSubreddit(UnitTest):
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery(
-                "Cool title", [{"caption": "caption"}, {"caption": "caption2"}]
-            )
+            await subreddit.submit_gallery("Cool title", [{"caption": "caption"}, {"caption": "caption2"}])
         assert str(excinfo.value) == message
 
     async def test_submit_gallery__too_long_caption(self, reddit):
@@ -178,9 +173,7 @@ class TestSubreddit(UnitTest):
             "yyyyyyyyyyyyyyyy too long caption"
         )
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery(
-                "Cool title", [{"image_path": __file__, "caption": caption}]
-            )
+            await subreddit.submit_gallery("Cool title", [{"image_path": __file__, "caption": caption}])
         assert str(excinfo.value) == message
 
     async def test_submit_image__bad_filetype(self, image_path, reddit):
@@ -212,26 +205,20 @@ class TestSubreddit(UnitTest):
     async def test_upload_banner_additional_image(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")
         with pytest.raises(ValueError):
-            await subreddit.stylesheet.upload_banner_additional_image(
-                "dummy_path", align="asdf"
-            )
+            await subreddit.stylesheet.upload_banner_additional_image("dummy_path", align="asdf")
 
 
 class TestSubredditFlair(UnitTest):
     async def test_set(self, reddit):
         subreddit = Subreddit(reddit, pytest.placeholders.test_subreddit)
         with pytest.raises(TypeError):
-            await subreddit.flair.set(
-                "a_redditor", css_class="myCSS", flair_template_id="gibberish"
-            )
+            await subreddit.flair.set("a_redditor", css_class="myCSS", flair_template_id="gibberish")
 
 
 class TestSubredditFlairTemplates(UnitTest):
     async def test_not_implemented(self, reddit):
         with pytest.raises(NotImplementedError):
-            await SubredditFlairTemplates(
-                Subreddit(reddit, pytest.placeholders.test_subreddit)
-            ).__aiter__()
+            await SubredditFlairTemplates(Subreddit(reddit, pytest.placeholders.test_subreddit)).__aiter__()
 
 
 class TestSubredditModmailConversationsStream(UnitTest):

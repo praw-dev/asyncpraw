@@ -1,3 +1,5 @@
+import pickle
+
 import pytest
 
 from asyncpraw.models import Emoji, Subreddit
@@ -45,6 +47,12 @@ class TestEmoji(UnitTest):
         assert hash(emoji1) == hash(emoji4)
         assert hash(emoji1) != hash(emoji5)
         assert hash(emoji1) != hash(emoji6)
+
+    def test_pickle(self, reddit):
+        emoji = Emoji(reddit, subreddit=Subreddit(reddit, "a"), name="x")
+        for level in range(pickle.HIGHEST_PROTOCOL + 1):
+            other = pickle.loads(pickle.dumps(emoji, protocol=level))
+            assert emoji == other
 
     def test_repr(self, reddit):
         emoji = Emoji(reddit, subreddit=Subreddit(reddit, "a"), name="x")

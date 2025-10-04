@@ -25,10 +25,7 @@ class TestSubredditWidgets(UnitTest):
 
     def test_repr(self, reddit):
         widgets = SubredditWidgets(Subreddit(reddit, "fake_subreddit"))
-        assert (
-            "SubredditWidgets(subreddit=Subreddit(display_name='fake_subreddit'))"
-            == repr(widgets)
-        )
+        assert "SubredditWidgets(subreddit=Subreddit(display_name='fake_subreddit'))" == repr(widgets)
 
     def test_subreddit_widgets_mod(self, reddit):
         widgets = SubredditWidgets(Subreddit(reddit, "fake_subreddit"))
@@ -63,9 +60,7 @@ class TestWidgetEncoder(UnitTest):
         data = [
             1,
             "two",
-            SubredditWidgetsModeration(
-                Subreddit(reddit, display_name="subreddit"), reddit
-            ),
+            SubredditWidgetsModeration(Subreddit(reddit, display_name="subreddit"), reddit),
         ]
         with raises(TypeError):
             dumps(data, cls=WidgetEncoder)  # should throw TypeError

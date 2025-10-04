@@ -13,7 +13,7 @@ class AsyncPRAWBase:
     """Superclass for all models in Async PRAW."""
 
     @staticmethod
-    def _safely_add_arguments(*, arguments: dict[str, Any], key: str, **new_arguments: Any):
+    def _safely_add_arguments(*, arguments: dict[str, Any], key: str, **new_arguments: Any) -> None:
         """Replace arguments[key] with a deepcopy and update.
 
         This method is often called when new parameters need to be added to a request.
@@ -35,7 +35,7 @@ class AsyncPRAWBase:
         """
         return cls(reddit, _data=data)
 
-    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any] | None):
+    def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any] | None) -> None:
         """Initialize a :class:`.AsyncPRAWBase` instance.
 
         :param reddit: An instance of :class:`.Reddit`.

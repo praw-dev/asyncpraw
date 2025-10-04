@@ -1,12 +1,12 @@
 """Provide the ReportableMixin class."""
 
-from ....const import API_PATH
+from asyncpraw.const import API_PATH
 
 
 class ReportableMixin:
     """Interface for :class:`.RedditBase` classes that can be reported."""
 
-    async def report(self, reason: str):
+    async def report(self, reason: str) -> None:
         """Report this object to the moderators of its subreddit.
 
         :param reason: The reason for reporting.

@@ -4,16 +4,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...const import API_PATH
-from ...util.cache import cachedproperty
-from ..list.redditor import RedditorList
-from ..listing.generator import ListingGenerator
-from ..util import stream_generator
-from .base import RedditBase
-from .mixins import FullnameMixin
-from .redditor import Redditor
+from asyncpraw.const import API_PATH
+from asyncpraw.models.list.redditor import RedditorList
+from asyncpraw.models.listing.generator import ListingGenerator
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import FullnameMixin
+from asyncpraw.models.reddit.redditor import Redditor
+from asyncpraw.models.util import stream_generator
+from asyncpraw.util.cache import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator, Iterable
 
     import asyncpraw.models
@@ -40,7 +40,7 @@ class LiveContributorRelationship:
 
         """
 
-        async def generator():
+        async def generator() -> AsyncIterator[asyncpraw.models.Redditor]:
             url = API_PATH["live_contributors"].format(id=self.thread.id)
             temp = await self.thread._reddit.get(url)
             redditor_list = temp if isinstance(temp, RedditorList) else temp[0]
@@ -49,7 +49,7 @@ class LiveContributorRelationship:
 
         return generator()
 
-    def __init__(self, thread: asyncpraw.models.LiveThread):
+    def __init__(self, thread: asyncpraw.models.LiveThread) -> None:
         """Initialize a :class:`.LiveContributorRelationship` instance.
 
         :param thread: An instance of :class:`.LiveThread`.
@@ -62,7 +62,7 @@ class LiveContributorRelationship:
         """
         self.thread = thread
 
-    async def accept_invite(self):
+    async def accept_invite(self) -> None:
         """Accept an invite to contribute the live thread.
 
         Usage:
@@ -81,7 +81,7 @@ class LiveContributorRelationship:
         redditor: str | asyncpraw.models.Redditor,
         *,
         permissions: list[str] | None = None,
-    ):
+    ) -> None:
         """Invite a redditor to be a contributor of the live thread.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -116,7 +116,7 @@ class LiveContributorRelationship:
         }
         await self.thread._reddit.post(url, data=data)
 
-    async def leave(self):
+    async def leave(self) -> None:
         """Abdicate the live thread contributor position (use with care).
 
         Usage:
@@ -130,7 +130,7 @@ class LiveContributorRelationship:
         url = API_PATH["live_leave"].format(id=self.thread.id)
         await self.thread._reddit.post(url)
 
-    async def remove(self, redditor: str | asyncpraw.models.Redditor):
+    async def remove(self, redditor: str | asyncpraw.models.Redditor) -> None:
         """Remove the redditor from the live thread contributors.
 
         :param redditor: A redditor fullname (e.g., ``"t2_1w72"``) or :class:`.Redditor`
@@ -151,7 +151,7 @@ class LiveContributorRelationship:
         url = API_PATH["live_remove_contrib"].format(id=self.thread.id)
         await self.thread._reddit.post(url, data=data)
 
-    async def remove_invite(self, redditor: str | asyncpraw.models.Redditor):
+    async def remove_invite(self, redditor: str | asyncpraw.models.Redditor) -> None:
         """Remove the invite for redditor.
 
         :param redditor: A redditor fullname (e.g., ``"t2_1w72"``) or :class:`.Redditor`
@@ -182,7 +182,7 @@ class LiveContributorRelationship:
         redditor: str | asyncpraw.models.Redditor,
         *,
         permissions: list[str] | None = None,
-    ):
+    ) -> None:
         """Update the contributor permissions for ``redditor``.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -225,7 +225,7 @@ class LiveContributorRelationship:
         redditor: str | asyncpraw.models.Redditor,
         *,
         permissions: list[str] | None = None,
-    ):
+    ) -> None:
         """Update the contributor invite permissions for ``redditor``.
 
         :param redditor: A redditor name or :class:`.Redditor` instance.
@@ -364,7 +364,7 @@ class LiveThread(RedditBase):
         reddit: asyncpraw.Reddit,
         id: str | None = None,
         _data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.LiveThread` instance.
 
         :param reddit: An instance of :class:`.Reddit`.
@@ -378,14 +378,14 @@ class LiveThread(RedditBase):
             self.id = id
         super().__init__(reddit, _data=_data)
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         data = await self._fetch_data()
         data = data["data"]
         other = type(self)(self._reddit, _data=data)
         self.__dict__.update(other.__dict__)
         await super()._fetch()
 
-    def _fetch_info(self):
+    def _fetch_info(self) -> tuple[str, dict[str, str], None]:
         return "liveabout", {"id": self.id}, None
 
     def discussions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
@@ -412,11 +412,10 @@ class LiveThread(RedditBase):
         url = API_PATH["live_discussions"].format(id=self.id)
         return ListingGenerator(self._reddit, url, **generator_kwargs)
 
-    async def get_update(self, update_id: str, fetch: bool = True, **_: Any) -> asyncpraw.models.LiveUpdate:
+    async def get_update(self, /, id: str, *, fetch: bool = True) -> asyncpraw.models.LiveUpdate:
         """Return a :class:`.LiveUpdate` instance.
 
-        :param update_id: A live update ID, e.g.,
-            ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
+        :param id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
         :param fetch: Determines if Async PRAW will fetch the object (default:
             ``True``).
 
@@ -440,12 +439,12 @@ class LiveThread(RedditBase):
             update.contrib  # LiveUpdateContribution instance
 
         """
-        update = LiveUpdate(self._reddit, self.id, update_id)
+        update = LiveUpdate(self._reddit, self.id, id)
         if fetch:
             await update._fetch()
         return update
 
-    async def report(self, type: str):
+    async def report(self, type: str) -> None:  # noqa: A002
         """Report the thread violating the Reddit rules.
 
         :param type: One of ``"spam"``, ``"vote-manipulation"``,
@@ -496,7 +495,7 @@ class LiveThread(RedditBase):
 class LiveThreadContribution:
     """Provides a set of contribution functions to a :class:`.LiveThread`."""
 
-    def __init__(self, thread: asyncpraw.models.LiveThread):
+    def __init__(self, thread: asyncpraw.models.LiveThread) -> None:
         """Initialize a :class:`.LiveThreadContribution` instance.
 
         :param thread: An instance of :class:`.LiveThread`.
@@ -512,7 +511,7 @@ class LiveThreadContribution:
         """
         self.thread = thread
 
-    async def add(self, body: str):
+    async def add(self, body: str) -> None:
         """Add an update to the live thread.
 
         :param body: The Markdown formatted content for the update.
@@ -528,7 +527,7 @@ class LiveThreadContribution:
         url = API_PATH["live_add_update"].format(id=self.thread.id)
         await self.thread._reddit.post(url, data={"body": body})
 
-    async def close(self):
+    async def close(self) -> None:
         """Close the live thread permanently (cannot be undone).
 
         Usage:
@@ -550,7 +549,7 @@ class LiveThreadContribution:
         resources: str | None = None,
         title: str | None = None,
         **other_settings: str | None,
-    ):
+    ) -> None:
         """Update settings of the live thread.
 
         :param description: The live thread's description (default: ``None``).
@@ -616,7 +615,7 @@ class LiveThreadStream:
 
     """
 
-    def __init__(self, live_thread: asyncpraw.models.LiveThread):
+    def __init__(self, live_thread: asyncpraw.models.LiveThread) -> None:
         """Initialize a :class:`.LiveThreadStream` instance.
 
         :param live_thread: The live thread associated with the stream.
@@ -663,7 +662,7 @@ class LiveThreadStream:
 class LiveUpdateContribution:
     """Provides a set of contribution functions to :class:`.LiveUpdate`."""
 
-    def __init__(self, update: asyncpraw.models.LiveUpdate):
+    def __init__(self, update: asyncpraw.models.LiveUpdate) -> None:
         """Initialize a :class:`.LiveUpdateContribution` instance.
 
         :param update: An instance of :class:`.LiveUpdate`.
@@ -681,7 +680,7 @@ class LiveUpdateContribution:
         """
         self.update = update
 
-    async def remove(self):
+    async def remove(self) -> None:
         """Remove a live update.
 
         Usage:
@@ -697,7 +696,7 @@ class LiveUpdateContribution:
         data = {"id": self.update.fullname}
         await self.update.thread._reddit.post(url, data=data)
 
-    async def strike(self):
+    async def strike(self) -> None:
         """Strike a content of a live update.
 
         .. code-block:: python
@@ -769,7 +768,7 @@ class LiveUpdate(FullnameMixin, RedditBase):
         thread_id: str | None = None,
         update_id: str | None = None,
         _data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.LiveUpdate` instance.
 
         Either ``thread_id`` and ``update_id``, or ``_data`` must be provided.
@@ -803,13 +802,13 @@ class LiveUpdate(FullnameMixin, RedditBase):
             msg = "Either 'thread_id' and 'update_id', or '_data' must be provided."
             raise TypeError(msg)
 
-    def __setattr__(self, attribute: str, value: Any):
+    def __setattr__(self, attribute: str, value: Any) -> None:
         """Objectify author."""
         if attribute == "author":
             value = Redditor(self._reddit, name=value)
         super().__setattr__(attribute, value)
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         url = API_PATH["live_focus"].format(thread_id=self.thread.id, update_id=self.id)
         response = await self._reddit.get(url)
         other = response[0]

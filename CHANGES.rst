@@ -10,18 +10,44 @@ Unreleased
 
 - Add support for Python 3.13.
 - Support delayed session creation in asyncprawcore 2.5.0+.
+- Add parameter ``fetch`` to :meth:`.get_rule` to control whether to fetch the rule data
+  when initializing the rule object.
 
 **Changed**
 
-- Bumped prawcore to 3.0.1.
+- Bumped asyncprawcore to 3.0.2.
 - Drop support for Python 3.8, which was end-of-life on 2024-10-07.
 - Change ``Reddit.user.me`` to raise :class:`.ReadOnlyException` when called in
   :attr:`.read_only` mode.
 - The ``subreddit`` attribute of :class:`.Redditor` is a :class:`.UserSubreddit`
   instance.
+- The ``data`` argument to ``Objector.objectify`` must now be passed by keyword.
+- The ``mark_read`` argument to ``subreddit.modmail`` (:class:`.ModmailConversation`)
+  must now be passed by keyword.
+- The ``flair_type`` argument to :class:`.SubredditFlairTemplates` must be passed by
+  keyword.
 - :meth:`.CommentForest.list` no longer needs to be awaited.
 - The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
   argument used to explicitly perform a fetch when initializing an object.
+- The argument ``reason_id`` in :meth:`.RemovalReason.__init__` has been replaced with
+  ``id`` and is now a positional-only argument.
+- The ``name`` argument in :meth:`.get_emoji` is now a positional-only argument.
+- The ``reason_id`` argument in :meth:`.get_reason` has been replaced with ``id`` and is
+  now a positional-only argument.
+- The ``short_name`` argument in :meth:`.get_rule` is now a positional-only argument.
+- The ``update_id`` argument in :meth:`.get_update` has been replaced with ``id`` and is
+  now a positional-only argument.
+- The ``page_name`` argument in :meth:`.get_page` is now a positional-only argument.
+- The ``fetch`` argument in the following methods is now a keyword-only argument:
+
+  - :meth:`.get_emoji`
+  - :meth:`.get_reason`
+  - :meth:`.get_update`
+  - :meth:`.DraftHelper.__call__`
+  - :meth:`.LiveHelper.__call__`
+  - :meth:`.Modmail.__call__`
+  - :meth:`.SubredditCollections.__call__`
+  - :meth:`.SubredditHelper.__call__`
 
 **Removed**
 

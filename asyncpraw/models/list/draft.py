@@ -1,6 +1,6 @@
 """Provide the DraftList class."""
 
-from .base import BaseList
+from asyncpraw.models.list.base import BaseList
 
 
 class DraftList(BaseList):

@@ -5,14 +5,14 @@ from __future__ import annotations
 from json import dumps
 from typing import TYPE_CHECKING, Any
 
-from ..const import API_PATH
-from .base import AsyncPRAWBase
-from .reddit.draft import Draft
-from .reddit.live import LiveThread
-from .reddit.multi import Multireddit, Subreddit
+from asyncpraw.const import API_PATH
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.draft import Draft
+from asyncpraw.models.reddit.live import LiveThread
+from asyncpraw.models.reddit.multi import Multireddit, Subreddit
 
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import AsyncGenerator
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
 
     import asyncpraw.models
 
@@ -27,7 +27,7 @@ class DraftHelper(AsyncPRAWBase):
 
     """
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncIterator[asyncpraw.models.Draft]:
         r"""Iterate through all the :class:`.Draft`\ s.
 
         :returns: An asynchronous iterator containing all the currently authenticated
@@ -44,7 +44,7 @@ class DraftHelper(AsyncPRAWBase):
             yield draft
 
     async def __call__(
-        self, draft_id: str | None = None, fetch: bool = True
+        self, draft_id: str | None = None, *, fetch: bool = True
     ) -> list[asyncpraw.models.Draft] | asyncpraw.models.Draft:
         """Return a list of :class:`.Draft` instances.
 
@@ -154,7 +154,7 @@ class DraftHelper(AsyncPRAWBase):
 class LiveHelper(AsyncPRAWBase):
     r"""Provide a set of functions to interact with :class:`.LiveThread`\ s."""
 
-    async def __call__(self, id: str, fetch: bool = False) -> asyncpraw.models.LiveThread:
+    async def __call__(self, id: str, *, fetch: bool = False) -> asyncpraw.models.LiveThread:
         """Return a new instance of :class:`.LiveThread`.
 
         This method is intended to be used as:
@@ -187,7 +187,7 @@ class LiveHelper(AsyncPRAWBase):
         *,
         description: str | None = None,
         nsfw: bool = False,
-        resources: str = None,
+        resources: str | None = None,
     ) -> asyncpraw.models.LiveThread:
         """Create a new :class:`.LiveThread`.
 
@@ -211,7 +211,7 @@ class LiveHelper(AsyncPRAWBase):
             },
         )
 
-    def info(self, ids: list[str]) -> AsyncGenerator[asyncpraw.models.LiveThread, None]:
+    def info(self, ids: list[str]) -> AsyncIterator[asyncpraw.models.LiveThread]:
         """Fetch information about each live thread in ``ids``.
 
         :param ids: A list of IDs for a live thread.
@@ -244,7 +244,7 @@ class LiveHelper(AsyncPRAWBase):
             msg = "ids must be a list"
             raise TypeError(msg)
 
-        async def generator():
+        async def generator() -> AsyncIterator[asyncpraw.models.LiveThread]:
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
@@ -354,7 +354,7 @@ class MultiredditHelper(AsyncPRAWBase):
 class SubredditHelper(AsyncPRAWBase):
     """Provide a set of functions to interact with Subreddits."""
 
-    async def __call__(self, display_name: str, fetch: bool = False) -> asyncpraw.models.Subreddit:
+    async def __call__(self, display_name: str, *, fetch: bool = False) -> asyncpraw.models.Subreddit:
         """Return an instance of :class:`.Subreddit`.
 
         :param display_name: The name of the subreddit.

@@ -26,29 +26,19 @@ class TestSubreddits(IntegrationTest):
         subreddits = await self.async_list(reddit.subreddits.premium())
         assert len(subreddits) == 0
 
-    async def test_recommended(
-        self, reddit
-    ):  # FIXME: always seems to return []; same with praw
-        subreddits = await reddit.subreddits.recommended(
-            ["earthporn"], omit_subreddits=["cityporn"]
-        )
-        assert (
-            len(subreddits) == 0
-        )  # This is like this for coverage. Endpoint does not seem to work for me.
+    async def test_recommended(self, reddit):  # FIXME: always seems to return []; same with praw
+        subreddits = await reddit.subreddits.recommended(["earthporn"], omit_subreddits=["cityporn"])
+        assert len(subreddits) == 0  # This is like this for coverage. Endpoint does not seem to work for me.
         # assert len(subreddits) > 1
         # for subreddit in subreddits:
         #     assert isinstance(subreddit, Subreddit)
 
-    async def test_recommended__with_multiple(
-        self, reddit
-    ):  # FIXME: always seems to return []; same with praw
+    async def test_recommended__with_multiple(self, reddit):  # FIXME: always seems to return []; same with praw
         subreddits = await reddit.subreddits.recommended(
             ["cityporn", "earthporn"],
             omit_subreddits=["skyporn", "winterporn"],
         )
-        assert (
-            len(subreddits) == 0
-        )  # This is like this for coverage. Endpoint does not seem to work for me.
+        assert len(subreddits) == 0  # This is like this for coverage. Endpoint does not seem to work for me.
         # assert len(subreddits) > 1
         # for subreddit in subreddits:
         #     assert isinstance(subreddit, Subreddit)

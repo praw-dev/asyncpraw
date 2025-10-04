@@ -30,9 +30,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_invite__limited(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        await thread.contributor.invite(
-            pytest.placeholders.username, permissions=["manage", "edit"]
-        )
+        await thread.contributor.invite(pytest.placeholders.username, permissions=["manage", "edit"])
 
     async def test_invite__none(self, reddit):
         reddit.read_only = False
@@ -42,9 +40,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_invite__redditor(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        redditor = Redditor(
-            reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"}
-        )
+        redditor = Redditor(reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"})
         await thread.contributor.invite(redditor)
 
     async def test_leave(self, reddit):
@@ -60,9 +56,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_remove__redditor(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        redditor = Redditor(
-            reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"}
-        )
+        redditor = Redditor(reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"})
         await thread.contributor.remove(redditor)
 
     async def test_remove_invite__fullname(self, reddit):
@@ -73,9 +67,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_remove_invite__redditor(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        redditor = Redditor(
-            reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"}
-        )
+        redditor = Redditor(reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"})
         await thread.contributor.remove_invite(redditor)
 
     async def test_update__empty_list(self, reddit):
@@ -86,9 +78,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_update__limited(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        await thread.contributor.update(
-            pytest.placeholders.username, permissions=["manage", "edit"]
-        )
+        await thread.contributor.update(pytest.placeholders.username, permissions=["manage", "edit"])
 
     async def test_update__none(self, reddit):
         reddit.read_only = False
@@ -98,23 +88,17 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_update_invite__empty_list(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        await thread.contributor.update_invite(
-            pytest.placeholders.username, permissions=[]
-        )
+        await thread.contributor.update_invite(pytest.placeholders.username, permissions=[])
 
     async def test_update_invite__limited(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        await thread.contributor.update_invite(
-            pytest.placeholders.username, permissions=["manage", "edit"]
-        )
+        await thread.contributor.update_invite(pytest.placeholders.username, permissions=["manage", "edit"])
 
     async def test_update_invite__none(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        await thread.contributor.update_invite(
-            pytest.placeholders.username, permissions=None
-        )
+        await thread.contributor.update_invite(pytest.placeholders.username, permissions=None)
 
 
 class TestLiveThread(IntegrationTest):
@@ -236,14 +220,10 @@ class TestLiveUpdate(IntegrationTest):
 class TestLiveUpdateContribution(IntegrationTest):
     async def test_remove(self, reddit):
         reddit.read_only = False
-        update = LiveUpdate(
-            reddit, "1595195m6j9zw", "ec5ead40-bf2a-11ea-a3be-0e0d584e0b0b"
-        )
+        update = LiveUpdate(reddit, "1595195m6j9zw", "ec5ead40-bf2a-11ea-a3be-0e0d584e0b0b")
         await update.contrib.remove()
 
     async def test_strike(self, reddit):
         reddit.read_only = False
-        update = LiveUpdate(
-            reddit, "1595195m6j9zw", "3e95636e-bf2c-11ea-9488-0e29bbfe5f37"
-        )
+        update = LiveUpdate(reddit, "1595195m6j9zw", "3e95636e-bf2c-11ea-9488-0e29bbfe5f37")
         await update.contrib.strike()

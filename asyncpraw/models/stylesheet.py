@@ -1,6 +1,6 @@
 """Provide the Stylesheet class."""
 
-from .base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase
 
 
 class Stylesheet(AsyncPRAWBase):

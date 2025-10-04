@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, SupportsIndex
 from urllib.parse import quote
 
-from ...const import API_PATH
-from ...exceptions import ClientException
-from ...util import cachedproperty
-from .base import RedditBase
+from asyncpraw.const import API_PATH
+from asyncpraw.exceptions import ClientException
+from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.util import cachedproperty
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw.models
@@ -79,7 +79,7 @@ class Rule(RedditBase):
         subreddit: asyncpraw.models.Subreddit | None = None,
         short_name: str | None = None,
         _data: dict[str, str] | None = None,
-    ):
+    ) -> None:
         """Initialize a :class:`.Rule` instance."""
         if (short_name, _data).count(None) != 1:
             msg = "Either short_name or _data needs to be given."
@@ -92,7 +92,7 @@ class Rule(RedditBase):
         self.subreddit = subreddit
         super().__init__(reddit, _data=_data)
 
-    async def _fetch(self):
+    async def _fetch(self) -> None:
         async for rule in self.subreddit.rules:
             if rule.short_name == self.short_name:
                 self.__dict__.update(rule.__dict__)
@@ -123,11 +123,11 @@ class RuleModeration:
 
     """
 
-    def __init__(self, rule: asyncpraw.models.Rule):
+    def __init__(self, rule: asyncpraw.models.Rule) -> None:
         """Initialize a :class:`.RuleModeration` instance."""
         self.rule = rule
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete a rule from this subreddit.
 
         To delete ``"No spam"`` from r/test try:
@@ -135,7 +135,7 @@ class RuleModeration:
         .. code-block:: python
 
             subreddit = await reddit.subreddit("test")
-            rule = await subreddit.rules.get_rule("No Spam")
+            rule = await subreddit.rules.get_rule("No Spam", fetch=False)
             await rule.mod.delete()
 
         """
@@ -263,7 +263,7 @@ class SubredditRules:
         for rule in rules:
             yield rule
 
-    def __init__(self, subreddit: asyncpraw.models.Subreddit):
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
         """Initialize a :class:`.SubredditRules` instance.
 
         :param subreddit: The subreddit whose rules to work with.
@@ -283,10 +283,12 @@ class SubredditRules:
             rule.subreddit = self.subreddit
         return rule_list
 
-    async def get_rule(self, short_name: str | (int | slice)) -> asyncpraw.models.Rule:
-        """Return the :class:`.Rule` for the subreddit with short_name ``short_name``.
+    async def get_rule(self, /, short_name: SupportsIndex, *, fetch: bool = True) -> asyncpraw.models.Rule:
+        """Return the :class:`.Rule` for the subreddit with the short name/number/slice ``short_name``.
 
-        :param short_name: The short_name of the rule, or the rule number.
+        :param short_name: The short name of the rule, or the rule number.
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
 
         This method is to be used to fetch a specific rule, like so:
 
@@ -317,12 +319,31 @@ class SubredditRules:
             subreddit = await reddit.subreddit("test")
             rule = await subreddit.rules.get_rule(1)
 
+        To get the last three rules in a subreddit:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            rules = await subreddit.rules.get_rule(slice(-3, None))
+            for rule in rules:
+                print(rule)
+
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) you can do:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            rule = await subreddit.rules.get_rule("No Spam", fetch=False)
+            await rule.mod.delete()
+
         """
         if not isinstance(short_name, str):
             rules = await self._rule_list()
             return rules[short_name]
         rule = Rule(self._reddit, subreddit=self.subreddit, short_name=short_name)
-        await rule._fetch()
+        if fetch:
+            await rule._fetch()
         return rule
 
 
@@ -351,7 +372,7 @@ class SubredditRulesModeration:
 
     """
 
-    def __init__(self, subreddit_rules: SubredditRules):
+    def __init__(self, subreddit_rules: SubredditRules) -> None:
         """Initialize a :class:`.SubredditRulesModeration` instance."""
         self.subreddit_rules = subreddit_rules
 

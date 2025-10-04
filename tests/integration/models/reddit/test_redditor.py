@@ -48,9 +48,7 @@ class TestRedditor(IntegrationTest):
     async def test_message(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor("subreddit_stats")
-        await redditor.message(
-            subject="Async PRAW test", message="This is a test from Async PRAW"
-        )
+        await redditor.message(subject="Async PRAW test", message="This is a test from Async PRAW")
 
     async def test_message_from_subreddit(self, reddit):
         reddit.read_only = False
@@ -82,11 +80,7 @@ class TestRedditor(IntegrationTest):
     async def test_notes__subreddits(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor("Lil_SpazTest")
-        notes = await self.async_list(
-            redditor.notes.subreddits(
-                pytest.placeholders.test_subreddit, "Lil_SpazTest"
-            )
-        )
+        notes = await self.async_list(redditor.notes.subreddits(pytest.placeholders.test_subreddit, "Lil_SpazTest"))
         assert len(notes) == 2
         assert notes[0].user == redditor
         assert notes[1] is None

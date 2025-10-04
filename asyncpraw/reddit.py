@@ -11,7 +11,6 @@ from itertools import islice
 from logging import getLogger
 from typing import IO, TYPE_CHECKING, Any
 from urllib.parse import urlparse
-from warnings import warn
 
 from asyncprawcore import (
     Authorizer,
@@ -26,11 +25,11 @@ from asyncprawcore import (
 )
 from asyncprawcore.exceptions import BadRequest
 
-from . import models
-from .config import Config
-from .const import API_PATH, USER_AGENT_FORMAT, __version__
-from .exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
-from .objector import Objector
+from asyncpraw import models
+from asyncpraw.config import Config
+from asyncpraw.const import API_PATH, USER_AGENT_FORMAT, __version__
+from asyncpraw.exceptions import ClientException, MissingRequiredAttributeException, RedditAPIException
+from asyncpraw.objector import Objector
 
 try:
     from update_checker import update_check
@@ -39,7 +38,7 @@ try:
 except ImportError:  # pragma: no cover
     UPDATE_CHECKER_MISSING = True
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Iterable
 
     import asyncprawcore
@@ -109,7 +108,7 @@ class Reddit:
         """Handle the context manager open."""
         return self
 
-    async def __aexit__(self, *_: object):
+    async def __aexit__(self, *_: object) -> None:
         """Handle the context manager close."""
         await self.close()
 
@@ -132,7 +131,7 @@ class Reddit:
         requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,
         requestor_kwargs: dict[str, Any] | None = None,
         **config_settings: str | bool | int | None,
-    ):
+    ) -> None:
         """Initialize a :class:`.Reddit` instance.
 
         :param site_name: The name of a section in your ``praw.ini`` file from which to
@@ -211,7 +210,7 @@ class Reddit:
 
         """
         self._core = self._authorized_core = self._read_only_core = None
-        self._objector = None
+        self._objector: Objector
         self._unique_counter = 0
 
         try:
@@ -438,7 +437,7 @@ class Reddit:
 
         """
 
-    def _check_for_update(self):
+    def _check_for_update(self) -> None:
         if UPDATE_CHECKER_MISSING:
             return
         if not Reddit.update_checked and self.config.check_for_updates:
@@ -486,7 +485,7 @@ class Reddit:
 
         """
         return self._objector.objectify(
-            await self.request(
+            data=await self.request(
                 data=data,
                 files=files,
                 json=json,
@@ -499,7 +498,7 @@ class Reddit:
     def _prepare_asyncprawcore(
         self,
         *,
-        requestor_class: type[Requestor] = None,
+        requestor_class: type[Requestor] | None = None,
         requestor_kwargs: Any | None = None,
     ) -> Requestor:
         requestor_class = requestor_class or Requestor
@@ -519,7 +518,7 @@ class Reddit:
 
         return requestor
 
-    def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator):
+    def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator) -> None:
         if self.config.refresh_token:
             authorizer = Authorizer(authenticator, refresh_token=self.config.refresh_token)
         else:
@@ -527,7 +526,7 @@ class Reddit:
             return
         self._core = self._authorized_core = session(authorizer=authorizer, window_size=self.config.window_size)
 
-    def _prepare_objector(self):
+    def _prepare_objector(self) -> None:
         mappings = {
             self.config.kinds["comment"]: models.Comment,
             self.config.kinds["message"]: models.Message,
@@ -575,7 +574,7 @@ class Reddit:
         }
         self._objector = Objector(self, mappings)
 
-    def _prepare_trusted_asyncprawcore(self, requestor: Requestor):
+    def _prepare_trusted_asyncprawcore(self, requestor: Requestor) -> None:
         authenticator = TrustedAuthenticator(
             requestor,
             self.config.client_id,
@@ -593,7 +592,7 @@ class Reddit:
         else:
             self._prepare_common_authorizer(authenticator)
 
-    def _prepare_untrusted_asyncprawcore(self, requestor: Requestor):
+    def _prepare_untrusted_asyncprawcore(self, requestor: Requestor) -> None:
         authenticator = UntrustedAuthenticator(requestor, self.config.client_id, self.config.redirect_uri)
         read_only_authorizer = DeviceIDAuthorizer(authenticator)
         self._read_only_core = session(authorizer=read_only_authorizer, window_size=self.config.window_size)
@@ -609,10 +608,9 @@ class Reddit:
                 return e.response.headers.get("location")
         return url
 
-    async def close(self):
+    async def close(self) -> None:
         """Close the requestor."""
         await self.requestor.close()
-
 
     async def comment(
         self,
@@ -620,7 +618,6 @@ class Reddit:
         *,
         fetch: bool = True,
         url: str | None = None,
-        **_,
     ) -> models.Comment:
         """Return an instance of :class:`.Comment`.
 
@@ -730,8 +727,8 @@ class Reddit:
             ``"https://www.youtube.com"`` will provide a different set of submissions.
 
         """
-        none_count = (fullnames, url, subreddits).count(None)
-        if none_count != 2:
+        set_count = sum(1 for value in (fullnames, url, subreddits) if value is not None)
+        if set_count != 1:
             msg = "Either 'fullnames', 'url', or 'subreddits' must be provided."
             raise TypeError(msg)
 
@@ -745,7 +742,13 @@ class Reddit:
 
             api_parameter_name = "id" if is_using_fullnames else "sr_name"
 
-            async def generator(names: Iterable[str | asyncpraw.models.Subreddit]):
+            async def generator(
+                names: Iterable[str | asyncpraw.models.Subreddit],
+            ) -> AsyncGenerator[
+                asyncpraw.models.Subreddit | asyncpraw.models.Comment | asyncpraw.models.Submission,
+                None,
+                None,
+            ]:
                 iterable = iter(names) if is_using_fullnames else iter([str(item) for item in names])
                 while True:
                     chunk = list(islice(iterable, 100))
@@ -757,7 +760,13 @@ class Reddit:
 
             return generator(ids_or_names)
 
-        async def generator(_url: str):
+        async def generator(
+            _url: str,
+        ) -> AsyncGenerator[
+            asyncpraw.models.Subreddit | asyncpraw.models.Comment | asyncpraw.models.Submission,
+            None,
+            None,
+        ]:
             params = {"url": _url}
             for result in await self.get(API_PATH["info"], params=params):
                 yield result
@@ -930,14 +939,12 @@ class Reddit:
                 field = None
             raise RedditAPIException([data["reason"], explanation, field]) from exception
 
-
     async def submission(
         self,
         id: str | None = None,
         *,
         fetch: bool = True,
         url: str | None = None,
-        **_,
     ) -> asyncpraw.models.Submission:
         """Return an instance of :class:`.Submission`.
 

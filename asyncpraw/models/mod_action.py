@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .base import AsyncPRAWBase
-from .reddit.redditor import Redditor
+from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.redditor import Redditor
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     import asyncpraw.models
 
 
@@ -20,5 +20,5 @@ class ModAction(AsyncPRAWBase):
         return Redditor(self._reddit, name=self._mod)
 
     @mod.setter
-    def mod(self, value: str | asyncpraw.models.Redditor):
+    def mod(self, value: str | asyncpraw.models.Redditor) -> None:
         self._mod = value

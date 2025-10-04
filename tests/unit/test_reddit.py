@@ -26,9 +26,7 @@ class MockClientSession:
 
 
 class TestReddit(UnitTest):
-    REQUIRED_DUMMY_SETTINGS = {
-        x: "dummy" for x in ["client_id", "client_secret", "user_agent"]
-    }
+    REQUIRED_DUMMY_SETTINGS = {x: "dummy" for x in ["client_id", "client_secret", "user_agent"]}
 
     @mock.patch("asyncpraw.reddit.update_check", create=True)
     async def test_check_for_updates(self, mock_update_check):
@@ -86,15 +84,13 @@ class TestReddit(UnitTest):
         with pytest.raises(ValueError) as excinfo:
             Reddit(timeout="test", **self.REQUIRED_DUMMY_SETTINGS)
         assert (
-            excinfo.value.args[0]
-            == "An incorrect config type was given for option timeout. The expected"
+            excinfo.value.args[0] == "An incorrect config type was given for option timeout. The expected"
             " type is int, but the given value is test."
         )
         with pytest.raises(ValueError) as excinfo:
             Reddit(ratelimit_seconds="test", **self.REQUIRED_DUMMY_SETTINGS)
         assert (
-            excinfo.value.args[0]
-            == "An incorrect config type was given for option ratelimit_seconds. The"
+            excinfo.value.args[0] == "An incorrect config type was given for option ratelimit_seconds. The"
             " expected type is int, but the given value is test."
         )
 
@@ -157,10 +153,7 @@ class TestReddit(UnitTest):
     async def test_post_ratelimit__over_threshold__minutes(self, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
-        assert (
-            exception.value.items[0].message
-            == "You are doing that too much. Try again in 1 minute."
-        )
+        assert exception.value.items[0].message == "You are doing that too much. Try again in 1 minute."
 
     @mock.patch(
         "asyncpraw.Reddit.request",
@@ -184,10 +177,7 @@ class TestReddit(UnitTest):
     async def test_post_ratelimit__over_threshold__seconds(self, mock_sleep, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
-        assert (
-            exception.value.items[0].message
-            == "You are doing that too much. Try again in 6 seconds."
-        )
+        assert exception.value.items[0].message == "You are doing that too much. Try again in 6 seconds."
         mock_sleep.assert_not_called()
 
     @mock.patch(
@@ -221,9 +211,7 @@ class TestReddit(UnitTest):
         ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__milliseconds(
-        self, mock_sleep, reddit
-    ):
+    async def test_post_ratelimit__under_threshold__milliseconds(self, mock_sleep, reddit):
         await reddit.post("test")
         mock_sleep.assert_has_calls([mock.call(1), mock.call(1)])
 
@@ -317,15 +305,10 @@ class TestReddit(UnitTest):
         ),
     )
     @mock.patch("asyncio.sleep", return_value=None)
-    async def test_post_ratelimit__under_threshold__seconds_failure(
-        self, mock_sleep, reddit
-    ):
+    async def test_post_ratelimit__under_threshold__seconds_failure(self, mock_sleep, reddit):
         with pytest.raises(RedditAPIException) as exception:
             await reddit.post("test")
-        assert (
-            exception.value.items[0].message
-            == "You are doing that too much. Try again in 1 second."
-        )
+        assert exception.value.items[0].message == "You are doing that too much. Try again in 1 second."
         mock_sleep.assert_has_calls([mock.call(6), mock.call(4), mock.call(2)])
 
     async def test_read_only__with_authenticated_core__legacy_refresh_token(self):
@@ -358,9 +341,7 @@ class TestReddit(UnitTest):
             assert not reddit.read_only
 
     async def test_read_only__with_script_authenticated_core(self):
-        async with Reddit(
-            password="dummy", username="dummy", **self.REQUIRED_DUMMY_SETTINGS
-        ) as reddit:
+        async with Reddit(password="dummy", username="dummy", **self.REQUIRED_DUMMY_SETTINGS) as reddit:
             assert not reddit.read_only
             reddit.read_only = True
             assert reddit.read_only
@@ -368,9 +349,7 @@ class TestReddit(UnitTest):
             assert not reddit.read_only
 
     async def test_read_only__without_trusted_authenticated_core(self):
-        async with Reddit(
-            password=None, username=None, **self.REQUIRED_DUMMY_SETTINGS
-        ) as reddit:
+        async with Reddit(password=None, username=None, **self.REQUIRED_DUMMY_SETTINGS) as reddit:
             assert reddit.read_only
             with pytest.raises(ClientException):
                 reddit.read_only = False
@@ -395,9 +374,7 @@ class TestReddit(UnitTest):
                 settings = self.REQUIRED_DUMMY_SETTINGS.copy()
                 settings[setting] = Config.CONFIG_NOT_SET
                 Reddit(**settings)
-            assert str(excinfo.value).startswith(
-                f"Required configuration setting {setting!r} missing."
-            )
+            assert str(excinfo.value).startswith(f"Required configuration setting {setting!r} missing.")
             if setting == "client_secret":
                 assert "set to None" in str(excinfo.value)
 
@@ -409,9 +386,7 @@ class TestReddit(UnitTest):
                 settings = self.REQUIRED_DUMMY_SETTINGS.copy()
                 settings[setting] = None
                 Reddit(**settings)
-            assert str(excinfo.value).startswith(
-                f"Required configuration setting {setting!r} missing."
-            )
+            assert str(excinfo.value).startswith(f"Required configuration setting {setting!r} missing.")
 
     def test_reddit__site_name_no_section(self):
         with pytest.raises(configparser.NoSectionError) as excinfo:
@@ -422,21 +397,15 @@ class TestReddit(UnitTest):
     async def test_request__badrequest_with_no_json_body(self, mock_session):
         response = MagicMock(status=400, text=AsyncMock(return_value=""))
         response.json.side_effect = ValueError
-        mock_session.return_value.request = MagicMock(
-            side_effect=BadRequest(response=response)
-        )
+        mock_session.return_value.request = MagicMock(side_effect=BadRequest(response=response))
 
-        async with Reddit(
-            client_id="dummy", client_secret="dummy", user_agent="dummy"
-        ) as reddit:
+        async with Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy") as reddit:
             with pytest.raises(Exception) as excinfo:
                 await reddit.request(method="POST", path="/")
         assert str(excinfo.value) == "received 400 HTTP response"
 
     async def test_request__json_and_body(self):
-        async with Reddit(
-            client_id="dummy", client_secret="dummy", user_agent="dummy"
-        ) as reddit:
+        async with Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy") as reddit:
             with pytest.raises(ClientException) as excinfo:
                 await reddit.request(
                     data={"key": "value"},
@@ -444,9 +413,7 @@ class TestReddit(UnitTest):
                     method="POST",
                     path="/",
                 )
-            assert str(excinfo.value).startswith(
-                "At most one of 'data' or 'json' is supported."
-            )
+            assert str(excinfo.value).startswith("At most one of 'data' or 'json' is supported.")
 
     async def test_submission(self, reddit):
         submission = await reddit.submission("2gmzqe", fetch=False)
