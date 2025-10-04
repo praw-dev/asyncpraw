@@ -34,9 +34,8 @@ class Objector:
 
         """
         if isinstance(data, list):
-            # Fetching a Submission returns a list (of two items).
-            # Although it's handled manually in `Submission._fetch()`,
-            # assume it's a possibility here.
+            # Fetching a Submission returns a list (of two items). Although it's handled
+            # manually in `Submission._fetch()`, assume it's a possibility here.
             return None
 
         errors = data.get("json", {}).get("errors")

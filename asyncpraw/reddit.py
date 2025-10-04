@@ -36,6 +36,7 @@ try:
 
     UPDATE_CHECKER_MISSING = False
 except ImportError:  # pragma: no cover
+    update_check = None
     UPDATE_CHECKER_MISSING = True
 
 if TYPE_CHECKING:
@@ -43,7 +44,6 @@ if TYPE_CHECKING:
 
     import asyncprawcore
 
-    import asyncpraw
     import asyncpraw.models
 
 Comment = models.Comment
@@ -110,7 +110,8 @@ class Reddit:
 
     async def __aexit__(self, *_: object) -> None:
         """Handle the context manager close."""
-        await self.close()
+        if self._core is not None:
+            await self._core.close()
 
     def __deepcopy__(self, memodict: dict[str, Any] | None = None) -> Reddit:
         """Shallow copy on deepcopy.
@@ -209,7 +210,9 @@ class Reddit:
             await reddit.close()
 
         """
-        self._core = self._authorized_core = self._read_only_core = None
+        self._core: asyncprawcore.Session | None = None
+        self._authorized_core: asyncprawcore.Session | None = None
+        self._read_only_core: asyncprawcore.Session | None = None
         self._objector: Objector
         self._unique_counter = 0
 
@@ -243,7 +246,7 @@ class Reddit:
             raise MissingRequiredAttributeException(msg)
         self._check_for_update()
         self._prepare_objector()
-        self.requestor = self._prepare_asyncprawcore(requestor_class=requestor_class, requestor_kwargs=requestor_kwargs)
+        self._prepare_asyncprawcore(requestor_class=requestor_class, requestor_kwargs=requestor_kwargs)
 
         self.auth = models.Auth(self, None)
         """An instance of :class:`.Auth`.
@@ -500,7 +503,7 @@ class Reddit:
         *,
         requestor_class: type[Requestor] | None = None,
         requestor_kwargs: Any | None = None,
-    ) -> Requestor:
+    ) -> None:
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
 
@@ -515,8 +518,6 @@ class Reddit:
             self._prepare_trusted_asyncprawcore(requestor)
         else:
             self._prepare_untrusted_asyncprawcore(requestor)
-
-        return requestor
 
     def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator) -> None:
         if self.config.refresh_token:
@@ -607,10 +608,6 @@ class Reddit:
             except Redirect as e:
                 return e.response.headers.get("location")
         return url
-
-    async def close(self) -> None:
-        """Close the requestor."""
-        await self.requestor.close()
 
     async def comment(
         self,

@@ -1,10 +1,9 @@
 import os
 import sys
 from pathlib import Path
+from unittest import mock
 
 import pytest
-
-from unittest import mock
 
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException
