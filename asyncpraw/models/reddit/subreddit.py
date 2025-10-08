@@ -3511,7 +3511,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBa
                         media_path=image["image_path"],
                         upload_type="gallery",
                     )
-                )[0],
+                ),
             })
         response = await self._reddit.request(json=data, method="POST", path=API_PATH["submit_gallery_post"])
         response = response["json"]

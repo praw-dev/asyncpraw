@@ -59,6 +59,10 @@ Unreleased
   - :meth:`.SubredditCollections.__call__`
   - :meth:`.SubredditHelper.__call__`
 
+**Fixed**
+
+- An issue where submitting a gallery post with websockets enabled would fail.
+
 **Removed**
 
 - Remove ``Reddit.random_subreddit``, ``Subreddit.random``, and
