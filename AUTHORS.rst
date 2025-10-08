@@ -94,5 +94,6 @@ Source Contributors
 - zacc `@zacc <https://github.com/zacc>`_
 - Arkadiy Illarionov `@qarkai <https://github.com/qarkai>`_
 - c0d3rman `@c0d3rman <https://github.com/c0d3rman>`
+- Joe Kerhin `@jkerhin <https://github.com/jkerhin>`_
 - Aaron Becker `@aaronjbecker <https://github.com/aaronjbecker>`_
 - Add "Name <email (optional)> and github profile link" above this line.
