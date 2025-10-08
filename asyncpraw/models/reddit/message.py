@@ -161,39 +161,3 @@ class SubredditMessage(Message):
     .. _unix time: https://en.wikipedia.org/wiki/Unix_time
 
     """
-
-    async def mute(self) -> None:
-        """Mute the sender of this :class:`.SubredditMessage`.
-
-        For example, to mute the sender of the first :class:`.SubredditMessage` in the
-        authenticated users' inbox:
-
-        .. code-block:: python
-
-            from asyncpraw.models import SubredditMessage
-
-            async for message in reddit.inbox.all():
-                if isinstance(message, SubredditMessage):
-                    await msg.mute()
-                    break
-
-        """
-        await self._reddit.post(API_PATH["mute_sender"], data={"id": self.fullname})
-
-    async def unmute(self) -> None:
-        """Unmute the sender of this :class:`.SubredditMessage`.
-
-        For example, to unmute the sender of the first :class:`.SubredditMessage` in the
-        authenticated users' inbox:
-
-        .. code-block:: python
-
-            from asyncpraw.models import SubredditMessage
-
-            async for message in reddit.inbox.all():
-                if isinstance(message, SubredditMessage):
-                    await msg.unmute()
-                    break
-
-        """
-        await self._reddit.post(API_PATH["unmute_sender"], data={"id": self.fullname})

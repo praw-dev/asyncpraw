@@ -85,6 +85,8 @@ Unreleased
 - Remove ability to use :class:`.CommentForest` as an asynchronous iterator.
 - Remove ability to use :class:`.Reddit` as an synchronous context manager.
 - Remove key ``reset_timestamp`` from :meth:`.limits`.
+- Remove ``SubredditMessage.mute`` and ``SubredditMessage.unmute`` methods.
+- Remove ``InboxableMixin.unblock_subreddit`` method.
 
 7.8.1 (2024/12/21)
 ------------------
@@ -266,7 +268,7 @@ Unreleased
   WikiPage.
 - :meth:`.revert` to revert a WikiPage to a specified revision.
 - :meth:`.Inbox.mark_all_read` to mark all messages as read with one API call.
-- :meth:`~.InboxableMixin.unblock_subreddit` to unblock a subreddit.
+- ``InboxableMixin.unblock_subreddit`` to unblock a subreddit.
 - :meth:`.update_crowd_control_level` to update the crowd control level of a post.
 - :meth:`.moderator_subreddits`, which returns information about the subreddits that the
   authenticated user moderates, has been restored.
