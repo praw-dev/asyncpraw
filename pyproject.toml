@@ -29,6 +29,7 @@ dependencies = [
   "aiofiles",
   "aiohttp <4",
   "asyncprawcore >=3.0.1, <4",
+  "coverage>=7.10.7",
   "defusedxml ==0.7.1",
   "update_checker >=0.18"
 ]

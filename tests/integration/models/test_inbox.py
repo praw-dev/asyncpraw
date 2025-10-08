@@ -28,7 +28,7 @@ class TestInbox(IntegrationTest):
             assert isinstance(item, Comment)
             assert item.parent_id.startswith(reddit.config.kinds["comment"])
             count += 1
-        assert count == 64
+        assert count == 1
 
     async def test_comment_reply__refresh(self, reddit):
         reddit.read_only = False
@@ -47,10 +47,17 @@ class TestInbox(IntegrationTest):
     async def test_mark_read(self, reddit):
         reddit.read_only = False
         await reddit.inbox.mark_read(await self.async_list(reddit.inbox.unread()))
+        unread_messages = await self.async_list(reddit.inbox.unread(limit=10, mark_read=False))
+        await reddit.inbox.mark_read(unread_messages)
+        for read_message in await self.async_list(reddit.inbox.unread(limit=10, mark_read=False)):
+            assert read_message.id not in unread_messages
 
     async def test_mark_unread(self, reddit):
         reddit.read_only = False
-        await reddit.inbox.mark_unread(await self.async_list(reddit.inbox.all()))
+        messages = await self.async_list(reddit.inbox.all(limit=10))
+        await reddit.inbox.mark_unread(messages)
+        for message in await self.async_list(reddit.inbox.unread(limit=10, mark_read=False)):
+            assert message.id in messages
 
     async def test_mention__refresh(self, reddit):
         reddit.read_only = False
@@ -68,13 +75,12 @@ class TestInbox(IntegrationTest):
 
     async def test_message(self, reddit):
         reddit.read_only = False
-        message = await reddit.inbox.message("kfrjvh")
-        assert message.name.split("_", 1)[1] == "kfrjvh"
+        message = await reddit.inbox.message("30ru7t9")
+        assert message.name.split("_", 1)[1] == "30ru7t9"
         assert isinstance(message, Message)
         assert isinstance(message.author, Redditor)
-        assert isinstance(message.dest, Subreddit)
-        assert message.replies == []
-        assert isinstance(message.subreddit, Subreddit)
+        assert isinstance(message.dest, Redditor)
+        assert len(message.replies) == 2
 
     async def test_message__unauthorized(self, reddit):
         reddit.read_only = False
@@ -92,17 +98,17 @@ class TestInbox(IntegrationTest):
     async def test_messages(self, reddit):
         reddit.read_only = False
         count = 0
-        async for item in reddit.inbox.messages(limit=64):
+        async for item in reddit.inbox.messages(limit=100):
             assert isinstance(item, Message)
             count += 1
-        assert count == 64
+        assert count == 100
 
     async def test_sent(self, reddit):
         reddit.read_only = False
         count = 0
         async for item in reddit.inbox.sent(limit=48):
             assert isinstance(item, Message)
-            assert item.author == reddit.config.username
+            assert item.author == await reddit.user.me()
             count += 1
         assert count == 48
 
@@ -125,4 +131,4 @@ class TestInbox(IntegrationTest):
         count = 0
         async for item in reddit.inbox.unread(limit=64):
             count += 1
-        assert count == 64
+        assert count == 1

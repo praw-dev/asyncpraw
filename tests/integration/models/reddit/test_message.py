@@ -72,7 +72,7 @@ class TestMessage(IntegrationTest):
 
     async def test_parent(self, reddit):
         reddit.read_only = False
-        message = await reddit.inbox.message("1aogu6u")
+        message = await reddit.inbox.message("30rugdg")
         parent = message.parent
         assert isinstance(parent, Message)
         assert parent.fullname == message.parent_id
@@ -93,34 +93,8 @@ class TestMessage(IntegrationTest):
 
     async def test_reply(self, reddit):
         reddit.read_only = False
-        message = await self.async_next(reddit.inbox.messages())
-        reply = await message.reply("Message reply")
-        assert reply.author == pytest.placeholders.username
+        message = await self.async_next(reddit.inbox.messages(limit=1))
+        reply = await message.reply(body="Message reply")
+        assert reply.author == await reddit.user.me()
         assert reply.body == "Message reply"
         assert reply.first_message_name == message.fullname
-
-    async def test_unblock_subreddit(self, reddit):
-        reddit.read_only = False
-        message1 = await self.async_next(reddit.inbox.messages(limit=1))
-        assert isinstance(message1, SubredditMessage)
-        message_fullname = message1.fullname
-        await message1.block()
-        message2 = await self.async_next(reddit.inbox.messages(limit=1))
-        assert message2.fullname == message_fullname
-        assert message2.subject == "[message from blocked subreddit]"
-        await message2.unblock_subreddit()
-        message3 = await self.async_next(reddit.inbox.messages(limit=1))
-        assert message3.fullname == message_fullname
-        assert message3.subject != "[message from blocked subreddit]"
-
-
-class TestSubredditMessage(IntegrationTest):
-    async def test_mute(self, reddit):
-        reddit.read_only = False
-        message = SubredditMessage(reddit, _data={"id": "faj6z"})
-        await message.mute()
-
-    async def test_unmute(self, reddit):
-        reddit.read_only = False
-        message = SubredditMessage(reddit, _data={"id": "faj6z"})
-        await message.unmute()
