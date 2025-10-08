@@ -87,6 +87,7 @@ Unreleased
 - Remove key ``reset_timestamp`` from :meth:`.limits`.
 - Remove ``SubredditMessage.mute`` and ``SubredditMessage.unmute`` methods.
 - Remove ``InboxableMixin.unblock_subreddit`` method.
+- Remove ``Reddit.close`` method. Use ``async with Reddit(...)`` instead.
 
 7.8.1 (2024/12/21)
 ------------------

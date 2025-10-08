@@ -81,6 +81,17 @@ body:
     type: input
     validations:
       required: true
+  - id: sync-praw
+    attributes:
+      description: Does this issue also occur in `praw`?
+      label: Does this issue occur in `praw`?
+      multiple: false
+      options:
+        - "Yes"
+        - "No"
+    type: dropdown
+    validations:
+      required: true
   - id: anything-else
     attributes:
       description: Anything that will give us more context about the issue you are encountering!
