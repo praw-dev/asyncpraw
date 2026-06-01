@@ -1,10 +1,12 @@
-Change Log
-==========
+############
+ Change Log
+############
 
 Async PRAW follows `semantic versioning <https://semver.org/>`_.
 
-Unreleased
-----------
+************
+ Unreleased
+************
 
 **Added**
 
@@ -88,15 +90,17 @@ Unreleased
 - Remove ``SubredditMessage.mute`` and ``SubredditMessage.unmute`` methods.
 - Remove ``InboxableMixin.unblock_subreddit`` method.
 
-7.8.1 (2024/12/21)
-------------------
+********************
+ 7.8.1 (2024/12/21)
+********************
 
 **Changed**
 
 - Bump asyncprawcore minimum version.
 
-7.8.0 (2024/10/20)
-------------------
+********************
+ 7.8.0 (2024/10/20)
+********************
 
 **Added**
 
@@ -141,8 +145,9 @@ Unreleased
 
 - XML parsing error when media uploads fail.
 
-7.7.1 (2023/07/11)
-------------------
+********************
+ 7.7.1 (2023/07/11)
+********************
 
 **Changed**
 
@@ -152,8 +157,9 @@ Unreleased
 
 - An issue with replying to a modmail conversation results in a error.
 
-7.7.0 (2023/02/25)
-------------------
+********************
+ 7.7.0 (2023/02/25)
+********************
 
 **Added**
 
@@ -166,8 +172,9 @@ Unreleased
 - An issue when uploading media during the submission of a new media post.
 - Removal reasons are now returned in the same order as they appear on Reddit.
 
-7.6.1 (2022/11/28)
-------------------
+********************
+ 7.6.1 (2022/11/28)
+********************
 
 **Changed**
 
@@ -179,8 +186,9 @@ Unreleased
 - An issue where :class:`.ModmailConversation`'s ``messages`` attribute would only
   contain the latest message.
 
-7.6.0 (2022/10/23)
-------------------
+********************
+ 7.6.0 (2022/10/23)
+********************
 
 **Added**
 
@@ -227,8 +235,9 @@ Unreleased
   alphabetically, and prevent breaking changes when adding new arguments to existing
   methods.
 
-7.5.0 (2021/11/13)
-------------------
+********************
+ 7.5.0 (2021/11/13)
+********************
 
 **Added**
 
@@ -259,8 +268,9 @@ Unreleased
 - An import error when using Async PRAW in environments where ``libsqlite3-dev`` is
   needed to utilize ``aiosqlite`` package which depends on the ``sqlite3`` builtin.
 
-7.4.0 (2021/07/30)
-------------------
+********************
+ 7.4.0 (2021/07/30)
+********************
 
 **Added**
 
@@ -284,8 +294,9 @@ Unreleased
 
 - :class:`.Reddit` keyword argument ``token_manager``.
 
-7.3.1 (2021/07/06)
-------------------
+********************
+ 7.3.1 (2021/07/06)
+********************
 
 **Changed**
 
@@ -298,8 +309,9 @@ Unreleased
 - Fixed an issue where some :class:`.RedditBase` objects would be sent in a request as
   ``"None"``.
 
-7.3.0 (2021/06/18)
-------------------
+********************
+ 7.3.0 (2021/06/18)
+********************
 
 **Added**
 
@@ -338,8 +350,9 @@ Unreleased
 - Fixed bug where :meth:`~.FullnameMixin.fullname` sometimes returned the wrong
   fullname.
 
-7.2.0 (2021/02/25)
-------------------
+********************
+ 7.2.0 (2021/02/25)
+********************
 
 **Added**
 
@@ -360,8 +373,9 @@ Unreleased
   switch forward to the Async PRAW 8 behavior set ``praw8_raise_exception_on_me=True``
   in your ``asyncpraw.Reddit(...)`` call.
 
-7.1.1 (2021/02/11)
-------------------
+********************
+ 7.1.1 (2021/02/11)
+********************
 
 **Added**
 
@@ -405,13 +419,15 @@ Unreleased
 - An issue where streams could get stuck on a deleted item and never pull new items.
 - Fix subreddit style asset uploading.
 
-7.1.0 (2020/07/16)
-------------------
+********************
+ 7.1.0 (2020/07/16)
+********************
 
 - First official Async PRAW release!
 
-7.1.0.pre1 (2020/07/16)
------------------------
+*************************
+ 7.1.0.pre1 (2020/07/16)
+*************************
 
 - Initial Async PRAW pre-release.
 

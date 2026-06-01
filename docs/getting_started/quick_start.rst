@@ -1,12 +1,14 @@
-Quick Start
-===========
+#############
+ Quick Start
+#############
 
 In this section, we go over everything you need to know to start building scripts or
 bots using Async PRAW, the Asynchronous Python Reddit API Wrapper. It's fun and easy.
 Let's get started.
 
-Prerequisites
--------------
+***************
+ Prerequisites
+***************
 
 :Python Knowledge: You need to know at least a little Python and some understanding of
     asynchronous usage in Python to use Async PRAW. Async PRAW supports `Python 3.9+`_.
@@ -40,11 +42,12 @@ Prerequisites
 With these prerequisites satisfied, you are ready to learn how to do some of the most
 common tasks with Reddit's API.
 
-Common Tasks
-------------
+**************
+ Common Tasks
+**************
 
 Obtain a :class:`.Reddit` Instance
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==================================
 
 .. warning::
 
@@ -61,7 +64,7 @@ There are two distinct states a :class:`.Reddit` instance can be in: :ref:`read-
 .. _read-only:
 
 Read-only :class:`.Reddit` Instances
-++++++++++++++++++++++++++++++++++++
+------------------------------------
 
 To create a read-only :class:`.Reddit` instance, you need three pieces of information:
 
@@ -117,7 +120,7 @@ authorized :class:`.Reddit` instance.
 .. _authorized:
 
 Authorized :class:`.Reddit` Instances
-+++++++++++++++++++++++++++++++++++++
+-------------------------------------
 
 In order to create an authorized :class:`.Reddit` instance, two additional pieces of
 information are required for **script** applications (see :ref:`oauth` for other
@@ -158,7 +161,7 @@ to read-only mode whenever you want:
     some options available to you. Please see: :ref:`configuration`.
 
 Close Connections in :class:`.Reddit`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=====================================
 
 The asynchronous context requires closing your session when you finish using Reddit:
 
@@ -177,7 +180,7 @@ Or, you can use an asynchronous context manager:
     # connection is closed
 
 Obtain a :class:`.Subreddit`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 
 To obtain a :class:`.Subreddit` instance, pass the subreddit's name when calling
 ``subreddit`` on your :class:`.Reddit` instance. For example:
@@ -195,7 +198,7 @@ To obtain a :class:`.Subreddit` instance, pass the subreddit's name when calling
     # Output: a subreddit for discussion of ...
 
 Obtain :class:`.Submission` Instances from a :class:`.Subreddit`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================================================
 
 Now that you have a :class:`.Subreddit` instance, you can iterate through some of its
 submissions, each bound to an instance of :class:`.Submission`. There are several sorts
@@ -245,7 +248,7 @@ You can create :class:`.Submission` instances in other ways too:
     submission = await reddit.submission(url="https://www.reddit.com/...")
 
 Obtain :class:`.Redditor` Instances
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===================================
 
 There are several ways to obtain a redditor (a :class:`.Redditor` instance). Two of the
 most common ones are:
@@ -268,7 +271,7 @@ For example:
     # Output: u/bboe's karma
 
 Obtain :class:`.Comment` Instances
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==================================
 
 Submissions have a ``comments`` attribute that is a :class:`.CommentForest` instance.
 That instance is iterable and represents the top-level comments of the submission by the
@@ -306,7 +309,7 @@ updated. See :ref:`extracting_comments` for an example.
 .. _determine-available-attributes-of-an-object:
 
 Determine Available Attributes of an Object
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================================
 
 If you have a Async PRAW object, e.g., :class:`.Comment`, :class:`.Message`,
 :class:`.Redditor`, or :class:`.Submission`, and you want to see what attributes are

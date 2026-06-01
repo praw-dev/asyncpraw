@@ -1,5 +1,6 @@
-Async PRAW: The Asynchronous Python Reddit API Wrapper
-======================================================
+########################################################
+ Async PRAW: The Asynchronous Python Reddit API Wrapper
+########################################################
 
 .. image:: https://img.shields.io/pypi/v/asyncpraw.svg
     :alt: Latest Async PRAW Version
@@ -42,8 +43,9 @@ you're set.
 
 .. _installation:
 
-Installation
-------------
+**************
+ Installation
+**************
 
 Async PRAW is supported on Python 3.9+. The recommended way to install Async PRAW is via
 `pip <https://pypi.python.org/pypi/pip>`_.
@@ -61,8 +63,9 @@ To install the latest development version of Async PRAW run the following instea
 For instructions on installing Python and pip see "The Hitchhiker's Guide to Python"
 `Installation Guides <https://docs.python-guide.org/en/latest/starting/installation/>`_.
 
-Quickstart
-----------
+************
+ Quickstart
+************
 
 Assuming you already have a credentials for a script-type OAuth application you can
 instantiate an instance of Async PRAW like so:
@@ -111,8 +114,9 @@ With the ``reddit`` instance you can then interact with Reddit:
 Please see Async PRAW's `documentation <https://asyncpraw.readthedocs.io/>`_ for more
 examples of what you can do with Async PRAW.
 
-Async PRAW Discussion and Support
----------------------------------
+***********************************
+ Async PRAW Discussion and Support
+***********************************
 
 For those new to Python, or would otherwise consider themselves a Python beginner,
 please consider asking questions on the `r/learnpython
@@ -146,13 +150,15 @@ welcome.
     <https://github.com/praw-dev/.github/blob/main/CODE_OF_CONDUCT.md>`_. By
     participating in this project you agree to abide by its terms.
 
-Documentation
--------------
+***************
+ Documentation
+***************
 
 Async PRAW's documentation is located at https://asyncpraw.readthedocs.io/.
 
-History
--------
+*********
+ History
+*********
 
 `February 2019
 <https://github.com/praw-dev/asyncpraw/commit/55480eb3d59dc7bc3d1480d83b98c95effc77181>`_:
@@ -163,8 +169,9 @@ PRAW.
 <https://github.com/praw-dev/asyncpraw/commit/b8b8a4bf3618639968e8be379e85e2ff84f2307a>`_:
 Async PRAW was moved into the praw-dev namespace.
 
-License
--------
+*********
+ License
+*********
 
 Async PRAW's source (v7.1.1+) is provided under the `Simplified BSD License
 <https://github.com/praw-dev/asyncpraw/blob/30796acc29b4ba2335cf0eab414477702c29452f/LICENSE.txt>`_.

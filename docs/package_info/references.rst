@@ -1,5 +1,6 @@
-References
-==========
+############
+ References
+############
 
 - `Async PRAW Source Code <https://github.com/praw-dev/asyncpraw>`_.
 - `PRAW Source Code <https://github.com/praw-dev/praw>`_.

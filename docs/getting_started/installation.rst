@@ -1,5 +1,6 @@
-Installing Async PRAW
-=====================
+#######################
+ Installing Async PRAW
+#######################
 
 Async PRAW supports Python 3.9+. The recommended way to install Async PRAW is via
 ``pip``.
@@ -20,8 +21,9 @@ Async PRAW supports Python 3.9+. The recommended way to install Async PRAW is vi
 For instructions on installing Python and pip see "The Hitchhiker's Guide to Python"
 `Installation Guides <https://docs.python-guide.org/en/latest/starting/installation/>`_.
 
-Updating Async PRAW
--------------------
+*********************
+ Updating Async PRAW
+*********************
 
 Async PRAW can be updated by running:
 
@@ -29,8 +31,9 @@ Async PRAW can be updated by running:
 
     pip install --upgrade asyncpraw
 
-Installing Older Versions
--------------------------
+***************************
+ Installing Older Versions
+***************************
 
 Older versions of Async PRAW can be installed by specifying the version number as part
 of the installation command:
@@ -39,8 +42,9 @@ of the installation command:
 
     pip install asyncpraw==7.1.0
 
-Installing the Latest Development Version
------------------------------------------
+*******************************************
+ Installing the Latest Development Version
+*******************************************
 
 Is there a feature that was recently merged into Async PRAW that you cannot wait to take
 advantage of? If so, you can install Async PRAW directly from GitHub like so:
