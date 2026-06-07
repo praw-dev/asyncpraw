@@ -2,8 +2,14 @@
  Installing Async PRAW
 #######################
 
-Async PRAW supports Python 3.9+. The recommended way to install Async PRAW is via
-``pip``.
+Async PRAW supports Python 3.10+. The recommended way to install Async PRAW is with `uv
+<https://docs.astral.sh/uv/>`_.
+
+.. code-block:: bash
+
+    uv add asyncpraw
+
+Alternatively, Async PRAW can be installed via ``pip``:
 
 .. code-block:: bash
 
@@ -29,6 +35,12 @@ Async PRAW can be updated by running:
 
 .. code-block:: bash
 
+    uv sync --upgrade-package asyncpraw
+
+or with pip:
+
+.. code-block:: bash
+
     pip install --upgrade asyncpraw
 
 ***************************
@@ -37,6 +49,12 @@ Async PRAW can be updated by running:
 
 Older versions of Async PRAW can be installed by specifying the version number as part
 of the installation command:
+
+.. code-block:: bash
+
+    uv add asyncpraw==7.1.0
+
+or with pip:
 
 .. code-block:: bash
 
