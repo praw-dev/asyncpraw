@@ -1,8 +1,7 @@
 jobs:
   tag_release:
     name: Tag Release
-    secrets: inherit
-    uses: praw-dev/.github/.github/workflows/tag_release.yml@main
+    uses: praw-dev/.github/.github/workflows/tag_release.yml@16645281204644e9e0e79c3b249b2472dff307a7 # v1.1.0
 name: Tag Release
 on:
   push:
