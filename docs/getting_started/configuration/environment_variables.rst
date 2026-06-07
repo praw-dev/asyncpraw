@@ -1,7 +1,8 @@
 .. _environment_variables:
 
-Async PRAW Environment Variables
-================================
+##################################
+ Async PRAW Environment Variables
+##################################
 
 The second-highest priority configuration options can be passed to a program via
 environment variables prefixed with ``praw_``.

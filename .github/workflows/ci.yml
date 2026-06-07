@@ -1,10 +1,67 @@
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  ci:
-    name: CI
-    secrets: inherit
-    uses: praw-dev/.github/.github/workflows/ci.yml@main
-    with:
-      package: asyncpraw
+  test:
+    name: test with ${{ matrix.env }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: "3.10"
+            os: macos-latest
+          - env: "3.10"
+            os: ubuntu-latest
+          - env: "3.10"
+            os: windows-latest
+          - env: "3.11"
+            os: ubuntu-latest
+          - env: "3.12"
+            os: ubuntu-latest
+          - env: "3.13"
+            os: ubuntu-latest
+          - env: "3.14"
+            os: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Install tox
+        env:
+          PYTHON_VERSION: ${{ matrix.env }}
+        run: uv tool install --python-preference only-managed --python "$PYTHON_VERSION" tox --with tox-uv
+      - name: Run test suite
+        env:
+          ENSURE_NO_UNUSED_CASSETTES: 1
+          PYTHON_VERSION: ${{ matrix.env }}
+        run: tox run --skip-pkg-install -e "py${PYTHON_VERSION//./}"
+      - name: Run lint tests
+        env:
+          SKIP: no-commit-to-branch
+        if: matrix.env == '3.10'
+        run: tox run --skip-pkg-install --skip-env py
+  test-network:
+    name: Test Network Request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Run network test
+        env:
+          NETWORK_TEST_CLIENT_ID: ${{ secrets.NETWORK_TEST_CLIENT_ID }}
+          NETWORK_TEST_CLIENT_SECRET: ${{ secrets.NETWORK_TEST_CLIENT_SECRET }}
+        run: uv run --frozen --group test pytest tests/integration/test_github_actions.py::test_github_actions
 name: CI
-on: [ pull_request, push ]
-permissions: read-all
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+permissions:
+  contents: read

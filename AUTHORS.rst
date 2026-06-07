@@ -1,10 +1,12 @@
-Author/Maintainer
-=================
+###################
+ Author/Maintainer
+###################
 
 - Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/lilspazjoekp>`_
 
-Documentation Contributors
-==========================
+############################
+ Documentation Contributors
+############################
 
 - Dale Cudmore <dalecudmore@gmail.com> `@DCuddies <https://github.com/DCuddies>`_
 - Zhifu Ge <zhifu@me.com> `@zhifuge <https://github.com/zhifuge>`_
@@ -34,18 +36,21 @@ Documentation Contributors
 - Andrew Chen Wang `@Andrew-Chen-Wang <https://github.com/Andrew-Chen-Wang>`_
 - Add "Name <email (optional)> and github profile link" above this line.
 
-PRAW Author
-===========
+#############
+ PRAW Author
+#############
 
 - Bryce Boe <bbzbryce@gmail.com> `@bboe <https://github.com/bboe>`_
 
-Logo Creator
-============
+##############
+ Logo Creator
+##############
 
 - kungming2 `@kungming2 <https://github.com/kungming2>`_
 
-Source Contributors
-===================
+#####################
+ Source Contributors
+#####################
 
 - Ethan Dalool <edalool@yahoo.com> `@voussoir <https://github.com/voussoir>`_
 - William McKinnerney <me@williammck.net> `@williammck <https://github.com/williammck>`_

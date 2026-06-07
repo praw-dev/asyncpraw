@@ -1,11 +1,13 @@
-Migrating to Async PRAW
-=======================
+#########################
+ Migrating to Async PRAW
+#########################
 
 With the conversion to async, there are few critical changes that had to be made. This
 page outlines a few those changes.
 
-Network Requests
-----------------
+******************
+ Network Requests
+******************
 
 .. _network_requests:
 
@@ -16,8 +18,9 @@ well. You can tell if a method needs awaited by looking at the docs. For example
 :meth:`.me` has the word ``await`` before ``me(use_cache: bool = True)`` in the header
 for that method since that method makes a network request.
 
-Lazy Loading
-------------
+**************
+ Lazy Loading
+**************
 
 .. _lazy_loading:
 
@@ -104,8 +107,9 @@ you need to call the ``.load()`` method first:
     # network request is not made as object is already fully fetched
     print(submission.score)
 
-Getting items by Indices
-------------------------
+**************************
+ Getting items by Indices
+**************************
 
 .. _objects_by_indices:
 

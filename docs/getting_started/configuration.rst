@@ -1,7 +1,8 @@
 .. _configuration:
 
-Configuring Async PRAW
-======================
+########################
+ Configuring Async PRAW
+########################
 
 .. note::
 
@@ -26,8 +27,9 @@ Environment variables have the highest priority, followed by keyword arguments t
 
 .. _proxy-support:
 
-Using an HTTP or HTTPS proxy with Async PRAW
---------------------------------------------
+**********************************************
+ Using an HTTP or HTTPS proxy with Async PRAW
+**********************************************
 
 Async PRAW internally relies upon the aiohttp_ package to handle HTTP requests. Aiohttp
 supports use of ``HTTP_PROXY`` and ``HTTPS_PROXY`` environment variables in order to
@@ -53,7 +55,6 @@ configuring Async PRAW like so:
     import asyncpraw
     from aiohttp import ClientSession
 
-
     session = ClientSession(trust_env=True)
     reddit = asyncpraw.Reddit(
         client_id="SI8pN3DSbt0zor",
@@ -64,8 +65,9 @@ configuring Async PRAW like so:
         username="fakebot3",
     )
 
-Configuring a custom aiohttp ClientSession
-------------------------------------------
+********************************************
+ Configuring a custom aiohttp ClientSession
+********************************************
 
 Async PRAW uses aiohttp_ to handle networking. If your use-case requires custom
 configuration, it is possible to configure a ClientSession_ and then use it with Async
@@ -82,7 +84,6 @@ certificate without an exception from aiohttp_, first export the certificate as 
 
     import aiohttp
     import asyncpraw
-
 
     ssl_ctx = ssl.create_default_context(cafile="/path/to/certfile.pem")
 
