@@ -1,7 +1,8 @@
 .. _reddit_initialization:
 
-Keyword Arguments to :class:`.Reddit`
-=====================================
+#######################################
+ Keyword Arguments to :class:`.Reddit`
+#######################################
 
 Most of Async PRAW's documentation will demonstrate configuring Async PRAW through the
 use of keyword arguments when initializing instances of :class:`.Reddit`. All of the

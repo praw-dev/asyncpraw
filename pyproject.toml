@@ -4,7 +4,30 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
-  "tox-uv>=1.22.1"
+  "packaging",
+  "tox-uv>=1.22.1",
+  {include-group = "lint"},
+  {include-group = "test"}
+]
+docs = [
+  "furo",
+  "sphinx",
+  "sphinx-autodoc-typehints",
+  "sphinxcontrib-trio"
+]
+lint = [
+  "pre-commit",
+  "ruff >=0.0.292",
+  {include-group = "docs"}
+]
+test = [
+  "aiohttp <3.13", # vcrpy's aiohttp stubs break on 3.13+ (AsyncStreamReaderMixin removed)
+  "coverage>=7.10.7",
+  "pytest >=8",
+  "pytest-asyncio >=1.0.0",
+  "pytest-vcr ==1.*",
+  "urllib3 ==1.*",
+  "vcrpy ==4.2.1"
 ]
 
 [project]
@@ -18,18 +41,17 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Utilities"
 ]
 dependencies = [
   "aiofiles",
   "aiohttp <4",
   "asyncprawcore >=3.0.1, <4",
-  "coverage>=7.10.7",
   "defusedxml ==0.7.1",
   "update_checker >=0.18"
 ]
@@ -39,32 +61,7 @@ license = {file = "LICENSE.txt"}
 maintainers = [{name = "Joel Payne", email = "lilspazjoekp@gmail.com"}]
 name = "asyncpraw"
 readme = "README.rst"
-requires-python = ">=3.9"
-
-[project.optional-dependencies]
-dev = [
-  "packaging",
-  "asyncpraw[lint]",
-  "asyncpraw[test]"
-]
-lint = [
-  "asyncpraw[readthedocs]",
-  "pre-commit",
-  "ruff >=0.0.292"
-]
-readthedocs = [
-  "furo",
-  "sphinx",
-  "sphinx-autodoc-typehints",
-  "sphinxcontrib-trio"
-]
-test = [
-  "pytest ==7.*",
-  "pytest-asyncio ==0.18.*",
-  "pytest-vcr ==1.*",
-  "urllib3 ==1.*",
-  "vcrpy ==4.2.1"
-]
+requires-python = ">=3.10"
 
 [project.urls]
 "Change Log" = "https://asyncpraw.readthedocs.io/en/latest/package_info/change_log.html"
@@ -167,3 +164,34 @@ ban-relative-imports = "all"
 "asyncpraw/models/mod_notes.py" = ["FA100"]
 "asyncpraw/models/reddit/collections.py" = ["A005"]
 "tests/*.py" = ["SLF001"]
+
+[tool.tox]
+envlist = ["py310", "py311", "py312", "py313", "py314", "docs", "pre-commit"]
+minversion = "4.22"
+
+[tool.tox.env.docs]
+commands = [
+  ["sphinx-build", "--keep-going", "docs/", "{env_tmp_dir}/html"]
+]
+dependency_groups = ["docs"]
+description = "build docs with sphinx"
+runner = "uv-venv-lock-runner"
+
+[tool.tox.env.pre-commit]
+commands = [
+  ["pre-commit", "run", "--all-files"]
+]
+dependency_groups = ["lint"]
+description = "run pre-commit on code base"
+pass_env = ["SKIP"]
+runner = "uv-venv-lock-runner"
+
+[tool.tox.env_run_base]
+commands = [
+  ["coverage", "run", "--source", "asyncpraw", "--module", "pytest", "{posargs}"],
+  ["coverage", "report", "-m", "--fail-under=100"]
+]
+dependency_groups = ["test"]
+description = "Run test under {base_python}"
+pass_env = ["ENSURE_NO_UNUSED_CASSETTES"]
+runner = "uv-venv-lock-runner"

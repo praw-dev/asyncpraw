@@ -1,5 +1,6 @@
-Util
-====
+######
+ Util
+######
 
 .. autoclass:: asyncpraw.models.util.BoundedSet
     :inherited-members:

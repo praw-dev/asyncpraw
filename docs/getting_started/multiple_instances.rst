@@ -1,5 +1,6 @@
-Running Multiple Instances of Async PRAW
-========================================
+##########################################
+ Running Multiple Instances of Async PRAW
+##########################################
 
 Async PRAW performs rate limiting dynamically based on the HTTP response headers from
 Reddit. As a result you can safely run a handful of Async PRAW instances without any
@@ -14,8 +15,9 @@ additional configuration.
 If you are authorized on other users' behalf, each authorization should have its own
 rate limit, even when running from a single IP address.
 
-Multiple Programs
------------------
+*******************
+ Multiple Programs
+*******************
 
 The recommended way to run multiple instances of Async PRAW is to simply write separate
 independent Python programs. With this approach one program can monitor a comment stream
