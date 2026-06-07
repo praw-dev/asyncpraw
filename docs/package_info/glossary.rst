@@ -15,22 +15,11 @@
 
   Here is a list of the six different types of objects returned from Reddit:
 
-
   - ``t1`` These objects represent :class:`.Comment`\ s.
-
-
   - ``t2`` These objects represent :class:`.Redditor`\ s.
-
-
   - ``t3`` These objects represent :class:`.Submission`\ s.
-
-
   - ``t4`` These objects represent :class:`.Message`\ s.
-
-
   - ``t5`` These objects represent :class:`.Subreddit`\ s.
-
-
   - ``t6`` These objects represent :class:`.Trophy`\ s.
 
 .. _websocket:
