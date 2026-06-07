@@ -7,7 +7,7 @@ jobs:
     secrets:
       NETWORK_TEST_CLIENT_ID: ${{ secrets.NETWORK_TEST_CLIENT_ID }}
       NETWORK_TEST_CLIENT_SECRET: ${{ secrets.NETWORK_TEST_CLIENT_SECRET }}
-    uses: praw-dev/.github/.github/workflows/ci.yml@e86d5e7389cc00472a01675465bfa72b1dffd884 # v1.2.0
+    uses: praw-dev/.github/.github/workflows/ci.yml@1149a76ab5ae488cdc632ce70548ec3c1a278305 # v1.3.0
     with:
       min_python: "3.10"
       network_test: true
