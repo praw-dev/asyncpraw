@@ -26,7 +26,7 @@ test = [
   "pytest >=8",
   "pytest-asyncio >=1.0.0",
   "pytest-vcr ==1.*",
-  "urllib3 ==1.*",
+  "urllib3==2.*",
   "vcrpy >=8.1.1"
 ]
 
