@@ -22,6 +22,10 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
 - Drop support for Python 3.9, which was end-of-life on 2025-10-31.
 - Bumped asyncprawcore to 3.0.2.
+- Require ``update_checker[async] >=1.0, <2.0`` and perform the update check using its
+  native async API on the first request, instead of a blocking call during ``Reddit``
+  initialization. The 1.0 release is dependency-free, dropping ``requests`` from Async
+  PRAW's transitive dependencies.
 - Drop support for Python 3.8, which was end-of-life on 2024-10-07.
 - Change ``Reddit.user.me`` to raise :class:`.ReadOnlyException` when called in
   :attr:`.read_only` mode.

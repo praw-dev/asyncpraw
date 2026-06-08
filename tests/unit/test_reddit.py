@@ -28,17 +28,21 @@ class MockClientSession:
 class TestReddit(UnitTest):
     REQUIRED_DUMMY_SETTINGS = {x: "dummy" for x in ["client_id", "client_secret", "user_agent"]}
 
-    @mock.patch("asyncpraw.reddit.update_check", create=True)
+    @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", False)
+    @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
+    @mock.patch("asyncpraw.reddit.async_update_check", create=True, new_callable=AsyncMock)
     async def test_check_for_updates(self, mock_update_check):
-        Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
+        reddit = Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
+        await reddit._check_for_update()
         assert Reddit.update_checked
-        mock_update_check.assert_called_with("asyncpraw", __version__)
+        mock_update_check.assert_called_with(package_name="asyncpraw", package_version=__version__)
 
     @mock.patch("asyncpraw.reddit.Reddit.update_checked", False)
     @mock.patch("asyncpraw.reddit.UPDATE_CHECKER_MISSING", True)
-    @mock.patch("asyncpraw.reddit.update_check", create=True)
+    @mock.patch("asyncpraw.reddit.async_update_check", create=True, new_callable=AsyncMock)
     async def test_check_for_updates_update_checker_missing(self, mock_update_check):
-        Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
+        reddit = Reddit(check_for_updates="1", **self.REQUIRED_DUMMY_SETTINGS)
+        await reddit._check_for_update()
         assert not Reddit.update_checked
         assert not mock_update_check.called
 

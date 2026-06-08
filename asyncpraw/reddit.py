@@ -32,7 +32,7 @@ from asyncpraw.exceptions import ClientException, MissingRequiredAttributeExcept
 from asyncpraw.objector import Objector
 
 try:
-    from update_checker import update_check
+    from update_checker import async_update_check
 
     UPDATE_CHECKER_MISSING = False
 except ImportError:  # pragma: no cover
@@ -241,7 +241,6 @@ class Reddit:
         if self.config.client_secret is self.config.CONFIG_NOT_SET:
             msg = f"{required_message.format('client_secret')}\nFor installed applications this value must be set to None via a keyword argument to the Reddit class constructor."
             raise MissingRequiredAttributeException(msg)
-        self._check_for_update()
         self._prepare_objector()
         self.requestor = self._prepare_asyncprawcore(requestor_class=requestor_class, requestor_kwargs=requestor_kwargs)
 
@@ -437,11 +436,11 @@ class Reddit:
 
         """
 
-    def _check_for_update(self) -> None:
+    async def _check_for_update(self) -> None:
         if UPDATE_CHECKER_MISSING:
             return
         if not Reddit.update_checked and self.config.check_for_updates:
-            update_check(__package__, __version__)
+            await async_update_check(package_name=__package__, package_version=__version__)
             Reddit.update_checked = True
 
     def _handle_rate_limit(self, exception: RedditAPIException) -> int | float | None:
@@ -908,6 +907,7 @@ class Reddit:
         :param path: The path to fetch.
 
         """
+        await self._check_for_update()
         if data and json:
             msg = "At most one of 'data' or 'json' is supported."
             raise ClientException(msg)
