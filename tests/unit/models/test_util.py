@@ -2,6 +2,8 @@
 
 from collections import namedtuple
 
+import pytest
+
 from asyncpraw.models.util import (
     BoundedSet,
     ExponentialCounter,
@@ -147,3 +149,48 @@ class TestStream(UnitTest):
             counter += 1
             if counter == 400:
                 break
+
+    async def test_stream__exception_handler(self, monkeypatch):
+        async def _sleep(*_):
+            pass
+
+        monkeypatch.setattr("asyncpraw.models.util.asyncio.sleep", _sleep)
+        Thing = namedtuple("Thing", ["fullname"])
+        handled = []
+        responses = [RuntimeError("boom"), [Thing(1)], [Thing(2)]]
+
+        async def generate(limit, **kwargs):
+            response = responses.pop(0)
+            if isinstance(response, Exception):
+                raise response
+            for item in response:
+                yield item
+
+        stream = stream_generator(generate, exception_handler=handled.append)
+        # The first fetch raises and is handled; the stream then resumes and keeps
+        # yielding new items on subsequent iterations.
+        assert (await self.async_next(stream)).fullname == 1
+        assert (await self.async_next(stream)).fullname == 2
+        assert len(handled) == 1
+        assert str(handled[0]) == "boom"
+
+    async def test_stream__exception_handler__reraise(self):
+        async def generate(limit, **kwargs):
+            raise RuntimeError("boom")
+            yield  # unreachable; makes ``generate`` an async generator
+
+        def handler(exception):
+            raise exception
+
+        stream = stream_generator(generate, exception_handler=handler)
+        with pytest.raises(RuntimeError):
+            await self.async_next(stream)
+
+    async def test_stream__exception_propagates_without_handler(self):
+        async def generate(limit, **kwargs):
+            raise RuntimeError("boom")
+            yield  # unreachable; makes ``generate`` an async generator
+
+        stream = stream_generator(generate)
+        with pytest.raises(RuntimeError):
+            await self.async_next(stream)
