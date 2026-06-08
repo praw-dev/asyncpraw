@@ -10,6 +10,8 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
 **Added**
 
+- :meth:`.Redditor.overview` to iterate over a Redditor's combined comments and
+  submissions, mirroring the user overview page on Reddit.
 - Add support for Python 3.13.
 - Add support for Python 3.14.
 - Add support for optional Markdown-formatted ``selftext`` when submitting link, image,

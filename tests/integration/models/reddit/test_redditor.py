@@ -192,6 +192,26 @@ class TestRedditorListings(IntegrationTest):
         items = await self.async_list(redditor.new())
         assert len(items) == 100
 
+    async def test_overview__controversial(self, reddit):
+        redditor = await reddit.redditor("spez")
+        items = await self.async_list(redditor.overview.controversial())
+        assert len(items) == 100
+
+    async def test_overview__hot(self, reddit):
+        redditor = await reddit.redditor("spez")
+        items = await self.async_list(redditor.overview.hot())
+        assert len(items) == 100
+
+    async def test_overview__new(self, reddit):
+        redditor = await reddit.redditor("spez")
+        items = await self.async_list(redditor.overview.new())
+        assert len(items) == 100
+
+    async def test_overview__top(self, reddit):
+        redditor = await reddit.redditor("spez")
+        items = await self.async_list(redditor.overview.top())
+        assert len(items) == 100
+
     async def test_saved(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor(pytest.placeholders.username)
