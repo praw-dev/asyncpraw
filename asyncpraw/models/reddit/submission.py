@@ -16,7 +16,13 @@ from asyncpraw.models.comment_forest import CommentForest
 from asyncpraw.models.listing.listing import Listing
 from asyncpraw.models.listing.mixins import SubmissionListingMixin
 from asyncpraw.models.reddit.base import RedditBase
-from asyncpraw.models.reddit.mixins import FullnameMixin, ModNoteMixin, ThingModerationMixin, UserContentMixin
+from asyncpraw.models.reddit.mixins import (
+    CreatedMixin,
+    FullnameMixin,
+    ModNoteMixin,
+    ThingModerationMixin,
+    UserContentMixin,
+)
 from asyncpraw.models.reddit.poll import PollData
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.reddit.subreddit import Subreddit
@@ -403,7 +409,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
         )
 
 
-class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, RedditBase):
+class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, CreatedMixin, RedditBase):
     """A class for submissions to Reddit.
 
     .. include:: ../../typical_attributes.rst

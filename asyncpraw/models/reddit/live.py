@@ -8,7 +8,7 @@ from asyncpraw.const import API_PATH
 from asyncpraw.models.list.redditor import RedditorList
 from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.reddit.base import RedditBase
-from asyncpraw.models.reddit.mixins import FullnameMixin
+from asyncpraw.models.reddit.mixins import CreatedMixin, FullnameMixin
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
@@ -264,7 +264,7 @@ class LiveContributorRelationship:
         await self.thread._reddit.post(url, data=data)
 
 
-class LiveThread(RedditBase):
+class LiveThread(CreatedMixin, RedditBase):
     """An individual :class:`.LiveThread` object.
 
     .. include:: ../../typical_attributes.rst
@@ -719,7 +719,7 @@ class LiveUpdateContribution:
         await self.update.thread._reddit.post(url, data=data)
 
 
-class LiveUpdate(FullnameMixin, RedditBase):
+class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
     """An individual :class:`.LiveUpdate` object.
 
     .. include:: ../../typical_attributes.rst

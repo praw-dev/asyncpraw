@@ -8,6 +8,7 @@ from urllib.parse import quote
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import CreatedMixin
 from asyncpraw.util import cachedproperty
 
 if TYPE_CHECKING:
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
-class Rule(RedditBase):
+class Rule(CreatedMixin, RedditBase):
     """An individual :class:`.Rule` object.
 
     .. include:: ../../typical_attributes.rst

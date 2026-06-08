@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from asyncpraw.const import API_PATH
 from asyncpraw.models.listing.mixins import RedditorListingMixin
 from asyncpraw.models.reddit.base import RedditBase
-from asyncpraw.models.reddit.mixins import FullnameMixin, MessageableMixin
+from asyncpraw.models.reddit.mixins import CreatedMixin, FullnameMixin, MessageableMixin
 from asyncpraw.models.util import stream_generator
 from asyncpraw.util.cache import cachedproperty
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
-class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, RedditBase):
+class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMixin, RedditBase):
     """A class representing the users of Reddit.
 
     .. include:: ../../typical_attributes.rst

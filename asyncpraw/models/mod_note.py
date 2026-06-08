@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from asyncpraw.endpoints import API_PATH
 from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.reddit.mixins import CreatedMixin
 
 
-class ModNote(AsyncPRAWBase):
+class ModNote(CreatedMixin, AsyncPRAWBase):
     """Represent a moderator note.
 
     .. include:: ../../typical_attributes.rst
@@ -44,6 +45,8 @@ class ModNote(AsyncPRAWBase):
     .. _unix time: https://en.wikipedia.org/wiki/Unix_time
 
     """
+
+    _created_at_attribute = "created_at"
 
     def __eq__(self, other: ModNote | str | object) -> bool:
         """Return whether the other instance equals the current."""

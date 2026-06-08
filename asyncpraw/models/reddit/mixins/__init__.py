@@ -6,6 +6,7 @@ from json import dumps
 from typing import TYPE_CHECKING, Optional
 
 from asyncpraw.const import API_PATH
+from asyncpraw.models.reddit.mixins.created import CreatedMixin
 from asyncpraw.models.reddit.mixins.editable import EditableMixin
 from asyncpraw.models.reddit.mixins.fullname import FullnameMixin
 from asyncpraw.models.reddit.mixins.inboxable import InboxableMixin
