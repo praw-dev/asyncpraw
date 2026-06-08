@@ -247,7 +247,7 @@ dev = [
     { name = "sphinxcontrib-trio" },
     { name = "tox-uv", specifier = ">=1.22.1" },
     { name = "urllib3", specifier = "==1.*" },
-    { name = "vcrpy", specifier = "==4.2.1" },
+    { name = "vcrpy", specifier = ">=8.1.1" },
 ]
 docs = [
     { name = "furo" },
@@ -270,7 +270,7 @@ test = [
     { name = "pytest-asyncio", specifier = ">=1.0.0" },
     { name = "pytest-vcr", specifier = "==1.*" },
     { name = "urllib3", specifier = "==1.*" },
-    { name = "vcrpy", specifier = "==4.2.1" },
+    { name = "vcrpy", specifier = ">=8.1.1" },
 ]
 
 [[package]]
@@ -1431,15 +1431,6 @@ wheels = [
 ]
 
 [[package]]
-name = "six"
-version = "1.17.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031, upload-time = "2024-12-04T17:35:28.174Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050, upload-time = "2024-12-04T17:35:26.475Z" },
-]
-
-[[package]]
 name = "snowballstemmer"
 version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1855,17 +1846,15 @@ wheels = [
 
 [[package]]
 name = "vcrpy"
-version = "4.2.1"
+version = "8.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyyaml" },
-    { name = "six" },
     { name = "wrapt" },
-    { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/74/ae/642573c8f79999a6da22e78d80c53924e0faa140bfca3dcc41240dcd567f/vcrpy-4.2.1.tar.gz", hash = "sha256:7cd3e81a2c492e01c281f180bcc2a86b520b173d2b656cb5d89d99475423e013", size = 78895, upload-time = "2022-08-31T19:18:17.841Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/07/bcfd5ebd7cb308026ab78a353e091bd699593358be49197d39d004e5ad83/vcrpy-8.1.1.tar.gz", hash = "sha256:58e3053e33b423f3594031cb758c3f4d1df931307f1e67928e30cf352df7709f", size = 85770, upload-time = "2026-01-04T19:22:03.886Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/c5/f9efe3fea61a844ef1c47c800139d02984442a3a61ab4608fb2a682bc78d/vcrpy-4.2.1-py2.py3-none-any.whl", hash = "sha256:efac3e2e0b2af7686f83a266518180af7a048619b2f696e7bad9520f5e2eac09", size = 40815, upload-time = "2022-08-31T19:18:15.869Z" },
+    { url = "https://files.pythonhosted.org/packages/3a/d7/f79b05a5d728f8786876a7d75dfb0c5cae27e428081b2d60152fb52f155f/vcrpy-8.1.1-py3-none-any.whl", hash = "sha256:2d16f31ad56493efb6165182dd99767207031b0da3f68b18f975545ede8ac4b9", size = 42445, upload-time = "2026-01-04T19:22:02.532Z" },
 ]
 
 [[package]]

@@ -1,6 +1,8 @@
 """Async PRAW Integration test suite."""
 
 import asyncio
+import copy
+import io
 import os
 
 import aiohttp
@@ -17,6 +19,13 @@ from ..utils import (
     ensure_integration_test,
     filter_access_token,
 )
+
+# vcrpy 8 deep-copies each request before matching/recording (vcr.config.before_record_request).
+# File-upload tests pass open file handles in the request body, which cannot be deep-copied
+# ("cannot pickle 'BufferedReader' instances"). A file handle wraps an OS resource, so copying it
+# by reference is the only sane behavior; register that for the file types the tests use.
+for _file_type in (io.BufferedReader, io.BufferedRandom, io.FileIO, io.TextIOWrapper):
+    copy._deepcopy_dispatch[_file_type] = lambda value, _memo: value
 
 CASSETTES_PATH = "tests/integration/cassettes"
 existing_cassettes = set()
