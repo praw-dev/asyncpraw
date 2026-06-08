@@ -53,7 +53,7 @@ dependencies = [
   "aiohttp <4",
   "asyncprawcore >=3.0.1, <4",
   "defusedxml ==0.7.1",
-  "update_checker >=0.18"
+  "update_checker[async] >=1.0, <2.0"
 ]
 dynamic = ["version", "description"]
 keywords = ["reddit", "api", "wrapper", "asyncpraw", "praw", "async", "asynchronous"]
