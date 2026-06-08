@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Dict
 
 import pytest
-from vcr.persisters.filesystem import FilesystemPersister
+from vcr.persisters.filesystem import CassetteNotFoundError, FilesystemPersister
 from vcr.serialize import deserialize, serialize
 
 from tests.conftest import placeholders as _placeholders
@@ -45,15 +45,16 @@ def ensure_integration_test(cassette):
 
 def filter_access_token(response):
     """Add VCR callback to filter access token."""
-    request_uri = response["url"]
-    if "api/v1/access_token" not in request_uri or response["status"]["code"] != 200:
+    if response["status"]["code"] != 200:
         return response
-    body = response["body"]["string"].decode()
+    # ``before_record_response`` only receives the response, so the access token is
+    # located by inspecting the body rather than the request URI.
+    body = response["body"]["string"]
     try:
-        token = json.loads(body)["access_token"]
-        response["body"]["string"] = response["body"]["string"].replace(token.encode("utf-8"), b"<ACCESS_TOKEN>")
+        token = json.loads(body.decode())["access_token"]
+        response["body"]["string"] = body.replace(token.encode("utf-8"), b"<ACCESS_TOKEN>")
         _placeholders["access_token"] = token
-    except (KeyError, TypeError, ValueError):
+    except (AttributeError, KeyError, TypeError, ValueError):
         pass
     return response
 
@@ -79,8 +80,8 @@ class CustomPersister(FilesystemPersister):
         try:
             with open(cassette_path) as f:
                 cassette_content = f.read()
-        except OSError:
-            raise ValueError("Cassette not found.")
+        except OSError as error:
+            raise CassetteNotFoundError("Cassette not found.") from error
         for replacement, value in [
             (v, f"<{k.upper()}>") for k, v in {**cls.additional_placeholders, **_placeholders}.items()
         ]:
