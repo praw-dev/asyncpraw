@@ -33,7 +33,7 @@ from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.listing.mixins import SubredditListingMixin
 from asyncpraw.models.reddit.base import RedditBase
 from asyncpraw.models.reddit.emoji import SubredditEmoji
-from asyncpraw.models.reddit.mixins import FullnameMixin, MessageableMixin
+from asyncpraw.models.reddit.mixins import CreatedMixin, FullnameMixin, MessageableMixin
 from asyncpraw.models.reddit.modmail import ModmailConversation
 from asyncpraw.models.reddit.removal_reasons import SubredditRemovalReasons
 from asyncpraw.models.reddit.rules import SubredditRules
@@ -2416,7 +2416,7 @@ class ModeratorRelationship(SubredditRelationship):
         await self.subreddit._reddit.post(url, data=data)
 
 
-class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, RedditBase):
+class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedMixin, RedditBase):
     """A class for Subreddits.
 
     To obtain an instance of this class for r/test execute:

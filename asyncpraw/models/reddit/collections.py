@@ -8,6 +8,7 @@ from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models.base import AsyncPRAWBase
 from asyncpraw.models.reddit.base import RedditBase
+from asyncpraw.models.reddit.mixins import CreatedMixin
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.reddit.submission import Submission
 from asyncpraw.models.reddit.subreddit import Subreddit
@@ -15,6 +16,7 @@ from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from datetime import datetime
 
     import asyncpraw.models
 
@@ -412,7 +414,7 @@ class SubredditCollections(AsyncPRAWBase):
         self.subreddit = subreddit
 
 
-class Collection(RedditBase):
+class Collection(CreatedMixin, RedditBase):
     """Class to represent a :class:`.Collection`.
 
     Obtain an instance via:
@@ -454,6 +456,17 @@ class Collection(RedditBase):
     """
 
     STR_FIELD = "collection_id"
+
+    _created_at_attribute = "created_at_utc"
+
+    @property
+    def updated_datetime(self) -> datetime:
+        """Return the last update time as a timezone-aware :class:`datetime.datetime`.
+
+        The returned object is localized to the system's timezone.
+
+        """
+        return self._to_local_datetime(self.last_update_utc)
 
     @cachedproperty
     def mod(self) -> CollectionModeration:

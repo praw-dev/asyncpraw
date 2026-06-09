@@ -8,7 +8,13 @@ from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException, InvalidURL
 from asyncpraw.models.comment_forest import CommentForest
 from asyncpraw.models.reddit.base import RedditBase
-from asyncpraw.models.reddit.mixins import FullnameMixin, InboxableMixin, ThingModerationMixin, UserContentMixin
+from asyncpraw.models.reddit.mixins import (
+    CreatedMixin,
+    FullnameMixin,
+    InboxableMixin,
+    ThingModerationMixin,
+    UserContentMixin,
+)
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.reddit.submission import Submission
 from asyncpraw.models.reddit.subreddit import Subreddit
@@ -18,7 +24,7 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
-class Comment(InboxableMixin, UserContentMixin, FullnameMixin, RedditBase):
+class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, RedditBase):
     """A class that represents a Reddit comment.
 
     .. include:: ../../typical_attributes.rst

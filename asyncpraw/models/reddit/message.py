@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.reddit.base import RedditBase
-from asyncpraw.models.reddit.mixins import FullnameMixin, InboxableMixin, ReplyableMixin
+from asyncpraw.models.reddit.mixins import CreatedMixin, FullnameMixin, InboxableMixin, ReplyableMixin
 from asyncpraw.models.reddit.redditor import Redditor
 from asyncpraw.models.reddit.subreddit import Subreddit
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
-class Message(InboxableMixin, ReplyableMixin, FullnameMixin, RedditBase):
+class Message(InboxableMixin, ReplyableMixin, FullnameMixin, CreatedMixin, RedditBase):
     """A class for private messages.
 
     .. include:: ../../typical_attributes.rst
