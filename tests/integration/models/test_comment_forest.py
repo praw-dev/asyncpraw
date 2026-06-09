@@ -36,8 +36,9 @@ class TestCommentForest(IntegrationTest):
         assert len(submission.comments.list()) == len(submission._comments_by_id)
 
     async def test_replace__all_with_comment_limit(self, reddit):
-        submission = await reddit.submission("3hahrw")
+        submission = await reddit.submission("3hahrw", fetch=False)
         submission.comment_limit = 10
+        await submission.load()
         skipped = await submission.comments.replace_more(limit=None, threshold=0)
         assert len(skipped) == 0
         assert len(submission.comments.list()) >= 500
