@@ -107,6 +107,12 @@ you need to call the ``.load()`` method first:
     # network request is not made as object is already fully fetched
     print(submission.score)
 
+Because a :class:`.Submission` is fetched on initialization, its ``comment_sort`` and
+``comment_limit`` attributes -- and :meth:`.Submission.add_fetch_param` -- must be set
+before it is fetched. Initialize the submission with ``fetch=False``, set them, then
+call ``load()``. Setting any of them after the submission is fetched raises
+:class:`.ClientException`.
+
 **************************
  Getting items by Indices
 **************************
