@@ -86,12 +86,27 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
   - :meth:`.SubredditCollections.__call__`
   - :meth:`.SubredditHelper.__call__`
 
+- :meth:`.Submission.add_fetch_param` now raises :class:`.ClientException` when called
+  on a submission that has already been fetched, rather than logging a warning, since
+  the added parameters would have no effect.
+- The ``comment_sort`` and ``comment_limit`` attributes of a :class:`.Submission` must
+  now be set before the submission is fetched; setting either after the submission has
+  been fetched raises :class:`.ClientException` instead of logging a warning. Because
+  ``reddit.submission()`` fetches by default, initialize the submission with
+  ``fetch=False``, set the attributes, then call :meth:`~.Submission.load`.
+
 **Fixed**
 
 - An issue where submitting a gallery post with websockets enabled would fail.
 
 **Removed**
 
+- The ``warn_additional_fetch_params`` configuration option, which is obsolete now that
+  adding fetch parameters to an already-fetched submission raises
+  :class:`.ClientException`.
+- The ``warn_comment_sort`` configuration option, which is obsolete now that setting
+  ``comment_sort`` or ``comment_limit`` after the comments have been fetched raises
+  :class:`.ClientException`.
 - Remove ``Reddit.random_subreddit``, ``Subreddit.random``, and
   ``Subreddit.random_rising``.
 - Remove ``APIException`` class.
