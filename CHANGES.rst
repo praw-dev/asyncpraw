@@ -98,6 +98,8 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 **Fixed**
 
 - An issue where submitting a gallery post with websockets enabled would fail.
+- Fix ``TypeError`` when objectifying a response whose ``json.errors`` field is ``null``
+  rather than an empty list (e.g. ``api/hide``).
 
 **Removed**
 
