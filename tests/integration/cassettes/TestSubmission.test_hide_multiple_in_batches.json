@@ -138,7 +138,7 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/hide/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/hide?raw_json=1"
       },
       "response": {
         "body": {
@@ -173,7 +173,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/hide/?raw_json=1"
+        "url": "https://oauth.reddit.com/api/hide?raw_json=1"
       }
     },
     {
@@ -200,7 +200,7 @@
           ]
         },
         "method": "POST",
-        "uri": "https://oauth.reddit.com/api/hide/?raw_json=1"
+        "uri": "https://oauth.reddit.com/api/hide?raw_json=1"
       },
       "response": {
         "body": {
@@ -235,7 +235,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://oauth.reddit.com/api/hide/?raw_json=1"
+        "url": "https://oauth.reddit.com/api/hide?raw_json=1"
       }
     }
   ],
