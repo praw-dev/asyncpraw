@@ -67,7 +67,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
     STR_FIELD = "name"
 
     @classmethod
-    def from_data(cls, reddit: asyncpraw.Reddit, data: dict[str, Any]) -> Redditor | None:
+    def from_data(cls, reddit: asyncpraw.Reddit, data: str) -> Redditor | None:
         """Return an instance of :class:`.Redditor`, or ``None`` from ``data``."""
         if data == "[deleted]":
             return None
@@ -98,7 +98,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
         return RedditorModNotes(self._reddit, self)
 
     @cachedproperty
-    def stream(self) -> asyncpraw.models.reddit.redditor.RedditorStream:
+    def stream(self) -> RedditorStream:
         """Provide an instance of :class:`.RedditorStream`.
 
         Streams can be used to indefinitely retrieve new comments made by a redditor,
@@ -128,7 +128,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
         return self._reddit.config.kinds["redditor"]
 
     @property
-    def _path(self) -> str:
+    def _path(self) -> str:  # pyright: ignore[reportIncompatibleVariableOverride]  # read-only property override of base str attribute
         return API_PATH["user"].format(user=self)
 
     def __init__(
@@ -404,6 +404,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
 
         """
         container = await self._reddit.user.me()
+        assert container is not None
         data = {
             "container": container.fullname,
             "name": str(self),
@@ -437,7 +438,7 @@ class RedditorStream:
         """
         self.redditor = redditor
 
-    def comments(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Comment]:
+    def comments(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Comment]:
         """Yield new comments as they become available.
 
         Comments are yielded oldest first. Up to 100 historical comments will initially
@@ -456,7 +457,7 @@ class RedditorStream:
         """
         return stream_generator(self.redditor.comments.new, **stream_options)
 
-    def submissions(self, **stream_options: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
+    def submissions(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Submission]:
         """Yield new submissions as they become available.
 
         Submissions are yielded oldest first. Up to 100 historical submissions will

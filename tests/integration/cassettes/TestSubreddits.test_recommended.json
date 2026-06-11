@@ -79,7 +79,7 @@
       },
       "response": {
         "body": {
-          "string": "[]"
+          "string": "[{\"sr_name\": \"ExposurePorn\"}, {\"sr_name\": \"SkyPorn\"}, {\"sr_name\": \"TrueNorthPictures\"}, {\"sr_name\": \"earthgifs\"}, {\"sr_name\": \"unitedstatesofamerica\"}, {\"sr_name\": \"ruralporn\"}, {\"sr_name\": \"waterporn\"}, {\"sr_name\": \"CityPorn\"}, {\"sr_name\": \"winterporn\"}]"
         },
         "headers": {
           "Accept-Ranges": "bytes",

@@ -9,7 +9,7 @@ import re
 from copy import copy
 from itertools import islice
 from logging import getLogger
-from typing import IO, TYPE_CHECKING, Any
+from typing import IO, TYPE_CHECKING, Any, cast
 from urllib.parse import urlparse
 
 from asyncprawcore import (
@@ -36,15 +36,16 @@ try:
 
     UPDATE_CHECKER_MISSING = False
 except ImportError:  # pragma: no cover
+    async_update_check = None
     UPDATE_CHECKER_MISSING = True
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator, Iterable
+    from collections.abc import AsyncGenerator, Iterable, Iterator
 
     import asyncprawcore
 
-    import asyncpraw
     import asyncpraw.models
+    from asyncpraw.exceptions import RedditErrorItem
 
 Comment = models.Comment
 Redditor = models.Redditor
@@ -437,15 +438,15 @@ class Reddit:
         """
 
     async def _check_for_update(self) -> None:
-        if UPDATE_CHECKER_MISSING:
+        if UPDATE_CHECKER_MISSING or async_update_check is None:
             return
         if not Reddit.update_checked and self.config.check_for_updates:
-            await async_update_check(package_name=__package__, package_version=__version__)
+            await async_update_check(package_name=__package__ or "asyncpraw", package_version=__version__)
             Reddit.update_checked = True
 
     def _handle_rate_limit(self, exception: RedditAPIException) -> int | float | None:
         for item in exception.items:
-            if item.error_type == "RATELIMIT":
+            if item.error_type == "RATELIMIT" and item.message is not None:
                 amount_search = self._ratelimit_regex.search(item.message)
                 if not amount_search:
                     break
@@ -461,11 +462,11 @@ class Reddit:
     async def _objectify_request(
         self,
         *,
-        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        data: dict[str, Any] | bytes | IO | str | None = None,
         files: dict[str, IO] | None = None,
         json: dict[Any, Any] | list[Any] | None = None,
         method: str = "",
-        params: str | dict[str, str] | None = None,
+        params: dict[str, str | int] | None = None,
         path: str = "",
     ) -> Any:
         """Run a request through the ``Objector``.
@@ -498,7 +499,7 @@ class Reddit:
         self,
         *,
         requestor_class: type[Requestor] | None = None,
-        requestor_kwargs: Any | None = None,
+        requestor_kwargs: dict[str, Any] | None = None,
     ) -> Requestor:
         requestor_class = requestor_class or Requestor
         requestor_kwargs = requestor_kwargs or {}
@@ -574,6 +575,8 @@ class Reddit:
         self._objector = Objector(self, mappings)
 
     def _prepare_trusted_asyncprawcore(self, requestor: Requestor) -> None:
+        # Only reached when client_secret is set (see _prepare_asyncprawcore).
+        assert self.config.client_secret is not None
         authenticator = TrustedAuthenticator(
             requestor,
             self.config.client_id,
@@ -604,7 +607,9 @@ class Reddit:
             try:
                 await self.get(url)
             except Redirect as e:
-                return e.response.headers.get("location")
+                location = e.response.headers.get("location")
+                assert location is not None
+                return location
         return url
 
     async def close(self) -> None:
@@ -651,9 +656,9 @@ class Reddit:
         self,
         path: str,
         *,
-        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        data: dict[str, Any] | bytes | IO | str | None = None,
         json: dict[Any, Any] | list[Any] | None = None,
-        params: str | dict[str, str] | None = None,
+        params: dict[str, str | int] | None = None,
     ) -> Any:
         """Return parsed objects returned from a DELETE request to ``path``.
 
@@ -680,7 +685,7 @@ class Reddit:
         self,
         path: str,
         *,
-        params: str | dict[str, str | int] | None = None,
+        params: dict[str, str | int] | None = None,
     ) -> Any:
         """Return parsed objects returned from a GET request to ``path``.
 
@@ -741,44 +746,45 @@ class Reddit:
 
             api_parameter_name = "id" if is_using_fullnames else "sr_name"
 
-            async def generator(
+            async def name_generator(
                 names: Iterable[str | asyncpraw.models.Subreddit],
             ) -> AsyncGenerator[
                 asyncpraw.models.Subreddit | asyncpraw.models.Comment | asyncpraw.models.Submission,
                 None,
-                None,
             ]:
-                iterable = iter(names) if is_using_fullnames else iter([str(item) for item in names])
+                iterable: Iterator[str] = (
+                    iter(str(item) for item in names) if is_using_fullnames else iter([str(item) for item in names])
+                )
                 while True:
                     chunk = list(islice(iterable, 100))
                     if not chunk:
                         break
-                    params = {api_parameter_name: ",".join(chunk)}
+                    params: dict[str, str | int] = {api_parameter_name: ",".join(chunk)}
                     for result in await self.get(API_PATH["info"], params=params):
                         yield result
 
-            return generator(ids_or_names)
+            return name_generator(ids_or_names)
 
-        async def generator(
+        async def url_generator(
             _url: str,
         ) -> AsyncGenerator[
             asyncpraw.models.Subreddit | asyncpraw.models.Comment | asyncpraw.models.Submission,
             None,
-            None,
         ]:
-            params = {"url": _url}
+            params: dict[str, str | int] = {"url": _url}
             for result in await self.get(API_PATH["info"], params=params):
                 yield result
 
-        return generator(url)
+        assert url is not None
+        return url_generator(url)
 
     async def patch(
         self,
         path: str,
         *,
-        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        data: dict[str, Any] | bytes | IO | str | None = None,
         json: dict[Any, Any] | list[Any] | None = None,
-        params: str | dict[str, str] | None = None,
+        params: dict[str, str | int] | None = None,
     ) -> Any:
         """Return parsed objects returned from a PATCH request to ``path``.
 
@@ -797,10 +803,10 @@ class Reddit:
         self,
         path: str,
         *,
-        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        data: dict[str, Any] | bytes | IO | str | None = None,
         files: dict[str, IO] | None = None,
         json: dict[Any, Any] | list[Any] | None = None,
-        params: str | dict[str, str] | None = None,
+        params: dict[str, str | int] | None = None,
     ) -> Any:
         """Return parsed objects returned from a POST request to ``path``.
 
@@ -819,7 +825,7 @@ class Reddit:
             data = data or {}
 
         attempts = 3
-        last_exception = None
+        last_exception: RedditAPIException | None = None
         while attempts > 0:
             attempts -= 1
             try:
@@ -839,13 +845,14 @@ class Reddit:
                 second_string = "second" if seconds == 1 else "seconds"
                 logger.debug("Rate limit hit, sleeping for %d %s", seconds, second_string)
                 await asyncio.sleep(seconds)
+        assert last_exception is not None
         raise last_exception
 
     async def put(
         self,
         path: str,
         *,
-        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        data: dict[str, Any] | bytes | IO | str | None = None,
         json: dict[Any, Any] | list[Any] | None = None,
     ) -> Any:
         """Return parsed objects returned from a PUT request to ``path``.
@@ -885,11 +892,11 @@ class Reddit:
     async def request(
         self,
         *,
-        data: dict[str, str | Any] | bytes | IO | str | None = None,
+        data: dict[str, Any] | bytes | IO | str | None = None,
         files: dict[str, IO] | None = None,
         json: dict[Any, Any] | list[Any] | None = None,
         method: str,
-        params: str | dict[str, str | int] | None = None,
+        params: dict[str, str | int] | None = None,
         path: str,
     ) -> Any:
         """Return the parsed JSON data returned from a request to URL.
@@ -911,6 +918,7 @@ class Reddit:
         if data and json:
             msg = "At most one of 'data' or 'json' is supported."
             raise ClientException(msg)
+        assert self._core is not None
         try:
             return await self._core.request(
                 data=data,
@@ -921,23 +929,29 @@ class Reddit:
                 path=path,
             )
         except BadRequest as exception:
+            error_data: dict[str, Any]
             try:
-                data = await exception.response.json(content_type=None)
+                error_data = await exception.response.json(content_type=None)
             except ValueError:
                 text = await exception.response.text()
                 if text:
-                    data = {"reason": text}
+                    error_data = {"reason": text}
                 else:
                     raise exception from None
-            if set(data) == {"error", "message"}:
+            if set(error_data) == {"error", "message"}:
                 raise
-            explanation = data.get("explanation")
-            if "fields" in data:
-                assert len(data["fields"]) == 1
-                field = data["fields"][0]
+            explanation = error_data.get("explanation")
+            if "fields" in error_data:
+                assert len(error_data["fields"]) == 1
+                field = error_data["fields"][0]
             else:
                 field = None
-            raise RedditAPIException([data["reason"], explanation, field]) from exception
+            raise RedditAPIException(
+                cast(
+                    "list[RedditErrorItem | list[str] | str]",
+                    [error_data["reason"], explanation, field],
+                )
+            ) from exception
 
     async def submission(
         self,

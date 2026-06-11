@@ -11,11 +11,18 @@ from asyncpraw.models.listing.generator import ListingGenerator
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
+    from typing_extensions import Unpack
+
+    from asyncpraw.models.listing.generator import ListingGeneratorKwargs
+
 
 class BaseListingMixin(AsyncPRAWBase):
     """Adds minimum set of methods that apply to all listing objects."""
 
     VALID_TIME_FILTERS = frozenset({"all", "day", "hour", "month", "week", "year"})
+
+    if TYPE_CHECKING:
+        _path: str
 
     @staticmethod
     def _validate_time_filter(time_filter: str) -> None:
@@ -40,7 +47,7 @@ class BaseListingMixin(AsyncPRAWBase):
         self,
         *,
         time_filter: str = "all",
-        **generator_kwargs: str | int | dict[str, str],
+        **generator_kwargs: Unpack[ListingGeneratorKwargs],
     ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for controversial items.
 
@@ -75,11 +82,12 @@ class BaseListingMixin(AsyncPRAWBase):
 
         """
         self._validate_time_filter(time_filter)
-        self._safely_add_arguments(arguments=generator_kwargs, key="params", t=time_filter)
-        url = self._prepare(arguments=generator_kwargs, sort="controversial")
-        return ListingGenerator(self._reddit, url, **generator_kwargs)
+        arguments: dict[str, Any] = dict(generator_kwargs)
+        self._safely_add_arguments(arguments=arguments, key="params", t=time_filter)
+        url = self._prepare(arguments=arguments, sort="controversial")
+        return ListingGenerator(self._reddit, url, **arguments)
 
-    def hot(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[Any]:
+    def hot(self, **generator_kwargs: Unpack[ListingGeneratorKwargs]) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for hot items.
 
         Additional keyword arguments are passed in the initialization of
@@ -107,11 +115,12 @@ class BaseListingMixin(AsyncPRAWBase):
             subreddit.hot()
 
         """
-        generator_kwargs.setdefault("params", {})
-        url = self._prepare(arguments=generator_kwargs, sort="hot")
-        return ListingGenerator(self._reddit, url, **generator_kwargs)
+        arguments: dict[str, Any] = dict(generator_kwargs)
+        arguments.setdefault("params", {})
+        url = self._prepare(arguments=arguments, sort="hot")
+        return ListingGenerator(self._reddit, url, **arguments)
 
-    def new(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[Any]:
+    def new(self, **generator_kwargs: Unpack[ListingGeneratorKwargs]) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for new items.
 
         Additional keyword arguments are passed in the initialization of
@@ -139,15 +148,16 @@ class BaseListingMixin(AsyncPRAWBase):
             subreddit.new()
 
         """
-        generator_kwargs.setdefault("params", {})
-        url = self._prepare(arguments=generator_kwargs, sort="new")
-        return ListingGenerator(self._reddit, url, **generator_kwargs)
+        arguments: dict[str, Any] = dict(generator_kwargs)
+        arguments.setdefault("params", {})
+        url = self._prepare(arguments=arguments, sort="new")
+        return ListingGenerator(self._reddit, url, **arguments)
 
     def top(
         self,
         *,
         time_filter: str = "all",
-        **generator_kwargs: str | int | dict[str, str],
+        **generator_kwargs: Unpack[ListingGeneratorKwargs],
     ) -> AsyncIterator[Any]:
         """Return a :class:`.ListingGenerator` for top items.
 
@@ -182,6 +192,7 @@ class BaseListingMixin(AsyncPRAWBase):
 
         """
         self._validate_time_filter(time_filter)
-        self._safely_add_arguments(arguments=generator_kwargs, key="params", t=time_filter)
-        url = self._prepare(arguments=generator_kwargs, sort="top")
-        return ListingGenerator(self._reddit, url, **generator_kwargs)
+        arguments: dict[str, Any] = dict(generator_kwargs)
+        self._safely_add_arguments(arguments=arguments, key="params", t=time_filter)
+        url = self._prepare(arguments=arguments, sort="top")
+        return ListingGenerator(self._reddit, url, **arguments)

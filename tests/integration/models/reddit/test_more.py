@@ -24,7 +24,7 @@ class TestMore(IntegrationTest):
         }
         more = MoreComments(reddit, data)
         more.submission = await reddit.submission("3hahrw")
-        assert len((await more.comments())) == 7
+        assert len(await more.comments()) == 7
 
     async def test_comments__continue_thread_type(self, reddit):
         data = {
@@ -36,4 +36,4 @@ class TestMore(IntegrationTest):
         }
         more = MoreComments(reddit, data)
         more.submission = await reddit.submission("3hahrw")
-        assert len((await more.comments())) == 1
+        assert len(await more.comments()) == 1

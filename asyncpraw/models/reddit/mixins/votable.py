@@ -2,11 +2,23 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from asyncpraw.const import API_PATH
+
+if TYPE_CHECKING:
+    import asyncpraw
 
 
 class VotableMixin:
     """Interface for :class:`.RedditBase` classes that can be voted on."""
+
+    if TYPE_CHECKING:
+        # Provided by the host class (:class:`.RedditBase`).
+        _reddit: asyncpraw.Reddit
+
+        @property
+        def fullname(self) -> str: ...  # noqa: D102
 
     async def _vote(self, direction: int) -> None:
         await self._reddit.post(API_PATH["vote"], data={"dir": str(direction), "id": self.fullname})

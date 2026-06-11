@@ -14,7 +14,10 @@ from asyncpraw.util.cache import cachedproperty
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
+    from typing_extensions import Unpack
+
     import asyncpraw.models
+    from asyncpraw.models.listing.generator import ListingGeneratorKwargs
 
 
 class CommentHelper(AsyncPRAWBase):
@@ -24,7 +27,7 @@ class CommentHelper(AsyncPRAWBase):
     def _path(self) -> str:
         return urljoin(self.subreddit._path, "comments/")
 
-    def __call__(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Comment]:
+    def __call__(self, **generator_kwargs: Unpack[ListingGeneratorKwargs]) -> AsyncIterator[asyncpraw.models.Comment]:
         """Return a :class:`.ListingGenerator` for the :class:`.Subreddit`'s comments.
 
         Additional keyword arguments are passed in the initialization of

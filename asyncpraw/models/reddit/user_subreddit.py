@@ -8,7 +8,7 @@ from asyncpraw.models.reddit.subreddit import Subreddit, SubredditModeration
 from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:
-    import asyncpraw.models
+    import asyncpraw
 
 
 class UserSubreddit(Subreddit):
@@ -52,7 +52,7 @@ class UserSubreddit(Subreddit):
     """
 
     @cachedproperty
-    def mod(self) -> asyncpraw.models.reddit.user_subreddit.UserSubredditModeration:
+    def mod(self) -> UserSubredditModeration:
         """Provide an instance of :class:`.UserSubredditModeration`.
 
         For example, to update the authenticated user's display name:
@@ -208,4 +208,7 @@ class UserSubredditModeration(SubredditModeration):
             current_settings[new] = current_settings.pop(old)
 
         current_settings.update(settings)
-        return await UserSubreddit._create_or_update(_reddit=self.subreddit._reddit, **current_settings)
+        return await UserSubreddit._create_or_update(  # pyright: ignore[reportReturnType]  # _create_or_update returns None but base override is annotated to return a dict
+            _reddit=self.subreddit._reddit,
+            **current_settings,  # pyright: ignore[reportArgumentType]  # heterogeneous str | int | bool values are routed through _create_or_update's **other_settings
+        )

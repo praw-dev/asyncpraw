@@ -5,7 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from datetime import datetime
+    import datetime
+    from collections.abc import Callable
 
 
 class CreatedMixin:
@@ -15,8 +16,12 @@ class CreatedMixin:
     #: creation timestamp is stored under a different name override this.
     _created_at_attribute = "created_utc"
 
+    if TYPE_CHECKING:
+        # Provided by the host class (:class:`.AsyncPRAWBase`).
+        _to_local_datetime: Callable[[float], datetime.datetime]
+
     @property
-    def created_datetime(self) -> datetime:
+    def created_datetime(self) -> datetime.datetime:
         """Return the creation time as a timezone-aware :class:`datetime.datetime`.
 
         The returned object is localized to the system's timezone.

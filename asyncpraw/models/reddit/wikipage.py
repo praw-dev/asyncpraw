@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.listing.generator import ListingGenerator
@@ -189,7 +189,8 @@ class WikiPage(RedditBase):
         subreddit: asyncpraw.models.Subreddit,
         url: str,
     ) -> AsyncIterator[dict[str, Redditor | WikiPage | str | int | bool | None]]:
-        async for revision in ListingGenerator(subreddit._reddit, url, **generator_kwargs):
+        async for item in ListingGenerator(subreddit._reddit, url, **generator_kwargs):
+            revision = cast("dict[str, Any]", item)
             if revision["author"] is not None:
                 revision["author"] = Redditor(subreddit._reddit, _data=revision["author"]["data"])
             revision["page"] = WikiPage(subreddit._reddit, subreddit, revision["page"], revision["id"])
@@ -245,7 +246,7 @@ class WikiPage(RedditBase):
         self.__dict__.update(data)
         await super()._fetch()
 
-    def _fetch_info(self) -> tuple[str, dict[str, str], dict[str, str] | None]:
+    def _fetch_info(self) -> tuple[str, dict[str, str | asyncpraw.models.Subreddit], dict[str, str] | None]:
         return (
             "wiki_page",
             {"subreddit": self.subreddit, "page": self.name},
@@ -312,7 +313,9 @@ class WikiPage(RedditBase):
         await page._fetch()
         return page
 
-    def revisions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[WikiPage]:
+    def revisions(
+        self, **generator_kwargs: Any
+    ) -> AsyncIterator[dict[str, asyncpraw.models.Redditor | WikiPage | str | int | bool | None]]:
         """Return a :class:`.ListingGenerator` for page revisions.
 
         Additional keyword arguments are passed in the initialization of

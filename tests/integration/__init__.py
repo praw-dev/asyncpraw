@@ -31,6 +31,19 @@ CASSETTES_PATH = "tests/integration/cassettes"
 existing_cassettes = set()
 used_cassettes = set()
 
+# VCR's ``uri`` matcher compares the full URI as a string, which is sensitive to query
+# parameter order. Betamax compared query parameters order-independently, so expand
+# ``uri`` into components that use VCR's order-independent ``query`` matcher.
+URI_MATCHERS = ["scheme", "host", "port", "path", "query"]
+
+
+def _expand_uri_matcher(matchers):
+    """Replace the ``uri`` matcher with order-independent component matchers."""
+    expanded = []
+    for matcher in matchers:
+        expanded.extend(URI_MATCHERS if matcher == "uri" else [matcher])
+    return expanded
+
 
 class IntegrationTest(HelperMethodMixin):
     """Base class for Async PRAW integration tests."""
@@ -60,6 +73,8 @@ class IntegrationTest(HelperMethodMixin):
                 #  Don't overwrite existing values since function markers are provided
                 #  before class markers.
                 kwargs.setdefault(key, value)
+        if "match_on" in kwargs:
+            kwargs["match_on"] = _expand_uri_matcher(kwargs["match_on"])
         with recorder.use_cassette(cassette_name, **kwargs) as cassette:
             if not cassette.write_protected:
                 ensure_environment_variables()
@@ -80,7 +95,7 @@ class IntegrationTest(HelperMethodMixin):
         vcr.before_record_response = filter_access_token
         vcr.cassette_library_dir = CASSETTES_PATH
         vcr.decode_compressed_response = True
-        vcr.match_on = ["uri", "method"]
+        vcr.match_on = ["method", *URI_MATCHERS]
         vcr.path_transformer = VCR.ensure_suffix(".json")
         vcr.register_persister(CustomPersister)
         vcr.register_serializer("custom_serializer", CustomSerializer)

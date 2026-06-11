@@ -1,4 +1,5 @@
 from base64 import urlsafe_b64encode
+from pathlib import Path
 
 import pytest
 from asyncprawcore import Forbidden, NotFound
@@ -10,8 +11,7 @@ from ... import IntegrationTest
 
 
 def large_content():
-    with open("tests/integration/files/too_large.jpg", "rb") as fp:
-        return urlsafe_b64encode(fp.read()).decode()
+    return urlsafe_b64encode(Path("tests/integration/files/too_large.jpg").read_bytes()).decode()
 
 
 class TestWikiPageModeration(IntegrationTest):

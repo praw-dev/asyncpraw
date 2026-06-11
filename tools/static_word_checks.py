@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+import pathlib
 import re
 import sys
 
@@ -33,9 +34,7 @@ class StaticChecker:
         :returns: A boolean with the status of the check
 
         """
-        if (
-            os.path.join("asyncpraw", "const.py") in filename
-        ):  # fails due to bytes blocks
+        if os.path.join("asyncpraw", "const.py") in filename:  # fails due to bytes blocks
             return True
         newcontent = re.sub(r"(^|\s)/(u|r)/", r"\1\2/", content)
         # will only replace if the character behind a /r/ is a
@@ -43,16 +42,11 @@ class StaticChecker:
         if content == newcontent:
             return True
         if self.replace:
-            with open(filename, "w") as fp:
-                fp.write(newcontent)
-            print(
-                f"{filename}: Replaced all instances of '/r/' and/or '/u/' to"
-                " 'r/' and/or 'u/'."
-            )
+            pathlib.Path(filename).write_text(newcontent)
+            print(f"{filename}: Replaced all instances of '/r/' and/or '/u/' to 'r/' and/or 'u/'.")
             return True
         print(
-            f"{filename}: This file contains instances of '/r/' and/or '/u/'."
-            " Please change them to 'r/' and/or 'u/'."
+            f"{filename}: This file contains instances of '/r/' and/or '/u/'. Please change them to 'r/' and/or 'u/'."
         )
         return False
 
@@ -67,10 +61,7 @@ class StaticChecker:
 
         """
         if "noreturn" in content.lower():
-            print(
-                f"{filename}: Line {line_number} has phrase 'noreturn', please edit and"
-                " remove this."
-            )
+            print(f"{filename}: Line {line_number} has phrase 'noreturn', please edit and remove this.")
             return False
         return True
 
@@ -107,8 +98,7 @@ class StaticChecker:
                 for check in self.full_file_checks:
                     # this is done to make sure that the checks are not
                     # replacing each other and creating an infinite loop
-                    with open(filename) as fp:
-                        full_content = fp.read()
+                    full_content = pathlib.Path(filename).read_text()
                     status &= check(filename, full_content)
                 for check in self.line_checks:
                     # this is done to make sure that the checks are not
@@ -123,10 +113,7 @@ class StaticChecker:
 def main():
     """The main function."""
     parser = argparse.ArgumentParser(
-        description=(
-            "Run static line checks and optionally replace values that should not be"
-            " used."
-        )
+        description=("Run static line checks and optionally replace values that should not be used.")
     )
     parser.add_argument(
         "-r",

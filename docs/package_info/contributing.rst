@@ -11,7 +11,9 @@ decreases bug-potential and makes it faster to understand how everything works t
 *****************************************
 
 This section will cover the recommended steps to get you started with contributing to
-Async PRAW. .. _install_dev_deps:
+Async PRAW.
+
+.. _install_dev_deps:
 
 Install Development Dependencies
 ================================

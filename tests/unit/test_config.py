@@ -1,11 +1,9 @@
 import os
-import sys
 import warnings
 from pathlib import Path
+from unittest import mock
 
 import pytest
-
-from unittest import mock
 
 from asyncpraw.config import Config
 from asyncpraw.exceptions import ClientException
@@ -23,9 +21,7 @@ class TestConfig:
                 del os.environ[env_name]
         os.environ[environment] = "/MOCK"
 
-        environ_path = (
-            Path("/MOCK") / (".config" if environment == "HOME" else "") / "praw.ini"
-        )
+        environ_path = Path("/MOCK") / (".config" if environment == "HOME" else "") / "praw.ini"
         locations = [
             str(environ_path),
             "praw.ini",
@@ -51,6 +47,9 @@ class TestConfig:
         for value in [True, "1", "true", "YES", "on"]:
             config = Config("DEFAULT", check_for_updates=value)
             assert config.check_for_updates is True
+
+    def test_config_boolean__not_set(self):
+        assert Config._config_boolean(item=Config.CONFIG_NOT_SET) is False
 
     def test_custom__extra_values_set(self):
         config = Config("DEFAULT", user1="foo", user2="bar")

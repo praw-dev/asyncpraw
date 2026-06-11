@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from json import dumps
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, overload
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.base import AsyncPRAWBase
@@ -42,6 +42,12 @@ class DraftHelper(AsyncPRAWBase):
         drafts = await self._draft_list()
         for draft in drafts:
             yield draft
+
+    @overload
+    async def __call__(self, draft_id: None = None, *, fetch: bool = True) -> list[asyncpraw.models.Draft]: ...
+
+    @overload
+    async def __call__(self, draft_id: str, *, fetch: bool = True) -> asyncpraw.models.Draft: ...
 
     async def __call__(
         self, draft_id: str | None = None, *, fetch: bool = True
@@ -248,7 +254,7 @@ class LiveHelper(AsyncPRAWBase):
             for position in range(0, len(ids), 100):
                 ids_chunk = ids[position : position + 100]
                 url = API_PATH["live_info"].format(ids=",".join(ids_chunk))
-                params = {"limit": 100}  # 25 is used if not specified
+                params: dict[str, str | int] = {"limit": 100}  # 25 is used if not specified
                 for result in await self._reddit.get(url, params=params):
                     yield result
 
@@ -312,7 +318,7 @@ class MultiredditHelper(AsyncPRAWBase):
         display_name: str,
         icon_name: str | None = None,
         key_color: str | None = None,
-        subreddits: str | asyncpraw.models.Subreddit,
+        subreddits: list[str | asyncpraw.models.Subreddit],
         visibility: str = "private",
         weighting_scheme: str = "classic",
     ) -> asyncpraw.models.Multireddit:
@@ -383,7 +389,7 @@ class SubredditHelper(AsyncPRAWBase):
         subreddit_type: str = "public",
         title: str | None = None,
         wikimode: str = "disabled",
-        **other_settings: str | None,
+        **other_settings: Any,
     ) -> asyncpraw.models.Subreddit:
         """Create a new :class:`.Subreddit`.
 

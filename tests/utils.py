@@ -2,8 +2,8 @@
 
 import json
 import os
+import pathlib
 from datetime import datetime
-from typing import Dict
 
 import pytest
 from vcr.persisters.filesystem import CassetteNotFoundError, FilesystemPersister
@@ -65,7 +65,7 @@ class CustomPersister(FilesystemPersister):
     additional_placeholders = {}
 
     @classmethod
-    def add_additional_placeholders(cls, placeholders: Dict[str, str]):
+    def add_additional_placeholders(cls, placeholders: dict[str, str]):
         """Add additional placeholders."""
         cls.additional_placeholders.update(placeholders)
 
@@ -78,8 +78,7 @@ class CustomPersister(FilesystemPersister):
     def load_cassette(cls, cassette_path, serializer):
         """Load cassette."""
         try:
-            with open(cassette_path) as f:
-                cassette_content = f.read()
+            cassette_content = pathlib.Path(cassette_path).read_text()
         except OSError as error:
             raise CassetteNotFoundError("Cassette not found.") from error
         for replacement, value in [
@@ -100,8 +99,7 @@ class CustomPersister(FilesystemPersister):
         dirname, filename = os.path.split(cassette_path)
         if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
-        with open(cassette_path, "w") as f:
-            f.write(data)
+        pathlib.Path(cassette_path).write_text(data)
 
 
 class CustomSerializer:
@@ -109,8 +107,7 @@ class CustomSerializer:
 
     @staticmethod
     def _serialize_file(file_name):
-        with open(file_name, "rb") as f:
-            return f.read().decode("utf-8", "replace")
+        return pathlib.Path(file_name).read_bytes().decode("utf-8", "replace")
 
     @staticmethod
     def deserialize(cassette_string):

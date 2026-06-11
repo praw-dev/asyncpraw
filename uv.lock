@@ -165,6 +165,7 @@ dependencies = [
     { name = "aiohttp" },
     { name = "asyncprawcore" },
     { name = "defusedxml" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
     { name = "update-checker", extra = ["async"] },
 ]
 
@@ -219,13 +220,23 @@ test = [
     { name = "pytest-vcr" },
     { name = "vcrpy" },
 ]
+type = [
+    { name = "aiohttp" },
+    { name = "coverage" },
+    { name = "pyright" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-vcr" },
+    { name = "vcrpy" },
+]
 
 [package.metadata]
 requires-dist = [
     { name = "aiofiles" },
     { name = "aiohttp", specifier = "<4" },
-    { name = "asyncprawcore", specifier = ">=3.0.1,<4" },
+    { name = "asyncprawcore", specifier = ">=3.1.0,<4" },
     { name = "defusedxml", specifier = "==0.7.1" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
     { name = "update-checker", extras = ["async"], specifier = ">=1.0,<2.0" },
 ]
 
@@ -239,7 +250,7 @@ dev = [
     { name = "pytest", specifier = ">=8" },
     { name = "pytest-asyncio", specifier = ">=1.0.0" },
     { name = "pytest-vcr", specifier = "==1.*" },
-    { name = "ruff", specifier = ">=0.0.292" },
+    { name = "ruff", specifier = ">=0.15.16" },
     { name = "sphinx" },
     { name = "sphinx-autodoc-typehints" },
     { name = "sphinxcontrib-trio" },
@@ -255,7 +266,7 @@ docs = [
 lint = [
     { name = "furo" },
     { name = "pre-commit" },
-    { name = "ruff", specifier = ">=0.0.292" },
+    { name = "ruff", specifier = ">=0.15.16" },
     { name = "sphinx" },
     { name = "sphinx-autodoc-typehints" },
     { name = "sphinxcontrib-trio" },
@@ -268,18 +279,27 @@ test = [
     { name = "pytest-vcr", specifier = "==1.*" },
     { name = "vcrpy", specifier = ">=8.1.1" },
 ]
+type = [
+    { name = "aiohttp", specifier = "<3.13" },
+    { name = "coverage", specifier = ">=7.10.7" },
+    { name = "pyright" },
+    { name = "pytest", specifier = ">=8" },
+    { name = "pytest-asyncio", specifier = ">=1.0.0" },
+    { name = "pytest-vcr", specifier = "==1.*" },
+    { name = "vcrpy", specifier = ">=8.1.1" },
+]
 
 [[package]]
 name = "asyncprawcore"
-version = "3.0.2"
+version = "3.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cb/59/77c1a9287eed6124603d546e27485f323c9a45fd6c7deb9c3ed8417b8c02/asyncprawcore-3.0.2.tar.gz", hash = "sha256:660e471d59557e21143f4bcbdfcc0f82d0ac4f93732433f4324cca8d69d9d24e", size = 18829, upload-time = "2025-08-06T21:42:19.05Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/d4/c469311941217d06dc793fbee17e9f83d39be0c2154e44cb63605ee73ccc/asyncprawcore-3.1.0.tar.gz", hash = "sha256:c36b7cfcef2b1c5bb36784d4224861d2e0eea39140e33d3f4f037b044ab032de", size = 1333407, upload-time = "2026-06-10T19:28:57.129Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/5f/c88f7b4b950aec57ce661acf6e540e91ee923369a9ef72f8aa704f41f77c/asyncprawcore-3.0.2-py3-none-any.whl", hash = "sha256:27094f541c7b1de7996f0b2ee804b52f631a71f799f26dd8302ae5ea44e8b4a1", size = 20414, upload-time = "2025-08-06T21:42:17.989Z" },
+    { url = "https://files.pythonhosted.org/packages/e8/a3/bd9befe17a44fa05a21318664c8ca6a277af54ee53badce7bcde1bf9bd58/asyncprawcore-3.1.0-py3-none-any.whl", hash = "sha256:38539dcfe104706b255f87e66aaf155b4f0da20c4ca655fa8d5f8a8ffc5da4dd", size = 22653, upload-time = "2026-06-10T19:28:55.972Z" },
 ]
 
 [[package]]
@@ -1253,6 +1273,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/62/62/0fe346fe380b1aafaf819c8cb195d3241bb4f355f908e6339814131a830b/pyproject_api-1.10.1.tar.gz", hash = "sha256:c2b2726bd7aa9217b6c50b621fef5b2ae5def4d55b779c9e0694c15e0a8517ba", size = 23477, upload-time = "2026-05-28T14:22:14.049Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/79/d7/29e1e5e882f79133631f7bcace42d23db493f616463c157a1ab614bf69dd/pyproject_api-1.10.1-py3-none-any.whl", hash = "sha256:fa9e6f66c35b5017e909825d8f2b5d5482ea699d7be809d21c03bd1f7317f36a", size = 12992, upload-time = "2026-05-28T14:22:12.711Z" },
+]
+
+[[package]]
+name = "pyright"
+version = "1.1.410"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nodeenv" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/10/53/e4d8ea1391bd4355231be6f91bf239479aa0014260ed3fb5526eeb12a1f2/pyright-1.1.410.tar.gz", hash = "sha256:07a073b8ba6749826773c1269773efa11b93440d9a6aa60419d9a3172d6dc488", size = 4062013, upload-time = "2026-06-01T17:35:48.894Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d7/33/288b5868fa00846dacf249633719d747893e54aebd196b9968ac1878a5d3/pyright-1.1.410-py3-none-any.whl", hash = "sha256:5e961bed37cacf96b3f7cd7b1da39b350a9239aa2e69138d0e88f728cfaf296c", size = 6082448, upload-time = "2026-06-01T17:35:46.387Z" },
 ]
 
 [[package]]

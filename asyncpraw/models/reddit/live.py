@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.list.redditor import RedditorList
@@ -23,7 +23,7 @@ class LiveContributorRelationship:
     """Provide methods to interact with live threads' contributors."""
 
     @staticmethod
-    def _handle_permissions(permissions: Iterable[str]) -> str:
+    def _handle_permissions(permissions: Iterable[str] | None) -> str:
         permissions = {"all"} if permissions is None else set(permissions)
         return ",".join(f"+{x}" for x in permissions)
 
@@ -43,8 +43,8 @@ class LiveContributorRelationship:
         async def generator() -> AsyncIterator[asyncpraw.models.Redditor]:
             url = API_PATH["live_contributors"].format(id=self.thread.id)
             temp = await self.thread._reddit.get(url)
-            redditor_list = temp if isinstance(temp, RedditorList) else temp[0]
-            for redditor in redditor_list.children:
+            redditor_list = cast("list[asyncpraw.models.Redditor]", temp if isinstance(temp, RedditorList) else temp[0])
+            for redditor in redditor_list:
                 yield redditor
 
         return generator()
@@ -287,7 +287,7 @@ class LiveThread(CreatedMixin, RedditBase):
     STR_FIELD = "id"
 
     @cachedproperty
-    def contrib(self) -> asyncpraw.models.reddit.live.LiveThreadContribution:
+    def contrib(self) -> LiveThreadContribution:
         """Provide an instance of :class:`.LiveThreadContribution`.
 
         Usage:
@@ -301,7 +301,7 @@ class LiveThread(CreatedMixin, RedditBase):
         return LiveThreadContribution(self)
 
     @cachedproperty
-    def contributor(self) -> asyncpraw.models.reddit.live.LiveContributorRelationship:
+    def contributor(self) -> LiveContributorRelationship:
         """Provide an instance of :class:`.LiveContributorRelationship`.
 
         You can call the instance to get a list of contributors which is represented as
@@ -319,7 +319,7 @@ class LiveThread(CreatedMixin, RedditBase):
         return LiveContributorRelationship(self)
 
     @cachedproperty
-    def stream(self) -> asyncpraw.models.reddit.live.LiveThreadStream:
+    def stream(self) -> LiveThreadStream:
         """Provide an instance of :class:`.LiveThreadStream`.
 
         Streams are used to indefinitely retrieve new updates made to a live thread,
@@ -343,7 +343,7 @@ class LiveThread(CreatedMixin, RedditBase):
         """
         return LiveThreadStream(self)
 
-    def __eq__(self, other: str | asyncpraw.models.LiveThread) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Return whether the other instance equals the current.
 
         .. note::
@@ -388,7 +388,7 @@ class LiveThread(CreatedMixin, RedditBase):
     def _fetch_info(self) -> tuple[str, dict[str, str], None]:
         return "liveabout", {"id": self.id}, None
 
-    def discussions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
+    def discussions(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Submission]:
         """Get submissions linking to the thread.
 
         :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
@@ -462,9 +462,7 @@ class LiveThread(CreatedMixin, RedditBase):
         url = API_PATH["live_report"].format(id=self.id)
         await self._reddit.post(url, data={"type": type})
 
-    async def updates(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
+    async def updates(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
         """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
 
         :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
@@ -488,6 +486,7 @@ class LiveThread(CreatedMixin, RedditBase):
         """
         url = API_PATH["live_updates"].format(id=self.id)
         async for update in ListingGenerator(self._reddit, url, **generator_kwargs):
+            update = cast("LiveUpdate", update)
             update._thread = self
             yield update
 
@@ -623,7 +622,7 @@ class LiveThreadStream:
         """
         self.live_thread = live_thread
 
-    def updates(self, **stream_options: dict[str, Any]) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
+    def updates(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
         """Yield new updates to the live thread as they become available.
 
         :param skip_existing: Set to ``True`` to only fetch items created after the
@@ -740,10 +739,17 @@ class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
     """
 
     STR_FIELD = "id"
-    _kind = "LiveUpdate"
+
+    if TYPE_CHECKING:
+        _thread: LiveThread
+
+    @property
+    def _kind(self) -> str:
+        """Return the class's kind."""
+        return "LiveUpdate"
 
     @cachedproperty
-    def contrib(self) -> asyncpraw.models.reddit.live.LiveUpdateContribution:
+    def contrib(self) -> LiveUpdateContribution:
         """Provide an instance of :class:`.LiveUpdateContribution`.
 
         Usage:

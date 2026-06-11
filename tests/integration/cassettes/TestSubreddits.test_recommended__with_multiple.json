@@ -79,7 +79,7 @@
       },
       "response": {
         "body": {
-          "string": "[]"
+          "string": "[{\"sr_name\": \"BackYardChickens\"}, {\"sr_name\": \"NoShitSherlock\"}, {\"sr_name\": \"Quebec\"}, {\"sr_name\": \"DesignPorn\"}, {\"sr_name\": \"AbandonedPorn\"}, {\"sr_name\": \"earthgifs\"}, {\"sr_name\": \"ruralporn\"}, {\"sr_name\": \"unfazed\"}, {\"sr_name\": \"seinfeldgifs\"}, {\"sr_name\": \"waterporn\"}]"
         },
         "headers": {
           "Accept-Ranges": "bytes",

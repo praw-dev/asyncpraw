@@ -1,10 +1,24 @@
 """Provide the InboxToggleableMixin class."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from asyncpraw.const import API_PATH
+
+if TYPE_CHECKING:
+    import asyncpraw
 
 
 class InboxToggleableMixin:
     """Interface for classes that can optionally receive inbox replies."""
+
+    if TYPE_CHECKING:
+        # Provided by the host class (:class:`.RedditBase`).
+        _reddit: asyncpraw.Reddit
+
+        @property
+        def fullname(self) -> str: ...  # noqa: D102
 
     async def disable_inbox_replies(self) -> None:
         """Disable inbox replies for the item.

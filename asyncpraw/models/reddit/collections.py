@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
@@ -15,8 +15,8 @@ from asyncpraw.models.reddit.subreddit import Subreddit
 from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
-    from datetime import datetime
+    import datetime
+    from collections.abc import AsyncIterator, Iterator
 
     import asyncpraw.models
 
@@ -330,7 +330,7 @@ class SubredditCollections(AsyncPRAWBase):
         """
         return SubredditCollectionsModeration(self._reddit, self.subreddit)
 
-    async def __aiter__(self) -> AsyncGenerator[Collection, None, None]:
+    async def __aiter__(self) -> AsyncIterator[Collection]:
         r"""Iterate over the :class:`.Subreddit`'s :class:`.Collection`\ s.
 
         Example usage:
@@ -460,7 +460,7 @@ class Collection(CreatedMixin, RedditBase):
     _created_at_attribute = "created_at_utc"
 
     @property
-    def updated_datetime(self) -> datetime:
+    def updated_datetime(self) -> datetime.datetime:
         """Return the last update time as a timezone-aware :class:`datetime.datetime`.
 
         The returned object is localized to the system's timezone.
@@ -597,7 +597,7 @@ class Collection(CreatedMixin, RedditBase):
             data={"collection_id": self.collection_id, "follow": True},
         )
 
-    async def subreddit(self) -> asyncpraw.models.Subreddit:  # noqa: RET503
+    async def subreddit(self) -> asyncpraw.models.Subreddit:
         """Get the subreddit that this collection belongs to.
 
         For example:
@@ -609,8 +609,8 @@ class Collection(CreatedMixin, RedditBase):
             print(await collection.subreddit())
 
         """
-        async for subreddit in self._reddit.info(fullnames=[self.subreddit_id]):
-            return subreddit
+        subreddits = [subreddit async for subreddit in self._reddit.info(fullnames=[self.subreddit_id])]
+        return cast("asyncpraw.models.Subreddit", subreddits[0])
 
     async def unfollow(self) -> None:
         """Unfollow this :class:`.Collection`.

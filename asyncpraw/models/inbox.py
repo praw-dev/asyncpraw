@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.base import AsyncPRAWBase
@@ -18,9 +18,7 @@ if TYPE_CHECKING:
 class Inbox(AsyncPRAWBase):
     """Inbox is a Listing class that represents the inbox."""
 
-    def all(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Message | asyncpraw.models.Comment]:
+    def all(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Message | asyncpraw.models.Comment]:
         """Return a :class:`.ListingGenerator` for all inbox comments and messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -65,9 +63,7 @@ class Inbox(AsyncPRAWBase):
             await self._reddit.post(API_PATH["collapse"], data=data)
             items = items[25:]
 
-    def comment_replies(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Comment]:
+    def comment_replies(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Comment]:
         """Return a :class:`.ListingGenerator` for comment replies.
 
         Additional keyword arguments are passed in the initialization of
@@ -159,7 +155,7 @@ class Inbox(AsyncPRAWBase):
             await self._reddit.post(API_PATH["unread_message"], data=data)
             items = items[25:]
 
-    def mentions(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Comment]:
+    def mentions(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Comment]:
         r"""Return a :class:`.ListingGenerator` for mentions.
 
         A mention is :class:`.Comment` in which the authorized redditor is named in its
@@ -192,11 +188,11 @@ class Inbox(AsyncPRAWBase):
         """
         listing = await self._reddit.get(API_PATH["message"].format(id=message_id))
         messages = {message.fullname: message for message in [listing[0], *listing[0].replies]}
-        for _fullname, message in messages.items():
+        for message in messages.values():
             message.parent = messages.get(message.parent_id)
         return messages[f"t4_{message_id.lower()}"]
 
-    def messages(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Message]:
+    def messages(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Message]:
         """Return a :class:`.ListingGenerator` for inbox messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -212,7 +208,7 @@ class Inbox(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["messages"], **generator_kwargs)
 
-    def sent(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Message]:
+    def sent(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Message]:
         """Return a :class:`.ListingGenerator` for sent messages.
 
         Additional keyword arguments are passed in the initialization of
@@ -228,9 +224,7 @@ class Inbox(AsyncPRAWBase):
         """
         return ListingGenerator(self._reddit, API_PATH["sent"], **generator_kwargs)
 
-    def stream(
-        self, **stream_options: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Message]:
+    def stream(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Message]:
         """Yield new inbox items as they become available.
 
         Items are yielded oldest first. Up to 100 historical items will initially be
@@ -248,9 +242,7 @@ class Inbox(AsyncPRAWBase):
         """
         return stream_generator(self.unread, **stream_options)
 
-    def submission_replies(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Comment]:
+    def submission_replies(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Comment]:
         """Return a :class:`.ListingGenerator` for submission replies.
 
         Additional keyword arguments are passed in the initialization of
@@ -299,7 +291,7 @@ class Inbox(AsyncPRAWBase):
         self,
         *,
         mark_read: bool = False,
-        **generator_kwargs: str | int | dict[str, str] | None,
+        **generator_kwargs: Any | None,
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Message]:
         """Return a :class:`.ListingGenerator` for unread comments and messages.
 

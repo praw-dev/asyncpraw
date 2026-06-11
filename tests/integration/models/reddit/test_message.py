@@ -1,6 +1,6 @@
 import pytest
 
-from asyncpraw.models import Message, Redditor, Subreddit, SubredditMessage
+from asyncpraw.models import Message, Redditor, Subreddit
 
 from ... import IntegrationTest
 

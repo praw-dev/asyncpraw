@@ -27,6 +27,8 @@ class ThingModerationMixin(ModNoteMixin):
 
     REMOVAL_MESSAGE_API = None
 
+    thing: asyncpraw.models.Comment | asyncpraw.models.Submission
+
     async def _add_removal_reason(self, *, mod_note: str = "", reason_id: str | None = None) -> None:
         """Add a removal reason for a :class:`.Comment` or :class:`.Submission`.
 
@@ -98,7 +100,7 @@ class ThingModerationMixin(ModNoteMixin):
             :meth:`.undistinguish`
 
         """
-        data = {"how": how, "id": self.thing.fullname}
+        data: dict[str, str | bool] = {"how": how, "id": self.thing.fullname}
         await self.thing._fetch()
         if sticky and getattr(self.thing, "is_root", False):
             data["sticky"] = True

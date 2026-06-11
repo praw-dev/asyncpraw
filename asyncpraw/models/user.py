@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from asyncprawcore import Conflict
 
@@ -66,9 +66,7 @@ class User(AsyncPRAWBase):
         r"""Return a :class:`.RedditorList` of blocked :class:`.Redditor`\ s."""
         return await self._reddit.get(API_PATH["blocked"])
 
-    def contributor_subreddits(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def contributor_subreddits(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Subreddit]:
         r"""Return a :class:`.ListingGenerator` of contributor :class:`.Subreddit`\ s.
 
         These are subreddits in which the user is an approved user.
@@ -148,9 +146,7 @@ class User(AsyncPRAWBase):
             self._me = Redditor(self._reddit, _data=user_data)
         return self._me
 
-    def moderator_subreddits(
-        self, **generator_kwargs: str | int | dict[str, str]
-    ) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def moderator_subreddits(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Subreddit]:
         """Return a :class:`.ListingGenerator` subreddits that the user moderates.
 
         Additional keyword arguments are passed in the initialization of
@@ -180,7 +176,7 @@ class User(AsyncPRAWBase):
         *,
         num: int | None = None,
         state: bool = True,
-    ) -> asyncpraw.models.Submission:
+    ) -> asyncpraw.models.Submission | None:
         """Set the pin state of a submission on the authenticated user's profile.
 
         :param submission: An instance of :class:`.Submission` that will be
@@ -239,7 +235,7 @@ class User(AsyncPRAWBase):
         except Conflict:
             pass
 
-    def subreddits(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Subreddit]:
+    def subreddits(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Subreddit]:
         r"""Return a :class:`.ListingGenerator` of :class:`.Subreddit`\ s the user is subscribed to.
 
         Additional keyword arguments are passed in the initialization of

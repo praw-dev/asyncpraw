@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase, DynamicAttributes
 
 if TYPE_CHECKING:
     import asyncpraw
 
 
-class Trophy(AsyncPRAWBase):
+class Trophy(DynamicAttributes, AsyncPRAWBase):
     """Represent a trophy.
 
     End users should not instantiate this class directly. :meth:`.Redditor.trophies` can
@@ -30,6 +30,8 @@ class Trophy(AsyncPRAWBase):
     =============== ===================================================
 
     """
+
+    name: str
 
     def __eq__(self, other: Trophy | Any) -> bool:
         """Check if two Trophies are equal."""

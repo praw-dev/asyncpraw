@@ -5,10 +5,10 @@ from __future__ import annotations
 import asyncio
 import random
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, Callable
 
 
 def permissions_string(*, known_permissions: set[str], permissions: list[str] | None) -> str:

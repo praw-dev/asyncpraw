@@ -17,7 +17,7 @@ docs = [
 ]
 lint = [
   "pre-commit",
-  "ruff >=0.0.292",
+  "ruff >=0.15.16",
   {include-group = "docs"}
 ]
 test = [
@@ -27,6 +27,10 @@ test = [
   "pytest-asyncio >=1.0.0",
   "pytest-vcr ==1.*",
   "vcrpy >=8.1.1"
+]
+type = [
+  "pyright",
+  {include-group = "test"}
 ]
 
 [project]
@@ -45,13 +49,15 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
-  "Topic :: Utilities"
+  "Topic :: Utilities",
+  "Typing :: Typed"
 ]
 dependencies = [
   "aiofiles",
   "aiohttp <4",
-  "asyncprawcore >=3.0.1, <4",
+  "asyncprawcore >=3.1.0, <4",
   "defusedxml ==0.7.1",
+  "typing-extensions; python_version <= '3.10'",
   "update_checker[async] >=1.0, <2.0"
 ]
 dynamic = ["version", "description"]
@@ -68,11 +74,25 @@ requires-python = ">=3.10"
 "Issue Tracker" = "https://github.com/praw-dev/asyncpraw/issues"
 "Source Code" = "https://github.com/praw-dev/asyncpraw"
 
+[tool.coverage.report]
+exclude_lines = [
+  "@overload",
+  "if TYPE_CHECKING:",
+  "pragma: no cover"
+]
+fail_under = 100
+
 [tool.docstrfmt]
 extend_exclude = ['./docs/examples/']
 
 [tool.hatch.version]
 path = "asyncpraw/const.py"
+
+[tool.pyright]
+include = ["asyncpraw", "tests/typing"]
+pythonVersion = "3.10"
+reportUnnecessaryTypeIgnoreComment = "error"
+typeCheckingMode = "standard"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -80,73 +100,34 @@ filterwarnings = "ignore::DeprecationWarning"
 testpaths = "tests"
 
 [tool.ruff]
-include = [
-  "asyncpraw/**.py"
-]
+include = ["*.py"]
 line-length = 120
 preview = true
 
 [tool.ruff.lint]
 ignore = [
   "ANN401", # any-type
+  "C901", # too complex
+  "COM812", # trailing comma missing (conflicts with the formatter)
+  "CPY001", # missing copyright notice
   "D203", # incorrect-blank-line-before-class
   "D213", # multi-line-summary-second-line
+  "DOC201", # `return` not documented in docstring
+  "DOC402", # `yield` not documented in docstring
+  "DOC501", # `raise` not documented in docstring
   "E501", # Line too long
+  "ISC001", # single-line implicit string concatenation (conflicts with the formatter)
+  "PERF203", # `try`-`except` within a loop
   "PLR0904", # Too many public methods
   "PLR0911", # Too many return statements
   "PLR0912", # Too many branches
   "PLR0913", # Too many arguments in function definition
   "PLR0915", # Too many statements
+  "RUF067", # `__init__` module should only contain docstrings and re-exports
   "S101", # use of assert
   "SLF001" # Private member accessed
 ]
-select = [
-  "A", # flake8-builtins
-  "ANN", # flake8-annotations
-  "ASYNC", # flake8-async
-  "ARG", # flake8-unused-arguments
-  "B", # flake8-bugbear
-  "BLE", # flake8-blind-except
-  "C4", # flake8-comprehensions
-  "D", # pydocstyle
-  "DTZ", # flake8-datetimez
-  "E", # pycodestyle
-  "EM", # flake8-errmsg
-  "ERA", # eradicate
-  "EXE", # flake8-executable
-  "F", # pyflakes
-  "FA", # flake8-future-annotations
-  "FBT", # flake8-boolean-trap
-  "FIX", # flake8-fixme
-  "FLY", # flynt
-  "G", # flake8-logging-format
-  "I", # isort
-  "INP", # flake8-no-pep420
-  "ISC", # flake8-implicit-str-concat
-  "LOG", # flake8-logging
-  "N", # pep8-naming
-  "PIE", # flake8-pie
-  "PGH", # pygrep-hooks
-  "PL", # Pylint
-  "PT", # flake8-pytest-style
-  "PTH", # flake8-use-pathlib
-  "PYI", # flake8-pyi
-  "Q", # flake8-quotes
-  "RET", # flake8-return
-  "RSE", # flake8-raise
-  "RUF", # ruff-specific
-  "S", # bandit
-  "SIM", # flake8-simplify
-  "SLF", # flake8-self
-  "T10", # flake8-debugger
-  "T20", # flake8-print
-  "TCH", # flake8-type-checking
-  "TD", # flake8-todos
-  "TID", # flake8-tidy-imports
-  "TRY", # tryceratops
-  "UP", # pyupgrade
-  "W" # pycodestyle
-]
+select = ["ALL"]
 
 [tool.ruff.lint.flake8-annotations]
 allow-star-arg-any = true
@@ -159,21 +140,70 @@ builtins-ignorelist = ["id"]
 ban-relative-imports = "all"
 
 [tool.ruff.lint.per-file-ignores]
+# Non-library code (tests, examples, maintenance scripts) is not held to the
+# same docstring/annotation/style strictness as the package source.
 "__init__.py" = ["F401"]
 "asyncpraw/models/mod_notes.py" = ["FA100"]
 "asyncpraw/models/reddit/collections.py" = ["A005"]
-"tests/*.py" = ["SLF001"]
+"docs/conf.py" = ["A001", "ANN", "ARG", "D", "DTZ002", "INP001", "PLR0917"]
+"docs/examples/*.py" = ["ANN", "ARG", "ASYNC", "D", "INP", "PLR", "S", "T20"]
+"pre_push.py" = ["ANN", "BLE", "D", "FBT", "S", "T20"]
+"tests/**/*.py" = [
+  "A", # builtin shadowing
+  "ANN", # type annotations
+  "ARG", # unused arguments (pytest fixtures)
+  "ASYNC", # blocking calls in async test helpers
+  "B", # bugbear (asserts attribute access, loop vars)
+  "C4", # comprehensions
+  "D", # docstrings
+  "DTZ", # naive datetimes
+  "EM", # exception message strings
+  "ERA", # commented-out code
+  "FBT", # boolean traps
+  "FIX", # TODO/FIXME comments
+  "INP", # implicit namespace package
+  "ISC", # implicit string concatenation
+  "N", # naming
+  "PLC", # pylint convention
+  "PLR", # pylint refactor (no-self-use, magic values, self-comparison)
+  "PLW", # pylint warning
+  "PT", # pytest style
+  "PTH", # use pathlib
+  "PYI", # stub-only rules
+  "RET", # unnecessary assignment before return
+  "RSE", # raise
+  "RUF", # ruff-specific
+  "S", # bandit (assert, pickle, hardcoded secrets)
+  "SIM", # simplify
+  "SLF", # private member access
+  "T20", # print
+  "TD", # todos
+  "TID", # relative imports
+  "TRY", # tryceratops (long exception messages)
+  "UP" # pyupgrade (percent formatting)
+]
+"tools/*.py" = ["ANN", "D", "DTZ", "FBT", "INP", "PLR", "PLW", "PTH", "RUF", "S", "T20"]
 
 [tool.tox]
-envlist = ["py310", "py311", "py312", "py313", "py314", "docs", "pre-commit"]
+envlist = ["py310", "py311", "py312", "py313", "py314", "docs", "pre-commit", "type"]
 minversion = "4.22"
 
 [tool.tox.env.docs]
+base_python = ["py314"]
 commands = [
-  ["sphinx-build", "--keep-going", "docs/", "{env_tmp_dir}/html"]
+  ["sphinx-build", "-W", "--keep-going", "-n", "docs/", "{env_tmp_dir}/html"]
 ]
 dependency_groups = ["docs"]
 description = "build docs with sphinx"
+runner = "uv-venv-lock-runner"
+
+[tool.tox.env.linkcheck]
+base_python = ["py314"]
+commands = [
+  ["sphinx-build", "--keep-going", "-b", "linkcheck", "docs/", "{env_tmp_dir}/linkcheck"]
+]
+dependency_groups = ["docs"]
+description = "check documentation for broken external links"
 runner = "uv-venv-lock-runner"
 
 [tool.tox.env.pre-commit]
@@ -183,6 +213,12 @@ commands = [
 dependency_groups = ["lint"]
 description = "run pre-commit on code base"
 pass_env = ["SKIP"]
+runner = "uv-venv-lock-runner"
+
+[tool.tox.env.type]
+commands = [["pyright"]]
+dependency_groups = ["type"]
+description = "run type check on code base"
 runner = "uv-venv-lock-runner"
 
 [tool.tox.env_run_base]

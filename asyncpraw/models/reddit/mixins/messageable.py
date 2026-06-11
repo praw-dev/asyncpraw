@@ -8,10 +8,15 @@ from asyncpraw.const import API_PATH
 
 if TYPE_CHECKING:  # pragma: no cover
     import asyncpraw
+    import asyncpraw.models
 
 
 class MessageableMixin:
     """Interface for classes that can be messaged."""
+
+    if TYPE_CHECKING:
+        # Provided by the host class (:class:`.RedditBase`).
+        _reddit: asyncpraw.Reddit
 
     async def message(
         self,

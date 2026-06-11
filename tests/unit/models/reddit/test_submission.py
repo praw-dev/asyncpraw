@@ -53,9 +53,11 @@ class TestSubmission(UnitTest):
         )
 
     async def test_comment_unfetched(self, reddit):
+        submission = await reddit.submission("1234", fetch=False)
         with pytest.raises(TypeError):
-            submission = await reddit.submission("1234", fetch=False)
             submission.comments.list()
+        with pytest.raises(TypeError):
+            _ = submission.comments[0]
 
     def test_construct_failure(self, reddit):
         message = "Exactly one of 'id', 'url', or '_data' must be provided."
