@@ -2,22 +2,25 @@
 
 from __future__ import annotations
 
+from io import BytesIO
 from json import JSONEncoder, dumps
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, cast
+
+import aiofiles
 
 from asyncpraw.const import API_PATH
-from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase, DynamicAttributes
 from asyncpraw.models.list.base import BaseList
 from asyncpraw.util.cache import cachedproperty
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
     import asyncpraw.models
 
-WidgetType: TypeVar = TypeVar("WidgetType", bound="Widget")
 
-
-class Button(AsyncPRAWBase):
+class Button(DynamicAttributes, AsyncPRAWBase):
     """Class to represent a single button inside a :class:`.ButtonWidget`.
 
     .. include:: ../../typical_attributes.rst
@@ -44,7 +47,7 @@ class Button(AsyncPRAWBase):
     """
 
 
-class CalendarConfiguration(AsyncPRAWBase):
+class CalendarConfiguration(DynamicAttributes, AsyncPRAWBase):
     """Class to represent the configuration of a :class:`.Calendar`.
 
     .. include:: ../../typical_attributes.rst
@@ -63,7 +66,7 @@ class CalendarConfiguration(AsyncPRAWBase):
     """
 
 
-class Hover(AsyncPRAWBase):
+class Hover(DynamicAttributes, AsyncPRAWBase):
     """Class to represent the hover data for a :class:`.ButtonWidget`.
 
     These values will take effect when the button is hovered over (the user moves their
@@ -89,7 +92,7 @@ class Hover(AsyncPRAWBase):
     """
 
 
-class Image(AsyncPRAWBase):
+class Image(DynamicAttributes, AsyncPRAWBase):
     """Class to represent an image that's part of a :class:`.ImageWidget`.
 
     .. include:: ../../typical_attributes.rst
@@ -106,7 +109,7 @@ class Image(AsyncPRAWBase):
     """
 
 
-class ImageData(AsyncPRAWBase):
+class ImageData(DynamicAttributes, AsyncPRAWBase):
     """Class for image data that's part of a :class:`.CustomWidget`.
 
     .. include:: ../../typical_attributes.rst
@@ -123,7 +126,7 @@ class ImageData(AsyncPRAWBase):
     """
 
 
-class MenuLink(AsyncPRAWBase):
+class MenuLink(DynamicAttributes, AsyncPRAWBase):
     """Class to represent a single link inside a :class:`.Menu` or :class:`.Submenu`.
 
     .. include:: ../../typical_attributes.rst
@@ -138,7 +141,7 @@ class MenuLink(AsyncPRAWBase):
     """
 
 
-class Styles(AsyncPRAWBase):
+class Styles(DynamicAttributes, AsyncPRAWBase):
     """Class to represent the style information of a widget.
 
     .. include:: ../../typical_attributes.rst
@@ -155,7 +158,7 @@ class Styles(AsyncPRAWBase):
     """
 
 
-class Submenu(BaseList):
+class Submenu(DynamicAttributes, BaseList):
     r"""Class to represent a submenu of links inside a :class:`.Menu`.
 
     .. include:: ../../typical_attributes.rst
@@ -285,7 +288,7 @@ class SubredditWidgets(AsyncPRAWBase):
         :param subreddit: The :class:`.Subreddit` the widgets belong to.
 
         """
-        self._raw_items = None
+        self._raw_items: dict[str, Any] | None = None
         self._items = None
         self._fetched = False
         self.subreddit = subreddit
@@ -312,7 +315,7 @@ class SubredditWidgets(AsyncPRAWBase):
     async def id_card(self) -> asyncpraw.models.IDCard:
         """Get this :class:`.Subreddit`'s :class:`.IDCard` widget."""
         items = await self.items()
-        return items[self.layout["idCardWidget"]]
+        return cast("asyncpraw.models.IDCard", items[self.layout["idCardWidget"]])
 
     async def items(self) -> dict[str, asyncpraw.models.Widget]:
         """Get this :class:`.Subreddit`'s widgets as a dict from ID to widget."""
@@ -320,6 +323,7 @@ class SubredditWidgets(AsyncPRAWBase):
             if not self._raw_items:
                 await self._fetch()
             self._items = {}
+            assert self._raw_items is not None
             for item_name, data in self._raw_items.items():
                 data["subreddit"] = self.subreddit
                 self._items[item_name] = self._reddit._objector.objectify(data=data)
@@ -328,7 +332,7 @@ class SubredditWidgets(AsyncPRAWBase):
     async def moderators_widget(self) -> asyncpraw.models.ModeratorsWidget:
         """Get this :class:`.Subreddit`'s :class:`.ModeratorsWidget`."""
         items = await self.items()
-        return items[self.layout["moderatorWidget"]]
+        return cast("asyncpraw.models.ModeratorsWidget", items[self.layout["moderatorWidget"]])
 
     async def refresh(self) -> None:
         """Refresh the :class:`.Subreddit`'s widgets.
@@ -347,20 +351,20 @@ class SubredditWidgets(AsyncPRAWBase):
         """
         await self._fetch()
 
-    async def sidebar(self) -> list[asyncpraw.models.Widget]:
+    async def sidebar(self) -> AsyncIterator[asyncpraw.models.Widget]:
         r"""Get a list of :class:`.Widget`\ s that make up the sidebar."""
         items = await self.items()
         for widget in self.layout["sidebar"]["order"]:
             yield items[widget]
 
-    async def topbar(self) -> list[asyncpraw.models.Menu]:
+    async def topbar(self) -> AsyncIterator[asyncpraw.models.Menu]:
         r"""Get a list of :class:`.Widget`\ s that make up the top bar."""
         items = await self.items()
         for widget in self.layout["topbar"]["order"]:
-            yield items[widget]
+            yield cast("asyncpraw.models.Menu", items[widget])
 
 
-class Widget(AsyncPRAWBase):
+class Widget(DynamicAttributes, AsyncPRAWBase):
     """Base class to represent a :class:`.Widget`."""
 
     @cachedproperty
@@ -396,6 +400,8 @@ class Widget(AsyncPRAWBase):
 
 class WidgetEncoder(JSONEncoder):
     """Class to encode widget-related objects."""
+
+    _subreddit_class: type[asyncpraw.models.Subreddit]
 
     def default(self, o: Any) -> Any:
         """Serialize ``AsyncPRAWBase`` objects."""
@@ -949,9 +955,11 @@ class ModeratorsWidget(Widget, BaseList):
 
     def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.ModeratorsWidget` instance."""
-        if self.CHILD_ATTRIBUTE not in _data:
+        child_attribute = self.CHILD_ATTRIBUTE
+        assert child_attribute is not None
+        if child_attribute not in _data:
             # .mod.update() sometimes returns payload without "mods" field
-            _data[self.CHILD_ATTRIBUTE] = []
+            _data[child_attribute] = []
         super().__init__(reddit, _data=_data)
 
 
@@ -1069,9 +1077,11 @@ class RulesWidget(Widget, BaseList):
 
     def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.RulesWidget` instance."""
-        if self.CHILD_ATTRIBUTE not in _data:
+        child_attribute = self.CHILD_ATTRIBUTE
+        assert child_attribute is not None
+        if child_attribute not in _data:
             # .mod.update() sometimes returns payload without "data" field
-            _data[self.CHILD_ATTRIBUTE] = []
+            _data[child_attribute] = []
         super().__init__(reddit, _data=_data)
 
 
@@ -1231,7 +1241,9 @@ class SubredditWidgetsModeration:
         self._subreddit = subreddit
         self._reddit = reddit
 
-    async def _create_widget(self, payload: dict[str, Any]) -> WidgetType:
+    # Returns Any: the concrete widget type is determined at runtime by objectifying the
+    # response. Each public ``add_*`` wrapper carries the precise return annotation.
+    async def _create_widget(self, payload: dict[str, Any]) -> Any:
         path = API_PATH["widget_create"].format(subreddit=self._subreddit)
         widget = await self._reddit.post(path, data={"json": dumps(payload, cls=WidgetEncoder)})
         widget.subreddit = self._subreddit
@@ -1872,10 +1884,12 @@ class SubredditWidgetsModeration:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
-        with file.open("rb") as image:  # noqa: ASYNC230
-            upload_data["file"] = image
-            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data) as response:
-                response.raise_for_status()
+        assert self._reddit._core is not None
+        async with aiofiles.open(file, "rb") as image:
+            upload = BytesIO(await image.read())
+        upload.name = file.name
+        upload_data["file"] = upload
+        async with self._reddit._core.requestor.request("POST", upload_url, data=upload_data) as response:
+            response.raise_for_status()
 
         return f"{upload_url}/{upload_data['key']}"

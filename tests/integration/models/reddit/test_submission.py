@@ -226,11 +226,11 @@ class TestSubmission(IntegrationTest):
         assert comment.body == "Test reply"
         assert comment.parent_id == submission.fullname
 
-    # async def test_reply__none(self, reddit): # TODO: I have not been able to reproduce this again; same with praw
-    #     reddit.read_only = False
-    #     submission = Submission(reddit, "ah19vv")
-    #     reply = submission.reply("TEST")
-    #     assert reply is None
+    async def test_reply__none(self, reddit):
+        reddit.read_only = False
+        submission = Submission(reddit, "ah19vv")
+        reply = await submission.reply("TEST")
+        assert reply is None
 
     async def test_report(self, reddit):
         reddit.read_only = False

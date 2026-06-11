@@ -5,7 +5,7 @@ from datetime import datetime
 sys.path.insert(0, ".")
 sys.path.insert(1, "..")
 
-from asyncpraw import __version__  # noqa: E402
+from asyncpraw import __version__
 
 autodoc_typehints = "description"
 copyright = datetime.today().strftime("%Y, Joel Payne")
@@ -17,21 +17,20 @@ extensions = [
     "sphinxcontrib_trio",
 ]
 html_theme = "furo"
-htmlhelp_basename = "Async PRAW"
-intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
-master_doc = "index"
-nitpick_ignore = [
-    ("py:class", "IO"),
-    ("py:class", "asyncprawcore.requestor.Requestor"),
-    ("py:class", "asyncprawcore.auth.BaseAuthorizer"),
-    ("py:class", "asyncpraw.models.redditors.PartialRedditor"),
+intersphinx_mapping = {
+    "asyncprawcore": ("https://asyncprawcore.readthedocs.io/en/stable/", None),
+    "python": ("https://docs.python.org/3", None),
+}
+# GitHub renders wiki/file anchors client-side, so linkcheck cannot verify them.
+linkcheck_anchors_ignore_for_url = [r"https://github\.com/.*"]
+# The Reddit Help / Zendesk support site blocks automated requests with a 403.
+linkcheck_ignore = [
+    r"https://(\w+\.)?reddithelp\.com/.*",
+    r"https://reddit\.zendesk\.com/.*",
 ]
 nitpicky = True
 project = "Async PRAW"
-pygments_style = "sphinx"
 release = __version__
-source_suffix = ".rst"
-suppress_warnings = ["image.nonlocal_uri"]
 version = ".".join(__version__.split(".", 2)[:2])
 
 

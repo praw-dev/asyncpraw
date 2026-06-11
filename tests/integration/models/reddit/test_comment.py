@@ -173,11 +173,11 @@ class TestComment(IntegrationTest):
         assert not comment.is_root
         assert comment.parent_id == parent_comment.fullname
 
-    # async def test_reply__none(self, reddit): # TODO: I have not been able to reproduce this again; same with praw
-    #     reddit.read_only = False
-    #     comment = Comment(reddit, "fx1rxr1")
-    #     reply = await comment.reply("TEST")
-    #     assert reply is None
+    async def test_reply__none(self, reddit):
+        reddit.read_only = False
+        comment = Comment(reddit, "eear2ml")
+        reply = await comment.reply("TEST")
+        assert reply is None
 
     async def test_report(self, reddit):
         reddit.read_only = False

@@ -1,12 +1,11 @@
 import configparser
 import types
+from unittest import mock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from asyncprawcore import Requestor
 from asyncprawcore.exceptions import BadRequest
-
-from unittest import mock
-from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw import Reddit, __version__
 from asyncpraw.config import Config
@@ -441,8 +440,8 @@ class TestRedditCustomRequestor(UnitTest):
             user_agent="dummy",
             username="dummy",
         ) as temp_reddit:
-            assert isinstance(temp_reddit._core._requestor, CustomRequestor)
-        assert not isinstance(reddit._core._requestor, CustomRequestor)
+            assert isinstance(temp_reddit._core.requestor, CustomRequestor)
+        assert not isinstance(reddit._core.requestor, CustomRequestor)
 
         async with Reddit(
             requestor_class=CustomRequestor,
@@ -450,8 +449,8 @@ class TestRedditCustomRequestor(UnitTest):
             client_secret="dummy",
             user_agent="dummy",
         ) as temp_reddit:
-            assert isinstance(temp_reddit._core._requestor, CustomRequestor)
-        assert not isinstance(reddit._core._requestor, CustomRequestor)
+            assert isinstance(temp_reddit._core.requestor, CustomRequestor)
+        assert not isinstance(reddit._core.requestor, CustomRequestor)
 
     def test_requestor_kwargs(self):
         session = AsyncMock(headers={})
@@ -461,6 +460,6 @@ class TestRedditCustomRequestor(UnitTest):
                 client_id="dummy",
                 client_secret="dummy",
                 user_agent="dummy",
-            )._core._requestor._http
+            )._core.requestor._http
             is session
         )

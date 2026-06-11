@@ -1,6 +1,7 @@
 """Test asyncpraw.reddit."""
 
 from base64 import urlsafe_b64encode
+from pathlib import Path
 
 import pytest
 from asyncprawcore.exceptions import BadRequest, ServerError
@@ -15,13 +16,11 @@ from . import IntegrationTest
 
 
 def comment_ids():
-    with open("tests/integration/files/comment_ids.txt") as fp:
-        return fp.read()[:8000]
+    return Path("tests/integration/files/comment_ids.txt").read_text()[:8000]
 
 
 def junk_data():
-    with open("tests/integration/files/too_large.jpg", "rb") as fp:
-        return urlsafe_b64encode(fp.read()).decode()
+    return urlsafe_b64encode(Path("tests/integration/files/too_large.jpg").read_bytes()).decode()
 
 
 class TestDomainListing(IntegrationTest):
@@ -81,8 +80,7 @@ class TestReddit(IntegrationTest):
         bases = ["t1_d7ltv", "t3_5dec", "t5_2qk"]
         items = []
         for i in range(100):
-            for base in bases:
-                items.append(f"{base}{i:02d}")
+            items.extend(f"{base}{i:02d}" for base in bases)
         results = await self.async_list(reddit.info(fullnames=items))
         assert len(results) > 100
         for item in results:
@@ -154,10 +152,10 @@ class TestReddit(IntegrationTest):
         with pytest.raises(ServerError):
             await self.async_list(gen)
 
-    # async def test_live_now__featured(self, reddit): # TODO: record when something is featured
-    #     thread = await reddit.live.now()
-    #     assert isinstance(thread, LiveThread)
-    #     assert thread.id == "z2f981agq7ky"
+    async def test_live_now__featured(self, reddit):
+        thread = await reddit.live.now()
+        assert isinstance(thread, LiveThread)
+        assert thread.id == "z2f981agq7ky"
 
     async def test_live_now__no_featured(self, reddit):
         now = await reddit.live.now()

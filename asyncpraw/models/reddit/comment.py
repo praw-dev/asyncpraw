@@ -82,7 +82,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
         return parts[-1]
 
     @cachedproperty
-    def mod(self) -> asyncpraw.models.reddit.comment.CommentModeration:
+    def mod(self) -> CommentModeration:
         """Provide an instance of :class:`.CommentModeration`.
 
         Example usage:
@@ -181,13 +181,14 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
     def __setattr__(
         self,
         attribute: str,
-        value: str | Redditor | CommentForest | asyncpraw.models.Subreddit,
+        value: Any,
     ) -> None:
         """Objectify author, replies, and subreddit."""
         if attribute == "author":
             value = Redditor.from_data(self._reddit, value)
         elif attribute == "replies":
-            value = [] if value == "" else self._reddit._objector.objectify(data=value).children  # noqa: PLC1901
+            listing: Any = None if value == "" else self._reddit._objector.objectify(data=value)  # noqa: PLC1901
+            value = [] if listing is None else listing.children
             attribute = "_replies"
         elif attribute == "subreddit" and isinstance(value, str):
             value = Subreddit(self._reddit, display_name=value)
@@ -302,7 +303,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
             comment_path = f"{path}_/{self.id}"
 
         # The context limit appears to be 8, but let's ask for more anyway.
-        params = {"context": 100}
+        params: dict[str, str | int] = {"context": 100}
         if "reply_limit" in self.__dict__:
             params["limit"] = self.reply_limit
         if "reply_sort" in self.__dict__:
@@ -319,7 +320,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
             if isinstance(comment, Comment):
                 queue.extend(comment._replies)
 
-        if comment.id != self.id:
+        if comment is None or comment.id != self.id:
             raise ClientException(self.MISSING_COMMENT_MESSAGE)
 
         if self._submission is not None:

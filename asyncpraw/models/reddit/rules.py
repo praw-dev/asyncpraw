@@ -44,7 +44,7 @@ class Rule(CreatedMixin, RedditBase):
     STR_FIELD = "short_name"
 
     @cachedproperty
-    def mod(self) -> asyncpraw.models.reddit.rules.RuleModeration:
+    def mod(self) -> RuleModeration:
         """Contain methods used to moderate rules.
 
         To delete ``"No spam"`` from r/test try:
@@ -94,6 +94,7 @@ class Rule(CreatedMixin, RedditBase):
         super().__init__(reddit, _data=_data)
 
     async def _fetch(self) -> None:
+        assert self.subreddit is not None
         async for rule in self.subreddit.rules:
             if rule.short_name == self.short_name:
                 self.__dict__.update(rule.__dict__)

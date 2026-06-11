@@ -73,7 +73,7 @@ that registered the application are required.
 
     This example demonstrates use of a *script* type application. For other application
     types please see Reddit's wiki page `OAuth2 App Types
-    <https://github.com/reddit/reddit/wiki/oauth2-app-types>`_.
+    <https://github.com/reddit-archive/reddit/wiki/oauth2-app-types>`_.
 
 Step 2: Monitoring New Submissions to /r/AskReddit
 ==================================================
@@ -234,4 +234,4 @@ The following is the complete LMGTFY Bot:
 
 .. _lmgtfy: https://lmgtfy.com/
 
-.. _oauth2 quick start example: https://github.com/reddit/reddit/wiki/OAuth2-Quick-Start-Example#first-steps
+.. _oauth2 quick start example: https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps

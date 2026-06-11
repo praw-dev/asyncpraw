@@ -9,6 +9,8 @@ from asyncpraw.models.base import AsyncPRAWBase
 
 if TYPE_CHECKING:
     import asyncpraw.models
+    from asyncpraw.models.comment_forest import CommentForest
+    from asyncpraw.models.reddit.submission import Submission
 
 
 class MoreComments(AsyncPRAWBase):
@@ -16,7 +18,16 @@ class MoreComments(AsyncPRAWBase):
 
     MAX_COMMENTS_IN_REPR = 4
 
-    def __eq__(self, other: str | MoreComments) -> bool:
+    children: list[str]
+    count: int
+    name: str
+    parent_id: str
+    submission: Submission
+    _comments: CommentForest | list[asyncpraw.models.Comment | MoreComments] | None
+    # Attached by CommentForest._gather_more_comments.
+    _remove_from: list[asyncpraw.models.Comment | MoreComments]
+
+    def __eq__(self, other: object) -> bool:
         """Return ``True`` if these :class:`.MoreComments` instances are the same."""
         if isinstance(other, self.__class__):
             return self.count == other.count and self.children == other.children
@@ -28,11 +39,11 @@ class MoreComments(AsyncPRAWBase):
 
     def __init__(self, reddit: asyncpraw.Reddit, _data: dict[str, Any]) -> None:
         """Initialize a :class:`.MoreComments` instance."""
-        self.count = self.parent_id = None
-        self.children = []
+        # count, parent_id, and children are populated from _data by super().__init__;
+        # submission is attached afterward by CommentForest. All are declared as class
+        # attributes above, so they need no placeholder initialization here.
         super().__init__(reddit, _data=_data)
         self._comments = None
-        self.submission = None
 
     def __lt__(self, other: MoreComments) -> bool:
         """Provide a sort order on the :class:`.MoreComments` object."""
@@ -48,7 +59,9 @@ class MoreComments(AsyncPRAWBase):
             children[-1] = "..."
         return f"<{self.__class__.__name__} count={self.count}, children={children!r}>"
 
-    async def _continue_comments(self, *, update: bool) -> list[asyncpraw.models.Comment]:
+    async def _continue_comments(
+        self, *, update: bool
+    ) -> CommentForest | list[asyncpraw.models.Comment | MoreComments]:
         assert not self.children, "Please file a bug report with Async PRAW."
         parent = await self._load_comment(self.parent_id.split("_", 1)[1])
         self._comments = parent.replies
@@ -69,7 +82,7 @@ class MoreComments(AsyncPRAWBase):
         assert len(comments.children) == 1, "Please file a bug report with Async PRAW."
         return comments.children[0]
 
-    async def comments(self, *, update: bool = True) -> list[asyncpraw.models.Comment]:
+    async def comments(self, *, update: bool = True) -> CommentForest | list[asyncpraw.models.Comment | MoreComments]:
         """Fetch and return the comments for a single :class:`.MoreComments` object."""
         if self._comments is None:
             if self.count == 0:  # Handle "continue this thread"
@@ -80,8 +93,11 @@ class MoreComments(AsyncPRAWBase):
                 "link_id": self.submission.fullname,
                 "sort": self.submission.comment_sort,
             }
-            self._comments = await self._reddit.post(API_PATH["morechildren"], data=data)
+            comments: list[asyncpraw.models.Comment | MoreComments] = await self._reddit.post(
+                API_PATH["morechildren"], data=data
+            )
+            self._comments = comments
             if update:
-                for comment in self._comments:
+                for comment in comments:
                     comment.submission = self.submission
         return self._comments

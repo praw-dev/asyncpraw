@@ -7,11 +7,19 @@ from typing import TYPE_CHECKING
 from asyncpraw.const import API_PATH
 
 if TYPE_CHECKING:  # pragma: no cover
+    import asyncpraw
     import asyncpraw.models
 
 
 class ReplyableMixin:
     """Interface for :class:`.RedditBase` classes that can be replied to."""
+
+    if TYPE_CHECKING:
+        # Provided by the host class (:class:`.RedditBase`).
+        _reddit: asyncpraw.Reddit
+
+        @property
+        def fullname(self) -> str: ...  # noqa: D102
 
     async def reply(self, body: str) -> asyncpraw.models.Comment | asyncpraw.models.Message | None:
         """Reply to the object.

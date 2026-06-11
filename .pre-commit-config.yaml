@@ -21,12 +21,13 @@ repos:
     hooks:
       - id: ruff
         args: [ --exit-non-zero-on-fix, --fix ]
-        files: ^(praw/.*.py)$
+      - id: ruff-format
     rev: 22f0422809455ec89ffdcf5a00170ba816e42ddb  # frozen: v0.15.16
 
   - repo: https://github.com/LilSpazJoekp/docstrfmt
     hooks:
       - id: docstrfmt
+        require_serial: true
     rev: 06455715c8a81e176748e036c1c945f3e80d5b8d  # frozen: v2.1.0
 
   - repo: https://github.com/MarcoGorelli/auto-walrus
@@ -53,7 +54,7 @@ repos:
         args: [ --fix=no ]
       - id: name-tests-test
         args: [ --pytest-test-first ]
-        files: ^tests/integration/.*\.py|tests/unit/.*\.py$
+        files: ^tests/(integration|unit)/.*\.py$
       - id: no-commit-to-branch
       - id: sort-simple-yaml
         files: ^(\.github/workflows/.*\.ya?ml|\.readthedocs.ya?ml)$

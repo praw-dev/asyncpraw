@@ -24,7 +24,7 @@ def do_process(args, shell=False):
         print(f"\nFailed: {' '.join(args)}")
         return False
     except Exception as exc:
-        sys.stderr.write(f"{str(exc)}\n")
+        sys.stderr.write(f"{exc!s}\n")
         sys.exit(1)
     return True
 

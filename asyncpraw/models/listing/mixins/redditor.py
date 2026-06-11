@@ -12,7 +12,10 @@ from asyncpraw.util.cache import cachedproperty
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
+    from typing_extensions import Unpack
+
     import asyncpraw.models
+    from asyncpraw.models.listing.generator import ListingGeneratorKwargs
 
 
 class SubListing(BaseListingMixin):
@@ -85,7 +88,7 @@ class RedditorListingMixin(BaseListingMixin):
         return SubListing(self._reddit, self._path, "submitted")
 
     def downvoted(
-        self, **generator_kwargs: str | int | dict[str, str]
+        self, **generator_kwargs: Unpack[ListingGeneratorKwargs]
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has downvoted.
 
@@ -116,7 +119,7 @@ class RedditorListingMixin(BaseListingMixin):
         return ListingGenerator(self._reddit, urljoin(self._path, "downvoted"), **generator_kwargs)
 
     def hidden(
-        self, **generator_kwargs: str | int | dict[str, str]
+        self, **generator_kwargs: Unpack[ListingGeneratorKwargs]
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has hidden.
 
@@ -147,7 +150,7 @@ class RedditorListingMixin(BaseListingMixin):
         return ListingGenerator(self._reddit, urljoin(self._path, "hidden"), **generator_kwargs)
 
     def saved(
-        self, **generator_kwargs: str | int | dict[str, str]
+        self, **generator_kwargs: Unpack[ListingGeneratorKwargs]
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has saved.
 
@@ -178,7 +181,7 @@ class RedditorListingMixin(BaseListingMixin):
         return ListingGenerator(self._reddit, urljoin(self._path, "saved"), **generator_kwargs)
 
     def upvoted(
-        self, **generator_kwargs: str | int | dict[str, str]
+        self, **generator_kwargs: Unpack[ListingGeneratorKwargs]
     ) -> AsyncIterator[asyncpraw.models.Comment | asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for items the user has upvoted.
 

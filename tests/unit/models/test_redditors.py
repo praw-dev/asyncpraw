@@ -1,8 +1,6 @@
 """Test asyncpraw.models.redditors."""
 
-import sys
-
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
 
 from .. import UnitTest
 

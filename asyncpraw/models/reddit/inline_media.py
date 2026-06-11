@@ -8,7 +8,7 @@ class InlineMedia:
 
     TYPE = None
 
-    def __eq__(self, other: InlineMedia) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Return whether the other instance equals the current."""
         return all(getattr(self, attr) == getattr(other, attr) for attr in ["TYPE", "path", "caption", "media_id"])
 
@@ -27,7 +27,7 @@ class InlineMedia:
         """
         self.path = path
         self.caption = caption
-        self.media_id = None
+        self.media_id: str | None = None
 
     def __repr__(self) -> str:
         """Return an object initialization representation of the instance."""
@@ -35,7 +35,7 @@ class InlineMedia:
 
     def __str__(self) -> str:
         """Return a string representation of the media in Markdown format."""
-        return f'\n\n![{self.TYPE}]({self.media_id} "{self.caption if self.caption else ""}")\n\n'
+        return f'\n\n![{self.TYPE}]({self.media_id} "{self.caption or ""}")\n\n'
 
 
 class InlineGif(InlineMedia):

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from heapq import heappop, heappush
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from asyncpraw.exceptions import DuplicateReplaceException
 from asyncpraw.models.reddit.more import MoreComments
@@ -19,7 +19,7 @@ class CommentForest:
 
     """
 
-    def __getitem__(self, index: int) -> asyncpraw.models.Comment:
+    def __getitem__(self, index: int) -> asyncpraw.models.Comment | asyncpraw.models.MoreComments:
         """Return the comment at position ``index`` in the list.
 
         This method is to be used like an array access, such as:
@@ -40,17 +40,19 @@ class CommentForest:
         if not (self._comments is not None or self._submission._fetched):
             msg = "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
             raise TypeError(msg)
+        assert self._comments is not None
         return self._comments[index]
 
     def __len__(self) -> int:
         """Return the number of top-level comments in the forest."""
         return len(self._comments or [])
 
-    def _insert_comment(self, comment: asyncpraw.models.Comment) -> None:
+    def _insert_comment(self, comment: asyncpraw.models.Comment | asyncpraw.models.MoreComments) -> None:
         if comment.name in self._submission._comments_by_id:
             raise DuplicateReplaceException
         comment.submission = self._submission
         if isinstance(comment, MoreComments) or comment.is_root:
+            assert self._comments is not None
             self._comments.append(comment)
         else:
             assert comment.parent_id in self._submission._comments_by_id, (
@@ -68,41 +70,45 @@ class CommentForest:
         was not called first.
 
         """
-        comments = []
-        queue = list(self)
+        if not (self._comments is not None or self._submission._fetched):
+            msg = "Submission must be fetched before comments are accessible. Call `.load()` to fetch."
+            raise TypeError(msg)
+        comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] = []
+        queue = list(self._comments or [])
         while queue:
             comment = queue.pop(0)
             comments.append(comment)
             if not isinstance(comment, MoreComments):
-                queue.extend(comment.replies)
+                queue.extend(comment.replies._comments or [])
         return comments
 
     @staticmethod
     def _gather_more_comments(
-        tree: list[asyncpraw.models.MoreComments],
+        tree: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments],
         *,
-        parent_tree: list[asyncpraw.models.MoreComments] | None = None,
+        parent_tree: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = None,
     ) -> list[MoreComments]:
         """Return a list of :class:`.MoreComments` objects obtained from tree."""
-        more_comments = []
-        queue = [(None, x) for x in tree]
+        more_comments: list[MoreComments] = []
+        queue: list[
+            tuple[asyncpraw.models.Comment | None, asyncpraw.models.Comment | asyncpraw.models.MoreComments]
+        ] = [(None, x) for x in tree]
         while queue:
             parent, comment = queue.pop(0)
             if isinstance(comment, MoreComments):
                 heappush(more_comments, comment)
                 if parent:
-                    comment._remove_from = parent.replies._comments
+                    comment._remove_from = parent.replies._comments or []
                 else:
                     comment._remove_from = parent_tree or tree
             else:
-                for item in comment.replies:
-                    queue.append((comment, item))
+                queue.extend((comment, item) for item in comment.replies)
         return more_comments
 
     def __init__(
         self,
         submission: asyncpraw.models.Submission,
-        comments: list[asyncpraw.models.Comment] | None = None,
+        comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = None,
     ) -> None:
         """Initialize a :class:`.CommentForest` instance.
 
@@ -112,10 +118,10 @@ class CommentForest:
             ``None``).
 
         """
-        self._comments = comments
+        self._comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = comments
         self._submission = submission
 
-    def _update(self, comments: list[asyncpraw.models.Comment]) -> None:
+    def _update(self, comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]) -> None:
         self._comments = comments
         for comment in comments:
             comment.submission = self._submission
@@ -176,6 +182,7 @@ class CommentForest:
 
         """
         remaining = limit
+        assert self._comments is not None
         more_comments = self._gather_more_comments(self._comments)
         skipped = []
 
@@ -187,7 +194,10 @@ class CommentForest:
                 item._remove_from.remove(item)
                 continue
 
-            new_comments = await item.comments(update=False)
+            new_comments = cast(
+                "list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]",
+                await item.comments(update=False),
+            )
             if remaining is not None:
                 remaining -= 1
 

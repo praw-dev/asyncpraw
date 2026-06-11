@@ -2,15 +2,13 @@
 
 import socket
 from asyncio import TimeoutError
-from contextlib import asynccontextmanager
+from unittest import mock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from aiohttp import ClientResponse
 from aiohttp.http_websocket import WebSocketError
 from asyncprawcore import BadRequest, Forbidden, NotFound, TooLarge
-
-from unittest import mock
-from unittest.mock import AsyncMock, MagicMock
 
 from asyncpraw.const import PNG_HEADER
 from asyncpraw.exceptions import (
@@ -34,7 +32,6 @@ from asyncpraw.models import (
     Stylesheet,
     Submission,
     Subreddit,
-    SubredditMessage,
     WikiPage,
 )
 
@@ -67,11 +64,11 @@ class TestSubredditFilters(IntegrationTest):
         subreddit = await reddit.subreddit("all")
         await subreddit.filters.add(await reddit.subreddit("redditdev"))
 
-    # async def test_add__non_special(self, reddit): # FIXME: no longer raises not found; same with praw
-    #     reddit.read_only = False
-    #     with pytest.raises(NotFound):
-    #         subreddit = await reddit.subreddit("redditdev")
-    #         await subreddit.filters.add("redditdev")
+    async def test_add__non_special(self, reddit):
+        reddit.read_only = False
+        with pytest.raises(NotFound):
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.filters.add("redditdev")
 
     async def test_remove(self, reddit):
         reddit.read_only = False
@@ -84,11 +81,11 @@ class TestSubredditFilters(IntegrationTest):
         subreddit = await reddit.subreddit("mod")
         await subreddit.filters.remove(await reddit.subreddit("redditdev"))
 
-    # async def test_remove__non_special(self, reddit):  # FIXME: no longer raises not found; same with praw
-    #     reddit.read_only = False
-    #     with pytest.raises(NotFound):
-    #         subreddit = await reddit.subreddit("redditdev")
-    #         await subreddit.filters.remove("redditdev")
+    async def test_remove__non_special(self, reddit):
+        reddit.read_only = False
+        with pytest.raises(NotFound):
+            subreddit = await reddit.subreddit("redditdev")
+            await subreddit.filters.remove("redditdev")
 
 
 class TestSubredditFlair(IntegrationTest):
@@ -885,9 +882,7 @@ class TestSubredditStreams(IntegrationTest):
     async def test_comments__with_continue_after_id(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         initial_stream = subreddit.stream.comments()
-        first_ten = []
-        for _ in range(10):
-            first_ten.append(await self.async_next(initial_stream))
+        first_ten = [await self.async_next(initial_stream) for _ in range(10)]
         generator = subreddit.stream.comments(continue_after_id=first_ten[4].fullname)
         for i in range(5):
             comment = await self.async_next(generator)
@@ -1561,7 +1556,7 @@ class TestSubreddit(IntegrationTest):
             "<HostId>iYEVOuRfbLiKwMgHt2ewqQRIm0NWL79uiC2rPLj9P0PwW55MhjY2/O8d9JdKTf1iwzLjwWMnGQ=</HostId>"
             "</Error>"
         )
-        _request = reddit._core._requestor.request
+        _request = reddit._core.requestor.request
 
         def patch_request(method, url, *args, **kwargs):
             """Patch requests to return mock data on specific url."""
@@ -1572,7 +1567,7 @@ class TestSubreddit(IntegrationTest):
                 return response
             return _request(method, url, *args, **kwargs)
 
-        reddit._core._requestor.request = patch_request
+        reddit._core.requestor.request = patch_request
 
         fake_png = PNG_HEADER + b"\x1a" * 10  # Normally 1024 ** 2 * 20 (20 MB)
         with open(tmp_path.joinpath("fake_img.png"), "wb") as tempfile:
@@ -1790,7 +1785,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for i, file_name in enumerate(("test.mov", "test.mp4")):
             title = f"Test Title {i}"
-            selftext = f"Testing **Async PRAW** video submission *with markdown selftext*."
+            selftext = "Testing **Async PRAW** video submission *with markdown selftext*."
             video = image_path(file_name)
             submission = await subreddit.submit_video(title, video, selftext=selftext)
             assert submission.author == pytest.placeholders.username

@@ -3,7 +3,7 @@
 import pytest
 from asyncprawcore import Forbidden
 
-from asyncpraw.models import Comment, Message, Redditor, Subreddit
+from asyncpraw.models import Comment, Message, Redditor
 
 from .. import IntegrationTest
 

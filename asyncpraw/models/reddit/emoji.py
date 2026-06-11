@@ -2,15 +2,21 @@
 
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
+
+import aiofiles
 
 from asyncpraw.const import API_PATH
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models.reddit.base import RedditBase
 
 if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
     import asyncpraw
+    import asyncpraw.models
 
 
 class Emoji(RedditBase):
@@ -138,7 +144,7 @@ class Emoji(RedditBase):
 class SubredditEmoji:
     """Provides a set of functions to a :class:`.Subreddit` for emoji."""
 
-    async def __aiter__(self) -> list[Emoji]:
+    async def __aiter__(self) -> AsyncIterator[Emoji]:
         """Return a list of :class:`.Emoji` for the subreddit.
 
         This method is to be used to discover all emoji for a subreddit:
@@ -210,11 +216,13 @@ class SubredditEmoji:
         upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
         upload_url = f"https:{upload_lease['action']}"
 
-        # TODO(@LilSpazJoekp): This is a blocking operation. It should be made async.
-        with file.open("rb") as image:  # noqa: ASYNC230
-            upload_data["file"] = image
-            async with self._reddit._core._requestor.request("POST", upload_url, data=upload_data) as response:
-                response.raise_for_status()
+        assert self._reddit._core is not None
+        async with aiofiles.open(file, "rb") as image:
+            upload = BytesIO(await image.read())
+        upload.name = file.name
+        upload_data["file"] = upload
+        async with self._reddit._core.requestor.request("POST", upload_url, data=upload_data) as response:
+            response.raise_for_status()
 
         data = {
             "mod_flair_only": mod_flair_only,

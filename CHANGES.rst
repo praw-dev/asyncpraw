@@ -36,11 +36,15 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 - Support delayed session creation in asyncprawcore 2.5.0+.
 - Add parameter ``fetch`` to :meth:`.get_rule` to control whether to fetch the rule data
   when initializing the rule object.
+- A ``py.typed`` marker (:PEP:`561`) so that downstream projects can type check against
+  Async PRAW's inline annotations.
 
 **Changed**
 
 - Drop support for Python 3.9, which was end-of-life on 2025-10-31.
-- Bumped asyncprawcore to 3.0.2.
+- Require ``asyncprawcore >=3.1.0, <4`` for its public :class:`!Session` and authorizer
+  accessors and the widened :meth:`!Session.request` annotations, which let Async PRAW
+  drop a number of internal ``cast``\ s and type-checker suppressions.
 - Require ``update_checker[async] >=1.0, <2.0`` and perform the update check using its
   native async API on the first request, instead of a blocking call during ``Reddit``
   initialization. The 1.0 release is dependency-free, dropping ``requests`` from Async

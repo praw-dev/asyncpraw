@@ -11,13 +11,19 @@ from asyncpraw.models.listing.generator import ListingGenerator
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import AsyncIterator
 
+    from typing_extensions import Unpack
+
     import asyncpraw.models
+    from asyncpraw.models.listing.generator import ListingGeneratorKwargs
 
 
 class RisingListingMixin(AsyncPRAWBase):
     """Mixes in the rising methods."""
 
-    def rising(self, **generator_kwargs: str | int | dict[str, str]) -> AsyncIterator[asyncpraw.models.Submission]:
+    if TYPE_CHECKING:
+        _path: str
+
+    def rising(self, **generator_kwargs: Unpack[ListingGeneratorKwargs]) -> AsyncIterator[asyncpraw.models.Submission]:
         """Return a :class:`.ListingGenerator` for rising submissions.
 
         Additional keyword arguments are passed in the initialization of

@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw
+    import asyncpraw.models
 
 
 class RemovalReason(RedditBase):

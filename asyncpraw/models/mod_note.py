@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from asyncpraw.endpoints import API_PATH
-from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.base import AsyncPRAWBase, DynamicAttributes
 from asyncpraw.models.reddit.mixins import CreatedMixin
 
+if TYPE_CHECKING:
+    import asyncpraw.models
 
-class ModNote(CreatedMixin, AsyncPRAWBase):
+
+class ModNote(DynamicAttributes, CreatedMixin, AsyncPRAWBase):
     """Represent a moderator note.
 
     .. include:: ../../typical_attributes.rst
@@ -48,6 +53,10 @@ class ModNote(CreatedMixin, AsyncPRAWBase):
 
     _created_at_attribute = "created_at"
 
+    id: str
+    subreddit: asyncpraw.models.Subreddit
+    user: asyncpraw.models.Redditor
+
     def __eq__(self, other: ModNote | str | object) -> bool:
         """Return whether the other instance equals the current."""
         if isinstance(other, self.__class__):
@@ -71,7 +80,7 @@ class ModNote(CreatedMixin, AsyncPRAWBase):
                 note.delete()
 
         """
-        params = {
+        params: dict[str, str | int] = {
             "user": str(self.user),
             "subreddit": str(self.subreddit),
             "note_id": self.id,

@@ -1,12 +1,9 @@
 import pickle
-import sys
-
-import aiohttp
-import pytest
-
 from unittest import mock
 from unittest.mock import AsyncMock, MagicMock
 
+import aiohttp
+import pytest
 from aiohttp import ClientResponse
 
 from asyncpraw.exceptions import ClientException, MediaPostFailed
@@ -70,7 +67,7 @@ class TestSubreddit(UnitTest):
     )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
     async def test_invalid_media(self, connection_mock, reddit):
-        reddit._core._requestor._http = aiohttp.ClientSession()
+        reddit._core.requestor._http = aiohttp.ClientSession()
         recv_mock = MagicMock()
         recv_mock.receive_json = AsyncMock(return_value={"payload": {}, "type": "failed"})
         context_manager = MagicMock()
@@ -79,7 +76,7 @@ class TestSubreddit(UnitTest):
 
         with pytest.raises(MediaPostFailed):
             await Subreddit(reddit, display_name="test").submit_image("Test", "dummy path")
-        await reddit._core._requestor._http.close()
+        await reddit._core.requestor._http.close()
 
     @mock.patch("aiohttp.client.ClientSession.ws_connect", new=AsyncMock())
     @mock.patch(
@@ -152,10 +149,7 @@ class TestSubreddit(UnitTest):
         media = {"gif1": gif, "image1": image, "video1": video}
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit(
-                "Cool title",
-                 url="https://praw.readthedocs.org/en/stable/",
-                 inline_media=media,
-                 selftext=selftext
+                "Cool title", url="https://praw.readthedocs.org/en/stable/", inline_media=media, selftext=selftext
             )
         assert str(excinfo.value) == message
 

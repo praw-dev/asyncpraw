@@ -1,5 +1,3 @@
-import pytest
-
 from asyncpraw.exceptions import (
     AsyncPRAWException,
     ClientException,

@@ -114,6 +114,9 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
 
     REMOVAL_MESSAGE_API = "removal_link_message"
 
+    if TYPE_CHECKING:
+        thing: asyncpraw.models.Comment | asyncpraw.models.Submission
+
     def __init__(self, submission: asyncpraw.models.Submission) -> None:
         """Initialize a :class:`.SubmissionModeration` instance.
 
@@ -275,7 +278,7 @@ class SubmissionModeration(ThingModerationMixin, ModNoteMixin):
         """
         await self.thing._reddit.post(API_PATH["spoiler"], data={"id": self.thing.fullname})
 
-    async def sticky(self, *, bottom: bool = True, state: bool = True) -> asyncpraw.models.Submission:
+    async def sticky(self, *, bottom: bool = True, state: bool = True) -> asyncpraw.models.Submission | None:
         """Set the submission's sticky state in its subreddit.
 
         :param bottom: When ``True``, set the submission as the bottom sticky. If no top
@@ -729,8 +732,8 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Create
 
         submission_data = submission_listing["data"]["children"][0]["data"]
         submission = type(self)(self._reddit, _data=submission_data)
-        delattr(submission, "comment_limit")
-        delattr(submission, "comment_sort")
+        del submission.comment_limit
+        del submission.comment_sort
         submission.comments = CommentForest(self)
 
         self.__dict__.update(submission.__dict__)
@@ -865,9 +868,9 @@ class Submission(SubmissionListingMixin, UserContentMixin, FullnameMixin, Create
             "nsfw": bool(nsfw),
             "spoiler": bool(spoiler),
         }
-        for key, value in (("flair_id", flair_id), ("flair_text", flair_text)):
-            if value is not None:
-                data[key] = value
+        data.update({
+            key: value for key, value in (("flair_id", flair_id), ("flair_text", flair_text)) if value is not None
+        })
 
         return await self._reddit.post(API_PATH["submit"], data=data)
 

@@ -4,14 +4,25 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypedDict
 
 from asyncpraw.models.base import AsyncPRAWBase
-from asyncpraw.models.listing.listing import FlairListing, ModNoteListing
+from asyncpraw.models.listing.listing import FlairListing, Listing, ModNoteListing
 
 if TYPE_CHECKING:
     import asyncpraw
     from asyncpraw.models.reddit.base import RedditBase
+
+
+class ListingGeneratorKwargs(TypedDict, total=False):
+    """The keyword arguments accepted by methods that return a :class:`.ListingGenerator`.
+
+    See :meth:`.ListingGenerator.__init__` for the meaning of each value.
+
+    """
+
+    limit: int | None
+    params: dict[str, str | int] | None
 
 
 class ListingGenerator(AsyncPRAWBase, AsyncIterator):
@@ -40,13 +51,14 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
 
         self._list_index += 1
         self.yielded += 1
+        assert self._listing is not None
         return self._listing[self._list_index - 1]
 
     def __init__(
         self,
         reddit: asyncpraw.Reddit,
         url: str,
-        limit: int = 100,
+        limit: int | None = 100,
         params: dict[str, str | int] | None = None,
     ) -> None:
         """Initialize a :class:`.ListingGenerator` instance.
@@ -63,7 +75,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
         """
         super().__init__(reddit, _data=None)
         self._exhausted = False
-        self._listing = None
+        self._listing: Listing | None = None
         self._list_index: int
         self.limit = limit
         self.params = deepcopy(params) if params else {}

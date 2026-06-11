@@ -698,35 +698,34 @@ class TestSubredditWidgets(IntegrationTest):
         widgets = subreddit.widgets
         assert isinstance(await widgets.items(), dict)
 
-    # async def test_progressive_images(self, reddit): # FIXME: not currently working; same with praw
-    #     subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-    #     widgets = subreddit.widgets
-    #
-    #     async def has_progressive(widgets_):
-    #         # best way I could figure if an image is progressive
-    #         sign = "fm=pjpg"
-    #
-    #         async for widget in widgets_.sidebar():
-    #             if isinstance(widget, ImageWidget):
-    #                 for image in widget:
-    #                     if sign in image.url:
-    #                         return True
-    #             elif isinstance(widget, CustomWidget):
-    #                 for image_data in widget.imageData:
-    #                     if sign in image_data.url:
-    #                         return True
-    #
-    #         return False
-    #
-    #     with self.use_cassette():
-    #         widgets.progressive_images = True
-    #         assert await has_progressive(widgets)
-    #         widgets.progressive_images = False
-    #         await widgets.refresh()
-    #         assert not await has_progressive(widgets)
-    #         widgets.progressive_images = True
-    #         await widgets.refresh()
-    #         assert await has_progressive(widgets)
+    async def test_progressive_images(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        widgets = subreddit.widgets
+
+        async def has_progressive(widgets_):
+            # best way I could figure if an image is progressive
+            sign = "fm=pjpg"
+
+            async for widget in widgets_.sidebar():
+                if isinstance(widget, ImageWidget):
+                    for image in widget:
+                        if sign in image.url:
+                            return True
+                elif isinstance(widget, CustomWidget):
+                    for image_data in widget.imageData:
+                        if sign in image_data.url:
+                            return True
+
+            return False
+
+        widgets.progressive_images = True
+        assert await has_progressive(widgets)
+        widgets.progressive_images = False
+        await widgets.refresh()
+        assert not await has_progressive(widgets)
+        widgets.progressive_images = True
+        await widgets.refresh()
+        assert await has_progressive(widgets)
 
     async def test_refresh(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
