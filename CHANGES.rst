@@ -33,6 +33,11 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 - Add support for Python 3.14.
 - Add support for optional Markdown-formatted ``selftext`` when submitting link, image,
   gallery and video posts.
+- Add :class:`.Media` and its subclasses :class:`.EmojiMedia`, :class:`.PostMedia`,
+  :class:`.StylesheetAsset`, :class:`.StylesheetImage`, and :class:`.WidgetMedia` to
+  consolidate media uploads. Media can be constructed from a file path, or from
+  ``bytes`` content along with a ``name``, so media no longer has to be written to disk
+  before uploading.
 - Support delayed session creation in asyncprawcore 2.5.0+.
 - Add parameter ``fetch`` to :meth:`.get_rule` to control whether to fetch the rule data
   when initializing the rule object.
@@ -64,9 +69,43 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
   body text to accompany the link submission. An exception is raised when trying to use
   ``inline_media`` with ``selftext`` for a ``url`` submission because Reddit does not
   support inline media in body text for link submissions.
-- :meth:`.Subreddit.submit_video`, :meth:`.Subreddit.submit_gallery`, and
-  :meth:`.Subreddit.submit_image` now accept an optional Markdown-formatted ``selftext``
-  parameter.
+- ``Subreddit.submit_gallery``, ``Subreddit.submit_image``, ``Subreddit.submit_poll``,
+  and ``Subreddit.submit_video`` have been merged into :meth:`.Subreddit.submit`. The
+  kind of submission is selected with the ``gallery``, ``image``, ``poll``, ``url``, or
+  ``video`` keyword argument. At least one of those, or ``selftext``, must be provided,
+  and they are mutually exclusive, while ``selftext`` may accompany any of them as
+  optional Markdown-formatted body text. ``image`` takes a :class:`.PostMedia` instance;
+  ``gallery`` takes a list of :class:`.PostMedia` instances or ``dict``\ s with a
+  ``media`` key; ``video`` takes a :class:`.PostMedia` instance or a ``dict`` with a
+  ``media`` key and optional ``gif`` and ``thumbnail`` keys; and ``poll`` takes a
+  ``dict`` with ``duration`` and ``options`` keys.
+- Media upload methods now accept :class:`.Media` instances instead of file paths:
+
+  - The ``image_path`` argument to :meth:`.SubredditEmoji.add` has been replaced by
+    ``media``, which takes an :class:`.EmojiMedia` instance.
+  - The ``image_path`` arguments to the :class:`.SubredditStylesheet` ``upload_*``
+    methods have been replaced by ``media``, which must be passed positionally.
+    :meth:`.SubredditStylesheet.upload`, :meth:`.SubredditStylesheet.upload_header`,
+    :meth:`.SubredditStylesheet.upload_mobile_header`, and
+    :meth:`.SubredditStylesheet.upload_mobile_icon` take a :class:`.StylesheetImage`
+    instance, while :meth:`.SubredditStylesheet.upload_banner`,
+    :meth:`.SubredditStylesheet.upload_banner_additional_image`,
+    :meth:`.SubredditStylesheet.upload_banner_hover_image`, and
+    :meth:`.SubredditStylesheet.upload_mobile_banner` take a :class:`.StylesheetAsset`
+    instance.
+  - The ``file_path`` argument to :meth:`.SubredditWidgetsModeration.upload_image` has
+    been replaced by ``media``, which takes a :class:`.WidgetMedia` instance and must be
+    passed positionally.
+  - The ``path`` argument to :class:`.InlineMedia` (:class:`.InlineGif`,
+    :class:`.InlineImage`, and :class:`.InlineVideo`) has been replaced by ``media``,
+    which takes a :class:`.PostMedia` instance.
+
+- An unknown media type now raises :class:`.ClientException` when uploading media,
+  instead of falling back to JPEG.
+- Media uploads to Reddit's S3 buckets now respect the configured ``timeout`` and raise
+  ``asyncprawcore.RequestException`` on transport errors, consistent with all other
+  requests, instead of bypassing the configured timeout and raising raw ``aiohttp``
+  exceptions.
 - :meth:`.CommentForest.list` no longer needs to be awaited.
 - The keyword argument ``lazy`` has been replace by ``fetch`` to consolidate the keyword
   argument used to explicitly perform a fetch when initializing an object.
@@ -428,7 +467,7 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 **Added**
 
 - Add method :meth:`.Subreddits.premium` to reflect the naming change in Reddit's API.
-- Ability to submit image galleries with :meth:`~.Subreddit.submit_gallery`.
+- Ability to submit image galleries with ``Subreddit.submit_gallery``.
 - Ability to pass a gallery url to :meth:`.Reddit.submission`.
 - Ability to specify modmail mute duration.
 - Add method :meth:`.invited` to get invited moderators of a subreddit.
@@ -445,9 +484,9 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
 - :class:`.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
   which will change the order in which elements are removed from the set.
-- Improved :meth:`~.Subreddit.submit_image` and :meth:`~.Subreddit.submit_video`
-  performance in slow network environments by removing a race condition when
-  establishing a websocket connection.
+- Improved ``Subreddit.submit_image`` and ``Subreddit.submit_video`` performance in slow
+  network environments by removing a race condition when establishing a websocket
+  connection.
 
 **Deprecated**
 

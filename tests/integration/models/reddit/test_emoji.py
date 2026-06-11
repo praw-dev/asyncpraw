@@ -1,7 +1,10 @@
+import pathlib
+
 import pytest
 
 from asyncpraw.exceptions import ClientException
 from asyncpraw.models import Emoji
+from asyncpraw.models.media import EmojiMedia
 
 from ... import IntegrationTest
 
@@ -57,8 +60,20 @@ class TestSubredditEmoji(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for extension in ["jpg", "png"]:
             emoji = await subreddit.emoji.add(
+                media=EmojiMedia(f"tests/integration/files/test.{extension}"),
                 name=f"test_{extension}",
-                image_path=f"tests/integration/files/test.{extension}",
+            )
+            assert isinstance(emoji, Emoji)
+
+    @pytest.mark.cassette_name("TestSubredditEmoji.test_add")
+    async def test_add__bytes(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        for extension in ["jpg", "png"]:
+            media_bytes = pathlib.Path(f"tests/integration/files/test.{extension}").read_bytes()
+            emoji = await subreddit.emoji.add(
+                media=EmojiMedia(media_bytes, name=f"test.{extension}"),
+                name=f"test_{extension}",
             )
             assert isinstance(emoji, Emoji)
 
@@ -67,9 +82,9 @@ class TestSubredditEmoji(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for extension in ["jpg", "png"]:
             emoji = await subreddit.emoji.add(
-                name=f"test_{extension}",
-                image_path=f"tests/integration/files/test.{extension}",
+                media=EmojiMedia(f"tests/integration/files/test.{extension}"),
                 mod_flair_only=True,
+                name=f"test_{extension}",
                 post_flair_allowed=True,
                 user_flair_allowed=False,
             )

@@ -20,6 +20,7 @@ from asyncpraw.models import (
     Subreddit,
     TextArea,
     Widget,
+    WidgetMedia,
 )
 
 from ... import IntegrationTest
@@ -54,7 +55,7 @@ class TestButtonWidget(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-        my_image = await widgets.mod.upload_image(image_path("test.png"))
+        my_image = await widgets.mod.upload_image(WidgetMedia(image_path("test.png")))
         buttons = [
             {
                 "kind": "text",
@@ -294,7 +295,7 @@ class TestCustomWidget(IntegrationTest):
                 "width": 0,
                 "height": 0,
                 "name": "a",
-                "url": await widgets.mod.upload_image(image_path("test.png")),
+                "url": await widgets.mod.upload_image(WidgetMedia(image_path("test.png"))),
             }
         ]
 
@@ -415,7 +416,7 @@ class TestImageWidget(IntegrationTest):
                 "width": 10,
                 "height": 10,
                 "linkUrl": "",
-                "url": await widgets.mod.upload_image(img_path),
+                "url": await widgets.mod.upload_image(WidgetMedia(img_path)),
             }
             for img_path in image_paths
         ]
@@ -792,7 +793,7 @@ class TestSubredditWidgetsModeration(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
         for image in ("test.jpg", "test.png"):
-            image_url = await widgets.mod.upload_image(image_path(image))
+            image_url = await widgets.mod.upload_image(WidgetMedia(image_path(image)))
             assert image_url
 
 
