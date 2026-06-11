@@ -7,7 +7,7 @@ import pytest
 from aiohttp import ClientResponse
 
 from asyncpraw.exceptions import ClientException, MediaPostFailed
-from asyncpraw.models import InlineGif, InlineImage, InlineVideo, PostMedia, Subreddit, WikiPage
+from asyncpraw.models import InlineGif, InlineImage, InlineVideo, PostMedia, StylesheetAsset, Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
 from ... import UnitTest
@@ -73,7 +73,7 @@ class TestSubreddit(UnitTest):
         connection_mock.return_value = context_manager
 
         with pytest.raises(MediaPostFailed):
-            await Subreddit(reddit, display_name="test").submit_image("Test", PostMedia(b"", name="dummy.png"))
+            await Subreddit(reddit, display_name="test").submit("Test", image=PostMedia(b"", name="dummy.png"))
         await reddit._core.requestor._http.close()
 
     @mock.patch("aiohttp.client.ClientSession.ws_connect", new=AsyncMock())
@@ -95,7 +95,7 @@ class TestSubreddit(UnitTest):
         response.status = 500
         mock_method.side_effect = ServerError(response=response)
         with pytest.raises(ServerError):
-            await Subreddit(reddit, display_name="test").submit_image("Test", PostMedia(b"", name="test.png"))
+            await Subreddit(reddit, display_name="test").submit("Test", image=PostMedia(b"", name="test.png"))
 
     async def test_notes_delete__invalid_args(self):
         with pytest.raises(TypeError) as excinfo:
@@ -127,17 +127,29 @@ class TestSubreddit(UnitTest):
         assert str(subreddit) == "name"
 
     async def test_submit__failure(self, reddit):
-        message = "Either 'selftext' and/or 'url' must be provided."
+        message = "At least one of 'gallery', 'image', 'poll', 'selftext', 'url', or 'video' must be provided."
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit("Cool title")
         assert str(excinfo.value) == message
 
+    async def test_submit__multiple_kinds_disallowed(self, reddit):
+        message = "Only one of 'gallery', 'image', 'poll', 'url', or 'video' can be provided ('image', 'url' given)."
+        subreddit = Subreddit(reddit, display_name="name")
+
+        with pytest.raises(TypeError) as excinfo:
+            await subreddit.submit(
+                "Cool title",
+                image=PostMedia(b"", name="test.png"),
+                url="https://praw.readthedocs.org/en/stable/",
+            )
+        assert str(excinfo.value) == message
+
     async def test_submit__url_selftext_inline_media_disallowed(self, reddit):
         # `selftext` and `url` are no longer mutually exclusive,
         # but `inline_media` is not supported for link post selftext
-        message = "As of 2025-10-08, `inline_media` is not supported for link post selftext. Only Markdown text can be added to non-self posts."
+        message = "'inline_media' is only supported for text submissions. Only Markdown text can be used for the selftext of a 'url' submission."
         subreddit = Subreddit(reddit, display_name="name")
         gif = InlineGif(caption="optional caption", media=PostMedia(b"", name="test.gif"))
         image = InlineImage(caption="optional caption", media=PostMedia(b"", name="test.png"))
@@ -155,7 +167,7 @@ class TestSubreddit(UnitTest):
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery("Cool title", [{"media": "a string is not PostMedia"}])
+            await subreddit.submit("Cool title", gallery=[{"media": "a string is not PostMedia"}])
         assert str(excinfo.value) == message
 
     async def test_submit_gallery__missing_media(self, reddit):
@@ -163,7 +175,7 @@ class TestSubreddit(UnitTest):
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery("Cool title", [{"caption": "caption"}, {"caption": "caption2"}])
+            await subreddit.submit("Cool title", gallery=[{"caption": "caption"}, {"caption": "caption2"}])
         assert str(excinfo.value) == message
 
     async def test_submit_gallery__too_long_caption(self, reddit):
@@ -175,8 +187,9 @@ class TestSubreddit(UnitTest):
             "yyyyyyyyyyyyyyyy too long caption"
         )
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery(
-                "Cool title", [{"media": PostMedia(b"", name="test.png"), "caption": caption}]
+            await subreddit.submit(
+                "Cool title",
+                gallery=[{"media": PostMedia(b"", name="test.png"), "caption": caption}],
             )
         assert str(excinfo.value) == message
 
@@ -185,7 +198,7 @@ class TestSubreddit(UnitTest):
         for file_name in ("test.mov", "test.mp4"):
             image = PostMedia(image_path(file_name))
             with pytest.raises(ClientException):
-                await subreddit.submit_image("Test Title", image)
+                await subreddit.submit("Test Title", image=image)
 
     async def test_submit_inline_media__invalid_media(self, reddit):
         message = "'media' must be a PostMedia instance."
@@ -199,32 +212,54 @@ class TestSubreddit(UnitTest):
             await subreddit.submit("title", inline_media=media, selftext=selftext)
         assert str(excinfo.value) == message
 
+    async def test_submit_poll__invalid_keys(self, reddit):
+        message = "'poll' contains invalid keys: 'duratoin'."
+        subreddit = Subreddit(reddit, display_name="name")
+
+        with pytest.raises(TypeError) as excinfo:
+            await subreddit.submit("Cool title", poll={"duratoin": 3, "options": ["Yes", "No"]})
+        assert str(excinfo.value) == message
+
+    async def test_submit_poll__missing_keys(self, reddit):
+        message = "'poll' is missing required keys: 'duration'."
+        subreddit = Subreddit(reddit, display_name="name")
+
+        with pytest.raises(TypeError) as excinfo:
+            await subreddit.submit("Cool title", poll={"options": ["Yes", "No"]})
+        assert str(excinfo.value) == message
+
     async def test_submit_video__bad_filetype(self, image_path, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.jpg", "test.png", "test.gif"):
             video = PostMedia(image_path(file_name))
             with pytest.raises(ClientException):
-                await subreddit.submit_video("Test Title", video)
+                await subreddit.submit("Test Title", video=video)
 
     async def test_submit_video__invalid_keys(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        message = "'video' contains invalid keys: 'videogif'."
+        subreddit = Subreddit(reddit, display_name="name")
+
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_video(
+            await subreddit.submit(
                 "Cool title",
-                {"media": PostMedia(b"", name="test.mp4"), "videogif": True},
+                video={"media": PostMedia(b"", name="test.mp4"), "videogif": True},
             )
-        assert str(excinfo.value) == "'video' contains invalid keys: 'videogif'."
+        assert str(excinfo.value) == message
 
     async def test_submit_video__invalid_media(self, reddit):
-        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        message = "'media' is required and must be a PostMedia instance."
+        subreddit = Subreddit(reddit, display_name="name")
+
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_video("Cool title", {"gif": True})
-        assert str(excinfo.value) == "'media' is required and must be a PostMedia instance."
+            await subreddit.submit("Cool title", video={"gif": True})
+        assert str(excinfo.value) == message
 
     async def test_upload_banner_additional_image(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")
         with pytest.raises(ValueError):
-            await subreddit.stylesheet.upload_banner_additional_image("dummy_path", align="asdf")
+            await subreddit.stylesheet.upload_banner_additional_image(
+                StylesheetAsset(b"", name="dummy.png"), align="asdf"
+            )
 
 
 class TestSubredditFlair(UnitTest):

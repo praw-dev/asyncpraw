@@ -69,9 +69,16 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
   body text to accompany the link submission. An exception is raised when trying to use
   ``inline_media`` with ``selftext`` for a ``url`` submission because Reddit does not
   support inline media in body text for link submissions.
-- :meth:`.Subreddit.submit_video`, :meth:`.Subreddit.submit_gallery`, and
-  :meth:`.Subreddit.submit_image` now accept an optional Markdown-formatted ``selftext``
-  parameter.
+- ``Subreddit.submit_gallery``, ``Subreddit.submit_image``, ``Subreddit.submit_poll``,
+  and ``Subreddit.submit_video`` have been merged into :meth:`.Subreddit.submit`. The
+  kind of submission is selected with the ``gallery``, ``image``, ``poll``, ``url``, or
+  ``video`` keyword argument. At least one of those, or ``selftext``, must be provided,
+  and they are mutually exclusive, while ``selftext`` may accompany any of them as
+  optional Markdown-formatted body text. ``image`` takes a :class:`.PostMedia` instance;
+  ``gallery`` takes a list of :class:`.PostMedia` instances or ``dict``\ s with a
+  ``media`` key; ``video`` takes a :class:`.PostMedia` instance or a ``dict`` with a
+  ``media`` key and optional ``gif`` and ``thumbnail`` keys; and ``poll`` takes a
+  ``dict`` with ``duration`` and ``options`` keys.
 - Media upload methods now accept :class:`.Media` instances instead of file paths:
 
   - The ``image_path`` argument to :meth:`.SubredditEmoji.add` has been replaced by
@@ -460,7 +467,7 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 **Added**
 
 - Add method :meth:`.Subreddits.premium` to reflect the naming change in Reddit's API.
-- Ability to submit image galleries with :meth:`~.Subreddit.submit_gallery`.
+- Ability to submit image galleries with ``Subreddit.submit_gallery``.
 - Ability to pass a gallery url to :meth:`.Reddit.submission`.
 - Ability to specify modmail mute duration.
 - Add method :meth:`.invited` to get invited moderators of a subreddit.
@@ -477,9 +484,9 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
 - :class:`.BoundedSet` will now utilize a Last-Recently-Used (LRU) storing mechanism,
   which will change the order in which elements are removed from the set.
-- Improved :meth:`~.Subreddit.submit_image` and :meth:`~.Subreddit.submit_video`
-  performance in slow network environments by removing a race condition when
-  establishing a websocket connection.
+- Improved ``Subreddit.submit_image`` and ``Subreddit.submit_video`` performance in slow
+  network environments by removing a race condition when establishing a websocket
+  connection.
 
 **Deprecated**
 

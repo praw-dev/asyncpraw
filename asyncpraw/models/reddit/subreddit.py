@@ -9,7 +9,7 @@ from csv import writer
 from io import StringIO
 from json import dumps
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, cast, overload
 from urllib.parse import urljoin
 
 from aiohttp import WebSocketError
@@ -3134,6 +3134,113 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
         await submission._fetch()
         return submission
 
+    @overload
+    async def submit(
+        self,
+        title: str,
+        *,
+        collection_id: str | None = ...,
+        discussion_type: str | None = ...,
+        draft_id: str | None = ...,
+        flair_id: str | None = ...,
+        flair_text: str | None = ...,
+        inline_media: dict[str, asyncpraw.models.InlineMedia] | None = ...,
+        nsfw: bool = ...,
+        resubmit: bool = ...,
+        selftext: str,
+        send_replies: bool = ...,
+        spoiler: bool = ...,
+    ) -> asyncpraw.models.Submission: ...
+
+    @overload
+    async def submit(
+        self,
+        title: str,
+        *,
+        collection_id: str | None = ...,
+        discussion_type: str | None = ...,
+        draft_id: str | None = ...,
+        flair_id: str | None = ...,
+        flair_text: str | None = ...,
+        nsfw: bool = ...,
+        resubmit: bool = ...,
+        selftext: str | None = ...,
+        send_replies: bool = ...,
+        spoiler: bool = ...,
+        url: str,
+    ) -> asyncpraw.models.Submission: ...
+
+    @overload
+    async def submit(
+        self,
+        title: str,
+        *,
+        collection_id: str | None = ...,
+        discussion_type: str | None = ...,
+        flair_id: str | None = ...,
+        flair_text: str | None = ...,
+        image: asyncpraw.models.PostMedia,
+        nsfw: bool = ...,
+        resubmit: bool = ...,
+        selftext: str | None = ...,
+        send_replies: bool = ...,
+        spoiler: bool = ...,
+        timeout: int = ...,
+        without_websockets: bool = ...,
+    ) -> asyncpraw.models.Submission | None: ...
+
+    @overload
+    async def submit(
+        self,
+        title: str,
+        *,
+        collection_id: str | None = ...,
+        discussion_type: str | None = ...,
+        flair_id: str | None = ...,
+        flair_text: str | None = ...,
+        gallery: list[asyncpraw.models.PostMedia | dict[str, str | asyncpraw.models.PostMedia]],
+        nsfw: bool = ...,
+        selftext: str | None = ...,
+        send_replies: bool = ...,
+        spoiler: bool = ...,
+    ) -> asyncpraw.models.Submission: ...
+
+    @overload
+    async def submit(
+        self,
+        title: str,
+        *,
+        collection_id: str | None = ...,
+        discussion_type: str | None = ...,
+        flair_id: str | None = ...,
+        flair_text: str | None = ...,
+        nsfw: bool = ...,
+        poll: dict[str, int | list[str]],
+        resubmit: bool = ...,
+        selftext: str | None = ...,
+        send_replies: bool = ...,
+        spoiler: bool = ...,
+    ) -> asyncpraw.models.Submission: ...
+
+    @overload
+    async def submit(
+        self,
+        title: str,
+        *,
+        collection_id: str | None = ...,
+        discussion_type: str | None = ...,
+        flair_id: str | None = ...,
+        flair_text: str | None = ...,
+        nsfw: bool = ...,
+        resubmit: bool = ...,
+        selftext: str | None = ...,
+        send_replies: bool = ...,
+        spoiler: bool = ...,
+        timeout: int = ...,
+        video: asyncpraw.models.PostMedia | dict[str, bool | asyncpraw.models.PostMedia],
+        without_websockets: bool = ...,
+    ) -> asyncpraw.models.Submission | None: ...
+
     async def submit(
         self,
         title: str,
@@ -3143,14 +3250,20 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
         draft_id: str | None = None,
         flair_id: str | None = None,
         flair_text: str | None = None,
+        gallery: list[asyncpraw.models.PostMedia | dict[str, str | asyncpraw.models.PostMedia]] | None = None,
+        image: asyncpraw.models.PostMedia | None = None,
         inline_media: dict[str, asyncpraw.models.InlineMedia] | None = None,
         nsfw: bool = False,
+        poll: dict[str, int | list[str]] | None = None,
         resubmit: bool = True,
         selftext: str | None = None,
         send_replies: bool = True,
         spoiler: bool = False,
+        timeout: int = 10,
         url: str | None = None,
-    ) -> asyncpraw.models.Submission:
+        video: asyncpraw.models.PostMedia | dict[str, bool | asyncpraw.models.PostMedia] | None = None,
+        without_websockets: bool = False,
+    ) -> asyncpraw.models.Submission | None:
         r"""Add a submission to the :class:`.Subreddit`.
 
         :param title: The title of the submission.
@@ -3158,32 +3271,59 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
             newly-submitted post to.
         :param discussion_type: Set to ``"CHAT"`` to enable live discussion instead of
             traditional comments (default: ``None``).
-        :param draft_id: The ID of a draft to submit.
+        :param draft_id: The ID of a draft to submit. Only applies to text and link
+            submissions.
         :param flair_id: The flair template to select (default: ``None``).
         :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
             this value will set a custom text (default: ``None``). ``flair_id`` is
             required when ``flair_text`` is provided.
+        :param gallery: A list of images to post as a gallery. Each item is either a
+            :class:`.PostMedia` or a ``dict`` with the structure ``{"media":
+            PostMedia("path"), "caption": "caption", "outbound_url": "url"}``, where
+            only ``media`` is required.
+        :param image: The :class:`.PostMedia` image to upload and post.
         :param inline_media: A dict of :class:`.InlineMedia` objects where the key is
-            the placeholder name in ``selftext``. Link post selftext does not support
-            inline media.
+            the placeholder name in ``selftext``. Only supported for text submissions.
         :param nsfw: Whether the submission should be marked NSFW (default: ``False``).
+        :param poll: A ``dict`` with the structure ``{"duration": 3, "options": ["Yes",
+            "No"]}``, where ``duration`` is the number of days the poll should accept
+            votes (between ``1`` and ``7``, inclusive) and ``options`` is a list of two
+            to six poll options as ``str``. Both keys are required.
         :param resubmit: When ``False``, an error will occur if the URL has already been
             submitted (default: ``True``).
-        :param selftext: The Markdown formatted content for a ``text`` submission or an
-            optional post body for ``link`` submissions. Use an empty string, ``""``, to
-            make a title-only submission.
+        :param selftext: The Markdown formatted content for a ``text`` submission or
+            optional Markdown-formatted body text for any other kind of submission. Use
+            an empty string, ``""``, to make a title-only submission.
         :param send_replies: When ``True``, messages will be sent to the submission
             author when comments are made to the submission (default: ``True``).
         :param spoiler: Whether the submission should be marked as a spoiler (default:
             ``False``).
+        :param timeout: Specifies a particular timeout, in seconds, for the WebSockets
+            connection used by ``image`` and ``video`` submissions. Use to avoid
+            "Websocket error" exceptions (default: ``10``).
         :param url: The URL for a ``link`` submission.
+        :param video: The video to upload and post. Either a :class:`.PostMedia` or a
+            ``dict`` with the structure ``{"media": PostMedia("path"), "gif": True,
+            "thumbnail": PostMedia("path")}``, where only ``media`` is required. Set
+            ``"gif"`` to ``True`` to submit the video as a videogif, which is
+            essentially a silent video (default: ``False``). When ``"thumbnail"`` is not
+            provided, the PRAW logo will be used as the thumbnail.
+        :param without_websockets: Set to ``True`` to disable use of WebSockets for
+            ``image`` and ``video`` submissions (see note below for an explanation). If
+            ``True``, this method doesn't return anything (default: ``False``).
 
-        :returns: A :class:`.Submission` object for the newly created submission.
+        :returns: A :class:`.Submission` object for the newly created submission, unless
+            ``without_websockets`` is ``True`` for an ``image`` or ``video`` submission.
 
-        Provide ``selftext`` alone for a ``text`` submission. ``selftext`` can accompany
-        a ``url`` for a ``link`` submission. ``selftext`` that accompanies a ``link``
-        submission is optional. ``selftext`` for ``link`` submissions does not support
-        ``inline_media``.
+        :raises: :class:`.ClientException` if ``image`` or a ``gallery`` item's
+            ``media`` refers to a file that is not an image, or if the ``video`` (or its
+            ``media``) refers to a file that is not a video.
+
+        At least one of ``gallery``, ``image``, ``poll``, ``selftext``, ``url``, or
+        ``video`` must be provided. ``gallery``, ``image``, ``poll``, ``url``, and
+        ``video`` are mutually exclusive, while ``selftext`` may accompany any of them
+        as optional Markdown-formatted body text. ``selftext`` that accompanies another
+        kind of submission does not support ``inline_media``.
 
         For example, to submit a URL to r/test do:
 
@@ -3194,7 +3334,75 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
             subreddit = await reddit.subreddit("test")
             await subreddit.submit(title, url=url)
 
-        For example, to submit a self post with inline media do:
+        To submit an image to r/test do:
+
+        .. code-block:: python
+
+            from asyncpraw.models import PostMedia
+
+            title = "My favorite picture"
+            image = PostMedia("/path/to/image.png")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.submit(title, image=image)
+
+        To submit an image gallery to r/test do:
+
+        .. code-block:: python
+
+            from asyncpraw.models import PostMedia
+
+            title = "My favorite pictures"
+            gallery = [
+                PostMedia("/path/to/image.png"),
+                {
+                    "media": PostMedia("/path/to/image2.png"),
+                    "caption": "Image caption 2",
+                },
+                {
+                    "media": PostMedia("/path/to/image3.png"),
+                    "caption": "Image caption 3",
+                    "outbound_url": "https://example.com/link3",
+                },
+            ]
+            subreddit = await reddit.subreddit("test")
+            await subreddit.submit(title, gallery=gallery)
+
+        To submit a video to r/test do:
+
+        .. code-block:: python
+
+            from asyncpraw.models import PostMedia
+
+            title = "My favorite movie"
+            video = PostMedia("/path/to/video.mp4")
+            subreddit = await reddit.subreddit("test")
+            await subreddit.submit(title, video=video)
+
+        To submit a videogif with a custom thumbnail instead, do:
+
+        .. code-block:: python
+
+            from asyncpraw.models import PostMedia
+
+            title = "My favorite gif"
+            video = {
+                "gif": True,
+                "media": PostMedia("/path/to/video.mp4"),
+                "thumbnail": PostMedia("/path/to/thumbnail.png"),
+            }
+            subreddit = await reddit.subreddit("test")
+            await subreddit.submit(title, video=video)
+
+        To submit a poll to r/test do:
+
+        .. code-block:: python
+
+            title = "Do you like Async PRAW?"
+            poll = {"duration": 3, "options": ["Yes", "No"]}
+            subreddit = await reddit.subreddit("test")
+            await subreddit.submit(title, poll=poll)
+
+        To submit a self post with inline media do:
 
         .. code-block:: python
 
@@ -3211,7 +3419,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
         .. note::
 
             Inserted media will have a padding of ``\\n\\n`` automatically added. This
-            is due to the weirdness with Reddit's API. Using the example above the
+            is due to the weirdness with Reddit's API. Using the example above, the
             result selftext body will look like so:
 
             .. code-block::
@@ -3229,6 +3437,20 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
                 ![video](gmc7rvthryq51 "optional caption")
 
                 inline
+
+        .. note::
+
+            For ``image`` and ``video`` submissions, Reddit's API uses WebSockets to
+            respond with the link of the newly created post. If this fails, the method
+            will raise :class:`.WebSocketException`. Occasionally, the Reddit post will
+            still be created. More often, there is an error with the media file. If you
+            frequently get exceptions but successfully created posts, try setting the
+            ``timeout`` parameter to a value above 10.
+
+            To disable the use of WebSockets, set ``without_websockets=True``. This will
+            make the method return ``None``, though the post will still be created. You
+            may wish to do this if you are running your program in a restricted network
+            environment, or using a proxy that doesn't support WebSockets connections.
 
         .. note::
 
@@ -3251,52 +3473,133 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
                 submission = await subreddit.submit(title, url=url)
                 await submission.load()
 
-        .. seealso::
-
-            - :meth:`~.Subreddit.submit_gallery` to submit more than one image in the
-              same post
-            - :meth:`~.Subreddit.submit_image` to submit images
-            - :meth:`~.Subreddit.submit_poll` to submit polls
-            - :meth:`~.Subreddit.submit_video` to submit videos and videogifs
-
         """
-        # link posts can now include selftext (no longer exclusive)
+        provided = [
+            name
+            for name, value in (
+                ("gallery", gallery),
+                ("image", image),
+                ("poll", poll),
+                ("url", url),
+                ("video", video),
+            )
+            if value is not None
+        ]
+        if len(provided) > 1:
+            msg = f"Only one of 'gallery', 'image', 'poll', 'url', or 'video' can be provided ({', '.join(repr(name) for name in provided)} given)."
+            raise TypeError(msg)
+        kind = provided[0] if provided else None
         # test for empty string in selftext for title-only submissions
-        if not url and not (bool(selftext) or selftext == ""):  # noqa: PLC1901
-            msg = "Either 'selftext' and/or 'url' must be provided."
+        if kind is None and not (bool(selftext) or selftext == ""):  # noqa: PLC1901
+            msg = "At least one of 'gallery', 'image', 'poll', 'selftext', 'url', or 'video' must be provided."
+            raise TypeError(msg)
+        if inline_media and kind is not None:
+            msg = f"'inline_media' is only supported for text submissions. Only Markdown text can be used for the selftext of a {kind!r} submission."
             raise TypeError(msg)
 
         data = {
-            "sr": str(self),
-            "resubmit": bool(resubmit),
-            "sendreplies": bool(send_replies),
-            "title": title,
             "nsfw": bool(nsfw),
+            "sendreplies": bool(send_replies),
             "spoiler": bool(spoiler),
+            "sr": str(self),
+            "title": title,
             "validate_on_submit": True,
         }
         data.update({
             key: value
             for key, value in (
-                ("flair_id", flair_id),
-                ("flair_text", flair_text),
                 ("collection_id", collection_id),
                 ("discussion_type", discussion_type),
-                ("draft_id", draft_id),
+                ("flair_id", flair_id),
+                ("flair_text", flair_text),
             )
             if value is not None
         })
+
+        if gallery is not None:
+            images: list[dict[str, str | asyncpraw.models.PostMedia]] = [
+                {"media": item} if isinstance(item, PostMedia) else item for item in gallery
+            ]
+            self._validate_gallery(images)
+            data.update(api_type="json", items=[], show_error_list=True)
+            if selftext is not None:
+                data["text"] = selftext
+            for image_item in images:
+                data["items"].append({
+                    "caption": image_item.get("caption", ""),
+                    "outbound_url": image_item.get("outbound_url", ""),
+                    "media_id": await cast("PostMedia", image_item["media"])._upload(
+                        self._reddit,
+                        expected_mime_prefix="image",
+                        upload_type="gallery",
+                    ),
+                })
+            response = await self._reddit.request(json=data, method="POST", path=API_PATH["submit_gallery_post"])
+            response = response["json"]
+            if response["errors"]:
+                raise RedditAPIException(response["errors"])
+            return await self._reddit.submission(url=response["data"]["url"])
+
+        data["resubmit"] = bool(resubmit)
+
+        if poll is not None:
+            invalid_keys = poll.keys() - {"duration", "options"}
+            if invalid_keys:
+                msg = f"'poll' contains invalid keys: {', '.join(repr(key) for key in sorted(invalid_keys))}."
+                raise TypeError(msg)
+            missing_keys = {"duration", "options"} - poll.keys()
+            if missing_keys:
+                msg = f"'poll' is missing required keys: {', '.join(repr(key) for key in sorted(missing_keys))}."
+                raise TypeError(msg)
+            data.update(
+                duration=poll["duration"],
+                options=poll["options"],
+                text=selftext if selftext is not None else "",
+            )
+            return await self._reddit.post(API_PATH["submit_poll_post"], json=data)
+
+        if image is not None:
+            if selftext is not None:
+                data["text"] = selftext
+            data.update(kind="image", url=await image._upload(self._reddit, expected_mime_prefix="image"))
+            return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
+
+        if video is not None:
+            if isinstance(video, PostMedia):
+                video = {"media": video}
+            invalid_keys = video.keys() - {"gif", "media", "thumbnail"}
+            if invalid_keys:
+                msg = f"'video' contains invalid keys: {', '.join(repr(key) for key in sorted(invalid_keys))}."
+                raise TypeError(msg)
+            video_media = video.get("media")
+            if not isinstance(video_media, PostMedia):
+                msg = "'media' is required and must be a PostMedia instance."
+                raise TypeError(msg)
+            thumbnail_media = cast("PostMedia | None", video.get("thumbnail"))
+            if thumbnail_media is None:
+                # if we're uploading without a thumbnail, use the PRAW logo
+                logo_path = Path(__file__).absolute().parent.parent.parent / "images" / "PRAW logo.png"  # noqa: ASYNC240
+                thumbnail_media = PostMedia(str(logo_path))
+            if selftext is not None:
+                data["text"] = selftext
+            data.update(
+                kind="videogif" if video.get("gif") else "video",
+                url=await video_media._upload(self._reddit, expected_mime_prefix="video"),
+                video_poster_url=await thumbnail_media._upload(self._reddit),
+            )
+            return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
+
+        if draft_id is not None:
+            data["draft_id"] = draft_id
         if url is not None:
             data.update(kind="link", url=url)
-            if inline_media:
-                msg = "As of 2025-10-08, `inline_media` is not supported for link post selftext. Only Markdown text can be added to non-self posts."
-                raise TypeError(msg)
             # we can ignore an empty string for selftext here b/c body text is optional for link posts
             if selftext:
-                data.update(text=selftext)
-        elif selftext is not None:
+                data["text"] = selftext
+        else:
             data.update(kind="self")
             if inline_media:
+                assert selftext is not None
                 body = selftext.format(**{
                     placeholder: await self._upload_inline_media(media) for placeholder, media in inline_media.items()
                 })
@@ -3306,459 +3609,6 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
                 data.update(text=selftext)
 
         return await self._reddit.post(API_PATH["submit"], data=data)
-
-    async def submit_gallery(
-        self,
-        title: str,
-        images: list[PostMedia | dict[str, str | PostMedia]],
-        *,
-        collection_id: str | None = None,
-        discussion_type: str | None = None,
-        flair_id: str | None = None,
-        flair_text: str | None = None,
-        nsfw: bool = False,
-        selftext: str | None = None,
-        send_replies: bool = True,
-        spoiler: bool = False,
-    ) -> asyncpraw.models.Submission:
-        """Add an image gallery submission to the subreddit.
-
-        :param title: The title of the submission.
-        :param images: A list of images to post as a gallery. Each item is either a
-            :class:`.PostMedia` or a ``dict`` with the structure ``{"media":
-            PostMedia("path"), "caption": "caption", "outbound_url": "url"}``, where only
-            ``media`` is required.
-        :param collection_id: The UUID of a :class:`.Collection` to add the
-            newly-submitted post to.
-        :param discussion_type: Set to ``"CHAT"`` to enable live discussion instead of
-            traditional comments (default: ``None``).
-        :param flair_id: The flair template to select (default: ``None``).
-        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
-            this value will set a custom text (default: ``None``). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param nsfw: Whether the submission should be marked NSFW (default: ``False``).
-        :param selftext: Optional Markdown-formatted post body content (default:
-            ``None``).
-        :param send_replies: When ``True``, messages will be sent to the submission
-            author when comments are made to the submission (default: ``True``).
-        :param spoiler: Whether the submission should be marked asa spoiler (default:
-            ``False``).
-
-        :returns: A :class:`.Submission` object for the newly created submission.
-
-        :raises: :class:`.ClientException` if a gallery item's ``media`` refers to a file
-            that is not an image.
-
-        For example, to submit an image gallery to r/test do:
-
-        .. code-block:: python
-
-            from asyncpraw.models import PostMedia
-
-            title = "My favorite pictures"
-            images = [
-                PostMedia("/path/to/image.png"),
-                {
-                    "media": PostMedia("/path/to/image2.png"),
-                    "caption": "Image caption 2",
-                },
-                {
-                    "media": PostMedia("/path/to/image3.png"),
-                    "caption": "Image caption 3",
-                    "outbound_url": "https://example.com/link3",
-                },
-            ]
-            subreddit = await reddit.subreddit("test")
-            await subreddit.submit_gallery(title, images)
-
-        .. seealso::
-
-            - :meth:`~.Subreddit.submit` to submit url posts and selftexts
-            - :meth:`~.Subreddit.submit_image` to submit single images
-            - :meth:`~.Subreddit.submit_poll` to submit polls
-            - :meth:`~.Subreddit.submit_video` to submit videos and videogifs
-
-        """
-        gallery_images: list[dict[str, str | PostMedia]] = [
-            {"media": item} if isinstance(item, PostMedia) else item for item in images
-        ]
-        self._validate_gallery(gallery_images)
-        data = {
-            "api_type": "json",
-            "items": [],
-            "nsfw": bool(nsfw),
-            "sendreplies": bool(send_replies),
-            "show_error_list": True,
-            "spoiler": bool(spoiler),
-            "sr": str(self),
-            "title": title,
-            "validate_on_submit": True,
-        }
-        data.update({
-            key: value
-            for key, value in (
-                ("flair_id", flair_id),
-                ("flair_text", flair_text),
-                ("collection_id", collection_id),
-                ("discussion_type", discussion_type),
-                ("text", selftext),
-            )
-            if value is not None
-        })
-        for image in gallery_images:
-            data["items"].append({
-                "caption": image.get("caption", ""),
-                "outbound_url": image.get("outbound_url", ""),
-                "media_id": await cast("PostMedia", image["media"])._upload(
-                    self._reddit,
-                    expected_mime_prefix="image",
-                    upload_type="gallery",
-                ),
-            })
-        response = await self._reddit.request(json=data, method="POST", path=API_PATH["submit_gallery_post"])
-        response = response["json"]
-        if response["errors"]:
-            raise RedditAPIException(response["errors"])
-        return await self._reddit.submission(url=response["data"]["url"])
-
-    async def submit_image(
-        self,
-        title: str,
-        image: PostMedia,
-        *,
-        collection_id: str | None = None,
-        discussion_type: str | None = None,
-        flair_id: str | None = None,
-        flair_text: str | None = None,
-        nsfw: bool = False,
-        resubmit: bool = True,
-        selftext: str | None = None,
-        send_replies: bool = True,
-        spoiler: bool = False,
-        timeout: int = 10,
-        without_websockets: bool = False,
-    ) -> asyncpraw.models.Submission | None:
-        """Add an image submission to the subreddit.
-
-        :param collection_id: The UUID of a :class:`.Collection` to add the
-            newly-submitted post to.
-        :param discussion_type: Set to ``"CHAT"`` to enable live discussion instead of
-            traditional comments (default: ``None``).
-        :param flair_id: The flair template to select (default: ``None``).
-        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
-            this value will set a custom text (default: ``None``). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param image: The :class:`.PostMedia` image to upload and post.
-        :param nsfw: Whether the submission should be marked NSFW (default: ``False``).
-        :param resubmit: When ``False``, an error will occur if the URL has already been
-            submitted (default: ``True``).
-        :param selftext: Optional Markdown-formatted post body content (default:
-            ``None``).
-        :param send_replies: When ``True``, messages will be sent to the submission
-            author when comments are made to the submission (default: ``True``).
-        :param spoiler: Whether the submission should be marked as a spoiler (default:
-            ``False``).
-        :param timeout: Specifies a particular timeout, in seconds. Use to avoid
-            "Websocket error" exceptions (default: ``10``).
-        :param title: The title of the submission.
-        :param without_websockets: Set to ``True`` to disable use of WebSockets (see
-            note below for an explanation). If ``True``, this method doesn't return
-            anything (default: ``False``).
-
-        :returns: A :class:`.Submission` object for the newly created submission, unless
-            ``without_websockets`` is ``True``.
-
-        :raises: :class:`.ClientException` if ``image`` refers to a file that is not an
-            image.
-
-        .. note::
-
-            Reddit's API uses WebSockets to respond with the link of the newly created
-            post. If this fails, the method will raise :class:`.WebSocketException`.
-            Occasionally, the Reddit post will still be created. More often, there is an
-            error with the image file. If you frequently get exceptions but successfully
-            created posts, try setting the ``timeout`` parameter to a value above 10.
-
-            To disable the use of WebSockets, set ``without_websockets=True``. This will
-            make the method return ``None``, though the post will still be created. You
-            may wish to do this if you are running your program in a restricted network
-            environment, or using a proxy that doesn't support WebSockets connections.
-
-        For example, to submit an image to r/test do:
-
-        .. code-block:: python
-
-            from asyncpraw.models import PostMedia
-
-            title = "My favorite picture"
-            image = PostMedia("/path/to/image.png")
-            subreddit = await reddit.subreddit("test")
-            await subreddit.submit_image(title, image)
-
-        .. seealso::
-
-            - :meth:`~.Subreddit.submit` to submit url posts and selftexts
-            - :meth:`~.Subreddit.submit_gallery` to submit more than one image in the
-              same post
-            - :meth:`~.Subreddit.submit_poll` to submit polls
-            - :meth:`~.Subreddit.submit_video` to submit videos and videogifs
-
-        """
-        data = {
-            "sr": str(self),
-            "resubmit": bool(resubmit),
-            "sendreplies": bool(send_replies),
-            "title": title,
-            "nsfw": bool(nsfw),
-            "spoiler": bool(spoiler),
-            "validate_on_submit": True,
-        }
-        data.update({
-            key: value
-            for key, value in (
-                ("flair_id", flair_id),
-                ("flair_text", flair_text),
-                ("collection_id", collection_id),
-                ("discussion_type", discussion_type),
-                ("text", selftext),
-            )
-            if value is not None
-        })
-
-        image_url = await image._upload(self._reddit, expected_mime_prefix="image")
-        data.update(kind="image", url=image_url)
-        return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
-
-    async def submit_poll(
-        self,
-        title: str,
-        *,
-        collection_id: str | None = None,
-        discussion_type: str | None = None,
-        duration: int,
-        flair_id: str | None = None,
-        flair_text: str | None = None,
-        nsfw: bool = False,
-        options: list[str],
-        resubmit: bool = True,
-        selftext: str,
-        send_replies: bool = True,
-        spoiler: bool = False,
-    ) -> asyncpraw.models.Submission:
-        """Add a poll submission to the subreddit.
-
-        :param title: The title of the submission.
-        :param collection_id: The UUID of a :class:`.Collection` to add the
-            newly-submitted post to.
-        :param discussion_type: Set to ``"CHAT"`` to enable live discussion instead of
-            traditional comments (default: ``None``).
-        :param duration: The number of days the poll should accept votes, as an ``int``.
-            Valid values are between ``1`` and ``7``, inclusive.
-        :param flair_id: The flair template to select (default: ``None``).
-        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
-            this value will set a custom text (default: ``None``). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param nsfw: Whether the submission should be marked NSFW (default: ``False``).
-        :param options: A list of two to six poll options as ``str``.
-        :param resubmit: When ``False``, an error will occur if the URL has already been
-            submitted (default: ``True``).
-        :param selftext: The Markdown formatted content for the submission. Use an empty
-            string, ``""``, to make a submission with no text contents.
-        :param send_replies: When ``True``, messages will be sent to the submission
-            author when comments are made to the submission (default: ``True``).
-        :param spoiler: Whether the submission should be marked as a spoiler (default:
-            ``False``).
-
-        :returns: A :class:`.Submission` object for the newly created submission.
-
-        For example, to submit a poll to r/test do:
-
-        .. code-block:: python
-
-            title = "Do you like Async PRAW?"
-            subreddit = await reddit.subreddit("test")
-            await subreddit.submit_poll(title, selftext="", options=["Yes", "No"], duration=3)
-
-        .. seealso::
-
-            - :meth:`~.Subreddit.submit` to submit url posts and selftexts
-            - :meth:`~.Subreddit.submit_gallery` to submit more than one image in the
-              same post
-            - :meth:`~.Subreddit.submit_image` to submit single images
-            - :meth:`~.Subreddit.submit_video` to submit videos and videogifs
-
-        """
-        data = {
-            "sr": str(self),
-            "text": selftext,
-            "options": options,
-            "duration": duration,
-            "resubmit": bool(resubmit),
-            "sendreplies": bool(send_replies),
-            "title": title,
-            "nsfw": bool(nsfw),
-            "spoiler": bool(spoiler),
-            "validate_on_submit": True,
-        }
-        data.update({
-            key: value
-            for key, value in (
-                ("flair_id", flair_id),
-                ("flair_text", flair_text),
-                ("collection_id", collection_id),
-                ("discussion_type", discussion_type),
-            )
-            if value is not None
-        })
-
-        return await self._reddit.post(API_PATH["submit_poll_post"], json=data)
-
-    async def submit_video(
-        self,
-        title: str,
-        video: PostMedia | dict[str, bool | PostMedia],
-        *,
-        collection_id: str | None = None,
-        discussion_type: str | None = None,
-        flair_id: str | None = None,
-        flair_text: str | None = None,
-        nsfw: bool = False,
-        resubmit: bool = True,
-        selftext: str | None = None,
-        send_replies: bool = True,
-        spoiler: bool = False,
-        timeout: int = 10,
-        without_websockets: bool = False,
-    ) -> asyncpraw.models.Submission | None:
-        """Add a video or videogif submission to the subreddit.
-
-        :param title: The title of the submission.
-        :param video: The video to upload and post. Either a :class:`.PostMedia` or a
-            ``dict`` with the structure ``{"media": PostMedia("path"), "gif": True,
-            "thumbnail": PostMedia("path")}``, where only ``media`` is required. Set
-            ``"gif"`` to ``True`` to submit the video as a videogif, which is essentially
-            a silent video (default: ``False``). When ``"thumbnail"`` is not provided,
-            the PRAW logo will be used as the thumbnail.
-        :param collection_id: The UUID of a :class:`.Collection` to add the
-            newly-submitted post to.
-        :param discussion_type: Set to ``"CHAT"`` to enable live discussion instead of
-            traditional comments (default: ``None``).
-        :param flair_id: The flair template to select (default: ``None``).
-        :param flair_text: If the template's ``flair_text_editable`` value is ``True``,
-            this value will set a custom text (default: ``None``). ``flair_id`` is
-            required when ``flair_text`` is provided.
-        :param nsfw: Whether the submission should be marked NSFW (default: ``False``).
-        :param resubmit: When ``False``, an error will occur if the URL has already been
-            submitted (default: ``True``).
-        :param selftext: Optional Markdown-formatted post body content (default:
-            ``None``).
-        :param send_replies: When ``True``, messages will be sent to the submission
-            author when comments are made to the submission (default: ``True``).
-        :param spoiler: Whether the submission should be marked as a spoiler (default:
-            ``False``).
-        :param timeout: Specifies a particular timeout, in seconds. Use to avoid
-            "Websocket error" exceptions (default: ``10``).
-        :param without_websockets: Set to ``True`` to disable use of WebSockets (see
-            note below for an explanation). If ``True``, this method doesn't return
-            anything (default: ``False``).
-
-        :returns: A :class:`.Submission` object for the newly created submission, unless
-            ``without_websockets`` is ``True``.
-
-        :raises: :class:`.ClientException` if ``video`` (or its ``media``) refers to a
-            file that is not a video.
-
-        .. note::
-
-            Reddit's API uses WebSockets to respond with the link of the newly created
-            post. If this fails, the method will raise :class:`.WebSocketException`.
-            Occasionally, the Reddit post will still be created. More often, there is an
-            error with the image file. If you frequently get exceptions but successfully
-            created posts, try setting the ``timeout`` parameter to a value above 10.
-
-            To disable the use of WebSockets, set ``without_websockets=True``. This will
-            make the method return ``None``, though the post will still be created. You
-            may wish to do this if you are running your program in a restricted network
-            environment, or using a proxy that doesn't support WebSockets connections.
-
-        For example, to submit a video to r/test do:
-
-        .. code-block:: python
-
-            from asyncpraw.models import PostMedia
-
-            title = "My favorite movie"
-            video = PostMedia("/path/to/video.mp4")
-            subreddit = await reddit.subreddit("test")
-            await subreddit.submit_video(title, video)
-
-        To submit a videogif with a custom thumbnail instead, do:
-
-        .. code-block:: python
-
-            from asyncpraw.models import PostMedia
-
-            title = "My favorite gif"
-            video = {
-                "gif": True,
-                "media": PostMedia("/path/to/video.mp4"),
-                "thumbnail": PostMedia("/path/to/thumbnail.png"),
-            }
-            subreddit = await reddit.subreddit("test")
-            await subreddit.submit_video(title, video)
-
-        .. seealso::
-
-            - :meth:`~.Subreddit.submit` to submit url posts and selftexts
-            - :meth:`~.Subreddit.submit_image` to submit images
-            - :meth:`~.Subreddit.submit_gallery` to submit more than one image in the
-              same post
-            - :meth:`~.Subreddit.submit_poll` to submit polls
-
-        """
-        if isinstance(video, PostMedia):
-            video = {"media": video}
-        invalid_keys = video.keys() - {"gif", "media", "thumbnail"}
-        if invalid_keys:
-            msg = f"'video' contains invalid keys: {', '.join(repr(key) for key in sorted(invalid_keys))}."
-            raise TypeError(msg)
-        video_media = video.get("media")
-        if not isinstance(video_media, PostMedia):
-            msg = "'media' is required and must be a PostMedia instance."
-            raise TypeError(msg)
-        thumbnail_media = cast("PostMedia | None", video.get("thumbnail"))
-        if thumbnail_media is None:
-            # if we're uploading without a thumbnail, use the PRAW logo
-            logo_path = Path(__file__).absolute().parent.parent.parent / "images" / "PRAW logo.png"  # noqa: ASYNC240
-            thumbnail_media = PostMedia(str(logo_path))
-
-        data = {
-            "sr": str(self),
-            "resubmit": bool(resubmit),
-            "sendreplies": bool(send_replies),
-            "title": title,
-            "nsfw": bool(nsfw),
-            "spoiler": bool(spoiler),
-            "validate_on_submit": True,
-        }
-        data.update({
-            key: value
-            for key, value in (
-                ("flair_id", flair_id),
-                ("flair_text", flair_text),
-                ("collection_id", collection_id),
-                ("discussion_type", discussion_type),
-                ("text", selftext),
-            )
-            if value is not None
-        })
-
-        data.update(
-            kind="videogif" if video.get("gif") else "video",
-            url=await video_media._upload(self._reddit, expected_mime_prefix="video"),
-            video_poster_url=await thumbnail_media._upload(self._reddit),
-        )
-        return await self._submit_media(data=data, timeout=timeout, without_websockets=without_websockets)
 
     async def subscribe(self, *, other_subreddits: list[asyncpraw.models.Subreddit] | None = None) -> None:
         """Subscribe to the subreddit.
