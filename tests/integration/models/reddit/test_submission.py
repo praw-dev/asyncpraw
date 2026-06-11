@@ -1,7 +1,7 @@
 import pytest
 
 from asyncpraw.exceptions import ClientException, RedditAPIException
-from asyncpraw.models import Comment, InlineGif, InlineImage, InlineVideo, Submission
+from asyncpraw.models import Comment, InlineGif, InlineImage, InlineVideo, PostMedia, Submission
 
 from ... import IntegrationTest
 
@@ -9,9 +9,9 @@ from ... import IntegrationTest
 class TestSubmission(IntegrationTest):
     @staticmethod
     def _inline_media(image_path):
-        gif = InlineGif(caption="optional caption", path=image_path("test.gif"))
-        image = InlineImage(caption="optional caption", path=image_path("test.png"))
-        video = InlineVideo(caption="optional caption", path=image_path("test.mp4"))
+        gif = InlineGif(caption="optional caption", media=PostMedia(image_path("test.gif")))
+        image = InlineImage(caption="optional caption", media=PostMedia(image_path("test.png")))
+        video = InlineVideo(caption="optional caption", media=PostMedia(image_path("test.mp4")))
         return {"gif1": gif, "image1": image, "video1": video}
 
     @staticmethod

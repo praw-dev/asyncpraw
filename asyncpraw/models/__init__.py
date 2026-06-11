@@ -11,6 +11,7 @@ from asyncpraw.models.list.trophy import TrophyList
 from asyncpraw.models.listing.domain import DomainListing
 from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.listing.listing import Listing, ModeratorListing, ModmailConversationsListing
+from asyncpraw.models.media import EmojiMedia, Media, PostMedia, StylesheetAsset, StylesheetImage, WidgetMedia
 from asyncpraw.models.mod_action import ModAction
 from asyncpraw.models.mod_note import ModNote
 from asyncpraw.models.mod_notes import RedditModNotes, RedditorModNotes, SubredditModNotes

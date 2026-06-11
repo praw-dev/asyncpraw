@@ -7,7 +7,7 @@ import pytest
 from aiohttp import ClientResponse
 
 from asyncpraw.exceptions import ClientException, MediaPostFailed
-from asyncpraw.models import InlineGif, InlineImage, InlineVideo, Subreddit, WikiPage
+from asyncpraw.models import InlineGif, InlineImage, InlineVideo, PostMedia, Subreddit, WikiPage
 from asyncpraw.models.reddit.subreddit import SubredditFlairTemplates
 
 from ... import UnitTest
@@ -56,14 +56,12 @@ class TestSubreddit(UnitTest):
         assert hash(subreddit1) != hash(subreddit3)
 
     @mock.patch(
-        "asyncpraw.Reddit.post",
-        new=AsyncMock(return_value={"json": {"data": {"websocket_url": ""}}}),
+        "asyncpraw.models.PostMedia._upload",
+        new=AsyncMock(return_value="fake_media_url"),
     )
     @mock.patch(
-        "asyncpraw.models.Subreddit._upload_media",
-        new=AsyncMock(
-            return_value=("fake_media_url", "fake_websocket_url"),
-        ),
+        "asyncpraw.Reddit.post",
+        new=AsyncMock(return_value={"json": {"data": {"websocket_url": ""}}}),
     )
     @mock.patch("aiohttp.client.ClientSession.ws_connect")
     async def test_invalid_media(self, connection_mock, reddit):
@@ -75,7 +73,7 @@ class TestSubreddit(UnitTest):
         connection_mock.return_value = context_manager
 
         with pytest.raises(MediaPostFailed):
-            await Subreddit(reddit, display_name="test").submit_image("Test", "dummy path")
+            await Subreddit(reddit, display_name="test").submit_image("Test", PostMedia(b"", name="dummy.png"))
         await reddit._core.requestor._http.close()
 
     @mock.patch("aiohttp.client.ClientSession.ws_connect", new=AsyncMock())
@@ -88,17 +86,16 @@ class TestSubreddit(UnitTest):
             },
         ),
     )
-    @mock.patch("asyncpraw.models.Subreddit._read_and_post_media")
+    @mock.patch("asyncpraw.models.PostMedia._post_to_s3")
     async def test_media_upload_500(self, mock_method, reddit):
-        from aiohttp.http_exceptions import HttpProcessingError
         from asyncprawcore.exceptions import ServerError
 
         response = MagicMock(spec=ClientResponse)
-        response.raise_for_status = MagicMock(side_effect=HttpProcessingError(code=500, message=""))
-        response.status = 201
-        mock_method.return_value.__aenter__.return_value = response
+        response.ok = False
+        response.status = 500
+        mock_method.side_effect = ServerError(response=response)
         with pytest.raises(ServerError):
-            await Subreddit(reddit, display_name="test").submit_image("Test", "/dev/null")
+            await Subreddit(reddit, display_name="test").submit_image("Test", PostMedia(b"", name="test.png"))
 
     async def test_notes_delete__invalid_args(self):
         with pytest.raises(TypeError) as excinfo:
@@ -142,9 +139,9 @@ class TestSubreddit(UnitTest):
         # but `inline_media` is not supported for link post selftext
         message = "As of 2025-10-08, `inline_media` is not supported for link post selftext. Only Markdown text can be added to non-self posts."
         subreddit = Subreddit(reddit, display_name="name")
-        gif = InlineGif(caption="optional caption", path="test.gif")
-        image = InlineImage(caption="optional caption", path="test.png")
-        video = InlineVideo(caption="optional caption", path="test.mp4")
+        gif = InlineGif(caption="optional caption", media=PostMedia(b"", name="test.gif"))
+        image = InlineImage(caption="optional caption", media=PostMedia(b"", name="test.png"))
+        video = InlineVideo(caption="optional caption", media=PostMedia(b"", name="test.mp4"))
         selftext = "Text with {gif1}, {image1}, and {video1} inline"
         media = {"gif1": gif, "image1": image, "video1": video}
         with pytest.raises(TypeError) as excinfo:
@@ -153,16 +150,16 @@ class TestSubreddit(UnitTest):
             )
         assert str(excinfo.value) == message
 
-    async def test_submit_gallery__invalid_path(self, reddit):
-        message = "'invalid_image_path' is not a valid image path."
+    async def test_submit_gallery__invalid_media(self, reddit):
+        message = "'media' is required and must be a PostMedia instance."
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery("Cool title", [{"image_path": "invalid_image_path"}])
+            await subreddit.submit_gallery("Cool title", [{"media": "a string is not PostMedia"}])
         assert str(excinfo.value) == message
 
-    async def test_submit_gallery__missing_path(self, reddit):
-        message = "'image_path' is required."
+    async def test_submit_gallery__missing_media(self, reddit):
+        message = "'media' is required and must be a PostMedia instance."
         subreddit = Subreddit(reddit, display_name="name")
 
         with pytest.raises(TypeError) as excinfo:
@@ -178,34 +175,51 @@ class TestSubreddit(UnitTest):
             "yyyyyyyyyyyyyyyy too long caption"
         )
         with pytest.raises(TypeError) as excinfo:
-            await subreddit.submit_gallery("Cool title", [{"image_path": __file__, "caption": caption}])
+            await subreddit.submit_gallery(
+                "Cool title", [{"media": PostMedia(b"", name="test.png"), "caption": caption}]
+            )
         assert str(excinfo.value) == message
 
     async def test_submit_image__bad_filetype(self, image_path, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.mov", "test.mp4"):
-            image = image_path(file_name)
+            image = PostMedia(image_path(file_name))
             with pytest.raises(ClientException):
                 await subreddit.submit_image("Test Title", image)
 
-    async def test_submit_inline_media__invalid_path(self, reddit):
-        message = "'invalid_image_path' is not a valid file path."
+    async def test_submit_inline_media__invalid_media(self, reddit):
+        message = "'media' must be a PostMedia instance."
         subreddit = Subreddit(reddit, display_name="name")
-        gif = InlineGif(caption="optional caption", path="invalid_image_path")
-        image = InlineImage(caption="optional caption", path="invalid_image_path")
-        video = InlineVideo(caption="optional caption", path="invalid_image_path")
+        gif = InlineGif(caption="optional caption", media="not_post_media")
+        image = InlineImage(caption="optional caption", media="not_post_media")
+        video = InlineVideo(caption="optional caption", media="not_post_media")
         selftext = "Text with {gif1}, {image1}, and {video1} inline"
         media = {"gif1": gif, "image1": image, "video1": video}
-        with pytest.raises(ValueError) as excinfo:
+        with pytest.raises(TypeError) as excinfo:
             await subreddit.submit("title", inline_media=media, selftext=selftext)
         assert str(excinfo.value) == message
 
     async def test_submit_video__bad_filetype(self, image_path, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.jpg", "test.png", "test.gif"):
-            video = image_path(file_name)
+            video = PostMedia(image_path(file_name))
             with pytest.raises(ClientException):
                 await subreddit.submit_video("Test Title", video)
+
+    async def test_submit_video__invalid_keys(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        with pytest.raises(TypeError) as excinfo:
+            await subreddit.submit_video(
+                "Cool title",
+                {"media": PostMedia(b"", name="test.mp4"), "videogif": True},
+            )
+        assert str(excinfo.value) == "'video' contains invalid keys: 'videogif'."
+
+    async def test_submit_video__invalid_media(self, reddit):
+        subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
+        with pytest.raises(TypeError) as excinfo:
+            await subreddit.submit_video("Cool title", {"gif": True})
+        assert str(excinfo.value) == "'media' is required and must be a PostMedia instance."
 
     async def test_upload_banner_additional_image(self, reddit):
         subreddit = Subreddit(reddit, display_name="name")

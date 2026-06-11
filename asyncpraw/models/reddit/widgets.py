@@ -2,12 +2,8 @@
 
 from __future__ import annotations
 
-from io import BytesIO
 from json import JSONEncoder, dumps
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
-
-import aiofiles
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.base import AsyncPRAWBase, DynamicAttributes
@@ -1845,10 +1841,10 @@ class SubredditWidgetsModeration:
         path = API_PATH["widget_order"].format(subreddit=self._subreddit, section=section)
         await self._reddit.patch(path, data={"json": dumps(order), "section": section})
 
-    async def upload_image(self, file_path: str) -> str:
+    async def upload_image(self, media: asyncpraw.models.WidgetMedia, /) -> str:
         """Upload an image to Reddit and get the URL.
 
-        :param file_path: The path to the local file.
+        :param media: The :class:`.WidgetMedia` to upload.
 
         :returns: The URL of the uploaded image as a ``str``.
 
@@ -1860,8 +1856,10 @@ class SubredditWidgetsModeration:
 
         .. code-block:: python
 
+            from asyncpraw.models import WidgetMedia
+
             my_sub = await reddit.subreddit("test")
-            image_url = await my_sub.widgets.mod.upload_image("/path/to/image.jpg")
+            image_url = await my_sub.widgets.mod.upload_image(WidgetMedia("/path/to/image.jpg"))
             image_data = [{"width": 300, "height": 300, "url": image_url, "linkUrl": ""}]
             styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
             await my_sub.widgets.mod.add_image_widget(
@@ -1869,27 +1867,4 @@ class SubredditWidgetsModeration:
             )
 
         """
-        file = Path(file_path)
-        img_data = {
-            "filepath": file.name,
-            "mimetype": "image/jpeg",
-        }
-        if file_path.lower().endswith(".png"):
-            img_data["mimetype"] = "image/png"
-
-        url = API_PATH["widget_lease"].format(subreddit=self._subreddit)
-        # until we learn otherwise, assume this request always succeeds
-        response = await self._reddit.post(url, data=img_data)
-        upload_lease = response["s3UploadLease"]
-        upload_data = {item["name"]: item["value"] for item in upload_lease["fields"]}
-        upload_url = f"https:{upload_lease['action']}"
-
-        assert self._reddit._core is not None
-        async with aiofiles.open(file, "rb") as image:
-            upload = BytesIO(await image.read())
-        upload.name = file.name
-        upload_data["file"] = upload
-        async with self._reddit._core.requestor.request("POST", upload_url, data=upload_data) as response:
-            response.raise_for_status()
-
-        return f"{upload_url}/{upload_data['key']}"
+        return await media._upload(self._subreddit)

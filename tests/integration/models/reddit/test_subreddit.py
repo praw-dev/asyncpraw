@@ -28,8 +28,11 @@ from asyncpraw.models import (
     ModmailAction,
     ModmailConversation,
     ModmailMessage,
+    PostMedia,
     Redditor,
     Stylesheet,
+    StylesheetAsset,
+    StylesheetImage,
     Submission,
     Subreddit,
     WikiPage,
@@ -1004,21 +1007,21 @@ class TestSubredditStylesheet(IntegrationTest):
     async def test_upload(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload(name="asyncpraw", image_path=image_path("white-square.png"))
+        response = await subreddit.stylesheet.upload(StylesheetImage(image_path("white-square.png")), name="asyncpraw")
         assert response["img_src"].endswith(".png")
 
     async def test_upload__invalid(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(RedditAPIException) as excinfo:
-            await subreddit.stylesheet.upload(name="asyncpraw", image_path=image_path("invalid.jpg"))
+            await subreddit.stylesheet.upload(StylesheetImage(image_path("invalid.jpg")), name="asyncpraw")
         assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
 
     async def test_upload__invalid_ext(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(RedditAPIException) as excinfo:
-            await subreddit.stylesheet.upload(name="asyncpraw", image_path=image_path("white-square.png"))
+            await subreddit.stylesheet.upload(StylesheetImage(image_path("white-square.png")), name="asyncpraw.png")
         assert excinfo.value.items[0].error_type == "BAD_CSS_NAME"
 
     async def test_upload__others_invalid(self, image_path, reddit):
@@ -1030,7 +1033,7 @@ class TestSubredditStylesheet(IntegrationTest):
             "upload_mobile_icon",
         ]:
             with pytest.raises(RedditAPIException) as excinfo:
-                await getattr(subreddit.stylesheet, method)(image_path("invalid.jpg"))
+                await getattr(subreddit.stylesheet, method)(StylesheetImage(image_path("invalid.jpg")))
             assert excinfo.value.items[0].error_type == "IMAGE_ERROR"
 
     async def test_upload__others_too_large(self, image_path, reddit):
@@ -1045,84 +1048,86 @@ class TestSubredditStylesheet(IntegrationTest):
                 await getattr(
                     subreddit.stylesheet,
                     method,
-                )(image_path("too_large.jpg"))
+                )(StylesheetImage(image_path("too_large.jpg")))
 
     async def test_upload__too_large(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(TooLarge):
-            await subreddit.stylesheet.upload(name="asyncpraw", image_path=image_path("too_large.jpg"))
+            await subreddit.stylesheet.upload(StylesheetImage(image_path("too_large.jpg")), name="asyncpraw")
 
     async def test_upload_banner__jpg(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner(image_path("white-square.jpg"))
+        await subreddit.stylesheet.upload_banner(StylesheetAsset(image_path("white-square.jpg")))
 
     async def test_upload_banner__png(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner(image_path("white-square.png"))
+        await subreddit.stylesheet.upload_banner(StylesheetAsset(image_path("white-square.png")))
 
     async def test_upload_banner_additional_image__align(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for alignment in ("left", "centered", "right"):
-            await subreddit.stylesheet.upload_banner_additional_image(image_path("white-square.png"), align=alignment)
+            await subreddit.stylesheet.upload_banner_additional_image(
+                StylesheetAsset(image_path("white-square.png")), align=alignment
+            )
 
     async def test_upload_banner_additional_image__jpg(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(image_path("white-square.jpg"))
+        await subreddit.stylesheet.upload_banner_additional_image(StylesheetAsset(image_path("white-square.jpg")))
 
     async def test_upload_banner_additional_image__png(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(image_path("white-square.png"))
+        await subreddit.stylesheet.upload_banner_additional_image(StylesheetAsset(image_path("white-square.png")))
 
     async def test_upload_banner_hover_image__jpg(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(image_path("white-square.png"))
-        await subreddit.stylesheet.upload_banner_hover_image(image_path("white-square.jpg"))
+        await subreddit.stylesheet.upload_banner_additional_image(StylesheetAsset(image_path("white-square.png")))
+        await subreddit.stylesheet.upload_banner_hover_image(StylesheetAsset(image_path("white-square.jpg")))
 
     async def test_upload_banner_hover_image__png(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_banner_additional_image(image_path("white-square.jpg"))
-        await subreddit.stylesheet.upload_banner_hover_image(image_path("white-square.png"))
+        await subreddit.stylesheet.upload_banner_additional_image(StylesheetAsset(image_path("white-square.jpg")))
+        await subreddit.stylesheet.upload_banner_hover_image(StylesheetAsset(image_path("white-square.png")))
 
     async def test_upload_header__jpg(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_header(image_path("white-square.jpg"))
+        response = await subreddit.stylesheet.upload_header(StylesheetImage(image_path("white-square.jpg")))
         assert response["img_src"].endswith(".jpg")
 
     async def test_upload_header__png(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_header(image_path("white-square.png"))
+        response = await subreddit.stylesheet.upload_header(StylesheetImage(image_path("white-square.png")))
         assert response["img_src"].endswith(".png")
 
     async def test_upload_mobile_banner__jpg(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.jpg"))
+        await subreddit.stylesheet.upload_mobile_banner(StylesheetAsset(image_path("white-square.jpg")))
 
     async def test_upload_mobile_banner__png(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.stylesheet.upload_mobile_banner(image_path("white-square.png"))
+        await subreddit.stylesheet.upload_mobile_banner(StylesheetAsset(image_path("white-square.png")))
 
     async def test_upload_mobile_header(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_mobile_header(image_path("header.jpg"))
+        response = await subreddit.stylesheet.upload_mobile_header(StylesheetImage(image_path("header.jpg")))
         assert response["img_src"].endswith(".jpg")
 
     async def test_upload_mobile_icon(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        response = await subreddit.stylesheet.upload_mobile_icon(image_path("icon.jpg"))
+        response = await subreddit.stylesheet.upload_mobile_icon(StylesheetImage(image_path("icon.jpg")))
         assert response["img_src"].endswith(".jpg")
 
 
@@ -1327,9 +1332,9 @@ class TestSubreddit(IntegrationTest):
     async def test_submit__selftext_inline_media(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        gif = InlineGif(caption="optional caption", path=image_path("test.gif"))
-        image = InlineImage(caption="optional caption", path=image_path("test.png"))
-        video = InlineVideo(caption="optional caption", path=image_path("test.mp4"))
+        gif = InlineGif(caption="optional caption", media=PostMedia(image_path("test.gif")))
+        image = InlineImage(caption="optional caption", media=PostMedia(image_path("test.png")))
+        video = InlineVideo(caption="optional caption", media=PostMedia(image_path("test.mp4")))
         selftext = "Text with a gif {gif1} an image {image1} and a video {video1} inline"
         media = {"gif1": gif, "image1": image, "video1": video}
         submission = await subreddit.submit("title", inline_media=media, selftext=selftext)
@@ -1385,14 +1390,14 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
-            {"image_path": image_path("test.png")},
-            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+            {"media": PostMedia(image_path("test.png"))},
+            {"media": PostMedia(image_path("test.jpg")), "caption": "test.jpg"},
             {
-                "image_path": image_path("test.gif"),
+                "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "image_path": image_path("test.png"),
+                "media": PostMedia(image_path("test.png")),
                 "caption": "test.png",
                 "outbound_url": "https://example.com",
             },
@@ -1406,7 +1411,7 @@ class TestSubreddit(IntegrationTest):
         assert isinstance(submission.gallery_data["items"], list)
         for i, item in enumerate(items):
             test_data = images[i]
-            test_data.pop("image_path")
+            test_data.pop("media")
             item.pop("id")
             item.pop("media_id")
             assert item == test_data
@@ -1415,14 +1420,14 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
-            {"image_path": image_path("test.png")},
-            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+            {"media": PostMedia(image_path("test.png"))},
+            {"media": PostMedia(image_path("test.jpg")), "caption": "test.jpg"},
             {
-                "image_path": image_path("test.gif"),
+                "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "image_path": image_path("test.png"),
+                "media": PostMedia(image_path("test.png")),
                 "caption": "test.png",
                 "outbound_url": "https://example.com",
             },
@@ -1438,14 +1443,14 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
-            {"image_path": image_path("test.png")},
-            {"image_path": image_path("test.jpg"), "caption": "test.jpg"},
+            {"media": PostMedia(image_path("test.png"))},
+            {"media": PostMedia(image_path("test.jpg")), "caption": "test.jpg"},
             {
-                "image_path": image_path("test.gif"),
+                "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "image_path": image_path("test.png"),
+                "media": PostMedia(image_path("test.png")),
                 "caption": "test.png",
                 "outbound_url": "https://example.com",
             },
@@ -1462,17 +1467,17 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
-            {"image_path": image_path("test.png")},
+            {"media": PostMedia(image_path("test.png"))},
             {
-                "image_path": image_path("test.jpg"),
+                "media": PostMedia(image_path("test.jpg")),
                 "caption": "A JPG image.",
             },
             {
-                "image_path": image_path("test.gif"),
+                "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "image_path": image_path("test.png"),
+                "media": PostMedia(image_path("test.png")),
                 "caption": "A PNG image.",
                 "outbound_url": "https://example.com",
             },
@@ -1488,7 +1493,7 @@ class TestSubreddit(IntegrationTest):
         assert isinstance(submission.gallery_data["items"], list)
         for i, item in enumerate(items):
             test_data = images[i]
-            test_data.pop("image_path")
+            test_data.pop("media")
             item.pop("id")
             item.pop("media_id")
             assert item == test_data
@@ -1508,7 +1513,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for i, file_name in enumerate(("test.png", "test.jpg", "test.gif")):
             image = image_path(file_name)
-            submission = await subreddit.submit_image(f"Test Title {i}", image)
+            submission = await subreddit.submit_image(f"Test Title {i}", PostMedia(image))
             await submission.load()
             assert submission.author == pytest.placeholders.username
             assert submission.is_reddit_media_domain
@@ -1525,7 +1530,7 @@ class TestSubreddit(IntegrationTest):
         for file_name in ("test.png", "test.jpg"):
             image = image_path(file_name)
             with pytest.raises(ClientException):
-                await subreddit.submit_image("Test Title", image)
+                await subreddit.submit_image("Test Title", PostMedia(image))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1538,7 +1543,9 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
-        submission = await subreddit.submit_image("Test Title", image, flair_id=flair_id, flair_text=flair_text)
+        submission = await subreddit.submit_image(
+            "Test Title", PostMedia(image), flair_id=flair_id, flair_text=flair_text
+        )
         await submission.load()
         assert submission.link_flair_css_class == flair_class
         assert submission.link_flair_text == flair_text
@@ -1563,7 +1570,7 @@ class TestSubreddit(IntegrationTest):
             if "https://reddit-uploaded-media.s3-accelerate.amazonaws.com" in url:
                 response = MagicMock(spec=ClientResponse)
                 response.__aenter__.return_value.text = AsyncMock(return_value=mock_data)
-                response.status = 400
+                response.__aenter__.return_value.ok = False
                 return response
             return _request(method, url, *args, **kwargs)
 
@@ -1574,7 +1581,7 @@ class TestSubreddit(IntegrationTest):
             tempfile.write(fake_png)
         with pytest.raises(TooLargeMediaException):
             subreddit = await reddit.subreddit("test")
-            await subreddit.submit_image("test", tempfile.name)
+            await subreddit.submit_image("test", PostMedia(tempfile.name))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1586,7 +1593,7 @@ class TestSubreddit(IntegrationTest):
         image = image_path("test.png")
         selftext = "Testing **Async PRAW** image submission *with markdown selftext*."
         title = "Testing Async PRAW image submission with selftext"
-        submission = await subreddit.submit_image(title, image, selftext=selftext)
+        submission = await subreddit.submit_image(title, PostMedia(image), selftext=selftext)
         assert submission.selftext == selftext
         assert submission.is_reddit_media_domain
         assert submission.title == title
@@ -1601,7 +1608,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
+            await subreddit.submit_image("Test Title", PostMedia(image))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1616,7 +1623,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
+            await subreddit.submit_image("Test Title", PostMedia(image))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1631,7 +1638,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
+            await subreddit.submit_image("Test Title", PostMedia(image))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1646,14 +1653,14 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_image("Test Title", image)
+            await subreddit.submit_image("Test Title", PostMedia(image))
 
     async def test_submit_image__without_websockets(self, image_path, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.png", "test.jpg", "test.gif"):
             image = image_path(file_name)
-            submission = await subreddit.submit_image("Test Title", image, without_websockets=True)
+            submission = await subreddit.submit_image("Test Title", PostMedia(image), without_websockets=True)
             assert submission is None
 
     @mock.patch(
@@ -1664,7 +1671,7 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
-        submission = await subreddit.submit_image("Test Title", image, discussion_type="CHAT")
+        submission = await subreddit.submit_image("Test Title", PostMedia(image), discussion_type="CHAT")
         await submission.load()
         assert submission.discussion_type == "CHAT"
 
@@ -1674,7 +1681,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         image = image_path("test.jpg")
         with pytest.raises((RedditAPIException, BadRequest)):  # waiting for prawcore fix
-            await subreddit.submit_image("gdfgfdgdgdgfgfdgdfgfdgfdg", image, without_websockets=True)
+            await subreddit.submit_image("gdfgfdgdgdgfgfdgdfgfdgfdg", PostMedia(image), without_websockets=True)
 
     async def test_submit_live_chat(self, reddit):
         reddit.read_only = False
@@ -1739,7 +1746,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for i, file_name in enumerate(("test.mov", "test.mp4")):
             video = image_path(file_name)
-            submission = await subreddit.submit_video(f"Test Title {i}", video)
+            submission = await subreddit.submit_video(f"Test Title {i}", PostMedia(video))
             await submission.load()
             assert submission.author == pytest.placeholders.username
             # assert submission.is_reddit_media_domain
@@ -1757,7 +1764,7 @@ class TestSubreddit(IntegrationTest):
         for file_name in ("test.mov", "test.mp4"):
             video = image_path(file_name)
             with pytest.raises(ClientException):
-                await subreddit.submit_video("Test Title", video)
+                await subreddit.submit_video("Test Title", PostMedia(video))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1770,7 +1777,9 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
-        submission = await subreddit.submit_video("Test Title", video, flair_id=flair_id, flair_text=flair_text)
+        submission = await subreddit.submit_video(
+            "Test Title", PostMedia(video), flair_id=flair_id, flair_text=flair_text
+        )
         assert submission.link_flair_css_class == flair_class
         assert submission.link_flair_text == flair_text
 
@@ -1787,7 +1796,7 @@ class TestSubreddit(IntegrationTest):
             title = f"Test Title {i}"
             selftext = "Testing **Async PRAW** video submission *with markdown selftext*."
             video = image_path(file_name)
-            submission = await subreddit.submit_video(title, video, selftext=selftext)
+            submission = await subreddit.submit_video(title, PostMedia(video), selftext=selftext)
             assert submission.author == pytest.placeholders.username
             assert submission.is_video
             assert submission.title == title
@@ -1808,7 +1817,9 @@ class TestSubreddit(IntegrationTest):
         ):
             video = image_path(video_name)
             thumb = image_path(thumb_name)
-            submission = await subreddit.submit_video("Test Title", video, thumbnail_path=thumb)
+            submission = await subreddit.submit_video(
+                "Test Title", {"media": PostMedia(video), "thumbnail": PostMedia(thumb)}
+            )
             await submission.load()
             assert submission.author == pytest.placeholders.username
             assert submission.is_video
@@ -1824,7 +1835,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
+            await subreddit.submit_video("Test Title", PostMedia(video))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1839,7 +1850,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
+            await subreddit.submit_video("Test Title", PostMedia(video))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1854,7 +1865,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
+            await subreddit.submit_video("Test Title", PostMedia(video))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1869,7 +1880,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
         with pytest.raises(WebSocketException):
-            await subreddit.submit_video("Test Title", video)
+            await subreddit.submit_video("Test Title", PostMedia(video))
 
     @mock.patch(
         "aiohttp.client.ClientSession.ws_connect",
@@ -1882,7 +1893,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.mov", "test.mp4"):
             video = image_path(file_name)
-            submission = await subreddit.submit_video("Test Title", video, videogif=True)
+            submission = await subreddit.submit_video("Test Title", {"gif": True, "media": PostMedia(video)})
             assert submission.author == pytest.placeholders.username
             assert submission.is_video
             assert submission.title == "Test Title"
@@ -1892,7 +1903,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         for file_name in ("test.mov", "test.mp4"):
             video = image_path(file_name)
-            submission = await subreddit.submit_video("Test Title", video, without_websockets=True)
+            submission = await subreddit.submit_video("Test Title", PostMedia(video), without_websockets=True)
             assert submission is None
 
     @mock.patch(
@@ -1903,7 +1914,7 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
-        submission = await subreddit.submit_video("Test Title", video, discussion_type="CHAT")
+        submission = await subreddit.submit_video("Test Title", PostMedia(video), discussion_type="CHAT")
         await submission.load()
         assert submission.discussion_type == "CHAT"
 
@@ -1913,7 +1924,7 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         video = image_path("test.mov")
         with pytest.raises((RedditAPIException, BadRequest)):  # waiting for prawcore fix
-            await subreddit.submit_video("gdfgfdgdgdgfgfdgdfgfdgfdg", video, without_websockets=True)
+            await subreddit.submit_video("gdfgfdgdgdgfgfdgdfgfdgfdg", PostMedia(video), without_websockets=True)
 
     async def test_subscribe(self, reddit):
         reddit.read_only = False

@@ -5,7 +5,7 @@ import pytest
 from asyncprawcore import Forbidden, NotFound
 
 from asyncpraw.exceptions import RedditAPIException
-from asyncpraw.models import Redditor, WikiPage
+from asyncpraw.models import Redditor, StylesheetImage, WikiPage
 
 from ... import IntegrationTest
 
@@ -44,8 +44,8 @@ class TestWikiPageModeration(IntegrationTest):
         reddit.read_only = False
         page = await subreddit.wiki.get_page("config/stylesheet")
         await subreddit.stylesheet.upload(
+            StylesheetImage("tests/integration/files/icon.jpg"),
             name="css-revert-fail",
-            image_path="tests/integration/files/icon.jpg",
         )
         await page.edit(content="div {background: url(%%css-revert-fail%%)}")
         revision_id = (await self.async_next(page.revisions(limit=1)))["id"]
