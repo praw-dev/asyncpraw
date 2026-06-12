@@ -5,7 +5,7 @@ requires = ["hatchling"]
 [dependency-groups]
 dev = [
   "packaging",
-  "tox-uv>=1.22.1",
+  "tox-uv>=1.35.2",
   {include-group = "lint"},
   {include-group = "test"}
 ]
@@ -17,24 +17,24 @@ docs = [
 ]
 lint = [
   "pre-commit",
-  "ruff >=0.15.16",
+  "ruff>=0.15.17",
   {include-group = "docs"}
 ]
 test = [
-  "aiohttp <3.13", # vcrpy's aiohttp stubs break on 3.13+ (AsyncStreamReaderMixin removed)
-  "coverage>=7.10.7",
-  "pytest >=8",
-  "pytest-asyncio >=1.0.0",
-  "pytest-vcr ==1.*",
-  "vcrpy >=8.1.1"
+  "aiohttp<3.14", # vcrpy's aiohttp stubs break on 3.14+ (AsyncStreamReaderMixin removed); fixed by kevin1024/vcrpy#996, unreleased as of 8.1.1
+  "coverage>=7.14.1",
+  "pytest>=9.0.3",
+  "pytest-asyncio==1.4.*",
+  "pytest-vcr==1.*",
+  "vcrpy>=8.1.1"
 ]
 type = [
-  "pyright",
+  "pyright>=1.1.410",
   {include-group = "test"}
 ]
 
 [project]
-authors = [{name = "Joel Payne", email = "lilspazjoekp@gmail.com"}]
+authors = [{email = "lilspazjoekp@gmail.com", name = "Joel Payne"}]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
@@ -54,16 +54,20 @@ classifiers = [
 ]
 dependencies = [
   "aiofiles",
-  "aiohttp <4",
-  "asyncprawcore >=3.1.0, <4",
-  "defusedxml ==0.7.1",
+  "aiohttp<4",
+  "asyncprawcore>=3.1.0,<4",
+  "defusedxml==0.7.1",
   "typing-extensions; python_version <= '3.10'",
-  "update_checker[async] >=1.0, <2.0"
+  "update_checker[async]>=1.0,<2.0"
 ]
-dynamic = ["version", "description"]
+description = "Asynchronous Python Reddit API Wrapper."
+dynamic = ["version"]
 keywords = ["reddit", "api", "wrapper", "asyncpraw", "praw", "async", "asynchronous"]
 license = {file = "LICENSE.txt"}
-maintainers = [{name = "Joel Payne", email = "lilspazjoekp@gmail.com"}]
+maintainers = [
+  {email = "lilspazjoekp@gmail.com", name = "Joel Payne"},
+  {email = "bbzbryce@gmail.com", name = "Bryce Boe"}
+]
 name = "asyncpraw"
 readme = "README.rst"
 requires-python = ">=3.10"
@@ -76,6 +80,7 @@ requires-python = ">=3.10"
 
 [tool.coverage.report]
 exclude_lines = [
+  "@abstract",
   "@overload",
   "if TYPE_CHECKING:",
   "pragma: no cover"
@@ -147,7 +152,6 @@ ban-relative-imports = "all"
 "asyncpraw/models/reddit/collections.py" = ["A005"]
 "docs/conf.py" = ["A001", "ANN", "ARG", "D", "DTZ002", "INP001", "PLR0917"]
 "docs/examples/*.py" = ["ANN", "ARG", "ASYNC", "D", "INP", "PLR", "S", "T20"]
-"pre_push.py" = ["ANN", "BLE", "D", "FBT", "S", "T20"]
 "tests/**/*.py" = [
   "A", # builtin shadowing
   "ANN", # type annotations
@@ -177,12 +181,15 @@ ban-relative-imports = "all"
   "SIM", # simplify
   "SLF", # private member access
   "T20", # print
-  "TD", # todos
   "TID", # relative imports
   "TRY", # tryceratops (long exception messages)
   "UP" # pyupgrade (percent formatting)
 ]
 "tools/*.py" = ["ANN", "D", "DTZ", "FBT", "INP", "PLR", "PLW", "PTH", "RUF", "S", "T20"]
+
+[tool.tomlsort]
+sort_inline_tables = true
+sort_table_keys = true
 
 [tool.tox]
 envlist = ["py310", "py311", "py312", "py313", "py314", "docs", "pre-commit", "type"]

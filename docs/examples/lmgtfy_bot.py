@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 import asyncpraw
 
 QUESTIONS = ["what is", "who is", "what are"]
-REPLY_TEMPLATE = "[Let me google that for you](https://lmgtfy.com/?q={})"
+REPLY_TEMPLATE = "[Let me google that for you](https://letmegooglethat.com/?q={})"
 
 
 async def main():

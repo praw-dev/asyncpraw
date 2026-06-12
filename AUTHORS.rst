@@ -1,8 +1,15 @@
-###################
- Author/Maintainer
-###################
+########
+ Author
+########
 
-- Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/lilspazjoekp>`_
+- Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/LilSpazJoekp>`_
+
+#############
+ Maintainers
+#############
+
+- Joel Payne <lilspazjoekp@gmail.com> `@LilSpazJoekp <https://github.com/LilSpazJoekp>`_
+- Bryce Boe <bbzbryce@gmail.com> `@bboe <https://github.com/bboe>`_
 
 ############################
  Documentation Contributors
