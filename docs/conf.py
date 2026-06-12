@@ -7,6 +7,7 @@ sys.path.insert(1, "..")
 
 from asyncpraw import __version__
 
+always_use_bars_union = True
 autodoc_typehints = "description"
 copyright = datetime.today().strftime("%Y, Joel Payne")
 exclude_patterns = ["_build"]

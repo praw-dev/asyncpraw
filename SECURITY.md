@@ -2,10 +2,11 @@
 
 ## Supported Versions
 
-The supported versions of Async PRAW include the previous major release.
-This means that if Async PRAW is on 6.5.0, Async PRAW versions 5.0.0 and greater are supported.
+Only the current major release of Async PRAW is supported.
+This means that if Async PRAW is on 7.0.0, only Async PRAW versions 7.0.0 and greater are supported.
 
 ## Reporting a Vulnerability
 
-Contact Joel Payne (lilspazjoekp@gmail.com) as soon as possible to address
-the vulnerability.
+Please report security vulnerabilities through GitHub's [private vulnerability
+reporting](https://github.com/praw-dev/asyncpraw/security/advisories/new). Click "Report
+a vulnerability" under the repository's Security tab to begin.

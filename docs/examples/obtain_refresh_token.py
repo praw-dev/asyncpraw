@@ -2,10 +2,8 @@
 
 """This example demonstrates the flow for retrieving a refresh token.
 
-
-
-This tool can be used to conveniently create refresh tokens for later use with
-your web application OAuth2 credentials.
+This tool can be used to conveniently create refresh tokens for later use with your web
+application OAuth2 credentials.
 
 To create a Reddit application visit the following link while logged into the account
 you want to create a refresh token for: https://www.reddit.com/prefs/apps/
