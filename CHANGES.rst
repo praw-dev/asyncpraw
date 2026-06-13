@@ -138,6 +138,16 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
   ``reddit.submission()`` fetches by default, initialize the submission with
   ``fetch=False``, set the attributes, then call :meth:`~.Submission.load`.
 - Require ``asyncprawcore >=4, <5``.
+- Split ``asyncpraw/models/reddit/subreddit.py`` into an
+  ``asyncpraw.models.reddit.subreddit`` package, with :class:`.Subreddit` and each of
+  its helper classes (:class:`.Modmail`, :class:`.SubredditFilters`,
+  :class:`.SubredditFlair`, :class:`.SubredditModeration`,
+  :class:`.SubredditQuarantine`, :class:`.SubredditRelationship`,
+  :class:`.SubredditStream`, :class:`.SubredditStylesheet`, :class:`.SubredditWiki`, and
+  their related classes) moved to dedicated modules. All classes remain importable from
+  ``asyncpraw.models.reddit.subreddit`` and ``asyncpraw.models`` for backwards
+  compatibility. See the :ref:`migration guide <asyncpraw8_migration>` for the full
+  mapping.
 
 **Fixed**
 

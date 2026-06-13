@@ -571,6 +571,49 @@ New:
 
 See :ref:`refresh_token` for the complete guide to obtaining and using refresh tokens.
 
+*********************************
+ Subreddit Module Reorganization
+*********************************
+
+The single ``asyncpraw/models/reddit/subreddit.py`` file has been split into an
+``asyncpraw.models.reddit.subreddit`` package. The :class:`.Subreddit` class and each of
+its helper classes now live in their own module:
+
+.. list-table::
+    :header-rows: 1
+    :widths: 50 50
+
+    - - Class
+      - New module
+    - - :class:`.Subreddit`
+      - ``asyncpraw.models.reddit.subreddit.subreddit``
+    - - :class:`.Modmail`
+      - ``asyncpraw.models.reddit.subreddit.modmail``
+    - - :class:`.SubredditFilters`
+      - ``asyncpraw.models.reddit.subreddit.filters``
+    - - :class:`.SubredditFlair`, :class:`.SubredditFlairTemplates`,
+        :class:`.SubredditLinkFlairTemplates`, :class:`.SubredditRedditorFlairTemplates`
+      - ``asyncpraw.models.reddit.subreddit.flair``
+    - - :class:`.SubredditModeration`, :class:`.SubredditModerationStream`
+      - ``asyncpraw.models.reddit.subreddit.moderation``
+    - - :class:`.SubredditQuarantine`
+      - ``asyncpraw.models.reddit.subreddit.quarantine``
+    - - :class:`.SubredditRelationship`, :class:`.ContributorRelationship`,
+        :class:`.ModeratorRelationship`
+      - ``asyncpraw.models.reddit.subreddit.relationship``
+    - - :class:`.SubredditStream`
+      - ``asyncpraw.models.reddit.subreddit.stream``
+    - - :class:`.SubredditStylesheet`
+      - ``asyncpraw.models.reddit.subreddit.stylesheet``
+    - - :class:`.SubredditWiki`
+      - ``asyncpraw.models.reddit.subreddit.wiki``
+
+All of these classes remain importable from ``asyncpraw.models.reddit.subreddit`` and
+``asyncpraw.models`` for backwards compatibility, so existing imports of the form ``from
+asyncpraw.models.reddit.subreddit import Subreddit`` continue to work unchanged. Update
+direct imports only if you were depending on the module file's location on disk (for
+example, in tooling or monkeypatches).
+
 *****************************
  Removed without replacement
 *****************************
