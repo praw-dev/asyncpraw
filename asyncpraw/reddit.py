@@ -43,6 +43,7 @@ if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Iterable, Iterator
 
     import asyncprawcore
+    from asyncprawcore.auth import BaseAuthenticator
 
     import asyncpraw.models
     from asyncpraw.exceptions import RedditErrorItem
@@ -129,7 +130,7 @@ class Reddit:
         site_name: str | None = None,
         *,
         config_interpolation: str | None = None,
-        requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,
+        requestor_class: type[asyncprawcore.requestor.Requestor] | None = None,  # pyright: ignore[reportAttributeAccessIssue]
         requestor_kwargs: dict[str, Any] | None = None,
         **config_settings: str | bool | int | None,
     ) -> None:
@@ -518,7 +519,7 @@ class Reddit:
 
         return requestor
 
-    def _prepare_common_authorizer(self, authenticator: asyncprawcore.auth.BaseAuthenticator) -> None:
+    def _prepare_common_authorizer(self, authenticator: BaseAuthenticator) -> None:
         if self.config.refresh_token:
             authorizer = Authorizer(authenticator=authenticator, refresh_token=self.config.refresh_token)
         else:

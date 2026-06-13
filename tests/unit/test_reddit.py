@@ -400,7 +400,7 @@ class TestReddit(UnitTest):
     async def test_request__badrequest_with_no_json_body(self, mock_session):
         response = MagicMock(status=400, text=AsyncMock(return_value=""))
         response.json.side_effect = ValueError
-        mock_session.return_value.request = MagicMock(side_effect=BadRequest(response=response))
+        mock_session.return_value.request = MagicMock(side_effect=BadRequest(response))
 
         async with Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy") as reddit:
             with pytest.raises(Exception) as excinfo:
