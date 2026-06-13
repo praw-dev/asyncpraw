@@ -10,6 +10,15 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
 **Added**
 
+- :class:`.Announcement` and :class:`.AnnouncementHelper`, exposed as
+  :attr:`.Reddit.announcements`, for listing, hiding, and marking the currently
+  authenticated user's announcements as read. Provides :meth:`.Announcement.hide`,
+  :meth:`.Announcement.mark_read`, :meth:`.AnnouncementHelper.hide`,
+  :meth:`.AnnouncementHelper.mark_read`, and :meth:`.AnnouncementHelper.mark_all_read`.
+  :attr:`.Announcement.sent_datetime` and :attr:`.Announcement.read_datetime` return the
+  announcement's ``sent_at`` and ``read_at`` timestamps as timezone-aware
+  :class:`datetime.datetime` objects (``read_datetime`` is ``None`` for unread
+  announcements).
 - :attr:`~.Comment.created_datetime` to objects with a creation time (for example
   :class:`.Comment`, :class:`.Submission`, :class:`.Redditor`, :class:`.Subreddit`,
   :class:`.Collection`, and :class:`.ModNote`), returning a timezone-aware
