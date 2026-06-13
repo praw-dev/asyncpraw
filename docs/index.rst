@@ -63,6 +63,7 @@ application. See :ref:`oauth` for information on using **installed** application
     package_info/contributing
     package_info/glossary
     package_info/asyncpraw_migration
+    package_info/asyncpraw8_migration
     package_info/references
 
 .. toctree::
