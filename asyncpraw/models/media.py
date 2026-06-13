@@ -42,6 +42,20 @@ class Media:
     LEASE_API_PATH: ClassVar[str]
     LEASE_RESPONSE_KEY: ClassVar[str] = "s3UploadLease"
 
+    @staticmethod
+    async def _raise_upload_error(response: ClientResponse, /) -> None:
+        raise ServerError(response)
+
+    @property
+    def _mime_type(self) -> str:
+        if self._mime_type_value is None:
+            mime_type, _ = guess_file_type(self.name)
+            if mime_type is None:
+                msg = f"Unable to determine the MIME type of {self.name!r}."
+                raise ClientException(msg)
+            self._mime_type_value = mime_type
+        return self._mime_type_value
+
     def __eq__(self, other: object) -> bool:
         """Return whether the other instance equals the current."""
         return type(other) is type(self) and self.name == other.name and self._fp == other._fp
@@ -77,15 +91,8 @@ class Media:
         """Return a string representation of the instance."""
         return f"<{self.__class__.__name__} name={self.name!r}>"
 
-    @property
-    def _mime_type(self) -> str:
-        if self._mime_type_value is None:
-            mime_type, _ = guess_file_type(self.name)
-            if mime_type is None:
-                msg = f"Unable to determine the MIME type of {self.name!r}."
-                raise ClientException(msg)
-            self._mime_type_value = mime_type
-        return self._mime_type_value
+    def _build_lease_data(self, **additional_data: str) -> dict[str, str]:
+        return {"filepath": self.name, "mimetype": self._mime_type, **additional_data}
 
     async def _build_payload(self) -> BytesIO:
         """Read the media content and wrap it in a named file-like object."""
@@ -97,9 +104,6 @@ class Media:
         payload = BytesIO(data)
         payload.name = self.name
         return payload
-
-    def _build_lease_data(self, **additional_data: str) -> dict[str, str]:
-        return {"filepath": self.name, "mimetype": self._mime_type, **additional_data}
 
     async def _lease_and_post(
         self, lease_url: str, reddit: asyncpraw.Reddit, /, **additional_lease_data: str
@@ -124,10 +128,6 @@ class Media:
         async with reddit._core.requestor.request("POST", upload_url, data=data) as response:
             if not response.ok:
                 await self._raise_upload_error(response)
-
-    @staticmethod
-    async def _raise_upload_error(response: ClientResponse, /) -> None:
-        raise ServerError(response)
 
     async def _upload(self, subreddit: models.Subreddit, /, **additional_lease_data: str) -> str:
         """Upload the media to Reddit.
@@ -194,7 +194,12 @@ class PostMedia(Media):
         await Media._raise_upload_error(response)
 
     async def _upload(  # pyright: ignore[reportIncompatibleMethodOverride]  # post media is uploaded with a Reddit instance rather than a Subreddit
-        self, reddit: asyncpraw.Reddit, /, *, expected_mime_prefix: str | None = None, upload_type: str = "link"
+        self,
+        reddit: asyncpraw.Reddit,
+        /,
+        *,
+        expected_mime_prefix: str | None = None,
+        upload_type: str = "link",
     ) -> str:
         """Upload the media to Reddit (undocumented endpoint).
 

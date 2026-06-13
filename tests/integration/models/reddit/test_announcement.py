@@ -39,12 +39,6 @@ class TestAnnouncementHelper(IntegrationTest):
             count += 1
         assert count > 0
 
-    async def test_call__with_limit(self, reddit):
-        reddit.read_only = False
-        announcements = [a async for a in reddit.announcements(limit=5)]
-        assert len(announcements) == 5
-        assert all(isinstance(a, Announcement) for a in announcements)
-
     async def test_call__pagination(self, reddit):
         reddit.read_only = False
         # Drive pagination by requesting more than fits in a single response.
@@ -53,6 +47,12 @@ class TestAnnouncementHelper(IntegrationTest):
         # Ensure no duplicates across pages.
         ids = [a.id for a in announcements]
         assert len(set(ids)) == len(ids)
+
+    async def test_call__with_limit(self, reddit):
+        reddit.read_only = False
+        announcements = [a async for a in reddit.announcements(limit=5)]
+        assert len(announcements) == 5
+        assert all(isinstance(a, Announcement) for a in announcements)
 
     async def test_hide(self, reddit):
         reddit.read_only = False

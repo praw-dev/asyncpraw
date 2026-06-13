@@ -68,15 +68,6 @@ class TestCommentForest(IntegrationTest):
         await comment.replies.replace_more()
         assert all(isinstance(x, Comment) for x in comment.replies.list())
 
-    async def test_replace__skip_below_threshold(self, reddit):
-        submission = await reddit.submission("3hahrw")
-        before_count = len(submission.comments.list())
-        skipped = await submission.comments.replace_more(limit=16, threshold=5)
-        assert len(skipped) == 13
-        assert all(x.count < 5 for x in skipped)
-        assert all(x.submission == submission for x in skipped)
-        assert before_count < len(submission.comments.list())
-
     async def test_replace__skip_all(self, reddit):
         submission = await reddit.submission("3hahrw")
         before_count = len(submission.comments.list())
@@ -90,3 +81,12 @@ class TestCommentForest(IntegrationTest):
         submission = await reddit.submission("3hahrw")
         skipped = await submission.comments.replace_more(limit=1)
         assert len(skipped) == 5
+
+    async def test_replace__skip_below_threshold(self, reddit):
+        submission = await reddit.submission("3hahrw")
+        before_count = len(submission.comments.list())
+        skipped = await submission.comments.replace_more(limit=16, threshold=5)
+        assert len(skipped) == 13
+        assert all(x.count < 5 for x in skipped)
+        assert all(x.submission == submission for x in skipped)
+        assert before_count < len(submission.comments.list())

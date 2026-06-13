@@ -43,7 +43,10 @@ class LiveContributorRelationship:
         async def generator() -> AsyncIterator[asyncpraw.models.Redditor]:
             url = API_PATH["live_contributors"].format(id=self.thread.id)
             temp = await self.thread._reddit.get(url)
-            redditor_list = cast("list[asyncpraw.models.Redditor]", temp if isinstance(temp, RedditorList) else temp[0])
+            redditor_list = cast(
+                "list[asyncpraw.models.Redditor]",
+                temp if isinstance(temp, RedditorList) else temp[0],
+            )
             for redditor in redditor_list:
                 yield redditor
 
@@ -262,233 +265,6 @@ class LiveContributorRelationship:
             "permissions": self._handle_permissions(permissions),
         }
         await self.thread._reddit.post(url, data=data)
-
-
-class LiveThread(CreatedMixin, RedditBase):
-    """An individual :class:`.LiveThread` object.
-
-    .. include:: ../../typical_attributes.rst
-
-    ==================== =========================================================
-    Attribute            Description
-    ==================== =========================================================
-    ``created_utc``      The creation time of the live thread, in `Unix Time`_.
-    ``description``      Description of the live thread, as Markdown.
-    ``description_html`` Description of the live thread, as HTML.
-    ``id``               The ID of the live thread.
-    ``nsfw``             A ``bool`` representing whether or not the live thread is
-                         marked as NSFW.
-    ==================== =========================================================
-
-    .. _unix time: https://en.wikipedia.org/wiki/Unix_time
-
-    """
-
-    STR_FIELD = "id"
-
-    @cachedproperty
-    def contrib(self) -> LiveThreadContribution:
-        """Provide an instance of :class:`.LiveThreadContribution`.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            await thread.contrib.add("### update")
-
-        """
-        return LiveThreadContribution(self)
-
-    @cachedproperty
-    def contributor(self) -> LiveContributorRelationship:
-        """Provide an instance of :class:`.LiveContributorRelationship`.
-
-        You can call the instance to get a list of contributors which is represented as
-        :class:`.RedditorList` instance consists of :class:`.Redditor` instances. Those
-        :class:`.Redditor` instances have ``permissions`` attributes as contributors:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            async for contributor in thread.contributor():
-                # prints `Redditor(name="Acidtwist") [u"all"]`
-                print(contributor, contributor.permissions)
-
-        """
-        return LiveContributorRelationship(self)
-
-    @cachedproperty
-    def stream(self) -> LiveThreadStream:
-        """Provide an instance of :class:`.LiveThreadStream`.
-
-        Streams are used to indefinitely retrieve new updates made to a live thread,
-        like:
-
-        .. code-block:: python
-
-            for live_update in reddit.live("ta535s1hq2je").stream.updates():
-                print(live_update.body)
-
-        Updates are yielded oldest first as :class:`.LiveUpdate`. Up to 100 historical
-        updates will initially be returned. To only retrieve new updates starting from
-        when the stream is created, pass ``skip_existing=True``:
-
-        .. code-block:: python
-
-            live_thread = await reddit.live("ta535s1hq2je")
-            async for live_update in live_thread.stream.updates(skip_existing=True):
-                print(live_update.author)
-
-        """
-        return LiveThreadStream(self)
-
-    def __eq__(self, other: object) -> bool:
-        """Return whether the other instance equals the current.
-
-        .. note::
-
-            This comparison is case sensitive.
-
-        """
-        if isinstance(other, str):
-            return other == str(self)
-        return isinstance(other, self.__class__) and str(self) == str(other)
-
-    def __hash__(self) -> int:
-        """Return the hash of the current instance."""
-        return hash(self.__class__.__name__) ^ hash(str(self))
-
-    def __init__(
-        self,
-        reddit: asyncpraw.Reddit,
-        id: str | None = None,
-        _data: dict[str, Any] | None = None,
-    ) -> None:
-        """Initialize a :class:`.LiveThread` instance.
-
-        :param reddit: An instance of :class:`.Reddit`.
-        :param id: A live thread ID, e.g., ``"ukaeu1ik4sw5"``
-
-        """
-        if (id, _data).count(None) != 1:
-            msg = "Either 'id' or '_data' must be provided."
-            raise TypeError(msg)
-        if id:
-            self.id = id
-        super().__init__(reddit, _data=_data)
-
-    async def _fetch(self) -> None:
-        data = await self._fetch_data()
-        data = data["data"]
-        other = type(self)(self._reddit, _data=data)
-        self.__dict__.update(other.__dict__)
-        await super()._fetch()
-
-    def _fetch_info(self) -> tuple[str, dict[str, str], None]:
-        return "liveabout", {"id": self.id}, None
-
-    def discussions(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Submission]:
-        """Get submissions linking to the thread.
-
-        :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
-            constructor.
-
-        :returns: A :class:`.ListingGenerator` object which yields :class:`.Submission`
-            objects.
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            async for submission in thread.discussions(limit=None):
-                print(submission.title)
-
-        """
-        url = API_PATH["live_discussions"].format(id=self.id)
-        return ListingGenerator(self._reddit, url, **generator_kwargs)
-
-    async def get_update(self, /, id: str, *, fetch: bool = True) -> asyncpraw.models.LiveUpdate:
-        """Return a :class:`.LiveUpdate` instance.
-
-        :param id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
-        :param fetch: Determines if Async PRAW will fetch the object (default:
-            ``True``).
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
-            update.thread  # LiveThread(id="ukaeu1ik4sw5")
-            update.id  # "7827987a-c998-11e4-a0b9-22000b6a88d2"
-            update.author  # "umbrae"
-
-        If you don't need the object fetched right away (e.g., to utilize a class
-        method) you can do:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", fetch=False)
-            update.contrib  # LiveUpdateContribution instance
-
-        """
-        update = LiveUpdate(self._reddit, self.id, id)
-        if fetch:
-            await update._fetch()
-        return update
-
-    async def report(self, type: str) -> None:  # noqa: A002
-        """Report the thread violating the Reddit rules.
-
-        :param type: One of ``"spam"``, ``"vote-manipulation"``,
-            ``"personal-information"``, ``"sexualizing-minors"``, or
-            ``"site-breaking"``.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("xyu8kmjvfrww")
-            await thread.report("spam")
-
-        """
-        url = API_PATH["live_report"].format(id=self.id)
-        await self._reddit.post(url, data={"type": type})
-
-    async def updates(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
-        """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
-
-        :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
-            constructor.
-
-        :returns: A :class:`.ListingGenerator` object which yields :class:`.LiveUpdate`
-            objects.
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            after = "LiveUpdate_fefb3dae-7534-11e6-b259-0ef8c7233633"
-            async for submission in thread.updates(limit=5, params={"after": after}):
-                print(submission.body)
-
-        """
-        url = API_PATH["live_updates"].format(id=self.id)
-        async for update in ListingGenerator(self._reddit, url, **generator_kwargs):
-            update = cast("LiveUpdate", update)
-            update._thread = self
-            yield update
 
 
 class LiveThreadContribution:
@@ -718,6 +494,233 @@ class LiveUpdateContribution:
         await self.update.thread._reddit.post(url, data=data)
 
 
+class LiveThread(CreatedMixin, RedditBase):
+    """An individual :class:`.LiveThread` object.
+
+    .. include:: ../../typical_attributes.rst
+
+    ==================== =========================================================
+    Attribute            Description
+    ==================== =========================================================
+    ``created_utc``      The creation time of the live thread, in `Unix Time`_.
+    ``description``      Description of the live thread, as Markdown.
+    ``description_html`` Description of the live thread, as HTML.
+    ``id``               The ID of the live thread.
+    ``nsfw``             A ``bool`` representing whether or not the live thread is
+                         marked as NSFW.
+    ==================== =========================================================
+
+    .. _unix time: https://en.wikipedia.org/wiki/Unix_time
+
+    """
+
+    STR_FIELD = "id"
+
+    @cachedproperty
+    def contrib(self) -> LiveThreadContribution:
+        """Provide an instance of :class:`.LiveThreadContribution`.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contrib.add("### update")
+
+        """
+        return LiveThreadContribution(self)
+
+    @cachedproperty
+    def contributor(self) -> LiveContributorRelationship:
+        """Provide an instance of :class:`.LiveContributorRelationship`.
+
+        You can call the instance to get a list of contributors which is represented as
+        :class:`.RedditorList` instance consists of :class:`.Redditor` instances. Those
+        :class:`.Redditor` instances have ``permissions`` attributes as contributors:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            async for contributor in thread.contributor():
+                # prints `Redditor(name="Acidtwist") [u"all"]`
+                print(contributor, contributor.permissions)
+
+        """
+        return LiveContributorRelationship(self)
+
+    @cachedproperty
+    def stream(self) -> LiveThreadStream:
+        """Provide an instance of :class:`.LiveThreadStream`.
+
+        Streams are used to indefinitely retrieve new updates made to a live thread,
+        like:
+
+        .. code-block:: python
+
+            for live_update in reddit.live("ta535s1hq2je").stream.updates():
+                print(live_update.body)
+
+        Updates are yielded oldest first as :class:`.LiveUpdate`. Up to 100 historical
+        updates will initially be returned. To only retrieve new updates starting from
+        when the stream is created, pass ``skip_existing=True``:
+
+        .. code-block:: python
+
+            live_thread = await reddit.live("ta535s1hq2je")
+            async for live_update in live_thread.stream.updates(skip_existing=True):
+                print(live_update.author)
+
+        """
+        return LiveThreadStream(self)
+
+    def __eq__(self, other: object) -> bool:
+        """Return whether the other instance equals the current.
+
+        .. note::
+
+            This comparison is case sensitive.
+
+        """
+        if isinstance(other, str):
+            return other == str(self)
+        return isinstance(other, self.__class__) and str(self) == str(other)
+
+    def __hash__(self) -> int:
+        """Return the hash of the current instance."""
+        return hash(self.__class__.__name__) ^ hash(str(self))
+
+    def __init__(
+        self,
+        reddit: asyncpraw.Reddit,
+        id: str | None = None,
+        _data: dict[str, Any] | None = None,
+    ) -> None:
+        """Initialize a :class:`.LiveThread` instance.
+
+        :param reddit: An instance of :class:`.Reddit`.
+        :param id: A live thread ID, e.g., ``"ukaeu1ik4sw5"``
+
+        """
+        if (id, _data).count(None) != 1:
+            msg = "Either 'id' or '_data' must be provided."
+            raise TypeError(msg)
+        if id:
+            self.id = id
+        super().__init__(reddit, _data=_data)
+
+    async def _fetch(self) -> None:
+        data = await self._fetch_data()
+        data = data["data"]
+        other = type(self)(self._reddit, _data=data)
+        self.__dict__.update(other.__dict__)
+        await super()._fetch()
+
+    def _fetch_info(self) -> tuple[str, dict[str, str], None]:
+        return "liveabout", {"id": self.id}, None
+
+    def discussions(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.Submission]:
+        """Get submissions linking to the thread.
+
+        :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
+            constructor.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.Submission`
+            objects.
+
+        Additional keyword arguments are passed in the initialization of
+        :class:`.ListingGenerator`.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            async for submission in thread.discussions(limit=None):
+                print(submission.title)
+
+        """
+        url = API_PATH["live_discussions"].format(id=self.id)
+        return ListingGenerator(self._reddit, url, **generator_kwargs)
+
+    async def get_update(self, /, id: str, *, fetch: bool = True) -> asyncpraw.models.LiveUpdate:
+        """Return a :class:`.LiveUpdate` instance.
+
+        :param id: A live update ID, e.g., ``"7827987a-c998-11e4-a0b9-22000b6a88d2"``.
+        :param fetch: Determines if Async PRAW will fetch the object (default:
+            ``True``).
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update.thread  # LiveThread(id="ukaeu1ik4sw5")
+            update.id  # "7827987a-c998-11e4-a0b9-22000b6a88d2"
+            update.author  # "umbrae"
+
+        If you don't need the object fetched right away (e.g., to utilize a class
+        method) you can do:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2", fetch=False)
+            update.contrib  # LiveUpdateContribution instance
+
+        """
+        update = LiveUpdate(self._reddit, self.id, id)
+        if fetch:
+            await update._fetch()
+        return update
+
+    async def report(self, type: str) -> None:  # noqa: A002
+        """Report the thread violating the Reddit rules.
+
+        :param type: One of ``"spam"``, ``"vote-manipulation"``,
+            ``"personal-information"``, ``"sexualizing-minors"``, or
+            ``"site-breaking"``.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("xyu8kmjvfrww")
+            await thread.report("spam")
+
+        """
+        url = API_PATH["live_report"].format(id=self.id)
+        await self._reddit.post(url, data={"type": type})
+
+    async def updates(self, **generator_kwargs: Any) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
+        """Return a :class:`.ListingGenerator` yields :class:`.LiveUpdate` s.
+
+        :param generator_kwargs: keyword arguments passed to :class:`.ListingGenerator`
+            constructor.
+
+        :returns: A :class:`.ListingGenerator` object which yields :class:`.LiveUpdate`
+            objects.
+
+        Additional keyword arguments are passed in the initialization of
+        :class:`.ListingGenerator`.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            after = "LiveUpdate_fefb3dae-7534-11e6-b259-0ef8c7233633"
+            async for submission in thread.updates(limit=5, params={"after": after}):
+                print(submission.body)
+
+        """
+        url = API_PATH["live_updates"].format(id=self.id)
+        async for update in ListingGenerator(self._reddit, url, **generator_kwargs):
+            update = cast("LiveUpdate", update)
+            update._thread = self
+            yield update
+
+
 class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
     """An individual :class:`.LiveUpdate` object.
 
@@ -743,11 +746,6 @@ class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
     if TYPE_CHECKING:
         _thread: LiveThread
 
-    @property
-    def _kind(self) -> str:
-        """Return the class's kind."""
-        return "LiveUpdate"
-
     @cachedproperty
     def contrib(self) -> LiveUpdateContribution:
         """Provide an instance of :class:`.LiveUpdateContribution`.
@@ -762,6 +760,11 @@ class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
 
         """
         return LiveUpdateContribution(self)
+
+    @property
+    def _kind(self) -> str:
+        """Return the class's kind."""
+        return "LiveUpdate"
 
     @property
     def thread(self) -> LiveThread:

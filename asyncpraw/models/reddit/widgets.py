@@ -1081,135 +1081,6 @@ class RulesWidget(Widget, BaseList):
         super().__init__(reddit, _data=_data)
 
 
-class TextArea(Widget):
-    """Class to represent a text area widget.
-
-    Find a text area in a subreddit:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        widgets = subreddit.widgets
-        text_area = None
-        async for widget in widgets.sidebar():
-            if isinstance(widget, asyncpraw.models.TextArea):
-                text_area = widget
-                break
-        print(text_area.text)
-
-    Create one:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        widgets = subreddit.widgets
-        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
-        text_area = await widgets.mod.add_text_area(
-            short_name="My cool title", text="*Hello* **world**!", styles=styles
-        )
-
-    For more information on creation, see :meth:`.add_text_area`.
-
-    Update one:
-
-    .. code-block:: python
-
-        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-        text_area = await text_area.mod.update(shortName="My fav text", styles=new_styles)
-
-    Delete one:
-
-    .. code-block:: python
-
-        await text_area.mod.delete()
-
-    .. include:: ../../typical_attributes.rst
-
-    ============= =====================================================================
-    Attribute     Description
-    ============= =====================================================================
-    ``id``        The widget ID.
-    ``kind``      The widget kind (always ``"textarea"``).
-    ``shortName`` The short name of the widget.
-    ``styles``    A ``dict`` with the keys ``"backgroundColor"`` and ``"headerColor"``.
-    ``subreddit`` The :class:`.Subreddit` the button widget belongs to.
-    ``text``      The widget's text, as Markdown.
-    ``textHtml``  The widget's text, as HTML.
-    ============= =====================================================================
-
-    """
-
-
-class WidgetModeration:
-    """Class for moderating a particular widget.
-
-    Example usage:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        sidebar = [widget async for widget in subreddit.widgets.sidebar()]
-        widget = sidebar[0]
-        await widget.mod.update(shortName="My new title")
-        await widget.mod.delete()
-
-    """
-
-    def __init__(
-        self,
-        widget: asyncpraw.models.Widget,
-        subreddit: asyncpraw.models.Subreddit | str,
-        reddit: asyncpraw.Reddit,
-    ) -> None:
-        """Initialize a :class:`.WidgetModeration` instance."""
-        self.widget = widget
-        self._reddit = reddit
-        self._subreddit = subreddit
-
-    async def delete(self) -> None:
-        """Delete the widget.
-
-        Example usage:
-
-        .. code-block:: python
-
-            await widget.mod.delete()
-
-        """
-        path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
-        await self._reddit.delete(path)
-
-    async def update(self, **kwargs: Any) -> Widget:
-        """Update the widget. Returns the updated widget.
-
-        Parameters differ based on the type of widget. See `Reddit documentation
-        <https://www.reddit.com/dev/api#PUT_api_widget_{widget_id}>`_ or the document of
-        the particular type of widget.
-
-        :returns: The updated :class:`.Widget`.
-
-        For example, update a text widget like so:
-
-        .. code-block:: python
-
-            await text_widget.mod.update(shortName="New text area", text="Hello!")
-
-        .. note::
-
-            Most parameters follow the ``lowerCamelCase`` convention. When in doubt,
-            check the Reddit documentation linked above.
-
-        """
-        path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
-        payload = {key: value for key, value in vars(self.widget).items() if not key.startswith("_")}
-        del payload["subreddit"]  # not JSON serializable
-        payload.pop("mod", None)
-        payload.update(kwargs)
-        widget = await self._reddit.put(path, data={"json": dumps(payload, cls=WidgetEncoder)})
-        widget.subreddit = self._subreddit
-        return widget
-
-
 class SubredditWidgetsModeration:
     """Class for moderating a :class:`.Subreddit`'s widgets.
 
@@ -1868,3 +1739,132 @@ class SubredditWidgetsModeration:
 
         """
         return await media._upload(self._subreddit)
+
+
+class TextArea(Widget):
+    """Class to represent a text area widget.
+
+    Find a text area in a subreddit:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        widgets = subreddit.widgets
+        text_area = None
+        async for widget in widgets.sidebar():
+            if isinstance(widget, asyncpraw.models.TextArea):
+                text_area = widget
+                break
+        print(text_area.text)
+
+    Create one:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        widgets = subreddit.widgets
+        styles = {"backgroundColor": "#FFFF66", "headerColor": "#3333EE"}
+        text_area = await widgets.mod.add_text_area(
+            short_name="My cool title", text="*Hello* **world**!", styles=styles
+        )
+
+    For more information on creation, see :meth:`.add_text_area`.
+
+    Update one:
+
+    .. code-block:: python
+
+        new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
+        text_area = await text_area.mod.update(shortName="My fav text", styles=new_styles)
+
+    Delete one:
+
+    .. code-block:: python
+
+        await text_area.mod.delete()
+
+    .. include:: ../../typical_attributes.rst
+
+    ============= =====================================================================
+    Attribute     Description
+    ============= =====================================================================
+    ``id``        The widget ID.
+    ``kind``      The widget kind (always ``"textarea"``).
+    ``shortName`` The short name of the widget.
+    ``styles``    A ``dict`` with the keys ``"backgroundColor"`` and ``"headerColor"``.
+    ``subreddit`` The :class:`.Subreddit` the button widget belongs to.
+    ``text``      The widget's text, as Markdown.
+    ``textHtml``  The widget's text, as HTML.
+    ============= =====================================================================
+
+    """
+
+
+class WidgetModeration:
+    """Class for moderating a particular widget.
+
+    Example usage:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        sidebar = [widget async for widget in subreddit.widgets.sidebar()]
+        widget = sidebar[0]
+        await widget.mod.update(shortName="My new title")
+        await widget.mod.delete()
+
+    """
+
+    def __init__(
+        self,
+        widget: asyncpraw.models.Widget,
+        subreddit: asyncpraw.models.Subreddit | str,
+        reddit: asyncpraw.Reddit,
+    ) -> None:
+        """Initialize a :class:`.WidgetModeration` instance."""
+        self.widget = widget
+        self._reddit = reddit
+        self._subreddit = subreddit
+
+    async def delete(self) -> None:
+        """Delete the widget.
+
+        Example usage:
+
+        .. code-block:: python
+
+            await widget.mod.delete()
+
+        """
+        path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
+        await self._reddit.delete(path)
+
+    async def update(self, **kwargs: Any) -> Widget:
+        """Update the widget. Returns the updated widget.
+
+        Parameters differ based on the type of widget. See `Reddit documentation
+        <https://www.reddit.com/dev/api#PUT_api_widget_{widget_id}>`_ or the document of
+        the particular type of widget.
+
+        :returns: The updated :class:`.Widget`.
+
+        For example, update a text widget like so:
+
+        .. code-block:: python
+
+            await text_widget.mod.update(shortName="New text area", text="Hello!")
+
+        .. note::
+
+            Most parameters follow the ``lowerCamelCase`` convention. When in doubt,
+            check the Reddit documentation linked above.
+
+        """
+        path = API_PATH["widget_modify"].format(widget_id=self.widget.id, subreddit=self._subreddit)
+        payload = {key: value for key, value in vars(self.widget).items() if not key.startswith("_")}
+        del payload["subreddit"]  # not JSON serializable
+        payload.pop("mod", None)
+        payload.update(kwargs)
+        widget = await self._reddit.put(path, data={"json": dumps(payload, cls=WidgetEncoder)})
+        widget.subreddit = self._subreddit
+        return widget

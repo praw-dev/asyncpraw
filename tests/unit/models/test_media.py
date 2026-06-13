@@ -5,7 +5,13 @@ import pytest
 from asyncprawcore.exceptions import ServerError
 
 from asyncpraw.exceptions import ClientException, TooLargeMediaException
-from asyncpraw.models import EmojiMedia, PostMedia, StylesheetAsset, StylesheetImage, WidgetMedia
+from asyncpraw.models import (
+    EmojiMedia,
+    PostMedia,
+    StylesheetAsset,
+    StylesheetImage,
+    WidgetMedia,
+)
 from asyncpraw.models.media import Media
 
 from .. import UnitTest
@@ -93,12 +99,9 @@ class TestMedia(UnitTest):
 
 
 class TestPostMedia(UnitTest):
-    async def test_upload__expected_mime_prefix(self, reddit):
-        media = PostMedia(b"data", name="test.png")
-        message = "Expected a mimetype starting with 'video' but got mimetype 'image/png' (from file name 'test.png')."
-        with pytest.raises(ClientException) as excinfo:
-            await media._upload(reddit, expected_mime_prefix="video")
-        assert str(excinfo.value) == message
+    async def test_parse_xml_response__other(self):
+        response = FakeResponse("<Error><Code>AccessDenied</Code><Message>Denied</Message></Error>")
+        assert await PostMedia._parse_xml_response(response) is None
 
     async def test_parse_xml_response__too_large(self):
         response = FakeResponse(
@@ -111,14 +114,17 @@ class TestPostMedia(UnitTest):
         assert excinfo.value.actual == 2000
         assert excinfo.value.maximum_size == 1000
 
-    async def test_parse_xml_response__other(self):
-        response = FakeResponse("<Error><Code>AccessDenied</Code><Message>Denied</Message></Error>")
-        assert await PostMedia._parse_xml_response(response) is None
-
     async def test_raise_upload_error__other(self):
         response = FakeResponse("<Error><Code>AccessDenied</Code><Message>Denied</Message></Error>")
         with pytest.raises(ServerError):
             await PostMedia._raise_upload_error(response)
+
+    async def test_upload__expected_mime_prefix(self, reddit):
+        media = PostMedia(b"data", name="test.png")
+        message = "Expected a mimetype starting with 'video' but got mimetype 'image/png' (from file name 'test.png')."
+        with pytest.raises(ClientException) as excinfo:
+            await media._upload(reddit, expected_mime_prefix="video")
+        assert str(excinfo.value) == message
 
 
 class TestStylesheetAsset(UnitTest):

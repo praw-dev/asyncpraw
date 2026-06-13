@@ -14,17 +14,6 @@ if TYPE_CHECKING:
     from asyncpraw.models.reddit.base import RedditBase
 
 
-class ListingGeneratorKwargs(TypedDict, total=False):
-    """The keyword arguments accepted by methods that return a :class:`.ListingGenerator`.
-
-    See :meth:`.ListingGenerator.__init__` for the meaning of each value.
-
-    """
-
-    limit: int | None
-    params: dict[str, str | int] | None
-
-
 class ListingGenerator(AsyncPRAWBase, AsyncIterator):
     """Instances of this class generate :class:`.RedditBase` instances.
 
@@ -118,3 +107,14 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
             self.params[self._listing.AFTER_PARAM] = self._listing.after
         else:
             self._exhausted = True
+
+
+class ListingGeneratorKwargs(TypedDict, total=False):
+    """The keyword arguments accepted by methods that return a :class:`.ListingGenerator`.
+
+    See :meth:`.ListingGenerator.__init__` for the meaning of each value.
+
+    """
+
+    limit: int | None
+    params: dict[str, str | int] | None
