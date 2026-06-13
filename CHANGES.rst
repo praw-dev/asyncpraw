@@ -137,6 +137,7 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
   been fetched raises :class:`.ClientException` instead of logging a warning. Because
   ``reddit.submission()`` fetches by default, initialize the submission with
   ``fetch=False``, set the attributes, then call :meth:`~.Submission.load`.
+- Require ``asyncprawcore >=4, <5``.
 
 **Fixed**
 

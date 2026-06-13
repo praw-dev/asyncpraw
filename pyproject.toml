@@ -55,7 +55,7 @@ classifiers = [
 dependencies = [
   "aiofiles",
   "aiohttp<4",
-  "asyncprawcore>=3.1.0,<4",
+  "asyncprawcore>=4,<5",
   "defusedxml==0.7.1",
   "typing-extensions; python_version <= '3.10'",
   "update_checker[async]>=1.0,<2.0"

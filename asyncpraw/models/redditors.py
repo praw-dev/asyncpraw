@@ -58,7 +58,7 @@ class Redditors(AsyncPRAWBase):
             params: dict[str, str | int] = {"ids": ",".join(chunk)}
             try:
                 results = await self._reddit.get(API_PATH["user_by_fullname"], params=params)
-            except asyncprawcore.exceptions.NotFound:
+            except asyncprawcore.NotFound:
                 # None of the given IDs matched any Redditor.
                 continue
 

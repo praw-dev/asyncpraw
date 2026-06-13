@@ -93,7 +93,7 @@ class TestSubreddit(UnitTest):
         response = MagicMock(spec=ClientResponse)
         response.ok = False
         response.status = 500
-        mock_method.side_effect = ServerError(response=response)
+        mock_method.side_effect = ServerError(response)
         with pytest.raises(ServerError):
             await Subreddit(reddit, display_name="test").submit("Test", image=PostMedia(b"", name="test.png"))
 
