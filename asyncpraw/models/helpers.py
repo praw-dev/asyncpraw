@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any, overload
 
 from asyncpraw.const import API_PATH
 from asyncpraw.models.base import AsyncPRAWBase
+from asyncpraw.models.listing.generator import ListingGenerator
 from asyncpraw.models.reddit.draft import Draft
 from asyncpraw.models.reddit.live import LiveThread
 from asyncpraw.models.reddit.multi import Multireddit, Subreddit
@@ -15,6 +16,95 @@ if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
     import asyncpraw.models
+
+
+class AnnouncementHelper(AsyncPRAWBase):
+    r"""Provide a set of functions to interact with :class:`.Announcement` instances.
+
+    .. note::
+
+        The methods provided by this class will only work on the currently authenticated
+        user's :class:`.Announcement`\ s.
+
+    """
+
+    def __call__(self, **generator_kwargs: Any) -> ListingGenerator:
+        """Return a :class:`.ListingGenerator` for the authenticated user's announcements.
+
+        Additional keyword arguments are passed in the initialization of
+        :class:`.ListingGenerator`.
+
+        Example usage:
+
+        .. code-block:: python
+
+            async for announcement in reddit.announcements():
+                print(announcement.subject)
+
+        """
+        return ListingGenerator(self._reddit, API_PATH["announcements"], **generator_kwargs)
+
+    async def hide(self, announcements: list[asyncpraw.models.Announcement]) -> None:
+        r"""Hide :class:`.Announcement`\ s.
+
+        :param announcements: A list of :class:`.Announcement` instances to hide.
+
+        Requests are batched at 100 items (Reddit limit).
+
+        For example, to hide every announcement:
+
+        .. code-block:: python
+
+            await reddit.announcements.hide([a async for a in reddit.announcements()])
+
+        .. seealso::
+
+            :meth:`.Announcement.hide` to hide a single announcement.
+
+        """
+        while announcements:
+            ids = ",".join(announcement.fullname for announcement in announcements[:100])
+            await self._reddit.post(API_PATH["hide_announcements"], data={"ids": ids})
+            announcements = announcements[100:]
+
+    async def mark_all_read(self) -> None:
+        """Mark all announcements as read with just one API call.
+
+        Example usage:
+
+        .. code-block:: python
+
+            await reddit.announcements.mark_all_read()
+
+        """
+        await self._reddit.post(API_PATH["read_all_announcements"])
+
+    async def mark_read(self, announcements: list[asyncpraw.models.Announcement]) -> None:
+        r"""Mark :class:`.Announcement`\ s as read.
+
+        :param announcements: A list of :class:`.Announcement` instances to mark as
+            read.
+
+        Requests are batched at 100 items (Reddit limit).
+
+        For example, to mark every unread announcement as read:
+
+        .. code-block:: python
+
+            unread = [a async for a in reddit.announcements() if a.read_at is None]
+            await reddit.announcements.mark_read(unread)
+
+        .. seealso::
+
+            - :meth:`.Announcement.mark_read` to mark a single announcement as read.
+            - :meth:`.AnnouncementHelper.mark_all_read` to mark all announcements as
+              read.
+
+        """
+        while announcements:
+            ids = ",".join(announcement.fullname for announcement in announcements[:100])
+            await self._reddit.post(API_PATH["read_announcements"], data={"ids": ids})
+            announcements = announcements[100:]
 
 
 class DraftHelper(AsyncPRAWBase):

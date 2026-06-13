@@ -257,6 +257,27 @@ class Reddit:
 
         """
 
+        self.announcements = models.AnnouncementHelper(self, None)
+        r"""An instance of :class:`.AnnouncementHelper`.
+
+        Provides the interface for working with :class:`.Announcement`\ s for the
+        currently authenticated user.
+
+        For example, to iterate through announcements:
+
+        .. code-block:: python
+
+            async for announcement in reddit.announcements():
+                print(announcement.subject)
+
+        To mark all announcements as read:
+
+        .. code-block:: python
+
+            await reddit.announcements.mark_all_read()
+
+        """
+
         self.drafts = models.DraftHelper(self, None)
         """An instance of :class:`.DraftHelper`.
 
@@ -537,8 +558,11 @@ class Reddit:
             self.config.kinds["trophy"]: models.Trophy,
             "Button": models.Button,
             "Collection": models.Collection,
+            "Announcement": models.Announcement,
+            "AnnouncementListing": models.AnnouncementListing,
             "Draft": models.Draft,
             "DraftList": models.DraftList,
+            "ann": models.Announcement,
             "Image": models.Image,
             "LabeledMulti": models.Multireddit,
             "Listing": models.Listing,

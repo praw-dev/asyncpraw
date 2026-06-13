@@ -132,6 +132,7 @@ them bound to an attribute of one of the Async PRAW models.
     :maxdepth: 2
     :caption: Others
 
+    other/announcementlisting
     other/asyncprawbase
     other/auth
     other/baselist
