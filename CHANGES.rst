@@ -4,9 +4,9 @@
 
 asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
-************
- Unreleased
-************
+********************
+ 8.0.0 (2026/06/13)
+********************
 
 **Added**
 
