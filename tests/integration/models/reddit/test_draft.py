@@ -11,14 +11,14 @@ class TestDraft(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
 
-        draft = await reddit.drafts.create(title="test", url="https://reddit.com", subreddit=subreddit)
+        draft = await reddit.drafts.create(subreddit=subreddit, title="test", url="https://reddit.com")
         await draft.load()
         assert draft.subreddit == subreddit
         assert draft.title == "test"
         assert not hasattr(draft, "selftext")
         assert draft.url == "https://reddit.com"
 
-        draft = await reddit.drafts.create(title="test2", selftext="", subreddit=subreddit)
+        draft = await reddit.drafts.create(selftext="", subreddit=subreddit, title="test2")
         await draft.load()
         assert draft.subreddit == subreddit
         assert draft.selftext == ""
@@ -26,9 +26,9 @@ class TestDraft(IntegrationTest):
         assert not hasattr(draft, "url")
 
         draft = await reddit.drafts.create(
-            title="test2",
             selftext="selftext",
             subreddit=pytest.placeholders.test_subreddit,
+            title="test2",
         )
         await draft.load()
         assert draft.subreddit == subreddit
@@ -107,7 +107,7 @@ class TestDraft(IntegrationTest):
         reddit.read_only = False
         draft = await reddit.drafts(draft_id="98de0118-3b8c-11ec-98a3-764c49cd2e1a")
         assert draft.title == "title"
-        await draft.update(title="new title", subreddit=pytest.placeholders.test_subreddit)
+        await draft.update(subreddit=pytest.placeholders.test_subreddit, title="new title")
         assert draft.title == "new title"
         assert isinstance(draft.subreddit, Subreddit)
         assert draft.subreddit == pytest.placeholders.test_subreddit

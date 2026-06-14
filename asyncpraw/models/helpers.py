@@ -372,9 +372,9 @@ class MultiredditHelper(AsyncPRAWBase):
     async def __call__(
         self,
         *,
+        fetch: bool = False,
         name: str,
         redditor: str | asyncpraw.models.Redditor,
-        fetch: bool = False,
     ) -> asyncpraw.models.Multireddit:
         """Return a lazy instance of :class:`.Multireddit`.
 

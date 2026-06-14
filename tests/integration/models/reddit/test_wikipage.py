@@ -10,10 +10,6 @@ from asyncpraw.models import Redditor, StylesheetImage, WikiPage
 from ... import IntegrationTest
 
 
-def large_content():
-    return urlsafe_b64encode(Path("tests/integration/files/too_large.jpg").read_bytes()).decode()
-
-
 class TestWikiPageModeration(IntegrationTest):
     async def test_add(self, reddit):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
@@ -54,9 +50,9 @@ class TestWikiPageModeration(IntegrationTest):
             revision = await page.revision(revision_id)
             await revision.mod.revert()
         assert await exc.value.response.json() == {
-            "reason": "INVALID_CSS",
-            "message": "Forbidden",
             "explanation": "%(css_error)s",
+            "message": "Forbidden",
+            "reason": "INVALID_CSS",
         }
 
     async def test_settings(self, reddit):
@@ -74,6 +70,10 @@ class TestWikiPageModeration(IntegrationTest):
         page = await subreddit.wiki.get_page("index")
         updated = await page.mod.update(listed=False, permlevel=1)
         assert updated == {"editors": [], "listed": False, "permlevel": 1}
+
+
+def large_content():
+    return urlsafe_b64encode(Path("tests/integration/files/too_large.jpg").read_bytes()).decode()
 
 
 class TestWikiPage(IntegrationTest):

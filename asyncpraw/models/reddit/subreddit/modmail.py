@@ -29,7 +29,7 @@ class Modmail:
     """
 
     async def __call__(
-        self, id: str | None = None, *, mark_read: bool = False, fetch: bool = True
+        self, id: str | None = None, *, fetch: bool = True, mark_read: bool = False
     ) -> ModmailConversation:
         """Return an individual conversation.
 

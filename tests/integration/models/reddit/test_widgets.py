@@ -54,51 +54,51 @@ class TestButtonWidget(IntegrationTest):
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
         my_image = await widgets.mod.upload_image(WidgetMedia(image_path("test.png")))
         buttons = [
             {
-                "kind": "text",
-                "text": "View source",
-                "url": "https://github.com/praw-dev/asyncpraw",
                 "color": "#FF0000",
-                "textColor": "#00FF00",
                 "fillColor": "#0000FF",
                 "hoverState": {
+                    "color": "#FFFFFF",
+                    "fillColor": "#0000FF",
                     "kind": "text",
                     "text": "VIEW SOURCE!",
-                    "color": "#FFFFFF",
                     "textColor": "#000000",
-                    "fillColor": "#0000FF",
                 },
+                "kind": "text",
+                "text": "View source",
+                "textColor": "#00FF00",
+                "url": "https://github.com/praw-dev/asyncpraw",
             },
             {
-                "kind": "image",
-                "text": "View documentation",
-                "linkUrl": "https://asyncpraw.readthedocs.io",
-                "url": my_image,
                 "height": 200,
-                "width": 200,
                 "hoverState": {
+                    "height": 200,
                     "kind": "image",
                     "url": my_image,
-                    "height": 200,
                     "width": 200,
                 },
+                "kind": "image",
+                "linkUrl": "https://asyncpraw.readthedocs.io",
+                "text": "View documentation",
+                "url": my_image,
+                "width": 200,
             },
             {
+                "color": "#000000",
+                "fillColor": "#005500",
                 "kind": "text",
                 "text": "/r/redditdev",
-                "url": "https://reddit.com/r/redditdev",
-                "color": "#000000",
                 "textColor": "#FF00FF",
-                "fillColor": "#005500",
+                "url": "https://reddit.com/r/redditdev",
             },
         ]
         widget = await widgets.mod.add_button_widget(
-            short_name="Things to click",
-            description="Click some of these *cool* links!",
             buttons=buttons,
+            description="Click some of these *cool* links!",
+            short_name="Things to click",
             styles=styles,
         )
 
@@ -192,7 +192,7 @@ class TestCalendar(IntegrationTest):
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
         config = {
             "numEvents": 10,
             "showDate": True,
@@ -203,10 +203,10 @@ class TestCalendar(IntegrationTest):
         }
         cal_id = "ccahu0rstno2jrvioq4ccffn78@group.calendar.google.com"
         widget = await widgets.mod.add_calendar(
-            short_name="Upcoming Events",
+            configuration=config,
             google_calendar_id=cal_id,
             requires_sync=True,
-            configuration=config,
+            short_name="Upcoming Events",
             styles=styles,
         )
 
@@ -254,13 +254,13 @@ class TestCommunityList(IntegrationTest):
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
         subreddits = ["learnpython", Subreddit(reddit, "redditdev")]
         widget = await widgets.mod.add_community_list(
-            short_name="My fav subs",
             data=subreddits,
-            styles=styles,
             description="My description",
+            short_name="My fav subs",
+            styles=styles,
         )
         assert isinstance(widget, CommunityList)
         assert widget.shortName == "My fav subs"
@@ -270,9 +270,9 @@ class TestCommunityList(IntegrationTest):
         assert "redditdev" in widget
 
         widget = await widget.mod.update(
-            shortName="My least fav subs :(",
             data=["redesign"],
             description="My new description",
+            shortName="My least fav subs :(",
         )
 
         assert isinstance(widget, CommunityList)
@@ -292,21 +292,21 @@ class TestCustomWidget(IntegrationTest):
         widgets = subreddit.widgets
         image_dicts = [
             {
-                "width": 0,
                 "height": 0,
                 "name": "a",
                 "url": await widgets.mod.upload_image(WidgetMedia(image_path("test.png"))),
+                "width": 0,
             }
         ]
 
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
         widget = await widgets.mod.add_custom_widget(
-            short_name="My widget",
-            text="# Hello world!",
             css="/**/",
             height=200,
             image_data=image_dicts,
+            short_name="My widget",
             styles=styles,
+            text="# Hello world!",
         )
 
         assert isinstance(widget, CustomWidget)
@@ -413,16 +413,16 @@ class TestImageWidget(IntegrationTest):
         image_paths = (image_path(name) for name in ("test.jpg", "test.png"))
         image_data = [
             {
-                "width": 10,
                 "height": 10,
                 "linkUrl": "",
                 "url": await widgets.mod.upload_image(WidgetMedia(img_path)),
+                "width": 10,
             }
             for img_path in image_paths
         ]
 
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-        widget = await widgets.mod.add_image_widget(short_name="My new pics!", data=image_data, styles=styles)
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
+        widget = await widgets.mod.add_image_widget(data=image_data, short_name="My new pics!", styles=styles)
 
         assert isinstance(widget, ImageWidget)
         assert widget.shortName == "My new pics!"
@@ -430,7 +430,7 @@ class TestImageWidget(IntegrationTest):
         assert len(widget) == 2
         assert all(isinstance(img, Image) for img in widget)
 
-        widget = await widget.mod.update(shortName="My old pics :(", data=image_data[:1])
+        widget = await widget.mod.update(data=image_data[:1], shortName="My old pics :(")
 
         assert isinstance(widget, ImageWidget)
         assert widget.shortName == "My old pics :("
@@ -472,11 +472,11 @@ class TestMenu(IntegrationTest):
         menu_contents = [
             {"text": "My homepage", "url": "https://example.com"},
             {
-                "text": "Python packages",
                 "children": [
                     {"text": "PRAW", "url": "https://asyncpraw.readthedocs.io/"},
                     {"text": "requests", "url": "http://python-requests.org"},
                 ],
+                "text": "Python packages",
             },
             {"text": "Reddit homepage", "url": "https://reddit.com"},
         ]
@@ -589,7 +589,7 @@ class TestPostFlairWidget(IntegrationTest):
         widgets = subreddit.widgets
         flairs = [f["id"] async for f in subreddit.flair.link_templates][:30]
 
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
         widget = await widgets.mod.add_post_flair_widget(
             display="Some flairs", order="list", short_name=flairs, styles=styles
         )
@@ -803,8 +803,8 @@ class TestTextArea(IntegrationTest):
 
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         widgets = subreddit.widgets
-        styles = {"headerColor": "#123456", "backgroundColor": "#bb0e00"}
-        widget = await widgets.mod.add_text_area(short_name="My new widget!", text="Hello world!", styles=styles)
+        styles = {"backgroundColor": "#bb0e00", "headerColor": "#123456"}
+        widget = await widgets.mod.add_text_area(short_name="My new widget!", styles=styles, text="Hello world!")
 
         assert isinstance(widget, TextArea)
         assert widget.shortName == "My new widget!"

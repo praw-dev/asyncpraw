@@ -125,9 +125,9 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
 
     """
 
-    STR_FIELD = "display_name"
     MAX_CAPTION_LENGTH = 180
     MESSAGE_PREFIX = "#"
+    STR_FIELD = "display_name"
 
     # Bound at import time by the submission and collections modules to avoid circular
     # imports.
@@ -150,8 +150,8 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
         exclude_banned_modqueue: bool | None = None,
         header_hover_text: str | None = None,
         hide_ads: bool | None = None,
-        lang: str | None = None,
         key_color: str | None = None,
+        lang: str | None = None,
         link_type: str | None = None,
         name: str | None = None,
         over_18: bool | None = None,
@@ -623,7 +623,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
         :returns: A dict in ``richtext_json`` format.
 
         """
-        text_data = {"output_mode": "rtjson", "markdown_text": markdown_text}
+        text_data = {"markdown_text": markdown_text, "output_mode": "rtjson"}
         rte_body = await self._reddit.post(API_PATH["convert_rte_body"], data=text_data)
         return rte_body["output"]
 
@@ -1186,12 +1186,12 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
             for image_item in images:
                 data["items"].append({
                     "caption": image_item.get("caption", ""),
-                    "outbound_url": image_item.get("outbound_url", ""),
                     "media_id": await cast("PostMedia", image_item["media"])._upload(
                         self._reddit,
                         expected_mime_prefix="image",
                         upload_type="gallery",
                     ),
+                    "outbound_url": image_item.get("outbound_url", ""),
                 })
             response = await self._reddit.request(json=data, method="POST", path=API_PATH["submit_gallery_post"])
             response = response["json"]

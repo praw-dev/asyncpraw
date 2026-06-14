@@ -47,8 +47,8 @@ class TestReddit(UnitTest):
 
     async def test_close_session(self):
         temp_reddit = Reddit(
-            **self.REQUIRED_DUMMY_SETTINGS,
             requestor_kwargs={"session": MockClientSession()},
+            **self.REQUIRED_DUMMY_SETTINGS,
         )
         async with temp_reddit as reddit:
             pass
@@ -59,8 +59,8 @@ class TestReddit(UnitTest):
 
     async def test_context_manager(self):
         async with Reddit(
-            **self.REQUIRED_DUMMY_SETTINGS,
             requestor_kwargs={"session": MockClientSession()},
+            **self.REQUIRED_DUMMY_SETTINGS,
         ) as reddit:
             assert not reddit.requestor._http.closed
         assert reddit.requestor._http.closed
@@ -107,7 +107,7 @@ class TestReddit(UnitTest):
         assert isinstance(gen, types.AsyncGeneratorType)
 
     async def test_multireddit(self, reddit):
-        multireddit = await reddit.multireddit(redditor="bboe", name="aa")
+        multireddit = await reddit.multireddit(name="aa", redditor="bboe")
         assert multireddit.path == "/user/bboe/m/aa"
 
     @mock.patch(
@@ -433,10 +433,10 @@ class TestRedditCustomRequestor(UnitTest):
             pass
 
         async with Reddit(
-            requestor_class=CustomRequestor,
             client_id="dummy",
             client_secret="dummy",
             password="dummy",
+            requestor_class=CustomRequestor,
             user_agent="dummy",
             username="dummy",
         ) as temp_reddit:
@@ -444,9 +444,9 @@ class TestRedditCustomRequestor(UnitTest):
         assert not isinstance(reddit._core.requestor, CustomRequestor)
 
         async with Reddit(
-            requestor_class=CustomRequestor,
             client_id="dummy",
             client_secret="dummy",
+            requestor_class=CustomRequestor,
             user_agent="dummy",
         ) as temp_reddit:
             assert isinstance(temp_reddit._core.requestor, CustomRequestor)
@@ -456,9 +456,9 @@ class TestRedditCustomRequestor(UnitTest):
         session = AsyncMock(headers={})
         assert (
             Reddit(
-                requestor_kwargs={"session": session},
                 client_id="dummy",
                 client_secret="dummy",
+                requestor_kwargs={"session": session},
                 user_agent="dummy",
             )._core.requestor._http
             is session

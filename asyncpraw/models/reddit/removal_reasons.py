@@ -86,7 +86,7 @@ class RemovalReason(RedditBase):
             await reason.delete()
 
         """
-        url = API_PATH["removal_reason"].format(subreddit=self.subreddit, id=self.id)
+        url = API_PATH["removal_reason"].format(id=self.id, subreddit=self.subreddit)
         await self._reddit.delete(url)
 
     async def update(self, *, message: str | None = None, title: str | None = None) -> None:
@@ -108,7 +108,7 @@ class RemovalReason(RedditBase):
             await reason.update(title="New title", message="New message")
 
         """
-        url = API_PATH["removal_reason"].format(subreddit=self.subreddit, id=self.id)
+        url = API_PATH["removal_reason"].format(id=self.id, subreddit=self.subreddit)
         data = {
             name: getattr(self, name) if value is None else value
             for name, value in {"message": message, "title": title}.items()

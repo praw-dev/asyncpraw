@@ -15,14 +15,6 @@ from asyncpraw.models.reddit.subreddit import Subreddit
 from . import IntegrationTest
 
 
-def comment_ids():
-    return Path("tests/integration/files/comment_ids.txt").read_text()[:8000]
-
-
-def junk_data():
-    return urlsafe_b64encode(Path("tests/integration/files/too_large.jpg").read_bytes()).decode()
-
-
 class TestDomainListing(IntegrationTest):
     async def test_controversial(self, reddit):
         submissions = await self.async_list(reddit.domain("youtube.com").controversial())
@@ -42,6 +34,14 @@ class TestDomainListing(IntegrationTest):
     async def test_top(self, reddit):
         submissions = await self.async_list(reddit.domain("youtube.com").top())
         assert len(submissions) == 100
+
+
+def comment_ids():
+    return Path("tests/integration/files/comment_ids.txt").read_text()[:8000]
+
+
+def junk_data():
+    return urlsafe_b64encode(Path("tests/integration/files/too_large.jpg").read_bytes()).decode()
 
 
 class TestReddit(IntegrationTest):
@@ -65,12 +65,12 @@ class TestReddit(IntegrationTest):
 
     async def test_bare_badrequest(self, reddit):
         data = {
-            "sr": "AskReddit",
             "field": "link",
             "kind": "link",
-            "title": "l",
-            "text": "lol",
             "show_error_list": True,
+            "sr": "AskReddit",
+            "text": "lol",
+            "title": "l",
         }
         reddit.read_only = False
         with pytest.raises(BadRequest):

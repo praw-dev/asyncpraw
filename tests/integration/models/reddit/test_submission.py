@@ -343,9 +343,9 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_flair_all(self, reddit):
         reddit.read_only = False
         await Submission(reddit, "hmkbt8").mod.flair(
-            text="submission flair",
             css_class="submission flair",
             flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
+            text="submission flair",
         )
 
     async def test_flair_just_css_class(self, reddit):
@@ -359,13 +359,13 @@ class TestSubmissionModeration(IntegrationTest):
     async def test_flair_template_id(self, reddit):
         reddit.read_only = False
         await Submission(reddit, "hmkbt8").mod.flair(
-            text="submission flair",
             flair_template_id="94f13282-e2e8-11e8-8291-0eae4e167256",
+            text="submission flair",
         )
 
     async def test_flair_text_and_css_class(self, reddit):
         reddit.read_only = False
-        await Submission(reddit, "hmkbt8").mod.flair(text="submission flair", css_class="submission flair")
+        await Submission(reddit, "hmkbt8").mod.flair(css_class="submission flair", text="submission flair")
 
     async def test_flair_text_only(self, reddit):
         reddit.read_only = False

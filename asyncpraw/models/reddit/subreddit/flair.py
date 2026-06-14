@@ -18,6 +18,244 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
+class SubredditFlair:
+    """Provide a set of functions to interact with a :class:`.Subreddit`'s flair."""
+
+    @cachedproperty
+    def link_templates(
+        self,
+    ) -> SubredditLinkFlairTemplates:
+        """Provide an instance of :class:`.SubredditLinkFlairTemplates`.
+
+        Use this attribute for interacting with a :class:`.Subreddit`'s link flair
+        templates. For example, to list all the link flair templates for a subreddit
+        which you have the ``flair`` moderator permission on try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            async for template in subreddit.flair.link_templates:
+                print(template)
+
+        """
+        return SubredditLinkFlairTemplates(self.subreddit)
+
+    @cachedproperty
+    def templates(
+        self,
+    ) -> SubredditRedditorFlairTemplates:
+        """Provide an instance of :class:`.SubredditRedditorFlairTemplates`.
+
+        Use this attribute for interacting with a :class:`.Subreddit`'s flair templates.
+        For example, to list all the flair templates for a subreddit which you have the
+        ``flair`` moderator permission on try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            async for template in subreddit.flair.templates:
+                print(template)
+
+        """
+        return SubredditRedditorFlairTemplates(self.subreddit)
+
+    def __call__(
+        self,
+        redditor: asyncpraw.models.Redditor | str | None = None,
+        **generator_kwargs: Any,
+    ) -> AsyncIterator[asyncpraw.models.Redditor]:
+        """Return a :class:`.ListingGenerator` for Redditors and their flairs.
+
+        :param redditor: When provided, yield at most a single :class:`.Redditor`
+            instance (default: ``None``).
+
+        Additional keyword arguments are passed in the initialization of
+        :class:`.ListingGenerator`.
+
+        Usage:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            async for flair in subreddit.flair(limit=None):
+                print(flair)
+
+        """
+        RedditBase._safely_add_arguments(arguments=generator_kwargs, key="params", name=redditor)
+        generator_kwargs.setdefault("limit", None)
+        url = API_PATH["flairlist"].format(subreddit=self.subreddit)
+        return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
+
+    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
+        """Initialize a :class:`.SubredditFlair` instance.
+
+        :param subreddit: The subreddit whose flair to work with.
+
+        """
+        self.subreddit = subreddit
+
+    async def configure(
+        self,
+        *,
+        link_position: str = "left",
+        link_self_assign: bool = False,
+        position: str = "right",
+        self_assign: bool = False,
+        **settings: Any,
+    ) -> None:
+        """Update the :class:`.Subreddit`'s flair configuration.
+
+        :param link_position: One of ``"left"``, ``"right"``, or ``False`` to disable
+            (default: ``"left"``).
+        :param link_self_assign: Permit self assignment of link flair (default:
+            ``False``).
+        :param position: One of ``"left"``, ``"right"``, or ``False`` to disable
+            (default: ``"right"``).
+        :param self_assign: Permit self assignment of user flair (default: ``False``).
+
+        .. code-block:: python
+
+            subreddit = reddit.subreddit("test")
+            subreddit.flair.configure(link_position="right", self_assign=True)
+
+        Additional keyword arguments can be provided to handle new settings as Reddit
+        introduces them.
+
+        """
+        data = {
+            "flair_enabled": bool(position),
+            "flair_position": position or "right",
+            "flair_self_assign_enabled": self_assign,
+            "link_flair_position": link_position or "",
+            "link_flair_self_assign_enabled": link_self_assign,
+        }
+        data.update(settings)
+        url = API_PATH["flairconfig"].format(subreddit=self.subreddit)
+        await self.subreddit._reddit.post(url, data=data)
+
+    async def delete(self, redditor: asyncpraw.models.Redditor | str) -> None:
+        """Delete flair for a :class:`.Redditor`.
+
+        :param redditor: A redditor name or :class:`.Redditor` instance.
+
+        .. seealso::
+
+            :meth:`~.SubredditFlair.update` to delete the flair of many redditors at
+            once.
+
+        """
+        url = API_PATH["deleteflair"].format(subreddit=self.subreddit)
+        await self.subreddit._reddit.post(url, data={"name": str(redditor)})
+
+    async def delete_all(self) -> list[dict[str, str | bool | dict[str, str]]]:
+        """Delete all :class:`.Redditor` flair in the :class:`.Subreddit`.
+
+        :returns: List of dictionaries indicating the success or failure of each delete.
+
+        """
+        all_flairs = [cast("dict[str, str | asyncpraw.models.Redditor]", x)["user"] async for x in self()]
+        return await self.update(iter(all_flairs))
+
+    async def set(
+        self,
+        redditor: asyncpraw.models.Redditor | str,
+        *,
+        css_class: str = "",
+        flair_template_id: str | None = None,
+        text: str = "",
+    ) -> None:
+        """Set flair for a :class:`.Redditor`.
+
+        :param redditor: A redditor name or :class:`.Redditor` instance.
+        :param text: The flair text to associate with the :class:`.Redditor` or
+            :class:`.Submission` (default: ``""``).
+        :param css_class: The css class to associate with the flair html (default:
+            ``""``). Use either this or ``flair_template_id``.
+        :param flair_template_id: The ID of the flair template to be used (default:
+            ``None``). Use either this or ``css_class``.
+
+        This method can only be used by an authenticated user who is a moderator of the
+        associated :class:`.Subreddit`.
+
+        For example:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            await subreddit.flair.set("bboe", text="PRAW author", css_class="mods")
+            template = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
+            subreddit = await reddit.subreddit("test")
+            await subreddit.flair.set("spez", text="Reddit CEO", flair_template_id=template)
+
+        """
+        if css_class and flair_template_id is not None:
+            msg = "Parameter 'css_class' cannot be used in conjunction with 'flair_template_id'."
+            raise TypeError(msg)
+        data = {"name": str(redditor), "text": text}
+        if flair_template_id is not None:
+            data["flair_template_id"] = flair_template_id
+            url = API_PATH["select_flair"].format(subreddit=self.subreddit)
+        else:
+            data["css_class"] = css_class
+            url = API_PATH["flair"].format(subreddit=self.subreddit)
+        await self.subreddit._reddit.post(url, data=data)
+
+    async def update(
+        self,
+        flair_list: Iterator[str | asyncpraw.models.Redditor | dict[str, str | asyncpraw.models.Redditor]],
+        *,
+        css_class: str = "",
+        text: str = "",
+    ) -> list[dict[str, str | bool | dict[str, str]]]:
+        """Set or clear the flair for many redditors at once.
+
+        :param flair_list: Each item in this list should be either:
+
+            - The name of a redditor.
+            - An instance of :class:`.Redditor`.
+            - A dictionary mapping keys ``"user"``, ``"flair_text"``, and
+              ``"flair_css_class"`` to their respective values. The ``"user"`` key
+              should map to a redditor, as described above. When a dictionary isn't
+              provided, or the dictionary is missing either ``"flair_text"`` or
+              ``"flair_css_class"`` keys, the default values will come from the other
+              arguments.
+        :param css_class: The css class to use when not explicitly provided in
+            ``flair_list`` (default: ``""``).
+        :param text: The flair text to use when not explicitly provided in
+            ``flair_list`` (default: ``""``).
+
+        :returns: List of dictionaries indicating the success or failure of each update.
+
+        For example, to clear the flair text, and set the ``"praw"`` flair css class on
+        a few users try:
+
+        .. code-block:: python
+
+            await subreddit.flair.update(["bboe", "spez", "spladug"], css_class="praw")
+
+        """
+        temp_lines = StringIO()
+        for item in flair_list:
+            if isinstance(item, dict):
+                writer(temp_lines).writerow([
+                    str(item["user"]),
+                    item.get("flair_text", text),
+                    item.get("flair_css_class", css_class),
+                ])
+            else:
+                writer(temp_lines).writerow([str(item), text, css_class])
+
+        lines = temp_lines.getvalue().splitlines()
+        temp_lines.close()
+        response = []
+        url = API_PATH["flaircsv"].format(subreddit=self.subreddit)
+        while lines:
+            data = {"flair_csv": "\n".join(lines[:100])}
+            response.extend(await self.subreddit._reddit.post(url, data=data))
+            lines = lines[100:]
+        return response
+
+
 class SubredditFlairTemplates:
     """Provide functions to interact with a :class:`.Subreddit`'s flair templates."""
 
@@ -90,11 +328,11 @@ class SubredditFlairTemplates:
         url = API_PATH["flairtemplatereorder"].format(subreddit=self.subreddit)
         await self.subreddit._reddit.patch(
             url,
+            json=flair_list,
             params={
                 "flair_type": self.flair_type(is_link=is_link),
                 "subreddit": self.subreddit.display_name,
             },
-            json=flair_list,
         )
 
     async def delete(self, template_id: str) -> None:
@@ -419,241 +657,3 @@ class SubredditRedditorFlairTemplates(SubredditFlairTemplates):
 
         """
         await self._reorder(flair_list, is_link=False)
-
-
-class SubredditFlair:
-    """Provide a set of functions to interact with a :class:`.Subreddit`'s flair."""
-
-    @cachedproperty
-    def link_templates(
-        self,
-    ) -> SubredditLinkFlairTemplates:
-        """Provide an instance of :class:`.SubredditLinkFlairTemplates`.
-
-        Use this attribute for interacting with a :class:`.Subreddit`'s link flair
-        templates. For example, to list all the link flair templates for a subreddit
-        which you have the ``flair`` moderator permission on try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            async for template in subreddit.flair.link_templates:
-                print(template)
-
-        """
-        return SubredditLinkFlairTemplates(self.subreddit)
-
-    @cachedproperty
-    def templates(
-        self,
-    ) -> SubredditRedditorFlairTemplates:
-        """Provide an instance of :class:`.SubredditRedditorFlairTemplates`.
-
-        Use this attribute for interacting with a :class:`.Subreddit`'s flair templates.
-        For example, to list all the flair templates for a subreddit which you have the
-        ``flair`` moderator permission on try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            async for template in subreddit.flair.templates:
-                print(template)
-
-        """
-        return SubredditRedditorFlairTemplates(self.subreddit)
-
-    def __call__(
-        self,
-        redditor: asyncpraw.models.Redditor | str | None = None,
-        **generator_kwargs: Any,
-    ) -> AsyncIterator[asyncpraw.models.Redditor]:
-        """Return a :class:`.ListingGenerator` for Redditors and their flairs.
-
-        :param redditor: When provided, yield at most a single :class:`.Redditor`
-            instance (default: ``None``).
-
-        Additional keyword arguments are passed in the initialization of
-        :class:`.ListingGenerator`.
-
-        Usage:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            async for flair in subreddit.flair(limit=None):
-                print(flair)
-
-        """
-        RedditBase._safely_add_arguments(arguments=generator_kwargs, key="params", name=redditor)
-        generator_kwargs.setdefault("limit", None)
-        url = API_PATH["flairlist"].format(subreddit=self.subreddit)
-        return ListingGenerator(self.subreddit._reddit, url, **generator_kwargs)
-
-    def __init__(self, subreddit: asyncpraw.models.Subreddit) -> None:
-        """Initialize a :class:`.SubredditFlair` instance.
-
-        :param subreddit: The subreddit whose flair to work with.
-
-        """
-        self.subreddit = subreddit
-
-    async def configure(
-        self,
-        *,
-        link_position: str = "left",
-        link_self_assign: bool = False,
-        position: str = "right",
-        self_assign: bool = False,
-        **settings: Any,
-    ) -> None:
-        """Update the :class:`.Subreddit`'s flair configuration.
-
-        :param link_position: One of ``"left"``, ``"right"``, or ``False`` to disable
-            (default: ``"left"``).
-        :param link_self_assign: Permit self assignment of link flair (default:
-            ``False``).
-        :param position: One of ``"left"``, ``"right"``, or ``False`` to disable
-            (default: ``"right"``).
-        :param self_assign: Permit self assignment of user flair (default: ``False``).
-
-        .. code-block:: python
-
-            subreddit = reddit.subreddit("test")
-            subreddit.flair.configure(link_position="right", self_assign=True)
-
-        Additional keyword arguments can be provided to handle new settings as Reddit
-        introduces them.
-
-        """
-        data = {
-            "flair_enabled": bool(position),
-            "flair_position": position or "right",
-            "flair_self_assign_enabled": self_assign,
-            "link_flair_position": link_position or "",
-            "link_flair_self_assign_enabled": link_self_assign,
-        }
-        data.update(settings)
-        url = API_PATH["flairconfig"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.post(url, data=data)
-
-    async def delete(self, redditor: asyncpraw.models.Redditor | str) -> None:
-        """Delete flair for a :class:`.Redditor`.
-
-        :param redditor: A redditor name or :class:`.Redditor` instance.
-
-        .. seealso::
-
-            :meth:`~.SubredditFlair.update` to delete the flair of many redditors at
-            once.
-
-        """
-        url = API_PATH["deleteflair"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.post(url, data={"name": str(redditor)})
-
-    async def delete_all(self) -> list[dict[str, str | bool | dict[str, str]]]:
-        """Delete all :class:`.Redditor` flair in the :class:`.Subreddit`.
-
-        :returns: List of dictionaries indicating the success or failure of each delete.
-
-        """
-        all_flairs = [cast("dict[str, str | asyncpraw.models.Redditor]", x)["user"] async for x in self()]
-        return await self.update(iter(all_flairs))
-
-    async def set(
-        self,
-        redditor: asyncpraw.models.Redditor | str,
-        *,
-        css_class: str = "",
-        flair_template_id: str | None = None,
-        text: str = "",
-    ) -> None:
-        """Set flair for a :class:`.Redditor`.
-
-        :param redditor: A redditor name or :class:`.Redditor` instance.
-        :param text: The flair text to associate with the :class:`.Redditor` or
-            :class:`.Submission` (default: ``""``).
-        :param css_class: The css class to associate with the flair html (default:
-            ``""``). Use either this or ``flair_template_id``.
-        :param flair_template_id: The ID of the flair template to be used (default:
-            ``None``). Use either this or ``css_class``.
-
-        This method can only be used by an authenticated user who is a moderator of the
-        associated :class:`.Subreddit`.
-
-        For example:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            await subreddit.flair.set("bboe", text="PRAW author", css_class="mods")
-            template = "6bd28436-1aa7-11e9-9902-0e05ab0fad46"
-            subreddit = await reddit.subreddit("test")
-            await subreddit.flair.set("spez", text="Reddit CEO", flair_template_id=template)
-
-        """
-        if css_class and flair_template_id is not None:
-            msg = "Parameter 'css_class' cannot be used in conjunction with 'flair_template_id'."
-            raise TypeError(msg)
-        data = {"name": str(redditor), "text": text}
-        if flair_template_id is not None:
-            data["flair_template_id"] = flair_template_id
-            url = API_PATH["select_flair"].format(subreddit=self.subreddit)
-        else:
-            data["css_class"] = css_class
-            url = API_PATH["flair"].format(subreddit=self.subreddit)
-        await self.subreddit._reddit.post(url, data=data)
-
-    async def update(
-        self,
-        flair_list: Iterator[str | asyncpraw.models.Redditor | dict[str, str | asyncpraw.models.Redditor]],
-        *,
-        text: str = "",
-        css_class: str = "",
-    ) -> list[dict[str, str | bool | dict[str, str]]]:
-        """Set or clear the flair for many redditors at once.
-
-        :param flair_list: Each item in this list should be either:
-
-            - The name of a redditor.
-            - An instance of :class:`.Redditor`.
-            - A dictionary mapping keys ``"user"``, ``"flair_text"``, and
-              ``"flair_css_class"`` to their respective values. The ``"user"`` key
-              should map to a redditor, as described above. When a dictionary isn't
-              provided, or the dictionary is missing either ``"flair_text"`` or
-              ``"flair_css_class"`` keys, the default values will come from the other
-              arguments.
-        :param css_class: The css class to use when not explicitly provided in
-            ``flair_list`` (default: ``""``).
-        :param text: The flair text to use when not explicitly provided in
-            ``flair_list`` (default: ``""``).
-
-        :returns: List of dictionaries indicating the success or failure of each update.
-
-        For example, to clear the flair text, and set the ``"praw"`` flair css class on
-        a few users try:
-
-        .. code-block:: python
-
-            await subreddit.flair.update(["bboe", "spez", "spladug"], css_class="praw")
-
-        """
-        temp_lines = StringIO()
-        for item in flair_list:
-            if isinstance(item, dict):
-                writer(temp_lines).writerow([
-                    str(item["user"]),
-                    item.get("flair_text", text),
-                    item.get("flair_css_class", css_class),
-                ])
-            else:
-                writer(temp_lines).writerow([str(item), text, css_class])
-
-        lines = temp_lines.getvalue().splitlines()
-        temp_lines.close()
-        response = []
-        url = API_PATH["flaircsv"].format(subreddit=self.subreddit)
-        while lines:
-            data = {"flair_csv": "\n".join(lines[:100])}
-            response.extend(await self.subreddit._reddit.post(url, data=data))
-            lines = lines[100:]
-        return response

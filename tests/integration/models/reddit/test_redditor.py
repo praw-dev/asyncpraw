@@ -48,15 +48,15 @@ class TestRedditor(IntegrationTest):
     async def test_message(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor("subreddit_stats")
-        await redditor.message(subject="Async PRAW test", message="This is a test from Async PRAW")
+        await redditor.message(message="This is a test from Async PRAW", subject="Async PRAW test")
 
     async def test_message_from_subreddit(self, reddit):
         reddit.read_only = False
         redditor = await reddit.redditor("subreddit_stats")
         await redditor.message(
-            subject="Async PRAW test",
-            message="This is a test from Async PRAW",
             from_subreddit=pytest.placeholders.test_subreddit,
+            message="This is a test from Async PRAW",
+            subject="Async PRAW test",
         )
 
     async def test_moderated(self, reddit):

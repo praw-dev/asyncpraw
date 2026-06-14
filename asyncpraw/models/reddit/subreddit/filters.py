@@ -79,8 +79,8 @@ class SubredditFilters:
         user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
             special=self.subreddit,
-            user=user,
             subreddit=subreddit,
+            user=user,
         )
         await self.subreddit._reddit.put(url, data={"model": dumps({"name": str(subreddit)})})
 
@@ -95,7 +95,7 @@ class SubredditFilters:
         user = await self.subreddit._reddit.user.me()
         url = API_PATH["subreddit_filter"].format(
             special=self.subreddit,
-            user=user,
             subreddit=subreddit,
+            user=user,
         )
         await self.subreddit._reddit.delete(url)

@@ -111,10 +111,10 @@ class TestSubredditFlair(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         await subreddit.flair.configure(
-            position=None,
-            self_assign=True,
             link_position=None,
             link_self_assign=True,
+            position=None,
+            self_assign=True,
         )
 
     async def test_configure__defaults(self, reddit):
@@ -171,7 +171,7 @@ class TestSubredditFlair(IntegrationTest):
             redditor,
             "spez",
             {"user": "bsimpson"},
-            {"user": "spladug", "flair_text": "", "flair_css_class": ""},
+            {"flair_css_class": "", "flair_text": "", "user": "spladug"},
         ]
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         response = await subreddit.flair.update(flair_list, css_class="async default")
@@ -187,7 +187,7 @@ class TestSubredditFlair(IntegrationTest):
         reddit.read_only = False
         flair_list = [
             {"user": "bsimpson"},
-            {"user": "spladug", "flair_text": "a,b"},
+            {"flair_text": "a,b", "user": "spladug"},
         ]
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         response = await subreddit.flair.update(flair_list, css_class="async default")
@@ -708,9 +708,9 @@ class TestSubredditModmail(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         redditor = await reddit.redditor(pytest.placeholders.username)
         conversation = await subreddit.modmail.create(
-            subject="Subject",
             body="Body",
             recipient=redditor,
+            subject="Subject",
         )
         assert isinstance(conversation, ModmailConversation)
 
@@ -909,7 +909,7 @@ class TestSubredditStreams(IntegrationTest):
 
     async def test_comments__with_skip_existing(self, reddit):
         subreddit = await reddit.subreddit("askreddit")
-        generator = subreddit.stream.comments(skip_existing=True, pause_after=-1)
+        generator = subreddit.stream.comments(pause_after=-1, skip_existing=True)
         comment = await self.async_next(generator)
         assert comment is None
         comment = await self.async_next(generator)
@@ -1144,7 +1144,7 @@ class TestSubredditWiki(IntegrationTest):
     async def test_create(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        wikipage = await subreddit.wiki.create(name="Async PRAW New Page", content="This is the new wiki page")
+        wikipage = await subreddit.wiki.create(content="This is the new wiki page", name="Async PRAW New Page")
         await wikipage.load()
         assert wikipage.name == "async_praw_new_page"
         assert wikipage.content_md == "This is the new wiki page"
@@ -1191,13 +1191,13 @@ class TestSubreddit(IntegrationTest):
         new_name = pytest.placeholders.test_subreddit
         subreddit = await reddit.subreddit.create(
             new_name,
+            comment_score_hide_mins=0,
             link_type="any",
             subreddit_type="public",
             title="Sub",
-            wikimode="disabled",
             wiki_edit_age=0,
             wiki_edit_karma=0,
-            comment_score_hide_mins=0,
+            wikimode="disabled",
         )
         assert subreddit.display_name == new_name
         assert subreddit.submission_type == "any"
@@ -1233,19 +1233,19 @@ class TestSubreddit(IntegrationTest):
             # Not supplying required field wiki_edit_age.
             await reddit.subreddit.create(
                 "PRAW_iavynavff3",
+                comment_score_hide_mins=0,
                 link_type="any",
                 subreddit_type="public",
                 title=None,
-                wikimode="disabled",
                 wiki_edit_karma=0,
-                comment_score_hide_mins=0,
+                wikimode="disabled",
             )
         assert excinfo.value.items[0].error_type == "BAD_NUMBER"
 
     async def test_message(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        await subreddit.message(subject="Test from Async PRAW", message="Test content")
+        await subreddit.message(message="Test content", subject="Test from Async PRAW")
 
     async def test_post_requirements(self, reddit):
         reddit.read_only = False
@@ -1275,7 +1275,7 @@ class TestSubreddit(IntegrationTest):
 
     async def test_search(self, reddit):
         subreddit = await reddit.subreddit("all")
-        async for item in subreddit.search("praw oauth search", syntax="cloudsearch", limit=None):
+        async for item in subreddit.search("praw oauth search", limit=None, syntax="cloudsearch"):
             assert isinstance(item, Submission)
 
     async def test_sticky(self, reddit):
@@ -1372,7 +1372,7 @@ class TestSubreddit(IntegrationTest):
         selftext = "Testing **Async PRAW** link submission *with markdown selftext*."
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        submission = await subreddit.submit("Test Title", url=url, selftext=selftext)
+        submission = await subreddit.submit("Test Title", selftext=selftext, url=url)
         await submission.load()
         assert submission.selftext == selftext
         assert submission.author == pytest.placeholders.username
@@ -1391,14 +1391,14 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
             {"media": PostMedia(image_path("test.png"))},
-            {"media": PostMedia(image_path("test.jpg")), "caption": "test.jpg"},
+            {"caption": "test.jpg", "media": PostMedia(image_path("test.jpg"))},
             {
                 "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "media": PostMedia(image_path("test.png")),
                 "caption": "test.png",
+                "media": PostMedia(image_path("test.png")),
                 "outbound_url": "https://example.com",
             },
         ]
@@ -1421,14 +1421,14 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
             {"media": PostMedia(image_path("test.png"))},
-            {"media": PostMedia(image_path("test.jpg")), "caption": "test.jpg"},
+            {"caption": "test.jpg", "media": PostMedia(image_path("test.jpg"))},
             {
                 "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "media": PostMedia(image_path("test.png")),
                 "caption": "test.png",
+                "media": PostMedia(image_path("test.png")),
                 "outbound_url": "https://example.com",
             },
         ]
@@ -1444,14 +1444,14 @@ class TestSubreddit(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         images = [
             {"media": PostMedia(image_path("test.png"))},
-            {"media": PostMedia(image_path("test.jpg")), "caption": "test.jpg"},
+            {"caption": "test.jpg", "media": PostMedia(image_path("test.jpg"))},
             {
                 "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "media": PostMedia(image_path("test.png")),
                 "caption": "test.png",
+                "media": PostMedia(image_path("test.png")),
                 "outbound_url": "https://example.com",
             },
         ]
@@ -1474,16 +1474,16 @@ class TestSubreddit(IntegrationTest):
         images = [
             {"media": PostMedia(image_path("test.png"))},
             {
-                "media": PostMedia(image_path("test.jpg")),
                 "caption": "A JPG image.",
+                "media": PostMedia(image_path("test.jpg")),
             },
             {
                 "media": PostMedia(image_path("test.gif")),
                 "outbound_url": "https://example.com",
             },
             {
-                "media": PostMedia(image_path("test.png")),
                 "caption": "A PNG image.",
+                "media": PostMedia(image_path("test.png")),
                 "outbound_url": "https://example.com",
             },
         ]
