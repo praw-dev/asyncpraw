@@ -8,6 +8,10 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
  Unreleased
 ************
 
+********************
+ 8.0.0 (2026/06/14)
+********************
+
 **Added**
 
 - :class:`.Announcement` and :class:`.AnnouncementHelper`, exposed as
