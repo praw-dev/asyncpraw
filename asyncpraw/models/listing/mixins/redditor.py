@@ -43,6 +43,13 @@ class RedditorListingMixin(BaseListingMixin):
         The overview combines a Redditor's comments and submissions, mirroring the user
         overview page on Reddit.
 
+        .. note::
+
+            This is the same listing produced by calling a sort method directly on the
+            :class:`.Redditor` instance, so ``redditor.overview.new()`` and
+            ``redditor.new()`` yield the same items. Use :attr:`.comments` or
+            :attr:`.submissions` to restrict the listing to a single type.
+
         For example, to output the first line of all top items by u/spez try:
 
         .. code-block:: python
