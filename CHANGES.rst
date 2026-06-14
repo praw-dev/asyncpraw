@@ -41,7 +41,11 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
   The warning can be silenced by setting the ``PRAW_ALLOW_ENDPOINT_OVERRIDE``
   environment variable.
 - :meth:`.Redditor.overview` to iterate over a Redditor's combined comments and
-  submissions, mirroring the user overview page on Reddit.
+  submissions, mirroring the user overview page on Reddit. It returns the same listing
+  as calling a sort method directly on a :class:`.Redditor`, so
+  ``redditor.overview.new()`` and ``redditor.new()`` yield the same items; use
+  ``redditor.comments`` or ``redditor.submissions`` to restrict the listing to a single
+  type.
 - Add support for Python 3.13.
 - Add support for Python 3.14.
 - Add support for optional Markdown-formatted ``selftext`` when submitting link, image,
