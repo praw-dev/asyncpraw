@@ -114,8 +114,8 @@ class LiveContributorRelationship:
         url = API_PATH["live_invite"].format(id=self.thread.id)
         data = {
             "name": str(redditor),
-            "type": "liveupdate_contributor_invite",
             "permissions": self._handle_permissions(permissions),
+            "type": "liveupdate_contributor_invite",
         }
         await self.thread._reddit.post(url, data=data)
 
@@ -218,8 +218,8 @@ class LiveContributorRelationship:
         url = API_PATH["live_update_perms"].format(id=self.thread.id)
         data = {
             "name": str(redditor),
-            "type": "liveupdate_contributor",
             "permissions": self._handle_permissions(permissions),
+            "type": "liveupdate_contributor",
         }
         await self.thread._reddit.post(url, data=data)
 
@@ -261,237 +261,10 @@ class LiveContributorRelationship:
         url = API_PATH["live_update_perms"].format(id=self.thread.id)
         data = {
             "name": str(redditor),
-            "type": "liveupdate_contributor_invite",
             "permissions": self._handle_permissions(permissions),
+            "type": "liveupdate_contributor_invite",
         }
         await self.thread._reddit.post(url, data=data)
-
-
-class LiveThreadContribution:
-    """Provides a set of contribution functions to a :class:`.LiveThread`."""
-
-    def __init__(self, thread: asyncpraw.models.LiveThread) -> None:
-        """Initialize a :class:`.LiveThreadContribution` instance.
-
-        :param thread: An instance of :class:`.LiveThread`.
-
-        This instance can be retrieved through ``thread.contrib`` where thread is a
-        :class:`.LiveThread` instance. E.g.,
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            await thread.contrib.add("### update")
-
-        """
-        self.thread = thread
-
-    async def add(self, body: str) -> None:
-        """Add an update to the live thread.
-
-        :param body: The Markdown formatted content for the update.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ydwwxneu7vsa")
-            await thread.contrib.add("test `LiveThreadContribution.add()`")
-
-        """
-        url = API_PATH["live_add_update"].format(id=self.thread.id)
-        await self.thread._reddit.post(url, data={"body": body})
-
-    async def close(self) -> None:
-        """Close the live thread permanently (cannot be undone).
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            await thread.contrib.close()
-
-        """
-        url = API_PATH["live_close"].format(id=self.thread.id)
-        await self.thread._reddit.post(url)
-
-    async def update(
-        self,
-        *,
-        description: str | None = None,
-        nsfw: bool | None = None,
-        resources: str | None = None,
-        title: str | None = None,
-        **other_settings: str | None,
-    ) -> None:
-        """Update settings of the live thread.
-
-        :param description: The live thread's description (default: ``None``).
-        :param nsfw: Indicate whether this thread is not safe for work (default:
-            ``None``).
-        :param resources: Markdown formatted information that is useful for the live
-            thread (default: ``None``).
-        :param title: The title of the live thread (default: ``None``).
-
-        Does nothing if no arguments are provided.
-
-        Each setting will maintain its current value if ``None`` is specified.
-
-        Additional keyword arguments can be provided to handle new settings as Reddit
-        introduces them.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("xyu8kmjvfrww")
-
-            # update 'title' and 'nsfw'
-            updated_thread = await thread.contrib.update(title=new_title, nsfw=True)
-
-        If Reddit introduces new settings, you must specify ``None`` for the setting you
-        want to maintain:
-
-        .. code-block:: python
-
-            # update 'nsfw' and maintain new setting 'foo'
-            await thread.contrib.update(nsfw=True, foo=None)
-
-        """
-        settings = {
-            "title": title,
-            "description": description,
-            "nsfw": nsfw,
-            "resources": resources,
-        }
-        settings.update(other_settings)
-        if all(value is None for value in settings.values()):
-            return
-        # get settings from Reddit (not cache)
-        thread = LiveThread(self.thread._reddit, self.thread.id)
-        await thread._fetch()
-        data = {key: getattr(thread, key) if value is None else value for key, value in settings.items()}
-
-        url = API_PATH["live_update_thread"].format(id=self.thread.id)
-        await self.thread._reddit.post(url, data=data.copy())
-        self.thread._reset_attributes(*data.keys())
-
-
-class LiveThreadStream:
-    """Provides a :class:`.LiveThread` stream.
-
-    Usually used via:
-
-    .. code-block:: python
-
-        for live_update in reddit.live("ta535s1hq2je").stream.updates():
-            print(live_update.body)
-
-    """
-
-    def __init__(self, live_thread: asyncpraw.models.LiveThread) -> None:
-        """Initialize a :class:`.LiveThreadStream` instance.
-
-        :param live_thread: The live thread associated with the stream.
-
-        """
-        self.live_thread = live_thread
-
-    def updates(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
-        """Yield new updates to the live thread as they become available.
-
-        :param skip_existing: Set to ``True`` to only fetch items created after the
-            stream (default: ``False``).
-
-        As with :meth:`.LiveThread.updates()`, updates are yielded as
-        :class:`.LiveUpdate`.
-
-        Updates are yielded oldest first. Up to 100 historical updates will initially be
-        returned.
-
-        Keyword arguments are passed to :func:`.stream_generator`.
-
-        For example, to retrieve all new updates made to the ``"ta535s1hq2je"`` live
-        thread, try:
-
-        .. code-block:: python
-
-            live_thread = await reddit.live("ta535s1hq2je")
-            async for live_update in live.stream.updates():
-                print(live_update.body)
-
-        To only retrieve new updates starting from when the stream is created, pass
-        ``skip_existing=True``:
-
-        .. code-block:: python
-
-            live_thread = await reddit.live("ta535s1hq2je")
-            async for live_update in live_thread.stream.updates(skip_existing=True):
-                print(live_update.author)
-
-        """
-        return stream_generator(self.live_thread.updates, **stream_options)
-
-
-class LiveUpdateContribution:
-    """Provides a set of contribution functions to :class:`.LiveUpdate`."""
-
-    def __init__(self, update: asyncpraw.models.LiveUpdate) -> None:
-        """Initialize a :class:`.LiveUpdateContribution` instance.
-
-        :param update: An instance of :class:`.LiveUpdate`.
-
-        This instance can be retrieved through ``update.contrib`` where update is a
-        :class:`.LiveUpdate` instance. E.g.,
-
-        .. code-block:: python
-
-            thread = await reddit.live("ukaeu1ik4sw5")
-            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
-            update.contrib  # LiveUpdateContribution instance
-            await update.contrib.remove()
-
-        """
-        self.update = update
-
-    async def remove(self) -> None:
-        """Remove a live update.
-
-        Usage:
-
-        .. code-block:: python
-
-            thread = await reddit.live("ydwwxneu7vsa")
-            update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
-            await update.contrib.remove()
-
-        """
-        url = API_PATH["live_remove_update"].format(id=self.update.thread.id)
-        data = {"id": self.update.fullname}
-        await self.update.thread._reddit.post(url, data=data)
-
-    async def strike(self) -> None:
-        """Strike a content of a live update.
-
-        .. code-block:: python
-
-            thread = await reddit.live("xyu8kmjvfrww")
-            update = await thread.get_update("cb5fe532-dbee-11e6-9a91-0e6d74fabcc4")
-            await update.contrib.strike()
-
-        To check whether the update is stricken or not, use ``update.stricken``
-        attribute.
-
-        .. note::
-
-            Accessing lazy attributes on updates (includes ``update.stricken``) may
-            raise :py:class:`AttributeError`. See :class:`.LiveUpdate` for details.
-
-        """
-        url = API_PATH["live_strike"].format(id=self.update.thread.id)
-        data = {"id": self.update.fullname}
-        await self.update.thread._reddit.post(url, data=data)
 
 
 class LiveThread(CreatedMixin, RedditBase):
@@ -721,6 +494,173 @@ class LiveThread(CreatedMixin, RedditBase):
             yield update
 
 
+class LiveThreadContribution:
+    """Provides a set of contribution functions to a :class:`.LiveThread`."""
+
+    def __init__(self, thread: asyncpraw.models.LiveThread) -> None:
+        """Initialize a :class:`.LiveThreadContribution` instance.
+
+        :param thread: An instance of :class:`.LiveThread`.
+
+        This instance can be retrieved through ``thread.contrib`` where thread is a
+        :class:`.LiveThread` instance. E.g.,
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contrib.add("### update")
+
+        """
+        self.thread = thread
+
+    async def add(self, body: str) -> None:
+        """Add an update to the live thread.
+
+        :param body: The Markdown formatted content for the update.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ydwwxneu7vsa")
+            await thread.contrib.add("test `LiveThreadContribution.add()`")
+
+        """
+        url = API_PATH["live_add_update"].format(id=self.thread.id)
+        await self.thread._reddit.post(url, data={"body": body})
+
+    async def close(self) -> None:
+        """Close the live thread permanently (cannot be undone).
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            await thread.contrib.close()
+
+        """
+        url = API_PATH["live_close"].format(id=self.thread.id)
+        await self.thread._reddit.post(url)
+
+    async def update(
+        self,
+        *,
+        description: str | None = None,
+        nsfw: bool | None = None,
+        resources: str | None = None,
+        title: str | None = None,
+        **other_settings: str | None,
+    ) -> None:
+        """Update settings of the live thread.
+
+        :param description: The live thread's description (default: ``None``).
+        :param nsfw: Indicate whether this thread is not safe for work (default:
+            ``None``).
+        :param resources: Markdown formatted information that is useful for the live
+            thread (default: ``None``).
+        :param title: The title of the live thread (default: ``None``).
+
+        Does nothing if no arguments are provided.
+
+        Each setting will maintain its current value if ``None`` is specified.
+
+        Additional keyword arguments can be provided to handle new settings as Reddit
+        introduces them.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("xyu8kmjvfrww")
+
+            # update 'title' and 'nsfw'
+            updated_thread = await thread.contrib.update(title=new_title, nsfw=True)
+
+        If Reddit introduces new settings, you must specify ``None`` for the setting you
+        want to maintain:
+
+        .. code-block:: python
+
+            # update 'nsfw' and maintain new setting 'foo'
+            await thread.contrib.update(nsfw=True, foo=None)
+
+        """
+        settings = {
+            "description": description,
+            "nsfw": nsfw,
+            "resources": resources,
+            "title": title,
+        }
+        settings.update(other_settings)
+        if all(value is None for value in settings.values()):
+            return
+        # get settings from Reddit (not cache)
+        thread = LiveThread(self.thread._reddit, self.thread.id)
+        await thread._fetch()
+        data = {key: getattr(thread, key) if value is None else value for key, value in settings.items()}
+
+        url = API_PATH["live_update_thread"].format(id=self.thread.id)
+        await self.thread._reddit.post(url, data=data.copy())
+        self.thread._reset_attributes(*data.keys())
+
+
+class LiveThreadStream:
+    """Provides a :class:`.LiveThread` stream.
+
+    Usually used via:
+
+    .. code-block:: python
+
+        for live_update in reddit.live("ta535s1hq2je").stream.updates():
+            print(live_update.body)
+
+    """
+
+    def __init__(self, live_thread: asyncpraw.models.LiveThread) -> None:
+        """Initialize a :class:`.LiveThreadStream` instance.
+
+        :param live_thread: The live thread associated with the stream.
+
+        """
+        self.live_thread = live_thread
+
+    def updates(self, **stream_options: Any) -> AsyncIterator[asyncpraw.models.LiveUpdate]:
+        """Yield new updates to the live thread as they become available.
+
+        :param skip_existing: Set to ``True`` to only fetch items created after the
+            stream (default: ``False``).
+
+        As with :meth:`.LiveThread.updates()`, updates are yielded as
+        :class:`.LiveUpdate`.
+
+        Updates are yielded oldest first. Up to 100 historical updates will initially be
+        returned.
+
+        Keyword arguments are passed to :func:`.stream_generator`.
+
+        For example, to retrieve all new updates made to the ``"ta535s1hq2je"`` live
+        thread, try:
+
+        .. code-block:: python
+
+            live_thread = await reddit.live("ta535s1hq2je")
+            async for live_update in live.stream.updates():
+                print(live_update.body)
+
+        To only retrieve new updates starting from when the stream is created, pass
+        ``skip_existing=True``:
+
+        .. code-block:: python
+
+            live_thread = await reddit.live("ta535s1hq2je")
+            async for live_update in live_thread.stream.updates(skip_existing=True):
+                print(live_update.author)
+
+        """
+        return stream_generator(self.live_thread.updates, **stream_options)
+
+
 class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
     """An individual :class:`.LiveUpdate` object.
 
@@ -823,3 +763,63 @@ class LiveUpdate(FullnameMixin, CreatedMixin, RedditBase):
         other = response[0]
         self.__dict__.update(other.__dict__)
         await super()._fetch()
+
+
+class LiveUpdateContribution:
+    """Provides a set of contribution functions to :class:`.LiveUpdate`."""
+
+    def __init__(self, update: asyncpraw.models.LiveUpdate) -> None:
+        """Initialize a :class:`.LiveUpdateContribution` instance.
+
+        :param update: An instance of :class:`.LiveUpdate`.
+
+        This instance can be retrieved through ``update.contrib`` where update is a
+        :class:`.LiveUpdate` instance. E.g.,
+
+        .. code-block:: python
+
+            thread = await reddit.live("ukaeu1ik4sw5")
+            update = await thread.get_update("7827987a-c998-11e4-a0b9-22000b6a88d2")
+            update.contrib  # LiveUpdateContribution instance
+            await update.contrib.remove()
+
+        """
+        self.update = update
+
+    async def remove(self) -> None:
+        """Remove a live update.
+
+        Usage:
+
+        .. code-block:: python
+
+            thread = await reddit.live("ydwwxneu7vsa")
+            update = await thread.get_update("6854605a-efec-11e6-b0c7-0eafac4ff094")
+            await update.contrib.remove()
+
+        """
+        url = API_PATH["live_remove_update"].format(id=self.update.thread.id)
+        data = {"id": self.update.fullname}
+        await self.update.thread._reddit.post(url, data=data)
+
+    async def strike(self) -> None:
+        """Strike a content of a live update.
+
+        .. code-block:: python
+
+            thread = await reddit.live("xyu8kmjvfrww")
+            update = await thread.get_update("cb5fe532-dbee-11e6-9a91-0e6d74fabcc4")
+            await update.contrib.strike()
+
+        To check whether the update is stricken or not, use ``update.stricken``
+        attribute.
+
+        .. note::
+
+            Accessing lazy attributes on updates (includes ``update.stricken``) may
+            raise :py:class:`AttributeError`. See :class:`.LiveUpdate` for details.
+
+        """
+        url = API_PATH["live_strike"].format(id=self.update.thread.id)
+        data = {"id": self.update.fullname}
+        await self.update.thread._reddit.post(url, data=data)

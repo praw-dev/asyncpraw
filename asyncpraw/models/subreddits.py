@@ -105,8 +105,8 @@ class Subreddits(AsyncPRAWBase):
         self,
         query: str,
         *,
-        include_nsfw: bool = True,
         exact: bool = False,
+        include_nsfw: bool = True,
     ) -> AsyncIterator[asyncpraw.models.Subreddit]:
         r"""Return list of :class:`.Subreddit`\ s whose names begin with ``query``.
 
@@ -117,7 +117,7 @@ class Subreddits(AsyncPRAWBase):
         """
         results = await self._reddit.post(
             API_PATH["subreddits_name_search"],
-            data={"include_over_18": include_nsfw, "exact": exact, "query": query},
+            data={"exact": exact, "include_over_18": include_nsfw, "query": query},
         )
         for result in results["names"]:
             yield await self._reddit.subreddit(result)

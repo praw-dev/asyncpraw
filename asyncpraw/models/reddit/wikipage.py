@@ -16,149 +16,6 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
-class WikiPageModeration:
-    """Provides a set of moderation functions for a :class:`.WikiPage`.
-
-    For example, to add u/spez as an editor on the wikipage ``"praw_test"`` try:
-
-    .. code-block:: python
-
-        subreddit = await reddit.subreddit("test")
-        page = await subreddit.wiki.get_page("praw_test")
-        await page.mod.add("spez")
-
-    """
-
-    def __init__(self, wikipage: WikiPage) -> None:
-        """Initialize a :class:`.WikiPageModeration` instance.
-
-        :param wikipage: The wikipage to moderate.
-
-        """
-        self.wikipage = wikipage
-
-    async def add(self, redditor: asyncpraw.models.Redditor) -> None:
-        """Add an editor to this :class:`.WikiPage`.
-
-        :param redditor: A redditor name or :class:`.Redditor` instance.
-
-        To add u/spez as an editor on the wikipage ``"praw_test"`` try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test", fetch=False)
-            await page.mod.add("spez")
-
-        """
-        data = {"page": self.wikipage.name, "username": str(redditor)}
-        url = API_PATH["wiki_page_editor"].format(subreddit=self.wikipage.subreddit, method="add")
-        await self.wikipage._reddit.post(url, data=data)
-
-    async def remove(self, redditor: asyncpraw.models.Redditor) -> None:
-        """Remove an editor from this :class:`.WikiPage`.
-
-        :param redditor: A redditor name or :class:`.Redditor` instance.
-
-        To remove u/spez as an editor on the wikipage ``"praw_test"`` try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test", fetch=False)
-            await page.mod.remove("spez")
-
-        """
-        data = {"page": self.wikipage.name, "username": str(redditor)}
-        url = API_PATH["wiki_page_editor"].format(subreddit=self.wikipage.subreddit, method="del")
-        await self.wikipage._reddit.post(url, data=data)
-
-    async def revert(self) -> None:
-        """Revert a wikipage back to a specific revision.
-
-        To revert the page ``"praw_test"`` in r/test to revision ``"1234abc"``, try
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            wikipage = await subreddit.wiki.get_page("praw_test")
-            revision = await wikipage.revision("1234abc")
-            await revision.mod.revert()
-
-        .. note::
-
-            When you attempt to revert the page ``config/stylesheet``, Reddit checks to
-            see if the revision being reverted to passes the CSS filter. If the check
-            fails, then the revision attempt will also fail, and a
-            ``asyncprawcore.Forbidden`` exception will be raised. For example, you can't
-            revert to a revision that contains a link to ``url(%%PRAW%%)`` if there is
-            no image named ``PRAW`` on the current stylesheet.
-
-            Here is an example of how to look for this type of error:
-
-            .. code-block:: python
-
-                from asyncprawcore.exceptions import Forbidden
-
-                try:
-                    subreddit = await reddit.subreddit("test")
-                    wikipage = await subreddit.wiki.get_page("config/stylesheet")
-                    revision = await wikipage.revision("1234abc")
-                    await revision.mod.revert()
-                except Forbidden as exception:
-                    try:
-                        await exception.response.json()
-                    except ValueError:
-                        exception.response.text
-
-            If the error occurs, the output will look something like
-
-            .. code-block:: python
-
-                {"reason": "INVALID_CSS", "message": "Forbidden", "explanation": "%(css_error)s"}
-
-        """
-        await self.wikipage._reddit.post(
-            API_PATH["wiki_revert"].format(subreddit=self.wikipage.subreddit),
-            data={
-                "page": self.wikipage.name,
-                "revision": self.wikipage._revision,
-            },
-        )
-
-    async def settings(self) -> dict[str, Any]:
-        """Return the settings for this :class:`.WikiPage`."""
-        url = API_PATH["wiki_page_settings"].format(subreddit=self.wikipage.subreddit, page=self.wikipage.name)
-        response = await self.wikipage._reddit.get(url)
-        return response["data"]
-
-    async def update(self, *, listed: bool, permlevel: int, **other_settings: Any) -> dict[str, Any]:
-        """Update the settings for this :class:`.WikiPage`.
-
-        :param listed: Show this page on page list.
-        :param permlevel: Who can edit this page? ``0`` use subreddit wiki permissions,
-            ``1`` only approved wiki contributors for this page may edit (see
-            :meth:`.WikiPageModeration.add`), ``2`` only mods may edit and view.
-        :param other_settings: Additional keyword arguments to pass.
-
-        :returns: The updated WikiPage settings.
-
-        To set the wikipage ``"praw_test"`` in r/test to mod only and disable it from
-        showing in the page list, try:
-
-        .. code-block:: python
-
-            subreddit = await reddit.subreddit("test")
-            page = await subreddit.wiki.get_page("praw_test", fetch=False)
-            await page.mod.update(listed=False, permlevel=2)
-
-        """
-        other_settings.update({"listed": listed, "permlevel": permlevel})
-        url = API_PATH["wiki_page_settings"].format(subreddit=self.wikipage.subreddit, page=self.wikipage.name)
-        response = await self.wikipage._reddit.post(url, data=other_settings)
-        return response["data"]
-
-
 class WikiPage(RedditBase):
     """An individual :class:`.WikiPage` object.
 
@@ -249,7 +106,7 @@ class WikiPage(RedditBase):
     def _fetch_info(self) -> tuple[str, dict[str, str | asyncpraw.models.Subreddit], dict[str, str] | None]:
         return (
             "wiki_page",
-            {"subreddit": self.subreddit, "page": self.name},
+            {"page": self.name, "subreddit": self.subreddit},
             {"v": self._revision} if self._revision else None,
         )
 
@@ -273,7 +130,7 @@ class WikiPage(RedditBase):
         """
         return ListingGenerator(
             self._reddit,
-            API_PATH["wiki_discussions"].format(subreddit=self.subreddit, page=self.name),
+            API_PATH["wiki_discussions"].format(page=self.name, subreddit=self.subreddit),
             **generator_kwargs,
         )
 
@@ -340,5 +197,148 @@ class WikiPage(RedditBase):
                 print(item["page"])
 
         """
-        url = API_PATH["wiki_page_revisions"].format(subreddit=self.subreddit, page=self.name)
+        url = API_PATH["wiki_page_revisions"].format(page=self.name, subreddit=self.subreddit)
         return self._revision_generator(generator_kwargs=generator_kwargs, subreddit=self.subreddit, url=url)
+
+
+class WikiPageModeration:
+    """Provides a set of moderation functions for a :class:`.WikiPage`.
+
+    For example, to add u/spez as an editor on the wikipage ``"praw_test"`` try:
+
+    .. code-block:: python
+
+        subreddit = await reddit.subreddit("test")
+        page = await subreddit.wiki.get_page("praw_test")
+        await page.mod.add("spez")
+
+    """
+
+    def __init__(self, wikipage: WikiPage) -> None:
+        """Initialize a :class:`.WikiPageModeration` instance.
+
+        :param wikipage: The wikipage to moderate.
+
+        """
+        self.wikipage = wikipage
+
+    async def add(self, redditor: asyncpraw.models.Redditor) -> None:
+        """Add an editor to this :class:`.WikiPage`.
+
+        :param redditor: A redditor name or :class:`.Redditor` instance.
+
+        To add u/spez as an editor on the wikipage ``"praw_test"`` try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            page = await subreddit.wiki.get_page("praw_test", fetch=False)
+            await page.mod.add("spez")
+
+        """
+        data = {"page": self.wikipage.name, "username": str(redditor)}
+        url = API_PATH["wiki_page_editor"].format(method="add", subreddit=self.wikipage.subreddit)
+        await self.wikipage._reddit.post(url, data=data)
+
+    async def remove(self, redditor: asyncpraw.models.Redditor) -> None:
+        """Remove an editor from this :class:`.WikiPage`.
+
+        :param redditor: A redditor name or :class:`.Redditor` instance.
+
+        To remove u/spez as an editor on the wikipage ``"praw_test"`` try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            page = await subreddit.wiki.get_page("praw_test", fetch=False)
+            await page.mod.remove("spez")
+
+        """
+        data = {"page": self.wikipage.name, "username": str(redditor)}
+        url = API_PATH["wiki_page_editor"].format(method="del", subreddit=self.wikipage.subreddit)
+        await self.wikipage._reddit.post(url, data=data)
+
+    async def revert(self) -> None:
+        """Revert a wikipage back to a specific revision.
+
+        To revert the page ``"praw_test"`` in r/test to revision ``"1234abc"``, try
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            wikipage = await subreddit.wiki.get_page("praw_test")
+            revision = await wikipage.revision("1234abc")
+            await revision.mod.revert()
+
+        .. note::
+
+            When you attempt to revert the page ``config/stylesheet``, Reddit checks to
+            see if the revision being reverted to passes the CSS filter. If the check
+            fails, then the revision attempt will also fail, and a
+            ``asyncprawcore.Forbidden`` exception will be raised. For example, you can't
+            revert to a revision that contains a link to ``url(%%PRAW%%)`` if there is
+            no image named ``PRAW`` on the current stylesheet.
+
+            Here is an example of how to look for this type of error:
+
+            .. code-block:: python
+
+                from asyncprawcore.exceptions import Forbidden
+
+                try:
+                    subreddit = await reddit.subreddit("test")
+                    wikipage = await subreddit.wiki.get_page("config/stylesheet")
+                    revision = await wikipage.revision("1234abc")
+                    await revision.mod.revert()
+                except Forbidden as exception:
+                    try:
+                        await exception.response.json()
+                    except ValueError:
+                        exception.response.text
+
+            If the error occurs, the output will look something like
+
+            .. code-block:: python
+
+                {"reason": "INVALID_CSS", "message": "Forbidden", "explanation": "%(css_error)s"}
+
+        """
+        await self.wikipage._reddit.post(
+            API_PATH["wiki_revert"].format(subreddit=self.wikipage.subreddit),
+            data={
+                "page": self.wikipage.name,
+                "revision": self.wikipage._revision,
+            },
+        )
+
+    async def settings(self) -> dict[str, Any]:
+        """Return the settings for this :class:`.WikiPage`."""
+        url = API_PATH["wiki_page_settings"].format(page=self.wikipage.name, subreddit=self.wikipage.subreddit)
+        response = await self.wikipage._reddit.get(url)
+        return response["data"]
+
+    async def update(self, *, listed: bool, permlevel: int, **other_settings: Any) -> dict[str, Any]:
+        """Update the settings for this :class:`.WikiPage`.
+
+        :param listed: Show this page on page list.
+        :param permlevel: Who can edit this page? ``0`` use subreddit wiki permissions,
+            ``1`` only approved wiki contributors for this page may edit (see
+            :meth:`.WikiPageModeration.add`), ``2`` only mods may edit and view.
+        :param other_settings: Additional keyword arguments to pass.
+
+        :returns: The updated WikiPage settings.
+
+        To set the wikipage ``"praw_test"`` in r/test to mod only and disable it from
+        showing in the page list, try:
+
+        .. code-block:: python
+
+            subreddit = await reddit.subreddit("test")
+            page = await subreddit.wiki.get_page("praw_test", fetch=False)
+            await page.mod.update(listed=False, permlevel=2)
+
+        """
+        other_settings.update({"listed": listed, "permlevel": permlevel})
+        url = API_PATH["wiki_page_settings"].format(page=self.wikipage.name, subreddit=self.wikipage.subreddit)
+        response = await self.wikipage._reddit.post(url, data=other_settings)
+        return response["data"]

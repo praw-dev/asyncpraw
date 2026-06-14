@@ -11,9 +11,9 @@ class TestRule(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         rule = await subreddit.rules.mod.add(
-            short_name="PRAW Test",
-            kind="all",
             description="Test by Async PRAW",
+            kind="all",
+            short_name="PRAW Test",
             violation_reason="PTest",
         )
         assert rule.short_name == "PRAW Test"
@@ -24,7 +24,7 @@ class TestRule(IntegrationTest):
     async def test_add_rule_without_violation_reason(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        rule = await subreddit.rules.mod.add(short_name="PRAW Test 2", kind="comment")
+        rule = await subreddit.rules.mod.add(kind="comment", short_name="PRAW Test 2")
         assert rule.short_name == "PRAW Test 2"
         assert rule.kind == "comment"
         assert rule.description == ""
@@ -154,9 +154,9 @@ class TestRule(IntegrationTest):
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         rule = await subreddit.rules.get_rule("Test Rule")
         rule2 = await rule.mod.update(
-            short_name="PRAW Update",
             description="Updated rule",
             kind="comment",
+            short_name="PRAW Update",
             violation_reason="PUpdate",
         )
         assert rule != rule2

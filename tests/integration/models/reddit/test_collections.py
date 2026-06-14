@@ -87,7 +87,7 @@ class TestCollectionModeration(IntegrationTest):
     async def test_delete(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit, fetch=True)
-        collection = await subreddit.collections.mod.create(title="Title", description="")
+        collection = await subreddit.collections.mod.create(description="", title="Title")
         await collection.mod.delete()
 
     async def test_remove_post(self, reddit):
@@ -219,7 +219,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         description = "The description."
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        collection = await subreddit.collections.mod.create(title=title, description=description)
+        collection = await subreddit.collections.mod.create(description=description, title=title)
         assert collection.title == title
         assert collection.description == description
         assert len(collection) == 0
@@ -230,7 +230,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         layout = ""
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        collection = await subreddit.collections.mod.create(title=title, description=description, display_layout=layout)
+        collection = await subreddit.collections.mod.create(description=description, display_layout=layout, title=title)
         assert collection.title == title
         assert collection.description == description
         assert collection.display_layout is None
@@ -242,7 +242,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         layout = "GALLERY"
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        collection = await subreddit.collections.mod.create(title=title, description=description, display_layout=layout)
+        collection = await subreddit.collections.mod.create(description=description, display_layout=layout, title=title)
         assert collection.title == title
         assert collection.description == description
         assert collection.display_layout == layout
@@ -255,7 +255,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(RedditAPIException):
-            await subreddit.collections.mod.create(title=title, description=description, display_layout=layout)
+            await subreddit.collections.mod.create(description=description, display_layout=layout, title=title)
 
     async def test_create__lowercase_layout(self, reddit):
         title = "The title!"
@@ -264,7 +264,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         with pytest.raises(RedditAPIException):
-            await subreddit.collections.mod.create(title=title, description=description, display_layout=layout)
+            await subreddit.collections.mod.create(description=description, display_layout=layout, title=title)
 
     async def test_create__none_layout(self, reddit):
         title = "The title!"
@@ -272,7 +272,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         layout = None
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        collection = await subreddit.collections.mod.create(title=title, description=description, display_layout=layout)
+        collection = await subreddit.collections.mod.create(description=description, display_layout=layout, title=title)
         assert collection.title == title
         assert collection.description == description
         assert collection.display_layout is None
@@ -284,7 +284,7 @@ class TestSubredditCollectionsModeration(IntegrationTest):
         layout = "TIMELINE"
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
-        collection = await subreddit.collections.mod.create(title=title, description=description, display_layout=layout)
+        collection = await subreddit.collections.mod.create(description=description, display_layout=layout, title=title)
         assert collection.title == title
         assert collection.description == description
         assert collection.display_layout == layout

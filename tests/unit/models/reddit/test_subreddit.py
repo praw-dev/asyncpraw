@@ -81,8 +81,8 @@ class TestSubreddit(UnitTest):
         "asyncpraw.Reddit.post",
         new=AsyncMock(
             return_value={
-                "json": {"data": {"websocket_url": ""}},
                 "args": {"action": "", "fields": []},
+                "json": {"data": {"websocket_url": ""}},
             },
         ),
     )
@@ -158,7 +158,7 @@ class TestSubreddit(UnitTest):
         media = {"gif1": gif, "image1": image, "video1": video}
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit(
-                "Cool title", url="https://praw.readthedocs.org/en/stable/", inline_media=media, selftext=selftext
+                "Cool title", inline_media=media, selftext=selftext, url="https://praw.readthedocs.org/en/stable/"
             )
         assert str(excinfo.value) == message
 
@@ -189,7 +189,7 @@ class TestSubreddit(UnitTest):
         with pytest.raises(TypeError) as excinfo:
             await subreddit.submit(
                 "Cool title",
-                gallery=[{"media": PostMedia(b"", name="test.png"), "caption": caption}],
+                gallery=[{"caption": caption, "media": PostMedia(b"", name="test.png")}],
             )
         assert str(excinfo.value) == message
 

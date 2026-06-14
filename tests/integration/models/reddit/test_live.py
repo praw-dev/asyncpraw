@@ -40,7 +40,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_invite__redditor(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        redditor = Redditor(reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"})
+        redditor = Redditor(reddit, _data={"id": "3ebyblla", "name": pytest.placeholders.username})
         await thread.contributor.invite(redditor)
 
     async def test_leave(self, reddit):
@@ -56,7 +56,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_remove__redditor(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        redditor = Redditor(reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"})
+        redditor = Redditor(reddit, _data={"id": "3ebyblla", "name": pytest.placeholders.username})
         await thread.contributor.remove(redditor)
 
     async def test_remove_invite__fullname(self, reddit):
@@ -67,7 +67,7 @@ class TestLiveContributorRelationship(IntegrationTest):
     async def test_remove_invite__redditor(self, reddit):
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
-        redditor = Redditor(reddit, _data={"name": pytest.placeholders.username, "id": "3ebyblla"})
+        redditor = Redditor(reddit, _data={"id": "3ebyblla", "name": pytest.placeholders.username})
         await thread.contributor.remove_invite(redditor)
 
     async def test_update__empty_list(self, reddit):
@@ -157,10 +157,10 @@ class TestLiveThreadContribution(IntegrationTest):
 
     async def test_update__full_settings(self, reddit):
         new_settings = {
-            "title": "new title 2",
             "description": "## new description 2",
             "nsfw": True,
             "resources": "## new resources 2",
+            "title": "new title 2",
         }
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
@@ -173,9 +173,9 @@ class TestLiveThreadContribution(IntegrationTest):
 
     async def test_update__other_settings(self, reddit):
         new_settings = {
-            "title": "new title",
             "other1": "other 1",
             "other2": "other 2",
+            "title": "new title",
         }
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
@@ -183,12 +183,12 @@ class TestLiveThreadContribution(IntegrationTest):
 
     async def test_update__partial_settings(self, reddit):
         old_settings = {
-            "title": "old title",
             "description": "## old description",
             "nsfw": False,
             "resources": "## old resources",
+            "title": "old title",
         }
-        new_settings = {"title": "new title", "nsfw": True}
+        new_settings = {"nsfw": True, "title": "new title"}
         reddit.read_only = False
         thread = LiveThread(reddit, "1595195m6j9zw")
         await thread.contrib.update(**new_settings)

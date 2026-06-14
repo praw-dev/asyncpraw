@@ -81,8 +81,8 @@ class ModNote(DynamicAttributes, CreatedMixin, AsyncPRAWBase):
 
         """
         params: dict[str, str | int] = {
-            "user": str(self.user),
-            "subreddit": str(self.subreddit),
             "note_id": self.id,
+            "subreddit": str(self.subreddit),
+            "user": str(self.user),
         }
         await self._reddit.delete(API_PATH["mod_notes"], params=params)

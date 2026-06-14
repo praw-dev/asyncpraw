@@ -12,10 +12,6 @@ from asyncpraw.models.reddit.modmail import ModmailObject  # noqa: E402
 from asyncpraw.util.cache import cachedproperty  # noqa: E402
 
 
-def main():
-    return int(not DocumentationChecker.check())
-
-
 class DocumentationChecker:
     """Checks for code block statements and attribute tables in subclasses.
 
@@ -27,12 +23,12 @@ class DocumentationChecker:
     """
 
     BASE_SEARCH_CLASS = RedditBase
+    HAS_ATTRIBUTE_TABLE = re.compile(r"Attribute +Description")
+    HAS_CODE_BLOCK = re.compile(r".. code-block::")
+    METHOD_EXCEPTIONS = {"from_data", "id_from_url", "parse", "sluggify", "gild"}
     exceptions = {
         ModmailObject,  # is never publicly accessed
     }
-    HAS_CODE_BLOCK = re.compile(r".. code-block::")
-    HAS_ATTRIBUTE_TABLE = re.compile(r"Attribute +Description")
-    METHOD_EXCEPTIONS = {"from_data", "id_from_url", "parse", "sluggify", "gild"}
     subclasses = set()
 
     @staticmethod
@@ -70,6 +66,10 @@ class DocumentationChecker:
                         )
                         success = False
         return success
+
+
+def main():
+    return int(not DocumentationChecker.check())
 
 
 if __name__ == "__main__":

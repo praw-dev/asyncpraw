@@ -19,6 +19,29 @@ class CommentForest:
 
     """
 
+    @staticmethod
+    def _gather_more_comments(
+        tree: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments],
+        *,
+        parent_tree: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = None,
+    ) -> list[MoreComments]:
+        """Return a list of :class:`.MoreComments` objects obtained from tree."""
+        more_comments: list[MoreComments] = []
+        queue: list[
+            tuple[asyncpraw.models.Comment | None, asyncpraw.models.Comment | asyncpraw.models.MoreComments]
+        ] = [(None, x) for x in tree]
+        while queue:
+            parent, comment = queue.pop(0)
+            if isinstance(comment, MoreComments):
+                heappush(more_comments, comment)
+                if parent:
+                    comment._remove_from = parent.replies._comments or []
+                else:
+                    comment._remove_from = parent_tree or tree
+            else:
+                queue.extend((comment, item) for item in comment.replies)
+        return more_comments
+
     def __getitem__(self, index: int) -> asyncpraw.models.Comment | asyncpraw.models.MoreComments:
         """Return the comment at position ``index`` in the list.
 
@@ -43,6 +66,22 @@ class CommentForest:
         assert self._comments is not None
         return self._comments[index]
 
+    def __init__(
+        self,
+        submission: asyncpraw.models.Submission,
+        comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = None,
+    ) -> None:
+        """Initialize a :class:`.CommentForest` instance.
+
+        :param submission: An instance of :class:`.Submission` that is the parent of the
+            comments.
+        :param comments: Initialize the forest with a list of comments (default:
+            ``None``).
+
+        """
+        self._comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = comments
+        self._submission = submission
+
     def __len__(self) -> int:
         """Return the number of top-level comments in the forest."""
         return len(self._comments or [])
@@ -60,6 +99,11 @@ class CommentForest:
             )
             parent = self._submission._comments_by_id[comment.parent_id]
             parent.replies._comments.append(comment)
+
+    def _update(self, comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]) -> None:
+        self._comments = comments
+        for comment in comments:
+            comment.submission = self._submission
 
     def list(
         self,
@@ -81,50 +125,6 @@ class CommentForest:
             if not isinstance(comment, MoreComments):
                 queue.extend(comment.replies._comments or [])
         return comments
-
-    @staticmethod
-    def _gather_more_comments(
-        tree: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments],
-        *,
-        parent_tree: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = None,
-    ) -> list[MoreComments]:
-        """Return a list of :class:`.MoreComments` objects obtained from tree."""
-        more_comments: list[MoreComments] = []
-        queue: list[
-            tuple[asyncpraw.models.Comment | None, asyncpraw.models.Comment | asyncpraw.models.MoreComments]
-        ] = [(None, x) for x in tree]
-        while queue:
-            parent, comment = queue.pop(0)
-            if isinstance(comment, MoreComments):
-                heappush(more_comments, comment)
-                if parent:
-                    comment._remove_from = parent.replies._comments or []
-                else:
-                    comment._remove_from = parent_tree or tree
-            else:
-                queue.extend((comment, item) for item in comment.replies)
-        return more_comments
-
-    def __init__(
-        self,
-        submission: asyncpraw.models.Submission,
-        comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = None,
-    ) -> None:
-        """Initialize a :class:`.CommentForest` instance.
-
-        :param submission: An instance of :class:`.Submission` that is the parent of the
-            comments.
-        :param comments: Initialize the forest with a list of comments (default:
-            ``None``).
-
-        """
-        self._comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments] | None = comments
-        self._submission = submission
-
-    def _update(self, comments: list[asyncpraw.models.Comment | asyncpraw.models.MoreComments]) -> None:
-        self._comments = comments
-        for comment in comments:
-            comment.submission = self._submission
 
     async def replace_more(self, *, limit: int | None = 32, threshold: int = 0) -> list[asyncpraw.models.MoreComments]:
         """Update the comment forest by resolving instances of :class:`.MoreComments`.
