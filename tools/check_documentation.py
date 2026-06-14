@@ -12,6 +12,10 @@ from asyncpraw.models.reddit.modmail import ModmailObject  # noqa: E402
 from asyncpraw.util.cache import cachedproperty  # noqa: E402
 
 
+def main():
+    return int(not DocumentationChecker.check())
+
+
 class DocumentationChecker:
     """Checks for code block statements and attribute tables in subclasses.
 
@@ -66,10 +70,6 @@ class DocumentationChecker:
                         )
                         success = False
         return success
-
-
-def main():
-    return int(not DocumentationChecker.check())
 
 
 if __name__ == "__main__":

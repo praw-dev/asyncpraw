@@ -24,6 +24,45 @@ if TYPE_CHECKING:
     import asyncpraw.models
 
 
+class CommentModeration(ThingModerationMixin):
+    """Provide a set of functions pertaining to :class:`.Comment` moderation.
+
+    Example usage:
+
+    .. code-block:: python
+
+        comment = await reddit.comment("dkk4qjd", fetch=False)
+        await comment.mod.approve()
+
+    """
+
+    REMOVAL_MESSAGE_API = "removal_comment_message"
+
+    def __init__(self, comment: asyncpraw.models.Comment) -> None:
+        """Initialize a :class:`.CommentModeration` instance.
+
+        :param comment: The comment to moderate.
+
+        """
+        self.thing = comment
+
+    async def show(self) -> None:
+        """Uncollapse a :class:`.Comment` that has been collapsed by Crowd Control.
+
+        Example usage:
+
+        .. code-block:: python
+
+            # Uncollapse a comment:
+            comment = await reddit.comment("dkk4qjd", fetch=False)
+            await comment.mod.show()
+
+        """
+        url = API_PATH["show_comment"]
+
+        await self.thing._reddit.post(url, data={"id": self.thing.fullname})
+
+
 class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, RedditBase):
     """A class that represents a Reddit comment.
 
@@ -330,42 +369,3 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
         for reply in comment_list:
             reply.submission = self.submission
         return self
-
-
-class CommentModeration(ThingModerationMixin):
-    """Provide a set of functions pertaining to :class:`.Comment` moderation.
-
-    Example usage:
-
-    .. code-block:: python
-
-        comment = await reddit.comment("dkk4qjd", fetch=False)
-        await comment.mod.approve()
-
-    """
-
-    REMOVAL_MESSAGE_API = "removal_comment_message"
-
-    def __init__(self, comment: asyncpraw.models.Comment) -> None:
-        """Initialize a :class:`.CommentModeration` instance.
-
-        :param comment: The comment to moderate.
-
-        """
-        self.thing = comment
-
-    async def show(self) -> None:
-        """Uncollapse a :class:`.Comment` that has been collapsed by Crowd Control.
-
-        Example usage:
-
-        .. code-block:: python
-
-            # Uncollapse a comment:
-            comment = await reddit.comment("dkk4qjd", fetch=False)
-            await comment.mod.show()
-
-        """
-        url = API_PATH["show_comment"]
-
-        await self.thing._reddit.post(url, data={"id": self.thing.fullname})

@@ -459,15 +459,6 @@ class Collection(CreatedMixin, RedditBase):
 
     _created_at_attribute = "created_at_utc"
 
-    @property
-    def updated_datetime(self) -> datetime.datetime:
-        """Return the last update time as a timezone-aware :class:`datetime.datetime`.
-
-        The returned object is localized to the system's timezone.
-
-        """
-        return self._to_local_datetime(self.last_update_utc)
-
     @cachedproperty
     def mod(self) -> CollectionModeration:
         """Get an instance of :class:`.CollectionModeration`.
@@ -488,6 +479,15 @@ class Collection(CreatedMixin, RedditBase):
 
         """
         return CollectionModeration(self._reddit, self.collection_id)
+
+    @property
+    def updated_datetime(self) -> datetime.datetime:
+        """Return the last update time as a timezone-aware :class:`datetime.datetime`.
+
+        The returned object is localized to the system's timezone.
+
+        """
+        return self._to_local_datetime(self.last_update_utc)
 
     def __init__(
         self,

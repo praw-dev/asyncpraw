@@ -107,47 +107,6 @@ class TestConfig:
         assert str(config.password) == "NotSet"
 
 
-class TestConfigInterpolation:
-    def test_basic_interpolation(self):
-        Config.CONFIG = None  # Force config file reload
-        with mock.patch.dict(
-            "os.environ",
-            {
-                "APPDATA": os.path.dirname(__file__),
-                "XDG_CONFIG_HOME": os.path.dirname(__file__),
-            },
-        ):
-            config = Config("INTERPOLATION", config_interpolation="basic")
-            assert config.custom["basic_interpolation"] == config.reddit_url
-            assert config.custom["extended_interpolation"] == "${reddit_url}"
-
-    def test_extended_interpolation(self):
-        Config.CONFIG = None  # Force config file reload
-        with mock.patch.dict(
-            "os.environ",
-            {
-                "APPDATA": os.path.dirname(__file__),
-                "XDG_CONFIG_HOME": os.path.dirname(__file__),
-            },
-        ):
-            config = Config("INTERPOLATION", config_interpolation="extended")
-            assert config.custom["basic_interpolation"] == "%(reddit_url)s"
-            assert config.custom["extended_interpolation"] == config.reddit_url
-
-    def test_no_interpolation(self):
-        Config.CONFIG = None  # Force config file reload
-        with mock.patch.dict(
-            "os.environ",
-            {
-                "APPDATA": os.path.dirname(__file__),
-                "XDG_CONFIG_HOME": os.path.dirname(__file__),
-            },
-        ):
-            config = Config("INTERPOLATION")
-            assert config.custom["basic_interpolation"] == "%(reddit_url)s"
-            assert config.custom["extended_interpolation"] == "${reddit_url}"
-
-
 class TestConfigEndpointOverrideWarning:
     @staticmethod
     def _write_cwd_ini(tmp_path, monkeypatch, contents):
@@ -197,3 +156,44 @@ class TestConfigEndpointOverrideWarning:
         self._write_cwd_ini(tmp_path, monkeypatch, "[DEFAULT]\nreddit_url = https://evil.example\n")
         with pytest.warns(UserWarning, match="reddit_url"):
             Config._warn_on_endpoint_override(None)
+
+
+class TestConfigInterpolation:
+    def test_basic_interpolation(self):
+        Config.CONFIG = None  # Force config file reload
+        with mock.patch.dict(
+            "os.environ",
+            {
+                "APPDATA": os.path.dirname(__file__),
+                "XDG_CONFIG_HOME": os.path.dirname(__file__),
+            },
+        ):
+            config = Config("INTERPOLATION", config_interpolation="basic")
+            assert config.custom["basic_interpolation"] == config.reddit_url
+            assert config.custom["extended_interpolation"] == "${reddit_url}"
+
+    def test_extended_interpolation(self):
+        Config.CONFIG = None  # Force config file reload
+        with mock.patch.dict(
+            "os.environ",
+            {
+                "APPDATA": os.path.dirname(__file__),
+                "XDG_CONFIG_HOME": os.path.dirname(__file__),
+            },
+        ):
+            config = Config("INTERPOLATION", config_interpolation="extended")
+            assert config.custom["basic_interpolation"] == "%(reddit_url)s"
+            assert config.custom["extended_interpolation"] == config.reddit_url
+
+    def test_no_interpolation(self):
+        Config.CONFIG = None  # Force config file reload
+        with mock.patch.dict(
+            "os.environ",
+            {
+                "APPDATA": os.path.dirname(__file__),
+                "XDG_CONFIG_HOME": os.path.dirname(__file__),
+            },
+        ):
+            config = Config("INTERPOLATION")
+            assert config.custom["basic_interpolation"] == "%(reddit_url)s"
+            assert config.custom["extended_interpolation"] == "${reddit_url}"

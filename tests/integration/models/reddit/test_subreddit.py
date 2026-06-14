@@ -61,34 +61,34 @@ class TestSubredditFilters(IntegrationTest):
         subreddit = await reddit.subreddit("all")
         await subreddit.filters.add("redditdev")
 
-    @pytest.mark.cassette_name("TestSubredditFilters.test_add")
-    async def test_add__subreddit_model(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("all")
-        await subreddit.filters.add(await reddit.subreddit("redditdev"))
-
     async def test_add__non_special(self, reddit):
         reddit.read_only = False
         with pytest.raises(NotFound):
             subreddit = await reddit.subreddit("redditdev")
             await subreddit.filters.add("redditdev")
 
+    @pytest.mark.cassette_name("TestSubredditFilters.test_add")
+    async def test_add__subreddit_model(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("all")
+        await subreddit.filters.add(await reddit.subreddit("redditdev"))
+
     async def test_remove(self, reddit):
         reddit.read_only = False
         subreddit = await reddit.subreddit("mod")
         await subreddit.filters.remove("redditdev")
-
-    @pytest.mark.cassette_name("TestSubredditFilters.test_remove")
-    async def test_remove__subreddit_model(self, reddit):
-        reddit.read_only = False
-        subreddit = await reddit.subreddit("mod")
-        await subreddit.filters.remove(await reddit.subreddit("redditdev"))
 
     async def test_remove__non_special(self, reddit):
         reddit.read_only = False
         with pytest.raises(NotFound):
             subreddit = await reddit.subreddit("redditdev")
             await subreddit.filters.remove("redditdev")
+
+    @pytest.mark.cassette_name("TestSubredditFilters.test_remove")
+    async def test_remove__subreddit_model(self, reddit):
+        reddit.read_only = False
+        subreddit = await reddit.subreddit("mod")
+        await subreddit.filters.remove(await reddit.subreddit("redditdev"))
 
 
 class TestSubredditFlair(IntegrationTest):
@@ -1711,7 +1711,9 @@ class TestSubreddit(IntegrationTest):
         reddit.read_only = False
         subreddit = await reddit.subreddit(pytest.placeholders.test_subreddit)
         submission = await subreddit.submit(
-            "Test Poll", poll={"duration": 6, "options": options}, selftext="Test poll text."
+            "Test Poll",
+            poll={"duration": 6, "options": options},
+            selftext="Test poll text.",
         )
         await submission.load()
         assert submission.author == pytest.placeholders.username
