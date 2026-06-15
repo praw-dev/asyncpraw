@@ -1,10 +1,11 @@
 jobs:
   tag_release:
     name: Tag Release
+    permissions:
+      contents: write # required to push the release tag
     uses: praw-dev/.github/.github/workflows/tag_release.yml@9ff8957d0cab4cf8c9d7cb5592aedb3d456cc058 # v1.4.0
 name: Tag Release
 on:
   push:
     branches: [ main, release_test ]
-permissions:
-  contents: write
+permissions: {}
