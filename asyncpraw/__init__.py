@@ -12,3 +12,5 @@ More information about Async PRAW can be found at https://github.com/praw-dev/as
 
 from asyncpraw.const import __version__
 from asyncpraw.reddit import Reddit
+
+__all__ = ["Reddit", "__version__"]

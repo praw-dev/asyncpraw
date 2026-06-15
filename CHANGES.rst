@@ -8,6 +8,13 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
  Unreleased
 ************
 
+**Fixed**
+
+- Declare ``__all__`` in ``asyncpraw`` and ``asyncpraw.models`` so that, now that Async
+  PRAW ships a ``py.typed`` marker, type checkers recognize documented imports such as
+  ``from asyncpraw import Reddit`` and ``from asyncpraw.models import Redditor`` as
+  public re-exports instead of reporting them as private.
+
 ********************
  8.0.0 (2026/06/14)
 ********************
