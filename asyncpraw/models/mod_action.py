@@ -16,7 +16,7 @@ class ModAction(AsyncPRAWBase):
 
     @property
     def mod(self) -> asyncpraw.models.Redditor:
-        """Return the :class:`.Redditor` who the action was issued by."""
+        """The :class:`.Redditor` who the action was issued by."""
         if isinstance(self._mod, str):
             return Redditor(self._reddit, name=self._mod)
         return self._mod

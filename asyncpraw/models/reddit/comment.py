@@ -97,12 +97,12 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
 
     @property
     def _kind(self) -> str:
-        """Return the class's kind."""
+        """The class's kind."""
         return self._reddit.config.kinds["comment"]
 
     @property
     def is_root(self) -> bool:
-        """Return ``True`` when the comment is a top-level comment.
+        """``True`` when the comment is a top-level comment.
 
         :raises: :py:class:`AttributeError` if the comment is not fetched.
 
@@ -139,7 +139,7 @@ class Comment(InboxableMixin, UserContentMixin, FullnameMixin, CreatedMixin, Red
 
     @property
     def submission(self) -> asyncpraw.models.Submission:
-        """Return the :class:`.Submission` object this comment belongs to.
+        """The :class:`.Submission` object this comment belongs to.
 
         :raises: :py:class:`AttributeError` if the comment is not fetched.
 

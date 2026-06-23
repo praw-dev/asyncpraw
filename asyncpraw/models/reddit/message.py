@@ -70,12 +70,12 @@ class Message(InboxableMixin, ReplyableMixin, FullnameMixin, CreatedMixin, Reddi
 
     @property
     def _kind(self) -> str:
-        """Return the class's kind."""
+        """The class's kind."""
         return self._reddit.config.kinds["message"]
 
     @property
     def parent(self) -> asyncpraw.models.Message | None:
-        """Return the parent of the message if it exists.
+        """The parent of the message if it exists.
 
         .. note::
 
