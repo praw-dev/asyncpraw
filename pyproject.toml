@@ -21,7 +21,6 @@ lint = [
   {include-group = "docs"}
 ]
 test = [
-  "aiohttp<3.14", # vcrpy's aiohttp stubs break on 3.14+ (AsyncStreamReaderMixin removed); fixed by kevin1024/vcrpy#996, unreleased as of 8.1.1
   "coverage>=7.14.1",
   "pytest>=9.0.3",
   "pytest-asyncio==1.4.*",
