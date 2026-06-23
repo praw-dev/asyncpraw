@@ -74,6 +74,12 @@ asyncpraw follows `semantic versioning <https://semver.org/>`_.
 
 **Changed**
 
+- Arguments deprecated for positional use in Async PRAW 7 are now keyword-only across
+  most methods, fulfilling the deprecation announced in 7.6.0. Notably, the
+  ``time_filter`` argument to listing methods such as :meth:`.Subreddit.top` and
+  :meth:`.Subreddit.controversial` — shown positionally in older documentation (for
+  example ``subreddit.top("all")``) — must now be passed by keyword
+  (``subreddit.top(time_filter="all")``).
 - Drop support for Python 3.9, which was end-of-life on 2025-10-31.
 - Require ``asyncprawcore >=3.1.0, <4`` for its public :class:`!Session` and authorizer
   accessors and the widened :meth:`!Session.request` annotations, which let Async PRAW
