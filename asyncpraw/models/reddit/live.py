@@ -447,7 +447,7 @@ class LiveThread(CreatedMixin, RedditBase):
             await update._fetch()
         return update
 
-    async def report(self, type: str) -> None:  # noqa: A002
+    async def report(self, type: str) -> None:  # ruff:ignore[builtin-argument-shadowing]
         """Report the thread violating the Reddit rules.
 
         :param type: One of ``"spam"``, ``"vote-manipulation"``,

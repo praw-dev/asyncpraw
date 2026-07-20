@@ -85,7 +85,7 @@ class ListingGenerator(AsyncPRAWBase, AsyncIterator):
             for listing_type in classes:
                 if listing_type.CHILD_ATTRIBUTE in listing:
                     return listing_type(self._reddit, listing)
-            else:  # noqa: PLW0120
+            else:  # ruff:ignore[useless-else-on-loop]
                 msg = (
                     "The generator returned a dictionary Async PRAW didn't recognize. File a bug report at Async PRAW."
                 )

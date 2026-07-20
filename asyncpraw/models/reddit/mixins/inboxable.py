@@ -19,7 +19,7 @@ class InboxableMixin:
         _reddit: asyncpraw.Reddit
 
         @property
-        def fullname(self) -> str: ...  # noqa: D102
+        def fullname(self) -> str: ...  # ruff:ignore[undocumented-public-method]
 
     async def block(self) -> None:
         """Block the user who sent the item.

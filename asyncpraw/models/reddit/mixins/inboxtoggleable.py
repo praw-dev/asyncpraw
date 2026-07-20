@@ -18,7 +18,7 @@ class InboxToggleableMixin:
         _reddit: asyncpraw.Reddit
 
         @property
-        def fullname(self) -> str: ...  # noqa: D102
+        def fullname(self) -> str: ...  # ruff:ignore[undocumented-public-method]
 
     async def disable_inbox_replies(self) -> None:
         """Disable inbox replies for the item.

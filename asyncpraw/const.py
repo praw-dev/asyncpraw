@@ -1,6 +1,6 @@
 """Async PRAW constants."""
 
-from asyncpraw.endpoints import API_PATH  # noqa: F401
+from asyncpraw.endpoints import API_PATH  # ruff:ignore[unused-import]
 
 JPEG_HEADER = b"\xff\xd8\xff"
 

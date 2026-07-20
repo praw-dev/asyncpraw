@@ -653,7 +653,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
         assert self._reddit._core is not None
         requestor = self._reddit._core.requestor
         assert requestor._http is not None
-        try:  # noqa: PLW0717
+        try:  # ruff:ignore[too-many-statements-in-try-clause]
             async with requestor._http.ws_connect(websocket_url, timeout=timeout) as websocket:  # pyright: ignore[reportArgumentType]
                 try:
                     ws_update = await websocket.receive_json()
@@ -1149,7 +1149,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
             raise TypeError(msg)
         kind = provided[0] if provided else None
         # test for empty string in selftext for title-only submissions
-        if kind is None and not (bool(selftext) or selftext == ""):  # noqa: PLC1901
+        if kind is None and not (bool(selftext) or selftext == ""):  # ruff:ignore[compare-to-empty-string]
             msg = "At least one of 'gallery', 'image', 'poll', 'selftext', 'url', or 'video' must be provided."
             raise TypeError(msg)
         if inline_media and kind is not None:
@@ -1237,7 +1237,7 @@ class Subreddit(MessageableMixin, SubredditListingMixin, FullnameMixin, CreatedM
             thumbnail_media = cast("PostMedia | None", video.get("thumbnail"))
             if thumbnail_media is None:
                 # if we're uploading without a thumbnail, use the PRAW logo
-                logo_path = Path(__file__).absolute().parent.parent.parent.parent / "images" / "PRAW logo.png"  # noqa: ASYNC240
+                logo_path = Path(__file__).absolute().parent.parent.parent.parent / "images" / "PRAW logo.png"  # ruff:ignore[blocking-path-method-in-async-function]
                 thumbnail_media = PostMedia(str(logo_path))
             if selftext is not None:
                 data["text"] = selftext

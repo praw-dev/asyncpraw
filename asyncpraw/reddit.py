@@ -106,7 +106,7 @@ class Reddit:
         else:
             self._core = self._authorized_core
 
-    async def __aenter__(self):  # noqa: ANN204
+    async def __aenter__(self):  # ruff:ignore[missing-return-type-special-method]
         """Handle the context manager open."""
         return self
 
@@ -217,7 +217,7 @@ class Reddit:
 
         try:
             config_section = (
-                site_name or os.getenv("praw_site") or "DEFAULT"  # noqa: SIM112
+                site_name or os.getenv("praw_site") or "DEFAULT"  # ruff:ignore[uncapitalized-environment-variables]
             )
             self.config = Config(config_section, config_interpolation, **config_settings)
         except configparser.NoSectionError as exc:
