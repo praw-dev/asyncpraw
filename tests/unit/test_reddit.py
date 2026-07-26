@@ -213,6 +213,49 @@ class TestReddit(UnitTest):
         assert result == b"complete file contents"
         assert bodies_read == [b"complete file contents", b"complete file contents"]
 
+    async def test_post_ratelimit__skips_non_seekable_file_streams(self, reddit):
+        class NonSeekable:
+            def __init__(self):
+                self.seek_calls = 0
+
+            def read(self):
+                return b"contents"
+
+            def seek(self, position):
+                self.seek_calls += 1
+                msg = "underlying stream is not seekable"
+                raise OSError(msg)
+
+            def tell(self):
+                return 0
+
+        upload = NonSeekable()
+        attempts = []
+        rate_limit_exception = RedditAPIException([
+            RedditErrorItem(
+                "RATELIMIT",
+                field="ratelimit",
+                message="Try again shortly.",
+            )
+        ])
+
+        async def objectify_request(*, files, **_):
+            attempts.append(files["file"].read())
+            if len(attempts) == 1:
+                raise rate_limit_exception
+            return attempts[-1]
+
+        with (
+            mock.patch.object(reddit, "_objectify_request", side_effect=objectify_request),
+            mock.patch.object(reddit, "_handle_rate_limit", return_value=0),
+            mock.patch("asyncio.sleep", return_value=None),
+        ):
+            result = await reddit.post("test", files={"file": upload})
+
+        assert result == b"contents"
+        # The probe seek raises, so the object is skipped and never rewound.
+        assert upload.seek_calls == 1
+
     @mock.patch(
         "asyncpraw.Reddit.request",
         new=AsyncMock(
