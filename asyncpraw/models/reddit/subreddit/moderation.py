@@ -53,7 +53,7 @@ class SubredditModeration:
                 print(f"{note.label}: {note.note}")
 
         """
-        from asyncpraw.models.mod_notes import SubredditModNotes  # noqa: PLC0415
+        from asyncpraw.models.mod_notes import SubredditModNotes  # ruff:ignore[import-outside-top-level]
 
         return SubredditModNotes(self.subreddit._reddit, subreddit=self.subreddit)
 
@@ -494,7 +494,7 @@ class SubredditModerationStream:
 
         """
         if self.subreddit == "mod":
-            from asyncpraw.models.reddit.subreddit.subreddit import Subreddit  # noqa: PLC0415
+            from asyncpraw.models.reddit.subreddit.subreddit import Subreddit  # ruff:ignore[import-outside-top-level]
 
             self.subreddit = Subreddit(self.subreddit._reddit, "all")
         return stream_generator(

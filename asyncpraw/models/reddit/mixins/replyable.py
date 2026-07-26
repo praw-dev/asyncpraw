@@ -19,7 +19,7 @@ class ReplyableMixin:
         _reddit: asyncpraw.Reddit
 
         @property
-        def fullname(self) -> str: ...  # noqa: D102
+        def fullname(self) -> str: ...  # ruff:ignore[undocumented-public-method]
 
     async def reply(self, body: str) -> asyncpraw.models.Comment | asyncpraw.models.Message | None:
         """Reply to the object.

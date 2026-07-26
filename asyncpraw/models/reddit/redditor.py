@@ -93,7 +93,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
                 print(f"{note.label}: {note.note}")
 
         """
-        from asyncpraw.models.mod_notes import RedditorModNotes  # noqa: PLC0415
+        from asyncpraw.models.mod_notes import RedditorModNotes  # ruff:ignore[import-outside-top-level]
 
         return RedditorModNotes(self._reddit, self)
 
@@ -151,7 +151,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
             msg = "Exactly one of 'name', 'fullname', or '_data' must be provided."
             raise TypeError(msg)
         if _data:
-            assert (  # noqa: PT018
+            assert (  # ruff:ignore[pytest-composite-assertion]
                 isinstance(_data, dict) and "name" in _data
             ), "Please file a bug with Async PRAW."
         self._listing_use_sort = True
@@ -164,7 +164,7 @@ class Redditor(MessageableMixin, RedditorListingMixin, FullnameMixin, CreatedMix
     def __setattr__(self, name: str, value: Any) -> None:
         """Objectify the subreddit attribute."""
         if name == "subreddit" and value:
-            from asyncpraw.models.reddit.user_subreddit import UserSubreddit  # noqa: PLC0415
+            from asyncpraw.models.reddit.user_subreddit import UserSubreddit  # ruff:ignore[import-outside-top-level]
 
             value = UserSubreddit(_data=value, reddit=self._reddit)
         super().__setattr__(name, value)

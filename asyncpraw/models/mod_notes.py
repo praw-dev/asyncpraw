@@ -163,7 +163,7 @@ class BaseModNotes:
                 # this is to minimize the number of requests
                 if not (getattr(self, "redditor", redditor) and getattr(self, "subreddit", subreddit)):
                     # only fetch if we are missing either redditor or subreddit
-                    resolved = [thing async for thing in self._reddit.info(fullnames=[thing])][0]  # noqa: RUF015
+                    resolved = [thing async for thing in self._reddit.info(fullnames=[thing])][0]  # ruff:ignore[unnecessary-iterable-allocation-for-first-element]
             else:
                 reddit_id = thing.fullname
             # ``thing`` is only ever a comment/submission (or their fullname), so

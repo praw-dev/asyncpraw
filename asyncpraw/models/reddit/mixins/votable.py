@@ -18,7 +18,7 @@ class VotableMixin:
         _reddit: asyncpraw.Reddit
 
         @property
-        def fullname(self) -> str: ...  # noqa: D102
+        def fullname(self) -> str: ...  # ruff:ignore[undocumented-public-method]
 
     async def _vote(self, direction: int) -> None:
         await self._reddit.post(API_PATH["vote"], data={"dir": str(direction), "id": self.fullname})

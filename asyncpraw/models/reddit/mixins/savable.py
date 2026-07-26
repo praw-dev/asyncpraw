@@ -18,7 +18,7 @@ class SavableMixin:
         _reddit: asyncpraw.Reddit
 
         @property
-        def fullname(self) -> str: ...  # noqa: D102
+        def fullname(self) -> str: ...  # ruff:ignore[undocumented-public-method]
 
     async def save(self, *, category: str | None = None) -> None:
         """Save the object.

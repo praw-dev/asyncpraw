@@ -18,7 +18,7 @@ class ReportableMixin:
         _reddit: asyncpraw.Reddit
 
         @property
-        def fullname(self) -> str: ...  # noqa: D102
+        def fullname(self) -> str: ...  # ruff:ignore[undocumented-public-method]
 
     async def report(self, reason: str) -> None:
         """Report this object to the moderators of its subreddit.
